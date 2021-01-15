@@ -1,6 +1,6 @@
 {
   "name": "@gradientedge/ge-common",
-  "version": "2.0.0",
+  "version": "0.0.0",
   "private": true,
   "description": "Gradient Edge utilities for AWS",
   "repository": {
@@ -20,7 +20,7 @@
     "build-aws-common": "cd packages/@common-aws && yarn build",
     "build": "npx concurrently \"yarn:build-*\"",
     "bump-aws-common": "cd packages/@common-aws && npm version patch",
-    "bump": "npx concurrently \"yarn:bump-*\" && && npm version patch",
+    "bump": "npx concurrently \"yarn:bump-*\"",
     "fix": "npm run prettify && eslint --fix **/*.ts",
     "lint": "npx lerna run lint",
     "prettier": "npx prettier --check \"**/*.{ts,json}\"",
@@ -43,7 +43,7 @@
       "packages/*"
     ],
     "nohoist": [
-      "aws-common"
+      "common-aws"
     ]
   }
 }
