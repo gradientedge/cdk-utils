@@ -23,7 +23,6 @@ parameters:
 orbs:
   aws-cli: circleci/aws-cli@1.0.0
   node: circleci/node@3.0.0
-  slack: circleci/slack@3.4.2
 
 executors:
   node-executor:
@@ -129,21 +128,12 @@ workflows:
     jobs:
       - build:
           context: << pipeline.parameters.profile-name >>
-          post-steps:
-            - slack/status:
-                fail_only: true
       - test:
           context: << pipeline.parameters.profile-name >>
-          post-steps:
-            - slack/status:
-                fail_only: true
           requires:
             - build
       - publish:
           context: << pipeline.parameters.profile-name >>
-          post-steps:
-            - slack/status:
-                fail_only: false
           requires:
             - build
             - test
