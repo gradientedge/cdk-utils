@@ -21,7 +21,7 @@ export interface CommonStackProps extends cdk.StackProps {
   distributions?: CloudFrontProps[]
   logs?: LogProps[]
   trails: CloudTrailProps[]
-  vpc: VpcProps
-  ecsClusters: EcsClusterProps[]
-  eksClusters: EksClusterProps[]
+  vpc?: VpcProps
+  ecsClusters?: EcsClusterProps[]
+  eksClusters?: EksClusterProps[]
 }

@@ -12,6 +12,7 @@ export interface LogProps extends ec2.VpcProps {
 
 export class VpcManager {
   public createVpc(id: string, scope: CommonConstruct, props: CommonStackProps) {
+    if (!props.vpc) throw 'Vpc props undefined'
     const vpc = new ec2.Vpc(scope, `${id}`, {
       maxAzs: props.vpc.maxAzs,
     })
