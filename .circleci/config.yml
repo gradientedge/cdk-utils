@@ -64,7 +64,6 @@ commands:
           with-cache: true
           cache-version: v1
           include-branch-in-cache-key: true
-          override-ci-command: yarn install --frozen-lockfile
 
   build-packages:
     description: 'Build all packages'
