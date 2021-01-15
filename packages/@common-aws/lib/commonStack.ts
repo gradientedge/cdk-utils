@@ -20,7 +20,7 @@ export interface CommonStackProps extends cdk.StackProps {
   certificates?: AcmProps[]
   distributions?: CloudFrontProps[]
   logs?: LogProps[]
-  trails: CloudTrailProps[]
+  trails?: CloudTrailProps[]
   vpc?: VpcProps
   ecsClusters?: EcsClusterProps[]
   eksClusters?: EksClusterProps[]
