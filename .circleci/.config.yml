@@ -1,0 +1,155 @@
+version: 2.1
+
+parameters:
+  node-executor-image:
+    type: string
+    default: circleci/node:12.19.0
+  cache-key:
+    type: string
+    default: node-deps-v3
+  node-version:
+    type: string
+    default: '12.19.0'
+  npm-version:
+    type: string
+    default: '6.14.8'
+  yarn-version:
+    type: string
+    default: '1.22.10'
+  profile-name:
+    type: string
+    default: 'default'
+
+orbs:
+  aws-cli: circleci/aws-cli@1.0.0
+  node: circleci/node@3.0.0
+  slack: circleci/slack@3.4.2
+
+executors:
+  node-executor:
+    docker:
+      - image: << pipeline.parameters.node-executor-image >>
+    working_directory: ~/repo
+
+commands:
+  initialise:
+    description: 'Initialise executor'
+    steps:
+      - checkout
+      - authenticate-registry
+
+  install-awscli:
+    description: "Install AWS CLI"
+    steps:
+      - aws-cli/setup:
+          profile-name: << pipeline.parameters.profile-name >>
+
+  install-node:
+    description: 'Install Node & NPM'
+    steps:
+      - node/install:
+          install-yarn: true
+          install-npm: true
+          node-version: << pipeline.parameters.node-version >>
+          npm-version: << pipeline.parameters.npm-version >>
+          yarn-version: << pipeline.parameters.yarn-version >>
+
+  install-packages:
+    description: 'Install Node packages'
+    steps:
+      - node/install-packages:
+          app-dir: ~/repo
+          pkg-manager: yarn
+          cache-path: ~/repo/node_modules
+          with-cache: true
+          cache-version: v1
+          include-branch-in-cache-key: true
+          override-ci-command: yarn install --frozen-lockfile
+
+  build-packages:
+    description: 'Build all packages'
+    steps:
+      - run:
+          name: 'Build all packages'
+          command: yarn build
+
+  run-unit-tests:
+    description: 'Run unit tests'
+    steps:
+      - run:
+          name: 'Run unit tests'
+          command: npm run validate
+
+  authenticate-registry:
+    description: 'Authenticate with npm registry'
+    steps:
+      - run:
+          name: 'Authenticate with registry'
+          command: |
+            echo "always-auth=true" > ~/.npmrc
+            echo "//npm.pkg.github.com/:_authToken=$GIT_PUBLISH_TOKEN" >> ~/.npmrc
+            echo "@gradientedge:registry=https://npm.pkg.github.com" >> ~/.npmrc
+
+  publish-packages:
+    description: "Publish NPM package(s)"
+    steps:
+      - run:
+          name: 'Publish NPM package(s)'
+          command: yarn package
+
+jobs:
+  build:
+    executor: machine-executor
+    steps:
+      - initialise
+      - install-packages
+      - retrieve-secrets
+      - build-packages
+      - persist_to_workspace:
+          root: ~/
+          paths: repo
+
+  test:
+    executor: machine-executor
+    steps:
+      - initialise
+      - attach_workspace:
+          at: /home/circleci
+      - run-unit-tests
+
+  publish:
+    executor: executor
+    steps:
+      - attach_workspace:
+          at: /home/circleci
+      - initialise
+      - publish-packages
+
+workflows:
+  version: 2
+  workflow:
+    jobs:
+      - build:
+          context: << pipeline.parameters.profile-name >>
+          post-steps:
+            - slack/status:
+                fail_only: true
+      - test:
+          context: << pipeline.parameters.profile-name >>
+          post-steps:
+            - slack/status:
+                fail_only: true
+          requires:
+            - build
+      - publish:
+          context: << pipeline.parameters.profile-name >>
+          post-steps:
+            - slack/status:
+                fail_only: false
+          requires:
+            - build
+            - test
+          filters:
+            branches:
+              only:
+                - main

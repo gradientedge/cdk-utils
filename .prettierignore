@@ -1,0 +1,9 @@
+*.d.ts
+.next
+**/cdk.out/**
+**/build/**
+**/storybook-static/**
+test-results
+package-lock.json
+coverage
+

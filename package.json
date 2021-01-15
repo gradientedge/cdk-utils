@@ -1,0 +1,49 @@
+{
+  "name": "@gradientedge/ge-common",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Gradient Edge utilities for AWS",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gradientedge/ge-common.git"
+  },
+  "keywords": [
+    "gradientedge",
+    "aws"
+  ],
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/gradientedge/ge-common/issues"
+  },
+  "homepage": "https://github.com/gradientedge/ge-common#readme",
+  "scripts": {
+    "build-aws-common": "cd packages/@common-aws && yarn build",
+    "build": "npx concurrently \"yarn:build-*\"",
+    "bump-aws-common": "cd packages/@common-aws && npm version patch",
+    "bump": "npx concurrently \"yarn:bump-*\" && && npm version patch",
+    "fix": "npm run prettify && eslint --fix **/*.ts",
+    "lint": "npx lerna run lint",
+    "prettier": "npx prettier --check \"**/*.{ts,json}\"",
+    "prettify": "npx prettier --write \"**/*.{ts,json}\"",
+    "validate": "npm run prettier && npx lerna run lint  --parallel && npm run test",
+    "test": "npx lerna run test --parallel",
+    "ci": "yarn install --frozen-lockfile && yarn build && yarn validate",
+    "package-aws-common": "cd packages/@common-aws && yarn publish",
+    "package": "npx concurrently \"yarn:package-*\""
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "concurrently": "^5.3.0",
+    "dotenv": "^8.2.0",
+    "eslint": "^7.17.0",
+    "husky": "^4.3.5"
+  },
+  "workspaces": {
+    "packages": [
+      "packages/*"
+    ],
+    "nohoist": [
+      "aws-common"
+    ]
+  }
+}
