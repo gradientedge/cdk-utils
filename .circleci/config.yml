@@ -103,7 +103,6 @@ jobs:
     steps:
       - initialise
       - install-packages
-      - retrieve-secrets
       - build-packages
       - persist_to_workspace:
           root: ~/
