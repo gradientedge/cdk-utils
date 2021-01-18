@@ -12,6 +12,8 @@ import { EventManager } from './eventManager'
 import { VpcManager } from './vpcManager'
 import { EksManager } from './eksManager'
 import { EcrManager } from './ecrManager'
+import { LambdaManager } from './lambdaManager'
+import { SnsManager } from './snsManager'
 import { createCfnOutput } from './genericUtils'
 
 export class CommonConstruct extends cdk.Construct {
@@ -24,9 +26,11 @@ export class CommonConstruct extends cdk.Construct {
   eksManager: EksManager
   eventManager: EventManager
   iamManager: IamManager
+  lambdaManager: LambdaManager
   logManager: LogManager
   route53Manager: Route53Manager
   s3Manager: S3Manager
+  snsManager: SnsManager
   vpcManager: VpcManager
   fullyQualifiedDomainName: string
 
@@ -41,9 +45,11 @@ export class CommonConstruct extends cdk.Construct {
     this.eksManager = new EksManager()
     this.eventManager = new EventManager()
     this.iamManager = new IamManager()
+    this.lambdaManager = new LambdaManager()
     this.logManager = new LogManager()
     this.route53Manager = new Route53Manager()
     this.s3Manager = new S3Manager()
+    this.snsManager = new SnsManager()
     this.vpcManager = new VpcManager()
     this.fullyQualifiedDomainName = this.determineFullyQualifiedDomain()
   }
