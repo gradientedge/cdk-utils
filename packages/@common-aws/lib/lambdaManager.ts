@@ -1,3 +1,4 @@
+import * as cdk from '@aws-cdk/core'
 import * as iam from '@aws-cdk/aws-iam'
 import * as lambda from '@aws-cdk/aws-lambda'
 import { CommonConstruct } from './commonConstruct'
@@ -6,6 +7,7 @@ import { createCfnOutput } from './genericUtils'
 
 export interface LambdaProps extends lambda.FunctionProps {
   key: string
+  timeoutInSecs?: number
 }
 
 export class LambdaManager {
@@ -55,7 +57,9 @@ export class LambdaManager {
       memorySize: lambdaProps.memorySize,
       reservedConcurrentExecutions: lambdaProps.reservedConcurrentExecutions,
       role: role instanceof iam.Role ? role : undefined,
-      timeout: lambdaProps.timeout,
+      timeout: lambdaProps.timeoutInSecs
+        ? cdk.Duration.seconds(lambdaProps.timeoutInSecs)
+        : cdk.Duration.minutes(1),
     })
 
     createCfnOutput(`${id}Arn`, scope, lambdaFunction.functionArn)
