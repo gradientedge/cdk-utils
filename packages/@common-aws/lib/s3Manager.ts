@@ -97,7 +97,8 @@ export class S3Manager {
     siteBucket: s3.IBucket,
     distribution: cloudfront.IDistribution,
     sources: s3deploy.ISource[],
-    prefix: string
+    prefix: string,
+    prune?: boolean
   ) {
     new s3deploy.BucketDeployment(scope, `${id}`, {
       destinationBucket: siteBucket,
@@ -105,7 +106,7 @@ export class S3Manager {
       distribution: distribution,
       distributionPaths: ['/*'],
       memoryLimit: 1024,
-      prune: true,
+      prune: !!prune,
       serverSideEncryption: s3deploy.ServerSideEncryption.AES_256,
       sources: sources,
     })
