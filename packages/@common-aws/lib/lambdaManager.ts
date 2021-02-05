@@ -1,4 +1,5 @@
 import * as cdk from '@aws-cdk/core'
+import * as ec2 from '@aws-cdk/aws-ec2'
 import * as iam from '@aws-cdk/aws-iam'
 import * as lambda from '@aws-cdk/aws-lambda'
 import { CommonConstruct } from './commonConstruct'
@@ -37,7 +38,8 @@ export class LambdaManager {
     role: iam.Role | iam.CfnRole,
     layers: lambda.LayerVersion[],
     code: lambda.AssetCode,
-    environment?: any
+    environment?: any,
+    vpc?: ec2.IVpc
   ) {
     if (!props.lambdas || props.lambdas.length == 0) throw `Lambda props undefined`
 
@@ -46,6 +48,7 @@ export class LambdaManager {
 
     const functionName = `${lambdaProps.functionName}-${props.stage}`
     const lambdaFunction = new lambda.Function(scope, `${id}`, {
+      allowPublicSubnet: !!vpc,
       functionName: functionName,
       handler: 'index.lambda_handler',
       runtime: lambda.Runtime.NODEJS_12_X,
@@ -62,6 +65,7 @@ export class LambdaManager {
       timeout: lambdaProps.timeoutInSecs
         ? cdk.Duration.seconds(lambdaProps.timeoutInSecs)
         : cdk.Duration.minutes(1),
+      vpc: vpc,
     })
 
     createCfnOutput(`${id}Arn`, scope, lambdaFunction.functionArn)
