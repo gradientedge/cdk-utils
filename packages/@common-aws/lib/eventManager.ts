@@ -57,7 +57,6 @@ export class EventManager {
 
     createCfnOutput(`${id}Arn`, scope, eventRule.attrArn)
     createCfnOutput(`${id}Name`, scope, eventRule.name)
-    createCfnOutput(`${id}BusName`, scope, eventRule.eventBusName)
 
     return eventRule
   }
@@ -96,7 +95,6 @@ export class EventManager {
 
     createCfnOutput(`${id}Arn`, scope, eventRule.attrArn)
     createCfnOutput(`${id}Name`, scope, eventRule.name)
-    createCfnOutput(`${id}BusName`, scope, eventRule.eventBusName)
 
     return eventRule
   }
