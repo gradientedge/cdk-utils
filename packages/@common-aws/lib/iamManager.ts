@@ -1,6 +1,7 @@
 import * as cdk from '@aws-cdk/core'
 import * as ecs from '@aws-cdk/aws-ecs'
 import * as iam from '@aws-cdk/aws-iam'
+import * as logs from '@aws-cdk/aws-logs'
 import * as s3 from '@aws-cdk/aws-s3'
 import { CommonConstruct } from './commonConstruct'
 import { CommonStackProps } from './commonStack'
@@ -118,37 +119,50 @@ export class IamManager {
     })
   }
 
-  public statementForCreateLogStream(scope: CommonConstruct, props: CommonStackProps) {
+  public statementForCreateLogStream(
+    scope: CommonConstruct,
+    props: CommonStackProps,
+    logGroup: logs.CfnLogGroup
+  ) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: ['logs:CreateLogStream'],
       resources: [
         `arn:aws:logs:${cdk.Stack.of(scope).region}:${cdk.Stack.of(scope).account}:log-group:${
-          props.name
+          logGroup.logGroupName
         }:log-stream:${cdk.Stack.of(scope).account}_CloudTrail_eu-west-1*`,
       ],
       sid: 'AWSCloudTrailCreateLogStream2014110',
     })
   }
 
-  public statementForPutLogEvent(scope: CommonConstruct, props: CommonStackProps) {
+  public statementForPutLogEvent(
+    scope: CommonConstruct,
+    props: CommonStackProps,
+    logGroup: logs.CfnLogGroup
+  ) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: ['logs:PutLogEvents'],
       resources: [
         `arn:aws:logs:${cdk.Stack.of(scope).region}:${cdk.Stack.of(scope).account}:log-group:${
-          props.name
+          logGroup.logGroupName
         }:log-stream:${cdk.Stack.of(scope).account}_CloudTrail_eu-west-1*`,
       ],
       sid: 'AWSCloudTrailPutLogEvents20141101',
     })
   }
 
-  public createRoleForCloudTrail(id: string, scope: CommonConstruct, props: CommonStackProps) {
+  public createRoleForCloudTrail(
+    id: string,
+    scope: CommonConstruct,
+    props: CommonStackProps,
+    logGroup: logs.CfnLogGroup
+  ) {
     const policy = new iam.PolicyDocument({
       statements: [
-        this.statementForCreateLogStream(scope, props),
-        this.statementForPutLogEvent(scope, props),
+        this.statementForCreateLogStream(scope, props, logGroup),
+        this.statementForPutLogEvent(scope, props, logGroup),
       ],
     })
     const role = new iam.CfnRole(scope, `${id}`, {
