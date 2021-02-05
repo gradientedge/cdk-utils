@@ -69,14 +69,14 @@ export class S3Manager {
     const bucketPolicyDocument = new iam.PolicyDocument({
       statements: [
         new iam.PolicyStatement({
-          actions: ['buckets:GetBucketAcl'],
+          actions: ['s3:GetBucketAcl'],
           effect: iam.Effect.ALLOW,
           principals: [new iam.ServicePrincipal('cloudtrail.amazonaws.com')],
           resources: [bucket.bucketArn],
           sid: 'AWSCloudTrailAclCheck20150319',
         }),
         new iam.PolicyStatement({
-          actions: ['buckets:PutObject'],
+          actions: ['s3:PutObject'],
           effect: iam.Effect.ALLOW,
           principals: [new iam.ServicePrincipal('cloudtrail.amazonaws.com')],
           resources: [bucket.arnForObjects('*')],
