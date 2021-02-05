@@ -36,7 +36,8 @@ export class LambdaManager {
     props: CommonStackProps,
     role: iam.Role | iam.CfnRole,
     layers: lambda.LayerVersion[],
-    code: lambda.AssetCode
+    code: lambda.AssetCode,
+    environment?: any
   ) {
     if (!props.lambdas || props.lambdas.length == 0) throw `Lambda props undefined`
 
@@ -51,6 +52,7 @@ export class LambdaManager {
       code: code,
       environment: {
         REGION: props.region,
+        ...environment
       },
       layers: layers,
       logRetention: lambdaProps.logRetention,

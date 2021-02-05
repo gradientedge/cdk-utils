@@ -201,6 +201,32 @@ export class IamManager {
     return role
   }
 
+  public createRoleForEcsExecution(
+    id: string,
+    scope: CommonConstruct,
+    props: CommonStackProps,
+    policy: iam.PolicyDocument
+  ) {
+    const role = new iam.Role(scope, `${id}`, {
+      assumedBy: new iam.ServicePrincipal('ecs-tasks.amazonaws.com'),
+      description: `Role for ${id} ECS Task execution`,
+      inlinePolicies: { policy },
+      managedPolicies: [
+        iam.ManagedPolicy.fromManagedPolicyArn(
+          scope,
+          'AmazonECSTaskExecutionRolePolicy',
+          'arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy'
+        ),
+      ],
+      roleName: `${id}-${props.stage}`,
+    })
+
+    createCfnOutput(`${id}Arn`, scope, role.roleArn)
+    createCfnOutput(`${id}Name`, scope, role.roleName)
+
+    return role
+  }
+
   public createRoleForLambda(
     id: string,
     scope: CommonConstruct,

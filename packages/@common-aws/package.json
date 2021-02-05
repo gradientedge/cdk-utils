@@ -1,7 +1,7 @@
 {
   "name": "@gradientedge/common-aws",
   "description": "Gradient Edge AWS utility for common functions",
-  "version": "2.0.6",
+  "version": "2.0.7",
   "license": "UNLICENSED",
   "main": "index.js",
   "directories": {
@@ -75,8 +75,11 @@
     "@aws-cdk/aws-apigatewayv2": "1.83.0",
     "@types/lodash": "^4.14.167",
     "@types/node": "^14.14.20",
+    "app-root-path": "^3.0.0",
+    "aws-sdk": "^2.835.0",
     "constructs": "^3.2.0",
     "lodash": "^4.17.20",
+    "nconf": "^0.11.2",
     "pluralize": "^8.0.0",
     "ts-node": "^9.1.1"
   },

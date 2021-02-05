@@ -6,7 +6,7 @@ import { CloudFrontProps } from './cloudFrontManager'
 import { LogProps } from './logManager'
 import { CloudTrailProps } from './cloudTrailManager'
 import { VpcProps } from '@aws-cdk/aws-ec2'
-import { EcsClusterProps } from './ecsManager'
+import { EcsClusterProps, EcsTaskProps } from './ecsManager'
 import { EksClusterProps } from './eksManager'
 import { LambdaProps } from './lambdaManager'
 import { SubscriptionProps } from './snsManager'
@@ -25,6 +25,7 @@ export interface CommonStackProps extends cdk.StackProps {
   trails?: CloudTrailProps[]
   vpc?: VpcProps
   ecsClusters?: EcsClusterProps[]
+  ecsTasks?: EcsTaskProps[]
   eksClusters?: EksClusterProps[]
   lambdas?: LambdaProps[]
   subscriptions?: SubscriptionProps[]

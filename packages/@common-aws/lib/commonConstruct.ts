@@ -15,6 +15,7 @@ import { EcrManager } from './ecrManager'
 import { LambdaManager } from './lambdaManager'
 import { SnsManager } from './snsManager'
 import { createCfnOutput } from './genericUtils'
+import { SecretsManager } from './secretsManager'
 
 export class CommonConstruct extends cdk.Construct {
   props: CommonStackProps
@@ -30,6 +31,7 @@ export class CommonConstruct extends cdk.Construct {
   logManager: LogManager
   route53Manager: Route53Manager
   s3Manager: S3Manager
+  secretsManager: SecretsManager
   snsManager: SnsManager
   vpcManager: VpcManager
   fullyQualifiedDomainName: string
@@ -49,6 +51,7 @@ export class CommonConstruct extends cdk.Construct {
     this.logManager = new LogManager()
     this.route53Manager = new Route53Manager()
     this.s3Manager = new S3Manager()
+    this.secretsManager = new SecretsManager()
     this.snsManager = new SnsManager()
     this.vpcManager = new VpcManager()
     this.fullyQualifiedDomainName = this.determineFullyQualifiedDomain()
