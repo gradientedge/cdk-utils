@@ -27,7 +27,7 @@ export class IamManager {
   ) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
-      actions: ['buckets:ListBucket'],
+      actions: ['s3:ListBucket'],
       resources: [bucket.bucketArn],
     })
   }
@@ -35,7 +35,7 @@ export class IamManager {
   public statementForListAllMyBuckets(scope: CommonConstruct, props: CommonStackProps) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
-      actions: ['buckets:ListAllMyBuckets'],
+      actions: ['s3:ListAllMyBuckets'],
       resources: ['*'],
     })
   }
@@ -47,7 +47,7 @@ export class IamManager {
   ) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
-      actions: ['buckets:GetObject', 'buckets:GetObjectAcl'],
+      actions: ['s3:GetObject', 's3:GetObjectAcl'],
       resources: [bucket.arnForObjects(`*`)],
     })
   }
@@ -59,7 +59,7 @@ export class IamManager {
   ) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
-      actions: ['buckets:DeleteObject'],
+      actions: ['s3:DeleteObject'],
       resources: [bucket.arnForObjects(`*`)],
     })
   }
@@ -71,7 +71,7 @@ export class IamManager {
   ) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
-      actions: ['buckets:PutObject', 'buckets:PutObjectAcl'],
+      actions: ['s3:PutObject', 's3:PutObjectAcl'],
       resources: [bucket.arnForObjects(`*`)],
     })
   }
