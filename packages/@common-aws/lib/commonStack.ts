@@ -10,6 +10,7 @@ import { EcsClusterProps, EcsTaskProps } from './ecsManager'
 import { EksClusterProps } from './eksManager'
 import { LambdaProps } from './lambdaManager'
 import { SubscriptionProps } from './snsManager'
+import { RuleProps } from './eventManager'
 
 export interface CommonStackProps extends cdk.StackProps {
   name: string
@@ -22,6 +23,7 @@ export interface CommonStackProps extends cdk.StackProps {
   certificates?: AcmProps[]
   distributions?: CloudFrontProps[]
   logs?: LogProps[]
+  rules?: RuleProps[]
   trails?: CloudTrailProps[]
   vpc?: VpcProps
   ecsClusters?: EcsClusterProps[]
