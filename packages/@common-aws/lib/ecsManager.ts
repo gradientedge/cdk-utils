@@ -76,5 +76,9 @@ export class EcsManager {
       memoryLimitMiB: ecsTaskProps.memoryMiB ? parseInt(ecsTaskProps.memoryMiB) : undefined,
       privileged: false,
     })
+
+    createCfnOutput(`${id}Arn`, scope, ecsTask.taskDefinitionArn)
+
+    return ecsTask
   }
 }
