@@ -23,13 +23,13 @@ export class S3Manager {
 
     let bucket: s3.IBucket
 
-    if (s3Props.existingBucket && s3Props.bucketName) {
-      bucket = s3.Bucket.fromBucketName(scope, `${id}`, s3Props.bucketName)
-    } else {
-      const bucketName = scope.isProductionStage()
-        ? `${s3Props.bucketName}.${scope.fullyQualifiedDomainName}`
-        : `${s3Props.bucketName}-${props.stage}.${scope.fullyQualifiedDomainName}`
+    const bucketName = scope.isProductionStage()
+      ? `${s3Props.bucketName}.${scope.fullyQualifiedDomainName}`
+      : `${s3Props.bucketName}-${props.stage}.${scope.fullyQualifiedDomainName}`
 
+    if (s3Props.existingBucket && s3Props.bucketName) {
+      bucket = s3.Bucket.fromBucketName(scope, `${id}`, bucketName)
+    } else {
       let logBucket
       if (s3Props.logBucketName) {
         const logBucketName = scope.isProductionStage()
