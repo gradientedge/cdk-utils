@@ -41,8 +41,8 @@ export class EventManager {
       description:
         'Rule to send notification on new objects in data bucket to lambda function target',
       eventPattern: eventPatternForNewS3Objects(bucket),
-      name: `${id}-${props.stage}`,
-      state: 'ENABLED',
+      name: `${ruleProps.name}-${props.stage}`,
+      state: ruleProps.state,
       targets: [{ arn: lambdaFunction.functionArn, id: `${id}-${props.stage}` }],
     })
 
