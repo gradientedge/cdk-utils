@@ -29,8 +29,9 @@ export class EventManager {
     key: string,
     scope: CommonConstruct,
     props: CommonStackProps,
-    bucket: s3.IBucket,
-    lambdaFunction: lambda.Function
+    lambdaFunction: lambda.Function,
+    bucket?: s3.IBucket,
+    scheduleExpression?: string
   ) {
     if (!props.rules || props.rules.length == 0) throw `Event rule props undefined`
 
@@ -40,7 +41,8 @@ export class EventManager {
     const eventRule = new events.CfnRule(scope, `${id}`, {
       description:
         'Rule to send notification on new objects in data bucket to lambda function target',
-      eventPattern: eventPatternForNewS3Objects(bucket),
+      eventPattern: bucket ? eventPatternForNewS3Objects(bucket) : undefined,
+      scheduleExpression: scheduleExpression ? scheduleExpression : undefined,
       name: `${ruleProps.name}-${props.stage}`,
       state: ruleProps.state,
       targets: [{ arn: lambdaFunction.functionArn, id: `${id}-${props.stage}` }],
