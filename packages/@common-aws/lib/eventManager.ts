@@ -13,10 +13,10 @@ export interface RuleProps extends events.CfnRuleProps {
 
 export function eventPatternForNewS3Objects(bucket: s3.IBucket) {
   return {
-    source: ['aws.buckets'],
+    source: ['aws.s3'],
     'detail-type': ['AWS API Call via CloudTrail'],
     detail: {
-      eventSource: ['buckets.amazonaws.com'],
+      eventSource: ['s3.amazonaws.com'],
       eventName: ['PutObject', 'CompleteMultipartUpload'],
       requestParameters: { bucketName: [bucket.bucketName] },
     },
