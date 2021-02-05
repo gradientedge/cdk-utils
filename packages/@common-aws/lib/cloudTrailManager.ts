@@ -3,7 +3,7 @@ import * as logs from '@aws-cdk/aws-logs'
 import * as s3 from '@aws-cdk/aws-s3'
 import { CommonConstruct } from './commonConstruct'
 import { CommonStackProps } from './commonStack'
-import { CfnTrailProps } from "@aws-cdk/aws-cloudtrail/lib/cloudtrail.generated";
+import { CfnTrailProps } from '@aws-cdk/aws-cloudtrail/lib/cloudtrail.generated'
 
 export interface CloudTrailProps extends cloudtrail.CfnTrailProps {
   key: string
