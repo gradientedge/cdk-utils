@@ -15,7 +15,7 @@ export class CloudTrailManager {
     key: string,
     scope: CommonConstruct,
     props: CommonStackProps,
-    logGroup: logs.CfnLogGroup | logs.ILogGroup,
+    logGroup: logs.CfnLogGroup,
     dataBucket: s3.IBucket,
     logBucket: s3.IBucket,
     logBucketPolicy: s3.CfnBucketPolicy
@@ -28,8 +28,7 @@ export class CloudTrailManager {
     const role = scope.iamManager.createRoleForCloudTrail(`${id}Role`, scope, props)
 
     const cloudTrail = new cloudtrail.CfnTrail(scope, `${id}`, {
-      cloudWatchLogsLogGroupArn:
-        logGroup instanceof logs.CfnLogGroup ? logGroup.attrArn : logGroup.logGroupArn,
+      cloudWatchLogsLogGroupArn: logGroup.attrArn,
       cloudWatchLogsRoleArn: role.attrArn,
       enableLogFileValidation: cloudTrailProps.enableLogFileValidation,
       eventSelectors: [
@@ -54,7 +53,7 @@ export class CloudTrailManager {
     })
 
     cloudTrail.addDependsOn(logBucketPolicy)
-    if (logGroup instanceof logs.CfnLogGroup) cloudTrail.addDependsOn(logGroup)
+    cloudTrail.addDependsOn(logGroup)
     cloudTrail.addDependsOn(role)
 
     return { cloudTrailRole: role, cloudTrail }
