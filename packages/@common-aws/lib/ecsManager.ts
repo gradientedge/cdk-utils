@@ -28,7 +28,7 @@ export class EcsManager {
     if (!ecsClusterProps) throw `Could not find EcsCluster props for key:${key}`
 
     const ecsCluster = new ecs.Cluster(scope, `${id}`, {
-      clusterName: ecsClusterProps.clusterName,
+      clusterName: `${ecsClusterProps.clusterName}-${props.stage}`,
       vpc: vpc,
     })
 
@@ -58,7 +58,7 @@ export class EcsManager {
       compatibility: ecs.Compatibility.FARGATE,
       cpu: ecsTaskProps.cpu,
       executionRole: role,
-      family: props.name,
+      family: `${ecsTaskProps.family}-${props.stage}`,
       memoryMiB: ecsTaskProps.memoryMiB,
       networkMode: ecs.NetworkMode.AWS_VPC,
       taskRole: role,
