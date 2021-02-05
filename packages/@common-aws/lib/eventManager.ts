@@ -63,6 +63,7 @@ export class EventManager {
 
   public createRuleForS3ToEcs(
     id: string,
+    key: string,
     scope: CommonConstruct,
     props: CommonStackProps,
     bucket: s3.IBucket,
@@ -71,11 +72,16 @@ export class EventManager {
     subnetIds: string[],
     role: iam.Role | iam.CfnRole
   ) {
+    if (!props.rules || props.rules.length == 0) throw `Event rule props undefined`
+
+    const ruleProps = props.rules.find((log: RuleProps) => log.key === key)
+    if (!ruleProps) throw `Could not find Event rule props for key:${key}`
+
     const eventRule = new events.CfnRule(scope, `${id}`, {
       description: 'Rule to send notification on new objects in data bucket to ecs task target',
       eventPattern: eventPatternForNewS3Objects(bucket),
-      name: `${id}-${props.stage}`,
-      state: 'ENABLED',
+      name: `${ruleProps.name}-${props.stage}`,
+      state: ruleProps.state,
       targets: [
         {
           arn: cluster.clusterArn,
