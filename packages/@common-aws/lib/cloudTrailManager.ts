@@ -25,7 +25,7 @@ export class CloudTrailManager {
     const cloudTrailProps = props.trails.find((log: CloudTrailProps) => log.key === key)
     if (!cloudTrailProps) throw `Could not find Cloud Trail props for key:${key}`
 
-    const role = scope.iamManager.createRoleForCloudTrail(id, scope, props)
+    const role = scope.iamManager.createRoleForCloudTrail(`${id}Role`, scope, props)
 
     const cloudTrail = new cloudtrail.CfnTrail(scope, `${id}`, {
       cloudWatchLogsLogGroupArn:
