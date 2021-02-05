@@ -52,7 +52,7 @@ export class LambdaManager {
       code: code,
       environment: {
         REGION: props.region,
-        ...environment
+        ...environment,
       },
       layers: layers,
       logRetention: lambdaProps.logRetention,
