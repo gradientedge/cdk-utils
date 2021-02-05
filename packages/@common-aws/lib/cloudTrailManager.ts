@@ -3,8 +3,9 @@ import * as logs from '@aws-cdk/aws-logs'
 import * as s3 from '@aws-cdk/aws-s3'
 import { CommonConstruct } from './commonConstruct'
 import { CommonStackProps } from './commonStack'
+import { CfnTrailProps } from "@aws-cdk/aws-cloudtrail/lib/cloudtrail.generated";
 
-export interface CloudTrailProps extends logs.CfnLogGroupProps {
+export interface CloudTrailProps extends cloudtrail.CfnTrailProps {
   key: string
 }
 
@@ -30,7 +31,7 @@ export class CloudTrailManager {
       cloudWatchLogsLogGroupArn:
         logGroup instanceof logs.CfnLogGroup ? logGroup.attrArn : logGroup.logGroupArn,
       cloudWatchLogsRoleArn: role.attrArn,
-      enableLogFileValidation: false,
+      enableLogFileValidation: cloudTrailProps.enableLogFileValidation,
       eventSelectors: [
         {
           dataResources: [
@@ -43,13 +44,13 @@ export class CloudTrailManager {
           readWriteType: 'WriteOnly',
         },
       ],
-      includeGlobalServiceEvents: false,
-      isLogging: true,
-      isMultiRegionTrail: false,
+      includeGlobalServiceEvents: cloudTrailProps.includeGlobalServiceEvents,
+      isLogging: cloudTrailProps.isLogging,
+      isMultiRegionTrail: cloudTrailProps.isMultiRegionTrail,
       s3BucketName: logBucket.bucketName,
-      s3KeyPrefix: `logs-${id}`,
+      s3KeyPrefix: `logs-${cloudTrailProps.trailName}`,
       tags: [{ key: 'service', value: props.name }],
-      trailName: `${id}-${props.stage}`,
+      trailName: `${cloudTrailProps.trailName}-${props.stage}`,
     })
 
     cloudTrail.addDependsOn(logBucketPolicy)
