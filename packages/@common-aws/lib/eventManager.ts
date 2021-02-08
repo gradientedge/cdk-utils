@@ -24,13 +24,13 @@ export function eventPatternForNewS3Objects(bucket: s3.IBucket) {
 }
 
 export class EventManager {
-  public createRuleForS3ToLambda(
+  public createLambdaRule(
     id: string,
     key: string,
     scope: CommonConstruct,
     props: CommonStackProps,
     lambdaFunction: lambda.Function,
-    bucket?: s3.IBucket,
+    eventPattern?: any,
     scheduleExpression?: string
   ) {
     if (!props.rules || props.rules.length == 0) throw `Event rule props undefined`
@@ -41,8 +41,8 @@ export class EventManager {
     const eventRule = new events.CfnRule(scope, `${id}`, {
       description:
         'Rule to send notification on new objects in data bucket to lambda function target',
-      eventPattern: bucket ? eventPatternForNewS3Objects(bucket) : undefined,
-      scheduleExpression: scheduleExpression ? scheduleExpression : undefined,
+      eventPattern: eventPattern,
+      scheduleExpression: scheduleExpression,
       name: `${ruleProps.name}-${props.stage}`,
       state: ruleProps.state,
       targets: [{ arn: lambdaFunction.functionArn, id: `${id}-${props.stage}` }],
@@ -61,7 +61,7 @@ export class EventManager {
     return eventRule
   }
 
-  public createRuleForS3ToEcs(
+  public createFargateTaskRule(
     id: string,
     key: string,
     scope: CommonConstruct,
@@ -70,7 +70,8 @@ export class EventManager {
     cluster: ecs.ICluster,
     task: ecs.ITaskDefinition,
     subnetIds: string[],
-    role: iam.Role | iam.CfnRole
+    role: iam.Role | iam.CfnRole,
+    eventPattern?: any
   ) {
     if (!props.rules || props.rules.length == 0) throw `Event rule props undefined`
 
@@ -79,7 +80,7 @@ export class EventManager {
 
     const eventRule = new events.CfnRule(scope, `${id}`, {
       description: 'Rule to send notification on new objects in data bucket to ecs task target',
-      eventPattern: eventPatternForNewS3Objects(bucket),
+      eventPattern: eventPattern,
       name: `${ruleProps.name}-${props.stage}`,
       state: ruleProps.state,
       targets: [
