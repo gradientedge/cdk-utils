@@ -11,18 +11,6 @@ export interface RuleProps extends events.CfnRuleProps {
   key: string
 }
 
-export function eventPatternForNewS3Objects(bucket: s3.IBucket) {
-  return {
-    source: ['aws.s3'],
-    'detail-type': ['AWS API Call via CloudTrail'],
-    detail: {
-      eventSource: ['s3.amazonaws.com'],
-      eventName: ['PutObject', 'CompleteMultipartUpload'],
-      requestParameters: { bucketName: [bucket.bucketName] },
-    },
-  }
-}
-
 export class EventManager {
   public createLambdaRule(
     id: string,
@@ -66,7 +54,6 @@ export class EventManager {
     key: string,
     scope: CommonConstruct,
     props: CommonStackProps,
-    bucket: s3.IBucket,
     cluster: ecs.ICluster,
     task: ecs.ITaskDefinition,
     subnetIds: string[],
