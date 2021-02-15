@@ -1,4 +1,5 @@
 import * as cdk from '@aws-cdk/core'
+import { createCfnOutput } from './genericUtils'
 import { CommonStackProps } from './commonStack'
 import { Route53Manager } from './route53Manager'
 import { S3Manager } from './s3Manager'
@@ -14,14 +15,15 @@ import { EksManager } from './eksManager'
 import { EcrManager } from './ecrManager'
 import { LambdaManager } from './lambdaManager'
 import { SnsManager } from './snsManager'
-import { createCfnOutput } from './genericUtils'
 import { SecretsManager } from './secretsManager'
+import { CloudWatchManager } from './cloudWatchManager'
 
 export class CommonConstruct extends cdk.Construct {
   props: CommonStackProps
   acmManager: AcmManager
   cloudFrontManager: CloudFrontManager
   cloudTrailManager: CloudTrailManager
+  cloudWatchManager: CloudWatchManager
   ecrManager: EcrManager
   ecsManager: EcsManager
   eksManager: EksManager
@@ -42,6 +44,7 @@ export class CommonConstruct extends cdk.Construct {
     this.acmManager = new AcmManager()
     this.cloudFrontManager = new CloudFrontManager()
     this.cloudTrailManager = new CloudTrailManager()
+    this.cloudWatchManager = new CloudWatchManager()
     this.ecrManager = new EcrManager()
     this.ecsManager = new EcsManager()
     this.eksManager = new EksManager()
