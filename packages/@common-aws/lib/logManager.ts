@@ -38,9 +38,11 @@ export class LogManager {
       filterPattern: metricFilterProps.filterPattern,
     })
 
-    if (metricFilterProps.options) metricFilter.metric(metricFilterProps.options)
+    let metric = metricFilterProps.options
+      ? metricFilter.metric(metricFilterProps.options)
+      : metricFilter.metric()
 
-    return metricFilter
+    return { metricFilter, metric }
   }
 
   public createCfnLogGroup(
