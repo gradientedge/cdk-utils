@@ -42,10 +42,10 @@ export class LogManager {
 
     let metric = metricFilterProps.options
       ? metricFilter.metric({
-        dimensions: metricFilterProps.options.dimensions,
-        statistic: metricFilterProps.options.statistic,
-        period: cdk.Duration.seconds(metricFilterProps.periodInSecs),
-      })
+          dimensions: metricFilterProps.options.dimensions,
+          statistic: metricFilterProps.options.statistic,
+          period: cdk.Duration.seconds(metricFilterProps.periodInSecs),
+        })
       : metricFilter.metric()
 
     return { metricFilter, metric }
