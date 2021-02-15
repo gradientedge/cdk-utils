@@ -1,4 +1,5 @@
 import * as logs from '@aws-cdk/aws-logs'
+import * as watch from '@aws-cdk/aws-cloudwatch'
 import { CommonConstruct } from './commonConstruct'
 import { CommonStackProps } from './commonStack'
 import { createCfnOutput } from './genericUtils'
@@ -9,6 +10,7 @@ export interface LogProps extends logs.CfnLogGroupProps {
 
 export interface MetricFilterProps extends logs.MetricFilterProps {
   key: string
+  options: watch.MetricOptions
 }
 
 export class LogManager {
@@ -27,7 +29,7 @@ export class LogManager {
     )
     if (!metricFilterProps) throw `Could not find Metric Filter props for key:${key}`
 
-    return new logs.MetricFilter(scope, `${id}`, {
+    const metricFilter = new logs.MetricFilter(scope, `${id}`, {
       logGroup: logGroup,
       metricName: metricFilterProps.metricName,
       metricNamespace: metricFilterProps.metricNamespace,
@@ -35,6 +37,10 @@ export class LogManager {
       defaultValue: metricFilterProps.defaultValue,
       filterPattern: metricFilterProps.filterPattern,
     })
+
+    if (metricFilterProps.options) metricFilter.metric(metricFilterProps.options)
+
+    return metricFilter
   }
 
   public createCfnLogGroup(
