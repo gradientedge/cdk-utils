@@ -59,8 +59,8 @@ export class CloudWatchManager {
     return new watch.Dashboard(scope, `${id}`, {
       dashboardName: dashboardProps.dashboardName,
       periodOverride: dashboardProps.periodOverride,
-      start: dashboardProps.start,
-      end: dashboardProps.end,
+      start: CloudWatchManager.determineTimeRange(dashboardProps.start),
+      end: CloudWatchManager.determineTimeRange(dashboardProps.end),
       widgets: widgets,
     })
   }
@@ -212,5 +212,18 @@ export class CloudWatchManager {
       widget.position(logQueryWidgetProps.positionX, logQueryWidgetProps.positionY)
 
     return widget
+  }
+
+  private static determineTimeRange(range?: string) {
+    let moment = require('moment')
+
+    switch (range) {
+      case 'START_TODAY':
+        return moment().startOf('day').format()
+      case 'END_TODAY':
+        return moment().endOf('day').format()
+      default:
+        return range
+    }
   }
 }

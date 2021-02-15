@@ -1,7 +1,7 @@
 {
   "name": "@gradientedge/common-aws",
   "description": "Gradient Edge AWS utility for common functions",
-  "version": "2.0.29",
+  "version": "2.0.30",
   "license": "UNLICENSED",
   "main": "index.js",
   "directories": {
@@ -79,6 +79,7 @@
     "aws-sdk": "^2.841.0",
     "constructs": "^3.2.0",
     "lodash": "^4.17.20",
+    "moment": "^2.29.1",
     "nconf": "^0.11.2",
     "pluralize": "^8.0.0",
     "ts-node": "^9.1.1"
