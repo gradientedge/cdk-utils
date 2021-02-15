@@ -1,3 +1,4 @@
+import * as cdk from '@aws-cdk/core'
 import * as logs from '@aws-cdk/aws-logs'
 import * as watch from '@aws-cdk/aws-cloudwatch'
 import { CommonConstruct } from './commonConstruct'
@@ -10,6 +11,7 @@ export interface LogProps extends logs.CfnLogGroupProps {
 
 export interface MetricFilterProps extends logs.MetricFilterProps {
   key: string
+  periodInSecs: number
   options: watch.MetricOptions
 }
 
@@ -39,7 +41,11 @@ export class LogManager {
     })
 
     let metric = metricFilterProps.options
-      ? metricFilter.metric(metricFilterProps.options)
+      ? metricFilter.metric({
+        dimensions: metricFilterProps.options.dimensions,
+        statistic: metricFilterProps.options.statistic,
+        period: cdk.Duration.seconds(metricFilterProps.periodInSecs),
+      })
       : metricFilter.metric()
 
     return { metricFilter, metric }
