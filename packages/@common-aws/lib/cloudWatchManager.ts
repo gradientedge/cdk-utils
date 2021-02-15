@@ -7,26 +7,38 @@ import { IAlarm } from '@aws-cdk/aws-cloudwatch/lib/alarm-base'
 
 export interface DashboardProps extends watch.DashboardProps {
   key: string
+  positionX: number
+  positionY: number
 }
 
 export interface TextWidgetProps extends watch.TextWidgetProps {
   key: string
+  positionX: number
+  positionY: number
 }
 
 export interface NumericWidgetProps extends watch.SingleValueWidgetProps {
   key: string
+  positionX: number
+  positionY: number
 }
 
 export interface GraphWidgetProps extends watch.GraphWidgetProps {
   key: string
+  positionX: number
+  positionY: number
 }
 
 export interface AlarmStatusWidgetProps extends watch.AlarmStatusWidgetProps {
   key: string
+  positionX: number
+  positionY: number
 }
 
 export interface LogQueryWidgetProps extends watch.LogQueryWidgetProps {
   key: string
+  positionX: number
+  positionY: number
 }
 
 export class CloudWatchManager {
@@ -64,11 +76,16 @@ export class CloudWatchManager {
     const textWidgetProps = props.textWidgets.find((widget: TextWidgetProps) => widget.key === key)
     if (!textWidgetProps) throw `Could not find Text Widget props for key:${key}`
 
-    return new watch.TextWidget({
+    const widget = new watch.TextWidget({
       markdown: textWidgetProps.markdown,
       width: textWidgetProps.width,
       height: textWidgetProps.height,
     })
+
+    if (textWidgetProps.positionX && textWidgetProps.positionY)
+      widget.position(textWidgetProps.positionX, textWidgetProps.positionY)
+
+    return widget
   }
 
   public createNumericWidget(
@@ -86,7 +103,7 @@ export class CloudWatchManager {
     )
     if (!numericWidgetProps) throw `Could not find Numeric Widget props for key:${key}`
 
-    return new watch.SingleValueWidget({
+    const widget = new watch.SingleValueWidget({
       metrics: metrics,
       setPeriodToTimeRange: numericWidgetProps.setPeriodToTimeRange,
       fullPrecision: numericWidgetProps.fullPrecision,
@@ -94,6 +111,11 @@ export class CloudWatchManager {
       width: numericWidgetProps.width,
       height: numericWidgetProps.height,
     })
+
+    if (numericWidgetProps.positionX && numericWidgetProps.positionY)
+      widget.position(numericWidgetProps.positionX, numericWidgetProps.positionY)
+
+    return widget
   }
 
   public createGraphWidget(
@@ -111,7 +133,7 @@ export class CloudWatchManager {
     )
     if (!graphWidgetProps) throw `Could not find Graph Widget props for key:${key}`
 
-    return new watch.GraphWidget({
+    const widget = new watch.GraphWidget({
       left: leftYMetrics,
       right: rightYMetrics,
       leftAnnotations: graphWidgetProps.leftAnnotations,
@@ -126,6 +148,11 @@ export class CloudWatchManager {
       width: graphWidgetProps.width,
       height: graphWidgetProps.height,
     })
+
+    if (graphWidgetProps.positionX && graphWidgetProps.positionY)
+      widget.position(graphWidgetProps.positionX, graphWidgetProps.positionY)
+
+    return widget
   }
 
   public createAlarmStatusWidget(
@@ -143,12 +170,17 @@ export class CloudWatchManager {
     )
     if (!alarmStatusWidgetProps) throw `Could not find Alarm Status Widget props for key:${key}`
 
-    return new watch.AlarmStatusWidget({
+    const widget = new watch.AlarmStatusWidget({
       alarms: alarms,
       title: alarmStatusWidgetProps.title,
       width: alarmStatusWidgetProps.width,
       height: alarmStatusWidgetProps.height,
     })
+
+    if (alarmStatusWidgetProps.positionX && alarmStatusWidgetProps.positionY)
+      widget.position(alarmStatusWidgetProps.positionX, alarmStatusWidgetProps.positionY)
+
+    return widget
   }
 
   public createLogQueryWidget(
@@ -166,7 +198,7 @@ export class CloudWatchManager {
     )
     if (!logQueryWidgetProps) throw `Could not find Log Query Widget props for key:${key}`
 
-    return new watch.LogQueryWidget({
+    const widget = new watch.LogQueryWidget({
       logGroupNames: logGroupNames,
       queryString: logQueryWidgetProps.queryString,
       queryLines: logQueryWidgetProps.queryLines,
@@ -175,5 +207,10 @@ export class CloudWatchManager {
       width: logQueryWidgetProps.width,
       height: logQueryWidgetProps.height,
     })
+
+    if (logQueryWidgetProps.positionX && logQueryWidgetProps.positionY)
+      widget.position(logQueryWidgetProps.positionX, logQueryWidgetProps.positionY)
+
+    return widget
   }
 }
