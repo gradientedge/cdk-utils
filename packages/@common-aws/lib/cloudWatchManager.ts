@@ -65,151 +65,153 @@ export class CloudWatchManager {
     })
   }
 
-  public createTextWidget(
-    id: string,
-    key: string,
-    scope: CommonConstruct,
-    props: CommonStackProps
-  ) {
-    if (!props.textWidgets || props.textWidgets.length == 0) throw `Text Widget props undefined`
-
-    const textWidgetProps = props.textWidgets.find((widget: TextWidgetProps) => widget.key === key)
-    if (!textWidgetProps) throw `Could not find Text Widget props for key:${key}`
-
-    const widget = new watch.TextWidget({
-      markdown: textWidgetProps.markdown,
-      width: textWidgetProps.width,
-      height: textWidgetProps.height,
-    })
-
-    if (textWidgetProps.positionX && textWidgetProps.positionY)
-      widget.position(textWidgetProps.positionX, textWidgetProps.positionY)
-
-    return widget
-  }
-
-  public createNumericWidget(
+  public createWidget(
     id: string,
     key: string,
     scope: CommonConstruct,
     props: CommonStackProps,
+    metrics?: IMetric[],
+    alarms?: IAlarm[],
+    logGroupNames?: string[]
+  ) {
+    if (!props.widgets || props.widgets.length == 0) throw `Widget props undefined`
+
+    const widgetProps = props.widgets.find((widget: any) => widget.key === key)
+    if (!widgetProps) throw `Could not find Widget props for key:${key}`
+
+    switch (widgetProps.type) {
+      case 'Text':
+        return this.createTextWidget(id, key, scope, props, widgetProps)
+      case 'SingleValue':
+        if (!metrics) throw `Metrics not defined for ${id}`
+        return this.createNumericWidget(id, key, scope, props, widgetProps, metrics)
+      case 'Graph':
+        return this.createGraphWidget(id, key, scope, props, widgetProps, metrics)
+      case 'AlarmStatus':
+        if (!alarms) throw `Alarms not defined for ${id}`
+        return this.createAlarmStatusWidget(id, key, scope, props, widgetProps, alarms)
+      case 'LogQuery':
+        if (!logGroupNames) throw `logGroupNames not defined for ${id}`
+        return this.createLogQueryWidget(id, key, scope, props, widgetProps, logGroupNames)
+      default:
+        throw 'Unsupported widget type'
+    }
+  }
+
+  protected createTextWidget(
+    id: string,
+    key: string,
+    scope: CommonConstruct,
+    props: CommonStackProps,
+    widgetProps: TextWidgetProps
+  ) {
+    const widget = new watch.TextWidget({
+      markdown: widgetProps.markdown,
+      width: widgetProps.width,
+      height: widgetProps.height,
+    })
+
+    if (widgetProps.positionX && widgetProps.positionY)
+      widget.position(widgetProps.positionX, widgetProps.positionY)
+
+    return widget
+  }
+
+  protected createNumericWidget(
+    id: string,
+    key: string,
+    scope: CommonConstruct,
+    props: CommonStackProps,
+    widgetProps: NumericWidgetProps,
     metrics: IMetric[]
   ) {
-    if (!props.numericWidgets || props.numericWidgets.length == 0)
-      throw `Numeric Widget props undefined`
-
-    const numericWidgetProps = props.numericWidgets.find(
-      (widget: NumericWidgetProps) => widget.key === key
-    )
-    if (!numericWidgetProps) throw `Could not find Numeric Widget props for key:${key}`
-
     const widget = new watch.SingleValueWidget({
       metrics: metrics,
-      setPeriodToTimeRange: numericWidgetProps.setPeriodToTimeRange,
-      fullPrecision: numericWidgetProps.fullPrecision,
-      title: numericWidgetProps.title,
-      width: numericWidgetProps.width,
-      height: numericWidgetProps.height,
+      setPeriodToTimeRange: widgetProps.setPeriodToTimeRange,
+      fullPrecision: widgetProps.fullPrecision,
+      title: widgetProps.title,
+      width: widgetProps.width,
+      height: widgetProps.height,
     })
 
-    if (numericWidgetProps.positionX && numericWidgetProps.positionY)
-      widget.position(numericWidgetProps.positionX, numericWidgetProps.positionY)
+    if (widgetProps.positionX && widgetProps.positionY)
+      widget.position(widgetProps.positionX, widgetProps.positionY)
 
     return widget
   }
 
-  public createGraphWidget(
+  protected createGraphWidget(
     id: string,
     key: string,
     scope: CommonConstruct,
     props: CommonStackProps,
+    widgetProps: GraphWidgetProps,
     leftYMetrics?: IMetric[],
     rightYMetrics?: IMetric[]
   ) {
-    if (!props.graphWidgets || props.graphWidgets.length == 0) throw `Graph Widget props undefined`
-
-    const graphWidgetProps = props.graphWidgets.find(
-      (widget: GraphWidgetProps) => widget.key === key
-    )
-    if (!graphWidgetProps) throw `Could not find Graph Widget props for key:${key}`
-
     const widget = new watch.GraphWidget({
       left: leftYMetrics,
       right: rightYMetrics,
-      leftAnnotations: graphWidgetProps.leftAnnotations,
-      rightAnnotations: graphWidgetProps.rightAnnotations,
-      stacked: graphWidgetProps.stacked,
-      leftYAxis: graphWidgetProps.leftYAxis,
-      rightYAxis: graphWidgetProps.rightYAxis,
-      legendPosition: graphWidgetProps.legendPosition,
-      liveData: graphWidgetProps.liveData,
-      view: graphWidgetProps.view,
-      title: graphWidgetProps.title,
-      width: graphWidgetProps.width,
-      height: graphWidgetProps.height,
+      leftAnnotations: widgetProps.leftAnnotations,
+      rightAnnotations: widgetProps.rightAnnotations,
+      stacked: widgetProps.stacked,
+      leftYAxis: widgetProps.leftYAxis,
+      rightYAxis: widgetProps.rightYAxis,
+      legendPosition: widgetProps.legendPosition,
+      liveData: widgetProps.liveData,
+      view: widgetProps.view,
+      title: widgetProps.title,
+      width: widgetProps.width,
+      height: widgetProps.height,
     })
 
-    if (graphWidgetProps.positionX && graphWidgetProps.positionY)
-      widget.position(graphWidgetProps.positionX, graphWidgetProps.positionY)
+    if (widgetProps.positionX && widgetProps.positionY)
+      widget.position(widgetProps.positionX, widgetProps.positionY)
 
     return widget
   }
 
-  public createAlarmStatusWidget(
+  protected createAlarmStatusWidget(
     id: string,
     key: string,
     scope: CommonConstruct,
     props: CommonStackProps,
+    widgetProps: AlarmStatusWidgetProps,
     alarms: IAlarm[]
   ) {
-    if (!props.alarmStatusWidgets || props.alarmStatusWidgets.length == 0)
-      throw `Alarm Status Widget props undefined`
-
-    const alarmStatusWidgetProps = props.alarmStatusWidgets.find(
-      (widget: AlarmStatusWidgetProps) => widget.key === key
-    )
-    if (!alarmStatusWidgetProps) throw `Could not find Alarm Status Widget props for key:${key}`
-
     const widget = new watch.AlarmStatusWidget({
       alarms: alarms,
-      title: alarmStatusWidgetProps.title,
-      width: alarmStatusWidgetProps.width,
-      height: alarmStatusWidgetProps.height,
+      title: widgetProps.title,
+      width: widgetProps.width,
+      height: widgetProps.height,
     })
 
-    if (alarmStatusWidgetProps.positionX && alarmStatusWidgetProps.positionY)
-      widget.position(alarmStatusWidgetProps.positionX, alarmStatusWidgetProps.positionY)
+    if (widgetProps.positionX && widgetProps.positionY)
+      widget.position(widgetProps.positionX, widgetProps.positionY)
 
     return widget
   }
 
-  public createLogQueryWidget(
+  protected createLogQueryWidget(
     id: string,
     key: string,
     scope: CommonConstruct,
     props: CommonStackProps,
+    widgetProps: LogQueryWidgetProps,
     logGroupNames: string[]
   ) {
-    if (!props.logQueryWidgets || props.logQueryWidgets.length == 0)
-      throw `Log Query Widget props undefined`
-
-    const logQueryWidgetProps = props.logQueryWidgets.find(
-      (widget: LogQueryWidgetProps) => widget.key === key
-    )
-    if (!logQueryWidgetProps) throw `Could not find Log Query Widget props for key:${key}`
-
     const widget = new watch.LogQueryWidget({
       logGroupNames: logGroupNames,
-      queryString: logQueryWidgetProps.queryString,
-      queryLines: logQueryWidgetProps.queryLines,
-      view: logQueryWidgetProps.view,
-      title: logQueryWidgetProps.title,
-      width: logQueryWidgetProps.width,
-      height: logQueryWidgetProps.height,
+      queryString: widgetProps.queryString,
+      queryLines: widgetProps.queryLines,
+      view: widgetProps.view,
+      title: widgetProps.title,
+      width: widgetProps.width,
+      height: widgetProps.height,
     })
 
-    if (logQueryWidgetProps.positionX && logQueryWidgetProps.positionY)
-      widget.position(logQueryWidgetProps.positionX, logQueryWidgetProps.positionY)
+    if (widgetProps.positionX && widgetProps.positionY)
+      widget.position(widgetProps.positionX, widgetProps.positionY)
 
     return widget
   }
