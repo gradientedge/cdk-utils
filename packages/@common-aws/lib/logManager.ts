@@ -7,7 +7,36 @@ export interface LogProps extends logs.CfnLogGroupProps {
   key: string
 }
 
+export interface MetricFilterProps extends logs.MetricFilterProps {
+  key: string
+}
+
 export class LogManager {
+  public createMetricFilter(
+    id: string,
+    key: string,
+    scope: CommonConstruct,
+    props: CommonStackProps,
+    logGroup: logs.ILogGroup
+  ) {
+    if (!props.metricFilters || props.metricFilters.length == 0)
+      throw `Metric Filter props undefined`
+
+    const metricFilterProps = props.metricFilters.find(
+      (metricFilter: MetricFilterProps) => metricFilter.key === key
+    )
+    if (!metricFilterProps) throw `Could not find Metric Filter props for key:${key}`
+
+    return new logs.MetricFilter(scope, `${id}`, {
+      logGroup: logGroup,
+      metricName: metricFilterProps.metricName,
+      metricNamespace: metricFilterProps.metricNamespace,
+      metricValue: metricFilterProps.metricValue,
+      defaultValue: metricFilterProps.defaultValue,
+      filterPattern: metricFilterProps.filterPattern,
+    })
+  }
+
   public createCfnLogGroup(
     id: string,
     key: string,

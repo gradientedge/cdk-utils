@@ -3,7 +3,7 @@ import { Route53Props } from './route53Manager'
 import { S3BucketProps } from './s3Manager'
 import { AcmProps } from './acmManager'
 import { CloudFrontProps } from './cloudFrontManager'
-import { LogProps } from './logManager'
+import { LogProps, MetricFilterProps } from './logManager'
 import { CloudTrailProps } from './cloudTrailManager'
 import { VpcProps } from '@aws-cdk/aws-ec2'
 import { EcsClusterProps, EcsTaskProps } from './ecsManager'
@@ -45,4 +45,5 @@ export interface CommonStackProps extends cdk.StackProps {
   graphWidgets?: GraphWidgetProps[]
   alarmStatusWidgets?: AlarmStatusWidgetProps[]
   logQueryWidgets?: LogQueryWidgetProps[]
+  metricFilters?: MetricFilterProps[]
 }
