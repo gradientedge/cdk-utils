@@ -222,22 +222,24 @@ export class CloudWatchManager {
 
   private determineMetrics(scope: CommonConstruct, metricProps: MetricProps[]) {
     const metrics: watch.IMetric[] = []
-    metricProps.forEach((metricProp: MetricProps) => {
-      const metric = new watch.Metric({
-        namespace: metricProp.stageSuffix
-          ? `${metricProp.namespace}-${scope.props.stage}`
-          : metricProp.namespace,
-        metricName: metricProp.stageSuffix
-          ? `${metricProp.metricName}-${scope.props.stage}`
-          : metricProp.metricName,
-        dimensions: metricProp.dimensions,
-        statistic: metricProp.statistic,
-        period: metricProp.periodInSecs
-          ? cdk.Duration.seconds(metricProp.periodInSecs)
-          : cdk.Duration.minutes(5),
+    if (metricProps) {
+      metricProps.forEach((metricProp: MetricProps) => {
+        const metric = new watch.Metric({
+          namespace: metricProp.stageSuffix
+            ? `${metricProp.namespace}-${scope.props.stage}`
+            : metricProp.namespace,
+          metricName: metricProp.stageSuffix
+            ? `${metricProp.metricName}-${scope.props.stage}`
+            : metricProp.metricName,
+          dimensions: metricProp.dimensions,
+          statistic: metricProp.statistic,
+          period: metricProp.periodInSecs
+            ? cdk.Duration.seconds(metricProp.periodInSecs)
+            : cdk.Duration.minutes(5),
+        })
+        metrics.push(metric)
       })
-      metrics.push(metric)
-    })
+    }
 
     return metrics
   }
@@ -257,17 +259,19 @@ export class CloudWatchManager {
 
   private determineAlarms(id: string, scope: CommonConstruct, alarmProps: watch.AlarmProps[]) {
     const alarms: watch.IAlarm[] = []
-    alarmProps.forEach((alarmProp: watch.AlarmProps) => {
-      if (!alarmProp.alarmName) throw `Alarm name undefined for ${id}`
-      const alarmName = scope.isProductionStage()
-        ? alarmProp.alarmName
-        : `${alarmProp.alarmName}-${scope.props.stage}`
-      const alarmArn = `arn:aws:cloudwatch:${cdk.Stack.of(scope).region}:${
-        cdk.Stack.of(scope).account
-      }:alarm:${alarmName}`
-      const alarm = watch.Alarm.fromAlarmArn(scope, `${id}`, alarmArn)
-      alarms.push(alarm)
-    })
+    if (alarmProps) {
+      alarmProps.forEach((alarmProp: watch.AlarmProps) => {
+        if (!alarmProp.alarmName) throw `Alarm name undefined for ${id}`
+        const alarmName = scope.isProductionStage()
+          ? alarmProp.alarmName
+          : `${alarmProp.alarmName}-${scope.props.stage}`
+        const alarmArn = `arn:aws:cloudwatch:${cdk.Stack.of(scope).region}:${
+          cdk.Stack.of(scope).account
+        }:alarm:${alarmName}`
+        const alarm = watch.Alarm.fromAlarmArn(scope, `${id}`, alarmArn)
+        alarms.push(alarm)
+      })
+    }
 
     return alarms
   }
