@@ -43,7 +43,9 @@ export class LogManager {
       ? metricFilter.metric({
           dimensions: metricFilterProps.options.dimensions,
           statistic: metricFilterProps.options.statistic,
-          period: cdk.Duration.seconds(metricFilterProps.periodInSecs),
+          period: metricFilterProps.periodInSecs
+            ? cdk.Duration.seconds(metricFilterProps.periodInSecs)
+            : cdk.Duration.minutes(5),
         })
       : metricFilter.metric()
 
