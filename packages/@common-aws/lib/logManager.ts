@@ -6,11 +6,11 @@ import { CommonStackProps } from './commonStack'
 import { createCfnOutput } from './genericUtils'
 
 export interface LogProps extends logs.CfnLogGroupProps {
-  key: string
+  id: string
 }
 
 export interface MetricFilterProps extends logs.MetricFilterProps {
-  key: string
+  id: string
   periodInSecs: number
   options: watch.MetricOptions
 }
@@ -18,7 +18,6 @@ export interface MetricFilterProps extends logs.MetricFilterProps {
 export class LogManager {
   public createMetricFilter(
     id: string,
-    key: string,
     scope: CommonConstruct,
     props: CommonStackProps,
     logGroup: logs.ILogGroup
@@ -27,9 +26,9 @@ export class LogManager {
       throw `Metric Filter props undefined`
 
     const metricFilterProps = props.metricFilters.find(
-      (metricFilter: MetricFilterProps) => metricFilter.key === key
+      (metricFilter: MetricFilterProps) => metricFilter.id === id
     )
-    if (!metricFilterProps) throw `Could not find Metric Filter props for key:${key}`
+    if (!metricFilterProps) throw `Could not find Metric Filter props for id:${id}`
 
     const metricFilter = new logs.MetricFilter(scope, `${id}`, {
       logGroup: logGroup,
@@ -51,16 +50,11 @@ export class LogManager {
     return { metricFilter, metric }
   }
 
-  public createCfnLogGroup(
-    id: string,
-    key: string,
-    scope: CommonConstruct,
-    props: CommonStackProps
-  ) {
+  public createCfnLogGroup(id: string, scope: CommonConstruct, props: CommonStackProps) {
     if (!props.logs || props.logs.length == 0) throw `Logs props undefined`
 
-    const logProps = props.logs.find((log: LogProps) => log.key === key)
-    if (!logProps) throw `Could not find log props for key:${key}`
+    const logProps = props.logs.find((log: LogProps) => log.id === id)
+    if (!logProps) throw `Could not find log props for id:${id}`
 
     const logGroup = new logs.CfnLogGroup(scope, `${id}`, {
       logGroupName: `${logProps.logGroupName}-${props.stage}`,
@@ -72,11 +66,11 @@ export class LogManager {
     return logGroup
   }
 
-  public createLogGroup(id: string, key: string, scope: CommonConstruct, props: CommonStackProps) {
+  public createLogGroup(id: string, scope: CommonConstruct, props: CommonStackProps) {
     if (!props.logs || props.logs.length == 0) throw `Logs props undefined`
 
-    const logProps = props.logs.find((log: LogProps) => log.key === key)
-    if (!logProps) throw `Could not find log props for key:${key}`
+    const logProps = props.logs.find((log: LogProps) => log.id === id)
+    if (!logProps) throw `Could not find log props for id:${id}`
 
     const logGroup = new logs.LogGroup(scope, `${id}`, {
       logGroupName: `${logProps.logGroupName}-${props.stage}`,

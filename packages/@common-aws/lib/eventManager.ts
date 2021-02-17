@@ -7,13 +7,12 @@ import { CommonStackProps } from './commonStack'
 import { createCfnOutput } from './genericUtils'
 
 export interface RuleProps extends events.CfnRuleProps {
-  key: string
+  id: string
 }
 
 export class EventManager {
   public createLambdaRule(
     id: string,
-    key: string,
     scope: CommonConstruct,
     props: CommonStackProps,
     lambdaFunction: lambda.Function,
@@ -22,8 +21,8 @@ export class EventManager {
   ) {
     if (!props.rules || props.rules.length == 0) throw `Event rule props undefined`
 
-    const ruleProps = props.rules.find((log: RuleProps) => log.key === key)
-    if (!ruleProps) throw `Could not find Event rule props for key:${key}`
+    const ruleProps = props.rules.find((log: RuleProps) => log.id === id)
+    if (!ruleProps) throw `Could not find Event rule props for id:${id}`
 
     const eventRule = new events.CfnRule(scope, `${id}`, {
       description:
@@ -50,7 +49,6 @@ export class EventManager {
 
   public createFargateTaskRule(
     id: string,
-    key: string,
     scope: CommonConstruct,
     props: CommonStackProps,
     cluster: ecs.ICluster,
@@ -61,8 +59,8 @@ export class EventManager {
   ) {
     if (!props.rules || props.rules.length == 0) throw `Event rule props undefined`
 
-    const ruleProps = props.rules.find((log: RuleProps) => log.key === key)
-    if (!ruleProps) throw `Could not find Event rule props for key:${key}`
+    const ruleProps = props.rules.find((log: RuleProps) => log.id === id)
+    if (!ruleProps) throw `Could not find Event rule props for id:${id}`
 
     const eventRule = new events.CfnRule(scope, `${id}`, {
       description: 'Rule to send notification on new objects in data bucket to ecs task target',

@@ -6,23 +6,18 @@ import { CommonConstruct } from './commonConstruct'
 import { createCfnOutput } from './genericUtils'
 
 export interface Route53Props extends route53.HostedZoneProps {
-  key: string
+  id: string
   existingHostedZone?: boolean
 }
 
 export class Route53Manager {
-  public createHostedZone(
-    id: string,
-    key: string,
-    scope: CommonConstruct,
-    props: CommonStackProps
-  ) {
+  public createHostedZone(id: string, scope: CommonConstruct, props: CommonStackProps) {
     let hostedZone: route53.IHostedZone
 
     if (!props.routes || props.routes.length == 0) throw `Route53 props undefined`
 
-    const route53Props = props.routes.find((r53: Route53Props) => r53.key === key)
-    if (!route53Props) throw `Could not find route53 props for key:${key}`
+    const route53Props = props.routes.find((r53: Route53Props) => r53.id === id)
+    if (!route53Props) throw `Could not find route53 props for id:${id}`
 
     if (route53Props.existingHostedZone) {
       hostedZone = route53.HostedZone.fromLookup(scope, `${id}`, {

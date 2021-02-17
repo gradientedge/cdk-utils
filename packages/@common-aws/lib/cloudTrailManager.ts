@@ -6,13 +6,12 @@ import { CommonStackProps } from './commonStack'
 import { CfnTrailProps } from '@aws-cdk/aws-cloudtrail/lib/cloudtrail.generated'
 
 export interface CloudTrailProps extends cloudtrail.CfnTrailProps {
-  key: string
+  id: string
 }
 
 export class CloudTrailManager {
   public createCloudTrail(
     id: string,
-    key: string,
     scope: CommonConstruct,
     props: CommonStackProps,
     logGroup: logs.CfnLogGroup,
@@ -22,8 +21,8 @@ export class CloudTrailManager {
   ) {
     if (!props.trails || props.trails.length == 0) throw `Cloud Trail props undefined`
 
-    const cloudTrailProps = props.trails.find((log: CloudTrailProps) => log.key === key)
-    if (!cloudTrailProps) throw `Could not find Cloud Trail props for key:${key}`
+    const cloudTrailProps = props.trails.find((log: CloudTrailProps) => log.id === id)
+    if (!cloudTrailProps) throw `Could not find Cloud Trail props for id:${id}`
 
     const role = scope.iamManager.createRoleForCloudTrail(`${id}Role`, scope, props, logGroup)
 

@@ -6,7 +6,7 @@ import { CommonStackProps } from './commonStack'
 import { createCfnOutput } from './genericUtils'
 
 export interface CloudFrontProps extends cloudfront.CloudFrontWebDistributionProps {
-  key?: string
+  id?: string
 }
 
 export class CloudFrontManager {
@@ -24,7 +24,6 @@ export class CloudFrontManager {
 
   public createCloudFrontDistribution(
     id: string,
-    key: string,
     scope: CommonConstruct,
     props: CommonStackProps,
     siteBucket?: s3.IBucket,
@@ -36,8 +35,8 @@ export class CloudFrontManager {
     if (!certificate) throw `Certificate not defined`
     if (!props.distributions || props.distributions.length == 0) throw `CloudFront props undefined`
 
-    const cloudFrontProps = props.distributions.find((cf: CloudFrontProps) => cf.key === key)
-    if (!cloudFrontProps) throw `Could not find CloudFront props for key:${key}`
+    const cloudFrontProps = props.distributions.find((cf: CloudFrontProps) => cf.id === id)
+    if (!cloudFrontProps) throw `Could not find CloudFront props for id:${id}`
 
     const distribution = new cloudfront.CloudFrontWebDistribution(scope, `${id}`, {
       priceClass: cloudfront.PriceClass.PRICE_CLASS_ALL,

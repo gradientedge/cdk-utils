@@ -8,18 +8,18 @@ import { CommonStackProps } from './commonStack'
 import { createCfnOutput } from './genericUtils'
 
 export interface S3BucketProps extends s3.BucketProps {
-  key: string
+  id: string
   bucketName: string
   logBucketName?: string
   existingBucket?: boolean
 }
 
 export class S3Manager {
-  public createS3Bucket(id: string, key: string, scope: CommonConstruct, props: CommonStackProps) {
+  public createS3Bucket(id: string, scope: CommonConstruct, props: CommonStackProps) {
     if (!props.buckets || props.buckets.length == 0) throw `S3 props undefined`
 
-    const s3Props = props.buckets.find((s: S3BucketProps) => s.key === key)
-    if (!s3Props) throw `Could not find s3 props for key:${key}`
+    const s3Props = props.buckets.find((s: S3BucketProps) => s.id === id)
+    if (!s3Props) throw `Could not find s3 props for id:${id}`
 
     let bucket: s3.IBucket
 

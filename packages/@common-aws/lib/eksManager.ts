@@ -6,7 +6,7 @@ import { CommonStackProps } from './commonStack'
 import { createCfnOutput } from './genericUtils'
 
 export interface EksClusterProps extends eks.ClusterProps {
-  key: string
+  id: string
   appContainerPort: number
   appCapacity: number
 }
@@ -14,7 +14,6 @@ export interface EksClusterProps extends eks.ClusterProps {
 export class EksManager {
   public createEksDeployment(
     id: string,
-    key: string,
     scope: CommonConstruct,
     props: CommonStackProps,
     image: ecr.DockerImageAsset,
@@ -22,8 +21,8 @@ export class EksManager {
   ) {
     if (!props.eksClusters || props.eksClusters.length == 0) throw `EksCluster props undefined`
 
-    const eksClusterProps = props.eksClusters.find((eks: EksClusterProps) => eks.key === key)
-    if (!eksClusterProps) throw `Could not find eksCluster props for key:${key}`
+    const eksClusterProps = props.eksClusters.find((eks: EksClusterProps) => eks.id === id)
+    if (!eksClusterProps) throw `Could not find eksCluster props for id:${id}`
 
     const appLabel = { app: `${id}`.toLowerCase() }
 

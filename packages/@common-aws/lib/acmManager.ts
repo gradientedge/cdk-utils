@@ -5,23 +5,18 @@ import { CommonStackProps } from './commonStack'
 import { createCfnOutput } from './genericUtils'
 
 export interface AcmProps extends acm.CertificateProps {
-  key: string
+  id: string
   certificateAccount?: string
   certificateRegion?: string
   certificateId: string
 }
 
 export class AcmManager {
-  public createCertificate(
-    id: string,
-    key: string,
-    scope: CommonConstruct,
-    props: CommonStackProps
-  ) {
+  public createCertificate(id: string, scope: CommonConstruct, props: CommonStackProps) {
     if (!props.certificates || props.certificates.length == 0) throw `Certificate props undefined`
 
-    const certificateProps = props.certificates.find((cert: AcmProps) => cert.key === key)
-    if (!certificateProps) throw `Could not find certificate props for key:${key}`
+    const certificateProps = props.certificates.find((cert: AcmProps) => cert.id === id)
+    if (!certificateProps) throw `Could not find certificate props for id:${id}`
 
     const certificateAccount = certificateProps.certificateAccount
       ? certificateProps.certificateAccount

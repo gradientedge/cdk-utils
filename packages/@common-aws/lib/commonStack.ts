@@ -11,7 +11,7 @@ import { EksClusterProps } from './eksManager'
 import { LambdaProps } from './lambdaManager'
 import { SubscriptionProps } from './snsManager'
 import { RuleProps } from './eventManager'
-import { DashboardProps } from './cloudWatchManager'
+import { AlarmProps, DashboardProps } from './cloudWatchManager'
 
 export interface CommonStackProps extends cdk.StackProps {
   name: string
@@ -35,4 +35,5 @@ export interface CommonStackProps extends cdk.StackProps {
   dashboards?: DashboardProps[]
   widgets?: any[]
   metricFilters?: MetricFilterProps[]
+  alarms?: AlarmProps[]
 }

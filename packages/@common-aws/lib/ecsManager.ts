@@ -7,25 +7,24 @@ import { CommonStackProps } from './commonStack'
 import { createCfnOutput } from './genericUtils'
 
 export interface EcsClusterProps extends ecs.ClusterProps {
-  key: string
+  id: string
 }
 
 export interface EcsTaskProps extends ecs.TaskDefinitionProps {
-  key: string
+  id: string
 }
 
 export class EcsManager {
   public createEcsCluster(
     id: string,
-    key: string,
     scope: CommonConstruct,
     props: CommonStackProps,
     vpc: ec2.IVpc
   ) {
     if (!props.ecsClusters || props.ecsClusters.length == 0) throw `Ecs Cluster props undefined`
 
-    const ecsClusterProps = props.ecsClusters.find((ecs: EcsClusterProps) => ecs.key === key)
-    if (!ecsClusterProps) throw `Could not find EcsCluster props for key:${key}`
+    const ecsClusterProps = props.ecsClusters.find((ecs: EcsClusterProps) => ecs.id === id)
+    if (!ecsClusterProps) throw `Could not find EcsCluster props for id:${id}`
 
     const ecsCluster = new ecs.Cluster(scope, `${id}`, {
       clusterName: `${ecsClusterProps.clusterName}-${props.stage}`,
@@ -40,7 +39,6 @@ export class EcsManager {
 
   public createEcsFargateTask(
     id: string,
-    key: string,
     scope: CommonConstruct,
     props: CommonStackProps,
     cluster: ecs.ICluster,
@@ -51,8 +49,8 @@ export class EcsManager {
   ) {
     if (!props.ecsTasks || props.ecsTasks.length == 0) throw `Ecs Task props undefined`
 
-    const ecsTaskProps = props.ecsTasks.find((ecs: EcsTaskProps) => ecs.key === key)
-    if (!ecsTaskProps) throw `Could not find EcsTask props for key:${key}`
+    const ecsTaskProps = props.ecsTasks.find((ecs: EcsTaskProps) => ecs.id === id)
+    if (!ecsTaskProps) throw `Could not find EcsTask props for id:${id}`
 
     const ecsTask = new ecs.TaskDefinition(scope, `${id}`, {
       compatibility: ecs.Compatibility.FARGATE,

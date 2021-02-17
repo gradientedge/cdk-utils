@@ -6,10 +6,6 @@ import { createCfnOutput } from './genericUtils'
 
 const CommonVpcIdentifier = 'CommonVpc'
 
-export interface LogProps extends ec2.VpcProps {
-  key: string
-}
-
 export class VpcManager {
   public createVpc(id: string, scope: CommonConstruct, props: CommonStackProps) {
     if (!props.vpc) throw 'Vpc props undefined'

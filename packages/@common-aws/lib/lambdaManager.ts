@@ -7,7 +7,7 @@ import { CommonStackProps } from './commonStack'
 import { createCfnOutput } from './genericUtils'
 
 export interface LambdaProps extends lambda.FunctionProps {
-  key: string
+  id: string
   timeoutInSecs?: number
 }
 
@@ -32,7 +32,6 @@ export class LambdaManager {
 
   public createLambdaFunction(
     id: string,
-    key: string,
     scope: CommonConstruct,
     props: CommonStackProps,
     role: iam.Role | iam.CfnRole,
@@ -43,8 +42,8 @@ export class LambdaManager {
   ) {
     if (!props.lambdas || props.lambdas.length == 0) throw `Lambda props undefined`
 
-    const lambdaProps = props.lambdas.find((lambda: LambdaProps) => lambda.key === key)
-    if (!lambdaProps) throw `Could not find lambda props for key:${key}`
+    const lambdaProps = props.lambdas.find((lambda: LambdaProps) => lambda.id === id)
+    if (!lambdaProps) throw `Could not find lambda props for id:${id}`
 
     const functionName = `${lambdaProps.functionName}-${props.stage}`
     const lambdaFunction = new lambda.Function(scope, `${id}`, {
