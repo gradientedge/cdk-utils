@@ -1,5 +1,6 @@
 import * as cdk from '@aws-cdk/core'
 import * as watch from '@aws-cdk/aws-cloudwatch'
+import { CloudWatchWidgetType } from './types'
 import { IMetric } from '@aws-cdk/aws-cloudwatch'
 import { CommonConstruct } from './commonConstruct'
 import { IWidget } from '@aws-cdk/aws-cloudwatch/lib/widget'
