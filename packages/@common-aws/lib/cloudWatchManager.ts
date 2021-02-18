@@ -15,6 +15,7 @@ export interface AlarmProps extends watch.AlarmProps {
   id: string
   expression?: string
   metricProps?: MetricProps[]
+  periodInSecs?: number
 }
 
 export interface MetricProps extends watch.MetricProps {
@@ -71,6 +72,9 @@ export class CloudWatchManager {
     const expression = new watch.MathExpression({
       expression: alarmProps.expression,
       usingMetrics: metrics,
+      period: alarmProps.periodInSecs
+        ? cdk.Duration.seconds(alarmProps.periodInSecs)
+        : cdk.Duration.minutes(5),
     })
 
     const alarm = expression.createAlarm(scope, `${id}`, {
