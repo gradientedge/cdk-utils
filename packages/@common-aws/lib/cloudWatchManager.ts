@@ -4,6 +4,7 @@ import { IMetric } from '@aws-cdk/aws-cloudwatch'
 import { CloudWatchWidgetType } from './types'
 import { CommonConstruct } from './commonConstruct'
 import { createCfnOutput } from './genericUtils'
+import { DimensionHash } from '@aws-cdk/aws-cloudwatch/lib/metric'
 
 export interface DashboardProps extends watch.DashboardProps {
   id: string
@@ -21,6 +22,8 @@ export interface AlarmProps extends watch.AlarmProps {
 export interface MetricProps extends watch.MetricProps {
   stageSuffix: boolean
   periodInSecs?: number
+  functionName?: string
+  dbClusterIdentifier?: string
 }
 
 export interface TextWidgetProps extends watch.TextWidgetProps {
@@ -279,6 +282,23 @@ export class CloudWatchManager {
     const metrics: watch.IMetric[] = []
     if (metricProps) {
       metricProps.forEach((metricProp: MetricProps) => {
+        let metricDimensions: watch.DimensionHash = metricProp.dimensions || {}
+        if (metricProp.functionName) {
+          metricDimensions = {
+            ...metricProp.dimensions,
+            ...{
+              FunctionName: `${metricProp.functionName}-${scope.props.stage}`,
+            },
+          }
+        }
+        if (metricProp.dbClusterIdentifier) {
+          metricDimensions = {
+            ...metricProp.dimensions,
+            ...{
+              DBClusterIdentifier: `${metricProp.dbClusterIdentifier}-${scope.props.stage}`,
+            },
+          }
+        }
         const metric = new watch.Metric({
           namespace: metricProp.stageSuffix
             ? `${metricProp.namespace}-${scope.props.stage}`
@@ -286,7 +306,7 @@ export class CloudWatchManager {
           metricName: metricProp.stageSuffix
             ? `${metricProp.metricName}-${scope.props.stage}`
             : metricProp.metricName,
-          dimensions: metricProp.dimensions,
+          dimensions: metricDimensions,
           statistic: metricProp.statistic,
           period: metricProp.periodInSecs
             ? cdk.Duration.seconds(metricProp.periodInSecs)
