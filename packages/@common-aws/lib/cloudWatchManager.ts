@@ -308,6 +308,7 @@ export class CloudWatchManager {
             : metricProp.metricName,
           dimensions: metricDimensions,
           statistic: metricProp.statistic,
+          region: metricProp.region,
           period: metricProp.periodInSecs
             ? cdk.Duration.seconds(metricProp.periodInSecs)
             : cdk.Duration.minutes(5),
