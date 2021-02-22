@@ -1,4 +1,5 @@
 import * as cdk from '@aws-cdk/core'
+import { isDevStage } from './genericUtils'
 import { Route53Props } from './route53Manager'
 import { S3BucketProps } from './s3Manager'
 import { AcmProps } from './acmManager'
@@ -84,7 +85,7 @@ export class CommonStack extends cdk.Stack {
     const stageContextPath = this.node.tryGetContext('stageContextPath') || 'cdkEnv'
     const stageContextFilePath = `${appRoot.path}/${stageContextPath}/${stage}.json`
 
-    if (stage === 'dev') {
+    if (isDevStage(stage)) {
       console.info(`Development stage. Using default stage context properties`)
       return
     }

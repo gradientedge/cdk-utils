@@ -1,5 +1,5 @@
 import * as cdk from '@aws-cdk/core'
-import { createCfnOutput } from './genericUtils'
+import { createCfnOutput, isDevStage, isPrdStage, isTestStage, isUatStage } from './genericUtils'
 import { CommonStackProps } from './commonStack'
 import { Route53Manager } from './route53Manager'
 import { S3Manager } from './s3Manager'
@@ -76,5 +76,8 @@ export class CommonConstruct extends cdk.Construct {
       : this.props.domainName
   }
 
-  public isProductionStage = () => this.props.stage === 'prd'
+  public isDevelopmentStage = () => isDevStage(this.props.stage)
+  public isTestStage = () => isTestStage(this.props.stage)
+  public isUatStage = () => isUatStage(this.props.stage)
+  public isProductionStage = () => isPrdStage(this.props.stage)
 }

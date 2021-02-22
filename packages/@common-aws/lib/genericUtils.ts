@@ -11,6 +11,11 @@ const defaultResponseObject = {
   },
 }
 
+export const isDevStage = (stage: string) => stage === 'dev'
+export const isTestStage = (stage: string) => stage === 'tst'
+export const isUatStage = (stage: string) => stage === 'uat'
+export const isPrdStage = (stage: string) => stage === 'prd'
+
 export function createCfnOutput(
   id: string,
   scope: CommonConstruct,
