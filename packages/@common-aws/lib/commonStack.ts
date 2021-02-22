@@ -14,11 +14,15 @@ import { RuleProps } from './eventManager'
 import { AlarmProps, DashboardProps } from './cloudWatchManager'
 import { CommonConstruct } from './commonConstruct'
 
+const appRoot = require('app-root-path')
+const fs = require('fs')
+
 export class CommonStack extends cdk.Stack {
   constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
     super(parent, name, props)
 
     this.determineExtraContexts()
+    this.determineStageContexts()
     new CommonConstruct(this, 'ge-common', this.determineConstructProps(props))
   }
 
@@ -52,18 +56,53 @@ export class CommonStack extends cdk.Stack {
   }
 
   protected determineExtraContexts() {
-    const appRoot = require('app-root-path')
-    const fs = require('fs')
+    const extraContexts = this.node.tryGetContext('extraContexts')
 
-    if (this.node.tryGetContext('extraContexts')) {
-      this.node.tryGetContext('extraContexts').forEach((context: string) => {
-        const extraContextPropsBuffer = fs.readFileSync(`${appRoot.path}/${context}`)
-        const extraContextProps = JSON.parse(extraContextPropsBuffer)
-        Object.keys(extraContextProps).forEach((propKey: any) => {
-          this.node.setContext(propKey, extraContextProps[propKey])
-        })
-      })
+    if (!extraContexts) {
+      console.info(
+        `No additional contexts provided. Using default context properties from cdk.json`
+      )
+      return
     }
+
+    extraContexts.forEach((context: string) => {
+      const extraContextPath = `${appRoot.path}/${context}`
+      if (!fs.existsSync(extraContextPath))
+        throw `Extra context properties unavailable in path:${extraContextPath}`
+
+      const extraContextPropsBuffer = fs.readFileSync(extraContextPath)
+      console.info(`Adding additional contexts provided in ${extraContextPath}`)
+      const extraContextProps = JSON.parse(extraContextPropsBuffer)
+      Object.keys(extraContextProps).forEach((propKey: any) => {
+        this.node.setContext(propKey, extraContextProps[propKey])
+      })
+    })
+  }
+
+  protected determineStageContexts() {
+    const stage = this.node.tryGetContext('stage')
+    const stageContextPath = this.node.tryGetContext('stageContextPath') || 'cdkEnv'
+    const stageContextFilePath = `${appRoot.path}/${stageContextPath}/${stage}.json`
+
+    if (stage === 'dev') {
+      console.info(`Development stage. Using default stage context properties`)
+      return
+    }
+
+    if (!fs.existsSync(stageContextFilePath)) {
+      console.warn(`Stage specific context properties unavailable in path:${stageContextFilePath}`)
+      console.warn(`Using default stage context properties for ${stage} stage`)
+    }
+
+    const stageContextPropsBuffer = fs.readFileSync(stageContextFilePath)
+    console.info(`Adding additional stage contexts provided in ${stageContextFilePath}`)
+    const stageContextProps = JSON.parse(stageContextPropsBuffer)
+    Object.keys(stageContextProps).forEach((propKey: any) => {
+      this.node.setContext(propKey, {
+        ...this.node.tryGetContext(propKey),
+        ...stageContextProps[propKey],
+      })
+    })
   }
 }
 
