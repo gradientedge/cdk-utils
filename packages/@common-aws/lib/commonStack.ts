@@ -98,10 +98,17 @@ export class CommonStack extends cdk.Stack {
     console.info(`Adding additional stage contexts provided in ${stageContextFilePath}`)
     const stageContextProps = JSON.parse(stageContextPropsBuffer)
     Object.keys(stageContextProps).forEach((propKey: any) => {
-      this.node.setContext(propKey, {
-        ...this.node.tryGetContext(propKey),
-        ...stageContextProps[propKey],
-      })
+      if (
+        typeof stageContextProps[propKey] === 'object' &&
+        !Array.isArray(stageContextProps[propKey])
+      ) {
+        this.node.setContext(propKey, {
+          ...this.node.tryGetContext(propKey),
+          ...stageContextProps[propKey],
+        })
+      } else {
+        this.node.setContext(propKey, stageContextProps[propKey])
+      }
     })
   }
 }
