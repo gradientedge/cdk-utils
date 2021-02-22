@@ -3,16 +3,8 @@ import * as ecs from '@aws-cdk/aws-ecs'
 import * as iam from '@aws-cdk/aws-iam'
 import * as logs from '@aws-cdk/aws-logs'
 import { CommonConstruct } from './commonConstruct'
-import { CommonStackProps } from './commonStack'
+import { CommonStackProps, EcsClusterProps, EcsTaskProps } from './types'
 import { createCfnOutput } from './genericUtils'
-
-export interface EcsClusterProps extends ecs.ClusterProps {
-  id: string
-}
-
-export interface EcsTaskProps extends ecs.TaskDefinitionProps {
-  id: string
-}
 
 export class EcsManager {
   public createEcsCluster(

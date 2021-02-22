@@ -4,7 +4,7 @@ import * as iam from '@aws-cdk/aws-iam'
 import * as logs from '@aws-cdk/aws-logs'
 import * as s3 from '@aws-cdk/aws-s3'
 import { CommonConstruct } from './commonConstruct'
-import { CommonStackProps } from './commonStack'
+import { CommonStackProps } from './types'
 import { createCfnOutput } from './genericUtils'
 
 export class IamManager {

@@ -3,12 +3,8 @@ import * as events from '@aws-cdk/aws-events'
 import * as iam from '@aws-cdk/aws-iam'
 import * as lambda from '@aws-cdk/aws-lambda'
 import { CommonConstruct } from './commonConstruct'
-import { CommonStackProps } from './commonStack'
+import { CommonStackProps, RuleProps } from './types'
 import { createCfnOutput } from './genericUtils'
-
-export interface RuleProps extends events.CfnRuleProps {
-  id: string
-}
 
 export class EventManager {
   public createLambdaRule(

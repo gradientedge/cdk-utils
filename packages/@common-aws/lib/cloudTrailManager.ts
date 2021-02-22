@@ -2,12 +2,7 @@ import * as cloudtrail from '@aws-cdk/aws-cloudtrail'
 import * as logs from '@aws-cdk/aws-logs'
 import * as s3 from '@aws-cdk/aws-s3'
 import { CommonConstruct } from './commonConstruct'
-import { CommonStackProps } from './commonStack'
-import { CfnTrailProps } from '@aws-cdk/aws-cloudtrail/lib/cloudtrail.generated'
-
-export interface CloudTrailProps extends cloudtrail.CfnTrailProps {
-  id: string
-}
+import { CloudTrailProps, CommonStackProps } from './types'
 
 export class CloudTrailManager {
   public createCloudTrail(

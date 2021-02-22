@@ -2,12 +2,8 @@ import * as lambda from '@aws-cdk/aws-lambda'
 import * as sns from '@aws-cdk/aws-sns'
 import * as subs from '@aws-cdk/aws-sns-subscriptions'
 import { CommonConstruct } from './commonConstruct'
-import { CommonStackProps } from './commonStack'
+import { CommonStackProps, SubscriptionProps } from './types'
 import { createCfnOutput } from './genericUtils'
-
-export interface SubscriptionProps extends sns.TopicProps {
-  id: string
-}
 
 export class SnsManager {
   public createEmailNotificationService(

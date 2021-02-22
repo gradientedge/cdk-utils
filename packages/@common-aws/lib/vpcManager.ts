@@ -1,7 +1,7 @@
 import * as cdk from '@aws-cdk/core'
 import * as ec2 from '@aws-cdk/aws-ec2'
 import { CommonConstruct } from './commonConstruct'
-import { CommonStackProps } from './commonStack'
+import { CommonStackProps } from './types'
 import { createCfnOutput } from './genericUtils'
 
 const CommonVpcIdentifier = 'CommonVpc'

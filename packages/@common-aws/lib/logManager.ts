@@ -1,19 +1,8 @@
 import * as cdk from '@aws-cdk/core'
 import * as logs from '@aws-cdk/aws-logs'
-import * as watch from '@aws-cdk/aws-cloudwatch'
 import { CommonConstruct } from './commonConstruct'
-import { CommonStackProps } from './commonStack'
+import { CommonStackProps, LogProps, MetricFilterProps } from './types'
 import { createCfnOutput } from './genericUtils'
-
-export interface LogProps extends logs.CfnLogGroupProps {
-  id: string
-}
-
-export interface MetricFilterProps extends logs.MetricFilterProps {
-  id: string
-  periodInSecs: number
-  options: watch.MetricOptions
-}
 
 export class LogManager {
   public createMetricFilter(

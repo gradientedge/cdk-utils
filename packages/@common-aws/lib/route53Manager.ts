@@ -1,14 +1,9 @@
 import * as cloudfront from '@aws-cdk/aws-cloudfront'
 import * as route53 from '@aws-cdk/aws-route53'
 import * as route53Targets from '@aws-cdk/aws-route53-targets'
-import { CommonStackProps } from './commonStack'
+import { CommonStackProps, Route53Props } from './types'
 import { CommonConstruct } from './commonConstruct'
 import { createCfnOutput } from './genericUtils'
-
-export interface Route53Props extends route53.HostedZoneProps {
-  id: string
-  existingHostedZone?: boolean
-}
 
 export class Route53Manager {
   public createHostedZone(id: string, scope: CommonConstruct, props: CommonStackProps) {

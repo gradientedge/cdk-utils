@@ -1,63 +1,19 @@
 import * as cdk from '@aws-cdk/core'
 import * as watch from '@aws-cdk/aws-cloudwatch'
 import { IMetric } from '@aws-cdk/aws-cloudwatch'
-import { CloudWatchWidgetType } from './types'
+import {
+  AlarmProps,
+  AlarmStatusWidgetProps,
+  CloudWatchWidgetType,
+  DashboardProps,
+  GraphWidgetProps,
+  LogQueryWidgetProps,
+  MetricProps,
+  NumericWidgetProps,
+  TextWidgetProps,
+} from './types'
 import { CommonConstruct } from './commonConstruct'
 import { createCfnOutput } from './genericUtils'
-import { DimensionHash } from '@aws-cdk/aws-cloudwatch/lib/metric'
-
-export interface DashboardProps extends watch.DashboardProps {
-  id: string
-  positionX: number
-  positionY: number
-}
-
-export interface AlarmProps extends watch.AlarmProps {
-  id: string
-  expression?: string
-  metricProps?: MetricProps[]
-  periodInSecs?: number
-}
-
-export interface MetricProps extends watch.MetricProps {
-  stageSuffix: boolean
-  periodInSecs?: number
-  functionName?: string
-  dbClusterIdentifier?: string
-}
-
-export interface TextWidgetProps extends watch.TextWidgetProps {
-  id: string
-  positionX: number
-  positionY: number
-}
-
-export interface NumericWidgetProps extends watch.SingleValueWidgetProps {
-  id: string
-  positionX: number
-  positionY: number
-  metricProps?: watch.MetricProps[]
-}
-
-export interface GraphWidgetProps extends watch.GraphWidgetProps {
-  id: string
-  positionX: number
-  positionY: number
-  metricProps?: MetricProps[]
-}
-
-export interface AlarmStatusWidgetProps extends watch.AlarmStatusWidgetProps {
-  id: string
-  positionX: number
-  positionY: number
-  alarmProps?: watch.AlarmProps[]
-}
-
-export interface LogQueryWidgetProps extends watch.LogQueryWidgetProps {
-  id: string
-  positionX: number
-  positionY: number
-}
 
 export class CloudWatchManager {
   public createAlarmForExpression(id: string, scope: CommonConstruct) {

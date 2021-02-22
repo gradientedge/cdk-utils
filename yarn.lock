@@ -652,6 +652,14 @@
     "@aws-cdk/core" "1.90.0"
     constructs "^3.2.0"
 
+"@aws-cdk/aws-wafv2@1.90.0":
+  version "1.90.0"
+  resolved "https://registry.yarnpkg.com/@aws-cdk/aws-wafv2/-/aws-wafv2-1.90.0.tgz#9ff8b475137a89cfd3f330d257c8bad4cb568521"
+  integrity sha512-ojb7ef0JF5WDxb+ffF2TZ23Hbe5n3fNUvf0cO8O92GHojtkSou3BQgAS+6/itvcgZiekrACNey40bH0zVk9Y/A==
+  dependencies:
+    "@aws-cdk/core" "1.90.0"
+    constructs "^3.2.0"
+
 "@aws-cdk/cloud-assembly-schema@1.90.0":
   version "1.90.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/cloud-assembly-schema/-/cloud-assembly-schema-1.90.0.tgz#a0384d5d5adc1773b31eb422d00227de5b7cb077"

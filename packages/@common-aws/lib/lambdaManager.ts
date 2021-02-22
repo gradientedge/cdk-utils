@@ -3,13 +3,8 @@ import * as ec2 from '@aws-cdk/aws-ec2'
 import * as iam from '@aws-cdk/aws-iam'
 import * as lambda from '@aws-cdk/aws-lambda'
 import { CommonConstruct } from './commonConstruct'
-import { CommonStackProps } from './commonStack'
+import { CommonStackProps, LambdaProps } from './types'
 import { createCfnOutput } from './genericUtils'
-
-export interface LambdaProps extends lambda.FunctionProps {
-  id: string
-  timeoutInSecs?: number
-}
 
 export class LambdaManager {
   public createLambdaLayer(

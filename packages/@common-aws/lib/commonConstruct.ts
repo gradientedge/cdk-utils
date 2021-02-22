@@ -1,6 +1,6 @@
 import * as cdk from '@aws-cdk/core'
 import { createCfnOutput, isDevStage, isPrdStage, isTestStage, isUatStage } from './genericUtils'
-import { CommonStackProps } from './commonStack'
+import { CommonStackProps } from './types'
 import { Route53Manager } from './route53Manager'
 import { S3Manager } from './s3Manager'
 import { AcmManager } from './acmManager'
@@ -17,6 +17,7 @@ import { LambdaManager } from './lambdaManager'
 import { SnsManager } from './snsManager'
 import { SecretsManager } from './secretsManager'
 import { CloudWatchManager } from './cloudWatchManager'
+import { WafManager } from './wafManager'
 
 export class CommonConstruct extends cdk.Construct {
   props: CommonStackProps
@@ -36,6 +37,7 @@ export class CommonConstruct extends cdk.Construct {
   secretsManager: SecretsManager
   snsManager: SnsManager
   vpcManager: VpcManager
+  wafManager: WafManager
   fullyQualifiedDomainName: string
 
   constructor(parent: cdk.Construct, id: string, props: CommonStackProps) {
@@ -56,6 +58,7 @@ export class CommonConstruct extends cdk.Construct {
     this.s3Manager = new S3Manager()
     this.secretsManager = new SecretsManager()
     this.snsManager = new SnsManager()
+    this.vpcManager = new VpcManager()
     this.vpcManager = new VpcManager()
 
     this.determineFullyQualifiedDomain()

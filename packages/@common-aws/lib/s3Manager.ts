@@ -4,15 +4,8 @@ import * as iam from '@aws-cdk/aws-iam'
 import * as s3 from '@aws-cdk/aws-s3'
 import * as s3deploy from '@aws-cdk/aws-s3-deployment'
 import { CommonConstruct } from './commonConstruct'
-import { CommonStackProps } from './commonStack'
+import { CommonStackProps, S3BucketProps } from './types'
 import { createCfnOutput } from './genericUtils'
-
-export interface S3BucketProps extends s3.BucketProps {
-  id: string
-  bucketName: string
-  logBucketName?: string
-  existingBucket?: boolean
-}
 
 export class S3Manager {
   public createS3Bucket(id: string, scope: CommonConstruct, props: CommonStackProps) {

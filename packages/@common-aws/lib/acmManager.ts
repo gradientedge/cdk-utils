@@ -1,15 +1,8 @@
 import * as acm from '@aws-cdk/aws-certificatemanager'
 import * as cdk from '@aws-cdk/core'
 import { CommonConstruct } from './commonConstruct'
-import { CommonStackProps } from './commonStack'
+import { AcmProps, CommonStackProps } from './types'
 import { createCfnOutput } from './genericUtils'
-
-export interface AcmProps extends acm.CertificateProps {
-  id: string
-  certificateAccount?: string
-  certificateRegion?: string
-  certificateId: string
-}
 
 export class AcmManager {
   public createCertificate(id: string, scope: CommonConstruct, props: CommonStackProps) {

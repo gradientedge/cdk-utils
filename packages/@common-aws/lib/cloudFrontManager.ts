@@ -2,12 +2,8 @@ import * as acm from '@aws-cdk/aws-certificatemanager'
 import * as cloudfront from '@aws-cdk/aws-cloudfront'
 import * as s3 from '@aws-cdk/aws-s3'
 import { CommonConstruct } from './commonConstruct'
-import { CommonStackProps } from './commonStack'
+import { CloudFrontProps, CommonStackProps } from './types'
 import { createCfnOutput } from './genericUtils'
-
-export interface CloudFrontProps extends cloudfront.CloudFrontWebDistributionProps {
-  id?: string
-}
 
 export class CloudFrontManager {
   public createOriginAccessIdentity(

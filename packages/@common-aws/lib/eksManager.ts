@@ -2,14 +2,8 @@ import * as ec2 from '@aws-cdk/aws-ec2'
 import * as ecr from '@aws-cdk/aws-ecr-assets'
 import * as eks from '@aws-cdk/aws-eks'
 import { CommonConstruct } from './commonConstruct'
-import { CommonStackProps } from './commonStack'
+import { CommonStackProps, EksClusterProps } from './types'
 import { createCfnOutput } from './genericUtils'
-
-export interface EksClusterProps extends eks.ClusterProps {
-  id: string
-  appContainerPort: number
-  appCapacity: number
-}
 
 export class EksManager {
   public createEksDeployment(

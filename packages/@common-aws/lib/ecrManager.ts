@@ -1,6 +1,6 @@
 import * as ecr from '@aws-cdk/aws-ecr-assets'
 import { CommonConstruct } from './commonConstruct'
-import { CommonStackProps } from './commonStack'
+import { CommonStackProps } from './types'
 import { createCfnOutput } from './genericUtils'
 
 export class EcrManager {
