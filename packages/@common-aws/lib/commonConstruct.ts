@@ -57,7 +57,8 @@ export class CommonConstruct extends cdk.Construct {
     this.secretsManager = new SecretsManager()
     this.snsManager = new SnsManager()
     this.vpcManager = new VpcManager()
-    this.fullyQualifiedDomainName = this.determineFullyQualifiedDomain()
+
+    this.determineFullyQualifiedDomain()
   }
 
   protected addCfnOutput(
@@ -70,7 +71,7 @@ export class CommonConstruct extends cdk.Construct {
   }
 
   protected determineFullyQualifiedDomain() {
-    return this.props.subDomain
+    this.fullyQualifiedDomainName = this.props.subDomain
       ? `${this.props.subDomain}.${this.props.domainName}`
       : this.props.domainName
   }
