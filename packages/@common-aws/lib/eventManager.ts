@@ -12,6 +12,7 @@ export class EventManager {
     scope: CommonConstruct,
     props: CommonStackProps,
     lambdaFunction: lambda.Function,
+    eventBusName?: any,
     eventPattern?: any,
     scheduleExpression?: string
   ) {
@@ -22,7 +23,8 @@ export class EventManager {
 
     const eventRule = new events.CfnRule(scope, `${id}`, {
       description:
-        'Rule to send notification on new objects in data bucket to lambda function target',
+        'Rule to send notification to lambda function target',
+      eventBusName: eventBusName,
       eventPattern: eventPattern,
       scheduleExpression: scheduleExpression,
       name: `${ruleProps.name}-${props.stage}`,
