@@ -22,8 +22,7 @@ export class EventManager {
     if (!ruleProps) throw `Could not find Event rule props for id:${id}`
 
     const eventRule = new events.CfnRule(scope, `${id}`, {
-      description:
-        'Rule to send notification to lambda function target',
+      description: 'Rule to send notification to lambda function target',
       eventBusName: eventBusName,
       eventPattern: eventPattern,
       scheduleExpression: scheduleExpression,
