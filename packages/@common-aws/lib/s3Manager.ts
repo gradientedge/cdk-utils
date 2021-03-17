@@ -4,21 +4,21 @@ import * as iam from '@aws-cdk/aws-iam'
 import * as s3 from '@aws-cdk/aws-s3'
 import * as s3deploy from '@aws-cdk/aws-s3-deployment'
 import { CommonConstruct } from './commonConstruct'
-import { CommonStackProps, S3BucketProps } from './types'
+import { S3BucketProps } from './types'
 import { createCfnOutput } from './genericUtils'
 
 export class S3Manager {
-  public createS3Bucket(id: string, scope: CommonConstruct, props: CommonStackProps) {
-    if (!props.buckets || props.buckets.length == 0) throw `S3 props undefined`
+  public createS3Bucket(id: string, scope: CommonConstruct) {
+    if (!scope.props.buckets || scope.props.buckets.length == 0) throw `S3 props undefined`
 
-    const s3Props = props.buckets.find((s: S3BucketProps) => s.id === id)
+    const s3Props = scope.props.buckets.find((s: S3BucketProps) => s.id === id)
     if (!s3Props) throw `Could not find s3 props for id:${id}`
 
     let bucket: s3.IBucket
 
     const bucketName = scope.isProductionStage()
       ? `${s3Props.bucketName}.${scope.fullyQualifiedDomainName}`
-      : `${s3Props.bucketName}-${props.stage}.${scope.fullyQualifiedDomainName}`
+      : `${s3Props.bucketName}-${scope.props.stage}.${scope.fullyQualifiedDomainName}`
 
     if (s3Props.existingBucket && s3Props.bucketName) {
       bucket = s3.Bucket.fromBucketName(scope, `${id}`, bucketName)
@@ -27,7 +27,7 @@ export class S3Manager {
       if (s3Props.logBucketName) {
         const logBucketName = scope.isProductionStage()
           ? `${s3Props.logBucketName}.${scope.fullyQualifiedDomainName}`
-          : `${s3Props.logBucketName}-${props.stage}.${scope.fullyQualifiedDomainName}`
+          : `${s3Props.logBucketName}-${scope.props.stage}.${scope.fullyQualifiedDomainName}`
         logBucket = s3.Bucket.fromBucketName(scope, `${id}Logs`, logBucketName)
       }
 

@@ -2,27 +2,22 @@ import * as lambda from '@aws-cdk/aws-lambda'
 import * as sns from '@aws-cdk/aws-sns'
 import * as subs from '@aws-cdk/aws-sns-subscriptions'
 import { CommonConstruct } from './commonConstruct'
-import { CommonStackProps, SubscriptionProps } from './types'
+import { SubscriptionProps } from './types'
 import { createCfnOutput } from './genericUtils'
 
 export class SnsManager {
-  public createEmailNotificationService(
-    id: string,
-    scope: CommonConstruct,
-    props: CommonStackProps,
-    emails: string[]
-  ) {
-    if (!props.subscriptions || props.subscriptions.length == 0)
+  public createEmailNotificationService(id: string, scope: CommonConstruct, emails: string[]) {
+    if (!scope.props.subscriptions || scope.props.subscriptions.length == 0)
       throw `subscription props undefined`
 
-    const subscriptionProps = props.subscriptions.find(
+    const subscriptionProps = scope.props.subscriptions.find(
       (subscription: SubscriptionProps) => subscription.id === id
     )
     if (!subscriptionProps) throw `Could not find subscription props for id:${id}`
 
     const topic = new sns.Topic(scope, id, {
-      displayName: `${subscriptionProps.topicName}-${props.stage}`,
-      topicName: `${subscriptionProps.topicName}-${props.stage}`,
+      displayName: `${subscriptionProps.topicName}-${scope.props.stage}`,
+      topicName: `${subscriptionProps.topicName}-${scope.props.stage}`,
       fifo: subscriptionProps.fifo,
     })
 
@@ -39,20 +34,19 @@ export class SnsManager {
   public createLambdaNotificationService(
     id: string,
     scope: CommonConstruct,
-    props: CommonStackProps,
     lambdaFunction: lambda.Function
   ) {
-    if (!props.subscriptions || props.subscriptions.length == 0)
+    if (!scope.props.subscriptions || scope.props.subscriptions.length == 0)
       throw `subscription props undefined`
 
-    const subscriptionProps = props.subscriptions.find(
+    const subscriptionProps = scope.props.subscriptions.find(
       (subscription: SubscriptionProps) => subscription.id === id
     )
     if (!subscriptionProps) throw `Could not find subscription props for id:${id}`
 
     const topic = new sns.Topic(scope, id, {
-      displayName: `${subscriptionProps.topicName}-${props.stage}`,
-      topicName: `${subscriptionProps.topicName}-${props.stage}`,
+      displayName: `${subscriptionProps.topicName}-${scope.props.stage}`,
+      topicName: `${subscriptionProps.topicName}-${scope.props.stage}`,
       fifo: subscriptionProps.fifo,
     })
 

@@ -3,22 +3,21 @@ import * as events from '@aws-cdk/aws-events'
 import * as iam from '@aws-cdk/aws-iam'
 import * as lambda from '@aws-cdk/aws-lambda'
 import { CommonConstruct } from './commonConstruct'
-import { CommonStackProps, RuleProps } from './types'
+import { RuleProps } from './types'
 import { createCfnOutput } from './genericUtils'
 
 export class EventManager {
   public createLambdaRule(
     id: string,
     scope: CommonConstruct,
-    props: CommonStackProps,
     lambdaFunction: lambda.Function,
     eventBusName?: any,
     eventPattern?: any,
     scheduleExpression?: string
   ) {
-    if (!props.rules || props.rules.length == 0) throw `Event rule props undefined`
+    if (!scope.props.rules || scope.props.rules.length == 0) throw `Event rule props undefined`
 
-    const ruleProps = props.rules.find((log: RuleProps) => log.id === id)
+    const ruleProps = scope.props.rules.find((log: RuleProps) => log.id === id)
     if (!ruleProps) throw `Could not find Event rule props for id:${id}`
 
     const eventRule = new events.CfnRule(scope, `${id}`, {
@@ -26,9 +25,9 @@ export class EventManager {
       eventBusName: eventBusName,
       eventPattern: eventPattern,
       scheduleExpression: scheduleExpression,
-      name: `${ruleProps.name}-${props.stage}`,
+      name: `${ruleProps.name}-${scope.props.stage}`,
       state: ruleProps.state,
-      targets: [{ arn: lambdaFunction.functionArn, id: `${id}-${props.stage}` }],
+      targets: [{ arn: lambdaFunction.functionArn, id: `${id}-${scope.props.stage}` }],
     })
 
     new lambda.CfnPermission(scope, `${id}LambdaPermission`, {
@@ -47,27 +46,26 @@ export class EventManager {
   public createFargateTaskRule(
     id: string,
     scope: CommonConstruct,
-    props: CommonStackProps,
     cluster: ecs.ICluster,
     task: ecs.ITaskDefinition,
     subnetIds: string[],
     role: iam.Role | iam.CfnRole,
     eventPattern?: any
   ) {
-    if (!props.rules || props.rules.length == 0) throw `Event rule props undefined`
+    if (!scope.props.rules || scope.props.rules.length == 0) throw `Event rule props undefined`
 
-    const ruleProps = props.rules.find((log: RuleProps) => log.id === id)
+    const ruleProps = scope.props.rules.find((log: RuleProps) => log.id === id)
     if (!ruleProps) throw `Could not find Event rule props for id:${id}`
 
     const eventRule = new events.CfnRule(scope, `${id}`, {
       description: 'Rule to send notification on new objects in data bucket to ecs task target',
       eventPattern: eventPattern,
-      name: `${ruleProps.name}-${props.stage}`,
+      name: `${ruleProps.name}-${scope.props.stage}`,
       state: ruleProps.state,
       targets: [
         {
           arn: cluster.clusterArn,
-          id: `${id}-${props.stage}`,
+          id: `${id}-${scope.props.stage}`,
           ecsParameters: {
             launchType: 'FARGATE',
             networkConfiguration: {

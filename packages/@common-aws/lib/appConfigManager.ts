@@ -1,14 +1,44 @@
 import * as appconfig from '@aws-cdk/aws-appconfig'
 import * as cdk from '@aws-cdk/core'
 import { CommonConstruct } from './commonConstruct'
-import { AppConfigProps, CommonStackProps } from './types'
+import { AppConfigProps } from './types'
 import { createCfnOutput } from './genericUtils'
 
-export class AppConfigManager {
-  public createApplication(id: string, scope: CommonConstruct, props: CommonStackProps) {
-    if (!props.appConfigs || props.appConfigs.length == 0) throw `AppConfig props undefined`
+export const ArnsByRegion: { [key: string]: string } = {
+  'us-east-1': 'arn:aws:lambda:us-east-1:027255383542:layer:AWS-AppConfig-Extension:11',
+  'us-east-2': 'arn:aws:lambda:us-east-2:728743619870:layer:AWS-AppConfig-Extension:15',
+  'us-west-1': 'arn:aws:lambda:us-west-1:958113053741:layer:AWS-AppConfig-Extension:11',
+  'us-west-2': 'arn:aws:lambda:us-west-2:359756378197:layer:AWS-AppConfig-Extension:18',
+  'ca-central-1': 'arn:aws:lambda:ca-central-1:039592058896:layer:AWS-AppConfig-Extension:15',
+  'eu-central-1': 'arn:aws:lambda:eu-central-1:066940009817:layer:AWS-AppConfig-Extension:19',
+  'eu-west-1': 'arn:aws:lambda:eu-west-1:434848589818:layer:AWS-AppConfig-Extension:11',
+  'eu-west-2': 'arn:aws:lambda:eu-west-2:282860088358:layer:AWS-AppConfig-Extension:15',
+  'eu-west-3': 'arn:aws:lambda:eu-west-3:493207061005:layer:AWS-AppConfig-Extension:15',
+  'eu-north-1': 'arn:aws:lambda:eu-north-1:646970417810:layer:AWS-AppConfig-Extension:19',
+  'ap-east-1': 'arn:aws:lambda:ap-east-1:630222743974:layer:AWS-AppConfig-Extension:15',
+  'ap-northeast-1': 'arn:aws:lambda:ap-northeast-1:980059726660:layer:AWS-AppConfig-Extension:12',
+  'ap-northeast-2': 'arn:aws:lambda:ap-northeast-2:826293736237:layer:AWS-AppConfig-Extension:19',
+  'ap-northeast-3': 'arn:aws:lambda:ap-northeast-3:706869817123:layer:AWS-AppConfig-Extension:3',
+  'ap-southeast-1': 'arn:aws:lambda:ap-southeast-1:421114256042:layer:AWS-AppConfig-Extension:12',
+  'ap-southeast-2': 'arn:aws:lambda:ap-southeast-2:080788657173:layer:AWS-AppConfig-Extension:19',
+  'ap-south-1': 'arn:aws:lambda:ap-south-1:554480029851:layer:AWS-AppConfig-Extension:20',
+  'sa-east-1': 'arn:aws:lambda:sa-east-1:000010852771:layer:AWS-AppConfig-Extension:11',
+  'af-south-1': 'arn:aws:lambda:af-south-1:574348263942:layer:AWS-AppConfig-Extension:15',
+  'me-south-1': 'arn:aws:lambda:me-south-1:559955524753:layer:AWS-AppConfig-Extension:15',
+}
 
-    const appConfigProps = props.appConfigs.find((appConfig: AppConfigProps) => appConfig.id === id)
+export class AppConfigManager {
+  public getArnForAppConfigExtension(scope: CommonConstruct) {
+    return ArnsByRegion[scope.props.region]
+  }
+
+  public createApplication(id: string, scope: CommonConstruct) {
+    if (!scope.props.appConfigs || scope.props.appConfigs.length == 0)
+      throw `AppConfig props undefined`
+
+    const appConfigProps = scope.props.appConfigs.find(
+      (appConfig: AppConfigProps) => appConfig.id === id
+    )
     if (!appConfigProps) throw `Could not find AppConfig props for id:${id}`
 
     const application = new appconfig.CfnApplication(scope, `${id}Application`, {
@@ -18,19 +48,18 @@ export class AppConfigManager {
     })
 
     createCfnOutput(`${id}ApplicationId`, scope, cdk.Fn.ref(application.logicalId))
+    createCfnOutput(`${id}ApplicationName`, scope, application.name)
 
     return application
   }
 
-  public createEnvironment(
-    id: string,
-    scope: CommonConstruct,
-    props: CommonStackProps,
-    applicationId: string
-  ) {
-    if (!props.appConfigs || props.appConfigs.length == 0) throw `AppConfig props undefined`
+  public createEnvironment(id: string, scope: CommonConstruct, applicationId: string) {
+    if (!scope.props.appConfigs || scope.props.appConfigs.length == 0)
+      throw `AppConfig props undefined`
 
-    const appConfigProps = props.appConfigs.find((appConfig: AppConfigProps) => appConfig.id === id)
+    const appConfigProps = scope.props.appConfigs.find(
+      (appConfig: AppConfigProps) => appConfig.id === id
+    )
     if (!appConfigProps) throw `Could not find AppConfig props for id:${id}`
 
     const environment = new appconfig.CfnEnvironment(scope, `${id}Environment`, {
@@ -42,19 +71,18 @@ export class AppConfigManager {
     })
 
     createCfnOutput(`${id}EnvironmentId`, scope, cdk.Fn.ref(environment.logicalId))
+    createCfnOutput(`${id}EnvironmentName`, scope, environment.name)
 
     return environment
   }
 
-  public createConfigurationProfile(
-    id: string,
-    scope: CommonConstruct,
-    props: CommonStackProps,
-    applicationId: string
-  ) {
-    if (!props.appConfigs || props.appConfigs.length == 0) throw `AppConfig props undefined`
+  public createConfigurationProfile(id: string, scope: CommonConstruct, applicationId: string) {
+    if (!scope.props.appConfigs || scope.props.appConfigs.length == 0)
+      throw `AppConfig props undefined`
 
-    const appConfigProps = props.appConfigs.find((appConfig: AppConfigProps) => appConfig.id === id)
+    const appConfigProps = scope.props.appConfigs.find(
+      (appConfig: AppConfigProps) => appConfig.id === id
+    )
     if (!appConfigProps) throw `Could not find AppConfig props for id:${id}`
 
     const profile = new appconfig.CfnConfigurationProfile(scope, `${id}ConfigurationProfile`, {
@@ -68,6 +96,7 @@ export class AppConfigManager {
     })
 
     createCfnOutput(`${id}ProfileId`, scope, cdk.Fn.ref(profile.logicalId))
+    createCfnOutput(`${id}ProfileName`, scope, profile.name)
 
     return profile
   }

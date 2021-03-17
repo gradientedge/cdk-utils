@@ -4,11 +4,10 @@ import * as iam from '@aws-cdk/aws-iam'
 import * as logs from '@aws-cdk/aws-logs'
 import * as s3 from '@aws-cdk/aws-s3'
 import { CommonConstruct } from './commonConstruct'
-import { CommonStackProps } from './types'
 import { createCfnOutput } from './genericUtils'
 
 export class IamManager {
-  public statementForReadSecrets(scope: CommonConstruct, props: CommonStackProps) {
+  public statementForReadSecrets(scope: CommonConstruct) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: ['secretsmanager:GetSecretValue'],
@@ -20,11 +19,28 @@ export class IamManager {
     })
   }
 
-  public statementForListBucket(
-    scope: CommonConstruct,
-    props: CommonStackProps,
-    bucket: s3.IBucket
-  ) {
+  public statementForReadAnyAppConfig(scope: CommonConstruct) {
+    return new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: [
+        'ssm:GetDocument',
+        'ssm:ListDocuments',
+        'appconfig:ListApplications',
+        'appconfig:GetApplication',
+        'appconfig:ListEnvironments',
+        'appconfig:GetEnvironment',
+        'appconfig:ListConfigurationProfiles',
+        'appconfig:GetConfigurationProfile',
+        'appconfig:ListDeploymentStrategies',
+        'appconfig:GetDeploymentStrategy',
+        'appconfig:GetConfiguration',
+        'appconfig:ListDeployments',
+      ],
+      resources: ['*'],
+    })
+  }
+
+  public statementForListBucket(scope: CommonConstruct, bucket: s3.IBucket) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: ['s3:ListBucket'],
@@ -32,7 +48,7 @@ export class IamManager {
     })
   }
 
-  public statementForListAllMyBuckets(scope: CommonConstruct, props: CommonStackProps) {
+  public statementForListAllMyBuckets(scope: CommonConstruct) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: ['s3:ListAllMyBuckets'],
@@ -40,11 +56,7 @@ export class IamManager {
     })
   }
 
-  public statementForGetAnyS3Objects(
-    scope: CommonConstruct,
-    props: CommonStackProps,
-    bucket: s3.IBucket
-  ) {
+  public statementForGetAnyS3Objects(scope: CommonConstruct, bucket: s3.IBucket) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: ['s3:GetObject', 's3:GetObjectAcl'],
@@ -52,11 +64,7 @@ export class IamManager {
     })
   }
 
-  public statementForDeleteAnyS3Objects(
-    scope: CommonConstruct,
-    props: CommonStackProps,
-    bucket: s3.IBucket
-  ) {
+  public statementForDeleteAnyS3Objects(scope: CommonConstruct, bucket: s3.IBucket) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: ['s3:DeleteObject'],
@@ -64,11 +72,7 @@ export class IamManager {
     })
   }
 
-  public statementForPutAnyS3Objects(
-    scope: CommonConstruct,
-    props: CommonStackProps,
-    bucket: s3.IBucket
-  ) {
+  public statementForPutAnyS3Objects(scope: CommonConstruct, bucket: s3.IBucket) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: ['s3:PutObject', 's3:PutObjectAcl'],
@@ -76,7 +80,7 @@ export class IamManager {
     })
   }
 
-  public statementForPassRole(scope: CommonConstruct, props: CommonStackProps) {
+  public statementForPassRole(scope: CommonConstruct) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: ['iam:PassRole'],
@@ -84,11 +88,7 @@ export class IamManager {
     })
   }
 
-  public statementForAssumeRole(
-    scope: CommonConstruct,
-    props: CommonStackProps,
-    servicePrincipals: iam.ServicePrincipal[]
-  ) {
+  public statementForAssumeRole(scope: CommonConstruct, servicePrincipals: iam.ServicePrincipal[]) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: ['sts:AssumeRole'],
@@ -96,7 +96,7 @@ export class IamManager {
     })
   }
 
-  public statementForEcsPassRole(scope: CommonConstruct, props: CommonStackProps) {
+  public statementForEcsPassRole(scope: CommonConstruct) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: ['iam:PassRole'],
@@ -107,7 +107,6 @@ export class IamManager {
 
   public statementForRunEcsTask(
     scope: CommonConstruct,
-    props: CommonStackProps,
     cluster: ecs.ICluster,
     task: ecs.ITaskDefinition
   ) {
@@ -119,11 +118,7 @@ export class IamManager {
     })
   }
 
-  public statementForCreateLogStream(
-    scope: CommonConstruct,
-    props: CommonStackProps,
-    logGroup: logs.CfnLogGroup
-  ) {
+  public statementForCreateLogStream(scope: CommonConstruct, logGroup: logs.CfnLogGroup) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: ['logs:CreateLogStream'],
@@ -136,11 +131,7 @@ export class IamManager {
     })
   }
 
-  public statementForPutLogEvent(
-    scope: CommonConstruct,
-    props: CommonStackProps,
-    logGroup: logs.CfnLogGroup
-  ) {
+  public statementForPutLogEvent(scope: CommonConstruct, logGroup: logs.CfnLogGroup) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: ['logs:PutLogEvents'],
@@ -153,33 +144,28 @@ export class IamManager {
     })
   }
 
-  public createRoleForCloudTrail(
-    id: string,
-    scope: CommonConstruct,
-    props: CommonStackProps,
-    logGroup: logs.CfnLogGroup
-  ) {
+  public createRoleForCloudTrail(id: string, scope: CommonConstruct, logGroup: logs.CfnLogGroup) {
     const policy = new iam.PolicyDocument({
       statements: [
-        this.statementForCreateLogStream(scope, props, logGroup),
-        this.statementForPutLogEvent(scope, props, logGroup),
+        this.statementForCreateLogStream(scope, logGroup),
+        this.statementForPutLogEvent(scope, logGroup),
       ],
     })
     const role = new iam.CfnRole(scope, `${id}`, {
       assumeRolePolicyDocument: new iam.PolicyDocument({
         statements: [
-          this.statementForAssumeRole(scope, props, [
+          this.statementForAssumeRole(scope, [
             new iam.ServicePrincipal('cloudtrail.amazonaws.com'),
           ]),
         ],
       }),
       policies: [
         {
-          policyName: `${id}-policy-${props.stage}`,
+          policyName: `${id}-policy-${scope.props.stage}`,
           policyDocument: policy,
         },
       ],
-      roleName: `${id}-${props.stage}`,
+      roleName: `${id}-${scope.props.stage}`,
     })
 
     createCfnOutput(`${id}Arn`, scope, role.attrArn)
@@ -191,14 +177,13 @@ export class IamManager {
   public createRoleForEcsEvent(
     id: string,
     scope: CommonConstruct,
-    props: CommonStackProps,
     cluster: ecs.ICluster,
     task: ecs.ITaskDefinition
   ) {
     const policy = new iam.PolicyDocument({
       statements: [
-        this.statementForRunEcsTask(scope, props, cluster, task),
-        this.statementForEcsPassRole(scope, props),
+        this.statementForRunEcsTask(scope, cluster, task),
+        this.statementForEcsPassRole(scope),
       ],
     })
 
@@ -206,7 +191,7 @@ export class IamManager {
       assumedBy: new iam.ServicePrincipal('events.amazonaws.com'),
       description: `Role for ${id} ECS Task execution from EventBridge`,
       inlinePolicies: { policy },
-      roleName: `${id}-${props.stage}`,
+      roleName: `${id}-${scope.props.stage}`,
     })
 
     createCfnOutput(`${id}Arn`, scope, role.roleArn)
@@ -215,12 +200,7 @@ export class IamManager {
     return role
   }
 
-  public createRoleForEcsExecution(
-    id: string,
-    scope: CommonConstruct,
-    props: CommonStackProps,
-    policy: iam.PolicyDocument
-  ) {
+  public createRoleForEcsExecution(id: string, scope: CommonConstruct, policy: iam.PolicyDocument) {
     const role = new iam.Role(scope, `${id}`, {
       assumedBy: new iam.ServicePrincipal('ecs-tasks.amazonaws.com'),
       description: `Role for ${id} ECS Task execution`,
@@ -232,7 +212,7 @@ export class IamManager {
           'arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy'
         ),
       ],
-      roleName: `${id}-${props.stage}`,
+      roleName: `${id}-${scope.props.stage}`,
     })
 
     createCfnOutput(`${id}Arn`, scope, role.roleArn)
@@ -241,12 +221,7 @@ export class IamManager {
     return role
   }
 
-  public createRoleForLambda(
-    id: string,
-    scope: CommonConstruct,
-    props: CommonStackProps,
-    policy: iam.PolicyDocument
-  ) {
+  public createRoleForLambda(id: string, scope: CommonConstruct, policy: iam.PolicyDocument) {
     const role = new iam.Role(scope, `${id}`, {
       assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
       description: `Role for ${id} Lambda function`,
@@ -258,7 +233,7 @@ export class IamManager {
           'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
         ),
       ],
-      roleName: `${id}-${props.stage}`,
+      roleName: `${id}-${scope.props.stage}`,
     })
 
     createCfnOutput(`${id}Arn`, scope, role.roleArn)

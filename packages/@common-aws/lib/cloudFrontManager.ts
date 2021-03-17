@@ -2,16 +2,11 @@ import * as acm from '@aws-cdk/aws-certificatemanager'
 import * as cloudfront from '@aws-cdk/aws-cloudfront'
 import * as s3 from '@aws-cdk/aws-s3'
 import { CommonConstruct } from './commonConstruct'
-import { CloudFrontProps, CommonStackProps } from './types'
+import { CloudFrontProps } from './types'
 import { createCfnOutput } from './genericUtils'
 
 export class CloudFrontManager {
-  public createOriginAccessIdentity(
-    id: string,
-    scope: CommonConstruct,
-    props: CommonStackProps,
-    accessBucket?: s3.IBucket
-  ) {
+  public createOriginAccessIdentity(id: string, scope: CommonConstruct, accessBucket?: s3.IBucket) {
     const oai = new cloudfront.OriginAccessIdentity(scope, `${id}`)
     if (accessBucket) accessBucket.grantRead(oai)
 
@@ -21,7 +16,6 @@ export class CloudFrontManager {
   public createCloudFrontDistribution(
     id: string,
     scope: CommonConstruct,
-    props: CommonStackProps,
     siteBucket?: s3.IBucket,
     logBucket?: s3.IBucket,
     originAccessIdentity?: cloudfront.OriginAccessIdentity,
@@ -29,15 +23,16 @@ export class CloudFrontManager {
   ) {
     if (!siteBucket) throw `SiteBucket not defined`
     if (!certificate) throw `Certificate not defined`
-    if (!props.distributions || props.distributions.length == 0) throw `CloudFront props undefined`
+    if (!scope.props.distributions || scope.props.distributions.length == 0)
+      throw `CloudFront props undefined`
 
-    const cloudFrontProps = props.distributions.find((cf: CloudFrontProps) => cf.id === id)
+    const cloudFrontProps = scope.props.distributions.find((cf: CloudFrontProps) => cf.id === id)
     if (!cloudFrontProps) throw `Could not find CloudFront props for id:${id}`
 
     const distribution = new cloudfront.CloudFrontWebDistribution(scope, `${id}`, {
       priceClass: cloudfront.PriceClass.PRICE_CLASS_ALL,
       httpVersion: cloudfront.HttpVersion.HTTP2,
-      comment: `${id} - ${props.stage}`,
+      comment: `${id} - ${scope.props.stage}`,
       originConfigs: [
         {
           s3OriginSource: {

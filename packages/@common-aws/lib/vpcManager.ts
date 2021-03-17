@@ -1,16 +1,15 @@
 import * as cdk from '@aws-cdk/core'
 import * as ec2 from '@aws-cdk/aws-ec2'
 import { CommonConstruct } from './commonConstruct'
-import { CommonStackProps } from './types'
 import { createCfnOutput } from './genericUtils'
 
 const CommonVpcIdentifier = 'CommonVpc'
 
 export class VpcManager {
-  public createVpc(id: string, scope: CommonConstruct, props: CommonStackProps) {
-    if (!props.vpc) throw 'Vpc props undefined'
+  public createVpc(id: string, scope: CommonConstruct) {
+    if (!scope.props.vpc) throw 'Vpc props undefined'
     const vpc = new ec2.Vpc(scope, `${id}`, {
-      maxAzs: props.vpc.maxAzs,
+      maxAzs: scope.props.vpc.maxAzs,
     })
 
     createCfnOutput(`${id}Id`, scope, vpc.vpcId)
@@ -39,14 +38,14 @@ export class VpcManager {
     return vpc
   }
 
-  public createCommonVpc(scope: CommonConstruct, props: CommonStackProps) {
-    const vpc = this.createVpc(CommonVpcIdentifier, scope, props)
+  public createCommonVpc(scope: CommonConstruct) {
+    const vpc = this.createVpc(CommonVpcIdentifier, scope)
     cdk.Tags.of(vpc).add('Name', CommonVpcIdentifier)
 
     return vpc
   }
 
-  public retrieveCommonVpc(id: string, scope: CommonConstruct, props: CommonStackProps) {
+  public retrieveCommonVpc(id: string, scope: CommonConstruct) {
     return ec2.Vpc.fromLookup(scope, `${id}`, { vpcName: CommonVpcIdentifier })
   }
 }

@@ -2,20 +2,20 @@ import * as ec2 from '@aws-cdk/aws-ec2'
 import * as ecr from '@aws-cdk/aws-ecr-assets'
 import * as eks from '@aws-cdk/aws-eks'
 import { CommonConstruct } from './commonConstruct'
-import { CommonStackProps, EksClusterProps } from './types'
+import { EksClusterProps } from './types'
 import { createCfnOutput } from './genericUtils'
 
 export class EksManager {
   public createEksDeployment(
     id: string,
     scope: CommonConstruct,
-    props: CommonStackProps,
     image: ecr.DockerImageAsset,
     vpc: ec2.IVpc
   ) {
-    if (!props.eksClusters || props.eksClusters.length == 0) throw `EksCluster props undefined`
+    if (!scope.props.eksClusters || scope.props.eksClusters.length == 0)
+      throw `EksCluster props undefined`
 
-    const eksClusterProps = props.eksClusters.find((eks: EksClusterProps) => eks.id === id)
+    const eksClusterProps = scope.props.eksClusters.find((eks: EksClusterProps) => eks.id === id)
     if (!eksClusterProps) throw `Could not find eksCluster props for id:${id}`
 
     const appLabel = { app: `${id}`.toLowerCase() }
@@ -60,7 +60,7 @@ export class EksManager {
     }
 
     const cluster = new eks.Cluster(scope, `${id}Cluster`, {
-      clusterName: `${id.toLowerCase()}-${props.stage}`,
+      clusterName: `${id.toLowerCase()}-${scope.props.stage}`,
       defaultCapacity: eksClusterProps.appCapacity,
       defaultCapacityInstance: ec2.InstanceType.of(ec2.InstanceClass.T3, ec2.InstanceSize.LARGE),
       version: eks.KubernetesVersion.V1_18,

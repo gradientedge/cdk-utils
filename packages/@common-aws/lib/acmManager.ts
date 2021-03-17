@@ -1,14 +1,15 @@
 import * as acm from '@aws-cdk/aws-certificatemanager'
 import * as cdk from '@aws-cdk/core'
 import { CommonConstruct } from './commonConstruct'
-import { AcmProps, CommonStackProps } from './types'
+import { AcmProps } from './types'
 import { createCfnOutput } from './genericUtils'
 
 export class AcmManager {
-  public createCertificate(id: string, scope: CommonConstruct, props: CommonStackProps) {
-    if (!props.certificates || props.certificates.length == 0) throw `Certificate props undefined`
+  public createCertificate(id: string, scope: CommonConstruct) {
+    if (!scope.props.certificates || scope.props.certificates.length == 0)
+      throw `Certificate props undefined`
 
-    const certificateProps = props.certificates.find((cert: AcmProps) => cert.id === id)
+    const certificateProps = scope.props.certificates.find((cert: AcmProps) => cert.id === id)
     if (!certificateProps) throw `Could not find certificate props for id:${id}`
 
     const certificateAccount = certificateProps.certificateAccount

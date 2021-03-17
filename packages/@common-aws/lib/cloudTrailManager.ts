@@ -2,24 +2,23 @@ import * as cloudtrail from '@aws-cdk/aws-cloudtrail'
 import * as logs from '@aws-cdk/aws-logs'
 import * as s3 from '@aws-cdk/aws-s3'
 import { CommonConstruct } from './commonConstruct'
-import { CloudTrailProps, CommonStackProps } from './types'
+import { CloudTrailProps } from './types'
 
 export class CloudTrailManager {
   public createCloudTrail(
     id: string,
     scope: CommonConstruct,
-    props: CommonStackProps,
     logGroup: logs.CfnLogGroup,
     dataBucket: s3.IBucket,
     logBucket: s3.IBucket,
     logBucketPolicy: s3.CfnBucketPolicy
   ) {
-    if (!props.trails || props.trails.length == 0) throw `Cloud Trail props undefined`
+    if (!scope.props.trails || scope.props.trails.length == 0) throw `Cloud Trail props undefined`
 
-    const cloudTrailProps = props.trails.find((log: CloudTrailProps) => log.id === id)
+    const cloudTrailProps = scope.props.trails.find((log: CloudTrailProps) => log.id === id)
     if (!cloudTrailProps) throw `Could not find Cloud Trail props for id:${id}`
 
-    const role = scope.iamManager.createRoleForCloudTrail(`${id}Role`, scope, props, logGroup)
+    const role = scope.iamManager.createRoleForCloudTrail(`${id}Role`, scope, logGroup)
 
     const cloudTrail = new cloudtrail.CfnTrail(scope, `${id}`, {
       cloudWatchLogsLogGroupArn: logGroup.attrArn,
@@ -42,8 +41,8 @@ export class CloudTrailManager {
       isMultiRegionTrail: cloudTrailProps.isMultiRegionTrail,
       s3BucketName: logBucket.bucketName,
       s3KeyPrefix: `logs-${cloudTrailProps.trailName}`,
-      tags: [{ key: 'service', value: props.name }],
-      trailName: `${cloudTrailProps.trailName}-${props.stage}`,
+      tags: [{ key: 'service', value: scope.props.name }],
+      trailName: `${cloudTrailProps.trailName}-${scope.props.stage}`,
     })
 
     cloudTrail.addDependsOn(logBucketPolicy)

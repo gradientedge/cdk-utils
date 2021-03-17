@@ -3,21 +3,16 @@ import * as ec2 from '@aws-cdk/aws-ec2'
 import * as iam from '@aws-cdk/aws-iam'
 import * as lambda from '@aws-cdk/aws-lambda'
 import { CommonConstruct } from './commonConstruct'
-import { CommonStackProps, LambdaProps } from './types'
+import { LambdaProps } from './types'
 import { createCfnOutput } from './genericUtils'
 
 export class LambdaManager {
-  public createLambdaLayer(
-    id: string,
-    scope: CommonConstruct,
-    props: CommonStackProps,
-    code: lambda.AssetCode
-  ) {
+  public createLambdaLayer(id: string, scope: CommonConstruct, code: lambda.AssetCode) {
     const lambdaLayer = new lambda.LayerVersion(scope, `${id}`, {
       compatibleRuntimes: [lambda.Runtime.NODEJS_12_X],
       code: code,
       description: `${id}`,
-      layerVersionName: `${id}-${props.stage}`,
+      layerVersionName: `${id}-${scope.props.stage}`,
     })
 
     createCfnOutput(`${id}Arn`, scope, lambdaLayer.layerVersionArn)
@@ -28,19 +23,18 @@ export class LambdaManager {
   public createLambdaFunction(
     id: string,
     scope: CommonConstruct,
-    props: CommonStackProps,
     role: iam.Role | iam.CfnRole,
     layers: lambda.ILayerVersion[],
     code: lambda.AssetCode,
     environment?: any,
     vpc?: ec2.IVpc
   ) {
-    if (!props.lambdas || props.lambdas.length == 0) throw `Lambda props undefined`
+    if (!scope.props.lambdas || scope.props.lambdas.length == 0) throw `Lambda props undefined`
 
-    const lambdaProps = props.lambdas.find((lambda: LambdaProps) => lambda.id === id)
+    const lambdaProps = scope.props.lambdas.find((lambda: LambdaProps) => lambda.id === id)
     if (!lambdaProps) throw `Could not find lambda props for id:${id}`
 
-    const functionName = `${lambdaProps.functionName}-${props.stage}`
+    const functionName = `${lambdaProps.functionName}-${scope.props.stage}`
     const lambdaFunction = new lambda.Function(scope, `${id}`, {
       allowPublicSubnet: !!vpc,
       functionName: functionName,
@@ -48,7 +42,7 @@ export class LambdaManager {
       runtime: lambda.Runtime.NODEJS_12_X,
       code: code,
       environment: {
-        REGION: props.region,
+        REGION: scope.props.region,
         ...environment,
       },
       layers: layers,
