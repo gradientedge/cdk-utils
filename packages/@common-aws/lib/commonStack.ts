@@ -23,6 +23,7 @@ export class CommonStack extends cdk.Stack {
       domainName: this.node.tryGetContext('domainName'),
       subDomain: this.node.tryGetContext('subDomain'),
       extraContexts: this.node.tryGetContext('extraContexts'),
+      appConfigs: this.node.tryGetContext('appConfigs'),
       routes: this.node.tryGetContext('routes'),
       buckets: this.node.tryGetContext('buckets'),
       certificates: this.node.tryGetContext('certificates'),

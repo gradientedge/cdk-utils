@@ -18,9 +18,11 @@ import { SnsManager } from './snsManager'
 import { SecretsManager } from './secretsManager'
 import { CloudWatchManager } from './cloudWatchManager'
 import { WafManager } from './wafManager'
+import { AppConfigManager } from './appConfigManager'
 
 export class CommonConstruct extends cdk.Construct {
   props: CommonStackProps
+  appConfigManager: AppConfigManager
   acmManager: AcmManager
   cloudFrontManager: CloudFrontManager
   cloudTrailManager: CloudTrailManager
@@ -44,6 +46,7 @@ export class CommonConstruct extends cdk.Construct {
     super(parent, id)
     this.props = props
     this.acmManager = new AcmManager()
+    this.appConfigManager = new AppConfigManager()
     this.cloudFrontManager = new CloudFrontManager()
     this.cloudTrailManager = new CloudTrailManager()
     this.cloudWatchManager = new CloudWatchManager()

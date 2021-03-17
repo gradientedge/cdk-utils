@@ -1,4 +1,6 @@
 import * as wafv2 from '@aws-cdk/aws-wafv2'
+import * as ec2 from '@aws-cdk/aws-ec2'
+import * as appconfig from '@aws-cdk/aws-appconfig'
 import * as sns from '@aws-cdk/aws-sns'
 import * as s3 from '@aws-cdk/aws-s3'
 import * as route53 from '@aws-cdk/aws-route53'
@@ -12,7 +14,6 @@ import * as cloudtrail from '@aws-cdk/aws-cloudtrail'
 import * as cloudfront from '@aws-cdk/aws-cloudfront'
 import * as acm from '@aws-cdk/aws-certificatemanager'
 import * as cdk from '@aws-cdk/core'
-import { VpcProps } from '@aws-cdk/aws-ec2'
 
 export enum CloudWatchWidgetType {
   Text = 'Text',
@@ -20,6 +21,15 @@ export enum CloudWatchWidgetType {
   Graph = 'Graph',
   AlarmStatus = 'AlarmStatus',
   LogQuery = 'LogQuery',
+}
+
+export interface AppConfigProps {
+  id: string
+  application: appconfig.CfnApplicationProps
+  configurationProfile: appconfig.CfnConfigurationProfileProps
+  deployment: appconfig.CfnDeploymentProps
+  deploymentStrategy: appconfig.CfnDeploymentStrategyProps
+  environment: appconfig.CfnEnvironmentProps
 }
 
 export interface CommonStackProps extends cdk.StackProps {
@@ -30,13 +40,14 @@ export interface CommonStackProps extends cdk.StackProps {
   subDomain?: string
   extraContexts?: string[]
   routes?: Route53Props[]
+  appConfigs?: AppConfigProps[]
   buckets?: S3BucketProps[]
   certificates?: AcmProps[]
   distributions?: CloudFrontProps[]
   logs?: LogProps[]
   rules?: RuleProps[]
   trails?: CloudTrailProps[]
-  vpc?: VpcProps
+  vpc?: ec2.VpcProps
   ecsClusters?: EcsClusterProps[]
   ecsTasks?: EcsTaskProps[]
   eksClusters?: EksClusterProps[]

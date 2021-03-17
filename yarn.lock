@@ -42,6 +42,14 @@
     "@aws-cdk/core" "1.90.0"
     constructs "^3.2.0"
 
+"@aws-cdk/aws-appconfig@1.90.0":
+  version "1.90.0"
+  resolved "https://registry.yarnpkg.com/@aws-cdk/aws-appconfig/-/aws-appconfig-1.90.0.tgz#a0015d914aedd16480f2d195a487efab6d0ae356"
+  integrity sha512-DjLJIBEqBscC9TZXAdUrqejmO9bOqWHuMJlHGwBmQYmJ8rLI50T58hCwfW7C2hDa1b8VItbQZ/XsNRusXcGFLA==
+  dependencies:
+    "@aws-cdk/core" "1.90.0"
+    constructs "^3.2.0"
+
 "@aws-cdk/aws-applicationautoscaling@1.90.0":
   version "1.90.0"
   resolved "https://registry.yarnpkg.com/@aws-cdk/aws-applicationautoscaling/-/aws-applicationautoscaling-1.90.0.tgz#ba6f8ee65293c3cf7f95ba3ab9a2f79daf1b6929"

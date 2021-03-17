@@ -30,7 +30,7 @@ export class LambdaManager {
     scope: CommonConstruct,
     props: CommonStackProps,
     role: iam.Role | iam.CfnRole,
-    layers: lambda.LayerVersion[],
+    layers: lambda.ILayerVersion[],
     code: lambda.AssetCode,
     environment?: any,
     vpc?: ec2.IVpc
