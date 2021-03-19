@@ -7,7 +7,6 @@ name: AWS Common Utilities Release Pipeline
 
 env:
   name: AWS Common Utilities Release Pipeline
-  GITHUB_PUBLISH_TOKEN: ${{ secrets.GIT_TOKEN }}
 
 jobs:
   build:
@@ -108,6 +107,8 @@ jobs:
     strategy:
       matrix:
         node-version: [ 12.x ]
+    env:
+      GITHUB_PUBLISH_TOKEN: ${{ secrets.GIT_TOKEN }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
@@ -156,6 +157,8 @@ jobs:
       - name: Validate Documentation
         if: steps.cache-docs.outputs.cache-hit != 'true'
         run: yarn docs
+      - name: Set NPM Auth
+        run: echo "//npm.pkg.github.com/:_authToken=${GITHUB_PUBLISH_TOKEN}" >> .npmrc
       - name: Deploy Package(s)
         run: npm publish
       - name: Deploy Documentation
