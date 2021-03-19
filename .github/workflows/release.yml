@@ -42,7 +42,7 @@ jobs:
           cache-name: cache-build-output
         with:
           path: build
-          key: ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-${{ build/**/*.js') }}
+          key: ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-${{ hashFiles('build/**/*.js') }}
           restore-keys: |
             ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-
       - name: Cache Documentation
@@ -86,7 +86,7 @@ jobs:
           cache-name: cache-node-modules
         with:
           path: node_modules
-          key: ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-${{ build/**/*.js') }}
+          key: ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-${{ hashFiles('build/**/*.js') }}
           restore-keys: |
             ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-
       - name: Install Packages
@@ -129,7 +129,7 @@ jobs:
           cache-name: cache-build-output
         with:
           path: build
-          key: ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-${{ build/**/*.js') }}
+          key: ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-${{ hashFiles('build/**/*.js') }}
           restore-keys: |
             ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-
       - name: Cache Documentation
