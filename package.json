@@ -28,7 +28,6 @@
     "lint": "npx lerna run lint",
     "prettier": "npx prettier --check \"**/*.{ts,json}\"",
     "prettify": "npx prettier --write \"**/*.{ts,json}\"",
-    "semantic-release": "semantic-release",
     "test": "npx lerna run test",
     "validate": "npm run prettier && npx lerna run lint --parallel && npm run test",
     "watch": "npx tsc --watch"
@@ -106,7 +105,6 @@
     "dotenv": "^8.2.0",
     "eslint": "^7.17.0",
     "husky": "^4.3.5",
-    "semantic-release": "^17.4.2",
     "typedoc": "^0.20.32",
     "typescript": "^4.1.2"
   },

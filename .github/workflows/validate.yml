@@ -8,10 +8,10 @@ on:
 #      - develop
 #      - main
 
-name: AWS Common Utilities Release Pipeline
+name: AWS Common Utilities Validate Pipeline
 
 env:
-  name: AWS Common Utilities Release Pipeline
+  name: AWS Common Utilities Validate Pipeline
 
 jobs:
   build:
