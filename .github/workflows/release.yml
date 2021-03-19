@@ -151,10 +151,10 @@ jobs:
         if: steps.cache-docs.outputs.cache-hit != 'true'
         run: yarn docs
       - name: Deploy Package(s)
-        env:
-          GH_TOKEN: ${{ secrets.GIT_TOKEN }}
-          NPM_TOKEN: ${{ secrets.GIT_TOKEN }}
-        run: npx semantic-release
+        run: |
+          echo "always-auth=true" > ~/.npmrc
+          echo "//npm.pkg.github.com/:_authToken=$GIT_TOKEN" >> ~/.npmrc
+          npm publish
       - name: Deploy Documentation
         uses: peaceiris/actions-gh-pages@v3
         with:
