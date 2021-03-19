@@ -101,7 +101,7 @@ jobs:
 
   release:
     name: Release Package(s)
-    if: ${{ success() }} && github.event_name == 'push' && github.ref == 'refs/heads/main'
+    if: ${{ success() && github.event_name == 'push' && github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
     needs: [ build, test ]
     strategy:
