@@ -1,49 +1,117 @@
 {
   "name": "@gradientedge/ge-common",
-  "version": "0.0.0",
-  "private": true,
-  "description": "Gradient Edge utilities for AWS",
+  "version": "2.0.54",
+  "description": "Utilities for AWS CDK provisioning",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gradientedge/ge-common.git"
+  },
+  "release": {
+    "branches": [
+      "main"
+    ]
   },
   "keywords": [
     "gradientedge",
     "aws"
   ],
-  "license": "UNLICENSED",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/gradientedge/ge-common/issues"
   },
   "homepage": "https://github.com/gradientedge/ge-common#readme",
   "scripts": {
-    "build-aws-common": "cd packages/@common-aws && yarn build",
-    "build": "npx concurrently \"yarn:build-*\"",
-    "bump-aws-common": "cd packages/@common-aws && npm version patch",
-    "bump": "npx concurrently \"yarn:bump-*\"",
+    "build": "npx tsc",
+    "ci": "yarn install --frozen-lockfile && yarn build && yarn validate",
+    "docs": "typedoc",
     "fix": "npm run prettify && eslint --fix **/*.ts",
     "lint": "npx lerna run lint",
     "prettier": "npx prettier --check \"**/*.{ts,json}\"",
     "prettify": "npx prettier --write \"**/*.{ts,json}\"",
-    "validate": "npm run prettier && npx lerna run lint  --parallel && npm run test",
-    "test": "npx lerna run test --parallel",
-    "ci": "yarn install --frozen-lockfile && yarn build && yarn validate",
-    "package-aws-common": "cd packages/@common-aws && yarn publish",
-    "package": "npx concurrently \"yarn:package-*\""
+    "semantic-release": "semantic-release",
+    "test": "npx lerna run test",
+    "validate": "npm run prettier && npx lerna run lint --parallel && npm run test",
+    "watch": "npx tsc --watch"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@aws-cdk/aws-appconfig": "1.90.0",
+    "@aws-cdk/aws-events": "1.90.0",
+    "@aws-cdk/aws-events-targets": "1.90.0",
+    "@aws-cdk/aws-iam": "1.90.0",
+    "@aws-cdk/aws-lambda": "1.90.0",
+    "@aws-cdk/aws-logs": "1.90.0",
+    "@aws-cdk/aws-s3": "1.90.0",
+    "@aws-cdk/aws-cloudwatch": "1.90.0",
+    "@aws-cdk/aws-s3-assets": "1.90.0",
+    "@aws-cdk/aws-secretsmanager": "1.90.0",
+    "@aws-cdk/assets": "1.90.0",
+    "@aws-cdk/core": "1.90.0",
+    "@aws-cdk/region-info": "1.90.0",
+    "@aws-cdk/aws-cloudtrail": "1.90.0",
+    "@aws-cdk/aws-kms": "1.90.0",
+    "@aws-cdk/aws-sns": "1.90.0",
+    "@aws-cdk/aws-autoscaling": "1.90.0",
+    "@aws-cdk/aws-autoscaling-hooktargets": "1.90.0",
+    "@aws-cdk/aws-applicationautoscaling": "1.90.0",
+    "@aws-cdk/aws-codeguruprofiler": "1.90.0",
+    "@aws-cdk/aws-ec2": "1.90.0",
+    "@aws-cdk/aws-ecr": "1.90.0",
+    "@aws-cdk/aws-eks": "1.90.0",
+    "@aws-cdk/aws-ecr-assets": "1.90.0",
+    "@aws-cdk/aws-elasticloadbalancing": "1.90.0",
+    "@aws-cdk/aws-sam": "1.90.0",
+    "@aws-cdk/aws-apigateway": "1.90.0",
+    "@aws-cdk/lambda-layer-kubectl": "1.90.0",
+    "@aws-cdk/aws-cloudfront": "1.90.0",
+    "@aws-cdk/aws-cognito": "1.90.0",
+    "@aws-cdk/aws-certificatemanager": "1.90.0",
+    "@aws-cdk/aws-elasticloadbalancingv2": "1.90.0",
+    "@aws-cdk/aws-route53": "1.90.0",
+    "@aws-cdk/aws-route53-targets": "1.90.0",
+    "@aws-cdk/aws-servicediscovery": "1.90.0",
+    "@aws-cdk/aws-sqs": "1.90.0",
+    "@aws-cdk/aws-s3-deployment": "1.90.0",
+    "@aws-cdk/lambda-layer-awscli": "1.90.0",
+    "@aws-cdk/aws-cloudformation": "1.90.0",
+    "@aws-cdk/aws-codebuild": "1.90.0",
+    "@aws-cdk/aws-codepipeline": "1.90.0",
+    "@aws-cdk/aws-codecommit": "1.90.0",
+    "@aws-cdk/aws-ssm": "1.90.0",
+    "@aws-cdk/aws-efs": "1.90.0",
+    "@aws-cdk/aws-ecs": "1.90.0",
+    "@aws-cdk/aws-sns-subscriptions": "1.90.0",
+    "@aws-cdk/aws-stepfunctions": "1.90.0",
+    "@aws-cdk/aws-autoscaling-common": "1.90.0",
+    "@aws-cdk/aws-batch": "1.90.0",
+    "@aws-cdk/aws-kinesis": "1.90.0",
+    "@aws-cdk/aws-rds": "1.90.0",
+    "@aws-cdk/cloud-assembly-schema": "1.90.0",
+    "@aws-cdk/custom-resources": "1.90.0",
+    "@aws-cdk/cx-api": "1.90.0",
+    "@aws-cdk/aws-kinesisfirehose": "1.90.0",
+    "@aws-cdk/aws-apigatewayv2": "1.90.0",
+    "@aws-cdk/aws-wafv2": "1.90.0",
+    "@types/lodash": "^4.14.167",
+    "@types/node": "^14.14.20",
+    "app-root-path": "^3.0.0",
+    "aws-sdk": "^2.841.0",
+    "constructs": "^3.2.0",
+    "lodash": "^4.17.20",
+    "moment": "^2.29.1",
+    "nconf": "^0.11.2",
+    "pluralize": "^8.0.0",
+    "ts-node": "^9.1.1"
+  },
   "devDependencies": {
-    "concurrently": "^5.3.0",
     "dotenv": "^8.2.0",
     "eslint": "^7.17.0",
-    "husky": "^4.3.5"
+    "husky": "^4.3.5",
+    "semantic-release": "^17.4.2",
+    "typedoc": "^0.20.32",
+    "typescript": "^4.1.2"
   },
-  "workspaces": {
-    "packages": [
-      "packages/*"
-    ],
-    "nohoist": [
-      "common-aws"
-    ]
+  "publishConfig": {
+    "access": "restricted",
+    "registry": "https://npm.pkg.github.com/"
   }
 }

@@ -1,9 +1,13 @@
-*.d.ts
-.next
-**/cdk.out/**
-**/build/**
-**/storybook-static/**
-test-results
-package-lock.json
+# Jest
 coverage
 
+# Node
+**/build/**
+package-lock.json
+
+# Typescript
+*.d.ts
+*.js
+
+# Typedocs
+**/docs/**
