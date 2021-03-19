@@ -153,6 +153,7 @@ jobs:
       - name: Deploy Package(s)
         env:
           GH_TOKEN: ${{ secrets.GIT_TOKEN }}
+          NPM_TOKEN: ${{ secrets.GIT_TOKEN }}
         run: npx semantic-release
       - name: Deploy Documentation
         uses: JamesIves/github-pages-deploy-action@4.1.0
