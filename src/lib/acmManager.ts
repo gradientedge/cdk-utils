@@ -5,7 +5,7 @@ import { AcmProps } from './types'
 import { createCfnOutput } from './genericUtils'
 
 export class AcmManager {
-  public createCertificate(id: string, scope: CommonConstruct) {
+  public createCertificate(id: string, scope: CommonConstruct, test?: string) {
     if (!scope.props.certificates || scope.props.certificates.length == 0)
       throw `Certificate props undefined`
 
