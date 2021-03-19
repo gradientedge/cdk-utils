@@ -41,7 +41,7 @@ jobs:
         env:
           cache-name: cache-build-output
         with:
-          path: build
+          path: dist
           key: ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-${{ hashFiles('build/**/*.js') }}
           restore-keys: |
             ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-
@@ -56,7 +56,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-
       - name: Install Packages
-        run: yarn install
+        run: yarn install --frozen-lockfile
       - name: Build Packages
         run: yarn build
       - name: Validate Documentation
@@ -91,6 +91,11 @@ jobs:
             ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-
       - name: Install Packages
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
-        run: yarn install
+        run: yarn install --frozen-lockfile
       - name: Test Packages
         run: yarn validate
+      - name: Publish Unit Test Results
+        uses: EnricoMi/publish-unit-test-result-action@v1
+        if: always()
+        with:
+          files: coverage/*.xml
