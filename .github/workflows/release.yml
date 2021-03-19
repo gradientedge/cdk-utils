@@ -7,6 +7,7 @@ name: AWS Common Utilities Release Pipeline
 
 env:
   name: AWS Common Utilities Release Pipeline
+  GITHUB_PUBLISH_TOKEN: ${{ secrets.GIT_TOKEN }}
 
 jobs:
   build:
@@ -151,8 +152,6 @@ jobs:
         if: steps.cache-docs.outputs.cache-hit != 'true'
         run: yarn docs
       - name: Deploy Package(s)
-        env:
-          GITHUB_PUBLISH_TOKEN: ${{ secrets.GIT_TOKEN }}
         run: npm publish
       - name: Deploy Documentation
         uses: peaceiris/actions-gh-pages@v3
