@@ -1,10 +1,10 @@
 {
-  "name": "@gradientedge/ge-common",
-  "version": "2.0.56",
+  "name": "@gradientedge/common-aws",
+  "version": "2.0.57",
   "description": "Utilities for AWS CDK provisioning",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gradientedge/ge-common.git"
+    "url": "git+https://github.com/gradientedge/common-aws.git"
   },
   "release": {
     "branches": [
@@ -17,9 +17,9 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/gradientedge/ge-common/issues"
+    "url": "https://github.com/gradientedge/common-aws/issues"
   },
-  "homepage": "https://github.com/gradientedge/ge-common#readme",
+  "homepage": "https://github.com/gradientedge/common-aws#readme",
   "scripts": {
     "build": "npx tsc",
     "ci": "yarn install --frozen-lockfile && yarn build && yarn validate",

@@ -3,7 +3,7 @@
 An easy-to-use toolkit for working with the AWS CDK Toolkit:
 https://docs.aws.amazon.com/cdk/latest/guide/home.html
 
-For more details, see our full [API documentation](https://gradientedge.github.io/ge-common/).
+For more details, see our full [API documentation](https://gradientedge.github.io/common-aws/).
 
 ## Installation
 

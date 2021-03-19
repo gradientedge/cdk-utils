@@ -11,13 +11,13 @@ export class CommonStack extends cdk.Stack {
 
     this.determineExtraContexts()
     this.determineStageContexts()
-    new CommonConstruct(this, 'ge-common', this.determineConstructProps(props))
+    new CommonConstruct(this, 'common-aws', this.determineConstructProps(props))
   }
 
   protected determineConstructProps(props: cdk.StackProps) {
     return {
       stackName: props.stackName,
-      name: props.stackName || 'ge-common',
+      name: props.stackName || 'common-aws',
       region: this.node.tryGetContext('region'),
       stage: this.node.tryGetContext('stage'),
       domainName: this.node.tryGetContext('domainName'),
