@@ -8,6 +8,7 @@ name: AWS Common Utilities Validate Pipeline
 
 env:
   name: AWS Common Utilities Validate Pipeline
+  GITHUB_PUBLISH_TOKEN: ${{ secrets.GIT_TOKEN }}
 
 jobs:
   build:

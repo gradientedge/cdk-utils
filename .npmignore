@@ -15,4 +15,12 @@ npm-debug.log
 .eslintrc.js
 .gitignore
 .prettierrc.js
+.prettierrc
 .prettierignore
+jest.config.js
+**/__tests__/**
+docs
+*.md
+.yarnrc
+.github
+.circleci
