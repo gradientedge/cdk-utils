@@ -63,7 +63,7 @@ jobs:
           cache-name: cache-node-modules
         with:
           path: node_modules
-          key: ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-${{ hashFiles('build/**/*.js') }}
+          key: ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
       - name: Install Packages
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
