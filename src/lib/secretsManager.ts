@@ -2,12 +2,27 @@ const AWS = require('aws-sdk')
 const fs = require('fs')
 
 /**
+ * @category Security, Identity & Compliance
+ * @summary Provides operations on AWS Secrets Manager.
+ * - A new instance of this class is injected into {@link CommonConstruct} constructor.
+ * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
+ * @example
+ * import { CommonConstruct } from '@gradientedge/cdk-utils/lib/commonConstruct'
+ * import { CommonStackProps } from '@gradientedge/cdk-utils/lib/types'
  *
+ * class CustomConstruct extends CommonConstruct {
+ *   constructor(parent: cdk.Construct, id: string, props: CommonStackProps) {
+ *     super(parent, id, props)
+ *     this.props = props
+ *     this.s3Manager.loadSecret('MySecretName', 'eu-west-1')
+ * }
+ *
+ * @see [CDK Secrets Manager Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-secretsmanager-readme.html}</li></i>
  */
 export class SecretsManager {
   /**
    *
-   * @param region
+   * @param {string} region
    */
   public getAwsSecretsManager(region: string) {
     return new AWS.SecretsManager({ region: region })
@@ -15,8 +30,8 @@ export class SecretsManager {
 
   /**
    *
-   * @param secretName
-   * @param region
+   * @param {string} secretName
+   * @param {string} region
    */
   public async loadSecret(secretName: string, region: string) {
     const secretsManager = this.getAwsSecretsManager(region)
@@ -29,8 +44,8 @@ export class SecretsManager {
 
   /**
    *
-   * @param secretNames
-   * @param region
+   * @param {string} secretNames
+   * @param {string} region
    */
   public async loadSecrets(secretNames: string, region: string) {
     let secrets = {}

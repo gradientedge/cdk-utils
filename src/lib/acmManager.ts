@@ -5,6 +5,7 @@ import { AcmProps } from './types'
 import { createCfnOutput } from './genericUtils'
 
 /**
+ * @category Security, Identity & Compliance
  * @summary Provides operations on AWS Certificates.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.

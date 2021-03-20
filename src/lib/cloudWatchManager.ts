@@ -4,7 +4,6 @@ import { IMetric } from '@aws-cdk/aws-cloudwatch'
 import {
   AlarmProps,
   AlarmStatusWidgetProps,
-  CloudWatchWidgetType,
   DashboardProps,
   GraphWidgetProps,
   LogQueryWidgetProps,
@@ -13,10 +12,25 @@ import {
   TextWidgetProps,
 } from './types'
 import { CommonConstruct } from './commonConstruct'
-import { createCfnOutput } from './genericUtils'
+import { CloudWatchWidgetType, createCfnOutput } from './genericUtils'
 
 /**
+ * @category Management & Governance
+ * @summary Provides operations on AWS CloudWatch.
+ * - A new instance of this class is injected into {@link CommonConstruct} constructor.
+ * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
+ * @example
+ * import { CommonConstruct } from '@gradientedge/cdk-utils/lib/commonConstruct'
+ * import { CommonStackProps } from '@gradientedge/cdk-utils/lib/types'
  *
+ * class CustomConstruct extends CommonConstruct {
+ *   constructor(parent: cdk.Construct, id: string, props: CommonStackProps) {
+ *     super(parent, id, props)
+ *     this.props = props
+ *     this.cloudWatchManager.createAlarmForMetric('MyAlarm', this, metric)
+ * }
+ *
+ * @see [CDK CloudWatch Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-cloudwatch-readme.html}</li></i>
  */
 export class CloudWatchManager {
   /**

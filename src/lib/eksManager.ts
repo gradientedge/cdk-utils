@@ -6,15 +6,30 @@ import { EksClusterProps } from './types'
 import { createCfnOutput } from './genericUtils'
 
 /**
+ * @category Containers
+ * @summary Provides operations on AWS Elastic Kubernetes Service.
+ * - A new instance of this class is injected into {@link CommonConstruct} constructor.
+ * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
+ * @example
+ * import { CommonConstruct } from '@gradientedge/cdk-utils/lib/commonConstruct'
+ * import { CommonStackProps } from '@gradientedge/cdk-utils/lib/types'
  *
+ * class CustomConstruct extends CommonConstruct {
+ *   constructor(parent: cdk.Construct, id: string, props: CommonStackProps) {
+ *     super(parent, id, props)
+ *     this.props = props
+ *     this.eksManager.createEksDeployment('MyEksDeployment', this, image, vpc)
+ * }
+ *
+ * @see [CDK EKS Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-eks-readme.html}</li></i>
  */
 export class EksManager {
   /**
    *
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param image
-   * @param vpc
+   * @param {ecr.DockerImageAsset} image
+   * @param {ec2.IVpc} vpc
    */
   public createEksDeployment(
     id: string,

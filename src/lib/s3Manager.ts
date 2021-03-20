@@ -8,7 +8,22 @@ import { S3BucketProps } from './types'
 import { createCfnOutput } from './genericUtils'
 
 /**
+ * @category Storage
+ * @summary Provides operations on AWS S3.
+ * - A new instance of this class is injected into {@link CommonConstruct} constructor.
+ * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
+ * @example
+ * import { CommonConstruct } from '@gradientedge/cdk-utils/lib/commonConstruct'
+ * import { CommonStackProps } from '@gradientedge/cdk-utils/lib/types'
  *
+ * class CustomConstruct extends CommonConstruct {
+ *   constructor(parent: cdk.Construct, id: string, props: CommonStackProps) {
+ *     super(parent, id, props)
+ *     this.props = props
+ *     this.s3Manager.createS3Bucket('MyBucket', this)
+ * }
+ *
+ * @see [CDK S3 Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-s3-readme.html}</li></i>
  */
 export class S3Manager {
   /**
@@ -70,7 +85,7 @@ export class S3Manager {
    *
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param bucket
+   * @param {s3.IBucket} bucket
    */
   public createBucketPolicyForCloudTrail(id: string, scope: CommonConstruct, bucket: s3.IBucket) {
     const bucketPolicyDocument = new iam.PolicyDocument({
@@ -102,11 +117,11 @@ export class S3Manager {
    *
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param siteBucket
-   * @param distribution
-   * @param sources
-   * @param prefix
-   * @param prune
+   * @param {s3.IBucket} siteBucket
+   * @param {cloudfront.IDistribution} distribution
+   * @param {s3deploy.ISource[]} sources
+   * @param {string} prefix
+   * @param {boolean} prune
    */
   public doBucketDeployment(
     id: string,

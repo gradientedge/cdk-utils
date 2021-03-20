@@ -7,14 +7,29 @@ import { LambdaProps } from './types'
 import { createCfnOutput } from './genericUtils'
 
 /**
+ * @category Compute
+ * @summary Provides operations on AWS Lambda.
+ * - A new instance of this class is injected into {@link CommonConstruct} constructor.
+ * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
+ * @example
+ * import { CommonConstruct } from '@gradientedge/cdk-utils/lib/commonConstruct'
+ * import { CommonStackProps } from '@gradientedge/cdk-utils/lib/types'
  *
+ * class CustomConstruct extends CommonConstruct {
+ *   constructor(parent: cdk.Construct, id: string, props: CommonStackProps) {
+ *     super(parent, id, props)
+ *     this.props = props
+ *     this.lambdaManager.createLambdaFunction('MyFunction', this, role, layers, code)
+ * }
+ *
+ * @see [CDK Lambda Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-lambda-readme.html}</li></i>
  */
 export class LambdaManager {
   /**
    *
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param code
+   * @param {lambda.AssetCode} code
    */
   public createLambdaLayer(id: string, scope: CommonConstruct, code: lambda.AssetCode) {
     const lambdaLayer = new lambda.LayerVersion(scope, `${id}`, {
@@ -33,11 +48,11 @@ export class LambdaManager {
    *
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param role
-   * @param layers
-   * @param code
-   * @param environment
-   * @param vpc
+   * @param {iam.Role | iam.CfnRole} role
+   * @param {lambda.ILayerVersion[]} layers
+   * @param {lambda.AssetCode} code
+   * @param {Map<string, string>} environment
+   * @param {ec2.IVpc} vpc
    */
   public createLambdaFunction(
     id: string,

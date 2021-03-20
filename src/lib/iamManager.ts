@@ -7,7 +7,22 @@ import { CommonConstruct } from './commonConstruct'
 import { createCfnOutput } from './genericUtils'
 
 /**
+ * @category Security, Identity & Compliance
+ * @summary Provides operations on AWS IAM.
+ * - A new instance of this class is injected into {@link CommonConstruct} constructor.
+ * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
+ * @example
+ * import { CommonConstruct } from '@gradientedge/cdk-utils/lib/commonConstruct'
+ * import { CommonStackProps } from '@gradientedge/cdk-utils/lib/types'
  *
+ * class CustomConstruct extends CommonConstruct {
+ *   constructor(parent: cdk.Construct, id: string, props: CommonStackProps) {
+ *     super(parent, id, props)
+ *     this.props = props
+ *     this.iamManager.createRoleForEcsEvent('MyEcsRole', this, cluster, task)
+ * }
+ *
+ * @see [CDK IAM Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-iam-readme.html}</li></i>
  */
 export class IamManager {
   /**
@@ -54,7 +69,7 @@ export class IamManager {
   /**
    *
    * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param bucket
+   * @param {s3.IBucket} bucket
    */
   public statementForListBucket(scope: CommonConstruct, bucket: s3.IBucket) {
     return new iam.PolicyStatement({
@@ -79,7 +94,7 @@ export class IamManager {
   /**
    *
    * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param bucket
+   * @param {s3.IBucket} bucket
    */
   public statementForGetAnyS3Objects(scope: CommonConstruct, bucket: s3.IBucket) {
     return new iam.PolicyStatement({
@@ -92,7 +107,7 @@ export class IamManager {
   /**
    *
    * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param bucket
+   * @param {s3.IBucket} bucket
    */
   public statementForDeleteAnyS3Objects(scope: CommonConstruct, bucket: s3.IBucket) {
     return new iam.PolicyStatement({
@@ -105,7 +120,7 @@ export class IamManager {
   /**
    *
    * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param bucket
+   * @param {s3.IBucket} bucket
    */
   public statementForPutAnyS3Objects(scope: CommonConstruct, bucket: s3.IBucket) {
     return new iam.PolicyStatement({
@@ -130,7 +145,7 @@ export class IamManager {
   /**
    *
    * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param servicePrincipals
+   * @param {iam.ServicePrincipal[]} servicePrincipals
    */
   public statementForAssumeRole(scope: CommonConstruct, servicePrincipals: iam.ServicePrincipal[]) {
     return new iam.PolicyStatement({
@@ -156,8 +171,8 @@ export class IamManager {
   /**
    *
    * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param cluster
-   * @param task
+   * @param {ecs.ICluster} cluster
+   * @param {ecs.ITaskDefinition} task
    */
   public statementForRunEcsTask(
     scope: CommonConstruct,
@@ -175,7 +190,7 @@ export class IamManager {
   /**
    *
    * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param logGroup
+   * @param {logs.CfnLogGroup} logGroup
    */
   public statementForCreateLogStream(scope: CommonConstruct, logGroup: logs.CfnLogGroup) {
     return new iam.PolicyStatement({
@@ -193,7 +208,7 @@ export class IamManager {
   /**
    *
    * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param logGroup
+   * @param {logs.CfnLogGroup} logGroup
    */
   public statementForPutLogEvent(scope: CommonConstruct, logGroup: logs.CfnLogGroup) {
     return new iam.PolicyStatement({
@@ -212,7 +227,7 @@ export class IamManager {
    *
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param logGroup
+   * @param {logs.CfnLogGroup} logGroup
    */
   public createRoleForCloudTrail(id: string, scope: CommonConstruct, logGroup: logs.CfnLogGroup) {
     const policy = new iam.PolicyDocument({
@@ -248,8 +263,8 @@ export class IamManager {
    *
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param cluster
-   * @param task
+   * @param {ecs.ICluster} cluster
+   * @param {ecs.ITaskDefinition} task
    */
   public createRoleForEcsEvent(
     id: string,
@@ -281,7 +296,7 @@ export class IamManager {
    *
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param policy
+   * @param {iam.PolicyDocument} policy
    */
   public createRoleForEcsExecution(id: string, scope: CommonConstruct, policy: iam.PolicyDocument) {
     const role = new iam.Role(scope, `${id}`, {
@@ -308,7 +323,7 @@ export class IamManager {
    *
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param policy
+   * @param {iam.PolicyDocument} policy
    */
   public createRoleForLambda(id: string, scope: CommonConstruct, policy: iam.PolicyDocument) {
     const role = new iam.Role(scope, `${id}`, {

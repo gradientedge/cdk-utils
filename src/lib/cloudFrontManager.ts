@@ -6,7 +6,29 @@ import { CloudFrontProps } from './types'
 import { createCfnOutput } from './genericUtils'
 
 /**
+ * @category Networking & Content Delivery
+ * @summary Provides operations on AWS CloudFront.
+ * - A new instance of this class is injected into {@link CommonConstruct} constructor.
+ * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
+ * @example
+ * import { CommonConstruct } from '@gradientedge/cdk-utils/lib/commonConstruct'
+ * import { CommonStackProps } from '@gradientedge/cdk-utils/lib/types'
  *
+ * class CustomConstruct extends CommonConstruct {
+ *   constructor(parent: cdk.Construct, id: string, props: CommonStackProps) {
+ *     super(parent, id, props)
+ *     this.props = props
+ *     this.cloudFrontManager.createCloudFrontDistribution(
+ *       'MyDistribution',
+ *       this,
+ *       siteBucket,
+ *       logBucket,
+ *       originAccessIdentity,
+ *       certificate
+ *     )
+ * }
+ *
+ * @see [CDK CloudFront Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-cloudfront-readme.html}</li></i>
  */
 export class CloudFrontManager {
   public createOriginAccessIdentity(id: string, scope: CommonConstruct, accessBucket?: s3.IBucket) {
@@ -20,10 +42,10 @@ export class CloudFrontManager {
    *
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param siteBucket
-   * @param logBucket
-   * @param originAccessIdentity
-   * @param certificate
+   * @param {s3.IBucket} siteBucket
+   * @param {s3.IBucket} logBucket
+   * @param {cloudfront.OriginAccessIdentity} originAccessIdentity
+   * @param {acm.ICertificate} certificate
    */
   public createCloudFrontDistribution(
     id: string,

@@ -4,7 +4,22 @@ import { createCfnOutput } from './genericUtils'
 import { WafIPSetProps, WafWebACLProps } from './types'
 
 /**
+ * @category Security, Identity & Compliance
+ * @summary Provides operations on AWS WAF.
+ * - A new instance of this class is injected into {@link CommonConstruct} constructor.
+ * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
+ * @example
+ * import { CommonConstruct } from '@gradientedge/cdk-utils/lib/commonConstruct'
+ * import { CommonStackProps } from '@gradientedge/cdk-utils/lib/types'
  *
+ * class CustomConstruct extends CommonConstruct {
+ *   constructor(parent: cdk.Construct, id: string, props: CommonStackProps) {
+ *     super(parent, id, props)
+ *     this.props = props
+ *     this.wafManager.createWebAcl('MyWebAcl', this)
+ * }
+ *
+ * @see [CDK WAF Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-waf-readme.html}</li></i>
  */
 export class WafManager {
   /**

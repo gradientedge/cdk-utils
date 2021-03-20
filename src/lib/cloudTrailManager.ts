@@ -5,17 +5,39 @@ import { CommonConstruct } from './commonConstruct'
 import { CloudTrailProps } from './types'
 
 /**
+ * @category Management & Governance
+ * @summary Provides operations on AWS CloudTrail.
+ * - A new instance of this class is injected into {@link CommonConstruct} constructor.
+ * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
+ * @example
+ * import { CommonConstruct } from '@gradientedge/cdk-utils/lib/commonConstruct'
+ * import { CommonStackProps } from '@gradientedge/cdk-utils/lib/types'
  *
+ * class CustomConstruct extends CommonConstruct {
+ *   constructor(parent: cdk.Construct, id: string, props: CommonStackProps) {
+ *     super(parent, id, props)
+ *     this.props = props
+ *     this.cloudTrailManager.createCloudTrail(
+ *       'MyTrail',
+ *       this,
+ *       logGroup,
+ *       dataBucket,
+ *       logBucket,
+ *       logBucketPolicy
+ *     )
+ * }
+ *
+ * @see [CDK CloudTrail Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-cloudtrail-readme.html}</li></i>
  */
 export class CloudTrailManager {
   /**
    *
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param logGroup
-   * @param dataBucket
-   * @param logBucket
-   * @param logBucketPolicy
+   * @param {logs.CfnLogGroup} logGroup
+   * @param {s3.IBucket} dataBucket
+   * @param {s3.IBucket} logBucket
+   * @param {s3.CfnBucketPolicy} logBucketPolicy
    */
   public createCloudTrail(
     id: string,

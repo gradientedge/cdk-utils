@@ -21,7 +21,7 @@ import { WafManager } from './wafManager'
 import { AppConfigManager } from './appConfigManager'
 
 /**
- *
+ * @category Constructs
  */
 export class CommonConstruct extends cdk.Construct {
   props: CommonStackProps
@@ -47,9 +47,9 @@ export class CommonConstruct extends cdk.Construct {
 
   /**
    *
-   * @param parent
+   * @param {cdk.Construct} parent
    * @param {string} id scoped id of the resource
-   * @param props
+   * @param {CommonStackProps} props
    */
   constructor(parent: cdk.Construct, id: string, props: CommonStackProps) {
     super(parent, id)
@@ -79,9 +79,9 @@ export class CommonConstruct extends cdk.Construct {
   /**
    *
    * @param {string} id scoped id of the resource
-   * @param value
-   * @param description
-   * @param overrideId
+   * @param {string} value
+   * @param {string} description
+   * @param {boolean} overrideId
    */
   protected addCfnOutput(
     id: string,

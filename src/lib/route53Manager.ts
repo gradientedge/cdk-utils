@@ -6,7 +6,22 @@ import { CommonConstruct } from './commonConstruct'
 import { createCfnOutput } from './genericUtils'
 
 /**
+ * @category Networking & Content Delivery
+ * @summary Provides operations on AWS Route53.
+ * - A new instance of this class is injected into {@link CommonConstruct} constructor.
+ * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
+ * @example
+ * import { CommonConstruct } from '@gradientedge/cdk-utils/lib/commonConstruct'
+ * import { CommonStackProps } from '@gradientedge/cdk-utils/lib/types'
  *
+ * class CustomConstruct extends CommonConstruct {
+ *   constructor(parent: cdk.Construct, id: string, props: CommonStackProps) {
+ *     super(parent, id, props)
+ *     this.props = props
+ *     this.route53Manager.createHostedZone('MyHostedZone', this)
+ * }
+ *
+ * @see [CDK Route53 Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-route53-readme.html}</li></i>
  */
 export class Route53Manager {
   /**
@@ -43,9 +58,9 @@ export class Route53Manager {
    *
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param distribution
-   * @param hostedZone
-   * @param recordName
+   * @param {cloudfront.IDistribution} distribution
+   * @param {route53.IHostedZone} hostedZone
+   * @param {string} recordName
    */
   public createCloudFrontTargetARecord(
     id: string,

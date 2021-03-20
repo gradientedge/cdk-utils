@@ -5,6 +5,7 @@ import { AppConfigProps } from './types'
 import { createCfnOutput } from './genericUtils'
 
 /**
+ * @category Utils
  * @returns { Map<string, string> } ArnsByRegion
  */
 export const ArnsByRegion: { [key: string]: string } = {
@@ -31,6 +32,7 @@ export const ArnsByRegion: { [key: string]: string } = {
 }
 
 /**
+ * @category Management & Governance
  * @summary Provides operations on AWS AppConfig.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
@@ -50,7 +52,7 @@ export const ArnsByRegion: { [key: string]: string } = {
 export class AppConfigManager {
   /**
    *
-   * @param scope
+   * @param {CommonConstruct} scope scope in which this resource is defined
    */
   public getArnForAppConfigExtension(scope: CommonConstruct) {
     return ArnsByRegion[scope.props.region]

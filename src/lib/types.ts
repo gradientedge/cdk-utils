@@ -16,18 +16,7 @@ import * as acm from '@aws-cdk/aws-certificatemanager'
 import * as cdk from '@aws-cdk/core'
 
 /**
- *
- */
-export enum CloudWatchWidgetType {
-  Text = 'Text',
-  SingleValue = 'SingleValue',
-  Graph = 'Graph',
-  AlarmStatus = 'AlarmStatus',
-  LogQuery = 'LogQuery',
-}
-
-/**
- *
+ * @category Management & Governance
  */
 export interface AppConfigProps {
   id: string
@@ -39,7 +28,7 @@ export interface AppConfigProps {
 }
 
 /**
- *
+ * @category Constructs
  */
 export interface CommonStackProps extends cdk.StackProps {
   name: string
@@ -71,7 +60,7 @@ export interface CommonStackProps extends cdk.StackProps {
 }
 
 /**
- *
+ * @category Security, Identity & Compliance
  */
 export interface AcmProps extends acm.CertificateProps {
   id: string
@@ -81,21 +70,21 @@ export interface AcmProps extends acm.CertificateProps {
 }
 
 /**
- *
+ * @category Networking & Content Delivery
  */
 export interface CloudFrontProps extends cloudfront.CloudFrontWebDistributionProps {
   id?: string
 }
 
 /**
- *
+ * @category Management & Governance
  */
 export interface CloudTrailProps extends cloudtrail.CfnTrailProps {
   id: string
 }
 
 /**
- *
+ * @category Management & Governance
  */
 export interface DashboardProps extends watch.DashboardProps {
   id: string
@@ -104,7 +93,7 @@ export interface DashboardProps extends watch.DashboardProps {
 }
 
 /**
- *
+ * @category Management & Governance
  */
 export interface AlarmProps extends watch.AlarmProps {
   id: string
@@ -114,7 +103,7 @@ export interface AlarmProps extends watch.AlarmProps {
 }
 
 /**
- *
+ * @category Management & Governance
  */
 export interface MetricProps extends watch.MetricProps {
   stageSuffix: boolean
@@ -124,7 +113,7 @@ export interface MetricProps extends watch.MetricProps {
 }
 
 /**
- *
+ * @category Management & Governance
  */
 export interface TextWidgetProps extends watch.TextWidgetProps {
   id: string
@@ -133,7 +122,7 @@ export interface TextWidgetProps extends watch.TextWidgetProps {
 }
 
 /**
- *
+ * @category Management & Governance
  */
 export interface NumericWidgetProps extends watch.SingleValueWidgetProps {
   id: string
@@ -143,7 +132,7 @@ export interface NumericWidgetProps extends watch.SingleValueWidgetProps {
 }
 
 /**
- *
+ * @category Management & Governance
  */
 export interface GraphWidgetProps extends watch.GraphWidgetProps {
   id: string
@@ -153,7 +142,7 @@ export interface GraphWidgetProps extends watch.GraphWidgetProps {
 }
 
 /**
- *
+ * @category Management & Governance
  */
 export interface AlarmStatusWidgetProps extends watch.AlarmStatusWidgetProps {
   id: string
@@ -163,7 +152,7 @@ export interface AlarmStatusWidgetProps extends watch.AlarmStatusWidgetProps {
 }
 
 /**
- *
+ * @category Management & Governance
  */
 export interface LogQueryWidgetProps extends watch.LogQueryWidgetProps {
   id: string
@@ -172,21 +161,21 @@ export interface LogQueryWidgetProps extends watch.LogQueryWidgetProps {
 }
 
 /**
- *
+ * @category Containers
  */
 export interface EcsClusterProps extends ecs.ClusterProps {
   id: string
 }
 
 /**
- *
+ * @category Containers
  */
 export interface EcsTaskProps extends ecs.TaskDefinitionProps {
   id: string
 }
 
 /**
- *
+ * @category Containers
  */
 export interface EksClusterProps extends eks.ClusterProps {
   id: string
@@ -195,14 +184,14 @@ export interface EksClusterProps extends eks.ClusterProps {
 }
 
 /**
- *
+ * @category Application Integration
  */
 export interface RuleProps extends events.CfnRuleProps {
   id: string
 }
 
 /**
- *
+ * @category Compute
  */
 export interface LambdaProps extends lambda.FunctionProps {
   id: string
@@ -210,14 +199,14 @@ export interface LambdaProps extends lambda.FunctionProps {
 }
 
 /**
- *
+ * @category Management & Governance
  */
 export interface LogProps extends logs.CfnLogGroupProps {
   id: string
 }
 
 /**
- *
+ * @category Management & Governance
  */
 export interface MetricFilterProps extends logs.MetricFilterProps {
   id: string
@@ -226,7 +215,7 @@ export interface MetricFilterProps extends logs.MetricFilterProps {
 }
 
 /**
- *
+ * @category Networking & Content Delivery
  */
 export interface Route53Props extends route53.HostedZoneProps {
   id: string
@@ -234,7 +223,7 @@ export interface Route53Props extends route53.HostedZoneProps {
 }
 
 /**
- *
+ * @category Storage
  */
 export interface S3BucketProps extends s3.BucketProps {
   id: string
@@ -244,21 +233,21 @@ export interface S3BucketProps extends s3.BucketProps {
 }
 
 /**
- *
+ * @category Application Integration
  */
 export interface SubscriptionProps extends sns.TopicProps {
   id: string
 }
 
 /**
- *
+ * @category Security, Identity & Compliance
  */
 export interface WafIPSetProps extends wafv2.CfnIPSetProps {
   id: string
 }
 
 /**
- *
+ * @category Security, Identity & Compliance
  */
 export interface WafWebACLProps extends wafv2.CfnWebACLProps {
   id: string

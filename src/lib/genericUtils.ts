@@ -3,7 +3,7 @@ import * as _ from 'lodash'
 import { CommonConstruct } from './commonConstruct'
 
 /**
- *
+ * @category Utils
  */
 const defaultResponseObject = {
   statusCode: 200,
@@ -15,28 +15,39 @@ const defaultResponseObject = {
 }
 
 /**
- *
+ * @category Utils
+ */
+export enum CloudWatchWidgetType {
+  Text = 'Text',
+  SingleValue = 'SingleValue',
+  Graph = 'Graph',
+  AlarmStatus = 'AlarmStatus',
+  LogQuery = 'LogQuery',
+}
+
+/**
+ * @category Utils
  * @param stage
  */
 export const isDevStage = (stage: string) => stage === 'dev'
 /**
- *
+ * @category Utils
  * @param stage
  */
 export const isTestStage = (stage: string) => stage === 'tst'
 /**
- *
+ * @category Utils
  * @param stage
  */
 export const isUatStage = (stage: string) => stage === 'uat'
 /**
- *
+ * @category Utils
  * @param stage
  */
 export const isPrdStage = (stage: string) => stage === 'prd'
 
 /**
- *
+ * @category Utils
  * @param {string} id scoped id of the resource
  * @param {CommonConstruct} scope scope in which this resource is defined
  * @param value
@@ -63,7 +74,7 @@ export function createCfnOutput(
 }
 
 /**
- *
+ * @category Utils
  * @param error
  */
 export function redirectError(error: any) {
@@ -75,7 +86,7 @@ export function redirectError(error: any) {
 }
 
 /**
- *
+ * @category Utils
  * @param message
  */
 export function redirectSuccess(message: any) {

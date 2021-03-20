@@ -4,12 +4,27 @@ import { CommonConstruct } from './commonConstruct'
 import { createCfnOutput } from './genericUtils'
 
 /**
- *
+ * @category Utils
  */
 const CommonVpcIdentifier = 'CommonVpc'
 
 /**
+ * @category Networking & Content Delivery
+ * @summary Provides operations on AWS VPC.
+ * - A new instance of this class is injected into {@link CommonConstruct} constructor.
+ * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
+ * @example
+ * import { CommonConstruct } from '@gradientedge/cdk-utils/lib/commonConstruct'
+ * import { CommonStackProps } from '@gradientedge/cdk-utils/lib/types'
  *
+ * class CustomConstruct extends CommonConstruct {
+ *   constructor(parent: cdk.Construct, id: string, props: CommonStackProps) {
+ *     super(parent, id, props)
+ *     this.props = props
+ *     this.vpcManager.createVpc('MyVPC', this)
+ * }
+ *
+ * @see [CDK VPC Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/@aws-cdk_aws-ec2.Vpc.html}</li></i>
  */
 export class VpcManager {
   /**

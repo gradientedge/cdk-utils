@@ -6,14 +6,29 @@ import { SubscriptionProps } from './types'
 import { createCfnOutput } from './genericUtils'
 
 /**
+ * @category Application Integration
+ * @summary Provides operations on AWS Simple Notification Service.
+ * - A new instance of this class is injected into {@link CommonConstruct} constructor.
+ * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
+ * @example
+ * import { CommonConstruct } from '@gradientedge/cdk-utils/lib/commonConstruct'
+ * import { CommonStackProps } from '@gradientedge/cdk-utils/lib/types'
  *
+ * class CustomConstruct extends CommonConstruct {
+ *   constructor(parent: cdk.Construct, id: string, props: CommonStackProps) {
+ *     super(parent, id, props)
+ *     this.props = props
+ *     this.snsManager.createEmailNotificationService('MySns', 'eu-west-1', ['test@example.com'])
+ * }
+ *
+ * @see [CDK Simple Notification Service Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-sns-readme.html}</li></i>
  */
 export class SnsManager {
   /**
    *
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param emails
+   * @param {string[]} emails
    */
   public createEmailNotificationService(id: string, scope: CommonConstruct, emails: string[]) {
     if (!scope.props.subscriptions || scope.props.subscriptions.length == 0)
@@ -44,7 +59,7 @@ export class SnsManager {
    *
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param lambdaFunction
+   * @param {lambda.Function} lambdaFunction
    */
   public createLambdaNotificationService(
     id: string,

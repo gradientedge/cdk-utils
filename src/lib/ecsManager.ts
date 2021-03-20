@@ -7,14 +7,29 @@ import { EcsClusterProps, EcsTaskProps } from './types'
 import { createCfnOutput } from './genericUtils'
 
 /**
+ * @category Containers
+ * @summary Provides operations on AWS Elastic Container Service.
+ * - A new instance of this class is injected into {@link CommonConstruct} constructor.
+ * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
+ * @example
+ * import { CommonConstruct } from '@gradientedge/cdk-utils/lib/commonConstruct'
+ * import { CommonStackProps } from '@gradientedge/cdk-utils/lib/types'
  *
+ * class CustomConstruct extends CommonConstruct {
+ *   constructor(parent: cdk.Construct, id: string, props: CommonStackProps) {
+ *     super(parent, id, props)
+ *     this.props = props
+ *     this.ecsManager.createEcsCluster('MyCluster', this, vpc)
+ * }
+ *
+ * @see [CDK ECS Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-ecs-readme.html}</li></i>
  */
 export class EcsManager {
   /**
    *
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param vpc
+   * @param {ec2.IVpc} vpc
    */
   public createEcsCluster(id: string, scope: CommonConstruct, vpc: ec2.IVpc) {
     if (!scope.props.ecsClusters || scope.props.ecsClusters.length == 0)
@@ -38,11 +53,11 @@ export class EcsManager {
    *
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param cluster
-   * @param role
-   * @param logGroup
-   * @param containerImage
-   * @param environment
+   * @param {ecs.ICluster} cluster
+   * @param {iam.Role} role
+   * @param {logs.ILogGroup} logGroup
+   * @param {ecs.ContainerImage} containerImage
+   * @param {Map<string, string>} environment
    */
   public createEcsFargateTask(
     id: string,

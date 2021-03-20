@@ -5,25 +5,41 @@ import * as lambda from '@aws-cdk/aws-lambda'
 import { CommonConstruct } from './commonConstruct'
 import { RuleProps } from './types'
 import { createCfnOutput } from './genericUtils'
+import { resolveSrv } from 'dns'
 
 /**
+ * @category Application Integration
+ * @summary Provides operations on AWS EventBridge.
+ * - A new instance of this class is injected into {@link CommonConstruct} constructor.
+ * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
+ * @example
+ * import { CommonConstruct } from '@gradientedge/cdk-utils/lib/commonConstruct'
+ * import { CommonStackProps } from '@gradientedge/cdk-utils/lib/types'
  *
+ * class CustomConstruct extends CommonConstruct {
+ *   constructor(parent: cdk.Construct, id: string, props: CommonStackProps) {
+ *     super(parent, id, props)
+ *     this.props = props
+ *     this.eventManager.createLambdaRule('MyLambdaRule', this, lambdaFunction)
+ * }
+ *
+ * @see [CDK EventBridge Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-events-readme.html}</li></i>
  */
 export class EventManager {
   /**
    *
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param lambdaFunction
-   * @param eventBusName
-   * @param eventPattern
-   * @param scheduleExpression
+   * @param {lambda.Function} lambdaFunction
+   * @param {string} eventBusName
+   * @param {any} eventPattern
+   * @param {string} scheduleExpression
    */
   public createLambdaRule(
     id: string,
     scope: CommonConstruct,
     lambdaFunction: lambda.Function,
-    eventBusName?: any,
+    eventBusName?: string,
     eventPattern?: any,
     scheduleExpression?: string
   ) {
@@ -59,11 +75,11 @@ export class EventManager {
    *
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param cluster
-   * @param task
-   * @param subnetIds
-   * @param role
-   * @param eventPattern
+   * @param {ecs.ICluster} cluster
+   * @param {ecs.ITaskDefinition} task
+   * @param {string[]} subnetIds
+   * @param {iam.Role | iam.CfnRole} role
+   * @param {any} eventPattern
    */
   public createFargateTaskRule(
     id: string,

@@ -6,14 +6,14 @@ const appRoot = require('app-root-path')
 const fs = require('fs')
 
 /**
- *
+ * @category Constructs
  */
 export class CommonStack extends cdk.Stack {
   /**
    *
-   * @param parent
-   * @param name
-   * @param props
+   * @param {cdk.App} parent
+   * @param {string} name
+   * @param {cdk.StackProps} props
    */
   constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
     super(parent, name, props)
@@ -25,7 +25,7 @@ export class CommonStack extends cdk.Stack {
 
   /**
    *
-   * @param props
+   * @param {cdk.StackProps} props
    */
   protected determineConstructProps(props: cdk.StackProps) {
     return {
