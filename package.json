@@ -1,6 +1,6 @@
 {
   "name": "@gradientedge/common-aws",
-  "version": "2.0.63",
+  "version": "2.0.64",
   "description": "Utilities for AWS CDK provisioning",
   "main": "build/index.js",
   "engines": {

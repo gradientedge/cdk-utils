@@ -1,7 +1,7 @@
 {
   "source": {
-    "includePattern": "\\.(jsx|js|ts|tsx)$",
-    "incluePattern": ".+\\.(test|spec).js(doc|x)?$",
+    "includePattern": "\\.(ts|tsx)$",
+    "excludePattern": ".+\\.(test|spec).(t|j)s(doc|x)?$",
     "exclude": [
       "__snapshots__",
       "__tests__",
