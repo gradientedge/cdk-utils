@@ -34,8 +34,6 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
       - name: Cache Build Output
         uses: actions/cache@v2
         id: cache-build-output
@@ -44,8 +42,6 @@ jobs:
         with:
           path: dist
           key: ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-${{ hashFiles('build/**/*.js') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-${{ hashFiles('build/**/*.js') }}
       - name: Cache Documentation
         uses: actions/cache@v2
         id: cache-docs
@@ -54,8 +50,6 @@ jobs:
         with:
           path: api-docs
           key: ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-${{ hashFiles('docs/**/*.html') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-${{ hashFiles('docs/**/*.html') }}
       - name: Install Packages
         run: yarn install --frozen-lockfile
       - name: Build Packages
@@ -88,8 +82,6 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
       - name: Install Packages
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
