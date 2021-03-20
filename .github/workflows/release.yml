@@ -119,4 +119,4 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ env.GITHUB_PUBLISH_TOKEN }}
-          publish_dir: ./docs
+          publish_dir: ./api-docs
