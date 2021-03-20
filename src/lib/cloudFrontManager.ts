@@ -5,6 +5,9 @@ import { CommonConstruct } from './commonConstruct'
 import { CloudFrontProps } from './types'
 import { createCfnOutput } from './genericUtils'
 
+/**
+ *
+ */
 export class CloudFrontManager {
   public createOriginAccessIdentity(id: string, scope: CommonConstruct, accessBucket?: s3.IBucket) {
     const oai = new cloudfront.OriginAccessIdentity(scope, `${id}`)
@@ -13,6 +16,15 @@ export class CloudFrontManager {
     return oai
   }
 
+  /**
+   *
+   * @param {string} id scoped id of the resource
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param siteBucket
+   * @param logBucket
+   * @param originAccessIdentity
+   * @param certificate
+   */
   public createCloudFrontDistribution(
     id: string,
     scope: CommonConstruct,

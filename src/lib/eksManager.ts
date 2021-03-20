@@ -5,7 +5,17 @@ import { CommonConstruct } from './commonConstruct'
 import { EksClusterProps } from './types'
 import { createCfnOutput } from './genericUtils'
 
+/**
+ *
+ */
 export class EksManager {
+  /**
+   *
+   * @param {string} id scoped id of the resource
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param image
+   * @param vpc
+   */
   public createEksDeployment(
     id: string,
     scope: CommonConstruct,

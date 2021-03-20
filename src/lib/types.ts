@@ -15,6 +15,9 @@ import * as cloudfront from '@aws-cdk/aws-cloudfront'
 import * as acm from '@aws-cdk/aws-certificatemanager'
 import * as cdk from '@aws-cdk/core'
 
+/**
+ *
+ */
 export enum CloudWatchWidgetType {
   Text = 'Text',
   SingleValue = 'SingleValue',
@@ -23,6 +26,9 @@ export enum CloudWatchWidgetType {
   LogQuery = 'LogQuery',
 }
 
+/**
+ *
+ */
 export interface AppConfigProps {
   id: string
   application: appconfig.CfnApplicationProps
@@ -32,6 +38,9 @@ export interface AppConfigProps {
   environment: appconfig.CfnEnvironmentProps
 }
 
+/**
+ *
+ */
 export interface CommonStackProps extends cdk.StackProps {
   name: string
   region: string
@@ -61,6 +70,9 @@ export interface CommonStackProps extends cdk.StackProps {
   wafWebAcls?: WafWebACLProps[]
 }
 
+/**
+ *
+ */
 export interface AcmProps extends acm.CertificateProps {
   id: string
   certificateAccount?: string
@@ -68,20 +80,32 @@ export interface AcmProps extends acm.CertificateProps {
   certificateId: string
 }
 
+/**
+ *
+ */
 export interface CloudFrontProps extends cloudfront.CloudFrontWebDistributionProps {
   id?: string
 }
 
+/**
+ *
+ */
 export interface CloudTrailProps extends cloudtrail.CfnTrailProps {
   id: string
 }
 
+/**
+ *
+ */
 export interface DashboardProps extends watch.DashboardProps {
   id: string
   positionX: number
   positionY: number
 }
 
+/**
+ *
+ */
 export interface AlarmProps extends watch.AlarmProps {
   id: string
   expression?: string
@@ -89,6 +113,9 @@ export interface AlarmProps extends watch.AlarmProps {
   periodInSecs?: number
 }
 
+/**
+ *
+ */
 export interface MetricProps extends watch.MetricProps {
   stageSuffix: boolean
   periodInSecs?: number
@@ -96,12 +123,18 @@ export interface MetricProps extends watch.MetricProps {
   dbClusterIdentifier?: string
 }
 
+/**
+ *
+ */
 export interface TextWidgetProps extends watch.TextWidgetProps {
   id: string
   positionX: number
   positionY: number
 }
 
+/**
+ *
+ */
 export interface NumericWidgetProps extends watch.SingleValueWidgetProps {
   id: string
   positionX: number
@@ -109,6 +142,9 @@ export interface NumericWidgetProps extends watch.SingleValueWidgetProps {
   metricProps?: watch.MetricProps[]
 }
 
+/**
+ *
+ */
 export interface GraphWidgetProps extends watch.GraphWidgetProps {
   id: string
   positionX: number
@@ -116,6 +152,9 @@ export interface GraphWidgetProps extends watch.GraphWidgetProps {
   metricProps?: MetricProps[]
 }
 
+/**
+ *
+ */
 export interface AlarmStatusWidgetProps extends watch.AlarmStatusWidgetProps {
   id: string
   positionX: number
@@ -123,50 +162,80 @@ export interface AlarmStatusWidgetProps extends watch.AlarmStatusWidgetProps {
   alarmProps?: watch.AlarmProps[]
 }
 
+/**
+ *
+ */
 export interface LogQueryWidgetProps extends watch.LogQueryWidgetProps {
   id: string
   positionX: number
   positionY: number
 }
 
+/**
+ *
+ */
 export interface EcsClusterProps extends ecs.ClusterProps {
   id: string
 }
 
+/**
+ *
+ */
 export interface EcsTaskProps extends ecs.TaskDefinitionProps {
   id: string
 }
 
+/**
+ *
+ */
 export interface EksClusterProps extends eks.ClusterProps {
   id: string
   appContainerPort: number
   appCapacity: number
 }
 
+/**
+ *
+ */
 export interface RuleProps extends events.CfnRuleProps {
   id: string
 }
 
+/**
+ *
+ */
 export interface LambdaProps extends lambda.FunctionProps {
   id: string
   timeoutInSecs?: number
 }
 
+/**
+ *
+ */
 export interface LogProps extends logs.CfnLogGroupProps {
   id: string
 }
 
+/**
+ *
+ */
 export interface MetricFilterProps extends logs.MetricFilterProps {
   id: string
   periodInSecs: number
   options: watch.MetricOptions
 }
 
+/**
+ *
+ */
 export interface Route53Props extends route53.HostedZoneProps {
   id: string
   existingHostedZone?: boolean
 }
 
+/**
+ *
+ */
 export interface S3BucketProps extends s3.BucketProps {
   id: string
   bucketName: string
@@ -174,14 +243,23 @@ export interface S3BucketProps extends s3.BucketProps {
   existingBucket?: boolean
 }
 
+/**
+ *
+ */
 export interface SubscriptionProps extends sns.TopicProps {
   id: string
 }
 
+/**
+ *
+ */
 export interface WafIPSetProps extends wafv2.CfnIPSetProps {
   id: string
 }
 
+/**
+ *
+ */
 export interface WafWebACLProps extends wafv2.CfnWebACLProps {
   id: string
 }

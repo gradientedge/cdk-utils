@@ -7,7 +7,15 @@ import { CommonConstruct } from './commonConstruct'
 import { S3BucketProps } from './types'
 import { createCfnOutput } from './genericUtils'
 
+/**
+ *
+ */
 export class S3Manager {
+  /**
+   *
+   * @param {string} id scoped id of the resource
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   */
   public createS3Bucket(id: string, scope: CommonConstruct) {
     if (!scope.props.buckets || scope.props.buckets.length == 0) throw `S3 props undefined`
 
@@ -58,6 +66,12 @@ export class S3Manager {
     return bucket
   }
 
+  /**
+   *
+   * @param {string} id scoped id of the resource
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param bucket
+   */
   public createBucketPolicyForCloudTrail(id: string, scope: CommonConstruct, bucket: s3.IBucket) {
     const bucketPolicyDocument = new iam.PolicyDocument({
       statements: [
@@ -84,6 +98,16 @@ export class S3Manager {
     })
   }
 
+  /**
+   *
+   * @param {string} id scoped id of the resource
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param siteBucket
+   * @param distribution
+   * @param sources
+   * @param prefix
+   * @param prune
+   */
   public doBucketDeployment(
     id: string,
     scope: CommonConstruct,

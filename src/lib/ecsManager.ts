@@ -6,7 +6,16 @@ import { CommonConstruct } from './commonConstruct'
 import { EcsClusterProps, EcsTaskProps } from './types'
 import { createCfnOutput } from './genericUtils'
 
+/**
+ *
+ */
 export class EcsManager {
+  /**
+   *
+   * @param {string} id scoped id of the resource
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param vpc
+   */
   public createEcsCluster(id: string, scope: CommonConstruct, vpc: ec2.IVpc) {
     if (!scope.props.ecsClusters || scope.props.ecsClusters.length == 0)
       throw `Ecs Cluster props undefined`
@@ -25,6 +34,16 @@ export class EcsManager {
     return ecsCluster
   }
 
+  /**
+   *
+   * @param {string} id scoped id of the resource
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param cluster
+   * @param role
+   * @param logGroup
+   * @param containerImage
+   * @param environment
+   */
   public createEcsFargateTask(
     id: string,
     scope: CommonConstruct,

@@ -5,7 +5,16 @@ import { CommonConstruct } from './commonConstruct'
 import { SubscriptionProps } from './types'
 import { createCfnOutput } from './genericUtils'
 
+/**
+ *
+ */
 export class SnsManager {
+  /**
+   *
+   * @param {string} id scoped id of the resource
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param emails
+   */
   public createEmailNotificationService(id: string, scope: CommonConstruct, emails: string[]) {
     if (!scope.props.subscriptions || scope.props.subscriptions.length == 0)
       throw `subscription props undefined`
@@ -31,6 +40,12 @@ export class SnsManager {
     return topic
   }
 
+  /**
+   *
+   * @param {string} id scoped id of the resource
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param lambdaFunction
+   */
   public createLambdaNotificationService(
     id: string,
     scope: CommonConstruct,

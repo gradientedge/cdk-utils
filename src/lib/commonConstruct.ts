@@ -45,6 +45,12 @@ export class CommonConstruct extends cdk.Construct {
   wafManager: WafManager
   fullyQualifiedDomainName: string
 
+  /**
+   *
+   * @param parent
+   * @param {string} id scoped id of the resource
+   * @param props
+   */
   constructor(parent: cdk.Construct, id: string, props: CommonStackProps) {
     super(parent, id)
     this.props = props
@@ -70,6 +76,13 @@ export class CommonConstruct extends cdk.Construct {
     this.determineFullyQualifiedDomain()
   }
 
+  /**
+   *
+   * @param {string} id scoped id of the resource
+   * @param value
+   * @param description
+   * @param overrideId
+   */
   protected addCfnOutput(
     id: string,
     value: string,
@@ -79,14 +92,32 @@ export class CommonConstruct extends cdk.Construct {
     return createCfnOutput(id, this, value, description, overrideId)
   }
 
+  /**
+   *
+   */
   protected determineFullyQualifiedDomain() {
     this.fullyQualifiedDomainName = this.props.subDomain
       ? `${this.props.subDomain}.${this.props.domainName}`
       : this.props.domainName
   }
 
+  /**
+   *
+   */
   public isDevelopmentStage = () => isDevStage(this.props.stage)
+
+  /**
+   *
+   */
   public isTestStage = () => isTestStage(this.props.stage)
+
+  /**
+   *
+   */
   public isUatStage = () => isUatStage(this.props.stage)
+
+  /**
+   *
+   */
   public isProductionStage = () => isPrdStage(this.props.stage)
 }

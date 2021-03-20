@@ -4,7 +4,16 @@ import { CommonConstruct } from './commonConstruct'
 import { LogProps, MetricFilterProps } from './types'
 import { createCfnOutput } from './genericUtils'
 
+/**
+ *
+ */
 export class LogManager {
+  /**
+   *
+   * @param {string} id scoped id of the resource
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param logGroup
+   */
   public createMetricFilter(id: string, scope: CommonConstruct, logGroup: logs.ILogGroup) {
     if (!scope.props.metricFilters || scope.props.metricFilters.length == 0)
       throw `Metric Filter props undefined`
@@ -23,7 +32,7 @@ export class LogManager {
       filterPattern: metricFilterProps.filterPattern,
     })
 
-    let metric = metricFilterProps.options
+    const metric = metricFilterProps.options
       ? metricFilter.metric({
           dimensions: metricFilterProps.options.dimensions,
           statistic: metricFilterProps.options.statistic,
@@ -36,6 +45,11 @@ export class LogManager {
     return { metricFilter, metric }
   }
 
+  /**
+   *
+   * @param {string} id scoped id of the resource
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   */
   public createCfnLogGroup(id: string, scope: CommonConstruct) {
     if (!scope.props.logs || scope.props.logs.length == 0) throw `Logs props undefined`
 
@@ -52,6 +66,11 @@ export class LogManager {
     return logGroup
   }
 
+  /**
+   *
+   * @param {string} id scoped id of the resource
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   */
   public createLogGroup(id: string, scope: CommonConstruct) {
     if (!scope.props.logs || scope.props.logs.length == 0) throw `Logs props undefined`
 

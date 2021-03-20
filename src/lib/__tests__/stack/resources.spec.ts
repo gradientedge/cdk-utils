@@ -1,5 +1,4 @@
 import * as cdk from '@aws-cdk/core'
-import * as s3 from '@aws-cdk/aws-s3'
 import { expect } from '@jest/globals'
 import { SynthUtils } from '@aws-cdk/assert'
 import '@aws-cdk/assert/jest'

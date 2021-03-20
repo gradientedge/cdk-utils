@@ -48,6 +48,10 @@ export const ArnsByRegion: { [key: string]: string } = {
  * @see [CDK AppConfig Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-appconfig-readme.html}</li></i>
  */
 export class AppConfigManager {
+  /**
+   *
+   * @param scope
+   */
   public getArnForAppConfigExtension(scope: CommonConstruct) {
     return ArnsByRegion[scope.props.region]
   }

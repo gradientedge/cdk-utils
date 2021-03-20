@@ -6,7 +6,16 @@ import { CommonConstruct } from './commonConstruct'
 import { LambdaProps } from './types'
 import { createCfnOutput } from './genericUtils'
 
+/**
+ *
+ */
 export class LambdaManager {
+  /**
+   *
+   * @param {string} id scoped id of the resource
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param code
+   */
   public createLambdaLayer(id: string, scope: CommonConstruct, code: lambda.AssetCode) {
     const lambdaLayer = new lambda.LayerVersion(scope, `${id}`, {
       compatibleRuntimes: [lambda.Runtime.NODEJS_12_X],
@@ -20,6 +29,16 @@ export class LambdaManager {
     return lambdaLayer
   }
 
+  /**
+   *
+   * @param {string} id scoped id of the resource
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param role
+   * @param layers
+   * @param code
+   * @param environment
+   * @param vpc
+   */
   public createLambdaFunction(
     id: string,
     scope: CommonConstruct,

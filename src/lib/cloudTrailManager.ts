@@ -4,7 +4,19 @@ import * as s3 from '@aws-cdk/aws-s3'
 import { CommonConstruct } from './commonConstruct'
 import { CloudTrailProps } from './types'
 
+/**
+ *
+ */
 export class CloudTrailManager {
+  /**
+   *
+   * @param {string} id scoped id of the resource
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param logGroup
+   * @param dataBucket
+   * @param logBucket
+   * @param logBucketPolicy
+   */
   public createCloudTrail(
     id: string,
     scope: CommonConstruct,

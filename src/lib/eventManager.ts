@@ -6,7 +6,19 @@ import { CommonConstruct } from './commonConstruct'
 import { RuleProps } from './types'
 import { createCfnOutput } from './genericUtils'
 
+/**
+ *
+ */
 export class EventManager {
+  /**
+   *
+   * @param {string} id scoped id of the resource
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param lambdaFunction
+   * @param eventBusName
+   * @param eventPattern
+   * @param scheduleExpression
+   */
   public createLambdaRule(
     id: string,
     scope: CommonConstruct,
@@ -43,6 +55,16 @@ export class EventManager {
     return eventRule
   }
 
+  /**
+   *
+   * @param {string} id scoped id of the resource
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param cluster
+   * @param task
+   * @param subnetIds
+   * @param role
+   * @param eventPattern
+   */
   public createFargateTaskRule(
     id: string,
     scope: CommonConstruct,

@@ -2,7 +2,16 @@ import * as ecr from '@aws-cdk/aws-ecr-assets'
 import { CommonConstruct } from './commonConstruct'
 import { createCfnOutput } from './genericUtils'
 
+/**
+ *
+ */
 export class EcrManager {
+  /**
+   *
+   * @param {string} id scoped id of the resource
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param dockerfilePath
+   */
   public createDockerImage(id: string, scope: CommonConstruct, dockerfilePath: string) {
     const asset = new ecr.DockerImageAsset(scope, `${id}`, {
       directory: dockerfilePath,

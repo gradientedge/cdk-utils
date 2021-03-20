@@ -5,7 +5,16 @@ import { CommonConstruct } from './commonConstruct'
 const appRoot = require('app-root-path')
 const fs = require('fs')
 
+/**
+ *
+ */
 export class CommonStack extends cdk.Stack {
+  /**
+   *
+   * @param parent
+   * @param name
+   * @param props
+   */
   constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
     super(parent, name, props)
 
@@ -14,6 +23,10 @@ export class CommonStack extends cdk.Stack {
     new CommonConstruct(this, 'common-aws', this.determineConstructProps(props))
   }
 
+  /**
+   *
+   * @param props
+   */
   protected determineConstructProps(props: cdk.StackProps) {
     return {
       stackName: props.stackName,
@@ -46,6 +59,9 @@ export class CommonStack extends cdk.Stack {
     }
   }
 
+  /**
+   *
+   */
   protected determineExtraContexts() {
     const extraContexts = this.node.tryGetContext('extraContexts')
 
@@ -70,6 +86,9 @@ export class CommonStack extends cdk.Stack {
     })
   }
 
+  /**
+   *
+   */
   protected determineStageContexts() {
     const stage = this.node.tryGetContext('stage')
     const stageContextPath = this.node.tryGetContext('stageContextPath') || 'cdkEnv'

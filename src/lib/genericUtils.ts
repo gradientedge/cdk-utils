@@ -2,6 +2,9 @@ import * as cdk from '@aws-cdk/core'
 import * as _ from 'lodash'
 import { CommonConstruct } from './commonConstruct'
 
+/**
+ *
+ */
 const defaultResponseObject = {
   statusCode: 200,
   body: '',
@@ -11,11 +14,35 @@ const defaultResponseObject = {
   },
 }
 
+/**
+ *
+ * @param stage
+ */
 export const isDevStage = (stage: string) => stage === 'dev'
+/**
+ *
+ * @param stage
+ */
 export const isTestStage = (stage: string) => stage === 'tst'
+/**
+ *
+ * @param stage
+ */
 export const isUatStage = (stage: string) => stage === 'uat'
+/**
+ *
+ * @param stage
+ */
 export const isPrdStage = (stage: string) => stage === 'prd'
 
+/**
+ *
+ * @param {string} id scoped id of the resource
+ * @param {CommonConstruct} scope scope in which this resource is defined
+ * @param value
+ * @param description
+ * @param overrideId
+ */
 export function createCfnOutput(
   id: string,
   scope: CommonConstruct,
@@ -35,6 +62,10 @@ export function createCfnOutput(
   return output
 }
 
+/**
+ *
+ * @param error
+ */
 export function redirectError(error: any) {
   console.error(error, error.message, error.stack)
   return Object.assign({}, defaultResponseObject, {
@@ -43,6 +74,10 @@ export function redirectError(error: any) {
   })
 }
 
+/**
+ *
+ * @param message
+ */
 export function redirectSuccess(message: any) {
   return Object.assign({}, defaultResponseObject, {
     statusCode: 200,

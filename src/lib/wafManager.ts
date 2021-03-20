@@ -3,7 +3,15 @@ import { CommonConstruct } from './commonConstruct'
 import { createCfnOutput } from './genericUtils'
 import { WafIPSetProps, WafWebACLProps } from './types'
 
+/**
+ *
+ */
 export class WafManager {
+  /**
+   *
+   * @param {string} id scoped id of the resource
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   */
   public createIpSet(id: string, scope: CommonConstruct) {
     if (!scope.props.wafIpSets || scope.props.wafIpSets.length == 0)
       throw `WAF Ip Set props undefined`
@@ -27,6 +35,11 @@ export class WafManager {
     return ipSet
   }
 
+  /**
+   *
+   * @param {string} id scoped id of the resource
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   */
   public createWebAcl(id: string, scope: CommonConstruct) {
     if (!scope.props.wafWebAcls || scope.props.wafWebAcls.length == 0)
       throw `WAF WebACL props undefined`

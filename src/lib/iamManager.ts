@@ -6,7 +6,14 @@ import * as s3 from '@aws-cdk/aws-s3'
 import { CommonConstruct } from './commonConstruct'
 import { createCfnOutput } from './genericUtils'
 
+/**
+ *
+ */
 export class IamManager {
+  /**
+   *
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   */
   public statementForReadSecrets(scope: CommonConstruct) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
@@ -19,6 +26,10 @@ export class IamManager {
     })
   }
 
+  /**
+   *
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   */
   public statementForReadAnyAppConfig(scope: CommonConstruct) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
@@ -40,6 +51,11 @@ export class IamManager {
     })
   }
 
+  /**
+   *
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param bucket
+   */
   public statementForListBucket(scope: CommonConstruct, bucket: s3.IBucket) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
@@ -48,6 +64,10 @@ export class IamManager {
     })
   }
 
+  /**
+   *
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   */
   public statementForListAllMyBuckets(scope: CommonConstruct) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
@@ -56,6 +76,11 @@ export class IamManager {
     })
   }
 
+  /**
+   *
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param bucket
+   */
   public statementForGetAnyS3Objects(scope: CommonConstruct, bucket: s3.IBucket) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
@@ -64,6 +89,11 @@ export class IamManager {
     })
   }
 
+  /**
+   *
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param bucket
+   */
   public statementForDeleteAnyS3Objects(scope: CommonConstruct, bucket: s3.IBucket) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
@@ -72,6 +102,11 @@ export class IamManager {
     })
   }
 
+  /**
+   *
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param bucket
+   */
   public statementForPutAnyS3Objects(scope: CommonConstruct, bucket: s3.IBucket) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
@@ -80,6 +115,10 @@ export class IamManager {
     })
   }
 
+  /**
+   *
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   */
   public statementForPassRole(scope: CommonConstruct) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
@@ -88,6 +127,11 @@ export class IamManager {
     })
   }
 
+  /**
+   *
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param servicePrincipals
+   */
   public statementForAssumeRole(scope: CommonConstruct, servicePrincipals: iam.ServicePrincipal[]) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
@@ -96,6 +140,10 @@ export class IamManager {
     })
   }
 
+  /**
+   *
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   */
   public statementForEcsPassRole(scope: CommonConstruct) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
@@ -105,6 +153,12 @@ export class IamManager {
     })
   }
 
+  /**
+   *
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param cluster
+   * @param task
+   */
   public statementForRunEcsTask(
     scope: CommonConstruct,
     cluster: ecs.ICluster,
@@ -118,6 +172,11 @@ export class IamManager {
     })
   }
 
+  /**
+   *
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param logGroup
+   */
   public statementForCreateLogStream(scope: CommonConstruct, logGroup: logs.CfnLogGroup) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
@@ -131,6 +190,11 @@ export class IamManager {
     })
   }
 
+  /**
+   *
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param logGroup
+   */
   public statementForPutLogEvent(scope: CommonConstruct, logGroup: logs.CfnLogGroup) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
@@ -144,6 +208,12 @@ export class IamManager {
     })
   }
 
+  /**
+   *
+   * @param {string} id scoped id of the resource
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param logGroup
+   */
   public createRoleForCloudTrail(id: string, scope: CommonConstruct, logGroup: logs.CfnLogGroup) {
     const policy = new iam.PolicyDocument({
       statements: [
@@ -174,6 +244,13 @@ export class IamManager {
     return role
   }
 
+  /**
+   *
+   * @param {string} id scoped id of the resource
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param cluster
+   * @param task
+   */
   public createRoleForEcsEvent(
     id: string,
     scope: CommonConstruct,
@@ -200,6 +277,12 @@ export class IamManager {
     return role
   }
 
+  /**
+   *
+   * @param {string} id scoped id of the resource
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param policy
+   */
   public createRoleForEcsExecution(id: string, scope: CommonConstruct, policy: iam.PolicyDocument) {
     const role = new iam.Role(scope, `${id}`, {
       assumedBy: new iam.ServicePrincipal('ecs-tasks.amazonaws.com'),
@@ -221,6 +304,12 @@ export class IamManager {
     return role
   }
 
+  /**
+   *
+   * @param {string} id scoped id of the resource
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param policy
+   */
   public createRoleForLambda(id: string, scope: CommonConstruct, policy: iam.PolicyDocument) {
     const role = new iam.Role(scope, `${id}`, {
       assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),

@@ -1,11 +1,23 @@
 const AWS = require('aws-sdk')
 const fs = require('fs')
 
+/**
+ *
+ */
 export class SecretsManager {
+  /**
+   *
+   * @param region
+   */
   public getAwsSecretsManager(region: string) {
     return new AWS.SecretsManager({ region: region })
   }
 
+  /**
+   *
+   * @param secretName
+   * @param region
+   */
   public async loadSecret(secretName: string, region: string) {
     const secretsManager = this.getAwsSecretsManager(region)
     const secret: any = await Promise.all([
@@ -15,6 +27,11 @@ export class SecretsManager {
     return secret ? JSON.parse(secret[0].SecretString) : {}
   }
 
+  /**
+   *
+   * @param secretNames
+   * @param region
+   */
   public async loadSecrets(secretNames: string, region: string) {
     let secrets = {}
     for (const secretName of secretNames.split(',')) {
@@ -24,6 +41,9 @@ export class SecretsManager {
     return secrets
   }
 
+  /**
+   *
+   */
   public exportToDotEnv() {
     let nconf = require('nconf')
     nconf.argv().env()

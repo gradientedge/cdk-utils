@@ -5,7 +5,15 @@ import { Route53Props } from './types'
 import { CommonConstruct } from './commonConstruct'
 import { createCfnOutput } from './genericUtils'
 
+/**
+ *
+ */
 export class Route53Manager {
+  /**
+   *
+   * @param {string} id scoped id of the resource
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   */
   public createHostedZone(id: string, scope: CommonConstruct) {
     let hostedZone: route53.IHostedZone
 
@@ -31,6 +39,14 @@ export class Route53Manager {
     return hostedZone
   }
 
+  /**
+   *
+   * @param {string} id scoped id of the resource
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param distribution
+   * @param hostedZone
+   * @param recordName
+   */
   public createCloudFrontTargetARecord(
     id: string,
     scope: CommonConstruct,
