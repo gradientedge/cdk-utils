@@ -67,6 +67,8 @@ jobs:
       - name: Install Packages
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
+      - name: Build Packages
+        run: yarn build
       - name: Test Packages
         run: yarn validate
       - name: Publish Unit Test Results
