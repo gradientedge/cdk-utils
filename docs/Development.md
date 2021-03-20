@@ -1,17 +1,6 @@
-<div align="center">
-
-  <a href="/docs/Architecture.md">![Architecture][docs-architecture]</a>
-  <a href="/docs/Build.md">![Build Process][build-process]</a>
-  <a href="/docs/Development.md">![Development][docs-development]</a>
-  <a href="/docs/CI-CD.md">![CI-CD][docs-ci-cd]</a>
-
-</div>
-
-# Development
-
 ## Table of Contents
 - [Requirements](#requirements)
-- [Setting up Development Environment](#deployment-instructions)
+- [Setting up Development Environment](#development-instructions)
 
 ## Requirements
 ### Mandatory

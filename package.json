@@ -1,6 +1,6 @@
 {
   "name": "@gradientedge/common-aws",
-  "version": "2.0.62",
+  "version": "2.0.63",
   "description": "Utilities for AWS CDK provisioning",
   "main": "build/index.js",
   "engines": {
@@ -27,7 +27,8 @@
   "scripts": {
     "build": "rimraf dist/ && npx tsc",
     "ci": "yarn install --frozen-lockfile && yarn build && yarn validate",
-    "docs": "typedoc",
+    "typedocs": "typedoc",
+    "docs": "rimraf api-docs/ && npx jsdoc --pedantic -c ./jsdoc.json .",
     "fix": "yarn prettify && eslint --fix **/*.ts",
     "lint": "npx lerna run lint",
     "prettier": "npx prettier --check \"**/*.{ts,json}\"",
@@ -128,11 +129,14 @@
     "@babel/preset-env": "^7.13.10",
     "@babel/preset-typescript": "^7.13.0",
     "@types/jest": "^26.0.20",
+    "better-docs": "^2.3.2",
     "dotenv": "^8.2.0",
     "eslint": "^7.17.0",
     "husky": "^4.3.5",
     "jest": "^26.6.3",
     "jest-junit": "^12.0.0",
+    "jsdoc": "^3.6.6",
+    "jsdoc-babel": "^0.5.0",
     "rimraf": "^3.0.2",
     "ts-jest": "^26.5.3",
     "ts-node": "^9.1.1",

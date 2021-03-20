@@ -2,7 +2,7 @@
 
 <a href="https://gradientedge.com">![Gradient Edge][logo]</a>
 
-# Gradient Edge AWS Utils
+# Gradient Edge AWS CDK Utils
 
 ![License][license]
 ![Maintained][maintained]
@@ -14,6 +14,8 @@
 ![Yarn][yarn-badge]
 </div>
 
+## Introduction
+Toolkit for working with the [AWS CDK][aws-cdk] Toolkit.
 
 For more details, see our full [API documentation](https://gradientedge.github.io/common-aws/).
 
@@ -34,29 +36,10 @@ yarn add @gradientedge/common-aws
 "@gradientedge/common-aws": "latest"
 ```
 
-## Introduction
-An easy-to-use toolkit for working with the [AWS CDK][aws-cdk] Toolkit:
-
-## Table of Contents
-- [Introduction][introduction]
-- [Architecture][architecture]
-- [Build Process][build-process]
-- [Development][development]
-  * [Requirements][development-requirements]
-  * [Development Instructions][development-instructions]
-- [Continuous Integration & Delivery][ci-cd]
-
 <!-- references -->
-[architecture]: /docs/Architecture.md
 [aws-cdk]: https://docs.aws.amazon.com/cdk/latest/guide/home.html
-[build-process]: /docs/Build.md
 [builds]: https://img.shields.io/badge/builds-passing-green?logo=github-actions&style=for-the-badge&logoColor=F8F8F5
-[ci-cd]: /docs/CI-CD.md
 [cmd]: https://img.shields.io/badge/command--line-4D4D4D?logo=windows-terminal&style=for-the-badge
-[development]: /docs/Development.md
-[development-requirements]: /docs/Development.md#requirements
-[development-instructions]: /docs/Development.md#development-instructions
-[introduction]: #introduction
 [license]: https://img.shields.io/badge/license-MIT-green?logo=github&style=for-the-badge
 [logo]: https://raw.githubusercontent.com/gradientedge/ge-cdn-static-content/master/content/images/ge-logo-1200.png?token=ACO4WMSMIP6QR4ZZQZIUP5TAL2MBI
 [maintained]: https://img.shields.io/badge/maintained-YES-green?style=for-the-badge
