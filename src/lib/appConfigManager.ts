@@ -31,10 +31,11 @@ export const ArnsByRegion: { [key: string]: string } = {
 }
 
 /**
- * @classdesc Provides operations on AWS AppConfig.
+ * @summary Provides operations on AWS AppConfig.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
  * @example
+ * ```typescript
  * import { CommonConstruct } from '@gradientedge/common-aws/lib/commonConstruct'
  * import { CommonStackProps } from '@gradientedge/common-aws/lib/types'
  *
@@ -44,8 +45,9 @@ export const ArnsByRegion: { [key: string]: string } = {
  *     this.props = props
  *     this.appConfigManager.createApplication('MyApplication', this)
  * }
+ * ```
  *
- * @see [AppConfig Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-appconfig-readme.html}</li></i>
+ * @see [CDK AppConfig Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-appconfig-readme.html}</li></i>
  */
 export class AppConfigManager {
   public getArnForAppConfigExtension(scope: CommonConstruct) {

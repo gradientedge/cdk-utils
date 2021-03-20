@@ -29,6 +29,8 @@
   "typedocOptions": {
     "entryPoints": ["src/lib"],
     "out": "api-docs",
-    "excludePrivate": false
+    "exclude": "**/*+(index|.spec|.e2e).ts",
+    "excludePrivate": false,
+    "theme": "node_modules/typedoc-neo-theme/bin/default"
   }
 }

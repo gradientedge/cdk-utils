@@ -5,10 +5,11 @@ import { AcmProps } from './types'
 import { createCfnOutput } from './genericUtils'
 
 /**
- * @classdesc Provides operations on AWS Certificates.
+ * @summary Provides operations on AWS Certificates.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
  * @example
+ * ```typescript
  * import { CommonConstruct } from '@gradientedge/common-aws/lib/commonConstruct'
  * import { CommonStackProps } from '@gradientedge/common-aws/lib/types'
  *
@@ -18,8 +19,9 @@ import { createCfnOutput } from './genericUtils'
  *     this.props = props
  *     this.acmManager.createCertificate('MyCertificate', this)
  * }
+ * ```
  *
- * @see [Certificate Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-certificatemanager-readme.html}</li></i>
+ * @see [CDK Certificate Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-certificatemanager-readme.html}</li></i>
  */
 export class AcmManager {
   /**
