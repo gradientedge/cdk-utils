@@ -1,6 +1,6 @@
 {
-  "name": "@gradientedge/common-aws",
-  "version": "2.0.64",
+  "name": "@gradientedge/cdk-utils",
+  "version": "2.0.65",
   "description": "Utilities for AWS CDK provisioning",
   "main": "build/index.js",
   "engines": {
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/gradientedge/common-aws.git"
+    "url": "git+https://github.com/gradientedge/cdk-utils.git"
   },
   "release": {
     "branches": [
@@ -21,13 +21,13 @@
   ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/gradientedge/common-aws/issues"
+    "url": "https://github.com/gradientedge/cdk-utils/issues"
   },
-  "homepage": "https://github.com/gradientedge/common-aws#readme",
+  "homepage": "https://github.com/gradientedge/cdk-utils#readme",
   "scripts": {
     "build": "rimraf dist/ && npx tsc",
     "ci": "yarn install --frozen-lockfile && yarn build && yarn validate",
-    "typedocs": "typedoc",
+    "typedocs": "rimraf api-docs/ && typedoc",
     "docs": "rimraf api-docs/ && npx jsdoc --pedantic -c ./jsdoc.json .",
     "fix": "yarn prettify && eslint --fix **/*.ts",
     "lint": "npx lerna run lint",

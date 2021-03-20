@@ -17,23 +17,23 @@
 ## Introduction
 Toolkit for working with the [AWS CDK][aws-cdk] Toolkit.
 
-For more details, see our full [API documentation](https://gradientedge.github.io/common-aws/).
+For more details, see our full [API documentation](https://gradientedge.github.io/cdk-utils/).
 
 ## Installation
 ### ![cmd]
 With **npm**:
 ```shell
-npm install --save @gradientedge/common-aws
+npm install --save @gradientedge/cdk-utils
 ```
 
 With **yarn**:
 ```shell
-yarn add @gradientedge/common-aws
+yarn add @gradientedge/cdk-utils
 ```
 
 ### ![purescript]
 ```
-"@gradientedge/common-aws": "latest"
+"@gradientedge/cdk-utils": "latest"
 ```
 
 <!-- references -->

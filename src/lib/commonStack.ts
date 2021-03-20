@@ -20,7 +20,7 @@ export class CommonStack extends cdk.Stack {
 
     this.determineExtraContexts()
     this.determineStageContexts()
-    new CommonConstruct(this, 'common-aws', this.determineConstructProps(props))
+    new CommonConstruct(this, 'cdk-utils', this.determineConstructProps(props))
   }
 
   /**
@@ -30,7 +30,7 @@ export class CommonStack extends cdk.Stack {
   protected determineConstructProps(props: cdk.StackProps) {
     return {
       stackName: props.stackName,
-      name: props.stackName || 'common-aws',
+      name: props.stackName || 'cdk-utils',
       region: this.node.tryGetContext('region'),
       stage: this.node.tryGetContext('stage'),
       domainName: this.node.tryGetContext('domainName'),
