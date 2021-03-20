@@ -3,6 +3,9 @@
   "version": "2.0.58",
   "description": "Utilities for AWS CDK provisioning",
   "main": "build/index.js",
+  "engines": {
+    "node": ">=12.16.0 <15"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gradientedge/common-aws.git"
@@ -22,9 +25,9 @@
   },
   "homepage": "https://github.com/gradientedge/common-aws#readme",
   "scripts": {
-    "build": "npx tsc",
+    "build": "rimraf dist/ && npx tsc",
     "ci": "yarn install --frozen-lockfile && yarn build && yarn validate",
-    "docs": "typedoc",
+    "docs": "rimraf api-docs/ && npx jsdoc --pedantic -c ./jsdoc.json .",
     "fix": "yarn prettify && eslint --fix **/*.ts",
     "lint": "npx lerna run lint",
     "prettier": "npx prettier --check \"**/*.{ts,json}\"",
@@ -118,17 +121,21 @@
   },
   "devDependencies": {
     "@aws-cdk/assert": "1.90.0",
-    "@babel/cli": "^7.11.6",
-    "@babel/core": "^7.11.6",
-    "@babel/plugin-proposal-object-rest-spread": "^7.11.0",
-    "@babel/plugin-proposal-optional-chaining": "^7.11.0",
-    "@babel/preset-env": "^7.11.5",
+    "@babel/cli": "^7.13.10",
+    "@babel/core": "^7.13.10",
+    "@babel/plugin-proposal-object-rest-spread": "^7.13.8",
+    "@babel/plugin-proposal-optional-chaining": "^7.13.8",
+    "@babel/preset-env": "^7.13.10",
+    "@babel/preset-typescript": "^7.13.0",
     "@types/jest": "^26.0.20",
     "dotenv": "^8.2.0",
     "eslint": "^7.17.0",
     "husky": "^4.3.5",
     "jest": "^26.6.3",
     "jest-junit": "^12.0.0",
+    "jsdoc": "^3.6.6",
+    "jsdoc-babel": "^0.5.0",
+    "rimraf": "^3.0.2",
     "ts-jest": "^26.5.3",
     "ts-node": "^9.1.1",
     "typedoc": "^0.20.32",

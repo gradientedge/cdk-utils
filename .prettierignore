@@ -9,5 +9,6 @@ package-lock.json
 *.d.ts
 *.js
 
-# Typedocs
+# Docs
 **/docs/**
+**/api-docs/**

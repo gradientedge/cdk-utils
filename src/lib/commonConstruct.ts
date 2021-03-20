@@ -20,6 +20,9 @@ import { CloudWatchManager } from './cloudWatchManager'
 import { WafManager } from './wafManager'
 import { AppConfigManager } from './appConfigManager'
 
+/**
+ *
+ */
 export class CommonConstruct extends cdk.Construct {
   props: CommonStackProps
   appConfigManager: AppConfigManager

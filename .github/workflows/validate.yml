@@ -52,7 +52,7 @@ jobs:
         env:
           cache-name: cache-docs
         with:
-          path: docs
+          path: api-docs
           key: ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-${{ hashFiles('docs/**/*.html') }}
           restore-keys: |
             ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-

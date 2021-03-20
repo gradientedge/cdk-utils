@@ -28,7 +28,7 @@
   "include": ["src/**/*.ts"],
   "typedocOptions": {
     "entryPoints": ["src/lib"],
-    "out": "docs",
+    "out": "api-docs",
     "excludePrivate": false
   }
 }

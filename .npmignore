@@ -18,8 +18,10 @@ npm-debug.log
 .prettierrc
 .prettierignore
 jest.config.js
+jsdoc.json
 **/__tests__/**
 docs
+api-docs
 *.md
 .yarnrc
 .github
