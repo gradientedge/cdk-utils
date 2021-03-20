@@ -34,22 +34,6 @@ jobs:
         with:
           path: node_modules
           key: ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
-      - name: Cache Build Output
-        uses: actions/cache@v2
-        id: cache-build-output
-        env:
-          cache-name: cache-build-output
-        with:
-          path: dist
-          key: ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-${{ hashFiles('build/**/*.js') }}
-      - name: Cache Documentation
-        uses: actions/cache@v2
-        id: cache-docs
-        env:
-          cache-name: cache-docs
-        with:
-          path: api-docs
-          key: ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-${{ hashFiles('docs/**/*.html') }}
       - name: Install Packages
         run: yarn install --frozen-lockfile
       - name: Build Packages
