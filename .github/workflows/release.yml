@@ -86,7 +86,7 @@ jobs:
       matrix:
         node-version: [ 12.x ]
     env:
-      GITHUB_PUBLISH_TOKEN: ${{ secrets.GIT_TOKEN }}
+      GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
@@ -112,11 +112,11 @@ jobs:
       - name: Validate Documentation
         run: yarn docs
       - name: Set NPM Auth
-        run: echo "//npm.pkg.github.com/:_authToken=${GITHUB_PUBLISH_TOKEN}" >> .npmrc
+        run: echo "//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}" >> .npmrc
       - name: Deploy Package(s)
         run: npm publish
       - name: Deploy Documentation
         uses: peaceiris/actions-gh-pages@v3
         with:
-          github_token: ${{ env.GITHUB_PUBLISH_TOKEN }}
+          github_token: ${{ env.GITHUB_TOKEN }}
           publish_dir: ./api-docs
