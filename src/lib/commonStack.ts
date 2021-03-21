@@ -7,6 +7,11 @@ const fs = require('fs')
 
 /**
  * @category Constructs
+ *
+ * @mermaid
+ *   graph LR;
+ *     A[CommonStack]-.->|extends|B(cdk.Stack);
+ *     B(cdk.Stack)-->|implements|C(cdk.ITaggable);
  */
 export class CommonStack extends cdk.Stack {
   /**

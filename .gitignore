@@ -158,8 +158,9 @@ cdk.context.json
 *.js
 *.d.ts
 
-# Typedocs
+# Typedoc & jsDoc
 api-docs/
+typedocs/
 
 # Misc
 !.eslintrc.js

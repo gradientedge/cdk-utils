@@ -22,6 +22,11 @@ import { AppConfigManager } from './appConfigManager'
 
 /**
  * @category Constructs
+ *
+ * @mermaid
+ *   graph LR;
+ *     A[CommonConstruct]-.->|extends|B(cdk.Construct);
+ *     B(cdk.Construct)-->|implements|C(cdk.IConstruct);
  */
 export class CommonConstruct extends cdk.Construct {
   props: CommonStackProps
