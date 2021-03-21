@@ -28,6 +28,17 @@ export class AcmManager {
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @returns {acm.ICertificate}
+   *
+   * @mermaid
+   *   graph LR;
+   *     A((Start)) --> B{Valid Properties?};
+   *     B -- Yes --> C(Fetch By ARN);
+   *     B -- No --> D[Throw Error];
+   *     D --> G((Stop));
+   *     C --> E{Valid ARN?};
+   *     E -- Yes --> F(Return Certificate);
+   *     E -- No --> D;
+   *     F --> G;
    */
   public createCertificate(id: string, scope: CommonConstruct): acm.ICertificate {
     if (!scope.props.certificates || scope.props.certificates.length == 0)
