@@ -37,11 +37,10 @@ export const ArnsByRegion: { [key: string]: string } = {
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
  * @example
- * import { CommonConstruct } from '@gradientedge/cdk-utils/lib/commonConstruct'
- * import { CommonStackProps } from '@gradientedge/cdk-utils/lib/types'
+ * import * as common from '@gradientedge/cdk-utils'
  *
- * class CustomConstruct extends CommonConstruct {
- *   constructor(parent: cdk.Construct, id: string, props: CommonStackProps) {
+ * class CustomConstruct extends common.CommonConstruct {
+ *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
  *     super(parent, id, props)
  *     this.props = props
  *     this.appConfigManager.createApplication('MyApplication', this)

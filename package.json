@@ -1,6 +1,6 @@
 {
   "name": "@gradientedge/cdk-utils",
-  "version": "2.0.69",
+  "version": "2.0.70",
   "description": "Utilities for AWS CDK provisioning",
   "main": "dist/index.js",
   "engines": {
@@ -30,11 +30,10 @@
     "typedocs": "rimraf typedocs/ && typedoc",
     "docs": "rimraf api-docs/ && npx jsdoc --pedantic -c jsdoc.json .",
     "fix": "yarn prettify && eslint --fix **/*.ts",
-    "lint": "npx lerna run lint",
     "prettier": "npx prettier --check \"**/*.{ts,json}\"",
     "prettify": "npx prettier --write \"**/*.{ts,json}\"",
     "test": "yarn build && npx jest --expand --updateSnapshot",
-    "validate": "yarn prettier && npx lerna run lint --parallel && yarn test",
+    "validate": "yarn prettier --parallel && yarn test",
     "watch": "npx tsc --watch"
   },
   "husky": {
