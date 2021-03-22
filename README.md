@@ -43,7 +43,7 @@ yarn add @gradientedge/cdk-utils
 [license]: https://img.shields.io/badge/license-MIT-green?logo=github&style=for-the-badge
 [logo]: https://raw.githubusercontent.com/gradientedge/ge-cdn-static-content/master/content/images/ge-logo-1200.png?token=ACO4WMSMIP6QR4ZZQZIUP5TAL2MBI
 [maintained]: https://img.shields.io/badge/maintained-YES-green?style=for-the-badge
-[version]: https://img.shields.io/badge/version-2.0.58-green?logo=npm&style=for-the-badge
+[version]: https://img.shields.io/badge/version-2.0.68-green?logo=npm&style=for-the-badge
 [node-badge]: https://img.shields.io/badge/node-14.16.0-green?logo=npm&style=for-the-badge
 [purescript]: https://img.shields.io/badge/package.json-4D4D4D?logo=purescript&style=for-the-badge
 [yarn-badge]: https://img.shields.io/badge/yarn-1.22.10-green?logo=yarn&style=for-the-badge
