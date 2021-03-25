@@ -32,7 +32,7 @@ export class LambdaManager {
    */
   public createLambdaLayer(id: string, scope: CommonConstruct, code: lambda.AssetCode) {
     const lambdaLayer = new lambda.LayerVersion(scope, `${id}`, {
-      compatibleRuntimes: [lambda.Runtime.NODEJS_12_X],
+      compatibleRuntimes: [lambda.Runtime.NODEJS_14_X],
       code: code,
       description: `${id}`,
       layerVersionName: `${id}-${scope.props.stage}`,
