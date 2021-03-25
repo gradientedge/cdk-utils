@@ -72,7 +72,7 @@ export class LambdaManager {
       allowPublicSubnet: !!vpc,
       functionName: functionName,
       handler: 'index.lambda_handler',
-      runtime: lambda.Runtime.NODEJS_12_X,
+      runtime: lambda.Runtime.NODEJS_14_X,
       code: code,
       environment: {
         REGION: scope.props.region,
