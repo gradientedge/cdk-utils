@@ -2,6 +2,7 @@ import * as cdk from '@aws-cdk/core'
 import * as ec2 from '@aws-cdk/aws-ec2'
 import * as iam from '@aws-cdk/aws-iam'
 import * as lambda from '@aws-cdk/aws-lambda'
+import * as pylambda from '@aws-cdk/aws-lambda-python'
 import { CommonConstruct } from './commonConstruct'
 import { LambdaProps } from './types'
 import { createCfnOutput } from './genericUtils'
@@ -47,11 +48,31 @@ export class LambdaManager {
    *
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {string} entry path to layer source
+   */
+  public createPythonLambdaLayer(id: string, scope: CommonConstruct, entry: string) {
+    const lambdaLayer = new pylambda.PythonLayerVersion(scope, `${id}`, {
+      compatibleRuntimes: [lambda.Runtime.PYTHON_3_8],
+      description: `${id}`,
+      entry: entry,
+      layerVersionName: `${id}-${scope.props.stage}`,
+    })
+
+    createCfnOutput(`${id}Arn`, scope, lambdaLayer.layerVersionArn)
+
+    return lambdaLayer
+  }
+
+  /**
+   *
+   * @param {string} id scoped id of the resource
+   * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {iam.Role | iam.CfnRole} role
    * @param {lambda.ILayerVersion[]} layers
    * @param {lambda.AssetCode} code
    * @param {Map<string, string>} environment
    * @param {ec2.IVpc} vpc
+   * @param {string} handler
    */
   public createLambdaFunction(
     id: string,
@@ -60,7 +81,8 @@ export class LambdaManager {
     layers: lambda.ILayerVersion[],
     code: lambda.AssetCode,
     environment?: any,
-    vpc?: ec2.IVpc
+    vpc?: ec2.IVpc,
+    handler?: string
   ) {
     if (!scope.props.lambdas || scope.props.lambdas.length == 0) throw `Lambda props undefined`
 
@@ -71,9 +93,62 @@ export class LambdaManager {
     const lambdaFunction = new lambda.Function(scope, `${id}`, {
       allowPublicSubnet: !!vpc,
       functionName: functionName,
-      handler: 'index.lambda_handler',
+      handler: handler || 'index.lambda_handler',
       runtime: lambda.Runtime.NODEJS_14_X,
       code: code,
+      environment: {
+        REGION: scope.props.region,
+        ...environment,
+      },
+      layers: layers,
+      logRetention: lambdaProps.logRetention,
+      memorySize: lambdaProps.memorySize,
+      reservedConcurrentExecutions: lambdaProps.reservedConcurrentExecutions,
+      role: role instanceof iam.Role ? role : undefined,
+      timeout: lambdaProps.timeoutInSecs
+        ? cdk.Duration.seconds(lambdaProps.timeoutInSecs)
+        : cdk.Duration.minutes(1),
+      vpc: vpc,
+    })
+
+    createCfnOutput(`${id}Arn`, scope, lambdaFunction.functionArn)
+
+    return lambdaFunction
+  }
+
+  /**
+   *
+   * @param {string} id scoped id of the resource
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {iam.Role | iam.CfnRole} role
+   * @param {lambda.ILayerVersion[]} layers
+   * @param {string} entry path to lambda source
+   * @param {Map<string, string>} environment
+   * @param {ec2.IVpc} vpc
+   * @param {string} handler
+   */
+  public createPythonLambdaFunction(
+    id: string,
+    scope: CommonConstruct,
+    role: iam.Role | iam.CfnRole,
+    layers: lambda.ILayerVersion[],
+    entry: string,
+    environment?: any,
+    vpc?: ec2.IVpc,
+    handler?: string
+  ) {
+    if (!scope.props.lambdas || scope.props.lambdas.length == 0) throw `Lambda props undefined`
+
+    const lambdaProps = scope.props.lambdas.find((lambda: LambdaProps) => lambda.id === id)
+    if (!lambdaProps) throw `Could not find lambda props for id:${id}`
+
+    const functionName = `${lambdaProps.functionName}-${scope.props.stage}`
+    const lambdaFunction = new pylambda.PythonFunction(scope, `${id}`, {
+      allowPublicSubnet: !!vpc,
+      functionName: functionName,
+      handler: handler || 'index.py',
+      runtime: lambda.Runtime.PYTHON_3_8,
+      entry: entry,
       environment: {
         REGION: scope.props.region,
         ...environment,
