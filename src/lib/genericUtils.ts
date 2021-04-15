@@ -15,6 +15,18 @@ const defaultResponseObject = {
 }
 
 /**
+ * LogLevel enumeration
+ */
+export enum LogLevel {
+  DEBUG = 'DEBUG',
+  INFO = 'INFO',
+  WARNING = 'WARNING',
+  TRACE = 'TRACE',
+  ERROR = 'ERROR',
+  CRITICAL = 'CRITICAL',
+}
+
+/**
  * @category Utils
  */
 export enum CloudWatchWidgetType {
