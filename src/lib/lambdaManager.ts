@@ -70,9 +70,9 @@ export class LambdaManager {
    * @param {iam.Role | iam.CfnRole} role
    * @param {lambda.ILayerVersion[]} layers
    * @param {lambda.AssetCode} code
+   * @param {string} handler
    * @param {Map<string, string>} environment
    * @param {ec2.IVpc} vpc
-   * @param {string} handler
    */
   public createLambdaFunction(
     id: string,
@@ -80,9 +80,9 @@ export class LambdaManager {
     role: iam.Role | iam.CfnRole,
     layers: lambda.ILayerVersion[],
     code: lambda.AssetCode,
+    handler?: string,
     environment?: any,
-    vpc?: ec2.IVpc,
-    handler?: string
+    vpc?: ec2.IVpc
   ) {
     if (!scope.props.lambdas || scope.props.lambdas.length == 0) throw `Lambda props undefined`
 
@@ -123,9 +123,10 @@ export class LambdaManager {
    * @param {iam.Role | iam.CfnRole} role
    * @param {lambda.ILayerVersion[]} layers
    * @param {string} entry path to lambda source
+   * @param {string} index
+   * @param {string} handler
    * @param {Map<string, string>} environment
    * @param {ec2.IVpc} vpc
-   * @param {string} handler
    */
   public createPythonLambdaFunction(
     id: string,
@@ -133,9 +134,10 @@ export class LambdaManager {
     role: iam.Role | iam.CfnRole,
     layers: lambda.ILayerVersion[],
     entry: string,
+    index?: string,
+    handler?: string,
     environment?: any,
-    vpc?: ec2.IVpc,
-    handler?: string
+    vpc?: ec2.IVpc
   ) {
     if (!scope.props.lambdas || scope.props.lambdas.length == 0) throw `Lambda props undefined`
 
@@ -146,7 +148,8 @@ export class LambdaManager {
     const lambdaFunction = new pylambda.PythonFunction(scope, `${id}`, {
       allowPublicSubnet: !!vpc,
       functionName: functionName,
-      handler: handler || 'index.py',
+      index: index,
+      handler: handler,
       runtime: lambda.Runtime.PYTHON_3_8,
       entry: entry,
       environment: {
