@@ -1,6 +1,6 @@
 {
   "name": "@gradientedge/cdk-utils",
-  "version": "2.0.79",
+  "version": "2.0.80",
   "description": "Utilities for AWS CDK provisioning",
   "main": "dist/index.js",
   "engines": {
@@ -52,6 +52,7 @@
   },
   "dependencies": {
     "@aws-cdk/aws-appconfig": "1.95.1",
+    "@aws-cdk/aws-efs": "1.95.1",
     "@aws-cdk/aws-events": "1.95.1",
     "@aws-cdk/aws-events-targets": "1.95.1",
     "@aws-cdk/aws-iam": "1.95.1",

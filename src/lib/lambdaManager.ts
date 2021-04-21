@@ -1,5 +1,6 @@
 import * as cdk from '@aws-cdk/core'
 import * as ec2 from '@aws-cdk/aws-ec2'
+import * as efs from '@aws-cdk/aws-efs'
 import * as iam from '@aws-cdk/aws-iam'
 import * as lambda from '@aws-cdk/aws-lambda'
 import * as pylambda from '@aws-cdk/aws-lambda-python'
@@ -73,6 +74,8 @@ export class LambdaManager {
    * @param {string} handler
    * @param {Map<string, string>} environment
    * @param {ec2.IVpc} vpc
+   * @param {efs.IAccessPoint} accessPoint
+   * @param {string} mountPath
    */
   public createLambdaFunction(
     id: string,
@@ -82,7 +85,9 @@ export class LambdaManager {
     code: lambda.AssetCode,
     handler?: string,
     environment?: any,
-    vpc?: ec2.IVpc
+    vpc?: ec2.IVpc,
+    accessPoint?: efs.IAccessPoint,
+    mountPath?: string
   ) {
     if (!scope.props.lambdas || scope.props.lambdas.length == 0) throw `Lambda props undefined`
 
@@ -100,6 +105,9 @@ export class LambdaManager {
         REGION: scope.props.region,
         ...environment,
       },
+      filesystem: accessPoint
+        ? lambda.FileSystem.fromEfsAccessPoint(accessPoint, mountPath || '/mnt/msg')
+        : undefined,
       layers: layers,
       logRetention: lambdaProps.logRetention,
       memorySize: lambdaProps.memorySize,
@@ -127,6 +135,8 @@ export class LambdaManager {
    * @param {string} handler
    * @param {Map<string, string>} environment
    * @param {ec2.IVpc} vpc
+   * @param {efs.IAccessPoint} accessPoint
+   * @param {string} mountPath
    */
   public createPythonLambdaFunction(
     id: string,
@@ -137,7 +147,9 @@ export class LambdaManager {
     index?: string,
     handler?: string,
     environment?: any,
-    vpc?: ec2.IVpc
+    vpc?: ec2.IVpc,
+    accessPoint?: efs.IAccessPoint,
+    mountPath?: string
   ) {
     if (!scope.props.lambdas || scope.props.lambdas.length == 0) throw `Lambda props undefined`
 
@@ -156,6 +168,9 @@ export class LambdaManager {
         REGION: scope.props.region,
         ...environment,
       },
+      filesystem: accessPoint
+        ? lambda.FileSystem.fromEfsAccessPoint(accessPoint, mountPath || '/mnt/msg')
+        : undefined,
       layers: layers,
       logRetention: lambdaProps.logRetention,
       memorySize: lambdaProps.memorySize,
