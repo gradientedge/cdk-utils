@@ -74,6 +74,7 @@ export class LambdaManager {
    * @param {string} handler
    * @param {Map<string, string>} environment
    * @param {ec2.IVpc} vpc
+   * @param {ec2.ISecurityGroup[]} securityGroups
    * @param {efs.IAccessPoint} accessPoint
    * @param {string} mountPath
    */
@@ -86,6 +87,7 @@ export class LambdaManager {
     handler?: string,
     environment?: any,
     vpc?: ec2.IVpc,
+    securityGroups?: ec2.ISecurityGroup[],
     accessPoint?: efs.IAccessPoint,
     mountPath?: string
   ) {
@@ -113,6 +115,7 @@ export class LambdaManager {
       memorySize: lambdaProps.memorySize,
       reservedConcurrentExecutions: lambdaProps.reservedConcurrentExecutions,
       role: role instanceof iam.Role ? role : undefined,
+      securityGroups: securityGroups,
       timeout: lambdaProps.timeoutInSecs
         ? cdk.Duration.seconds(lambdaProps.timeoutInSecs)
         : cdk.Duration.minutes(1),
@@ -135,6 +138,7 @@ export class LambdaManager {
    * @param {string} handler
    * @param {Map<string, string>} environment
    * @param {ec2.IVpc} vpc
+   * @param {ec2.ISecurityGroup[]} securityGroups
    * @param {efs.IAccessPoint} accessPoint
    * @param {string} mountPath
    */
@@ -148,6 +152,7 @@ export class LambdaManager {
     handler?: string,
     environment?: any,
     vpc?: ec2.IVpc,
+    securityGroups?: ec2.ISecurityGroup[],
     accessPoint?: efs.IAccessPoint,
     mountPath?: string
   ) {
@@ -176,6 +181,7 @@ export class LambdaManager {
       memorySize: lambdaProps.memorySize,
       reservedConcurrentExecutions: lambdaProps.reservedConcurrentExecutions,
       role: role instanceof iam.Role ? role : undefined,
+      securityGroups: securityGroups,
       timeout: lambdaProps.timeoutInSecs
         ? cdk.Duration.seconds(lambdaProps.timeoutInSecs)
         : cdk.Duration.minutes(1),
