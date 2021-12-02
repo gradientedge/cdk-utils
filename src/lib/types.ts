@@ -14,6 +14,7 @@ import * as cloudtrail from '@aws-cdk/aws-cloudtrail'
 import * as cloudfront from '@aws-cdk/aws-cloudfront'
 import * as acm from '@aws-cdk/aws-certificatemanager'
 import * as cdk from '@aws-cdk/core'
+import * as s3deploy from '@aws-cdk/aws-s3-deployment'
 
 /**
  * @category Management & Governance
@@ -57,6 +58,14 @@ export interface CommonStackProps extends cdk.StackProps {
   alarms?: AlarmProps[]
   wafIpSets?: WafIPSetProps[]
   wafWebAcls?: WafWebACLProps[]
+}
+
+export interface StaticSiteProps extends CommonStackProps {
+  siteSource: s3deploy.ISource
+  siteRecordName?: string
+  siteSubDomain?: string
+  aliases?: string[]
+  hostedZoneDomainName?: string
 }
 
 /**
