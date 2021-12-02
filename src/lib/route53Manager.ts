@@ -84,4 +84,33 @@ export class Route53Manager {
 
     return aRecord
   }
+
+  /**
+   *
+   * @param {string} id scoped id of the resource
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {cloudfront.IDistribution} distribution
+   * @param {route53.IHostedZone} hostedZone
+   * @param {string} recordName
+   */
+  public createCloudFrontTargetARecordV2(
+    id: string,
+    scope: CommonConstruct,
+    distribution?: cloudfront.IDistribution,
+    hostedZone?: route53.IHostedZone,
+    recordName?: string
+  ) {
+    if (!distribution) throw `Distribution undefined`
+    if (!hostedZone) throw `HostedZone undefined`
+
+    const aRecord = new route53.ARecord(scope, `${id}`, {
+      recordName: recordName,
+      target: route53.RecordTarget.fromAlias(new route53Targets.CloudFrontTarget(distribution)),
+      zone: hostedZone,
+    })
+
+    createCfnOutput(`${id}DomainName`, scope, aRecord.domainName)
+
+    return aRecord
+  }
 }

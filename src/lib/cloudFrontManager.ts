@@ -45,6 +45,7 @@ export class CloudFrontManager {
    * @param {s3.IBucket} logBucket
    * @param {cloudfront.OriginAccessIdentity} originAccessIdentity
    * @param {acm.ICertificate} certificate
+   * @param {string[]} aliases
    */
   public createCloudFrontDistribution(
     id: string,
@@ -52,7 +53,8 @@ export class CloudFrontManager {
     siteBucket?: s3.IBucket,
     logBucket?: s3.IBucket,
     originAccessIdentity?: cloudfront.OriginAccessIdentity,
-    certificate?: acm.ICertificate
+    certificate?: acm.ICertificate,
+    aliases?: string[]
   ) {
     if (!siteBucket) throw `SiteBucket not defined`
     if (!certificate) throw `Certificate not defined`
@@ -76,7 +78,7 @@ export class CloudFrontManager {
         },
       ],
       viewerCertificate: cloudfront.ViewerCertificate.fromAcmCertificate(certificate, {
-        aliases: [siteBucket.bucketName],
+        aliases: aliases ? [...aliases, ...[siteBucket.bucketName]] : [siteBucket.bucketName],
         securityPolicy: cloudfront.SecurityPolicyProtocol.TLS_V1_1_2016,
         sslMethod: cloudfront.SSLMethod.SNI,
       }),
