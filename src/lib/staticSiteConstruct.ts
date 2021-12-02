@@ -36,29 +36,17 @@ export class StaticSiteConstruct extends CommonConstruct {
 
     this.siteCertificate = this.acmManager.createCertificate(`${this.id}-certificate`, this)
 
-    this.siteLogBucket = this.s3Manager.createS3Bucket(
-      this.props.siteSubDomain
-        ? `${this.id}-${this.props.siteSubDomain}-log-bucket`
-        : `${this.id}-log-bucket`,
-      this
-    )
+    this.siteLogBucket = this.s3Manager.createS3Bucket(`${this.id}-log-bucket`, this)
 
-    this.siteBucket = this.s3Manager.createS3Bucket(
-      this.props.siteSubDomain
-        ? `${this.id}-${this.props.siteSubDomain}-bucket`
-        : `${this.id}-bucket`,
-      this
-    )
+    this.siteBucket = this.s3Manager.createS3Bucket(`${this.id}-bucket`, this)
 
     this.siteOriginAccessIdentity = this.cloudFrontManager.createOriginAccessIdentity(
-      this.props.siteSubDomain ? `${this.id}-${this.props.siteSubDomain}-oai` : `${this.id}-oai`,
+      `${this.id}-oai`,
       this,
       this.siteBucket
     )
     this.siteDistribution = this.cloudFrontManager.createCloudFrontDistribution(
-      this.props.siteSubDomain
-        ? `${this.id}-${this.props.siteSubDomain}-distribution`
-        : `${this.id}-distribution`,
+      `${this.id}-distribution`,
       this,
       this.siteBucket,
       this.siteLogBucket,
