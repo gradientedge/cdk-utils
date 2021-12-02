@@ -101,7 +101,6 @@ export class CommonStack extends cdk.Stack {
 
     if (isDevStage(stage)) {
       console.info(`Development stage. Using default stage context properties`)
-      return
     }
 
     if (!fs.existsSync(stageContextFilePath)) {
