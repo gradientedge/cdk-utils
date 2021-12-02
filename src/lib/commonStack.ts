@@ -125,4 +125,10 @@ export class CommonStack extends cdk.Stack {
       }
     })
   }
+
+  protected fullyQualifiedDomain() {
+    const domainName = this.node.tryGetContext('domainName')
+    const subDomain = this.node.tryGetContext('subDomain')
+    return subDomain ? `${subDomain}.${domainName}` : domainName
+  }
 }
