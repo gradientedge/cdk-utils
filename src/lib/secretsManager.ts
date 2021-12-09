@@ -1,3 +1,7 @@
+import { CommonConstruct } from './commonConstruct'
+import * as cdk from '@aws-cdk/core'
+import * as secretsManager from '@aws-cdk/aws-secretsmanager'
+
 const AWS = require('aws-sdk')
 const fs = require('fs')
 
@@ -83,5 +87,25 @@ export class SecretsManager {
         fs.appendFileSync(`${appRoot.path}/${outFileName}`, `${key}=${secretString[key]}\r\n`)
       })
     })
+  }
+
+  /**
+   *
+   * @param id
+   * @param scope
+   * @param stackName
+   * @param exportName
+   */
+  public retrieveSecretFromSecretsManager(
+    id: string,
+    scope: CommonConstruct,
+    stackName: string,
+    exportName: string
+  ) {
+    return secretsManager.Secret.fromSecretNameV2(
+      scope,
+      `${id}`,
+      cdk.Fn.importValue(`${stackName}-${scope.props.stage}.${exportName}`)
+    )
   }
 }
