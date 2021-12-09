@@ -105,7 +105,7 @@ export class SecretsManager {
     return secretsManager.Secret.fromSecretNameV2(
       scope,
       `${id}`,
-      cdk.Fn.importValue(`${stackName}-${scope.props.stage}.${exportName}`)
+      cdk.Fn.importValue(`${stackName}-${scope.props.stage}-${exportName}`)
     )
   }
 }
