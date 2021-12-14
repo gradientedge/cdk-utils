@@ -25,7 +25,7 @@
     "typeRoots": ["node_modules/@types"],
     "allowSyntheticDefaultImports": true
   },
-  "include": ["src/**/*.ts"],
+  "include": ["index.ts", "src/**/*.ts"],
   "typedocOptions": {
     "entryPoints": ["src/lib"],
     "out": "api-docs",
