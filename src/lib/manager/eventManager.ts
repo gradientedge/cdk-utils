@@ -1,11 +1,10 @@
-import * as ecs from '@aws-cdk/aws-ecs'
-import * as events from '@aws-cdk/aws-events'
-import * as iam from '@aws-cdk/aws-iam'
-import * as lambda from '@aws-cdk/aws-lambda'
-import { CommonConstruct } from './commonConstruct'
-import { RuleProps } from './types'
-import { createCfnOutput } from './genericUtils'
-import { resolveSrv } from 'dns'
+import * as ecs from 'aws-cdk-lib/aws-ecs'
+import * as events from 'aws-cdk-lib/aws-events'
+import * as iam from 'aws-cdk-lib/aws-iam'
+import * as lambda from 'aws-cdk-lib/aws-lambda'
+import { CommonConstruct } from '../common/commonConstruct'
+import { RuleProps } from '../types'
+import { createCfnOutput } from '../utils'
 
 /**
  * @category Application Integration
@@ -29,6 +28,7 @@ export class EventManager {
    *
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {RuleProps} props
    * @param {lambda.Function} lambdaFunction
    * @param {string} eventBusName
    * @param {any} eventPattern
@@ -37,23 +37,21 @@ export class EventManager {
   public createLambdaRule(
     id: string,
     scope: CommonConstruct,
+    props: RuleProps,
     lambdaFunction: lambda.Function,
     eventBusName?: string,
     eventPattern?: any,
     scheduleExpression?: string
   ) {
-    if (!scope.props.rules || scope.props.rules.length == 0) throw `Event rule props undefined`
-
-    const ruleProps = scope.props.rules.find((log: RuleProps) => log.id === id)
-    if (!ruleProps) throw `Could not find Event rule props for id:${id}`
+    if (!props) throw `Event rule props undefined`
 
     const eventRule = new events.CfnRule(scope, `${id}`, {
       description: 'Rule to send notification to lambda function target',
       eventBusName: eventBusName,
       eventPattern: eventPattern,
       scheduleExpression: scheduleExpression,
-      name: `${ruleProps.name}-${scope.props.stage}`,
-      state: ruleProps.state,
+      name: `${props.name}-${scope.props.stage}`,
+      state: props.state,
       targets: [{ arn: lambdaFunction.functionArn, id: `${id}-${scope.props.stage}` }],
     })
 
@@ -64,8 +62,8 @@ export class EventManager {
       sourceArn: eventRule.attrArn,
     })
 
-    createCfnOutput(`${id}Arn`, scope, eventRule.attrArn)
-    createCfnOutput(`${id}Name`, scope, eventRule.name)
+    createCfnOutput(`${id}-ruleArn`, scope, eventRule.attrArn)
+    createCfnOutput(`${id}-ruleName`, scope, eventRule.name)
 
     return eventRule
   }
@@ -74,6 +72,7 @@ export class EventManager {
    *
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {RuleProps} props
    * @param {ecs.ICluster} cluster
    * @param {ecs.ITaskDefinition} task
    * @param {string[]} subnetIds
@@ -83,22 +82,20 @@ export class EventManager {
   public createFargateTaskRule(
     id: string,
     scope: CommonConstruct,
+    props: RuleProps,
     cluster: ecs.ICluster,
     task: ecs.ITaskDefinition,
     subnetIds: string[],
     role: iam.Role | iam.CfnRole,
     eventPattern?: any
   ) {
-    if (!scope.props.rules || scope.props.rules.length == 0) throw `Event rule props undefined`
-
-    const ruleProps = scope.props.rules.find((log: RuleProps) => log.id === id)
-    if (!ruleProps) throw `Could not find Event rule props for id:${id}`
+    if (!props) throw `Event rule props undefined`
 
     const eventRule = new events.CfnRule(scope, `${id}`, {
       description: 'Rule to send notification on new objects in data bucket to ecs task target',
       eventPattern: eventPattern,
-      name: `${ruleProps.name}-${scope.props.stage}`,
-      state: ruleProps.state,
+      name: `${props.name}-${scope.props.stage}`,
+      state: props.state,
       targets: [
         {
           arn: cluster.clusterArn,
@@ -116,8 +113,8 @@ export class EventManager {
       ],
     })
 
-    createCfnOutput(`${id}Arn`, scope, eventRule.attrArn)
-    createCfnOutput(`${id}Name`, scope, eventRule.name)
+    createCfnOutput(`${id}-ruleArn`, scope, eventRule.attrArn)
+    createCfnOutput(`${id}-ruleName`, scope, eventRule.name)
 
     return eventRule
   }

@@ -1,9 +1,10 @@
-import * as cloudfront from '@aws-cdk/aws-cloudfront'
-import * as route53 from '@aws-cdk/aws-route53'
-import * as route53Targets from '@aws-cdk/aws-route53-targets'
-import { Route53Props } from './types'
-import { CommonConstruct } from './commonConstruct'
-import { createCfnOutput } from './genericUtils'
+import * as apig from 'aws-cdk-lib/aws-apigateway'
+import * as cloudfront from 'aws-cdk-lib/aws-cloudfront'
+import * as route53 from 'aws-cdk-lib/aws-route53'
+import * as route53Targets from 'aws-cdk-lib/aws-route53-targets'
+import { Route53Props } from '../types'
+import { CommonConstruct } from '../common/commonConstruct'
+import { createCfnOutput } from '../utils'
 
 /**
  * @category Networking & Content Delivery
@@ -27,16 +28,14 @@ export class Route53Manager {
    *
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {Route53Props} props
    */
-  public createHostedZone(id: string, scope: CommonConstruct) {
+  public createHostedZone(id: string, scope: CommonConstruct, props: Route53Props) {
     let hostedZone: route53.IHostedZone
 
-    if (!scope.props.routes || scope.props.routes.length == 0) throw `Route53 props undefined`
+    if (!props) throw `Route53 props undefined`
 
-    const route53Props = scope.props.routes.find((r53: Route53Props) => r53.id === id)
-    if (!route53Props) throw `Could not find route53 props for id:${id}`
-
-    if (route53Props.existingHostedZone) {
+    if (props.existingHostedZone) {
       hostedZone = route53.HostedZone.fromLookup(scope, `${id}`, {
         domainName: scope.props.domainName,
       })
@@ -47,8 +46,8 @@ export class Route53Manager {
       })
     }
 
-    createCfnOutput(`${id}Id`, scope, hostedZone.hostedZoneId)
-    createCfnOutput(`${id}Arn`, scope, hostedZone.hostedZoneArn)
+    createCfnOutput(`${id}-hostedZoneId`, scope, hostedZone.hostedZoneId)
+    createCfnOutput(`${id}-hostedZoneArn`, scope, hostedZone.hostedZoneArn)
 
     return hostedZone
   }
@@ -80,7 +79,7 @@ export class Route53Manager {
       zone: hostedZone,
     })
 
-    createCfnOutput(`${id}DomainName`, scope, aRecord.domainName)
+    createCfnOutput(`${id}-aRecordDomainName`, scope, aRecord.domainName)
 
     return aRecord
   }
@@ -109,8 +108,34 @@ export class Route53Manager {
       zone: hostedZone,
     })
 
-    createCfnOutput(`${id}DomainName`, scope, aRecord.domainName)
+    createCfnOutput(`${id}-aRecordDomainName`, scope, aRecord.domainName)
 
     return aRecord
+  }
+
+  /**
+   *
+   * @param id
+   * @param scope
+   * @param recordName
+   * @param apiDomain
+   * @param hostedZone
+   */
+  public createApiGatewayARecord(
+    id: string,
+    scope: CommonConstruct,
+    recordName: string,
+    apiDomain: apig.DomainName,
+    hostedZone: route53.IHostedZone
+  ) {
+    const apiARecord = new route53.ARecord(scope, `${id}`, {
+      recordName: recordName,
+      target: route53.RecordTarget.fromAlias(new route53Targets.ApiGatewayDomain(apiDomain)),
+      zone: hostedZone,
+    })
+
+    createCfnOutput(`${id}-a-record-domain-name`, scope, apiARecord.domainName)
+
+    return apiARecord
   }
 }

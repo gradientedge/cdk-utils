@@ -1,9 +1,9 @@
-import * as ec2 from '@aws-cdk/aws-ec2'
-import * as ecr from '@aws-cdk/aws-ecr-assets'
-import * as eks from '@aws-cdk/aws-eks'
-import { CommonConstruct } from './commonConstruct'
-import { EksClusterProps } from './types'
-import { createCfnOutput } from './genericUtils'
+import * as ec2 from 'aws-cdk-lib/aws-ec2'
+import * as ecr from 'aws-cdk-lib/aws-ecr-assets'
+import * as eks from 'aws-cdk-lib/aws-eks'
+import { CommonConstruct } from '../common/commonConstruct'
+import { EksClusterProps } from '../types'
+import { createCfnOutput } from '../utils'
 
 /**
  * @category Containers
@@ -27,20 +27,18 @@ export class EksManager {
    *
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {EksClusterProps} props
    * @param {ecr.DockerImageAsset} image
    * @param {ec2.IVpc} vpc
    */
   public createEksDeployment(
     id: string,
     scope: CommonConstruct,
+    props: EksClusterProps,
     image: ecr.DockerImageAsset,
     vpc: ec2.IVpc
   ) {
-    if (!scope.props.eksClusters || scope.props.eksClusters.length == 0)
-      throw `EksCluster props undefined`
-
-    const eksClusterProps = scope.props.eksClusters.find((eks: EksClusterProps) => eks.id === id)
-    if (!eksClusterProps) throw `Could not find eksCluster props for id:${id}`
+    if (!props) throw `EksCluster props undefined`
 
     const appLabel = { app: `${id}`.toLowerCase() }
 
@@ -57,7 +55,7 @@ export class EksManager {
               {
                 name: `${id}`.toLowerCase(),
                 image: image.imageUri,
-                ports: [{ containerPort: eksClusterProps.appContainerPort }],
+                ports: [{ containerPort: props.appContainerPort }],
               },
             ],
           },
@@ -76,7 +74,7 @@ export class EksManager {
             name: 'http-port',
             protocol: 'TCP',
             port: 80,
-            targetPort: eksClusterProps.appContainerPort,
+            targetPort: props.appContainerPort,
           },
         ],
         selector: appLabel,
@@ -85,7 +83,7 @@ export class EksManager {
 
     const cluster = new eks.Cluster(scope, `${id}Cluster`, {
       clusterName: `${id.toLowerCase()}-${scope.props.stage}`,
-      defaultCapacity: eksClusterProps.appCapacity,
+      defaultCapacity: props.appCapacity,
       defaultCapacityInstance: ec2.InstanceType.of(ec2.InstanceClass.T3, ec2.InstanceSize.LARGE),
       version: eks.KubernetesVersion.V1_18,
       vpc,
@@ -93,8 +91,8 @@ export class EksManager {
 
     cluster.addManifest(`${id}Pod`, service, deployment)
 
-    createCfnOutput(`${id}ClusterArn`, scope, cluster.clusterArn)
-    createCfnOutput(`${id}ClusterEndpoint`, scope, cluster.clusterEndpoint)
+    createCfnOutput(`${id}-clusterArn`, scope, cluster.clusterArn)
+    createCfnOutput(`${id}-clusterEndpoint`, scope, cluster.clusterEndpoint)
 
     return cluster
   }

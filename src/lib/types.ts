@@ -1,20 +1,21 @@
-import * as wafv2 from '@aws-cdk/aws-wafv2'
-import * as ec2 from '@aws-cdk/aws-ec2'
-import * as appconfig from '@aws-cdk/aws-appconfig'
-import * as sns from '@aws-cdk/aws-sns'
-import * as s3 from '@aws-cdk/aws-s3'
-import * as route53 from '@aws-cdk/aws-route53'
-import * as logs from '@aws-cdk/aws-logs'
-import * as watch from '@aws-cdk/aws-cloudwatch'
-import * as lambda from '@aws-cdk/aws-lambda'
-import * as events from '@aws-cdk/aws-events'
-import * as eks from '@aws-cdk/aws-eks'
-import * as ecs from '@aws-cdk/aws-ecs'
-import * as cloudtrail from '@aws-cdk/aws-cloudtrail'
-import * as cloudfront from '@aws-cdk/aws-cloudfront'
-import * as acm from '@aws-cdk/aws-certificatemanager'
-import * as cdk from '@aws-cdk/core'
-import * as s3deploy from '@aws-cdk/aws-s3-deployment'
+import * as wafv2 from 'aws-cdk-lib/aws-wafv2'
+import * as ec2 from 'aws-cdk-lib/aws-ec2'
+import * as appconfig from 'aws-cdk-lib/aws-appconfig'
+import * as sns from 'aws-cdk-lib/aws-sns'
+import * as s3 from 'aws-cdk-lib/aws-s3'
+import * as route53 from 'aws-cdk-lib/aws-route53'
+import * as logs from 'aws-cdk-lib/aws-logs'
+import * as watch from 'aws-cdk-lib/aws-cloudwatch'
+import * as lambda from 'aws-cdk-lib/aws-lambda'
+import * as events from 'aws-cdk-lib/aws-events'
+import * as eks from 'aws-cdk-lib/aws-eks'
+import * as ecs from 'aws-cdk-lib/aws-ecs'
+import * as cloudtrail from 'aws-cdk-lib/aws-cloudtrail'
+import * as cloudfront from 'aws-cdk-lib/aws-cloudfront'
+import * as acm from 'aws-cdk-lib/aws-certificatemanager'
+import * as cdk from 'aws-cdk-lib'
+import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment'
+import * as apig from 'aws-cdk-lib/aws-apigateway'
 
 /**
  * @category Management & Governance
@@ -61,11 +62,35 @@ export interface CommonStackProps extends cdk.StackProps {
 }
 
 export interface StaticSiteProps extends CommonStackProps {
+  siteCertificate: AcmProps
+  siteBucket: S3BucketProps
+  siteLogBucket: S3BucketProps
+  siteDistribution: CloudFrontProps
   siteSource: s3deploy.ISource
+  siteHostedZoneDomainName?: string
   siteRecordName?: string
   siteSubDomain?: string
-  aliases?: string[]
-  hostedZoneDomainName?: string
+  siteAliases?: string[]
+}
+
+export interface GraphQlApiLambdaEnvironment {
+  NODE_ENV: string
+  LOG_LEVEL: string
+  TZ: string
+}
+
+export interface GraphQlApiLambdaProps extends CommonStackProps {
+  apiRoot: string
+  apiSubDomain: string
+  graphQLApiCertificate: AcmProps
+  graphqlRestApi: apig.LambdaRestApiProps
+  graphqlApiLambdaLayerSources?: lambda.AssetCode[]
+  graphQLApiHandler: string
+  graphQLApiSource: lambda.AssetCode
+  graphqlApi: LambdaProps
+  nodeEnv: string
+  logLevel: string
+  timezone: string
 }
 
 /**

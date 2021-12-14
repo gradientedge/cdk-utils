@@ -1,5 +1,5 @@
-import * as cdk from '@aws-cdk/core'
-import { isDevStage } from './genericUtils'
+import * as cdk from 'aws-cdk-lib'
+import { isDevStage } from '../utils'
 import { CommonConstruct } from './commonConstruct'
 
 const appRoot = require('app-root-path')

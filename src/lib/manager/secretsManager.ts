@@ -1,6 +1,6 @@
-import { CommonConstruct } from './commonConstruct'
-import * as cdk from '@aws-cdk/core'
-import * as secretsManager from '@aws-cdk/aws-secretsmanager'
+import { CommonConstruct } from '../common/commonConstruct'
+import * as cdk from 'aws-cdk-lib'
+import * as secretsManager from 'aws-cdk-lib/aws-secretsmanager'
 
 const AWS = require('aws-sdk')
 const fs = require('fs')

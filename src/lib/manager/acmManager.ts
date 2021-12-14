@@ -1,8 +1,8 @@
-import * as acm from '@aws-cdk/aws-certificatemanager'
-import * as cdk from '@aws-cdk/core'
-import { CommonConstruct } from './commonConstruct'
-import { AcmProps } from './types'
-import { createCfnOutput } from './genericUtils'
+import * as acm from 'aws-cdk-lib/aws-certificatemanager'
+import * as cdk from 'aws-cdk-lib'
+import { CommonConstruct } from '../common/commonConstruct'
+import { AcmProps } from '../types'
+import { createCfnOutput } from '../utils'
 
 /**
  * @category Security, Identity & Compliance
@@ -26,6 +26,7 @@ export class AcmManager {
    * @summary Method to create/import a certificate
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {AcmProps} props certificate props
    * @returns {acm.ICertificate}
    *
    * @mermaid
@@ -39,23 +40,19 @@ export class AcmManager {
    *     E -- No --> D;
    *     F --> G;
    */
-  public createCertificate(id: string, scope: CommonConstruct): acm.ICertificate {
-    if (!scope.props.certificates || scope.props.certificates.length == 0)
-      throw `Certificate props undefined`
+  public resolveCertificate(id: string, scope: CommonConstruct, props: AcmProps): acm.ICertificate {
+    if (!props) throw `Certificate props undefined`
 
-    const certificateProps = scope.props.certificates.find((cert: AcmProps) => cert.id === id)
-    if (!certificateProps) throw `Could not find certificate props for id:${id}`
-
-    const certificateAccount = certificateProps.certificateAccount
-      ? certificateProps.certificateAccount
+    const certificateAccount = props.certificateAccount
+      ? props.certificateAccount
       : cdk.Stack.of(scope).account
-    const certificateRegion = certificateProps.certificateRegion
-      ? certificateProps.certificateRegion
+    const certificateRegion = props.certificateRegion
+      ? props.certificateRegion
       : cdk.Stack.of(scope).region
-    const certificateArn = `arn:aws:acm:${certificateRegion}:${certificateAccount}:certificate/${certificateProps.certificateId}`
+    const certificateArn = `arn:aws:acm:${certificateRegion}:${certificateAccount}:certificate/${props.certificateId}`
     const certificate = acm.Certificate.fromCertificateArn(scope, `${id}`, certificateArn)
 
-    createCfnOutput(`${id}Arn`, scope, certificate.certificateArn)
+    createCfnOutput(`${id}-certificateArn`, scope, certificate.certificateArn)
 
     return certificate
   }

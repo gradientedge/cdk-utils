@@ -1,6 +1,6 @@
-import * as cdk from '@aws-cdk/core'
-import * as watch from '@aws-cdk/aws-cloudwatch'
-import { IMetric } from '@aws-cdk/aws-cloudwatch'
+import * as cdk from 'aws-cdk-lib'
+import * as watch from 'aws-cdk-lib/aws-cloudwatch'
+import { IMetric } from 'aws-cdk-lib/aws-cloudwatch'
 import {
   AlarmProps,
   AlarmStatusWidgetProps,
@@ -10,9 +10,9 @@ import {
   MetricProps,
   NumericWidgetProps,
   TextWidgetProps,
-} from './types'
-import { CommonConstruct } from './commonConstruct'
-import { CloudWatchWidgetType, createCfnOutput } from './genericUtils'
+} from '../types'
+import { CommonConstruct } from '../common/commonConstruct'
+import { CloudWatchWidgetType, createCfnOutput } from '../utils'
 
 /**
  * @category Management & Governance
@@ -36,39 +36,38 @@ export class CloudWatchManager {
    *
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {AlarmProps} props
    */
-  public createAlarmForExpression(id: string, scope: CommonConstruct) {
-    if (!scope.props.alarms || scope.props.alarms.length == 0) throw `Alarm props undefined`
+  public createAlarmForExpression(id: string, scope: CommonConstruct, props: AlarmProps) {
+    if (!props) throw `Alarm props undefined`
 
-    const alarmProps = scope.props.alarms.find((alarm: AlarmProps) => alarm.id === id)
-    if (!alarmProps) throw `Could not find Alarm props for id:${id}`
-    if (!alarmProps.expression) throw `Could not find expression for Alarm props for id:${id}`
-    if (!alarmProps.metricProps) throw `Could not find metricProps for Alarm props for id:${id}`
+    if (!props.expression) throw `Could not find expression for Alarm props for id:${id}`
+    if (!props.metricProps) throw `Could not find metricProps for Alarm props for id:${id}`
 
     const metrics: any = {}
-    this.determineMetrics(scope, alarmProps.metricProps).map(
+    this.determineMetrics(scope, props.metricProps).map(
       (metric: watch.IMetric, index: number) => (metrics[`m${index}`] = metric)
     )
     const expression = new watch.MathExpression({
-      expression: alarmProps.expression,
+      expression: props.expression,
       usingMetrics: metrics,
-      period: alarmProps.periodInSecs
-        ? cdk.Duration.seconds(alarmProps.periodInSecs)
+      period: props.periodInSecs
+        ? cdk.Duration.seconds(props.periodInSecs)
         : cdk.Duration.minutes(5),
     })
 
     const alarm = expression.createAlarm(scope, `${id}`, {
-      alarmName: alarmProps.alarmName,
-      alarmDescription: alarmProps.alarmDescription,
-      threshold: alarmProps.threshold,
-      evaluationPeriods: alarmProps.evaluationPeriods,
-      comparisonOperator: alarmProps.comparisonOperator,
-      treatMissingData: alarmProps.treatMissingData,
-      datapointsToAlarm: alarmProps.datapointsToAlarm,
+      alarmName: props.alarmName,
+      alarmDescription: props.alarmDescription,
+      threshold: props.threshold,
+      evaluationPeriods: props.evaluationPeriods,
+      comparisonOperator: props.comparisonOperator,
+      treatMissingData: props.treatMissingData,
+      datapointsToAlarm: props.datapointsToAlarm,
     })
 
-    createCfnOutput(`${id}Arn`, scope, alarm.alarmArn)
-    createCfnOutput(`${id}Name`, scope, alarm.alarmName)
+    createCfnOutput(`${id}-alarmArn`, scope, alarm.alarmArn)
+    createCfnOutput(`${id}-alarmName`, scope, alarm.alarmName)
 
     return alarm
   }
@@ -77,26 +76,29 @@ export class CloudWatchManager {
    *
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {AlarmProps} props
    * @param metric
    */
-  public createAlarmForMetric(id: string, scope: CommonConstruct, metric: watch.Metric) {
-    if (!scope.props.alarms || scope.props.alarms.length == 0) throw `Alarm props undefined`
-
-    const alarmProps = scope.props.alarms.find((alarm: AlarmProps) => alarm.id === id)
-    if (!alarmProps) throw `Could not find Alarm props for id:${id}`
+  public createAlarmForMetric(
+    id: string,
+    scope: CommonConstruct,
+    props: AlarmProps,
+    metric: watch.Metric
+  ) {
+    if (!props) throw `Alarm props undefined`
 
     const alarm = metric.createAlarm(scope, `${id}`, {
-      alarmName: alarmProps.alarmName,
-      alarmDescription: alarmProps.alarmDescription,
-      threshold: alarmProps.threshold,
-      evaluationPeriods: alarmProps.evaluationPeriods,
-      comparisonOperator: alarmProps.comparisonOperator,
-      treatMissingData: alarmProps.treatMissingData,
-      datapointsToAlarm: alarmProps.datapointsToAlarm,
+      alarmName: props.alarmName,
+      alarmDescription: props.alarmDescription,
+      threshold: props.threshold,
+      evaluationPeriods: props.evaluationPeriods,
+      comparisonOperator: props.comparisonOperator,
+      treatMissingData: props.treatMissingData,
+      datapointsToAlarm: props.datapointsToAlarm,
     })
 
-    createCfnOutput(`${id}Arn`, scope, alarm.alarmArn)
-    createCfnOutput(`${id}Name`, scope, alarm.alarmName)
+    createCfnOutput(`${id}-alarmArn`, scope, alarm.alarmArn)
+    createCfnOutput(`${id}-alarmName`, scope, alarm.alarmName)
 
     return alarm
   }
@@ -105,22 +107,22 @@ export class CloudWatchManager {
    *
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {DashboardProps} props
    * @param widgets
    */
-  public createDashboard(id: string, scope: CommonConstruct, widgets?: watch.IWidget[][]) {
-    if (!scope.props.dashboards || scope.props.dashboards.length == 0)
-      throw `Dashboard props undefined`
-
-    const dashboardProps = scope.props.dashboards.find(
-      (dashboard: DashboardProps) => dashboard.id === id
-    )
-    if (!dashboardProps) throw `Could not find Dashboard props for id:${id}`
+  public createDashboard(
+    id: string,
+    scope: CommonConstruct,
+    props: DashboardProps,
+    widgets?: watch.IWidget[][]
+  ) {
+    if (!props) throw `Dashboard props undefined`
 
     return new watch.Dashboard(scope, `${id}`, {
-      dashboardName: dashboardProps.dashboardName,
-      periodOverride: dashboardProps.periodOverride,
-      start: CloudWatchManager.determineTimeRange(dashboardProps.start),
-      end: CloudWatchManager.determineTimeRange(dashboardProps.end),
+      dashboardName: props.dashboardName,
+      periodOverride: props.periodOverride,
+      start: CloudWatchManager.determineTimeRange(props.start),
+      end: CloudWatchManager.determineTimeRange(props.end),
       widgets: widgets,
     })
   }
@@ -128,13 +130,14 @@ export class CloudWatchManager {
   /**
    *
    * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param props
    */
-  public createWidgets(scope: CommonConstruct) {
-    if (!scope.props.widgets || scope.props.widgets.length == 0) throw `Widget props undefined`
+  public createWidgets(scope: CommonConstruct, props: any[]) {
+    if (!props || props.length == 0) throw `Widget props undefined`
 
     const widgets: any = []
-    scope.props.widgets.forEach((widgetProps: any) =>
-      widgets.push(this.createWidget(widgetProps.id, scope))
+    props.forEach((widgetProps: any) =>
+      widgets.push(this.createWidget(widgetProps.id, scope, widgetProps))
     )
 
     return widgets
@@ -144,31 +147,27 @@ export class CloudWatchManager {
    *
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param props
    */
-  public createWidget(id: string, scope: CommonConstruct) {
-    if (!scope.props.widgets || scope.props.widgets.length == 0) throw `Widget props undefined`
+  public createWidget(id: string, scope: CommonConstruct, props: any) {
+    if (!props) throw `Widget props undefined`
 
-    const widgetProps = scope.props.widgets.find((widget: any) => widget.id === id)
-    if (!widgetProps) throw `Could not find Widget props for id:${id}`
-
-    const metrics = this.determineMetrics(scope, widgetProps.metricProps)
+    const metrics = this.determineMetrics(scope, props.metricProps)
     let alarms,
       logGroupNames = []
-    switch (widgetProps.type) {
+    switch (props.type) {
       case CloudWatchWidgetType.Text:
-        return this.createTextWidget(id, scope, widgetProps)
+        return this.createTextWidget(id, scope, props)
       case CloudWatchWidgetType.SingleValue:
-        return this.createSingleValueWidget(id, scope, widgetProps, metrics)
+        return this.createSingleValueWidget(id, scope, props, metrics)
       case CloudWatchWidgetType.Graph:
-        return this.createGraphWidget(id, scope, widgetProps, metrics)
+        return this.createGraphWidget(id, scope, props, metrics)
       case CloudWatchWidgetType.AlarmStatus:
-        alarms = this.determineAlarms(id, scope, widgetProps.alarmProps)
-        return this.createAlarmStatusWidget(id, scope, widgetProps, alarms)
+        alarms = this.determineAlarms(id, scope, props.alarmProps)
+        return this.createAlarmStatusWidget(id, scope, props, alarms)
       case CloudWatchWidgetType.LogQuery:
-        logGroupNames = widgetProps.logGroupNames.map(
-          (name: string) => `${name}-${scope.props.stage}`
-        )
-        return this.createLogQueryWidget(id, scope, widgetProps, logGroupNames)
+        logGroupNames = props.logGroupNames.map((name: string) => `${name}-${scope.props.stage}`)
+        return this.createLogQueryWidget(id, scope, props, logGroupNames)
       default:
         throw 'Unsupported widget type'
     }
@@ -178,17 +177,16 @@ export class CloudWatchManager {
    *
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param widgetProps
+   * @param {TextWidgetProps} props
    */
-  public createTextWidget(id: string, scope: CommonConstruct, widgetProps: TextWidgetProps) {
+  public createTextWidget(id: string, scope: CommonConstruct, props: TextWidgetProps) {
     const widget = new watch.TextWidget({
-      markdown: widgetProps.markdown,
-      width: widgetProps.width,
-      height: widgetProps.height,
+      markdown: props.markdown,
+      width: props.width,
+      height: props.height,
     })
 
-    if (widgetProps.positionX && widgetProps.positionY)
-      widget.position(widgetProps.positionX, widgetProps.positionY)
+    if (props.positionX && props.positionY) widget.position(props.positionX, props.positionY)
 
     return widget
   }
@@ -197,26 +195,25 @@ export class CloudWatchManager {
    *
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param widgetProps
+   * @param {NumericWidgetProps} props
    * @param metrics
    */
   public createSingleValueWidget(
     id: string,
     scope: CommonConstruct,
-    widgetProps: NumericWidgetProps,
+    props: NumericWidgetProps,
     metrics: IMetric[]
   ) {
     const widget = new watch.SingleValueWidget({
       metrics: metrics,
-      setPeriodToTimeRange: widgetProps.setPeriodToTimeRange,
-      fullPrecision: widgetProps.fullPrecision,
-      title: widgetProps.title,
-      width: widgetProps.width,
-      height: widgetProps.height,
+      setPeriodToTimeRange: props.setPeriodToTimeRange,
+      fullPrecision: props.fullPrecision,
+      title: props.title,
+      width: props.width,
+      height: props.height,
     })
 
-    if (widgetProps.positionX && widgetProps.positionY)
-      widget.position(widgetProps.positionX, widgetProps.positionY)
+    if (props.positionX && props.positionY) widget.position(props.positionX, props.positionY)
 
     return widget
   }
@@ -225,35 +222,34 @@ export class CloudWatchManager {
    *
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param widgetProps
+   * @param {GraphWidgetProps} props
    * @param leftYMetrics
    * @param rightYMetrics
    */
   public createGraphWidget(
     id: string,
     scope: CommonConstruct,
-    widgetProps: GraphWidgetProps,
+    props: GraphWidgetProps,
     leftYMetrics?: IMetric[],
     rightYMetrics?: IMetric[]
   ) {
     const widget = new watch.GraphWidget({
       left: leftYMetrics,
       right: rightYMetrics,
-      leftAnnotations: widgetProps.leftAnnotations,
-      rightAnnotations: widgetProps.rightAnnotations,
-      stacked: widgetProps.stacked,
-      leftYAxis: widgetProps.leftYAxis,
-      rightYAxis: widgetProps.rightYAxis,
-      legendPosition: widgetProps.legendPosition,
-      liveData: widgetProps.liveData,
-      view: widgetProps.view,
-      title: widgetProps.title,
-      width: widgetProps.width,
-      height: widgetProps.height,
+      leftAnnotations: props.leftAnnotations,
+      rightAnnotations: props.rightAnnotations,
+      stacked: props.stacked,
+      leftYAxis: props.leftYAxis,
+      rightYAxis: props.rightYAxis,
+      legendPosition: props.legendPosition,
+      liveData: props.liveData,
+      view: props.view,
+      title: props.title,
+      width: props.width,
+      height: props.height,
     })
 
-    if (widgetProps.positionX && widgetProps.positionY)
-      widget.position(widgetProps.positionX, widgetProps.positionY)
+    if (props.positionX && props.positionY) widget.position(props.positionX, props.positionY)
 
     return widget
   }
@@ -262,24 +258,23 @@ export class CloudWatchManager {
    *
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param widgetProps
-   * @param alarms
+   * @param {AlarmStatusWidgetProps} props
+   * @param {watch.IAlarm[]} alarms
    */
   public createAlarmStatusWidget(
     id: string,
     scope: CommonConstruct,
-    widgetProps: AlarmStatusWidgetProps,
+    props: AlarmStatusWidgetProps,
     alarms: watch.IAlarm[]
   ) {
     const widget = new watch.AlarmStatusWidget({
       alarms: alarms,
-      title: widgetProps.title,
-      width: widgetProps.width,
-      height: widgetProps.height,
+      title: props.title,
+      width: props.width,
+      height: props.height,
     })
 
-    if (widgetProps.positionX && widgetProps.positionY)
-      widget.position(widgetProps.positionX, widgetProps.positionY)
+    if (props.positionX && props.positionY) widget.position(props.positionX, props.positionY)
 
     return widget
   }
@@ -288,27 +283,26 @@ export class CloudWatchManager {
    *
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param widgetProps
-   * @param logGroupNames
+   * @param {LogQueryWidgetProps} props
+   * @param {string[]} logGroupNames
    */
   public createLogQueryWidget(
     id: string,
     scope: CommonConstruct,
-    widgetProps: LogQueryWidgetProps,
+    props: LogQueryWidgetProps,
     logGroupNames: string[]
   ) {
     const widget = new watch.LogQueryWidget({
       logGroupNames: logGroupNames,
-      queryString: widgetProps.queryString,
-      queryLines: widgetProps.queryLines,
-      view: widgetProps.view,
-      title: widgetProps.title,
-      width: widgetProps.width,
-      height: widgetProps.height,
+      queryString: props.queryString,
+      queryLines: props.queryLines,
+      view: props.view,
+      title: props.title,
+      width: props.width,
+      height: props.height,
     })
 
-    if (widgetProps.positionX && widgetProps.positionY)
-      widget.position(widgetProps.positionX, widgetProps.positionY)
+    if (props.positionX && props.positionY) widget.position(props.positionX, props.positionY)
 
     return widget
   }
@@ -316,16 +310,16 @@ export class CloudWatchManager {
   /**
    *
    * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param metricProps
+   * @param {MetricProps[]} metricProps
    */
   private determineMetrics(scope: CommonConstruct, metricProps: MetricProps[]) {
     const metrics: watch.IMetric[] = []
     if (metricProps) {
       metricProps.forEach((metricProp: MetricProps) => {
-        let metricDimensions: watch.DimensionHash = metricProp.dimensions || {}
+        let metricDimensions: watch.DimensionHash = metricProp.dimensionsMap || {}
         if (metricProp.functionName) {
           metricDimensions = {
-            ...metricProp.dimensions,
+            ...metricProp.dimensionsMap,
             ...{
               FunctionName: `${metricProp.functionName}-${scope.props.stage}`,
             },
@@ -333,7 +327,7 @@ export class CloudWatchManager {
         }
         if (metricProp.dbClusterIdentifier) {
           metricDimensions = {
-            ...metricProp.dimensions,
+            ...metricProp.dimensionsMap,
             ...{
               DBClusterIdentifier: `${metricProp.dbClusterIdentifier}-${scope.props.stage}`,
             },
@@ -346,7 +340,7 @@ export class CloudWatchManager {
           metricName: metricProp.stageSuffix
             ? `${metricProp.metricName}-${scope.props.stage}`
             : metricProp.metricName,
-          dimensions: metricDimensions,
+          dimensionsMap: metricDimensions,
           statistic: metricProp.statistic,
           region: metricProp.region,
           period: metricProp.periodInSecs
@@ -362,7 +356,7 @@ export class CloudWatchManager {
 
   /**
    *
-   * @param range
+   * @param {string?} range
    */
   private static determineTimeRange(range?: string) {
     const moment = require('moment')
@@ -381,7 +375,7 @@ export class CloudWatchManager {
    *
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param alarmProps
+   * @param {watch.AlarmProps[]} alarmProps
    */
   private determineAlarms(id: string, scope: CommonConstruct, alarmProps: watch.AlarmProps[]) {
     const alarms: watch.IAlarm[] = []

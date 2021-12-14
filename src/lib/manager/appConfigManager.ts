@@ -1,8 +1,8 @@
-import * as appconfig from '@aws-cdk/aws-appconfig'
-import * as cdk from '@aws-cdk/core'
-import { CommonConstruct } from './commonConstruct'
-import { AppConfigProps } from './types'
-import { createCfnOutput } from './genericUtils'
+import * as appconfig from 'aws-cdk-lib/aws-appconfig'
+import * as cdk from 'aws-cdk-lib'
+import { CommonConstruct } from '../common/commonConstruct'
+import { AppConfigProps } from '../types'
+import { createCfnOutput } from '../utils'
 
 /**
  * @category Utils
@@ -61,25 +61,24 @@ export class AppConfigManager {
    * @summary Method to create an AppConfig Application
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {AppConfigProps} props
    * @returns {appconfig.CfnApplication}
    */
-  public createApplication(id: string, scope: CommonConstruct): appconfig.CfnApplication {
-    if (!scope.props.appConfigs || scope.props.appConfigs.length == 0)
-      throw `AppConfig props undefined`
-
-    const appConfigProps = scope.props.appConfigs.find(
-      (appConfig: AppConfigProps) => appConfig.id === id
-    )
-    if (!appConfigProps) throw `Could not find AppConfig props for id:${id}`
+  public createApplication(
+    id: string,
+    scope: CommonConstruct,
+    props: AppConfigProps
+  ): appconfig.CfnApplication {
+    if (!props) throw `AppConfig props undefined`
 
     const application = new appconfig.CfnApplication(scope, `${id}Application`, {
-      name: `${appConfigProps.application.name}-${scope.props.stage}`,
-      description: appConfigProps.application.description,
-      tags: appConfigProps.application.tags,
+      name: `${props.application.name}-${scope.props.stage}`,
+      description: props.application.description,
+      tags: props.application.tags,
     })
 
-    createCfnOutput(`${id}ApplicationId`, scope, cdk.Fn.ref(application.logicalId))
-    createCfnOutput(`${id}ApplicationName`, scope, application.name)
+    createCfnOutput(`${id}-ApplicationId`, scope, cdk.Fn.ref(application.logicalId))
+    createCfnOutput(`${id}-ApplicationName`, scope, application.name)
 
     return application
   }
@@ -89,31 +88,27 @@ export class AppConfigManager {
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {string} applicationId id of the application
+   * @param {AppConfigProps} props
    * @returns {appconfig.CfnEnvironment}
    */
   public createEnvironment(
     id: string,
     scope: CommonConstruct,
-    applicationId: string
+    applicationId: string,
+    props: AppConfigProps
   ): appconfig.CfnEnvironment {
-    if (!scope.props.appConfigs || scope.props.appConfigs.length == 0)
-      throw `AppConfig props undefined`
-
-    const appConfigProps = scope.props.appConfigs.find(
-      (appConfig: AppConfigProps) => appConfig.id === id
-    )
-    if (!appConfigProps) throw `Could not find AppConfig props for id:${id}`
+    if (!props) throw `AppConfig props undefined`
 
     const environment = new appconfig.CfnEnvironment(scope, `${id}Environment`, {
       applicationId: applicationId,
       name: scope.props.stage,
-      description: appConfigProps.environment.description,
-      monitors: appConfigProps.environment.monitors,
-      tags: appConfigProps.environment.tags,
+      description: props.environment.description,
+      monitors: props.environment.monitors,
+      tags: props.environment.tags,
     })
 
-    createCfnOutput(`${id}EnvironmentId`, scope, cdk.Fn.ref(environment.logicalId))
-    createCfnOutput(`${id}EnvironmentName`, scope, environment.name)
+    createCfnOutput(`${id}-configurationEnvironmentId`, scope, cdk.Fn.ref(environment.logicalId))
+    createCfnOutput(`${id}-configurationEnvironmentName`, scope, environment.name)
 
     return environment
   }
@@ -124,33 +119,29 @@ export class AppConfigManager {
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {string} applicationId id of the application
+   * @param {AppConfigProps} props
    * @returns {appconfig.CfnConfigurationProfile}
    */
   public createConfigurationProfile(
     id: string,
     scope: CommonConstruct,
-    applicationId: string
+    applicationId: string,
+    props: AppConfigProps
   ): appconfig.CfnConfigurationProfile {
-    if (!scope.props.appConfigs || scope.props.appConfigs.length == 0)
-      throw `AppConfig props undefined`
-
-    const appConfigProps = scope.props.appConfigs.find(
-      (appConfig: AppConfigProps) => appConfig.id === id
-    )
-    if (!appConfigProps) throw `Could not find AppConfig props for id:${id}`
+    if (!props) throw `AppConfig props undefined`
 
     const profile = new appconfig.CfnConfigurationProfile(scope, `${id}ConfigurationProfile`, {
       applicationId: applicationId,
-      locationUri: appConfigProps.configurationProfile.locationUri || 'hosted',
-      name: `${appConfigProps.configurationProfile.name}-${scope.props.stage}`,
-      description: appConfigProps.configurationProfile.description,
-      retrievalRoleArn: appConfigProps.configurationProfile.retrievalRoleArn,
-      tags: appConfigProps.configurationProfile.tags,
-      validators: appConfigProps.configurationProfile.validators,
+      locationUri: props.configurationProfile.locationUri || 'hosted',
+      name: `${props.configurationProfile.name}-${scope.props.stage}`,
+      description: props.configurationProfile.description,
+      retrievalRoleArn: props.configurationProfile.retrievalRoleArn,
+      tags: props.configurationProfile.tags,
+      validators: props.configurationProfile.validators,
     })
 
-    createCfnOutput(`${id}ProfileId`, scope, cdk.Fn.ref(profile.logicalId))
-    createCfnOutput(`${id}ProfileName`, scope, profile.name)
+    createCfnOutput(`${id}-configurationProfileId`, scope, cdk.Fn.ref(profile.logicalId))
+    createCfnOutput(`${id}-configurationProfileName`, scope, profile.name)
 
     return profile
   }

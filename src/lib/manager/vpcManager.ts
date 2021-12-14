@@ -1,7 +1,7 @@
-import * as cdk from '@aws-cdk/core'
-import * as ec2 from '@aws-cdk/aws-ec2'
-import { CommonConstruct } from './commonConstruct'
-import { createCfnOutput } from './genericUtils'
+import * as cdk from 'aws-cdk-lib'
+import * as ec2 from 'aws-cdk-lib/aws-ec2'
+import { CommonConstruct } from '../common/commonConstruct'
+import { createCfnOutput } from '../utils'
 
 /**
  * @category Utils
@@ -30,11 +30,12 @@ export class VpcManager {
    *
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {ec2.VpcProps} props
    */
-  public createVpc(id: string, scope: CommonConstruct) {
-    if (!scope.props.vpc) throw 'Vpc props undefined'
+  public createVpc(id: string, scope: CommonConstruct, props: ec2.VpcProps) {
+    if (!props) throw 'Vpc props undefined'
     const vpc = new ec2.Vpc(scope, `${id}`, {
-      maxAzs: scope.props.vpc.maxAzs,
+      maxAzs: props.maxAzs,
     })
 
     createCfnOutput(`${id}Id`, scope, vpc.vpcId)
@@ -66,9 +67,10 @@ export class VpcManager {
   /**
    *
    * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {ec2.VpcProps} props
    */
-  public createCommonVpc(scope: CommonConstruct) {
-    const vpc = this.createVpc(CommonVpcIdentifier, scope)
+  public createCommonVpc(scope: CommonConstruct, props: ec2.VpcProps) {
+    const vpc = this.createVpc(CommonVpcIdentifier, scope, props)
     cdk.Tags.of(vpc).add('Name', CommonVpcIdentifier)
 
     return vpc

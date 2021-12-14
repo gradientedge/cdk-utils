@@ -1,6 +1,6 @@
-import * as ecr from '@aws-cdk/aws-ecr-assets'
-import { CommonConstruct } from './commonConstruct'
-import { createCfnOutput } from './genericUtils'
+import * as ecr from 'aws-cdk-lib/aws-ecr-assets'
+import { CommonConstruct } from '../common/commonConstruct'
+import { createCfnOutput } from '../utils'
 
 /**
  * @category Containers
@@ -31,7 +31,7 @@ export class EcrManager {
       directory: dockerfilePath,
     })
 
-    createCfnOutput(`${id}Arn`, scope, asset.imageUri)
+    createCfnOutput(`${id}-dockerImageArn`, scope, asset.imageUri)
 
     return asset
   }

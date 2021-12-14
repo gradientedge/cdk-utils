@@ -1,12 +1,12 @@
-import * as cdk from '@aws-cdk/core'
-import * as ec2 from '@aws-cdk/aws-ec2'
-import * as efs from '@aws-cdk/aws-efs'
-import * as iam from '@aws-cdk/aws-iam'
-import * as lambda from '@aws-cdk/aws-lambda'
-import * as pylambda from '@aws-cdk/aws-lambda-python'
-import { CommonConstruct } from './commonConstruct'
-import { LambdaProps } from './types'
-import { createCfnOutput } from './genericUtils'
+import * as cdk from 'aws-cdk-lib'
+import * as ec2 from 'aws-cdk-lib/aws-ec2'
+import * as efs from 'aws-cdk-lib/aws-efs'
+import * as iam from 'aws-cdk-lib/aws-iam'
+import * as lambda from 'aws-cdk-lib/aws-lambda'
+import * as pylambda from '@aws-cdk/aws-lambda-python-alpha'
+import { CommonConstruct } from '../common/commonConstruct'
+import { LambdaProps } from '../types'
+import { createCfnOutput } from '../utils'
 
 /**
  * @category Compute
@@ -40,7 +40,7 @@ export class LambdaManager {
       layerVersionName: `${id}-${scope.props.stage}`,
     })
 
-    createCfnOutput(`${id}Arn`, scope, lambdaLayer.layerVersionArn)
+    createCfnOutput(`${id}-lambdaLayerArn`, scope, lambdaLayer.layerVersionArn)
 
     return lambdaLayer
   }
@@ -59,7 +59,7 @@ export class LambdaManager {
       layerVersionName: `${id}-${scope.props.stage}`,
     })
 
-    createCfnOutput(`${id}Arn`, scope, lambdaLayer.layerVersionArn)
+    createCfnOutput(`${id}-lambdaLayerArn`, scope, lambdaLayer.layerVersionArn)
 
     return lambdaLayer
   }
@@ -68,6 +68,7 @@ export class LambdaManager {
    *
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {LambdaProps} props
    * @param {iam.Role | iam.CfnRole} role
    * @param {lambda.ILayerVersion[]} layers
    * @param {lambda.AssetCode} code
@@ -81,6 +82,7 @@ export class LambdaManager {
   public createLambdaFunction(
     id: string,
     scope: CommonConstruct,
+    props: LambdaProps,
     role: iam.Role | iam.CfnRole,
     layers: lambda.ILayerVersion[],
     code: lambda.AssetCode,
@@ -91,12 +93,9 @@ export class LambdaManager {
     accessPoint?: efs.IAccessPoint,
     mountPath?: string
   ) {
-    if (!scope.props.lambdas || scope.props.lambdas.length == 0) throw `Lambda props undefined`
+    if (!props) throw `Lambda props undefined`
 
-    const lambdaProps = scope.props.lambdas.find((lambda: LambdaProps) => lambda.id === id)
-    if (!lambdaProps) throw `Could not find lambda props for id:${id}`
-
-    const functionName = `${lambdaProps.functionName}-${scope.props.stage}`
+    const functionName = `${props.functionName}-${scope.props.stage}`
     const lambdaFunction = new lambda.Function(scope, `${id}`, {
       allowPublicSubnet: !!vpc,
       functionName: functionName,
@@ -111,18 +110,18 @@ export class LambdaManager {
         ? lambda.FileSystem.fromEfsAccessPoint(accessPoint, mountPath || '/mnt/msg')
         : undefined,
       layers: layers,
-      logRetention: lambdaProps.logRetention,
-      memorySize: lambdaProps.memorySize,
-      reservedConcurrentExecutions: lambdaProps.reservedConcurrentExecutions,
+      logRetention: props.logRetention,
+      memorySize: props.memorySize,
+      reservedConcurrentExecutions: props.reservedConcurrentExecutions,
       role: role instanceof iam.Role ? role : undefined,
       securityGroups: securityGroups,
-      timeout: lambdaProps.timeoutInSecs
-        ? cdk.Duration.seconds(lambdaProps.timeoutInSecs)
+      timeout: props.timeoutInSecs
+        ? cdk.Duration.seconds(props.timeoutInSecs)
         : cdk.Duration.minutes(1),
       vpc: vpc,
     })
 
-    createCfnOutput(`${id}Arn`, scope, lambdaFunction.functionArn)
+    createCfnOutput(`${id}-lambdaArn`, scope, lambdaFunction.functionArn)
 
     return lambdaFunction
   }
@@ -131,6 +130,7 @@ export class LambdaManager {
    *
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {LambdaProps} props
    * @param {iam.Role | iam.CfnRole} role
    * @param {lambda.ILayerVersion[]} layers
    * @param {string} entry path to lambda source
@@ -142,9 +142,11 @@ export class LambdaManager {
    * @param {efs.IAccessPoint} accessPoint
    * @param {string} mountPath
    */
+
   public createPythonLambdaFunction(
     id: string,
     scope: CommonConstruct,
+    props: LambdaProps,
     role: iam.Role | iam.CfnRole,
     layers: lambda.ILayerVersion[],
     entry: string,
@@ -156,12 +158,9 @@ export class LambdaManager {
     accessPoint?: efs.IAccessPoint,
     mountPath?: string
   ) {
-    if (!scope.props.lambdas || scope.props.lambdas.length == 0) throw `Lambda props undefined`
+    if (!props) throw `Lambda props undefined`
 
-    const lambdaProps = scope.props.lambdas.find((lambda: LambdaProps) => lambda.id === id)
-    if (!lambdaProps) throw `Could not find lambda props for id:${id}`
-
-    const functionName = `${lambdaProps.functionName}-${scope.props.stage}`
+    const functionName = `${props.functionName}-${scope.props.stage}`
     const lambdaFunction = new pylambda.PythonFunction(scope, `${id}`, {
       allowPublicSubnet: !!vpc,
       functionName: functionName,
@@ -177,18 +176,18 @@ export class LambdaManager {
         ? lambda.FileSystem.fromEfsAccessPoint(accessPoint, mountPath || '/mnt/msg')
         : undefined,
       layers: layers,
-      logRetention: lambdaProps.logRetention,
-      memorySize: lambdaProps.memorySize,
-      reservedConcurrentExecutions: lambdaProps.reservedConcurrentExecutions,
+      logRetention: props.logRetention,
+      memorySize: props.memorySize,
+      reservedConcurrentExecutions: props.reservedConcurrentExecutions,
       role: role instanceof iam.Role ? role : undefined,
       securityGroups: securityGroups,
-      timeout: lambdaProps.timeoutInSecs
-        ? cdk.Duration.seconds(lambdaProps.timeoutInSecs)
+      timeout: props.timeoutInSecs
+        ? cdk.Duration.seconds(props.timeoutInSecs)
         : cdk.Duration.minutes(1),
       vpc: vpc,
     })
 
-    createCfnOutput(`${id}Arn`, scope, lambdaFunction.functionArn)
+    createCfnOutput(`${id}-lambdaArn`, scope, lambdaFunction.functionArn)
 
     return lambdaFunction
   }

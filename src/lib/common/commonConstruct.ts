@@ -1,24 +1,26 @@
-import * as cdk from '@aws-cdk/core'
-import { createCfnOutput, isDevStage, isPrdStage, isTestStage, isUatStage } from './genericUtils'
-import { CommonStackProps } from './types'
-import { Route53Manager } from './route53Manager'
-import { S3Manager } from './s3Manager'
-import { AcmManager } from './acmManager'
-import { CloudFrontManager } from './cloudFrontManager'
-import { LogManager } from './logManager'
-import { IamManager } from './iamManager'
-import { CloudTrailManager } from './cloudTrailManager'
-import { EcsManager } from './ecsManager'
-import { EventManager } from './eventManager'
-import { VpcManager } from './vpcManager'
-import { EksManager } from './eksManager'
-import { EcrManager } from './ecrManager'
-import { LambdaManager } from './lambdaManager'
-import { SnsManager } from './snsManager'
-import { SecretsManager } from './secretsManager'
-import { CloudWatchManager } from './cloudWatchManager'
-import { WafManager } from './wafManager'
-import { AppConfigManager } from './appConfigManager'
+import * as cdk from 'aws-cdk-lib'
+import { createCfnOutput, isDevStage, isPrdStage, isTestStage, isUatStage } from '../utils'
+import { CommonStackProps } from '../types'
+import { Route53Manager } from '../manager/route53Manager'
+import { S3Manager } from '../manager/s3Manager'
+import { AcmManager } from '../manager/acmManager'
+import { CloudFrontManager } from '../manager/cloudFrontManager'
+import { LogManager } from '../manager/logManager'
+import { IamManager } from '../manager/iamManager'
+import { CloudTrailManager } from '../manager/cloudTrailManager'
+import { EcsManager } from '../manager/ecsManager'
+import { EventManager } from '../manager/eventManager'
+import { VpcManager } from '../manager/vpcManager'
+import { EksManager } from '../manager/eksManager'
+import { EcrManager } from '../manager/ecrManager'
+import { LambdaManager } from '../manager/lambdaManager'
+import { SnsManager } from '../manager/snsManager'
+import { SecretsManager } from '../manager/secretsManager'
+import { CloudWatchManager } from '../manager/cloudWatchManager'
+import { WafManager } from '../manager/wafManager'
+import { AppConfigManager } from '../manager/appConfigManager'
+import { Construct } from 'constructs'
+import { ApiManager } from '../manager/apiManager'
 
 /**
  * @category Constructs
@@ -28,10 +30,11 @@ import { AppConfigManager } from './appConfigManager'
  *     A[CommonConstruct]-.->|extends|B(cdk.Construct);
  *     B(cdk.Construct)-->|implements|C(cdk.IConstruct);
  */
-export class CommonConstruct extends cdk.Construct {
+export class CommonConstruct extends Construct {
   props: CommonStackProps
   appConfigManager: AppConfigManager
   acmManager: AcmManager
+  apiManager: ApiManager
   cloudFrontManager: CloudFrontManager
   cloudTrailManager: CloudTrailManager
   cloudWatchManager: CloudWatchManager
@@ -52,11 +55,11 @@ export class CommonConstruct extends cdk.Construct {
 
   /**
    *
-   * @param {cdk.Construct} parent
+   * @param {cdk.Stack} parent
    * @param {string} id scoped id of the resource
    * @param {CommonStackProps} props
    */
-  constructor(parent: cdk.Construct, id: string, props: CommonStackProps) {
+  constructor(parent: cdk.Stack, id: string, props: CommonStackProps) {
     super(parent, id)
     this.props = props
     this.acmManager = new AcmManager()
@@ -77,6 +80,7 @@ export class CommonConstruct extends cdk.Construct {
     this.snsManager = new SnsManager()
     this.vpcManager = new VpcManager()
     this.vpcManager = new VpcManager()
+    this.wafManager = new WafManager()
 
     this.determineFullyQualifiedDomain()
   }

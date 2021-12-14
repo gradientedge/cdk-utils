@@ -1,10 +1,10 @@
-import * as cdk from '@aws-cdk/core'
-import * as ecs from '@aws-cdk/aws-ecs'
-import * as iam from '@aws-cdk/aws-iam'
-import * as logs from '@aws-cdk/aws-logs'
-import * as s3 from '@aws-cdk/aws-s3'
-import { CommonConstruct } from './commonConstruct'
-import { createCfnOutput } from './genericUtils'
+import * as cdk from 'aws-cdk-lib'
+import * as ecs from 'aws-cdk-lib/aws-ecs'
+import * as iam from 'aws-cdk-lib/aws-iam'
+import * as logs from 'aws-cdk-lib/aws-logs'
+import * as s3 from 'aws-cdk-lib/aws-s3'
+import { CommonConstruct } from '../common/commonConstruct'
+import { createCfnOutput } from '../utils'
 
 /**
  * @category Security, Identity & Compliance

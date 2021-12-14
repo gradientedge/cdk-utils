@@ -1,9 +1,9 @@
-import * as acm from '@aws-cdk/aws-certificatemanager'
-import * as cloudfront from '@aws-cdk/aws-cloudfront'
-import * as s3 from '@aws-cdk/aws-s3'
-import { CommonConstruct } from './commonConstruct'
-import { CloudFrontProps } from './types'
-import { createCfnOutput } from './genericUtils'
+import * as acm from 'aws-cdk-lib/aws-certificatemanager'
+import * as cloudfront from 'aws-cdk-lib/aws-cloudfront'
+import * as s3 from 'aws-cdk-lib/aws-s3'
+import { CommonConstruct } from '../common/commonConstruct'
+import { CloudFrontProps } from '../types'
+import { createCfnOutput } from '../utils'
 
 /**
  * @category Networking & Content Delivery
@@ -41,6 +41,7 @@ export class CloudFrontManager {
    *
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {CloudFrontProps} props distribution properties
    * @param {s3.IBucket} siteBucket
    * @param {s3.IBucket} logBucket
    * @param {cloudfront.OriginAccessIdentity} originAccessIdentity
@@ -50,6 +51,7 @@ export class CloudFrontManager {
   public createCloudFrontDistribution(
     id: string,
     scope: CommonConstruct,
+    props: CloudFrontProps,
     siteBucket?: s3.IBucket,
     logBucket?: s3.IBucket,
     originAccessIdentity?: cloudfront.OriginAccessIdentity,
@@ -58,11 +60,7 @@ export class CloudFrontManager {
   ) {
     if (!siteBucket) throw `SiteBucket not defined`
     if (!certificate) throw `Certificate not defined`
-    if (!scope.props.distributions || scope.props.distributions.length == 0)
-      throw `CloudFront props undefined`
-
-    const cloudFrontProps = scope.props.distributions.find((cf: CloudFrontProps) => cf.id === id)
-    if (!cloudFrontProps) throw `Could not find CloudFront props for id:${id}`
+    if (!props) throw `CloudFront props undefined`
 
     const distribution = new cloudfront.CloudFrontWebDistribution(scope, `${id}`, {
       priceClass: cloudfront.PriceClass.PRICE_CLASS_ALL,
@@ -86,11 +84,11 @@ export class CloudFrontManager {
         bucket: logBucket,
         prefix: 'cloudfront/',
       },
-      errorConfigurations: cloudFrontProps.errorConfigurations,
+      errorConfigurations: props.errorConfigurations,
     })
 
-    createCfnOutput(`${id}Id`, scope, distribution.distributionId)
-    createCfnOutput(`${id}DomainName`, scope, distribution.distributionDomainName)
+    createCfnOutput(`${id}-distributionId`, scope, distribution.distributionId)
+    createCfnOutput(`${id}-distributionDomainName`, scope, distribution.distributionDomainName)
 
     return distribution
   }

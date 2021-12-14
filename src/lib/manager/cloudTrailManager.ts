@@ -1,8 +1,9 @@
-import * as cloudtrail from '@aws-cdk/aws-cloudtrail'
-import * as logs from '@aws-cdk/aws-logs'
-import * as s3 from '@aws-cdk/aws-s3'
-import { CommonConstruct } from './commonConstruct'
-import { CloudTrailProps } from './types'
+import * as cloudtrail from 'aws-cdk-lib/aws-cloudtrail'
+import * as logs from 'aws-cdk-lib/aws-logs'
+import * as s3 from 'aws-cdk-lib/aws-s3'
+import { CommonConstruct } from '../common/commonConstruct'
+import { CloudTrailProps } from '../types'
+import { createCfnOutput } from '../utils'
 
 /**
  * @category Management & Governance
@@ -33,6 +34,7 @@ export class CloudTrailManager {
    *
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {CloudTrailProps} props
    * @param {logs.CfnLogGroup} logGroup
    * @param {s3.IBucket} dataBucket
    * @param {s3.IBucket} logBucket
@@ -41,22 +43,20 @@ export class CloudTrailManager {
   public createCloudTrail(
     id: string,
     scope: CommonConstruct,
+    props: CloudTrailProps,
     logGroup: logs.CfnLogGroup,
     dataBucket: s3.IBucket,
     logBucket: s3.IBucket,
     logBucketPolicy: s3.CfnBucketPolicy
   ) {
-    if (!scope.props.trails || scope.props.trails.length == 0) throw `Cloud Trail props undefined`
-
-    const cloudTrailProps = scope.props.trails.find((log: CloudTrailProps) => log.id === id)
-    if (!cloudTrailProps) throw `Could not find Cloud Trail props for id:${id}`
+    if (!props) throw `Cloud Trail props undefined`
 
     const role = scope.iamManager.createRoleForCloudTrail(`${id}Role`, scope, logGroup)
 
     const cloudTrail = new cloudtrail.CfnTrail(scope, `${id}`, {
       cloudWatchLogsLogGroupArn: logGroup.attrArn,
       cloudWatchLogsRoleArn: role.attrArn,
-      enableLogFileValidation: cloudTrailProps.enableLogFileValidation,
+      enableLogFileValidation: props.enableLogFileValidation,
       eventSelectors: [
         {
           dataResources: [
@@ -69,18 +69,21 @@ export class CloudTrailManager {
           readWriteType: 'WriteOnly',
         },
       ],
-      includeGlobalServiceEvents: cloudTrailProps.includeGlobalServiceEvents,
-      isLogging: cloudTrailProps.isLogging,
-      isMultiRegionTrail: cloudTrailProps.isMultiRegionTrail,
+      includeGlobalServiceEvents: props.includeGlobalServiceEvents,
+      isLogging: props.isLogging,
+      isMultiRegionTrail: props.isMultiRegionTrail,
       s3BucketName: logBucket.bucketName,
-      s3KeyPrefix: `logs-${cloudTrailProps.trailName}`,
+      s3KeyPrefix: `logs-${props.trailName}`,
       tags: [{ key: 'service', value: scope.props.name }],
-      trailName: `${cloudTrailProps.trailName}-${scope.props.stage}`,
+      trailName: `${props.trailName}-${scope.props.stage}`,
     })
 
     cloudTrail.addDependsOn(logBucketPolicy)
     cloudTrail.addDependsOn(logGroup)
     cloudTrail.addDependsOn(role)
+
+    createCfnOutput(`${id}-trailName`, scope, cloudTrail.trailName)
+    createCfnOutput(`${id}-trailArn`, scope, cloudTrail.attrArn)
 
     return { cloudTrailRole: role, cloudTrail }
   }
