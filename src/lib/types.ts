@@ -80,7 +80,7 @@ export interface GraphQlApiLambdaEnvironment {
 }
 
 export interface GraphQlApiLambdaProps extends CommonStackProps {
-  apiRoot: string
+  apiRootPaths: string[]
   apiSubDomain: string
   graphQLApiCertificate: AcmProps
   graphqlRestApi: apig.LambdaRestApiProps

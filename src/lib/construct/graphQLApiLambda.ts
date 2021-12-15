@@ -33,7 +33,7 @@ export class GraphQLApiLambda extends CommonConstruct {
   graphQLApiHostedZone: route53.IHostedZone
   graphQLApiCertificate: acm.ICertificate
   graphQLApiDomain: apig.DomainName
-  graphQLApiBasePathMapping: apig.BasePathMapping
+  graphQLApiBasePathMappings: apig.BasePathMapping[] = []
   graphQLApiLambdaPolicy: iam.PolicyDocument
   graphQLApiLambdaRole: iam.Role
   graphQLApiLambdaEnvironment: GraphQlApiLambdaEnvironment
@@ -151,16 +151,19 @@ export class GraphQLApiLambda extends CommonConstruct {
   }
 
   protected createApiBasePathMapping() {
-    this.graphQLApiBasePathMapping = new apig.BasePathMapping(
-      this,
-      `${this.id}-base-bath-mapping`,
-      {
-        basePath: this.props.apiRoot,
-        domainName: this.graphQLApiDomain,
-        restApi: this.graphQLApi,
-        stage: this.graphQLApi.deploymentStage,
-      }
-    )
+    const apiRootPaths = this.props.apiRootPaths
+    if (apiRootPaths && apiRootPaths.length > 0) {
+      apiRootPaths.forEach((apiRootPath: string) => {
+        this.graphQLApiBasePathMappings.push(
+          new apig.BasePathMapping(this, `${this.id}-base-bath-mapping-${apiRootPath}`, {
+            basePath: apiRootPath,
+            domainName: this.graphQLApiDomain,
+            restApi: this.graphQLApi,
+            stage: this.graphQLApi.deploymentStage,
+          })
+        )
+      })
+    }
   }
 
   protected createApiRouteAssets() {

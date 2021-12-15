@@ -46,8 +46,8 @@ export class StaticSite extends CommonConstruct {
   protected initResources() {
     this.initHostedZone()
     this.initCertificate()
-    this.createSiteBucket()
     this.createSiteLogBucket()
+    this.createSiteBucket()
     this.createSiteOriginAccessIdentity()
     this.createSiteDistribution()
     this.createSiteRouteAssets()
@@ -68,16 +68,16 @@ export class StaticSite extends CommonConstruct {
     )
   }
 
-  protected createSiteBucket() {
-    this.siteBucket = this.s3Manager.createS3Bucket(`${this.id}-site`, this, this.props.siteBucket)
-  }
-
   protected createSiteLogBucket() {
     this.siteLogBucket = this.s3Manager.createS3Bucket(
       `${this.id}-site-logs`,
       this,
       this.props.siteLogBucket
     )
+  }
+
+  protected createSiteBucket() {
+    this.siteBucket = this.s3Manager.createS3Bucket(`${this.id}-site`, this, this.props.siteBucket)
   }
 
   protected createSiteOriginAccessIdentity() {
