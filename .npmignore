@@ -14,6 +14,7 @@ npm-debug.log
 .eslintignore
 .eslintrc.js
 .gitignore
+.babelrc
 .prettierrc.js
 .prettierrc
 .prettierignore
@@ -26,3 +27,6 @@ api-docs
 .yarnrc
 .github
 .circleci
+tsconfig.json
+lerna.json
+yarn.lock
