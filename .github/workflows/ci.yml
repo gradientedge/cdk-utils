@@ -54,11 +54,11 @@ jobs:
       - uses: actions/upload-artifact@v2
         with:
           name: build-artifact
-          path: /dist/
+          path: ./dist/
       - uses: actions/upload-artifact@v2
         with:
           name: docs-artifact
-          path: /api-docs/
+          path: ./api-docs/
 
   release:
     name: Release Package(s)
