@@ -21,7 +21,7 @@ export class ApiManager {
     props: apig.LambdaRestApiProps,
     lambdaFunction: lambda.Function
   ) {
-    const api = new apig.LambdaRestApi(scope, `${id}-lambda-rest-api`, {
+    const api = new apig.LambdaRestApi(scope, `${id}`, {
       binaryMediaTypes: props.binaryMediaTypes,
       minimumCompressionSize: props.minimumCompressionSize,
       deploy: props.deploy || true,
@@ -33,7 +33,7 @@ export class ApiManager {
         cacheClusterEnabled: props.deployOptions?.cacheClusterEnabled,
         cacheClusterSize: props.deployOptions?.cacheClusterSize,
         clientCertificateId: props.deployOptions?.clientCertificateId,
-        description: `${id}-lambda-rest-api - ${scope.props.stage} stage`,
+        description: `${id} - ${scope.props.stage} stage`,
         documentationVersion: props.deployOptions?.documentationVersion,
         variables: props.deployOptions?.variables,
         methodOptions: props.deployOptions?.methodOptions,

@@ -41,8 +41,6 @@ export class StaticSite extends CommonConstruct {
 
     this.props = props
     this.id = id
-
-    this.initResources()
   }
 
   protected initResources() {

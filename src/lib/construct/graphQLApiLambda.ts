@@ -46,10 +46,12 @@ export class GraphQLApiLambda extends CommonConstruct {
 
     this.props = props
     this.id = id
-
-    this.initResources()
   }
 
+  /**
+   *
+   * @protected
+   */
   protected initResources() {
     this.resolveSecrets()
     this.resolveHostedZone()

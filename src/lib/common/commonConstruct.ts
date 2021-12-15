@@ -63,6 +63,7 @@ export class CommonConstruct extends Construct {
     super(parent, id)
     this.props = props
     this.acmManager = new AcmManager()
+    this.apiManager = new ApiManager()
     this.appConfigManager = new AppConfigManager()
     this.cloudFrontManager = new CloudFrontManager()
     this.cloudTrailManager = new CloudTrailManager()
