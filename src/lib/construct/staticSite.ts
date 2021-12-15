@@ -1,10 +1,10 @@
 import { CommonConstruct } from '../common/commonConstruct'
-import * as cdk from 'aws-cdk-lib'
 import { StaticSiteProps } from '../types'
 import * as route53 from 'aws-cdk-lib/aws-route53'
 import * as certificateManager from 'aws-cdk-lib/aws-certificatemanager'
 import * as s3 from 'aws-cdk-lib/aws-s3'
 import * as cloudfront from 'aws-cdk-lib/aws-cloudfront'
+import { Construct } from 'constructs'
 
 /**
  * @category Constructs
@@ -36,7 +36,7 @@ export class StaticSite extends CommonConstruct {
   siteLogBucket: s3.IBucket
   siteOriginAccessIdentity: cloudfront.OriginAccessIdentity
 
-  constructor(parent: cdk.Stack, id: string, props: StaticSiteProps) {
+  constructor(parent: Construct, id: string, props: StaticSiteProps) {
     super(parent, id, props)
 
     this.props = props

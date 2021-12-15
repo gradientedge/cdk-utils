@@ -1,5 +1,4 @@
 import { CommonConstruct } from '../common/commonConstruct'
-import * as cdk from 'aws-cdk-lib'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
@@ -7,6 +6,7 @@ import * as apig from 'aws-cdk-lib/aws-apigateway'
 import * as route53 from 'aws-cdk-lib/aws-route53'
 import * as acm from 'aws-cdk-lib/aws-certificatemanager'
 import { GraphQlApiLambdaEnvironment, GraphQlApiLambdaProps } from '../types'
+import { Construct } from 'constructs'
 
 /**
  * @category Constructs
@@ -41,7 +41,7 @@ export class GraphQLApiLambda extends CommonConstruct {
   graphQLApiLambdaFunction: lambda.Function
   graphQLApi: apig.RestApi
 
-  constructor(parent: cdk.Stack, id: string, props: GraphQlApiLambdaProps) {
+  constructor(parent: Construct, id: string, props: GraphQlApiLambdaProps) {
     super(parent, id, props)
 
     this.props = props
