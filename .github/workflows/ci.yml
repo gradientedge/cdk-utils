@@ -52,10 +52,12 @@ jobs:
         with:
           files: coverage/*.xml
       - uses: actions/upload-artifact@v2
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && success() }}
         with:
           name: build-artifact
           path: ./dist/
       - uses: actions/upload-artifact@v2
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && success() }}
         with:
           name: docs-artifact
           path: ./api-docs/
