@@ -55,11 +55,11 @@ export class CommonConstruct extends Construct {
 
   /**
    *
-   * @param {cdk.Stack} parent
+   * @param {Construct} parent
    * @param {string} id scoped id of the resource
    * @param {CommonStackProps} props
    */
-  constructor(parent: cdk.Stack, id: string, props: CommonStackProps) {
+  constructor(parent: Construct, id: string, props: CommonStackProps) {
     super(parent, id)
     this.props = props
     this.acmManager = new AcmManager()
