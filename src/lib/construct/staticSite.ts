@@ -23,6 +23,11 @@ import { Construct } from 'constructs'
  *     this.initResources()
  * }
  *
+ * @mermaid
+ *   graph LR;
+ *     A[StaticSite]-.->|extends|B(CommonConstruct);
+ *     B(CommonConstruct)-->|extends|C(Construct);
+ *     C(Construct)-->|implements|D(IConstruct);
  */
 export class StaticSite extends CommonConstruct {
   /* static site properties */

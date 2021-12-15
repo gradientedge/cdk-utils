@@ -93,9 +93,11 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: build-artifact
+          path: ./dist/
       - uses: actions/download-artifact@v2
         with:
           name: docs-artifact
+          path: ./api-docs/
       - name: Set NPM Auth
         run: echo "//npm.pkg.github.com/:_authToken=${GITHUB_TOKEN}" >> .npmrc
       - name: Deploy Package(s)
@@ -105,9 +107,9 @@ jobs:
         with:
           github_token: ${{ env.GITHUB_TOKEN }}
           publish_dir: ./api-docs
-      - uses: geekyeggo/delete-artifact@v1
-        with:
-          name: |
-            build-artifact
-            docs-artifact
-          failOnError: false
+#      - uses: geekyeggo/delete-artifact@v1
+#        with:
+#          name: |
+#            build-artifact
+#            docs-artifact
+#          failOnError: false

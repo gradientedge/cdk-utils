@@ -25,6 +25,11 @@ import { Construct } from 'constructs'
  *     this.initResources()
  * }
  *
+ * @mermaid
+ *   graph LR;
+ *     A[GraphQLApiLambda]-.->|extends|B(CommonConstruct);
+ *     B(CommonConstruct)-->|extends|C(Construct);
+ *     C(Construct)-->|implements|D(IConstruct);
  */
 export class GraphQLApiLambda extends CommonConstruct {
   /* graphql api props */
