@@ -5,14 +5,30 @@ import * as acm from 'aws-cdk-lib/aws-certificatemanager'
 import { createCfnOutput } from '../utils'
 
 /**
+ * @stability stable
+ * @category Networking & Content Delivery
+ * @summary Provides operations on AWS API Gateway.
+ * - A new instance of this class is injected into {@link CommonConstruct} constructor.
+ * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
+ * @example
+ * import { CommonConstruct } from '@gradientedge/cdk-utils'
  *
+ * class CustomConstruct extends CommonConstruct {
+ *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
+ *     super(parent, id, props)
+ *     this.props = props
+ *     const lambdaFunction = this.lambdaManager.createLambdaFunction('MyFunction', this, role, layers, code)
+ *     this.apiManager.createLambdaRestApi('MyCertificate', this, props, lambdaFunction)
+ * }
+ *
+ * @see [CDK API Gateway Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-apigateway-readme.html}
  */
 export class ApiManager {
   /**
-   *
-   * @param id
-   * @param scope
-   * @param props
+   * @summary Method to create a Rest API with Lambda backend/target
+   * @param {string} id scoped id of the resource
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {AcmProps} props lambda rest api props
    * @param lambdaFunction
    */
   public createLambdaRestApi(
@@ -64,18 +80,13 @@ export class ApiManager {
   }
 
   /**
-   *
-   * @param id
-   * @param scope
-   * @param domainName
-   * @param certificate
+   * @summary Method to create custom api domain
+   * @param {string} id scoped id of the resource
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param domainName the domain name to use
+   * @param certificate the certificate used for custom api domain
    */
-  public createApiDomain(
-    id: string,
-    scope: CommonConstruct,
-    domainName: string,
-    certificate: acm.ICertificate
-  ) {
+  public createApiDomain(id: string, scope: CommonConstruct, domainName: string, certificate: acm.ICertificate) {
     const apiDomain = new apig.DomainName(scope, `${id}`, {
       domainName: domainName,
       certificate: certificate,

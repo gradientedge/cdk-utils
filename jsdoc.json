@@ -1,0 +1,42 @@
+{
+  "source": {
+    "includePattern": "\\.(ts|tsx)$",
+    "excludePattern": ".+\\.(test|spec).(t|j)s(doc|x)?$",
+    "exclude": ["__snapshots__", "__tests__", "build", "coverage", "logo", "node_modules", "private", "public"]
+  },
+  "plugins": [
+    "plugins/markdown",
+    "plugins/summarize",
+    "jsdoc-mermaid",
+    "node_modules/better-docs/category",
+    "node_modules/better-docs/typescript"
+  ],
+  "opts": {
+    "destination": "api-docs/",
+    "encoding": "utf8",
+    "readme": "README.md",
+    "recurse": true,
+    "tutorials": "docs/",
+    "template": "node_modules/better-docs"
+  },
+  "tags": {
+    "allowUnknownTags": true,
+    "dictionaries": ["jsdoc", "closure"]
+  },
+  "templates": {
+    "cleverLinks": false,
+    "monospaceLinks": false,
+    "search": true,
+    "better-docs": {
+      "name": "Gradient Edge CDK Utils Documentation",
+      "title": "Gradient Edge CDK Utils",
+      "hideGenerator": true,
+      "navLinks": [
+        {
+          "label": "Github",
+          "href": "https://github.com/gradientedge/cdk-utils"
+        }
+      ]
+    }
+  }
+}

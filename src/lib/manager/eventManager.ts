@@ -7,6 +7,7 @@ import { RuleProps } from '../types'
 import { createCfnOutput } from '../utils'
 
 /**
+ * @stability stable
  * @category Application Integration
  * @summary Provides operations on AWS EventBridge.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
@@ -21,11 +22,11 @@ import { createCfnOutput } from '../utils'
  *     this.eventManager.createLambdaRule('MyLambdaRule', this, lambdaFunction)
  * }
  *
- * @see [CDK EventBridge Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-events-readme.html}</li></i>
+ * @see [CDK EventBridge Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-events-readme.html}
  */
 export class EventManager {
   /**
-   *
+   * @summary Method to create an eventbridge rule with lambda target
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {RuleProps} props
@@ -69,7 +70,7 @@ export class EventManager {
   }
 
   /**
-   *
+   * @summary Method to create an eventbridge rule with fargate task target
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {RuleProps} props

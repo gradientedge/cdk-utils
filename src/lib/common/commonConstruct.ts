@@ -23,18 +23,30 @@ import { Construct } from 'constructs'
 import { ApiManager } from '../manager/apiManager'
 
 /**
+ * @stability stable
  * @category Constructs
+ * @summary Common construct to use as a base for all higher level constructs.
+ *
+ * @example
+ * import { CommonConstruct } from '@gradientedge/cdk-utils'
+ *
+ * class CustomConstruct extends CommonConstruct {
+ *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
+ *     super(parent, id, props)
+ *     this.props = props
+ *     // provision resources here...
+ * }
  *
  * @mermaid
  *   graph LR;
- *     A[CommonConstruct]-.->|extends|B(cdk.Construct);
- *     B(cdk.Construct)-->|implements|C(cdk.IConstruct);
+ *     A[CommonConstruct]-.->|extends|B(Construct);
+ *     B(Construct)-->|implements|C(IConstruct);
  */
 export class CommonConstruct extends Construct {
   props: CommonStackProps
-  appConfigManager: AppConfigManager
   acmManager: AcmManager
   apiManager: ApiManager
+  appConfigManager: AppConfigManager
   cloudFrontManager: CloudFrontManager
   cloudTrailManager: CloudTrailManager
   cloudWatchManager: CloudWatchManager
@@ -54,7 +66,7 @@ export class CommonConstruct extends Construct {
   fullyQualifiedDomainName: string
 
   /**
-   *
+   * @summary Constructor to initialise the CommonConstruct
    * @param {Construct} parent
    * @param {string} id scoped id of the resource
    * @param {CommonStackProps} props
@@ -87,23 +99,18 @@ export class CommonConstruct extends Construct {
   }
 
   /**
-   *
+   * @summary Helper method to add CloudFormation outputs from the construct
    * @param {string} id scoped id of the resource
-   * @param {string} value
-   * @param {string} description
-   * @param {boolean} overrideId
+   * @param {string} value the value of the exported output
+   * @param {string?} description optional description for the output
+   * @param {boolean} overrideId Flag which indicates whether to override the default logical id of the output
    */
-  protected addCfnOutput(
-    id: string,
-    value: string,
-    description?: string,
-    overrideId = true
-  ): cdk.CfnOutput {
+  protected addCfnOutput(id: string, value: string, description?: string, overrideId = true): cdk.CfnOutput {
     return createCfnOutput(id, this, value, description, overrideId)
   }
 
   /**
-   *
+   * @summary Determine the fully qualified domain name based on domainName & subDomain
    */
   protected determineFullyQualifiedDomain() {
     this.fullyQualifiedDomainName = this.props.subDomain
@@ -112,22 +119,26 @@ export class CommonConstruct extends Construct {
   }
 
   /**
-   *
+   * @summary Utility method to determine if the initialisation is in development (dev) stage
+   * This is determined by the stage property injected via cdk context
    */
   public isDevelopmentStage = () => isDevStage(this.props.stage)
 
   /**
-   *
+   * @summary Utility method to determine if the initialisation is in test (tst) stage
+   * This is determined by the stage property injected via cdk context
    */
   public isTestStage = () => isTestStage(this.props.stage)
 
   /**
-   *
+   * @summary Utility method to determine if the initialisation is in uat (uat) stage
+   * This is determined by the stage property injected via cdk context
    */
   public isUatStage = () => isUatStage(this.props.stage)
 
   /**
-   *
+   * @summary Utility method to determine if the initialisation is in production (prd) stage
+   * This is determined by the stage property injected via cdk context
    */
   public isProductionStage = () => isPrdStage(this.props.stage)
 }

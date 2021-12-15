@@ -6,6 +6,7 @@ import { CloudFrontProps } from '../types'
 import { createCfnOutput } from '../utils'
 
 /**
+ * @stability stable
  * @category Networking & Content Delivery
  * @summary Provides operations on AWS CloudFront.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
@@ -27,7 +28,7 @@ import { createCfnOutput } from '../utils'
  *     )
  * }
  *
- * @see [CDK CloudFront Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-cloudfront-readme.html}</li></i>
+ * @see [CDK CloudFront Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-cloudfront-readme.html}
  */
 export class CloudFrontManager {
   public createOriginAccessIdentity(id: string, scope: CommonConstruct, accessBucket?: s3.IBucket) {
@@ -38,7 +39,7 @@ export class CloudFrontManager {
   }
 
   /**
-   *
+   * @summary Method to create a cloudfront distribution
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {CloudFrontProps} props distribution properties

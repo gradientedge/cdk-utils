@@ -6,6 +6,7 @@ import { SubscriptionProps } from '../types'
 import { createCfnOutput } from '../utils'
 
 /**
+ * @stability stable
  * @category Application Integration
  * @summary Provides operations on AWS Simple Notification Service.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
@@ -20,11 +21,11 @@ import { createCfnOutput } from '../utils'
  *     this.snsManager.createEmailNotificationService('MySns', 'eu-west-1', ['test@example.com'])
  * }
  *
- * @see [CDK Simple Notification Service Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-sns-readme.html}</li></i>
+ * @see [CDK Simple Notification Service Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-sns-readme.html}
  */
 export class SnsManager {
   /**
-   *
+   * @summary Method to create an email notification service
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {SubscriptionProps} props
@@ -55,7 +56,7 @@ export class SnsManager {
   }
 
   /**
-   *
+   * @summary Method to create a lambda notification service
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {SubscriptionProps} props

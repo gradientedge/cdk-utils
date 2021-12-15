@@ -62,6 +62,7 @@ export interface CommonStackProps extends cdk.StackProps {
 }
 
 export interface StaticSiteProps extends CommonStackProps {
+  siteCreateAltARecord: boolean
   siteCertificate: AcmProps
   siteBucket: S3BucketProps
   siteLogBucket: S3BucketProps
@@ -71,6 +72,7 @@ export interface StaticSiteProps extends CommonStackProps {
   siteRecordName?: string
   siteSubDomain?: string
   siteAliases?: string[]
+  useExistingHostedZone: boolean
 }
 
 export interface GraphQlApiLambdaEnvironment {
@@ -88,6 +90,7 @@ export interface GraphQlApiLambdaProps extends CommonStackProps {
   graphQLApiHandler: string
   graphQLApiSource: lambda.AssetCode
   graphqlApi: LambdaProps
+  useExistingHostedZone: boolean
   nodeEnv: string
   logLevel: string
   timezone: string
@@ -101,6 +104,7 @@ export interface AcmProps extends acm.CertificateProps {
   certificateAccount?: string
   certificateRegion?: string
   certificateId: string
+  useExistingCertificate: boolean
 }
 
 /**
@@ -253,7 +257,7 @@ export interface MetricFilterProps extends logs.MetricFilterProps {
  */
 export interface Route53Props extends route53.HostedZoneProps {
   id: string
-  existingHostedZone?: boolean
+  useExistingHostedZone?: boolean
 }
 
 /**

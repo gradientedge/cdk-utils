@@ -7,17 +7,20 @@ import * as cloudfront from 'aws-cdk-lib/aws-cloudfront'
 import { Construct } from 'constructs'
 
 /**
+ * @stability stable
  * @category Constructs
  * @summary Provides a construct to create and deploy a s3 hosted static site
  *
  * @example
- * import { StaticSite } '@gradientedge/cdk-utils'
+ * import { StaticSite, StaticSiteProps } '@gradientedge/cdk-utils'
+ * import { Construct } from 'constructs'
  *
- * class CustomConstruct extends common.CommonConstruct {
- *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
+ * class CustomConstruct extends StaticSite {
+ *   constructor(parent: Construct, id: string, props: StaticSiteProps) {
  *     super(parent, id, props)
  *     this.props = props
- *     const site = new StaticSite(this, 'my-new-static-site', {...})
+ *     this.id = id
+ *     this.initResources()
  * }
  *
  */
@@ -36,6 +39,12 @@ export class StaticSite extends CommonConstruct {
   siteLogBucket: s3.IBucket
   siteOriginAccessIdentity: cloudfront.OriginAccessIdentity
 
+  /**
+   * @summary Constructor to initialise the StaticSite Construct
+   * @param {Construct} parent
+   * @param {string} id
+   * @param {StaticSiteProps} props
+   */
   constructor(parent: Construct, id: string, props: StaticSiteProps) {
     super(parent, id, props)
 
@@ -43,9 +52,13 @@ export class StaticSite extends CommonConstruct {
     this.id = id
   }
 
+  /**
+   * @summary Initialise and provision resources
+   * @protected
+   */
   protected initResources() {
-    this.initHostedZone()
-    this.initCertificate()
+    this.resolveHostedZone()
+    this.resolveCertificate()
     this.createSiteLogBucket()
     this.createSiteBucket()
     this.createSiteOriginAccessIdentity()
@@ -54,32 +67,50 @@ export class StaticSite extends CommonConstruct {
     this.deploySite()
   }
 
-  protected initHostedZone() {
-    this.siteHostedZone = route53.HostedZone.fromLookup(this, `${this.id}-hosted-zone`, {
-      domainName: this.props.siteHostedZoneDomainName || this.fullyQualifiedDomainName,
-    })
+  /**
+   * @summary Method to resolve a hosted zone based on domain attributes
+   * @protected
+   */
+  protected resolveHostedZone() {
+    this.siteHostedZone = this.route53Manager.withHostedZoneFromFullyQualifiedDomainName(
+      `${this.id}-hosted-zone`,
+      this,
+      this.props.useExistingHostedZone
+    )
   }
 
-  protected initCertificate() {
+  /**
+   * @summary Method to resolve a certificate based on attributes
+   * @protected
+   */
+  protected resolveCertificate() {
     this.siteCertificate = this.acmManager.resolveCertificate(
-      this.id,
+      `${this.id}-certificate`,
       this,
       this.props.siteCertificate
     )
   }
 
+  /**
+   * @summary Method to create a site log bucket
+   * @protected
+   */
   protected createSiteLogBucket() {
-    this.siteLogBucket = this.s3Manager.createS3Bucket(
-      `${this.id}-site-logs`,
-      this,
-      this.props.siteLogBucket
-    )
+    this.siteLogBucket = this.s3Manager.createS3Bucket(`${this.id}-site-logs`, this, this.props.siteLogBucket)
   }
 
+  /**
+   * @summary Method to create a site bucket
+   * @protected
+   */
   protected createSiteBucket() {
     this.siteBucket = this.s3Manager.createS3Bucket(`${this.id}-site`, this, this.props.siteBucket)
   }
 
+  /**
+   * @summary Method to create a site origin access identity
+   * @protected
+   */
   protected createSiteOriginAccessIdentity() {
     this.siteOriginAccessIdentity = this.cloudFrontManager.createOriginAccessIdentity(
       `${this.id}-oai`,
@@ -88,6 +119,10 @@ export class StaticSite extends CommonConstruct {
     )
   }
 
+  /**
+   * @summary Method to create a site cloudfront distribution
+   * @protected
+   */
   protected createSiteDistribution() {
     this.siteDistribution = this.cloudFrontManager.createCloudFrontDistribution(
       `${this.id}-distribution`,
@@ -101,6 +136,10 @@ export class StaticSite extends CommonConstruct {
     )
   }
 
+  /**
+   * @summary Method to create route53 records for static site
+   * @protected
+   */
   protected createSiteRouteAssets() {
     this.siteARecord = this.route53Manager.createCloudFrontTargetARecord(
       `${this.id}-domain-a-record`,
@@ -109,15 +148,22 @@ export class StaticSite extends CommonConstruct {
       this.siteHostedZone,
       this.props.siteRecordName
     )
-    this.siteARecordAlt = this.route53Manager.createCloudFrontTargetARecordV2(
-      `${this.id}-domain-a-record-alt`,
-      this,
-      this.siteDistribution,
-      this.siteHostedZone,
-      this.props.siteRecordName
-    )
+
+    if (!this.isProductionStage() && this.props.siteCreateAltARecord) {
+      this.siteARecordAlt = this.route53Manager.createCloudFrontTargetARecordV2(
+        `${this.id}-domain-a-record-alt`,
+        this,
+        this.siteDistribution,
+        this.siteHostedZone,
+        this.props.siteRecordName
+      )
+    }
   }
 
+  /**
+   * @summary Method to deploy the static assets into s3 bucket for static site
+   * @protected
+   */
   protected deploySite() {
     this.s3Manager.doBucketDeployment(
       `${this.id}-deployment`,

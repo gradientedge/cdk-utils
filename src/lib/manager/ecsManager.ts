@@ -7,6 +7,7 @@ import { EcsClusterProps, EcsTaskProps } from '../types'
 import { createCfnOutput } from '../utils'
 
 /**
+ * @stability stable
  * @category Containers
  * @summary Provides operations on AWS Elastic Container Service.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
@@ -21,22 +22,17 @@ import { createCfnOutput } from '../utils'
  *     this.ecsManager.createEcsCluster('MyCluster', this, vpc)
  * }
  *
- * @see [CDK ECS Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-ecs-readme.html}</li></i>
+ * @see [CDK ECS Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-ecs-readme.html}
  */
 export class EcsManager {
   /**
-   *
+   * @summary Method to create an ecs cluster
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {EcsClusterProps} props
    * @param {ec2.IVpc} vpc
    */
-  public createEcsCluster(
-    id: string,
-    scope: CommonConstruct,
-    props: EcsClusterProps,
-    vpc: ec2.IVpc
-  ) {
+  public createEcsCluster(id: string, scope: CommonConstruct, props: EcsClusterProps, vpc: ec2.IVpc) {
     if (!props) throw `Ecs Cluster props undefined`
 
     const ecsCluster = new ecs.Cluster(scope, `${id}`, {
@@ -51,7 +47,7 @@ export class EcsManager {
   }
 
   /**
-   *
+   * @summary Method to create an ecs fargate task
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {EcsTaskProps} props

@@ -4,6 +4,7 @@ import { CommonConstruct } from '../common/commonConstruct'
 import { createCfnOutput } from '../utils'
 
 /**
+ * @stability stable
  * @category Utils
  */
 const CommonVpcIdentifier = 'CommonVpc'
@@ -23,11 +24,11 @@ const CommonVpcIdentifier = 'CommonVpc'
  *     this.vpcManager.createVpc('MyVPC', this)
  * }
  *
- * @see [CDK VPC Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/@aws-cdk_aws-ec2.Vpc.html}</li></i>
+ * @see [CDK VPC Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/@aws-cdk_aws-ec2.Vpc.html}
  */
 export class VpcManager {
   /**
-   *
+   * @summary Method to create a new vpc
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {ec2.VpcProps} props
@@ -39,25 +40,17 @@ export class VpcManager {
     })
 
     createCfnOutput(`${id}Id`, scope, vpc.vpcId)
-    createCfnOutput(
-      `${id}PublicSubnetIds`,
-      scope,
-      vpc.publicSubnets.map((subnet) => subnet.subnetId).toString()
-    )
-    createCfnOutput(
-      `${id}PrivateSubnetIds`,
-      scope,
-      vpc.privateSubnets.map((subnet) => subnet.subnetId).toString()
-    )
+    createCfnOutput(`${id}PublicSubnetIds`, scope, vpc.publicSubnets.map(subnet => subnet.subnetId).toString())
+    createCfnOutput(`${id}PrivateSubnetIds`, scope, vpc.privateSubnets.map(subnet => subnet.subnetId).toString())
     createCfnOutput(
       `${id}PublicSubnetRouteTableIds`,
       scope,
-      vpc.publicSubnets.map((subnet) => subnet.routeTable.routeTableId).toString()
+      vpc.publicSubnets.map(subnet => subnet.routeTable.routeTableId).toString()
     )
     createCfnOutput(
       `${id}PrivateSubnetRouteTableIds`,
       scope,
-      vpc.privateSubnets.map((subnet) => subnet.routeTable.routeTableId).toString()
+      vpc.privateSubnets.map(subnet => subnet.routeTable.routeTableId).toString()
     )
     createCfnOutput(`${id}AvailabilityZones`, scope, vpc.availabilityZones.toString())
 
@@ -65,7 +58,7 @@ export class VpcManager {
   }
 
   /**
-   *
+   * @summary Method to create a common vpc
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {ec2.VpcProps} props
    */
@@ -77,7 +70,7 @@ export class VpcManager {
   }
 
   /**
-   *
+   * @summary Method to retrieve a common vpc
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    */

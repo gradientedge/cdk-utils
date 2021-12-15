@@ -7,6 +7,7 @@ import { CommonConstruct } from '../common/commonConstruct'
 import { createCfnOutput } from '../utils'
 
 /**
+ * @stability stable
  * @category Networking & Content Delivery
  * @summary Provides operations on AWS Route53.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
@@ -21,11 +22,11 @@ import { createCfnOutput } from '../utils'
  *     this.route53Manager.createHostedZone('MyHostedZone', this)
  * }
  *
- * @see [CDK Route53 Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-route53-readme.html}</li></i>
+ * @see [CDK Route53 Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-route53-readme.html}
  */
 export class Route53Manager {
   /**
-   *
+   * @summary Method to create a hosted zone
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {Route53Props} props
@@ -35,7 +36,7 @@ export class Route53Manager {
 
     if (!props) throw `Route53 props undefined`
 
-    if (props.existingHostedZone) {
+    if (props.useExistingHostedZone) {
       hostedZone = route53.HostedZone.fromLookup(scope, `${id}`, {
         domainName: scope.props.domainName,
       })
@@ -53,7 +54,37 @@ export class Route53Manager {
   }
 
   /**
-   *
+   * @summary Method to create/lookup a hosted zone
+   * @param {string} id scoped id of the resource
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param useExistingHostedZone Flag to indicate whether to lookup vs create new hosted zone
+   */
+  public withHostedZoneFromFullyQualifiedDomainName(
+    id: string,
+    scope: CommonConstruct,
+    useExistingHostedZone: boolean
+  ) {
+    let hostedZone: route53.IHostedZone
+
+    if (useExistingHostedZone) {
+      hostedZone = route53.HostedZone.fromLookup(scope, `${id}`, {
+        domainName: scope.fullyQualifiedDomainName,
+      })
+    } else {
+      hostedZone = new route53.HostedZone(scope, `${id}`, {
+        zoneName: scope.fullyQualifiedDomainName,
+        comment: `Hosted zone for ${scope.fullyQualifiedDomainName}`,
+      })
+    }
+
+    createCfnOutput(`${id}-hostedZoneId`, scope, hostedZone.hostedZoneId)
+    createCfnOutput(`${id}-hostedZoneArn`, scope, hostedZone.hostedZoneArn)
+
+    return hostedZone
+  }
+
+  /**
+   * @summary Method to create a-record for cloudfront target
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {cloudfront.IDistribution} distribution
@@ -71,10 +102,7 @@ export class Route53Manager {
     if (!hostedZone) throw `HostedZone undefined`
 
     const aRecord = new route53.ARecord(scope, `${id}`, {
-      recordName:
-        recordName && scope.isProductionStage()
-          ? `${recordName}`
-          : `${recordName}-${scope.props.stage}`,
+      recordName: recordName && scope.isProductionStage() ? `${recordName}` : `${recordName}-${scope.props.stage}`,
       target: route53.RecordTarget.fromAlias(new route53Targets.CloudFrontTarget(distribution)),
       zone: hostedZone,
     })
@@ -85,7 +113,7 @@ export class Route53Manager {
   }
 
   /**
-   *
+   * @summary Method to create a-record for cloudfront target
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {cloudfront.IDistribution} distribution
@@ -114,9 +142,9 @@ export class Route53Manager {
   }
 
   /**
-   *
-   * @param id
-   * @param scope
+   * @summary Method to create a-record for api gateway target
+   * @param {string} id scoped id of the resource
+   * @param {CommonConstruct} scope scope in which this resource is defined
    * @param recordName
    * @param apiDomain
    * @param hostedZone

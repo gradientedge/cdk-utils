@@ -9,6 +9,7 @@ import { LambdaProps } from '../types'
 import { createCfnOutput } from '../utils'
 
 /**
+ * @stability stable
  * @category Compute
  * @summary Provides operations on AWS Lambda.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
@@ -23,11 +24,11 @@ import { createCfnOutput } from '../utils'
  *     this.lambdaManager.createLambdaFunction('MyFunction', this, role, layers, code)
  * }
  *
- * @see [CDK Lambda Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-lambda-readme.html}</li></i>
+ * @see [CDK Lambda Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-lambda-readme.html}
  */
 export class LambdaManager {
   /**
-   *
+   * @summary Method to create a lambda layer (nodejs)
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {lambda.AssetCode} code
@@ -46,7 +47,7 @@ export class LambdaManager {
   }
 
   /**
-   *
+   * @summary Method to create a lambda layer (python)
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {string} entry path to layer source
@@ -65,7 +66,7 @@ export class LambdaManager {
   }
 
   /**
-   *
+   * @summary Method to create a lambda function (nodejs)
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {LambdaProps} props
@@ -106,18 +107,14 @@ export class LambdaManager {
         REGION: scope.props.region,
         ...environment,
       },
-      filesystem: accessPoint
-        ? lambda.FileSystem.fromEfsAccessPoint(accessPoint, mountPath || '/mnt/msg')
-        : undefined,
+      filesystem: accessPoint ? lambda.FileSystem.fromEfsAccessPoint(accessPoint, mountPath || '/mnt/msg') : undefined,
       layers: layers,
       logRetention: props.logRetention,
       memorySize: props.memorySize,
       reservedConcurrentExecutions: props.reservedConcurrentExecutions,
       role: role instanceof iam.Role ? role : undefined,
       securityGroups: securityGroups,
-      timeout: props.timeoutInSecs
-        ? cdk.Duration.seconds(props.timeoutInSecs)
-        : cdk.Duration.minutes(1),
+      timeout: props.timeoutInSecs ? cdk.Duration.seconds(props.timeoutInSecs) : cdk.Duration.minutes(1),
       vpc: vpc,
     })
 
@@ -127,7 +124,7 @@ export class LambdaManager {
   }
 
   /**
-   *
+   * @summary Method to create a lambda function (python)
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {LambdaProps} props
@@ -172,18 +169,14 @@ export class LambdaManager {
         REGION: scope.props.region,
         ...environment,
       },
-      filesystem: accessPoint
-        ? lambda.FileSystem.fromEfsAccessPoint(accessPoint, mountPath || '/mnt/msg')
-        : undefined,
+      filesystem: accessPoint ? lambda.FileSystem.fromEfsAccessPoint(accessPoint, mountPath || '/mnt/msg') : undefined,
       layers: layers,
       logRetention: props.logRetention,
       memorySize: props.memorySize,
       reservedConcurrentExecutions: props.reservedConcurrentExecutions,
       role: role instanceof iam.Role ? role : undefined,
       securityGroups: securityGroups,
-      timeout: props.timeoutInSecs
-        ? cdk.Duration.seconds(props.timeoutInSecs)
-        : cdk.Duration.minutes(1),
+      timeout: props.timeoutInSecs ? cdk.Duration.seconds(props.timeoutInSecs) : cdk.Duration.minutes(1),
       vpc: vpc,
     })
 

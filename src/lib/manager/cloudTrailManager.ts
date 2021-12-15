@@ -6,6 +6,7 @@ import { CloudTrailProps } from '../types'
 import { createCfnOutput } from '../utils'
 
 /**
+ * @stability stable
  * @category Management & Governance
  * @summary Provides operations on AWS CloudTrail.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
@@ -27,11 +28,11 @@ import { createCfnOutput } from '../utils'
  *     )
  * }
  *
- * @see [CDK CloudTrail Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-cloudtrail-readme.html}</li></i>
+ * @see [CDK CloudTrail Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-cloudtrail-readme.html}
  */
 export class CloudTrailManager {
   /**
-   *
+   * @summary Method to create a cloud trail
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {CloudTrailProps} props

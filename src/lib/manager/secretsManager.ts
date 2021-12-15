@@ -6,6 +6,7 @@ const AWS = require('aws-sdk')
 const fs = require('fs')
 
 /**
+ * @stability stable
  * @category Security, Identity & Compliance
  * @summary Provides operations on AWS Secrets Manager.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
@@ -20,7 +21,7 @@ const fs = require('fs')
  *     this.s3Manager.loadSecret('MySecretName', 'eu-west-1')
  * }
  *
- * @see [CDK Secrets Manager Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-secretsmanager-readme.html}</li></i>
+ * @see [CDK Secrets Manager Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-secretsmanager-readme.html}
  */
 export class SecretsManager {
   /**
@@ -32,21 +33,19 @@ export class SecretsManager {
   }
 
   /**
-   *
+   * @summary Method to load a secret from secrets manager
    * @param {string} secretName
    * @param {string} region
    */
   public async loadSecret(secretName: string, region: string) {
     const secretsManager = this.getAwsSecretsManager(region)
-    const secret: any = await Promise.all([
-      secretsManager.getSecretValue({ SecretId: secretName }).promise(),
-    ])
+    const secret: any = await Promise.all([secretsManager.getSecretValue({ SecretId: secretName }).promise()])
 
     return secret ? JSON.parse(secret[0].SecretString) : {}
   }
 
   /**
-   *
+   * @summary Method to load secrets from secrets manager
    * @param {string} secretNames
    * @param {string} region
    */
@@ -60,7 +59,7 @@ export class SecretsManager {
   }
 
   /**
-   *
+   * @summary Method to export secrets from secrets manager to a dot env format
    */
   public exportToDotEnv() {
     let nconf = require('nconf')
@@ -90,18 +89,13 @@ export class SecretsManager {
   }
 
   /**
-   *
+   * @summary Method to retrieve a secret from secrets manager with a cloudformation export
    * @param id
    * @param scope
    * @param stackName
    * @param exportName
    */
-  public retrieveSecretFromSecretsManager(
-    id: string,
-    scope: CommonConstruct,
-    stackName: string,
-    exportName: string
-  ) {
+  public retrieveSecretFromSecretsManager(id: string, scope: CommonConstruct, stackName: string, exportName: string) {
     return secretsManager.Secret.fromSecretNameV2(
       scope,
       `${id}`,

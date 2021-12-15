@@ -15,6 +15,7 @@ import { CommonConstruct } from '../common/commonConstruct'
 import { CloudWatchWidgetType, createCfnOutput } from '../utils'
 
 /**
+ * @stability stable
  * @category Management & Governance
  * @summary Provides operations on AWS CloudWatch.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
@@ -29,11 +30,11 @@ import { CloudWatchWidgetType, createCfnOutput } from '../utils'
  *     this.cloudWatchManager.createAlarmForMetric('MyAlarm', this, metric)
  * }
  *
- * @see [CDK CloudWatch Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-cloudwatch-readme.html}</li></i>
+ * @see [CDK CloudWatch Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-cloudwatch-readme.html}
  */
 export class CloudWatchManager {
   /**
-   *
+   * @summary Method to create a cloudwatch alarm for a given expression
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {AlarmProps} props
@@ -51,9 +52,7 @@ export class CloudWatchManager {
     const expression = new watch.MathExpression({
       expression: props.expression,
       usingMetrics: metrics,
-      period: props.periodInSecs
-        ? cdk.Duration.seconds(props.periodInSecs)
-        : cdk.Duration.minutes(5),
+      period: props.periodInSecs ? cdk.Duration.seconds(props.periodInSecs) : cdk.Duration.minutes(5),
     })
 
     const alarm = expression.createAlarm(scope, `${id}`, {
@@ -73,18 +72,13 @@ export class CloudWatchManager {
   }
 
   /**
-   *
+   * @summary Method to create a cloudwatch alarm for a given metric
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {AlarmProps} props
    * @param metric
    */
-  public createAlarmForMetric(
-    id: string,
-    scope: CommonConstruct,
-    props: AlarmProps,
-    metric: watch.Metric
-  ) {
+  public createAlarmForMetric(id: string, scope: CommonConstruct, props: AlarmProps, metric: watch.Metric) {
     if (!props) throw `Alarm props undefined`
 
     const alarm = metric.createAlarm(scope, `${id}`, {
@@ -104,18 +98,13 @@ export class CloudWatchManager {
   }
 
   /**
-   *
+   * @summary Method to create a cloudwatch dashboard
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {DashboardProps} props
    * @param widgets
    */
-  public createDashboard(
-    id: string,
-    scope: CommonConstruct,
-    props: DashboardProps,
-    widgets?: watch.IWidget[][]
-  ) {
+  public createDashboard(id: string, scope: CommonConstruct, props: DashboardProps, widgets?: watch.IWidget[][]) {
     if (!props) throw `Dashboard props undefined`
 
     return new watch.Dashboard(scope, `${id}`, {
@@ -128,7 +117,7 @@ export class CloudWatchManager {
   }
 
   /**
-   *
+   * @summary Method to create cloudwatch widgets
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param props
    */
@@ -136,15 +125,13 @@ export class CloudWatchManager {
     if (!props || props.length == 0) throw `Widget props undefined`
 
     const widgets: any = []
-    props.forEach((widgetProps: any) =>
-      widgets.push(this.createWidget(widgetProps.id, scope, widgetProps))
-    )
+    props.forEach((widgetProps: any) => widgets.push(this.createWidget(widgetProps.id, scope, widgetProps)))
 
     return widgets
   }
 
   /**
-   *
+   * @summary Method to create a cloudwatch widget
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param props
@@ -174,7 +161,7 @@ export class CloudWatchManager {
   }
 
   /**
-   *
+   * @summary Method to create a cloudwatch text widget
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {TextWidgetProps} props
@@ -192,18 +179,13 @@ export class CloudWatchManager {
   }
 
   /**
-   *
+   * @summary Method to create a cloudwatch numeric widget
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {NumericWidgetProps} props
    * @param metrics
    */
-  public createSingleValueWidget(
-    id: string,
-    scope: CommonConstruct,
-    props: NumericWidgetProps,
-    metrics: IMetric[]
-  ) {
+  public createSingleValueWidget(id: string, scope: CommonConstruct, props: NumericWidgetProps, metrics: IMetric[]) {
     const widget = new watch.SingleValueWidget({
       metrics: metrics,
       setPeriodToTimeRange: props.setPeriodToTimeRange,
@@ -219,7 +201,7 @@ export class CloudWatchManager {
   }
 
   /**
-   *
+   * @summary Method to create a cloudwatch graph widget
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {GraphWidgetProps} props
@@ -255,7 +237,7 @@ export class CloudWatchManager {
   }
 
   /**
-   *
+   * @summary Method to create a cloudwatch alarm status widget
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {AlarmStatusWidgetProps} props
@@ -280,18 +262,13 @@ export class CloudWatchManager {
   }
 
   /**
-   *
+   * @summary Method to create a cloudwatch log query widget
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {LogQueryWidgetProps} props
    * @param {string[]} logGroupNames
    */
-  public createLogQueryWidget(
-    id: string,
-    scope: CommonConstruct,
-    props: LogQueryWidgetProps,
-    logGroupNames: string[]
-  ) {
+  public createLogQueryWidget(id: string, scope: CommonConstruct, props: LogQueryWidgetProps, logGroupNames: string[]) {
     const widget = new watch.LogQueryWidget({
       logGroupNames: logGroupNames,
       queryString: props.queryString,
@@ -308,7 +285,7 @@ export class CloudWatchManager {
   }
 
   /**
-   *
+   * @summary Utility method to determine the metrics and dimensions
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {MetricProps[]} metricProps
    */
@@ -334,18 +311,12 @@ export class CloudWatchManager {
           }
         }
         const metric = new watch.Metric({
-          namespace: metricProp.stageSuffix
-            ? `${metricProp.namespace}-${scope.props.stage}`
-            : metricProp.namespace,
-          metricName: metricProp.stageSuffix
-            ? `${metricProp.metricName}-${scope.props.stage}`
-            : metricProp.metricName,
+          namespace: metricProp.stageSuffix ? `${metricProp.namespace}-${scope.props.stage}` : metricProp.namespace,
+          metricName: metricProp.stageSuffix ? `${metricProp.metricName}-${scope.props.stage}` : metricProp.metricName,
           dimensionsMap: metricDimensions,
           statistic: metricProp.statistic,
           region: metricProp.region,
-          period: metricProp.periodInSecs
-            ? cdk.Duration.seconds(metricProp.periodInSecs)
-            : cdk.Duration.minutes(5),
+          period: metricProp.periodInSecs ? cdk.Duration.seconds(metricProp.periodInSecs) : cdk.Duration.minutes(5),
         })
         metrics.push(metric)
       })
@@ -355,7 +326,7 @@ export class CloudWatchManager {
   }
 
   /**
-   *
+   * @summary Utility method to determine the time range
    * @param {string?} range
    */
   private static determineTimeRange(range?: string) {
@@ -372,7 +343,7 @@ export class CloudWatchManager {
   }
 
   /**
-   *
+   * @summary Utility method to determine the configured alarms
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {watch.AlarmProps[]} alarmProps
@@ -382,9 +353,9 @@ export class CloudWatchManager {
     if (alarmProps) {
       alarmProps.forEach((alarmProp: watch.AlarmProps) => {
         if (!alarmProp.alarmName) throw `Alarm name undefined for ${id}`
-        const alarmArn = `arn:aws:cloudwatch:${cdk.Stack.of(scope).region}:${
-          cdk.Stack.of(scope).account
-        }:alarm:${alarmProp.alarmName}`
+        const alarmArn = `arn:aws:cloudwatch:${cdk.Stack.of(scope).region}:${cdk.Stack.of(scope).account}:alarm:${
+          alarmProp.alarmName
+        }`
         const alarm = watch.Alarm.fromAlarmArn(scope, `${alarmProp.alarmName}`, alarmArn)
         alarms.push(alarm)
       })

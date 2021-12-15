@@ -5,6 +5,7 @@ import { AppConfigProps } from '../types'
 import { createCfnOutput } from '../utils'
 
 /**
+ * @stability stable
  * @category Utils
  * @returns { Map<string, string> } ArnsByRegion
  */
@@ -46,11 +47,11 @@ export const ArnsByRegion: { [key: string]: string } = {
  *     this.appConfigManager.createApplication('MyApplication', this)
  * }
  *
- * @see [CDK AppConfig Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-appconfig-readme.html}</li></i>
+ * @see [CDK AppConfig Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-appconfig-readme.html}
  */
 export class AppConfigManager {
   /**
-   *
+   * Method to get static ARNs for AppConfig extensions
    * @param {CommonConstruct} scope scope in which this resource is defined
    */
   public getArnForAppConfigExtension(scope: CommonConstruct) {
@@ -64,11 +65,7 @@ export class AppConfigManager {
    * @param {AppConfigProps} props
    * @returns {appconfig.CfnApplication}
    */
-  public createApplication(
-    id: string,
-    scope: CommonConstruct,
-    props: AppConfigProps
-  ): appconfig.CfnApplication {
+  public createApplication(id: string, scope: CommonConstruct, props: AppConfigProps): appconfig.CfnApplication {
     if (!props) throw `AppConfig props undefined`
 
     const application = new appconfig.CfnApplication(scope, `${id}Application`, {

@@ -4,6 +4,7 @@ import { createCfnOutput } from '../utils'
 import { WafIPSetProps, WafWebACLProps } from '../types'
 
 /**
+ * @stability stable
  * @category Security, Identity & Compliance
  * @summary Provides operations on AWS WAF.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
@@ -18,11 +19,11 @@ import { WafIPSetProps, WafWebACLProps } from '../types'
  *     this.wafManager.createWebAcl('MyWebAcl', this)
  * }
  *
- * @see [CDK WAF Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-waf-readme.html}</li></i>
+ * @see [CDK WAF Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-waf-readme.html}
  */
 export class WafManager {
   /**
-   *
+   * @summary Method to create an ip set
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {WafIPSetProps} props
@@ -45,7 +46,7 @@ export class WafManager {
   }
 
   /**
-   *
+   * @summary Method to create a web acl
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {WafWebACLProps} props

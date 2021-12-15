@@ -6,6 +6,7 @@ import { EksClusterProps } from '../types'
 import { createCfnOutput } from '../utils'
 
 /**
+ * @stability stable
  * @category Containers
  * @summary Provides operations on AWS Elastic Kubernetes Service.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
@@ -20,11 +21,11 @@ import { createCfnOutput } from '../utils'
  *     this.eksManager.createEksDeployment('MyEksDeployment', this, image, vpc)
  * }
  *
- * @see [CDK EKS Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-eks-readme.html}</li></i>
+ * @see [CDK EKS Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-eks-readme.html}
  */
 export class EksManager {
   /**
-   *
+   * @summary Method to create an eks deployment
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {EksClusterProps} props

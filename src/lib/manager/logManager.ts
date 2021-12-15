@@ -5,6 +5,7 @@ import { LogProps, MetricFilterProps } from '../types'
 import { createCfnOutput } from '../utils'
 
 /**
+ * @stability stable
  * @category Management & Governance
  * @summary Provides operations on AWS CloudWatch.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
@@ -19,22 +20,17 @@ import { createCfnOutput } from '../utils'
  *     this.logsManager.createMetricFilter('MyMetricFilter', this, logGroup)
  * }
  *
- * @see [CDK CloudWatch Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-logs-readme.html}</li></i>
+ * @see [CDK CloudWatch Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-logs-readme.html}
  */
 export class LogManager {
   /**
-   *
+   * @summary Method to create a cloudwatch metric filter
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {MetricFilterProps} props
    * @param {logs.ILogGroup} logGroup
    */
-  public createMetricFilter(
-    id: string,
-    scope: CommonConstruct,
-    props: MetricFilterProps,
-    logGroup: logs.ILogGroup
-  ) {
+  public createMetricFilter(id: string, scope: CommonConstruct, props: MetricFilterProps, logGroup: logs.ILogGroup) {
     if (!props) throw `Metric Filter props undefined`
 
     const metricFilter = new logs.MetricFilter(scope, `${id}`, {
@@ -50,9 +46,7 @@ export class LogManager {
       ? metricFilter.metric({
           dimensionsMap: props.options.dimensionsMap,
           statistic: props.options.statistic,
-          period: props.periodInSecs
-            ? cdk.Duration.seconds(props.periodInSecs)
-            : cdk.Duration.minutes(5),
+          period: props.periodInSecs ? cdk.Duration.seconds(props.periodInSecs) : cdk.Duration.minutes(5),
         })
       : metricFilter.metric()
 
@@ -60,7 +54,7 @@ export class LogManager {
   }
 
   /**
-   *
+   * @summary Method to create a cloudwatch log group (cfn)
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {LogProps} props
@@ -79,7 +73,7 @@ export class LogManager {
   }
 
   /**
-   *
+   * @summary Method to create a cloudwatch log group
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {LogProps} props

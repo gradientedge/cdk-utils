@@ -8,6 +8,7 @@ import { S3BucketProps } from '../types'
 import { createCfnOutput } from '../utils'
 
 /**
+ * @stability stable
  * @category Storage
  * @summary Provides operations on AWS S3.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
@@ -22,11 +23,11 @@ import { createCfnOutput } from '../utils'
  *     this.s3Manager.createS3Bucket('MyBucket', this)
  * }
  *
- * @see [CDK S3 Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-s3-readme.html}</li></i>
+ * @see [CDK S3 Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-s3-readme.html}
  */
 export class S3Manager {
   /**
-   *
+   * @summary Method to create a s3 bucket
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {S3BucketProps} props bucket properties
@@ -79,7 +80,7 @@ export class S3Manager {
   }
 
   /**
-   *
+   * @summary Method to create an iam bucket policy for cloudtrail
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {s3.IBucket} bucket
@@ -111,7 +112,7 @@ export class S3Manager {
   }
 
   /**
-   *
+   * @summary Method to create a s3 bucket deployment
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {s3.IBucket} siteBucket
