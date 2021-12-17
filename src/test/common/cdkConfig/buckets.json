@@ -1,0 +1,20 @@
+{
+  "siteLogBucket": {
+    "bucketName": "site-logs",
+    "accessControl": "LogDeliveryWrite",
+    "autoDeleteObjects": true,
+    "removalPolicy": "destroy",
+    "existingBucket": false
+  },
+  "siteBucket": {
+    "bucketName": "site",
+    "logBucketName": "site-logs",
+    "accessControl": "Private",
+    "autoDeleteObjects": true,
+    "removalPolicy": "destroy",
+    "serverAccessLogsPrefix": "logs/",
+    "websiteIndexDocument": "index.html",
+    "websiteErrorDocument": "index.html",
+    "existingBucket": false
+  }
+}

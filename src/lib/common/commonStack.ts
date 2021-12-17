@@ -1,6 +1,7 @@
 import * as cdk from 'aws-cdk-lib'
 import { isDevStage } from '../utils'
 import { CommonConstruct } from './commonConstruct'
+import { CommonStackProps } from '../types'
 
 const appRoot = require('app-root-path')
 const fs = require('fs')
@@ -25,6 +26,8 @@ const fs = require('fs')
  *     B(cdk.Stack)-->|implements|C(cdk.ITaggable);
  */
 export class CommonStack extends cdk.Stack {
+  construct: CommonConstruct
+  props: CommonStackProps
   /**
    * @summary Constructor to initialise the CommonStack
    * @param {cdk.App} parent
@@ -40,8 +43,10 @@ export class CommonStack extends cdk.Stack {
     /* determine extra cdk stage contexts */
     this.determineStageContexts()
 
+    this.props = this.determineConstructProps(props)
+
     /* initialise the construct */
-    new CommonConstruct(this, 'cdk-utils', this.determineConstructProps(props))
+    this.construct = new CommonConstruct(this, 'cdk-utils', this.props)
   }
 
   /**
@@ -110,8 +115,9 @@ export class CommonStack extends cdk.Stack {
 
     /* alert default context usage when extra stage config is missing */
     if (!fs.existsSync(stageContextFilePath)) {
-      console.warn(`Stage specific context properties unavailable in path:${stageContextFilePath}`)
-      console.warn(`Using default stage context properties for ${stage} stage`)
+      console.info(`Stage specific context properties unavailable in path:${stageContextFilePath}`)
+      console.info(`Using default stage context properties for ${stage} stage`)
+      return
     }
 
     /* read the extra properties */

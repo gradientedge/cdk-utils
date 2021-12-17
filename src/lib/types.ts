@@ -1,5 +1,4 @@
 import * as wafv2 from 'aws-cdk-lib/aws-wafv2'
-import * as ec2 from 'aws-cdk-lib/aws-ec2'
 import * as appconfig from 'aws-cdk-lib/aws-appconfig'
 import * as sns from 'aws-cdk-lib/aws-sns'
 import * as s3 from 'aws-cdk-lib/aws-s3'
@@ -39,26 +38,7 @@ export interface CommonStackProps extends cdk.StackProps {
   domainName: string
   subDomain?: string
   extraContexts?: string[]
-  routes?: Route53Props[]
-  appConfigs?: AppConfigProps[]
-  buckets?: S3BucketProps[]
-  certificates?: AcmProps[]
-  distributions?: CloudFrontProps[]
-  logs?: LogProps[]
-  rules?: RuleProps[]
-  trails?: CloudTrailProps[]
-  vpc?: ec2.VpcProps
-  ecsClusters?: EcsClusterProps[]
-  ecsTasks?: EcsTaskProps[]
-  eksClusters?: EksClusterProps[]
-  lambdas?: LambdaProps[]
-  subscriptions?: SubscriptionProps[]
-  dashboards?: DashboardProps[]
-  widgets?: any[]
-  metricFilters?: MetricFilterProps[]
-  alarms?: AlarmProps[]
-  wafIpSets?: WafIPSetProps[]
-  wafWebAcls?: WafWebACLProps[]
+  stageContextPath?: string
 }
 
 export interface StaticSiteProps extends CommonStackProps {
@@ -100,7 +80,6 @@ export interface GraphQlApiLambdaProps extends CommonStackProps {
  * @category Security, Identity & Compliance
  */
 export interface AcmProps extends acm.CertificateProps {
-  id: string
   certificateAccount?: string
   certificateRegion?: string
   certificateId: string
@@ -110,22 +89,17 @@ export interface AcmProps extends acm.CertificateProps {
 /**
  * @category Networking & Content Delivery
  */
-export interface CloudFrontProps extends cloudfront.CloudFrontWebDistributionProps {
-  id?: string
-}
+export interface CloudFrontProps extends cloudfront.CloudFrontWebDistributionProps {}
 
 /**
  * @category Management & Governance
  */
-export interface CloudTrailProps extends cloudtrail.CfnTrailProps {
-  id: string
-}
+export interface CloudTrailProps extends cloudtrail.CfnTrailProps {}
 
 /**
  * @category Management & Governance
  */
 export interface DashboardProps extends watch.DashboardProps {
-  id: string
   positionX: number
   positionY: number
 }
@@ -134,7 +108,6 @@ export interface DashboardProps extends watch.DashboardProps {
  * @category Management & Governance
  */
 export interface AlarmProps extends watch.AlarmProps {
-  id: string
   expression?: string
   metricProps?: MetricProps[]
   periodInSecs?: number
@@ -154,7 +127,6 @@ export interface MetricProps extends watch.MetricProps {
  * @category Management & Governance
  */
 export interface TextWidgetProps extends watch.TextWidgetProps {
-  id: string
   positionX: number
   positionY: number
 }
@@ -163,7 +135,6 @@ export interface TextWidgetProps extends watch.TextWidgetProps {
  * @category Management & Governance
  */
 export interface NumericWidgetProps extends watch.SingleValueWidgetProps {
-  id: string
   positionX: number
   positionY: number
   metricProps?: watch.MetricProps[]
@@ -173,7 +144,6 @@ export interface NumericWidgetProps extends watch.SingleValueWidgetProps {
  * @category Management & Governance
  */
 export interface GraphWidgetProps extends watch.GraphWidgetProps {
-  id: string
   positionX: number
   positionY: number
   metricProps?: MetricProps[]
@@ -183,7 +153,6 @@ export interface GraphWidgetProps extends watch.GraphWidgetProps {
  * @category Management & Governance
  */
 export interface AlarmStatusWidgetProps extends watch.AlarmStatusWidgetProps {
-  id: string
   positionX: number
   positionY: number
   alarmProps?: watch.AlarmProps[]
@@ -193,7 +162,6 @@ export interface AlarmStatusWidgetProps extends watch.AlarmStatusWidgetProps {
  * @category Management & Governance
  */
 export interface LogQueryWidgetProps extends watch.LogQueryWidgetProps {
-  id: string
   positionX: number
   positionY: number
 }
@@ -201,22 +169,17 @@ export interface LogQueryWidgetProps extends watch.LogQueryWidgetProps {
 /**
  * @category Containers
  */
-export interface EcsClusterProps extends ecs.ClusterProps {
-  id: string
-}
+export interface EcsClusterProps extends ecs.ClusterProps {}
 
 /**
  * @category Containers
  */
-export interface EcsTaskProps extends ecs.TaskDefinitionProps {
-  id: string
-}
+export interface EcsTaskProps extends ecs.TaskDefinitionProps {}
 
 /**
  * @category Containers
  */
 export interface EksClusterProps extends eks.ClusterProps {
-  id: string
   appContainerPort: number
   appCapacity: number
 }
@@ -224,30 +187,24 @@ export interface EksClusterProps extends eks.ClusterProps {
 /**
  * @category Application Integration
  */
-export interface RuleProps extends events.CfnRuleProps {
-  id: string
-}
+export interface RuleProps extends events.CfnRuleProps {}
 
 /**
  * @category Compute
  */
 export interface LambdaProps extends lambda.FunctionProps {
-  id: string
   timeoutInSecs?: number
 }
 
 /**
  * @category Management & Governance
  */
-export interface LogProps extends logs.CfnLogGroupProps {
-  id: string
-}
+export interface LogProps extends logs.CfnLogGroupProps {}
 
 /**
  * @category Management & Governance
  */
 export interface MetricFilterProps extends logs.MetricFilterProps {
-  id: string
   periodInSecs: number
   options: watch.MetricOptions
 }
@@ -256,7 +213,6 @@ export interface MetricFilterProps extends logs.MetricFilterProps {
  * @category Networking & Content Delivery
  */
 export interface Route53Props extends route53.HostedZoneProps {
-  id: string
   useExistingHostedZone?: boolean
 }
 
@@ -264,7 +220,6 @@ export interface Route53Props extends route53.HostedZoneProps {
  * @category Storage
  */
 export interface S3BucketProps extends s3.BucketProps {
-  id: string
   bucketName: string
   logBucketName?: string
   existingBucket?: boolean
@@ -273,20 +228,14 @@ export interface S3BucketProps extends s3.BucketProps {
 /**
  * @category Application Integration
  */
-export interface SubscriptionProps extends sns.TopicProps {
-  id: string
-}
+export interface SubscriptionProps extends sns.TopicProps {}
 
 /**
  * @category Security, Identity & Compliance
  */
-export interface WafIPSetProps extends wafv2.CfnIPSetProps {
-  id: string
-}
+export interface WafIPSetProps extends wafv2.CfnIPSetProps {}
 
 /**
  * @category Security, Identity & Compliance
  */
-export interface WafWebACLProps extends wafv2.CfnWebACLProps {
-  id: string
-}
+export interface WafWebACLProps extends wafv2.CfnWebACLProps {}

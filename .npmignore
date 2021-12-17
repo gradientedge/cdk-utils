@@ -30,3 +30,4 @@ api-docs
 tsconfig.json
 lerna.json
 yarn.lock
+**/test/**

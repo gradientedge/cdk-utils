@@ -2,7 +2,7 @@
   "source": {
     "includePattern": "\\.(ts|tsx)$",
     "excludePattern": ".+\\.(test|spec).(t|j)s(doc|x)?$",
-    "exclude": ["__snapshots__", "__tests__", "build", "coverage", "logo", "node_modules", "private", "public"]
+    "exclude": ["__snapshots__", "test", "__tests__", "build", "coverage", "logo", "node_modules", "private", "public"]
   },
   "plugins": [
     "plugins/markdown",
