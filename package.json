@@ -83,7 +83,6 @@
     "jsdoc": "^3.6.7",
     "jsdoc-babel": "^0.5.0",
     "jsdoc-mermaid": "^1.0.0",
-    "pug": "^3.0.2",
     "rimraf": "^3.0.2",
     "semantic-release": "^18.0.1",
     "ts-jest": "^27.1.1",
