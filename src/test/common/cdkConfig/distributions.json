@@ -1,0 +1,16 @@
+{
+  "siteDistribution": {
+    "errorConfigurations": [
+      {
+        "errorCode": 403,
+        "responseCode": 200,
+        "responsePagePath": "/server/pages/index.html"
+      },
+      {
+        "errorCode": 404,
+        "responseCode": 200,
+        "responsePagePath": "/server/pages/index.html"
+      }
+    ]
+  }
+}

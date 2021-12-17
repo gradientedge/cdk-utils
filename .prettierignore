@@ -1,0 +1,14 @@
+# Jest
+coverage
+
+# Node
+**/build/**
+package-lock.json
+
+# Typescript
+*.d.ts
+*.js
+
+# Docs
+**/docs/**
+**/api-docs/**
