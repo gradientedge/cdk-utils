@@ -51,7 +51,7 @@ yarn add @gradientedge/cdk-utils
 [license]: https://img.shields.io/badge/license-MIT-green?logo=github&style=for-the-badge
 [logo]: https://cdn-images-1.medium.com/max/980/1*WsecR3i1TM7DbxKW_3VNQA@2x.png
 [maintained]: https://img.shields.io/badge/maintained-YES-green?style=for-the-badge
-[version]: https://img.shields.io/badge/version-3.0.8-green?logo=npm&style=for-the-badge
+[version]: https://img.shields.io/badge/version-3.0.7-green?logo=npm&style=for-the-badge
 [node-badge]: https://img.shields.io/badge/node-14.18.2-green?logo=npm&style=for-the-badge
 [purescript]: https://img.shields.io/badge/package.json-4D4D4D?logo=purescript&style=for-the-badge
 [yarn-badge]: https://img.shields.io/badge/yarn-1.22.10-green?logo=yarn&style=for-the-badge
