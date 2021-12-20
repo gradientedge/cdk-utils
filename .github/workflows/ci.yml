@@ -51,6 +51,13 @@ jobs:
         if: always()
         with:
           files: coverage/junit.xml
+      - name: Monitor coverage
+        uses: slavcodev/coverage-monitor-action@1.2.0
+        with:
+          github_token: ${{ secrets.GIT_TOKEN }}
+          clover_file: coverage/clover.xml
+          threshold_alert: 50
+          threshold_warning: 60
       - uses: actions/upload-artifact@v2
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && success() }}
         with:
