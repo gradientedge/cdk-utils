@@ -61,7 +61,7 @@ class TestGraphQLApiConstruct extends GraphQLApiLambda {
     this.props = props
 
     this.id = 'test-graphql'
-    this.props.graphQLApiSource = new lambda.AssetCode('.')
+    this.props.graphQLApiSource = new lambda.AssetCode('src/test/common/nodejs/lib')
     this.props.graphqlRestApi = {
       deploy: true,
       deployOptions: {

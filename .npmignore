@@ -18,6 +18,8 @@ npm-debug.log
 .prettierrc.js
 .prettierrc
 .prettierignore
+jest.config.ts
+jest.config.d.ts
 jest.config.js
 jsdoc.json
 **/__tests__/**
@@ -27,7 +29,9 @@ api-docs
 .yarnrc
 .github
 .circleci
+coverage
 tsconfig.json
 lerna.json
 yarn.lock
+**/cdk.out/**
 **/test/**

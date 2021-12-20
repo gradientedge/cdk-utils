@@ -44,7 +44,7 @@ export class EventManager {
     eventPattern?: any,
     scheduleExpression?: string
   ) {
-    if (!props) throw `Event rule props undefined`
+    if (!props) throw `EventRule props undefined`
 
     const eventRule = new events.CfnRule(scope, `${id}`, {
       description: 'Rule to send notification to lambda function target',
@@ -90,7 +90,7 @@ export class EventManager {
     role: iam.Role | iam.CfnRole,
     eventPattern?: any
   ) {
-    if (!props) throw `Event rule props undefined`
+    if (!props) throw `EventRule props undefined`
 
     const eventRule = new events.CfnRule(scope, `${id}`, {
       description: 'Rule to send notification on new objects in data bucket to ecs task target',

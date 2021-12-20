@@ -67,7 +67,7 @@ export class EcsManager {
     containerImage: ecs.ContainerImage,
     environment?: any
   ) {
-    if (!props) throw `Ecs Task props undefined`
+    if (!props) throw `EcsTask props undefined`
 
     const ecsTask = new ecs.TaskDefinition(scope, `${id}`, {
       compatibility: ecs.Compatibility.FARGATE,

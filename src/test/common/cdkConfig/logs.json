@@ -1,0 +1,22 @@
+{
+  "testLogGroup": {
+    "logGroupName": "test-lg",
+    "retentionInDays": 7
+  },
+  "testAnotherLogGroup": {
+    "logGroupName": "test-lg-another",
+    "retentionInDays": 7
+  },
+  "testMetricFilter": {
+    "metricName": "test-filter",
+    "metricNamespace": "test",
+    "metricValue": "1",
+    "defaultValue": 0,
+    "filterPattern": {
+      "logPatternString": "Failure during execution"
+    },
+    "options": {
+      "statistic": "Sum"
+    }
+  }
+}

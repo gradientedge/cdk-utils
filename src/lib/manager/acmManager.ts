@@ -47,7 +47,7 @@ export class AcmManager {
     id: string,
     scope: CommonConstruct,
     props: AcmProps,
-    hostedZone?: route53.HostedZone
+    hostedZone?: route53.IHostedZone
   ): acm.ICertificate {
     if (!props) throw `Certificate props undefined`
 
@@ -60,8 +60,8 @@ export class AcmManager {
       certificate = acm.Certificate.fromCertificateArn(scope, `${id}`, certificateArn)
     } else {
       certificate = new acm.Certificate(scope, `${id}`, {
-        domainName: '',
-        subjectAlternativeNames: [],
+        domainName: props.domainName,
+        subjectAlternativeNames: props.subjectAlternativeNames,
         validation: acm.CertificateValidation.fromDns(hostedZone),
       })
     }

@@ -32,7 +32,7 @@
     "fix": "yarn prettify && eslint --fix **/*.ts",
     "prettier": "npx prettier --check \"**/*.{ts,json,md}\"",
     "prettify": "npx prettier --write \"**/*.{ts,json,md}\"",
-    "test": "yarn build && npx jest",
+    "test": "rimraf coverage && yarn build && npx jest",
     "validate": "yarn prettier && yarn test",
     "watch": "npx tsc --watch"
   },
@@ -40,15 +40,6 @@
     "hooks": {
       "pre-commit": "yarn prettify && yarn validate"
     }
-  },
-  "jest-junit": {
-    "suiteName": "jest tests",
-    "outputDirectory": "coverage",
-    "uniqueOutputName": "false",
-    "classNameTemplate": "{classname}-{title}",
-    "titleTemplate": "{classname}-{title}",
-    "ancestorSeparator": " › ",
-    "usePathForSuiteName": "true"
   },
   "dependencies": {
     "@aws-cdk/aws-lambda-python-alpha": "2.2.0-alpha.0",
@@ -79,6 +70,7 @@
     "eslint-plugin-import": "^2.25.3",
     "husky": "^7.0.4",
     "jest": "^27.4.5",
+    "jest-extended": "^1.2.0",
     "jest-junit": "^13.0.0",
     "jsdoc": "^3.6.7",
     "jsdoc-babel": "^0.5.0",

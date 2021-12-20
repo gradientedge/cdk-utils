@@ -50,7 +50,7 @@ export class CloudTrailManager {
     logBucket: s3.IBucket,
     logBucketPolicy: s3.CfnBucketPolicy
   ) {
-    if (!props) throw `Cloud Trail props undefined`
+    if (!props) throw `CloudTrail props undefined`
 
     const role = scope.iamManager.createRoleForCloudTrail(`${id}Role`, scope, logGroup)
 

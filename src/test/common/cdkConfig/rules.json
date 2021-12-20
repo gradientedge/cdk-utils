@@ -1,0 +1,10 @@
+{
+  "testFargateRule": {
+    "name": "test-fargate-rule",
+    "state": "ENABLED"
+  },
+  "testLambdaRule": {
+    "name": "test-lambda-rule",
+    "state": "DISABLED"
+  }
+}

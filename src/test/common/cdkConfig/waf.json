@@ -1,0 +1,21 @@
+{
+  "testIpSet": {
+    "name": "test-ipset",
+    "addresses": ["0.0.0.0/32"],
+    "ipAddressVersion": "IPV4",
+    "scope": "REGIONAL"
+  },
+  "testWebAcl": {
+    "name": "test-webacl",
+    "defaultAction": {
+      "allow": {},
+      "block": {}
+    },
+    "scope": "CLOUDFRONT",
+    "visibilityConfig": {
+      "cloudWatchMetricsEnabled": true,
+      "metricName": "test-metric",
+      "sampledRequestsEnabled": false
+    }
+  }
+}

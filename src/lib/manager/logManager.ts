@@ -31,7 +31,7 @@ export class LogManager {
    * @param {logs.ILogGroup} logGroup
    */
   public createMetricFilter(id: string, scope: CommonConstruct, props: MetricFilterProps, logGroup: logs.ILogGroup) {
-    if (!props) throw `Metric Filter props undefined`
+    if (!props) throw `MetricFilter props undefined`
 
     const metricFilter = new logs.MetricFilter(scope, `${id}`, {
       logGroup: logGroup,

@@ -4,5 +4,17 @@
     "logRetention": 30,
     "memorySize": 1024,
     "timeoutInSecs": 300
+  },
+  "testLambda": {
+    "functionName": "test-lambda",
+    "logRetention": 7,
+    "memorySize": 1024,
+    "timeoutInSecs": 60
+  },
+  "testLambdaPython": {
+    "functionName": "test-lambda-python",
+    "logRetention": 7,
+    "memorySize": 1024,
+    "timeoutInSecs": 60
   }
 }

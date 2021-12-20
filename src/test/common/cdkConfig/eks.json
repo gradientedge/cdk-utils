@@ -1,0 +1,6 @@
+{
+  "testEks": {
+    "appContainerPort": 9000,
+    "appCapacity": 2
+  }
+}

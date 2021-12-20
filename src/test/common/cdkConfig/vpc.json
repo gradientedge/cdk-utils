@@ -1,0 +1,5 @@
+{
+  "testVpc": {
+    "maxAzs": 2
+  }
+}

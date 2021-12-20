@@ -1,0 +1,8 @@
+{
+  "testHostedZone": {
+    "useExistingHostedZone": true
+  },
+  "testNewHostedZone": {
+    "useExistingHostedZone": false
+  }
+}

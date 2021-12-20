@@ -1,0 +1,10 @@
+{
+  "testCluster": {
+    "clusterName": "test-cluster"
+  },
+  "testTask": {
+    "family": "test-task",
+    "cpu": "256",
+    "memoryMiB": "512"
+  }
+}

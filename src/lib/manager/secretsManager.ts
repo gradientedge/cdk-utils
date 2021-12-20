@@ -6,7 +6,7 @@ const AWS = require('aws-sdk')
 const fs = require('fs')
 
 /**
- * @stability stable
+ * @stability experimental
  * @category Security, Identity & Compliance
  * @summary Provides operations on AWS Secrets Manager.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
@@ -33,6 +33,7 @@ export class SecretsManager {
   }
 
   /**
+   * @stability experimental
    * @summary Method to load a secret from secrets manager
    * @param {string} secretName
    * @param {string} region
@@ -45,6 +46,7 @@ export class SecretsManager {
   }
 
   /**
+   * @stability experimental
    * @summary Method to load secrets from secrets manager
    * @param {string} secretNames
    * @param {string} region
@@ -59,6 +61,7 @@ export class SecretsManager {
   }
 
   /**
+   * @stability experimental
    * @summary Method to export secrets from secrets manager to a dot env format
    */
   public exportToDotEnv() {
@@ -89,6 +92,7 @@ export class SecretsManager {
   }
 
   /**
+   * @stability stable
    * @summary Method to retrieve a secret from secrets manager with a cloudformation export
    * @param id
    * @param scope

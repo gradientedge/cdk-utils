@@ -1,0 +1,18 @@
+{
+  "app": {
+    "application": {
+      "name": "test-application",
+      "description": "test-application desc",
+      "tags": []
+    },
+    "environment": {
+      "name": "test-env",
+      "description": "test-env",
+      "tags": []
+    },
+    "configurationProfile": {
+      "name": "test-profile",
+      "description": "test-profile"
+    }
+  }
+}

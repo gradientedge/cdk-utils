@@ -1,0 +1,9 @@
+{
+  "testTrail": {
+    "trailName": "test-trail",
+    "isMultiRegionTrail": false,
+    "isLogging": true,
+    "includeGlobalServiceEvents": false,
+    "enableLogFileValidation": false
+  }
+}

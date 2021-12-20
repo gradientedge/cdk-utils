@@ -37,7 +37,7 @@ export class SnsManager {
     props: SubscriptionProps,
     emails: string[]
   ) {
-    if (!props) throw `subscription props undefined`
+    if (!props) throw `Subscription props undefined`
 
     const topic = new sns.Topic(scope, id, {
       displayName: `${props.topicName}-${scope.props.stage}`,
@@ -68,7 +68,7 @@ export class SnsManager {
     props: SubscriptionProps,
     lambdaFunction: lambda.Function
   ) {
-    if (!props) throw `subscription props undefined`
+    if (!props) throw `Subscription props undefined`
 
     const topic = new sns.Topic(scope, id, {
       displayName: `${props.topicName}-${scope.props.stage}`,

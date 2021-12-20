@@ -44,7 +44,7 @@ class TestCommonStack extends CommonStack {
         siteBucket: this.node.tryGetContext('siteBucket'),
         siteLogBucket: this.node.tryGetContext('siteLogBucket'),
         siteDistribution: this.node.tryGetContext('siteDistribution'),
-        siteSource: s3deploy.Source.asset('.'),
+        siteSource: s3deploy.Source.asset('src/test/common/nodejs/lib'),
         siteRecordName: this.node.tryGetContext('siteSubDomain'),
         siteSubDomain: this.node.tryGetContext('siteSubDomain'),
         siteCreateAltARecord: this.node.tryGetContext('siteCreateAltARecord'),

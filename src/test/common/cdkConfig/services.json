@@ -1,0 +1,10 @@
+{
+  "testService": {
+    "topicName": "test-service",
+    "fifo": false
+  },
+  "testAnotherService": {
+    "topicName": "test-another-service",
+    "fifo": true
+  }
+}

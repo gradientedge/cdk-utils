@@ -1,0 +1,155 @@
+{
+  "testAlarm": {
+    "expression": "SUM(METRICS())",
+    "alarmName": "test-alarm",
+    "alarmDescription": "Error in execution",
+    "threshold": 1,
+    "evaluationPeriods": 1,
+    "comparisonOperator": "GreaterThanOrEqualToThreshold",
+    "treatMissingData": "missing",
+    "datapointsToAlarm": 1,
+    "periodInSecs": 3600,
+    "metricProps": [
+      {
+        "namespace": "AWS/Lambda",
+        "metricName": "Errors",
+        "functionName": "test-lambda",
+        "statistic": "Sum"
+      },
+      {
+        "namespace": "odc",
+        "metricName": "execution-error",
+        "statistic": "Sum"
+      }
+    ]
+  },
+  "testAnotherAlarm": {
+    "expression": "AVERAGE(METRICS())",
+    "alarmName": "test-another-alarm",
+    "alarmDescription": "Error in execution",
+    "threshold": 1,
+    "evaluationPeriods": 1,
+    "comparisonOperator": "GreaterThanOrEqualToThreshold",
+    "treatMissingData": "missing",
+    "datapointsToAlarm": 1,
+    "periodInSecs": 3600,
+    "metricProps": [
+      {
+        "namespace": "AWS/Lambda",
+        "metricName": "Errors",
+        "functionName": "test-another-lambda",
+        "statistic": "Sum"
+      },
+      {
+        "namespace": "odc",
+        "metricName": "execution-error",
+        "statistic": "Sum"
+      }
+    ]
+  },
+  "testAlarmStatusWidget": {
+    "title": "Alarms",
+    "width": 6,
+    "height": 6,
+    "alarmProps": [
+      {
+        "alarmName": "test-alarm"
+      }
+    ]
+  },
+  "testGraphWidget": {
+    "title": "Requests",
+    "view": "timeSeries",
+    "stacked": true,
+    "width": 6,
+    "height": 6,
+    "metricProps": [
+      {
+        "namespace": "AWS/ApiGateway",
+        "metricName": "Count",
+        "dimensionMap": {
+          "ApiName": "test-api"
+        },
+        "statistic": "SampleCount"
+      }
+    ]
+  },
+  "testLogQueryWidget": {
+    "title": "Recent Failures",
+    "queryString": "fields @message | parse @message /id:(?<@orderId>.*)/ | filter @message like /Failure n/ | sort @timestamp desc | limit 20 | display @orderId, @timestamp",
+    "view": "table",
+    "width": 6,
+    "height": 6,
+    "logGroupNames": ["/aws/lambda/test-lambda"]
+  },
+  "testSingleValueWidget": {
+    "title": "Executions Failed",
+    "setPeriodToTimeRange": true,
+    "width": 3,
+    "height": 3,
+    "metricProps": [
+      {
+        "namespace": "test",
+        "metricName": "test-metric",
+        "statistic": "Sum"
+      }
+    ]
+  },
+  "testTextWidget": {
+    "markdown": "## Failures ",
+    "width": 24,
+    "height": 1
+  },
+  "testWidget": {
+    "type": "SingleValue",
+    "title": "Errors",
+    "setPeriodToTimeRange": true,
+    "width": 3,
+    "height": 3,
+    "metricProps": [
+      {
+        "namespace": "test",
+        "metricName": "test-metric",
+        "statistic": "Sum"
+      }
+    ]
+  },
+  "testWidgets": [
+    {
+      "type": "Graph",
+      "title": "Concurrent Executions",
+      "view": "timeSeries",
+      "stacked": true,
+      "width": 9,
+      "height": 6,
+      "metricProps": [
+        {
+          "namespace": "AWS/Lambda",
+          "metricName": "ConcurrentExecutions",
+          "functionName": "test-lambda",
+          "statistic": "Average"
+        }
+      ]
+    },
+    {
+      "type": "LogQuery",
+      "title": "Recent Error Logs",
+      "queryString": "fields @timestamp, @message | filter @message like /(?i)ERROR/ | sort @timestamp desc | limit 20",
+      "view": "table",
+      "width": 9,
+      "height": 6,
+      "logGroupNames": ["/aws/lambda/test-lambda"]
+    }
+  ],
+  "testDashboard": {
+    "dashboardName": "test-monitoring-dashboard",
+    "periodOverride": "auto",
+    "start": "-P1D"
+  },
+  "testMetric": {
+    "namespace": "AWS/Lambda",
+    "metricName": "ConcurrentExecutions",
+    "functionName": "test-lambda",
+    "statistic": "Average"
+  }
+}
