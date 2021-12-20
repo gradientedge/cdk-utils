@@ -52,6 +52,7 @@ jobs:
         with:
           files: coverage/junit.xml
       - name: Monitor coverage
+        if: ${{ github.event_name == 'pull_request' && success() }}
         uses: slavcodev/coverage-monitor-action@1.2.0
         with:
           github_token: ${{ secrets.GIT_TOKEN }}
