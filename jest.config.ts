@@ -7,7 +7,7 @@ module.exports = {
   coverageDirectory: './coverage/',
   coverageProvider: 'v8',
   collectCoverage: true,
-  collectCoverageFrom: ['**/*.ts', '!**/*.d.ts', '!**/cdk.out/**', '!**/index.ts', '!jest.config.ts', '!types.ts'],
+  collectCoverageFrom: ['**/*.ts', '!**/*.d.ts', '!**/cdk.out/**', '!**/index.ts', '!jest.config.ts', '!**/types.ts'],
   moduleFileExtensions: ['js', 'ts'],
   reporters: [
     'default',
