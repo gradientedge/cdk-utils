@@ -15,9 +15,9 @@ module.exports = {
       'jest-junit',
       {
         outputDirectory: './coverage',
-        uniqueOutputName: 'true',
-        classNameTemplate: '{classname}-{title}',
-        titleTemplate: '{classname}-{title}',
+        uniqueOutputName: 'false',
+        classNameTemplate: '{classname}',
+        titleTemplate: '{title}',
         ancestorSeparator: ' › ',
         usePathForSuiteName: 'true',
       },
