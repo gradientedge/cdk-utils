@@ -82,7 +82,7 @@ export interface GraphQlApiLambdaProps extends CommonStackProps {
 export interface AcmProps extends acm.CertificateProps {
   certificateAccount?: string
   certificateRegion?: string
-  certificateId: string
+  certificateId?: string
   useExistingCertificate: boolean
 }
 
