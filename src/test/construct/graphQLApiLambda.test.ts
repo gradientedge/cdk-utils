@@ -69,7 +69,7 @@ class TestGraphQLApiConstruct extends GraphQLApiLambda {
         stageName: this.props.stage,
       },
       endpointConfiguration: {
-        types: [apig.EndpointType.EDGE],
+        types: [apig.EndpointType.REGIONAL],
       },
       handler: this.graphQLApiLambdaFunction,
       defaultCorsPreflightOptions: {
@@ -133,7 +133,7 @@ describe('TestGraphQLApiLambdaConstruct', () => {
     template.hasResourceProperties('AWS::ApiGateway::DomainName', {
       DomainName: 'api.test.gradientedge.io',
       EndpointConfiguration: {
-        Types: ['EDGE'],
+        Types: ['REGIONAL'],
       },
       SecurityPolicy: 'TLS_1_2',
     })
@@ -144,7 +144,7 @@ describe('TestGraphQLApiLambdaConstruct', () => {
   test('provisions api gateway as expected', () => {
     template.hasResourceProperties('AWS::ApiGateway::RestApi', {
       EndpointConfiguration: {
-        Types: ['EDGE'],
+        Types: ['REGIONAL'],
       },
       Name: 'test-graphql-lambda-rest-api',
     })

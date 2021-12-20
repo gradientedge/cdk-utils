@@ -62,7 +62,7 @@ export class ApiManager {
       cloudWatchRole: props.cloudWatchRole || false,
       endpointTypes: props.endpointTypes,
       endpointConfiguration: {
-        types: props.endpointConfiguration?.types || [apig.EndpointType.EDGE],
+        types: props.endpointConfiguration?.types || [apig.EndpointType.REGIONAL],
         vpcEndpoints: props.endpointConfiguration?.vpcEndpoints,
       },
       handler: lambdaFunction,
@@ -90,7 +90,7 @@ export class ApiManager {
     const apiDomain = new apig.DomainName(scope, `${id}`, {
       domainName: domainName,
       certificate: certificate,
-      endpointType: apig.EndpointType.EDGE,
+      endpointType: scope.isProductionStage() ? apig.EndpointType.EDGE : apig.EndpointType.REGIONAL,
       securityPolicy: apig.SecurityPolicy.TLS_1_2,
     })
 
