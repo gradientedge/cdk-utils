@@ -31,6 +31,6 @@
     "out": "api-docs",
     "exclude": "**/*+(index|.spec|.e2e).ts",
     "excludePrivate": false,
-    "theme": "node_modules/typedoc-neo-theme/bin/default"
+    "theme": "node_modules/typedoc-default-themes/bin/default"
   }
 }
