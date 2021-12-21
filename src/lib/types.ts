@@ -80,10 +80,20 @@ export interface GraphQlApiLambdaProps extends CommonStackProps {
  * @category Security, Identity & Compliance
  */
 export interface AcmProps extends acm.CertificateProps {
+  certificateSsmName?: string
   certificateAccount?: string
   certificateRegion?: string
   certificateId?: string
+  certificateArn?: string
   useExistingCertificate: boolean
+}
+
+/**
+ * @category Management & Governance
+ */
+export interface SSMParameterReaderProps {
+  parameterName: string
+  region: string
 }
 
 /**

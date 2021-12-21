@@ -89,6 +89,18 @@ export class StaticSite extends CommonConstruct {
    * @protected
    */
   protected resolveCertificate() {
+    if (
+      this.props.siteCertificate.useExistingCertificate &&
+      this.props.siteCertificate.certificateSsmName &&
+      this.props.siteCertificate.certificateRegion
+    ) {
+      this.props.siteCertificate.certificateArn = this.ssMManager.readStringParameterFromRegion(
+        `${this.id}-certificate-param`,
+        this,
+        this.props.siteCertificate.certificateSsmName,
+        this.props.siteCertificate.certificateRegion
+      )
+    }
     this.siteCertificate = this.acmManager.resolveCertificate(
       `${this.id}-certificate`,
       this,

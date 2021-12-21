@@ -54,9 +54,12 @@ export class AcmManager {
     let certificate
 
     if (props.useExistingCertificate) {
-      const certificateAccount = props.certificateAccount ? props.certificateAccount : cdk.Stack.of(scope).account
-      const certificateRegion = props.certificateRegion ? props.certificateRegion : cdk.Stack.of(scope).region
-      const certificateArn = `arn:aws:acm:${certificateRegion}:${certificateAccount}:certificate/${props.certificateId}`
+      let certificateArn = props.certificateArn
+      if (!certificateArn) {
+        const certificateAccount = props.certificateAccount ? props.certificateAccount : cdk.Stack.of(scope).account
+        const certificateRegion = props.certificateRegion ? props.certificateRegion : cdk.Stack.of(scope).region
+        certificateArn = `arn:aws:acm:${certificateRegion}:${certificateAccount}:certificate/${props.certificateId}`
+      }
       certificate = acm.Certificate.fromCertificateArn(scope, `${id}`, certificateArn)
     } else {
       certificate = new acm.Certificate(scope, `${id}`, {

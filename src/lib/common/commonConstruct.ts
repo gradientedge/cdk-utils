@@ -21,6 +21,7 @@ import { WafManager } from '../manager/wafManager'
 import { AppConfigManager } from '../manager/appConfigManager'
 import { Construct } from 'constructs'
 import { ApiManager } from '../manager/apiManager'
+import { SsmManager } from '../manager/ssmManager'
 
 /**
  * @stability stable
@@ -61,6 +62,7 @@ export class CommonConstruct extends Construct {
   s3Manager: S3Manager
   secretsManager: SecretsManager
   snsManager: SnsManager
+  ssMManager: SsmManager
   vpcManager: VpcManager
   wafManager: WafManager
   fullyQualifiedDomainName: string
@@ -91,6 +93,7 @@ export class CommonConstruct extends Construct {
     this.s3Manager = new S3Manager()
     this.secretsManager = new SecretsManager()
     this.snsManager = new SnsManager()
+    this.ssMManager = new SsmManager()
     this.vpcManager = new VpcManager()
     this.vpcManager = new VpcManager()
     this.wafManager = new WafManager()

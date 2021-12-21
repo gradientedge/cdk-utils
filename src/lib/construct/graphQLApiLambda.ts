@@ -107,6 +107,19 @@ export class GraphQLApiLambda extends CommonConstruct {
    * @protected
    */
   protected resolveCertificate() {
+    if (
+      this.props.graphQLApiCertificate.useExistingCertificate &&
+      this.props.graphQLApiCertificate.certificateSsmName &&
+      this.props.graphQLApiCertificate.certificateRegion
+    ) {
+      this.props.graphQLApiCertificate.certificateArn = this.ssMManager.readStringParameterFromRegion(
+        `${this.id}-certificate-param`,
+        this,
+        this.props.graphQLApiCertificate.certificateSsmName,
+        this.props.graphQLApiCertificate.certificateRegion
+      )
+    }
+
     this.graphQLApiCertificate = this.acmManager.resolveCertificate(
       `${this.id}-certificate`,
       this,
