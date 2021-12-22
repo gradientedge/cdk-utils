@@ -64,6 +64,7 @@ class TestGraphQLApiConstruct extends GraphQLApiLambda {
     this.props.graphQLApiSource = new lambda.AssetCode('src/test/common/nodejs/lib')
     this.props.graphqlRestApi = {
       deploy: true,
+      restApiName: 'test-lambda-rest-api',
       deployOptions: {
         description: `${this.id} - ${this.props.stage} stage`,
         stageName: this.props.stage,
@@ -146,7 +147,8 @@ describe('TestGraphQLApiLambdaConstruct', () => {
       EndpointConfiguration: {
         Types: ['REGIONAL'],
       },
-      Name: 'test-graphql-lambda-rest-api',
+      FailOnWarnings: false,
+      Name: 'test-lambda-rest-api-test',
     })
   })
 })

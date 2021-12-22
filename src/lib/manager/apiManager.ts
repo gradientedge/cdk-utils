@@ -65,6 +65,7 @@ export class ApiManager {
         types: props.endpointConfiguration?.types || [apig.EndpointType.REGIONAL],
         vpcEndpoints: props.endpointConfiguration?.vpcEndpoints,
       },
+      restApiName: `${props.restApiName}-${scope.props.stage}`,
       handler: lambdaFunction,
       defaultCorsPreflightOptions: {
         allowOrigins: props.defaultCorsPreflightOptions?.allowOrigins || apig.Cors.ALL_ORIGINS,

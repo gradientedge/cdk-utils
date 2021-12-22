@@ -68,7 +68,7 @@ export class AppConfigManager {
   public createApplication(id: string, scope: CommonConstruct, props: AppConfigProps): appconfig.CfnApplication {
     if (!props) throw `AppConfig props undefined`
 
-    const application = new appconfig.CfnApplication(scope, `${id}Application`, {
+    const application = new appconfig.CfnApplication(scope, `${id}`, {
       name: `${props.application.name}-${scope.props.stage}`,
       description: props.application.description,
       tags: props.application.tags,
@@ -96,7 +96,7 @@ export class AppConfigManager {
   ): appconfig.CfnEnvironment {
     if (!props) throw `AppConfig props undefined`
 
-    const environment = new appconfig.CfnEnvironment(scope, `${id}Environment`, {
+    const environment = new appconfig.CfnEnvironment(scope, `${id}`, {
       applicationId: applicationId,
       name: scope.props.stage,
       description: props.environment.description,
@@ -127,7 +127,7 @@ export class AppConfigManager {
   ): appconfig.CfnConfigurationProfile {
     if (!props) throw `AppConfig props undefined`
 
-    const profile = new appconfig.CfnConfigurationProfile(scope, `${id}ConfigurationProfile`, {
+    const profile = new appconfig.CfnConfigurationProfile(scope, `${id}`, {
       applicationId: applicationId,
       locationUri: props.configurationProfile.locationUri || 'hosted',
       name: `${props.configurationProfile.name}-${scope.props.stage}`,
