@@ -12,5 +12,19 @@
         "responsePagePath": "/server/pages/index.html"
       }
     ]
+  },
+  "testEdgeDistribution": {
+    "errorResponses": [
+      {
+        "httpStatus": 403,
+        "responseHttpStatus": 200,
+        "responsePagePath": "/server/pages/index.html"
+      },
+      {
+        "httpStatus": 404,
+        "responseHttpStatus": 200,
+        "responsePagePath": "/server/pages/index.html"
+      }
+    ]
   }
 }

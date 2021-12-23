@@ -11,6 +11,12 @@
     "memorySize": 1024,
     "timeoutInSecs": 60
   },
+  "testLambdaEdge": {
+    "functionName": "test-lambda-edge",
+    "logRetention": 7,
+    "memorySize": 1024,
+    "timeoutInSecs": 60
+  },
   "testLambdaPython": {
     "functionName": "test-lambda-python",
     "logRetention": 7,

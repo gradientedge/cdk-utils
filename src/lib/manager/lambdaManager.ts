@@ -5,8 +5,9 @@ import * as iam from 'aws-cdk-lib/aws-iam'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as pylambda from '@aws-cdk/aws-lambda-python-alpha'
 import { CommonConstruct } from '../common/commonConstruct'
-import { LambdaProps } from '../types'
+import { LambdaEdgeProps, LambdaProps } from '../types'
 import { createCfnOutput } from '../utils'
+import { CloudFrontManager } from './cloudFrontManager'
 
 /**
  * @stability stable
@@ -119,6 +120,7 @@ export class LambdaManager {
     })
 
     createCfnOutput(`${id}-lambdaArn`, scope, lambdaFunction.functionArn)
+    createCfnOutput(`${id}-lambdaName`, scope, lambdaFunction.functionName)
 
     return lambdaFunction
   }
@@ -181,7 +183,48 @@ export class LambdaManager {
     })
 
     createCfnOutput(`${id}-lambdaArn`, scope, lambdaFunction.functionArn)
+    createCfnOutput(`${id}-lambdaName`, scope, lambdaFunction.functionName)
 
     return lambdaFunction
+  }
+
+  /**
+   * @summary Method to provision a Lambda@Edge function
+   *
+   * @param {string} id scoped id of the resource
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {LambdaEdgeProps} props lambda@edge properties
+   * @param {lambda.ILayerVersion[]} layers
+   * @param {lambda.AssetCode} code
+   * @param {Map<string, string>} environment
+   * @param {ec2.IVpc} vpc
+   * @param {ec2.ISecurityGroup[]} securityGroups
+   * @param {efs.IAccessPoint} accessPoint
+   * @param {string} mountPath
+   */
+  public createEdgeFunction(
+    id: string,
+    scope: CommonConstruct,
+    props: LambdaEdgeProps,
+    layers: lambda.ILayerVersion[],
+    code: lambda.AssetCode,
+    environment?: any,
+    vpc?: ec2.IVpc,
+    securityGroups?: ec2.ISecurityGroup[],
+    accessPoint?: efs.IAccessPoint,
+    mountPath?: string
+  ) {
+    return new CloudFrontManager().createEdgeFunction(
+      id,
+      scope,
+      props,
+      layers,
+      code,
+      environment,
+      vpc,
+      securityGroups,
+      accessPoint,
+      mountPath
+    )
   }
 }

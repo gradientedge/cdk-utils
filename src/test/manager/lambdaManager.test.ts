@@ -9,17 +9,18 @@ import { CommonStack } from '../../lib/common/commonStack'
 
 interface TestStackProps extends CommonStackProps {
   testLambda: any
+  testLambdaEdge: any
   testLambdaPython: any
 }
 
 const testStackProps = {
   env: {
     account: '123456789',
-    region: 'eu-west-1',
+    region: 'us-east-1',
   },
   name: 'test-common-stack',
   domainName: 'gradientedge.io',
-  region: 'eu-west-1',
+  region: 'us-east-1',
   stackName: 'test',
   stage: 'test',
   extraContexts: ['src/test/common/cdkConfig/lambdas.json'],
@@ -40,6 +41,7 @@ class TestCommonStack extends CommonStack {
       ...super.determineConstructProps(props),
       ...{
         testLambda: this.node.tryGetContext('testLambda'),
+        testLambdaEdge: this.node.tryGetContext('testLambdaEdge'),
         testLambdaPython: this.node.tryGetContext('testLambdaPython'),
       },
     }
@@ -93,6 +95,14 @@ class TestCommonConstruct extends CommonConstruct {
       [testPythonLayer],
       'src/test/common/python/lib'
     )
+
+    this.lambdaManager.createEdgeFunction(
+      'test-lambda-edge',
+      this,
+      this.props.testLambdaEdge,
+      [],
+      new lambda.AssetCode('src/test/common/nodejs/lib')
+    )
   }
 }
 
@@ -111,7 +121,7 @@ describe('TestLambdaConstruct', () => {
   test('synthesises as expected', () => {
     /* test if number of resources are correctly synthesised */
     template.resourceCountIs('AWS::Lambda::LayerVersion', 2)
-    template.resourceCountIs('AWS::Lambda::Function', 3)
+    template.resourceCountIs('AWS::Lambda::Function', 4)
   })
 })
 
@@ -119,8 +129,13 @@ describe('TestLambdaConstruct', () => {
   test('outputs as expected', () => {
     template.hasOutput('testLambdaLayerLambdaLayerArn', {})
     template.hasOutput('testLambdaLambdaArn', {})
+    template.hasOutput('testLambdaLambdaName', {})
     template.hasOutput('testLambdaLayerPythonLambdaLayerArn', {})
     template.hasOutput('testLambdaPythonLambdaArn', {})
+    template.hasOutput('testLambdaPythonLambdaName', {})
+    template.hasOutput('testLambdaEdgeEdgeArn', {})
+    template.hasOutput('testLambdaEdgeEdgeFunctionArn', {})
+    template.hasOutput('testLambdaEdgeEdgeFunctionName', {})
   })
 })
 
@@ -145,7 +160,7 @@ describe('TestLambdaConstruct', () => {
     template.hasResourceProperties('AWS::Lambda::Function', {
       Environment: {
         Variables: {
-          REGION: 'eu-west-1',
+          REGION: 'us-east-1',
         },
       },
       FunctionName: 'test-lambda-test',
@@ -160,13 +175,23 @@ describe('TestLambdaConstruct', () => {
     template.hasResourceProperties('AWS::Lambda::Function', {
       Environment: {
         Variables: {
-          REGION: 'eu-west-1',
+          REGION: 'us-east-1',
         },
       },
       FunctionName: 'test-lambda-python-test',
       Handler: 'index.handler',
       MemorySize: 1024,
       Runtime: 'python3.8',
+      Timeout: 60,
+    })
+  })
+
+  test('provisions new edge lambda as expected', () => {
+    template.hasResourceProperties('AWS::Lambda::Function', {
+      FunctionName: 'test-lambda-edge-test',
+      Handler: 'index.handler',
+      MemorySize: 1024,
+      Runtime: 'nodejs14.x',
       Timeout: 60,
     })
   })

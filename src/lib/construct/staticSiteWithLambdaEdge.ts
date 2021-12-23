@@ -1,10 +1,11 @@
 import { CommonConstruct } from '../common/commonConstruct'
-import { CloudFrontProps, StaticSiteProps } from '../types'
+import { StaticSiteWithLambdaEdgeProps } from '../types'
 import * as route53 from 'aws-cdk-lib/aws-route53'
 import * as certificateManager from 'aws-cdk-lib/aws-certificatemanager'
 import * as s3 from 'aws-cdk-lib/aws-s3'
 import * as cloudfront from 'aws-cdk-lib/aws-cloudfront'
 import { Construct } from 'constructs'
+import * as origins from 'aws-cdk-lib/aws-cloudfront-origins'
 
 /**
  * @stability stable
@@ -12,10 +13,10 @@ import { Construct } from 'constructs'
  * @summary Provides a construct to create and deploy a s3 hosted static site
  *
  * @example
- * import { StaticSite, StaticSiteProps } '@gradientedge/cdk-utils'
+ * import { StaticSiteWithLambdaEdge, StaticSiteProps } '@gradientedge/cdk-utils'
  * import { Construct } from 'constructs'
  *
- * class CustomConstruct extends StaticSite {
+ * class CustomConstruct extends StaticSiteWithLambdaEdge {
  *   constructor(parent: Construct, id: string, props: StaticSiteProps) {
  *     super(parent, id, props)
  *     this.props = props
@@ -25,13 +26,13 @@ import { Construct } from 'constructs'
  *
  * @mermaid
  *   graph LR;
- *     A[StaticSite]-.->|extends|B(CommonConstruct);
+ *     A[StaticSiteWithLambdaEdge]-.->|extends|B(CommonConstruct);
  *     B(CommonConstruct)-->|extends|C(Construct);
  *     C(Construct)-->|implements|D(IConstruct);
  */
-export class StaticSite extends CommonConstruct {
+export class StaticSiteWithLambdaEdge extends CommonConstruct {
   /* static site properties */
-  props: StaticSiteProps
+  props: StaticSiteWithLambdaEdgeProps
   id: string
 
   /* static site resources */
@@ -40,7 +41,8 @@ export class StaticSite extends CommonConstruct {
   siteARecord: route53.ARecord
   siteARecordAlt: route53.ARecord
   siteBucket: s3.IBucket
-  siteDistribution: cloudfront.IDistribution
+  siteDistribution: cloudfront.Distribution
+  siteOrigin: origins.S3Origin
   siteLogBucket: s3.IBucket
   siteOriginAccessIdentity: cloudfront.OriginAccessIdentity
 
@@ -48,9 +50,9 @@ export class StaticSite extends CommonConstruct {
    * @summary Constructor to initialise the StaticSite Construct
    * @param {Construct} parent
    * @param {string} id
-   * @param {StaticSiteProps} props
+   * @param {StaticSiteWithLambdaEdgeProps} props
    */
-  constructor(parent: Construct, id: string, props: StaticSiteProps) {
+  constructor(parent: Construct, id: string, props: StaticSiteWithLambdaEdgeProps) {
     super(parent, id, props)
 
     this.props = props
@@ -141,18 +143,17 @@ export class StaticSite extends CommonConstruct {
    * @protected
    */
   protected createSiteDistribution() {
-    if (!this.props.siteDistribution) throw 'SiteDistribution props undefined'
-
-    this.siteDistribution = this.cloudFrontManager.createCloudFrontDistribution(
+    const { origin, distribution } = this.cloudFrontManager.createLambdaEdgeDistribution(
       `${this.id}-distribution`,
       this,
-      this.props.siteDistribution,
+      this.props.siteEdgeDistribution,
       this.siteBucket,
       this.siteLogBucket,
       this.siteOriginAccessIdentity,
-      this.siteCertificate,
-      this.props.siteAliases
+      this.siteCertificate
     )
+    this.siteOrigin = origin
+    this.siteDistribution = distribution
   }
 
   /**

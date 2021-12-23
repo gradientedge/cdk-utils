@@ -46,13 +46,20 @@ export interface StaticSiteProps extends CommonStackProps {
   siteCertificate: AcmProps
   siteBucket: S3BucketProps
   siteLogBucket: S3BucketProps
-  siteDistribution: CloudFrontProps
+  siteDistribution?: CloudFrontProps
   siteSource: s3deploy.ISource
   siteHostedZoneDomainName?: string
   siteRecordName?: string
   siteSubDomain?: string
   siteAliases?: string[]
   useExistingHostedZone: boolean
+  nodeEnv: string
+  logLevel: string
+  timezone: string
+}
+
+export interface StaticSiteWithLambdaEdgeProps extends StaticSiteProps {
+  siteEdgeDistribution: DistributionProps
 }
 
 export interface GraphQlApiLambdaEnvironment {
@@ -100,6 +107,11 @@ export interface SSMParameterReaderProps {
  * @category Networking & Content Delivery
  */
 export interface CloudFrontProps extends cloudfront.CloudFrontWebDistributionProps {}
+
+/**
+ * @category Networking & Content Delivery
+ */
+export interface DistributionProps extends cloudfront.DistributionProps {}
 
 /**
  * @category Management & Governance
@@ -203,6 +215,13 @@ export interface RuleProps extends events.CfnRuleProps {}
  * @category Compute
  */
 export interface LambdaProps extends lambda.FunctionProps {
+  timeoutInSecs?: number
+}
+
+/**
+ * @category Compute
+ */
+export interface LambdaEdgeProps extends cloudfront.experimental.EdgeFunctionProps {
   timeoutInSecs?: number
 }
 
