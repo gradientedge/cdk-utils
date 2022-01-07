@@ -6,8 +6,10 @@ import * as route53 from 'aws-cdk-lib/aws-route53'
 import * as logs from 'aws-cdk-lib/aws-logs'
 import * as watch from 'aws-cdk-lib/aws-cloudwatch'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
+import * as ecsPatterns from 'aws-cdk-lib/aws-ecs-patterns'
 import * as events from 'aws-cdk-lib/aws-events'
 import * as eks from 'aws-cdk-lib/aws-eks'
+import * as ec2 from 'aws-cdk-lib/aws-ec2'
 import * as ecs from 'aws-cdk-lib/aws-ecs'
 import * as cloudtrail from 'aws-cdk-lib/aws-cloudtrail'
 import * as cloudfront from 'aws-cdk-lib/aws-cloudfront'
@@ -41,12 +43,29 @@ export interface CommonStackProps extends cdk.StackProps {
   stageContextPath?: string
 }
 
+export interface SiteWithEcsBackendProps extends CommonStackProps {
+  siteCertificate: AcmProps
+  siteCluster: EcsClusterProps
+  siteDistribution: DistributionProps
+  siteEcsContainerImagePath: string
+  siteLog: LogProps
+  siteLogBucket: S3BucketProps
+  siteRecordName?: string
+  siteSubDomain: string
+  siteTask: ecsPatterns.ApplicationLoadBalancedFargateServiceProps
+  siteVpc: ec2.VpcProps
+  useExistingHostedZone: boolean
+  nodeEnv: string
+  logLevel: string
+  timezone: string
+}
+
 export interface StaticSiteProps extends CommonStackProps {
   siteCreateAltARecord: boolean
   siteCertificate: AcmProps
   siteBucket: S3BucketProps
   siteLogBucket: S3BucketProps
-  siteDistribution?: CloudFrontProps
+  siteDistribution?: DistributionProps
   siteSource: s3deploy.ISource
   siteHostedZoneDomainName?: string
   siteRecordName?: string
@@ -56,10 +75,6 @@ export interface StaticSiteProps extends CommonStackProps {
   nodeEnv: string
   logLevel: string
   timezone: string
-}
-
-export interface StaticSiteWithLambdaEdgeProps extends StaticSiteProps {
-  siteEdgeDistribution: DistributionProps
 }
 
 export interface GraphQlApiLambdaEnvironment {
@@ -228,7 +243,7 @@ export interface LambdaEdgeProps extends cloudfront.experimental.EdgeFunctionPro
 /**
  * @category Management & Governance
  */
-export interface LogProps extends logs.CfnLogGroupProps {}
+export interface LogProps extends logs.LogGroupProps {}
 
 /**
  * @category Management & Governance
