@@ -132,7 +132,7 @@ describe('TestGraphQLApiLambdaConstruct', () => {
 describe('TestGraphQLApiLambdaConstruct', () => {
   test('provisions custom domain as expected', () => {
     template.hasResourceProperties('AWS::ApiGateway::DomainName', {
-      DomainName: 'api.test.gradientedge.io',
+      DomainName: 'api-test.test.gradientedge.io',
       EndpointConfiguration: {
         Types: ['REGIONAL'],
       },
