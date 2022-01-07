@@ -1,10 +1,11 @@
 import { CommonConstruct } from '../common/commonConstruct'
-import { CloudFrontProps, StaticSiteProps } from '../types'
+import { StaticSiteProps } from '../types'
 import * as route53 from 'aws-cdk-lib/aws-route53'
 import * as certificateManager from 'aws-cdk-lib/aws-certificatemanager'
 import * as s3 from 'aws-cdk-lib/aws-s3'
 import * as cloudfront from 'aws-cdk-lib/aws-cloudfront'
 import { Construct } from 'constructs'
+import * as origins from 'aws-cdk-lib/aws-cloudfront-origins'
 
 /**
  * @stability stable
@@ -40,7 +41,8 @@ export class StaticSite extends CommonConstruct {
   siteARecord: route53.ARecord
   siteARecordAlt: route53.ARecord
   siteBucket: s3.IBucket
-  siteDistribution: cloudfront.IDistribution
+  siteOrigin: origins.S3Origin
+  siteDistribution: cloudfront.Distribution
   siteLogBucket: s3.IBucket
   siteOriginAccessIdentity: cloudfront.OriginAccessIdentity
 
@@ -66,7 +68,7 @@ export class StaticSite extends CommonConstruct {
     this.resolveCertificate()
     this.createSiteLogBucket()
     this.createSiteBucket()
-    this.createSiteOriginAccessIdentity()
+    this.createSiteOrigin()
     this.createSiteDistribution()
     this.createSiteRouteAssets()
     this.deploySite()
@@ -124,16 +126,8 @@ export class StaticSite extends CommonConstruct {
     this.siteBucket = this.s3Manager.createS3Bucket(`${this.id}-site`, this, this.props.siteBucket)
   }
 
-  /**
-   * @summary Method to create a site origin access identity
-   * @protected
-   */
-  protected createSiteOriginAccessIdentity() {
-    this.siteOriginAccessIdentity = this.cloudFrontManager.createOriginAccessIdentity(
-      `${this.id}-oai`,
-      this,
-      this.siteBucket
-    )
+  protected createSiteOrigin() {
+    this.siteOrigin = new origins.S3Origin(this.siteBucket)
   }
 
   /**
@@ -143,10 +137,11 @@ export class StaticSite extends CommonConstruct {
   protected createSiteDistribution() {
     if (!this.props.siteDistribution) throw 'SiteDistribution props undefined'
 
-    this.siteDistribution = this.cloudFrontManager.createCloudFrontDistribution(
+    this.siteDistribution = this.cloudFrontManager.createDistributionWithS3Origin(
       `${this.id}-distribution`,
       this,
       this.props.siteDistribution,
+      this.siteOrigin,
       this.siteBucket,
       this.siteLogBucket,
       this.siteOriginAccessIdentity,

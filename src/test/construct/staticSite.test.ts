@@ -85,7 +85,6 @@ describe('TestStaticSiteConstruct', () => {
     /* test if number of resources are correctly synthesised */
     template.resourceCountIs('AWS::Route53::HostedZone', 1)
     template.resourceCountIs('AWS::S3::Bucket', 2)
-    template.resourceCountIs('AWS::CloudFront::CloudFrontOriginAccessIdentity', 1)
     template.resourceCountIs('AWS::CloudFront::Distribution', 1)
     template.resourceCountIs('AWS::Route53::RecordSet', 2)
     template.resourceCountIs('AWS::Lambda::Function', 2)
@@ -168,32 +167,12 @@ describe('TestStaticSiteConstruct', () => {
           },
         ],
         Comment: 'test-static-site-distribution - test stage',
-        CustomErrorResponses: [
-          {
-            ErrorCode: 403,
-            ResponseCode: 200,
-            ResponsePagePath: '/server/pages/index.html',
-          },
-          {
-            ErrorCode: 404,
-            ResponseCode: 200,
-            ResponsePagePath: '/server/pages/index.html',
-          },
-        ],
         DefaultCacheBehavior: {
-          AllowedMethods: ['GET', 'HEAD'],
-          CachedMethods: ['GET', 'HEAD'],
+          CachePolicyId: '658327ea-f89d-4fab-a63d-7e88639e58f6',
           Compress: true,
-          ForwardedValues: {
-            Cookies: {
-              Forward: 'none',
-            },
-            QueryString: false,
-          },
-          TargetOriginId: 'origin1',
-          ViewerProtocolPolicy: 'redirect-to-https',
+          TargetOriginId: 'teststaticsitestackteststaticsitedistributionOrigin17FDFDB75',
+          ViewerProtocolPolicy: 'allow-all',
         },
-        DefaultRootObject: 'index.html',
         Enabled: true,
         HttpVersion: 'http2',
         IPV6Enabled: true,
@@ -201,30 +180,29 @@ describe('TestStaticSiteConstruct', () => {
           Bucket: {
             'Fn::GetAtt': ['teststaticsitestackteststaticsitesitelogsbucket7DECDDDE', 'RegionalDomainName'],
           },
-          IncludeCookies: false,
-          Prefix: 'cloudfront/',
+          IncludeCookies: true,
+          Prefix: 'edge/',
         },
         Origins: [
           {
-            ConnectionAttempts: 3,
-            ConnectionTimeout: 10,
-            DomainName: {
-              'Fn::GetAtt': ['teststaticsitestackteststaticsitesitebucketDBC08543', 'RegionalDomainName'],
+            CustomOriginConfig: {
+              OriginProtocolPolicy: 'http-only',
+              OriginSSLProtocols: ['TLSv1.2'],
             },
-            Id: 'origin1',
-            S3OriginConfig: {
-              OriginAccessIdentity: {
-                'Fn::Join': [
-                  '',
-                  [
-                    'origin-access-identity/cloudfront/',
+            DomainName: {
+              'Fn::Select': [
+                2,
+                {
+                  'Fn::Split': [
+                    '/',
                     {
-                      Ref: 'teststaticsitestackteststaticsiteoai8E203045',
+                      'Fn::GetAtt': ['teststaticsitestackteststaticsitesitebucketDBC08543', 'WebsiteURL'],
                     },
                   ],
-                ],
-              },
+                },
+              ],
             },
+            Id: 'teststaticsitestackteststaticsitedistributionOrigin17FDFDB75',
           },
         ],
         PriceClass: 'PriceClass_All',
@@ -241,7 +219,7 @@ describe('TestStaticSiteConstruct', () => {
               ],
             ],
           },
-          MinimumProtocolVersion: 'TLSv1.1_2016',
+          MinimumProtocolVersion: 'TLSv1.2_2021',
           SslSupportMethod: 'sni-only',
         },
       },
