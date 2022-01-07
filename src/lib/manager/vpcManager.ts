@@ -61,10 +61,11 @@ export class VpcManager {
    * @summary Method to create a common vpc
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {ec2.VpcProps} props
+   * @param {string?} vpcIdentifier optional identifier for VPC
    */
-  public createCommonVpc(scope: CommonConstruct, props: ec2.VpcProps) {
+  public createCommonVpc(scope: CommonConstruct, props: ec2.VpcProps, vpcIdentifier?: string) {
     const vpc = this.createVpc(CommonVpcIdentifier, scope, props)
-    cdk.Tags.of(vpc).add('Name', CommonVpcIdentifier)
+    cdk.Tags.of(vpc).add('Name', vpcIdentifier ?? CommonVpcIdentifier)
 
     return vpc
   }
