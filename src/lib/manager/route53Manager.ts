@@ -156,8 +156,12 @@ export class Route53Manager {
     apiDomain: apig.DomainName,
     hostedZone: route53.IHostedZone
   ) {
+    let apiRecordName = ''
+    if (recordName && recordName !== '')
+      apiRecordName = scope.isProductionStage() ? `${recordName}` : `${recordName}-${scope.props.stage}`
+
     const apiARecord = new route53.ARecord(scope, `${id}`, {
-      recordName: recordName,
+      recordName: apiRecordName,
       target: route53.RecordTarget.fromAlias(new route53Targets.ApiGatewayDomain(apiDomain)),
       zone: hostedZone,
     })

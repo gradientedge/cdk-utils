@@ -156,7 +156,7 @@ describe('TestGraphQLApiLambdaConstruct', () => {
 describe('TestGraphQLApiLambdaConstruct', () => {
   test('provisions route53 records as expected', () => {
     template.hasResourceProperties('AWS::Route53::RecordSet', {
-      Name: 'api.test.gradientedge.io.',
+      Name: 'api-test.test.gradientedge.io.',
       Type: 'A',
     })
   })

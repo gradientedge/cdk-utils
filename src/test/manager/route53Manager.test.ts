@@ -162,7 +162,7 @@ describe('TestRoute53Construct', () => {
 describe('TestRoute53Construct', () => {
   test('provisions new a record as expected', () => {
     template.hasResourceProperties('AWS::Route53::RecordSet', {
-      Name: 'testapi.gradientedge.io.',
+      Name: 'testapi-test.gradientedge.io.',
       Type: 'A',
     })
     template.hasResourceProperties('AWS::Route53::RecordSet', {
