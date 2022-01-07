@@ -64,7 +64,7 @@ export class LogManager {
 
     const logGroup = new logs.CfnLogGroup(scope, `${id}`, {
       logGroupName: `${props.logGroupName}-${scope.props.stage}`,
-      retentionInDays: props.retentionInDays,
+      retentionInDays: props.retention,
     })
 
     createCfnOutput(`${id}-logGroupArn`, scope, logGroup.attrArn)
@@ -83,7 +83,8 @@ export class LogManager {
 
     const logGroup = new logs.LogGroup(scope, `${id}`, {
       logGroupName: `${props.logGroupName}-${scope.props.stage}`,
-      retention: props.retentionInDays,
+      retention: props.retention,
+      removalPolicy: props.removalPolicy ?? cdk.RemovalPolicy.DESTROY,
     })
 
     createCfnOutput(`${id}-logGroupArn`, scope, logGroup.logGroupArn)
