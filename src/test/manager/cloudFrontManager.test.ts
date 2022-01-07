@@ -6,6 +6,7 @@ import { CommonConstruct } from '../../lib/common/commonConstruct'
 import { CommonStack } from '../../lib/common/commonStack'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as cloudfront from 'aws-cdk-lib/aws-cloudfront'
+import * as origins from 'aws-cdk-lib/aws-cloudfront-origins'
 
 interface TestStackProps extends CommonStackProps {
   testBucket: any
@@ -91,6 +92,7 @@ class TestCommonConstruct extends CommonConstruct {
     const siteLogBucket = this.s3Manager.createS3Bucket('test-log-bucket', this, this.props.testLogBucket)
     const oai = this.cloudFrontManager.createOriginAccessIdentity('test-oai-bucket', this, siteBucket)
     const certificate = this.acmManager.resolveCertificate('test-certificate', this, this.props.testCertificate)
+    const siteOrigin = new origins.S3Origin(siteBucket, { originAccessIdentity: oai })
     this.cloudFrontManager.createCloudFrontDistribution(
       'test-distribution',
       this,
@@ -112,16 +114,17 @@ class TestCommonConstruct extends CommonConstruct {
       [testLayer],
       new lambda.AssetCode('src/test/common/nodejs/lib')
     )
-    const { origin, distribution } = this.cloudFrontManager.createLambdaEdgeDistribution(
+    const distribution = this.cloudFrontManager.createDistributionWithS3Origin(
       'test-edge-distribution',
       this,
       this.props.testEdgeDistribution,
+      siteOrigin,
       siteBucket,
       siteLogBucket,
       oai,
       certificate
     )
-    distribution.addBehavior('product/*', origin, {
+    distribution.addBehavior('product/*', siteOrigin, {
       edgeLambdas: [
         {
           functionVersion: edgeFunction.currentVersion,

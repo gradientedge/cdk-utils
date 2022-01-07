@@ -1,6 +1,5 @@
 import * as acm from 'aws-cdk-lib/aws-certificatemanager'
 import * as cloudfront from 'aws-cdk-lib/aws-cloudfront'
-import * as origins from 'aws-cdk-lib/aws-cloudfront-origins'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as s3 from 'aws-cdk-lib/aws-s3'
 import { CommonConstruct } from '../common/commonConstruct'
@@ -9,6 +8,7 @@ import { createCfnOutput } from '../utils'
 import * as cdk from 'aws-cdk-lib'
 import * as ec2 from 'aws-cdk-lib/aws-ec2'
 import * as efs from 'aws-cdk-lib/aws-efs'
+import * as origins from 'aws-cdk-lib/aws-cloudfront-origins'
 
 /**
  * @stability stable
@@ -37,13 +37,17 @@ import * as efs from 'aws-cdk-lib/aws-efs'
  */
 export class CloudFrontManager {
   public createOriginAccessIdentity(id: string, scope: CommonConstruct, accessBucket?: s3.IBucket) {
-    const oai = new cloudfront.OriginAccessIdentity(scope, `${id}`)
+    const oai = new cloudfront.OriginAccessIdentity(scope, `${id}`, {
+      comment: `${id} - ${scope.props.stage} stage`,
+    })
     if (accessBucket) accessBucket.grantRead(oai)
 
     return oai
   }
 
   /**
+   * @deprecated Use `createDistributionWithS3Origin` instead
+   *
    * @summary Method to create a cloudfront distribution
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
@@ -105,34 +109,39 @@ export class CloudFrontManager {
   }
 
   /**
-   *
+   * Method to create a CloudFront distribution with S3 Origin
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {CloudFrontProps} props distribution properties
+   * @param {origins.S3Origin} origin
    * @param {s3.IBucket} siteBucket
    * @param {s3.IBucket?} logBucket
    * @param {cloudfront.OriginAccessIdentity?} oai
    * @param {acm.ICertificate?} certificate
+   * @param {string[]?} aliases
    */
-  public createLambdaEdgeDistribution(
+  public createDistributionWithS3Origin(
     id: string,
     scope: CommonConstruct,
     props: DistributionProps,
+    origin: origins.S3Origin,
     siteBucket: s3.IBucket,
     logBucket?: s3.IBucket,
     oai?: cloudfront.OriginAccessIdentity,
-    certificate?: acm.ICertificate
+    certificate?: acm.ICertificate,
+    aliases?: string[]
   ) {
-    const origin = new origins.S3Origin(siteBucket, { originAccessIdentity: oai })
     const distribution = new cloudfront.Distribution(scope, `${id}`, {
       certificate: certificate,
       comment: `${id} - ${scope.props.stage} stage`,
       defaultBehavior: {
+        cachePolicy: props.defaultBehavior ? props.defaultBehavior.cachePolicy : undefined,
         origin: origin,
+        originRequestPolicy: props.defaultBehavior ? props.defaultBehavior.originRequestPolicy : undefined,
       },
       additionalBehaviors: props.additionalBehaviors,
       defaultRootObject: props.defaultRootObject,
-      domainNames: props.domainNames ?? [siteBucket.bucketName],
+      domainNames: aliases ? [...aliases, ...[siteBucket.bucketName]] : [siteBucket.bucketName],
       enabled: props.enabled ?? true,
       enableIpv6: props.enableIpv6,
       enableLogging: props.enableLogging ?? true,
@@ -150,7 +159,57 @@ export class CloudFrontManager {
     createCfnOutput(`${id}-distributionId`, scope, distribution.distributionId)
     createCfnOutput(`${id}-distributionDomainName`, scope, distribution.distributionDomainName)
 
-    return { origin, distribution }
+    return distribution
+  }
+
+  /**
+   * Method to create a CloudFront distribution with HTTP Origin
+   * @param {string} id scoped id of the resource
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {CloudFrontProps} props distribution properties
+   * @param {origins.S3Origin} origin
+   * @param {string[]} domainNames
+   * @param {s3.IBucket?} logBucket
+   * @param {acm.ICertificate?} certificate
+   */
+  public createDistributionWithHttpOrigin(
+    id: string,
+    scope: CommonConstruct,
+    props: DistributionProps,
+    origin: origins.HttpOrigin,
+    domainNames: string[],
+    logBucket?: s3.IBucket,
+    certificate?: acm.ICertificate
+  ) {
+    const distribution = new cloudfront.Distribution(scope, `${id}`, {
+      certificate: certificate,
+      comment: `${id} - ${scope.props.stage} stage`,
+      defaultBehavior: {
+        cachePolicy: props.defaultBehavior ? props.defaultBehavior.cachePolicy : undefined,
+        origin: origin,
+        originRequestPolicy: props.defaultBehavior ? props.defaultBehavior.originRequestPolicy : undefined,
+      },
+      additionalBehaviors: props.additionalBehaviors,
+      defaultRootObject: props.defaultRootObject,
+      domainNames: domainNames,
+      enabled: props.enabled ?? true,
+      enableIpv6: props.enableIpv6,
+      enableLogging: props.enableLogging ?? true,
+      errorResponses: props.errorResponses,
+      geoRestriction: props.geoRestriction,
+      httpVersion: props.httpVersion ?? cloudfront.HttpVersion.HTTP2,
+      logBucket: logBucket,
+      logIncludesCookies: props.logIncludesCookies ?? true,
+      logFilePrefix: props.logFilePrefix ?? `edge/`,
+      minimumProtocolVersion: props.minimumProtocolVersion ?? cloudfront.SecurityPolicyProtocol.TLS_V1_2_2021,
+      priceClass: props.priceClass ?? cloudfront.PriceClass.PRICE_CLASS_ALL,
+      webAclId: props.webAclId,
+    })
+
+    createCfnOutput(`${id}-distributionId`, scope, distribution.distributionId)
+    createCfnOutput(`${id}-distributionDomainName`, scope, distribution.distributionDomainName)
+
+    return distribution
   }
 
   /**
