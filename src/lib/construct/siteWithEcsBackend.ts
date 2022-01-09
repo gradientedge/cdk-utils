@@ -282,7 +282,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
       fargateService.targetGroup.configureHealthCheck({
         enabled: this.props.siteHealthCheck.enabled ?? true,
         path: this.props.siteHealthCheck.path ?? '/',
-        port: this.props.siteHealthCheck.port ?? this.props.siteTask.listenerPort?.toString(),
+        port: this.props.siteHealthCheck.port,
         interval: cdk.Duration.seconds(this.props.siteHealthCheck.intervalInSecs),
         timeout: cdk.Duration.seconds(this.props.siteHealthCheck.timeoutInSecs),
         healthyThresholdCount: this.props.siteHealthCheck.healthyThresholdCount,
