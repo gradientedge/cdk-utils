@@ -103,6 +103,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
     this.createSiteOrigin()
     this.createDistribution()
     this.createNetworkMappings()
+    this.invalidateDistributionCache()
   }
 
   /**
@@ -277,6 +278,21 @@ export class SiteWithEcsBackend extends CommonConstruct {
       },
     })
 
+    if (this.props.siteHealthCheck) {
+      fargateService.targetGroup.configureHealthCheck({
+        enabled: this.props.siteHealthCheck.enabled ?? true,
+        path: this.props.siteHealthCheck.path ?? '/',
+        port: this.props.siteHealthCheck.port ?? this.props.siteTask.listenerPort?.toString(),
+        interval: cdk.Duration.seconds(this.props.siteHealthCheck.intervalInSecs),
+        timeout: cdk.Duration.seconds(this.props.siteHealthCheck.timeoutInSecs),
+        healthyThresholdCount: this.props.siteHealthCheck.healthyThresholdCount,
+        unhealthyThresholdCount: this.props.siteHealthCheck.unhealthyThresholdCount,
+        healthyGrpcCodes: this.props.siteHealthCheck.healthyGrpcCodes,
+        healthyHttpCodes: this.props.siteHealthCheck.healthyHttpCodes,
+        protocol: this.props.siteHealthCheck.protocol,
+      })
+    }
+
     this.siteEcsService = fargateService.service
     this.siteEcsTaskDefinition = fargateService.taskDefinition
     this.siteEcsListener = fargateService.listener
@@ -327,5 +343,20 @@ export class SiteWithEcsBackend extends CommonConstruct {
       this.siteHostedZone,
       this.props.siteRecordName
     )
+  }
+
+  /**
+   * Method to invalidation the cloudfront distribution cache after a deployment
+   * @protected
+   */
+  protected invalidateDistributionCache() {
+    if (this.props.siteCacheInvalidationDockerFilePath) {
+      this.cloudFrontManager.invalidateCache(
+        `${this.id}-cache-invalidation`,
+        this,
+        this.props.siteCacheInvalidationDockerFilePath,
+        this.siteDistribution.distributionId
+      )
+    }
   }
 }

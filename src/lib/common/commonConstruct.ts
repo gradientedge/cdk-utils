@@ -22,6 +22,7 @@ import { AppConfigManager } from '../manager/appConfigManager'
 import { Construct } from 'constructs'
 import { ApiManager } from '../manager/apiManager'
 import { SsmManager } from '../manager/ssmManager'
+import { CodeBuildManager } from '../manager/codeBuildManager'
 
 /**
  * @stability stable
@@ -48,6 +49,7 @@ export class CommonConstruct extends Construct {
   acmManager: AcmManager
   apiManager: ApiManager
   appConfigManager: AppConfigManager
+  codeBuildManager: CodeBuildManager
   cloudFrontManager: CloudFrontManager
   cloudTrailManager: CloudTrailManager
   cloudWatchManager: CloudWatchManager
@@ -79,6 +81,7 @@ export class CommonConstruct extends Construct {
     this.acmManager = new AcmManager()
     this.apiManager = new ApiManager()
     this.appConfigManager = new AppConfigManager()
+    this.codeBuildManager = new CodeBuildManager()
     this.cloudFrontManager = new CloudFrontManager()
     this.cloudTrailManager = new CloudTrailManager()
     this.cloudWatchManager = new CloudWatchManager()

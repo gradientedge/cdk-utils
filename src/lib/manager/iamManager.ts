@@ -139,6 +139,56 @@ export class IamManager {
   }
 
   /**
+   * @summary Method to create iam statement to invalidate cloudfront cache
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   */
+  public statementForCloudfrontInvalidation(scope: CommonConstruct) {
+    return new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: ['cloudfront:GetInvalidation', 'cloudfront:CreateInvalidation'],
+      resources: ['*'],
+    })
+  }
+
+  /**
+   * @summary Method to create iam policy to invalidate cloudfront cache
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   */
+  public policyForCloudfrontInvalidation(scope: CommonConstruct) {
+    return new iam.PolicyDocument({
+      statements: [
+        this.statementForCreateAnyLogStream(),
+        this.statementForPutAnyLogEvent(),
+        this.statementForCloudfrontInvalidation(scope),
+        new iam.PolicyStatement({
+          effect: iam.Effect.ALLOW,
+          actions: [
+            'ecr:GetDownloadUrlForLayer',
+            'ecr:BatchGetImage',
+            'ecr:BatchCheckLayerAvailability',
+            'ecr:GetAuthorizationToken',
+          ],
+          resources: ['*'],
+        }),
+      ],
+    })
+  }
+
+  /**
+   * @summary Method to create iam role to invalidate cloudfront cache
+   * @param {string} id scoped id of the resource
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   */
+  public roleForCloudfrontInvalidation(id: string, scope: CommonConstruct) {
+    return new iam.Role(scope, `${id}-install-deps-project-role`, {
+      assumedBy: new iam.ServicePrincipal('codebuild.amazonaws.com'),
+      inlinePolicies: {
+        codeBuildPolicy: this.policyForCloudfrontInvalidation(scope),
+      },
+    })
+  }
+
+  /**
    * @summary Method to create iam statement to assume iam role
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {iam.ServicePrincipal[]} servicePrincipals
@@ -198,6 +248,17 @@ export class IamManager {
   }
 
   /**
+   * @summary Method to create iam statement to create any log stream
+   */
+  public statementForCreateAnyLogStream() {
+    return new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: ['logs:CreateLogStream'],
+      resources: ['*'],
+    })
+  }
+
+  /**
    * @summary Method to create iam statement to write log events
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {logs.CfnLogGroup} logGroup
@@ -212,6 +273,17 @@ export class IamManager {
         }:log-stream:${cdk.Stack.of(scope).account}_CloudTrail_eu-west-1*`,
       ],
       sid: 'AWSCloudTrailPutLogEvents20141101',
+    })
+  }
+
+  /**
+   * @summary Method to create iam statement to write any log events
+   */
+  public statementForPutAnyLogEvent() {
+    return new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: ['logs:PutLogEvents'],
+      resources: ['*'],
     })
   }
 

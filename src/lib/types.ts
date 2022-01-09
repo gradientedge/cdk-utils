@@ -17,6 +17,7 @@ import * as acm from 'aws-cdk-lib/aws-certificatemanager'
 import * as cdk from 'aws-cdk-lib'
 import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment'
 import * as apig from 'aws-cdk-lib/aws-apigateway'
+import * as elb from 'aws-cdk-lib/aws-elasticloadbalancingv2'
 
 /**
  * @category Management & Governance
@@ -44,6 +45,8 @@ export interface CommonStackProps extends cdk.StackProps {
 }
 
 export interface SiteWithEcsBackendProps extends CommonStackProps {
+  siteCacheInvalidationDockerFilePath?: string
+  siteHealthCheck: HealthCheck
   siteCertificate: AcmProps
   siteCluster: EcsClusterProps
   siteDistribution: DistributionProps
@@ -75,6 +78,11 @@ export interface StaticSiteProps extends CommonStackProps {
   nodeEnv: string
   logLevel: string
   timezone: string
+}
+
+export interface HealthCheck extends elb.HealthCheck {
+  intervalInSecs: number
+  timeoutInSecs: number
 }
 
 export interface GraphQlApiLambdaEnvironment {

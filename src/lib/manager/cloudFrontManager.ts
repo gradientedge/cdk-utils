@@ -9,6 +9,7 @@ import * as cdk from 'aws-cdk-lib'
 import * as ec2 from 'aws-cdk-lib/aws-ec2'
 import * as efs from 'aws-cdk-lib/aws-efs'
 import * as origins from 'aws-cdk-lib/aws-cloudfront-origins'
+import * as cr from 'aws-cdk-lib/custom-resources'
 
 /**
  * @stability stable
@@ -264,5 +265,39 @@ export class CloudFrontManager {
     createCfnOutput(`${id}-edgeFunctionName`, scope, edgeFunction.functionName)
 
     return edgeFunction
+  }
+
+  /**
+   *
+   * @param id
+   * @param scope
+   * @param dockerFilePath
+   * @param distributionId
+   * @param paths
+   */
+  public invalidateCache(
+    id: string,
+    scope: CommonConstruct,
+    dockerFilePath: string,
+    distributionId: string,
+    paths?: string
+  ) {
+    new cr.AwsCustomResource(scope, `${id}-trigger-codebuild-${new Date().getTime()}`, {
+      onCreate: {
+        service: 'CodeBuild',
+        action: 'startBuild',
+        parameters: {
+          projectName: scope.codeBuildManager.createProjectForCloudfrontInvalidation(
+            id,
+            scope,
+            dockerFilePath,
+            distributionId,
+            paths
+          ).projectName,
+        },
+        physicalResourceId: cr.PhysicalResourceId.fromResponse('build.id'),
+      },
+      policy: cr.AwsCustomResourcePolicy.fromSdkCalls({ resources: cr.AwsCustomResourcePolicy.ANY_RESOURCE }),
+    })
   }
 }
