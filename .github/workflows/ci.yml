@@ -8,10 +8,10 @@ on:
       - main
       - develop
 
-name: AWS CDK Utilities Release Pipeline
+name: AWS CDK Utilities CI/CD Pipeline
 
 env:
-  name: AWS CDK Utilities Release Pipeline
+  name: AWS CDK Utilities CI/CD Pipeline
 
 jobs:
   validate:
