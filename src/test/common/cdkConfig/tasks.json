@@ -1,0 +1,11 @@
+{
+  "testTask": {
+    "cpu": 2048,
+    "memoryLimitMiB": 4096,
+    "desiredCount": 1,
+    "listenerPort": 80,
+    "taskImageOptions": {
+      "containerPort": 3000
+    }
+  }
+}

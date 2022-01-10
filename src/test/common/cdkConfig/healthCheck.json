@@ -1,0 +1,7 @@
+{
+  "siteHealthCheck": {
+    "path": "/",
+    "intervalInSecs": 30,
+    "timeoutInSecs": 5
+  }
+}
