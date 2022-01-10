@@ -8,10 +8,10 @@ on:
       - main
       - develop
 
-name: AWS CDK Utilities CI/CD Pipeline
+name: Gradient Edge CDK Utilities CI/CD Pipeline
 
 env:
-  name: AWS CDK Utilities CI/CD Pipeline
+  name: Gradient Edge  CDK Utilities CI/CD Pipeline
 
 jobs:
   validate:
