@@ -8,10 +8,10 @@ on:
       - main
       - develop
 
-name: Gradient Edge CDK Utilities CI/CD Pipeline
+name: CI-Pipeline
 
 env:
-  name: Gradient Edge  CDK Utilities CI/CD Pipeline
+  name: CI-Pipeline
 
 jobs:
   validate:
