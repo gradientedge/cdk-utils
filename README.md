@@ -6,7 +6,6 @@
 
 # Gradient Edge AWS CDK Utils
 
-
 ![Release][release]
 ![version][version]
 
@@ -30,7 +29,6 @@
 ![Last Commits][last-commit]
 ![Issues][issues]
 ![Pull Requests][pr]
-
 
 ## Introduction
 
