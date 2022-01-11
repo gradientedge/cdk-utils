@@ -77,6 +77,7 @@ yarn add @gradientedge/cdk-utils
 [logo]: https://cdn-images-1.medium.com/max/980/1*WsecR3i1TM7DbxKW_3VNQA@2x.png
 [maintained]: https://img.shields.io/badge/maintained-YES-green
 [node-badge]: https://img.shields.io/node/v/@gradientedge/cdk-utils
+[purescript]: https://img.shields.io/badge/package.json-4D4D4D?logo=purescript
 [release]: https://img.shields.io/github/release/gradientedge/cdk-utils.svg
 [yarn-badge]: https://img.shields.io/badge/yarn-1.22.10-green?logo=yarn
 [aws-cli-badge]: https://img.shields.io/badge/aws--cli-2.3.4-777BB4?logo=amazon-aws
