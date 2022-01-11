@@ -67,7 +67,6 @@ yarn add @gradientedge/cdk-utils
 [code-size]: https://img.shields.io/github/languages/code-size/gradientedge/cdk-utils
 [coverage]: https://codecov.io/gh/gradientedge/cdk-utils/branch/main/graph/badge.svg
 [commits]: https://img.shields.io/github/commit-activity/m/gradientedge/cdk-utils
-[docs]: https://img.shields.io/readthedocs/@gradientedge/cdk-utils
 [downloads]: https://img.shields.io/npm/dw/@gradientedge/cdk-utils
 [dependencies]: https://img.shields.io/librariesio/release/npm/@gradientedge/cdk-utils
 [issues]: https://img.shields.io/github/issues/gradientedge/cdk-utils.svg
