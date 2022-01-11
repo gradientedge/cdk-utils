@@ -51,6 +51,8 @@ jobs:
         if: always()
         with:
           files: coverage/junit.xml
+      - name: Publish Code Coverage
+        run: npx codecov
       - name: Monitor coverage
         if: ${{ github.event_name == 'pull_request' && success() }}
         uses: slavcodev/coverage-monitor-action@1.2.0

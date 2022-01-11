@@ -63,6 +63,7 @@
     "aws-cdk": "*",
     "babel-eslint": "^10.1.0",
     "better-docs": "^2.3.2",
+    "codecov": "^3.8.3",
     "dotenv": "^10.0.0",
     "eslint": "^8.6.0",
     "eslint-config-prettier": "^8.3.0",
