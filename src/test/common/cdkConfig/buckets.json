@@ -15,6 +15,7 @@
     "serverAccessLogsPrefix": "logs/",
     "websiteIndexDocument": "index.html",
     "websiteErrorDocument": "index.html",
-    "existingBucket": false
+    "existingBucket": false,
+    "enableEventBridge": true
   }
 }

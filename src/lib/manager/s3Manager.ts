@@ -4,7 +4,7 @@ import * as iam from 'aws-cdk-lib/aws-iam'
 import * as s3 from 'aws-cdk-lib/aws-s3'
 import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment'
 import { CommonConstruct } from '../common/commonConstruct'
-import { S3BucketProps } from '../types'
+import { LifecycleRule, S3BucketProps } from '../types'
 import { createCfnOutput } from '../utils'
 
 /**
@@ -27,6 +27,60 @@ import { createCfnOutput } from '../utils'
  */
 export class S3Manager {
   /**
+   * @summary Method to determine S3 Bucket lifecycle properties
+   * @param {S3BucketProps} props bucket properties
+   * @private
+   */
+  protected determineBucketLifecycleRules(props: S3BucketProps) {
+    if (!props.lifecycleRules) return undefined
+
+    const bucketLifecycleRules: LifecycleRule[] = []
+    props.lifecycleRules.forEach(lifecycleRule => {
+      bucketLifecycleRules.push({
+        id: lifecycleRule.id,
+        enabled: lifecycleRule.enabled,
+        abortIncompleteMultipartUploadAfter: lifecycleRule.abortIncompleteMultipartUploadAfter,
+        expirationDate: lifecycleRule.expirationDate,
+        expiration: lifecycleRule.expirationInDays ? cdk.Duration.days(lifecycleRule.expirationInDays) : undefined,
+        noncurrentVersionExpiration: lifecycleRule.noncurrentVersionExpirationInDays
+          ? cdk.Duration.days(lifecycleRule.noncurrentVersionExpirationInDays)
+          : undefined,
+        noncurrentVersionTransitions: lifecycleRule.noncurrentVersionTransitions,
+        transitions: lifecycleRule.transitions,
+        prefix: lifecycleRule.prefix,
+        tagFilters: lifecycleRule.tagFilters,
+        expiredObjectDeleteMarker: lifecycleRule.expiredObjectDeleteMarker,
+      })
+    })
+
+    return bucketLifecycleRules
+  }
+
+  /**
+   * @summary Method to determine the bucket name
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {S3BucketProps} props bucket properties
+   * @private
+   */
+  protected static determineBucketName(scope: CommonConstruct, props: S3BucketProps) {
+    return scope.isProductionStage()
+      ? `${props.bucketName}.${scope.fullyQualifiedDomainName}`
+      : `${props.bucketName}-${scope.props.stage}.${scope.fullyQualifiedDomainName}`
+  }
+
+  /**
+   * @summary Method to determine the log bucket name
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {S3BucketProps} props bucket properties
+   * @private
+   */
+  protected static determineLogBucketName(scope: CommonConstruct, props: S3BucketProps) {
+    return scope.isProductionStage()
+      ? `${props.logBucketName}.${scope.fullyQualifiedDomainName}`
+      : `${props.logBucketName}-${scope.props.stage}.${scope.fullyQualifiedDomainName}`
+  }
+
+  /**
    * @summary Method to create a s3 bucket
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
@@ -37,18 +91,14 @@ export class S3Manager {
 
     let bucket: s3.IBucket
 
-    const bucketName = scope.isProductionStage()
-      ? `${props.bucketName}.${scope.fullyQualifiedDomainName}`
-      : `${props.bucketName}-${scope.props.stage}.${scope.fullyQualifiedDomainName}`
+    const bucketName = S3Manager.determineBucketName(scope, props)
 
     if (props.existingBucket && props.bucketName) {
       bucket = s3.Bucket.fromBucketName(scope, `${id}`, bucketName)
     } else {
       let logBucket
       if (props.logBucketName) {
-        const logBucketName = scope.isProductionStage()
-          ? `${props.logBucketName}.${scope.fullyQualifiedDomainName}`
-          : `${props.logBucketName}-${scope.props.stage}.${scope.fullyQualifiedDomainName}`
+        const logBucketName = S3Manager.determineLogBucketName(scope, props)
         logBucket = s3.Bucket.fromBucketName(scope, `${id}-logs`, logBucketName)
       }
 
@@ -60,7 +110,7 @@ export class S3Manager {
         cors: props.cors,
         encryption: props.encryption || s3.BucketEncryption.S3_MANAGED,
         encryptionKey: props.encryptionKey,
-        lifecycleRules: props.lifecycleRules,
+        lifecycleRules: this.determineBucketLifecycleRules(props),
         metrics: props.metrics,
         publicReadAccess: props.publicReadAccess,
         removalPolicy: props.removalPolicy || cdk.RemovalPolicy.RETAIN,
@@ -71,6 +121,13 @@ export class S3Manager {
         websiteRoutingRules: props.websiteRoutingRules,
         versioned: props.versioned,
       })
+
+      const cfnBucket = bucket.node.defaultChild as s3.CfnBucket
+      cfnBucket.notificationConfiguration = {
+        eventBridgeConfiguration: {
+          eventBridgeEnabled: props.enableEventBridge ?? false,
+        },
+      }
     }
 
     createCfnOutput(`${id}-bucketName`, scope, bucket.bucketName)

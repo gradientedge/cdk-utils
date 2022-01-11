@@ -268,10 +268,17 @@ export interface Route53Props extends route53.HostedZoneProps {
   useExistingHostedZone?: boolean
 }
 
+export interface LifecycleRule extends s3.LifecycleRule {
+  expirationInDays?: number
+  noncurrentVersionExpirationInDays?: number
+}
+
 /**
  * @category Storage
  */
 export interface S3BucketProps extends s3.BucketProps {
+  enableEventBridge?: boolean
+  lifecycleRules?: LifecycleRule[]
   bucketName: string
   logBucketName?: string
   existingBucket?: boolean
