@@ -20,7 +20,6 @@
 ![CDK][cdk-badge]
 
 ![Builds][builds]
-![Checks][checks]
 ![Coverage][coverage]
 ![Code Size][code-size]
 
@@ -61,13 +60,14 @@ yarn add @gradientedge/cdk-utils
 <!-- references -->
 
 [aws-cdk]: https://docs.aws.amazon.com/cdk/latest/guide/home.html
-[builds]: https://img.shields.io/github/workflow/status/gradientedge/cdk-utils/CI-Pipeline
+[builds]: https://img.shields.io/github/workflow/status/gradientedge/cdk-utils/CI-Pipeline/main
 [cdk-badge]: https://img.shields.io/github/package-json/dependency-version/gradientedge/cdk-utils/aws-cdk-lib
 [checks]: https://img.shields.io/github/checks-status/gradientedge/cdk-utils/main
 [cmd]: https://img.shields.io/badge/command--line-4D4D4D?logo=windows-terminal&style=for-the-badge
 [code-size]: https://img.shields.io/github/languages/code-size/gradientedge/cdk-utils
 [coverage]: https://codecov.io/gh/gradientedge/cdk-utils/branch/main/graph/badge.svg
 [commits]: https://img.shields.io/github/commit-activity/m/gradientedge/cdk-utils
+[docs]: https://img.shields.io/readthedocs/@gradientedge/cdk-utils
 [downloads]: https://img.shields.io/npm/dw/@gradientedge/cdk-utils
 [dependencies]: https://img.shields.io/librariesio/release/npm/@gradientedge/cdk-utils
 [issues]: https://img.shields.io/github/issues/gradientedge/cdk-utils.svg
