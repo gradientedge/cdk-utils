@@ -67,6 +67,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
   siteInternalDomainName: string
   siteExternalDomainName: string
   siteDomainNames: string[]
+  siteCloudfrontFunction: cloudfront.Function
 
   /**
    * @summary Constructor to initialise the SiteWithEcsBackend Construct
@@ -101,6 +102,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
     this.createEcsService()
     this.createSiteLogBucket()
     this.createSiteOrigin()
+    this.createSiteCloudfrontFunction()
     this.createDistribution()
     this.createNetworkMappings()
     this.invalidateDistributionCache()
@@ -316,6 +318,21 @@ export class SiteWithEcsBackend extends CommonConstruct {
   }
 
   /**
+   * @summary Method to create a site cloudfront function
+   * @protected
+   */
+  protected createSiteCloudfrontFunction() {
+    if (this.props.siteCloudfrontFunctionProps && this.props.siteFunctionFilePath) {
+      this.siteCloudfrontFunction = this.cloudFrontManager.createCloudfrontFunction(
+        `${this.id}-function`,
+        this,
+        this.props.siteCloudfrontFunctionProps,
+        this.props.siteFunctionFilePath
+      )
+    }
+  }
+
+  /**
    * Method to create Site distribution
    * @protected
    */
@@ -327,7 +344,8 @@ export class SiteWithEcsBackend extends CommonConstruct {
       this.siteOrigin,
       this.siteDomainNames,
       this.siteLogBucket,
-      this.siteCertificate
+      this.siteCertificate,
+      this.siteCloudfrontFunction
     )
   }
 

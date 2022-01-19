@@ -3,7 +3,7 @@ import * as cloudfront from 'aws-cdk-lib/aws-cloudfront'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as s3 from 'aws-cdk-lib/aws-s3'
 import { CommonConstruct } from '../common/commonConstruct'
-import { CloudFrontProps, DistributionProps, LambdaEdgeProps } from '../types'
+import { CloudFrontProps, DistributionProps, LambdaEdgeProps, CloudfrontFunctionProps } from '../types'
 import { createCfnOutput } from '../utils'
 import * as cdk from 'aws-cdk-lib'
 import * as ec2 from 'aws-cdk-lib/aws-ec2'
@@ -120,6 +120,7 @@ export class CloudFrontManager {
    * @param {cloudfront.OriginAccessIdentity?} oai
    * @param {acm.ICertificate?} certificate
    * @param {string[]?} aliases
+   * @param {cloudfront.Function?} cloudfrontFunction
    */
   public createDistributionWithS3Origin(
     id: string,
@@ -130,7 +131,8 @@ export class CloudFrontManager {
     logBucket?: s3.IBucket,
     oai?: cloudfront.OriginAccessIdentity,
     certificate?: acm.ICertificate,
-    aliases?: string[]
+    aliases?: string[],
+    cloudfrontFunction?: cloudfront.Function
   ) {
     const distribution = new cloudfront.Distribution(scope, `${id}`, {
       certificate: certificate,
@@ -139,6 +141,14 @@ export class CloudFrontManager {
         cachePolicy: props.defaultBehavior ? props.defaultBehavior.cachePolicy : undefined,
         origin: origin,
         originRequestPolicy: props.defaultBehavior ? props.defaultBehavior.originRequestPolicy : undefined,
+        functionAssociations: cloudfrontFunction
+          ? [
+              {
+                eventType: cloudfront.FunctionEventType.VIEWER_REQUEST,
+                function: cloudfrontFunction,
+              },
+            ]
+          : undefined,
       },
       additionalBehaviors: props.additionalBehaviors,
       defaultRootObject: props.defaultRootObject,
@@ -172,6 +182,7 @@ export class CloudFrontManager {
    * @param {string[]} domainNames
    * @param {s3.IBucket?} logBucket
    * @param {acm.ICertificate?} certificate
+   * @param {cloudfront.Function?} cloudfrontFunction
    */
   public createDistributionWithHttpOrigin(
     id: string,
@@ -180,7 +191,8 @@ export class CloudFrontManager {
     origin: origins.HttpOrigin,
     domainNames: string[],
     logBucket?: s3.IBucket,
-    certificate?: acm.ICertificate
+    certificate?: acm.ICertificate,
+    cloudfrontFunction?: cloudfront.Function
   ) {
     const distribution = new cloudfront.Distribution(scope, `${id}`, {
       certificate: certificate,
@@ -189,6 +201,14 @@ export class CloudFrontManager {
         cachePolicy: props.defaultBehavior ? props.defaultBehavior.cachePolicy : undefined,
         origin: origin,
         originRequestPolicy: props.defaultBehavior ? props.defaultBehavior.originRequestPolicy : undefined,
+        functionAssociations: cloudfrontFunction
+          ? [
+              {
+                eventType: cloudfront.FunctionEventType.VIEWER_REQUEST,
+                function: cloudfrontFunction,
+              },
+            ]
+          : undefined,
       },
       additionalBehaviors: props.additionalBehaviors,
       defaultRootObject: props.defaultRootObject,
@@ -299,5 +319,33 @@ export class CloudFrontManager {
       },
       policy: cr.AwsCustomResourcePolicy.fromSdkCalls({ resources: cr.AwsCustomResourcePolicy.ANY_RESOURCE }),
     })
+  }
+
+  /**
+   * @summary Method to provision a Cloudfront function
+   *
+   * @param {string} id scoped id of the resource
+   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {CloudfrontFunctionProps} props
+   * @param {string} functionFilePath
+   */
+  public createCloudfrontFunction(
+    id: string,
+    scope: CommonConstruct,
+    props: CloudfrontFunctionProps,
+    functionFilePath: string
+  ) {
+    const cloudfrontFunction = new cloudfront.Function(scope, `${id}`, {
+      code: cloudfront.FunctionCode.fromFile({
+        filePath: functionFilePath,
+      }),
+      comment: props.comment,
+      functionName: `${id}-${props.functionName}-${scope.props.stage}`,
+    })
+
+    createCfnOutput(`${id}-functionArn`, scope, cloudfrontFunction.functionArn)
+    createCfnOutput(`${id}-functionName`, scope, cloudfrontFunction.functionName)
+
+    return cloudfrontFunction
   }
 }

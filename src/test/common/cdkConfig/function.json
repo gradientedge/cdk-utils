@@ -1,0 +1,14 @@
+{
+  "siteFunction": {
+    "functionName": "test-function",
+    "comment": "test comment"
+  },
+  "testSite": {
+    "functionName": "test-site-function",
+    "comment": "test comment"
+  },
+  "testStaticSite": {
+    "functionName": "test-static-function",
+    "comment": "test comment"
+  }
+}

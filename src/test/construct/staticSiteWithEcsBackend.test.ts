@@ -32,6 +32,7 @@ const testStackProps = {
     'src/test/common/cdkConfig/logs.json',
     'src/test/common/cdkConfig/tasks.json',
     'src/test/common/cdkConfig/vpc.json',
+    'src/test/common/cdkConfig/function.json',
   ],
   stageContextPath: 'src/test/common/cdkEnv',
 }
@@ -68,6 +69,8 @@ class TestCommonStack extends CommonStack {
         testAttribute: this.node.tryGetContext('testAttribute'),
         timezone: this.node.tryGetContext('timezone'),
         useExistingHostedZone: this.node.tryGetContext('useExistingHostedZone'),
+        siteCloudfrontFunctionProps: this.node.tryGetContext('testSite'),
+        siteFunctionFilePath: 'src/test/common/nodejs/lib/index.ts',
       },
     }
   }
@@ -126,6 +129,7 @@ describe('TestSiteWithEcsBackendConstruct', () => {
     template.resourceCountIs('Custom::AWS', 1)
     template.resourceCountIs('AWS::CloudFront::Distribution', 1)
     template.resourceCountIs('AWS::Lambda::Function', 2)
+    template.resourceCountIs('AWS::CloudFront::Function', 1)
   })
 })
 
@@ -195,6 +199,14 @@ describe('TestSiteWithEcsBackendConstruct', () => {
         Comment: 'test-site-distribution - test stage',
         DefaultCacheBehavior: {
           CachePolicyId: '658327ea-f89d-4fab-a63d-7e88639e58f6',
+          FunctionAssociations: [
+            {
+              EventType: 'viewer-request',
+              FunctionARN: {
+                'Fn::GetAtt': ['testsitestacktestsitefunctionF68C253C', 'FunctionARN'],
+              },
+            },
+          ],
           Compress: true,
           TargetOriginId: 'testsitestacktestsitedistributionOrigin14E765772',
           ViewerProtocolPolicy: 'allow-all',
@@ -313,6 +325,17 @@ describe('TestSiteWithEcsBackendConstruct', () => {
     template.hasResourceProperties('AWS::Route53::RecordSet', {
       Name: 'site-test.test.gradientedge.io.',
       Type: 'A',
+    })
+  })
+})
+
+describe('TestSiteWithEcsBackendConstruct', () => {
+  test('provisions cloudfront function as expected', () => {
+    template.hasResourceProperties('AWS::CloudFront::Function', {
+      Name: 'test-site-function-test-site-function-test',
+      FunctionConfig: {
+        Comment: 'test comment',
+      },
     })
   })
 })

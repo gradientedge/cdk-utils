@@ -45,6 +45,7 @@ export class StaticSite extends CommonConstruct {
   siteDistribution: cloudfront.Distribution
   siteLogBucket: s3.IBucket
   siteOriginAccessIdentity: cloudfront.OriginAccessIdentity
+  siteCloudfrontFunction: cloudfront.Function
 
   /**
    * @summary Constructor to initialise the StaticSite Construct
@@ -69,6 +70,7 @@ export class StaticSite extends CommonConstruct {
     this.createSiteLogBucket()
     this.createSiteBucket()
     this.createSiteOrigin()
+    this.createSiteCloudfrontFunction()
     this.createSiteDistribution()
     this.createSiteRouteAssets()
     this.deploySite()
@@ -131,6 +133,21 @@ export class StaticSite extends CommonConstruct {
   }
 
   /**
+   * @summary Method to create a site cloudfront function
+   * @protected
+   */
+  protected createSiteCloudfrontFunction() {
+    if (this.props.siteCloudfrontFunctionProps && this.props.siteFunctionFilePath) {
+      this.siteCloudfrontFunction = this.cloudFrontManager.createCloudfrontFunction(
+        `${this.id}-function`,
+        this,
+        this.props.siteCloudfrontFunctionProps,
+        this.props.siteFunctionFilePath
+      )
+    }
+  }
+
+  /**
    * @summary Method to create a site cloudfront distribution
    * @protected
    */
@@ -146,7 +163,8 @@ export class StaticSite extends CommonConstruct {
       this.siteLogBucket,
       this.siteOriginAccessIdentity,
       this.siteCertificate,
-      this.props.siteAliases
+      this.props.siteAliases,
+      this.siteCloudfrontFunction
     )
   }
 

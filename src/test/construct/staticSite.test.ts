@@ -23,6 +23,7 @@ const testStackProps = {
     'src/test/common/cdkConfig/buckets.json',
     'src/test/common/cdkConfig/certificates.json',
     'src/test/common/cdkConfig/distributions.json',
+    'src/test/common/cdkConfig/function.json',
   ],
   stageContextPath: 'src/test/common/cdkEnv',
 }
@@ -50,6 +51,8 @@ class TestCommonStack extends CommonStack {
         siteCreateAltARecord: this.node.tryGetContext('siteCreateAltARecord'),
         siteAliases: [`${this.node.tryGetContext('siteSubDomain')}.${this.fullyQualifiedDomain()}`],
         testAttribute: this.node.tryGetContext('testAttribute'),
+        siteCloudfrontFunctionProps: this.node.tryGetContext('testStaticSite'),
+        siteFunctionFilePath: 'src/test/common/nodejs/lib/index.ts',
       },
     }
   }
@@ -90,6 +93,7 @@ describe('TestStaticSiteConstruct', () => {
     template.resourceCountIs('AWS::Lambda::Function', 2)
     template.resourceCountIs('Custom::S3AutoDeleteObjects', 2)
     template.resourceCountIs('Custom::CDKBucketDeployment', 1)
+    template.resourceCountIs('AWS::CloudFront::Function', 1)
   })
 })
 
@@ -169,6 +173,14 @@ describe('TestStaticSiteConstruct', () => {
         Comment: 'test-static-site-distribution - test stage',
         DefaultCacheBehavior: {
           CachePolicyId: '658327ea-f89d-4fab-a63d-7e88639e58f6',
+          FunctionAssociations: [
+            {
+              EventType: 'viewer-request',
+              FunctionARN: {
+                'Fn::GetAtt': ['teststaticsitestackteststaticsitefunction9EE64F2F', 'FunctionARN'],
+              },
+            },
+          ],
           Compress: true,
           TargetOriginId: 'teststaticsitestackteststaticsitedistributionOrigin17FDFDB75',
           ViewerProtocolPolicy: 'allow-all',
@@ -236,6 +248,17 @@ describe('TestStaticSiteConstruct', () => {
     template.hasResourceProperties('AWS::Route53::RecordSet', {
       Name: 'site-test.test.gradientedge.io.',
       Type: 'A',
+    })
+  })
+})
+
+describe('TestStaticSiteConstruct', () => {
+  test('provisions cloudfront function as expected', () => {
+    template.hasResourceProperties('AWS::CloudFront::Function', {
+      Name: 'test-static-site-function-test-static-function-test',
+      FunctionConfig: {
+        Comment: 'test comment',
+      },
     })
   })
 })

@@ -15,6 +15,7 @@ interface TestStackProps extends CommonStackProps {
   testDistribution: any
   testLambdaEdge: any
   testEdgeDistribution: any
+  testFunction: any
 }
 
 const testStackProps = {
@@ -32,6 +33,7 @@ const testStackProps = {
     'src/test/common/cdkConfig/certificates.json',
     'src/test/common/cdkConfig/distributions.json',
     'src/test/common/cdkConfig/lambdas.json',
+    'src/test/common/cdkConfig/function.json',
   ],
   stageContextPath: 'src/test/common/cdkEnv',
 }
@@ -55,6 +57,7 @@ class TestCommonStack extends CommonStack {
         testDistribution: this.node.tryGetContext('siteDistribution'),
         testLambdaEdge: this.node.tryGetContext('testLambdaEdge'),
         testEdgeDistribution: this.node.tryGetContext('testEdgeDistribution'),
+        testFunction: this.node.tryGetContext('siteFunction'),
       },
     }
   }
@@ -78,6 +81,7 @@ class TestInvalidCommonStack extends CommonStack {
         testCertificate: this.node.tryGetContext('siteCertificate'),
         testLambdaEdge: this.node.tryGetContext('testLambdaEdge'),
         testEdgeDistribution: this.node.tryGetContext('testEdgeDistribution'),
+        testFunction: this.node.tryGetContext('siteFunction'),
       },
     }
   }
@@ -93,6 +97,13 @@ class TestCommonConstruct extends CommonConstruct {
     const oai = this.cloudFrontManager.createOriginAccessIdentity('test-oai-bucket', this, siteBucket)
     const certificate = this.acmManager.resolveCertificate('test-certificate', this, this.props.testCertificate)
     const siteOrigin = new origins.S3Origin(siteBucket, { originAccessIdentity: oai })
+    const cloudfrontFunction = this.cloudFrontManager.createCloudfrontFunction(
+      'test-function',
+      this,
+      this.props.testFunction,
+      'src/test/common/nodejs/lib/index.ts'
+    )
+
     this.cloudFrontManager.createCloudFrontDistribution(
       'test-distribution',
       this,
@@ -122,7 +133,9 @@ class TestCommonConstruct extends CommonConstruct {
       siteBucket,
       siteLogBucket,
       oai,
-      certificate
+      certificate,
+      undefined,
+      cloudfrontFunction
     )
     distribution.addBehavior('product/*', siteOrigin, {
       edgeLambdas: [
@@ -159,6 +172,7 @@ describe('TestCloudFrontConstruct', () => {
     /* test if number of resources are correctly synthesised */
     template.resourceCountIs('AWS::CloudFront::Distribution', 2)
     template.resourceCountIs('AWS::Lambda::Function', 3)
+    template.resourceCountIs('AWS::CloudFront::Function', 1)
   })
 })
 
@@ -171,6 +185,8 @@ describe('TestCloudFrontConstruct', () => {
     template.hasOutput('testLambdaEdgeEdgeFunctionName', {})
     template.hasOutput('testEdgeDistributionDistributionId', {})
     template.hasOutput('testEdgeDistributionDistributionDomainName', {})
+    template.hasOutput('testFunctionFunctionArn', {})
+    template.hasOutput('testFunctionFunctionName', {})
   })
 })
 describe('TestCloudFrontConstruct', () => {
@@ -348,6 +364,17 @@ describe('TestCloudFrontConstruct', () => {
           MinimumProtocolVersion: 'TLSv1.2_2021',
           SslSupportMethod: 'sni-only',
         },
+      },
+    })
+  })
+})
+
+describe('TestCloudFrontConstruct', () => {
+  test('provisions cloudfront function as expected', () => {
+    template.hasResourceProperties('AWS::CloudFront::Function', {
+      Name: 'test-function-test-function-test',
+      FunctionConfig: {
+        Comment: 'test comment',
       },
     })
   })
