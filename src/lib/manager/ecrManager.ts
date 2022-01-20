@@ -16,9 +16,10 @@ import { createCfnOutput } from '../utils'
  *     super(parent, id, props)
  *     this.props = props
  *     this.ecrManager.createDockerImage('MyImage', this, dockerfilePath)
+ *   }
  * }
  *
- * @see [CDK ECR Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-ecr-readme.html}
+ * @see [CDK ECR Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_ecr-readme.html}
  */
 export class EcrManager {
   /**

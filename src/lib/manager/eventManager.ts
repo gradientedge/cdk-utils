@@ -20,9 +20,10 @@ import { createCfnOutput } from '../utils'
  *     super(parent, id, props)
  *     this.props = props
  *     this.eventManager.createLambdaRule('MyLambdaRule', this, lambdaFunction)
+ *   }
  * }
  *
- * @see [CDK EventBridge Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-events-readme.html}
+ * @see [CDK EventBridge Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_events-readme.html}
  */
 export class EventManager {
   /**

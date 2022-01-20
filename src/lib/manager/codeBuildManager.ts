@@ -3,7 +3,23 @@ import * as codebuild from 'aws-cdk-lib/aws-codebuild'
 import * as cdk from 'aws-cdk-lib'
 
 /**
+ * @stability stable
+ * @category Developer Tools
+ * @summary Provides operations on AWS Code Build.
+ * - A new instance of this class is injected into {@link CommonConstruct} constructor.
+ * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
+ * @example
+ * import { CommonConstruct } from '@gradientedge/cdk-utils'
  *
+ * class CustomConstruct extends CommonConstruct {
+ *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
+ *     super(parent, id, props)
+ *     this.props = props
+ *     this.codeBuildManager.createImageForCloudfrontInvalidation('MyInvalidation', this, './docker ')
+ *   }
+ * }
+ *
+ * @see [CDK Codebuild Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_codebuild-readme.html}
  */
 export class CodeBuildManager {
   /**

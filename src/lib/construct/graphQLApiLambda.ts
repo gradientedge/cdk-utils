@@ -23,6 +23,7 @@ import { Construct } from 'constructs'
  *     this.props = props
  *     this.id = id
  *     this.initResources()
+ *   }
  * }
  *
  * @mermaid

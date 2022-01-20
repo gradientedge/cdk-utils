@@ -30,6 +30,7 @@ import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager'
  *     this.props = props
  *     this.id = id
  *     this.initResources()
+ *   }
  * }
  *
  * @mermaid

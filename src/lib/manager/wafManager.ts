@@ -17,9 +17,10 @@ import { WafIPSetProps, WafWebACLProps } from '../types'
  *     super(parent, id, props)
  *     this.props = props
  *     this.wafManager.createWebAcl('MyWebAcl', this)
+ *   }
  * }
  *
- * @see [CDK WAF Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-waf-readme.html}
+ * @see [CDK WAF Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_waf-readme.html}
  */
 export class WafManager {
   /**

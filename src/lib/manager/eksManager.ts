@@ -19,9 +19,10 @@ import { createCfnOutput } from '../utils'
  *     super(parent, id, props)
  *     this.props = props
  *     this.eksManager.createEksDeployment('MyEksDeployment', this, image, vpc)
+ *   }
  * }
  *
- * @see [CDK EKS Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-eks-readme.html}
+ * @see [CDK EKS Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_eks-readme.html}
  */
 export class EksManager {
   /**

@@ -19,9 +19,10 @@ import { createCfnOutput } from '../utils'
  *     this.props = props
  *     const lambdaFunction = this.lambdaManager.createLambdaFunction('MyFunction', this, role, layers, code)
  *     this.apiManager.createLambdaRestApi('MyCertificate', this, props, lambdaFunction)
+ *   }
  * }
  *
- * @see [CDK API Gateway Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-apigateway-readme.html}
+ * @see [CDK API Gateway Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_apigateway-readme.html}
  */
 export class ApiManager {
   /**

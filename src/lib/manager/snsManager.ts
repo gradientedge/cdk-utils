@@ -19,9 +19,10 @@ import { createCfnOutput } from '../utils'
  *     super(parent, id, props)
  *     this.props = props
  *     this.snsManager.createEmailNotificationService('MySns', 'eu-west-1', ['test@example.com'])
+ *   }
  * }
  *
- * @see [CDK Simple Notification Service Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-sns-readme.html}
+ * @see [CDK Simple Notification Service Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_sns-readme.html}
  */
 export class SnsManager {
   /**

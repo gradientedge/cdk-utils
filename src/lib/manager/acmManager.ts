@@ -19,9 +19,10 @@ import { createCfnOutput } from '../utils'
  *     super(parent, id, props)
  *     this.props = props
  *     this.acmManager.createCertificate('MyCertificate', this)
+ *   }
  * }
  *
- * @see [CDK Certificate Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-certificatemanager-readme.html}
+ * @see [CDK Certificate Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_certificatemanager-readme.html}
  */
 export class AcmManager {
   /**

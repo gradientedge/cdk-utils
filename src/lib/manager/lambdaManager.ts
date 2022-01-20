@@ -23,9 +23,10 @@ import { CloudFrontManager } from './cloudFrontManager'
  *     super(parent, id, props)
  *     this.props = props
  *     this.lambdaManager.createLambdaFunction('MyFunction', this, role, layers, code)
+ *   }
  * }
  *
- * @see [CDK Lambda Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-lambda-readme.html}
+ * @see [CDK Lambda Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_lambda-readme.html}
  */
 export class LambdaManager {
   /**

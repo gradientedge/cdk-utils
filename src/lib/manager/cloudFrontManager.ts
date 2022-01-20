@@ -32,9 +32,10 @@ import * as cr from 'aws-cdk-lib/custom-resources'
  *       originAccessIdentity,
  *       certificate
  *     )
+ *   }
  * }
  *
- * @see [CDK CloudFront Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-cloudfront-readme.html}
+ * @see [CDK CloudFront Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_cloudfront-readme.html}
  */
 export class CloudFrontManager {
   public createOriginAccessIdentity(id: string, scope: CommonConstruct, accessBucket?: s3.IBucket) {

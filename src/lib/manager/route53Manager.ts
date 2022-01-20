@@ -20,9 +20,10 @@ import { createCfnOutput } from '../utils'
  *     super(parent, id, props)
  *     this.props = props
  *     this.route53Manager.createHostedZone('MyHostedZone', this)
+ *   }
  * }
  *
- * @see [CDK Route53 Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-route53-readme.html}
+ * @see [CDK Route53 Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_route53-readme.html}
  */
 export class Route53Manager {
   /**

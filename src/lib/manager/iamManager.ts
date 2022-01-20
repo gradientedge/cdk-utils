@@ -20,9 +20,10 @@ import { createCfnOutput } from '../utils'
  *     super(parent, id, props)
  *     this.props = props
  *     this.iamManager.createRoleForEcsEvent('MyEcsRole', this, cluster, task)
+ *   }
  * }
  *
- * @see [CDK IAM Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-iam-readme.html}
+ * @see [CDK IAM Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_iam-readme.html}
  */
 export class IamManager {
   /**
