@@ -22,6 +22,7 @@ import * as origins from 'aws-cdk-lib/aws-cloudfront-origins'
  *     this.props = props
  *     this.id = id
  *     this.initResources()
+ *   }
  * }
  *
  * @mermaid

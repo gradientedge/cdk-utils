@@ -26,9 +26,10 @@ import { createCfnOutput } from '../utils'
  *       logBucket,
  *       logBucketPolicy
  *     )
+ *   }
  * }
  *
- * @see [CDK CloudTrail Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-cloudtrail-readme.html}
+ * @see [CDK CloudTrail Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_cloudtrail-readme.html}
  */
 export class CloudTrailManager {
   /**

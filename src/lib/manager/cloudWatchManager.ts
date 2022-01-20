@@ -28,9 +28,10 @@ import { CloudWatchWidgetType, createCfnOutput } from '../utils'
  *     super(parent, id, props)
  *     this.props = props
  *     this.cloudWatchManager.createAlarmForMetric('MyAlarm', this, metric)
+ *   }
  * }
  *
- * @see [CDK CloudWatch Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-cloudwatch-readme.html}
+ * @see [CDK CloudWatch Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_cloudwatch-readme.html}
  */
 export class CloudWatchManager {
   /**

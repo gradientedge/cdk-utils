@@ -45,9 +45,10 @@ export const ArnsByRegion: { [key: string]: string } = {
  *     super(parent, id, props)
  *     this.props = props
  *     this.appConfigManager.createApplication('MyApplication', this)
+ *   }
  * }
  *
- * @see [CDK AppConfig Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-appconfig-readme.html}
+ * @see [CDK AppConfig Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_appconfig-readme.html}
  */
 export class AppConfigManager {
   /**

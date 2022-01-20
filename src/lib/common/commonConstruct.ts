@@ -30,14 +30,14 @@ import { CodeBuildManager } from '../manager/codeBuildManager'
  * @summary Common construct to use as a base for all higher level constructs.
  *
  * @example
- * import { CommonConstruct } from '@gradientedge/cdk-utils'
+ * import { CommonConstruct } from '@gradientedge/cdk-utils';
  *
  * class CustomConstruct extends CommonConstruct {
  *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
- *     super(parent, id, props)
- *     this.props = props
- *     // provision resources here...
- * }
+ *     super(parent, id, props);
+ *     this.props = props;
+ *   };
+ * };
  *
  * @mermaid
  *   graph LR;

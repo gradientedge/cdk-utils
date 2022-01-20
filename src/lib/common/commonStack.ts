@@ -17,7 +17,8 @@ const fs = require('fs')
  * class CustomStack extends CommonStack {
  *   constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
  *     super(parent, name, props)
- *     // provision resources / initialise your contructs here...
+ *     // provision resources
+ *   }
  * }
  *
  * @mermaid

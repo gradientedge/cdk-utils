@@ -21,9 +21,10 @@ import { createCfnOutput } from '../utils'
  *     super(parent, id, props)
  *     this.props = props
  *     this.s3Manager.createS3Bucket('MyBucket', this)
+ *   }
  * }
  *
- * @see [CDK S3 Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-s3-readme.html}
+ * @see [CDK S3 Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_s3-readme.html}
  */
 export class S3Manager {
   /**

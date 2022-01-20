@@ -18,9 +18,10 @@ import { SSMParameterReaderProps } from '../types'
  *     super(parent, id, props)
  *     this.props = props
  *     this.acmManager.writeStringToParameters('MyParameter', this, ...props)
+ *   }
  * }
  *
- * @see [CDK Systems Manager Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-ssm-readme.html}
+ * @see [CDK Systems Manager Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_ssm-readme.html}
  */
 export class SsmManager {
   /**

@@ -18,10 +18,11 @@ const fs = require('fs')
  *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
  *     super(parent, id, props)
  *     this.props = props
- *     this.s3Manager.loadSecret('MySecretName', 'eu-west-1')
+ *     this.secretsManager.loadSecret('MySecretName', 'eu-west-1')
+ *   }
  * }
  *
- * @see [CDK Secrets Manager Module]{@link https://docs.aws.amazon.com/cdk/api/latest/docs/aws-secretsmanager-readme.html}
+ * @see [CDK Secrets Manager Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_secretsmanager-readme.html}
  */
 export class SecretsManager {
   /**
