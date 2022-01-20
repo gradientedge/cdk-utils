@@ -32,7 +32,7 @@
     "fix": "yarn prettify && eslint --fix **/*.ts",
     "prettier": "npx prettier --check \"**/*.{ts,json,md}\"",
     "prettify": "npx prettier --write \"**/*.{ts,json,md}\"",
-    "test": "yarn build && npx jest",
+    "test": "npx jest",
     "validate": "yarn prettier && yarn test",
     "watch": "npx tsc --watch"
   },
