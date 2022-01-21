@@ -120,7 +120,7 @@ export class CloudFrontManager {
    * @param {cloudfront.OriginAccessIdentity?} oai
    * @param {acm.ICertificate?} certificate
    * @param {string[]?} aliases
-   * @param {cloudfront.Function?} cloudfrontFunction
+   * @param {cloudfront.FunctionAssociation?} defaultFunctionAssociations
    */
   public createDistributionWithS3Origin(
     id: string,
@@ -132,7 +132,7 @@ export class CloudFrontManager {
     oai?: cloudfront.OriginAccessIdentity,
     certificate?: acm.ICertificate,
     aliases?: string[],
-    cloudfrontFunction?: cloudfront.Function
+    defaultFunctionAssociations?: cloudfront.FunctionAssociation[]
   ) {
     const distribution = new cloudfront.Distribution(scope, `${id}`, {
       certificate: certificate,
@@ -141,14 +141,7 @@ export class CloudFrontManager {
         cachePolicy: props.defaultBehavior ? props.defaultBehavior.cachePolicy : undefined,
         origin: origin,
         originRequestPolicy: props.defaultBehavior ? props.defaultBehavior.originRequestPolicy : undefined,
-        functionAssociations: cloudfrontFunction
-          ? [
-              {
-                eventType: cloudfront.FunctionEventType.VIEWER_REQUEST,
-                function: cloudfrontFunction,
-              },
-            ]
-          : undefined,
+        functionAssociations: defaultFunctionAssociations ?? undefined,
       },
       additionalBehaviors: props.additionalBehaviors,
       defaultRootObject: props.defaultRootObject,
@@ -182,7 +175,7 @@ export class CloudFrontManager {
    * @param {string[]} domainNames
    * @param {s3.IBucket?} logBucket
    * @param {acm.ICertificate?} certificate
-   * @param {cloudfront.Function?} cloudfrontFunction
+   * @param {cloudfront.FunctionAssociation?} defaultFunctionAssociations
    */
   public createDistributionWithHttpOrigin(
     id: string,
@@ -192,7 +185,7 @@ export class CloudFrontManager {
     domainNames: string[],
     logBucket?: s3.IBucket,
     certificate?: acm.ICertificate,
-    cloudfrontFunction?: cloudfront.Function
+    defaultFunctionAssociations?: cloudfront.FunctionAssociation[]
   ) {
     const distribution = new cloudfront.Distribution(scope, `${id}`, {
       certificate: certificate,
@@ -201,14 +194,7 @@ export class CloudFrontManager {
         cachePolicy: props.defaultBehavior ? props.defaultBehavior.cachePolicy : undefined,
         origin: origin,
         originRequestPolicy: props.defaultBehavior ? props.defaultBehavior.originRequestPolicy : undefined,
-        functionAssociations: cloudfrontFunction
-          ? [
-              {
-                eventType: cloudfront.FunctionEventType.VIEWER_REQUEST,
-                function: cloudfrontFunction,
-              },
-            ]
-          : undefined,
+        functionAssociations: defaultFunctionAssociations ?? undefined,
       },
       additionalBehaviors: props.additionalBehaviors,
       defaultRootObject: props.defaultRootObject,
@@ -327,20 +313,14 @@ export class CloudFrontManager {
    * @param {string} id scoped id of the resource
    * @param {CommonConstruct} scope scope in which this resource is defined
    * @param {CloudfrontFunctionProps} props
-   * @param {string} functionFilePath
    */
-  public createCloudfrontFunction(
-    id: string,
-    scope: CommonConstruct,
-    props: CloudfrontFunctionProps,
-    functionFilePath: string
-  ) {
+  public createCloudfrontFunction(id: string, scope: CommonConstruct, props: CloudfrontFunctionProps) {
     const cloudfrontFunction = new cloudfront.Function(scope, `${id}`, {
       code: cloudfront.FunctionCode.fromFile({
-        filePath: functionFilePath,
+        filePath: props.functionFilePath,
       }),
       comment: props.comment,
-      functionName: `${id}-${props.functionName}-${scope.props.stage}`,
+      functionName: `${props.functionName}-${scope.props.stage}`,
     })
 
     createCfnOutput(`${id}-functionArn`, scope, cloudfrontFunction.functionArn)

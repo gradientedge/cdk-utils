@@ -52,7 +52,6 @@ class TestCommonStack extends CommonStack {
         siteAliases: [`${this.node.tryGetContext('siteSubDomain')}.${this.fullyQualifiedDomain()}`],
         testAttribute: this.node.tryGetContext('testAttribute'),
         siteCloudfrontFunctionProps: this.node.tryGetContext('testStaticSite'),
-        siteFunctionFilePath: 'src/test/common/nodejs/lib/index.ts',
       },
     }
   }
@@ -255,7 +254,7 @@ describe('TestStaticSiteConstruct', () => {
 describe('TestStaticSiteConstruct', () => {
   test('provisions cloudfront function as expected', () => {
     template.hasResourceProperties('AWS::CloudFront::Function', {
-      Name: 'test-static-site-function-test-static-function-test',
+      Name: 'test-static-function-test',
       FunctionConfig: {
         Comment: 'test comment',
       },

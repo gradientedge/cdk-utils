@@ -138,7 +138,10 @@ export interface CloudFrontProps extends cloudfront.CloudFrontWebDistributionPro
 /**
  * @category Networking & Content Delivery
  */
-export interface CloudfrontFunctionProps extends cloudfront.FunctionProps {}
+export interface CloudfrontFunctionProps extends cloudfront.FunctionProps {
+  functionFilePath: string
+  eventType: string
+}
 
 /**
  * @category Networking & Content Delivery

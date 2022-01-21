@@ -100,10 +100,14 @@ class TestCommonConstruct extends CommonConstruct {
     const cloudfrontFunction = this.cloudFrontManager.createCloudfrontFunction(
       'test-function',
       this,
-      this.props.testFunction,
-      'src/test/common/nodejs/lib/index.ts'
+      this.props.testFunction
     )
-
+    const defaultFunctionAssociations = [
+      {
+        function: cloudfrontFunction,
+        eventType: cloudfront.FunctionEventType.VIEWER_RESPONSE,
+      },
+    ]
     this.cloudFrontManager.createCloudFrontDistribution(
       'test-distribution',
       this,
@@ -135,7 +139,7 @@ class TestCommonConstruct extends CommonConstruct {
       oai,
       certificate,
       undefined,
-      cloudfrontFunction
+      defaultFunctionAssociations
     )
     distribution.addBehavior('product/*', siteOrigin, {
       edgeLambdas: [
@@ -372,7 +376,7 @@ describe('TestCloudFrontConstruct', () => {
 describe('TestCloudFrontConstruct', () => {
   test('provisions cloudfront function as expected', () => {
     template.hasResourceProperties('AWS::CloudFront::Function', {
-      Name: 'test-function-test-function-test',
+      Name: 'test-function-test',
       FunctionConfig: {
         Comment: 'test comment',
       },

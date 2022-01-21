@@ -46,6 +46,7 @@ export class StaticSite extends CommonConstruct {
   siteLogBucket: s3.IBucket
   siteOriginAccessIdentity: cloudfront.OriginAccessIdentity
   siteCloudfrontFunction: cloudfront.Function
+  siteFunctionAssociations: cloudfront.FunctionAssociation[]
 
   /**
    * @summary Constructor to initialise the StaticSite Construct
@@ -137,13 +138,19 @@ export class StaticSite extends CommonConstruct {
    * @protected
    */
   protected createSiteCloudfrontFunction() {
-    if (this.props.siteCloudfrontFunctionProps && this.props.siteFunctionFilePath) {
+    if (this.props.siteCloudfrontFunctionProps) {
       this.siteCloudfrontFunction = this.cloudFrontManager.createCloudfrontFunction(
         `${this.id}-function`,
         this,
-        this.props.siteCloudfrontFunctionProps,
-        this.props.siteFunctionFilePath
+        this.props.siteCloudfrontFunctionProps
       )
+
+      this.siteFunctionAssociations = [
+        {
+          function: this.siteCloudfrontFunction,
+          eventType: cloudfront.FunctionEventType.VIEWER_REQUEST,
+        },
+      ]
     }
   }
 
@@ -164,7 +171,7 @@ export class StaticSite extends CommonConstruct {
       this.siteOriginAccessIdentity,
       this.siteCertificate,
       this.props.siteAliases,
-      this.siteCloudfrontFunction
+      this.siteFunctionAssociations
     )
   }
 

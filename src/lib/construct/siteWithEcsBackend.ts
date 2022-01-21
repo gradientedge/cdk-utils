@@ -68,6 +68,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
   siteExternalDomainName: string
   siteDomainNames: string[]
   siteCloudfrontFunction: cloudfront.Function
+  siteFunctionAssociations: cloudfront.FunctionAssociation[]
 
   /**
    * @summary Constructor to initialise the SiteWithEcsBackend Construct
@@ -322,13 +323,19 @@ export class SiteWithEcsBackend extends CommonConstruct {
    * @protected
    */
   protected createSiteCloudfrontFunction() {
-    if (this.props.siteCloudfrontFunctionProps && this.props.siteFunctionFilePath) {
+    if (this.props.siteCloudfrontFunctionProps) {
       this.siteCloudfrontFunction = this.cloudFrontManager.createCloudfrontFunction(
         `${this.id}-function`,
         this,
-        this.props.siteCloudfrontFunctionProps,
-        this.props.siteFunctionFilePath
+        this.props.siteCloudfrontFunctionProps
       )
+
+      this.siteFunctionAssociations = [
+        {
+          function: this.siteCloudfrontFunction,
+          eventType: cloudfront.FunctionEventType.VIEWER_REQUEST,
+        },
+      ]
     }
   }
 
@@ -345,7 +352,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
       this.siteDomainNames,
       this.siteLogBucket,
       this.siteCertificate,
-      this.siteCloudfrontFunction
+      this.siteFunctionAssociations
     )
   }
 

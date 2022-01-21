@@ -70,7 +70,6 @@ class TestCommonStack extends CommonStack {
         timezone: this.node.tryGetContext('timezone'),
         useExistingHostedZone: this.node.tryGetContext('useExistingHostedZone'),
         siteCloudfrontFunctionProps: this.node.tryGetContext('testSite'),
-        siteFunctionFilePath: 'src/test/common/nodejs/lib/index.ts',
       },
     }
   }
@@ -332,7 +331,7 @@ describe('TestSiteWithEcsBackendConstruct', () => {
 describe('TestSiteWithEcsBackendConstruct', () => {
   test('provisions cloudfront function as expected', () => {
     template.hasResourceProperties('AWS::CloudFront::Function', {
-      Name: 'test-site-function-test-site-function-test',
+      Name: 'test-site-function-test',
       FunctionConfig: {
         Comment: 'test comment',
       },
