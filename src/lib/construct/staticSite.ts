@@ -72,6 +72,7 @@ export class StaticSite extends CommonConstruct {
     this.createSiteBucket()
     this.createSiteOrigin()
     this.createSiteCloudfrontFunction()
+    this.resolveSiteFunctionAssociations()
     this.createSiteDistribution()
     this.createSiteRouteAssets()
     this.deploySite()
@@ -144,7 +145,15 @@ export class StaticSite extends CommonConstruct {
         this,
         this.props.siteCloudfrontFunctionProps
       )
+    }
+  }
 
+  /**
+   * @summary Method to create a site cloudfront function associations
+   * @protected
+   */
+  protected resolveSiteFunctionAssociations() {
+    if (this.props.siteCloudfrontFunctionProps) {
       this.siteFunctionAssociations = [
         {
           function: this.siteCloudfrontFunction,

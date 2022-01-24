@@ -104,6 +104,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
     this.createSiteLogBucket()
     this.createSiteOrigin()
     this.createSiteCloudfrontFunction()
+    this.resolveSiteFunctionAssociations()
     this.createDistribution()
     this.createNetworkMappings()
     this.invalidateDistributionCache()
@@ -329,7 +330,15 @@ export class SiteWithEcsBackend extends CommonConstruct {
         this,
         this.props.siteCloudfrontFunctionProps
       )
+    }
+  }
 
+  /**
+   * @summary Method to create a site cloudfront function associations
+   * @protected
+   */
+  protected resolveSiteFunctionAssociations() {
+    if (this.props.siteCloudfrontFunctionProps) {
       this.siteFunctionAssociations = [
         {
           function: this.siteCloudfrontFunction,
