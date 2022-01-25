@@ -68,6 +68,8 @@ export class SiteWithEcsBackend extends CommonConstruct {
   siteInternalDomainName: string
   siteExternalDomainName: string
   siteDomainNames: string[]
+  siteCloudfrontFunction: cloudfront.Function
+  siteFunctionAssociations: cloudfront.FunctionAssociation[]
 
   /**
    * @summary Constructor to initialise the SiteWithEcsBackend Construct
@@ -102,6 +104,8 @@ export class SiteWithEcsBackend extends CommonConstruct {
     this.createEcsService()
     this.createSiteLogBucket()
     this.createSiteOrigin()
+    this.createSiteCloudfrontFunction()
+    this.resolveSiteFunctionAssociations()
     this.createDistribution()
     this.createNetworkMappings()
     this.invalidateDistributionCache()
@@ -317,6 +321,35 @@ export class SiteWithEcsBackend extends CommonConstruct {
   }
 
   /**
+   * @summary Method to create a site cloudfront function
+   * @protected
+   */
+  protected createSiteCloudfrontFunction() {
+    if (this.props.siteCloudfrontFunctionProps) {
+      this.siteCloudfrontFunction = this.cloudFrontManager.createCloudfrontFunction(
+        `${this.id}-function`,
+        this,
+        this.props.siteCloudfrontFunctionProps
+      )
+    }
+  }
+
+  /**
+   * @summary Method to create a site cloudfront function associations
+   * @protected
+   */
+  protected resolveSiteFunctionAssociations() {
+    if (this.props.siteCloudfrontFunctionProps) {
+      this.siteFunctionAssociations = [
+        {
+          function: this.siteCloudfrontFunction,
+          eventType: cloudfront.FunctionEventType.VIEWER_REQUEST,
+        },
+      ]
+    }
+  }
+
+  /**
    * Method to create Site distribution
    * @protected
    */
@@ -328,7 +361,8 @@ export class SiteWithEcsBackend extends CommonConstruct {
       this.siteOrigin,
       this.siteDomainNames,
       this.siteLogBucket,
-      this.siteCertificate
+      this.siteCertificate,
+      this.siteFunctionAssociations
     )
   }
 

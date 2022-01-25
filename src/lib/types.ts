@@ -50,6 +50,8 @@ export interface SiteWithEcsBackendProps extends CommonStackProps {
   siteCertificate: AcmProps
   siteCluster: EcsClusterProps
   siteDistribution: DistributionProps
+  siteCloudfrontFunctionProps?: CloudfrontFunctionProps
+  siteFunctionFilePath?: string
   siteEcsContainerImagePath: string
   siteLog: LogProps
   siteLogBucket: S3BucketProps
@@ -69,6 +71,8 @@ export interface StaticSiteProps extends CommonStackProps {
   siteBucket: S3BucketProps
   siteLogBucket: S3BucketProps
   siteDistribution?: DistributionProps
+  siteCloudfrontFunctionProps?: CloudfrontFunctionProps
+  siteFunctionFilePath?: string
   siteSource: s3deploy.ISource
   siteHostedZoneDomainName?: string
   siteRecordName?: string
@@ -130,6 +134,14 @@ export interface SSMParameterReaderProps {
  * @category Networking & Content Delivery
  */
 export interface CloudFrontProps extends cloudfront.CloudFrontWebDistributionProps {}
+
+/**
+ * @category Networking & Content Delivery
+ */
+export interface CloudfrontFunctionProps extends cloudfront.FunctionProps {
+  functionFilePath: string
+  eventType: string
+}
 
 /**
  * @category Networking & Content Delivery

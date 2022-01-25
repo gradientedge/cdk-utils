@@ -1,0 +1,20 @@
+{
+  "siteFunction": {
+    "functionName": "test-function",
+    "comment": "test comment",
+    "functionFilePath": "src/test/common/nodejs/lib/index.ts",
+    "eventType": "cloudfront.FunctionEventType.VIEWER_REQUEST"
+  },
+  "testSite": {
+    "functionName": "test-site-function",
+    "comment": "test comment",
+    "functionFilePath": "src/test/common/nodejs/lib/index.ts",
+    "eventType": "cloudfront.FunctionEventType.VIEWER_REQUEST"
+  },
+  "testStaticSite": {
+    "functionName": "test-static-function",
+    "comment": "test comment",
+    "functionFilePath": "src/test/common/nodejs/lib/index.ts",
+    "eventType": "cloudfront.FunctionEventType.VIEWER_REQUEST"
+  }
+}
