@@ -1,29 +1,31 @@
 import * as cdk from 'aws-cdk-lib'
 import * as watch from 'aws-cdk-lib/aws-cloudwatch'
 import { IMetric } from 'aws-cdk-lib/aws-cloudwatch'
-import {
-  AlarmProps,
-  AlarmStatusWidgetProps,
-  DashboardProps,
-  GraphWidgetProps,
-  LogQueryWidgetProps,
-  MetricProps,
-  NumericWidgetProps,
-  TextWidgetProps,
-} from '../types'
-import { CommonConstruct } from '../common/commonConstruct'
-import { CloudWatchWidgetType, createCfnOutput } from '../utils'
+import * as common from '../../common'
+import * as types from '../../types'
+import * as utils from '../../utils'
+
+/**
+ * @category Utils
+ */
+export enum CloudWatchWidgetType {
+  Text = 'Text',
+  SingleValue = 'SingleValue',
+  Graph = 'Graph',
+  AlarmStatus = 'AlarmStatus',
+  LogQuery = 'LogQuery',
+}
 
 /**
  * @stability stable
  * @category Management & Governance
  * @summary Provides operations on AWS CloudWatch.
- * - A new instance of this class is injected into {@link CommonConstruct} constructor.
- * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
+ * - A new instance of this class is injected into {@link common.CommonConstruct} constructor.
+ * - If a custom construct extends {@link common.CommonConstruct}, an instance is available within the context.
  * @example
  * import * as common from '@gradientedge/cdk-utils'
  *
- * class CustomConstruct extends common.CommonConstruct {
+ * class CustomConstruct extends common.common.CommonConstruct {
  *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
  *     super(parent, id, props)
  *     this.props = props
@@ -37,10 +39,10 @@ export class CloudWatchManager {
   /**
    * @summary Method to create a cloudwatch alarm for a given expression
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {AlarmProps} props
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.AlarmProps} props
    */
-  public createAlarmForExpression(id: string, scope: CommonConstruct, props: AlarmProps) {
+  public createAlarmForExpression(id: string, scope: common.CommonConstruct, props: types.AlarmProps) {
     if (!props) throw `Alarm props undefined`
 
     if (!props.expression) throw `Could not find expression for Alarm props for id:${id}`
@@ -66,8 +68,8 @@ export class CloudWatchManager {
       datapointsToAlarm: props.datapointsToAlarm,
     })
 
-    createCfnOutput(`${id}-alarmArn`, scope, alarm.alarmArn)
-    createCfnOutput(`${id}-alarmName`, scope, alarm.alarmName)
+    utils.createCfnOutput(`${id}-alarmArn`, scope, alarm.alarmArn)
+    utils.createCfnOutput(`${id}-alarmName`, scope, alarm.alarmName)
 
     return alarm
   }
@@ -75,11 +77,16 @@ export class CloudWatchManager {
   /**
    * @summary Method to create a cloudwatch alarm for a given metric
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {AlarmProps} props
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.AlarmProps} props
    * @param metric
    */
-  public createAlarmForMetric(id: string, scope: CommonConstruct, props: AlarmProps, metric: watch.Metric) {
+  public createAlarmForMetric(
+    id: string,
+    scope: common.CommonConstruct,
+    props: types.AlarmProps,
+    metric: watch.Metric
+  ) {
     if (!props) throw `Alarm props undefined`
 
     const alarm = metric.createAlarm(scope, `${id}`, {
@@ -92,8 +99,8 @@ export class CloudWatchManager {
       datapointsToAlarm: props.datapointsToAlarm,
     })
 
-    createCfnOutput(`${id}-alarmArn`, scope, alarm.alarmArn)
-    createCfnOutput(`${id}-alarmName`, scope, alarm.alarmName)
+    utils.createCfnOutput(`${id}-alarmArn`, scope, alarm.alarmArn)
+    utils.createCfnOutput(`${id}-alarmName`, scope, alarm.alarmName)
 
     return alarm
   }
@@ -101,11 +108,16 @@ export class CloudWatchManager {
   /**
    * @summary Method to create a cloudwatch dashboard
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {DashboardProps} props
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.DashboardProps} props
    * @param widgets
    */
-  public createDashboard(id: string, scope: CommonConstruct, props: DashboardProps, widgets?: watch.IWidget[][]) {
+  public createDashboard(
+    id: string,
+    scope: common.CommonConstruct,
+    props: types.DashboardProps,
+    widgets?: watch.IWidget[][]
+  ) {
     if (!props) throw `Dashboard props undefined`
 
     const dashboard = new watch.Dashboard(scope, `${id}`, {
@@ -116,17 +128,17 @@ export class CloudWatchManager {
       widgets: widgets,
     })
 
-    createCfnOutput(`${id}-dashboardName`, scope, props.dashboardName)
+    utils.createCfnOutput(`${id}-dashboardName`, scope, props.dashboardName)
 
     return dashboard
   }
 
   /**
    * @summary Method to create cloudwatch widgets
-   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
    * @param props
    */
-  public createWidgets(scope: CommonConstruct, props: any[]) {
+  public createWidgets(scope: common.CommonConstruct, props: any[]) {
     if (!props || props.length == 0) throw `Widget props undefined`
 
     const widgets: any = []
@@ -138,10 +150,10 @@ export class CloudWatchManager {
   /**
    * @summary Method to create a cloudwatch widget
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
    * @param props
    */
-  public createWidget(id: string, scope: CommonConstruct, props: any) {
+  public createWidget(id: string, scope: common.CommonConstruct, props: any) {
     if (!props) throw `Widget props undefined`
 
     const metrics = this.determineMetrics(scope, props.metricProps)
@@ -168,10 +180,10 @@ export class CloudWatchManager {
   /**
    * @summary Method to create a cloudwatch text widget
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {TextWidgetProps} props
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.TextWidgetProps} props
    */
-  public createTextWidget(id: string, scope: CommonConstruct, props: TextWidgetProps) {
+  public createTextWidget(id: string, scope: common.CommonConstruct, props: types.TextWidgetProps) {
     const widget = new watch.TextWidget({
       markdown: props.markdown,
       width: props.width,
@@ -186,11 +198,16 @@ export class CloudWatchManager {
   /**
    * @summary Method to create a cloudwatch numeric widget
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {NumericWidgetProps} props
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.NumericWidgetProps} props
    * @param metrics
    */
-  public createSingleValueWidget(id: string, scope: CommonConstruct, props: NumericWidgetProps, metrics: IMetric[]) {
+  public createSingleValueWidget(
+    id: string,
+    scope: common.CommonConstruct,
+    props: types.NumericWidgetProps,
+    metrics: IMetric[]
+  ) {
     const widget = new watch.SingleValueWidget({
       metrics: metrics,
       setPeriodToTimeRange: props.setPeriodToTimeRange,
@@ -208,15 +225,15 @@ export class CloudWatchManager {
   /**
    * @summary Method to create a cloudwatch graph widget
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {GraphWidgetProps} props
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.GraphWidgetProps} props
    * @param leftYMetrics
    * @param rightYMetrics
    */
   public createGraphWidget(
     id: string,
-    scope: CommonConstruct,
-    props: GraphWidgetProps,
+    scope: common.CommonConstruct,
+    props: types.GraphWidgetProps,
     leftYMetrics?: IMetric[],
     rightYMetrics?: IMetric[]
   ) {
@@ -244,14 +261,14 @@ export class CloudWatchManager {
   /**
    * @summary Method to create a cloudwatch alarm status widget
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {AlarmStatusWidgetProps} props
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.AlarmStatusWidgetProps} props
    * @param {watch.IAlarm[]} alarms
    */
   public createAlarmStatusWidget(
     id: string,
-    scope: CommonConstruct,
-    props: AlarmStatusWidgetProps,
+    scope: common.CommonConstruct,
+    props: types.AlarmStatusWidgetProps,
     alarms: watch.IAlarm[]
   ) {
     const widget = new watch.AlarmStatusWidget({
@@ -269,11 +286,16 @@ export class CloudWatchManager {
   /**
    * @summary Method to create a cloudwatch log query widget
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {LogQueryWidgetProps} props
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.LogQueryWidgetProps} props
    * @param {string[]} logGroupNames
    */
-  public createLogQueryWidget(id: string, scope: CommonConstruct, props: LogQueryWidgetProps, logGroupNames: string[]) {
+  public createLogQueryWidget(
+    id: string,
+    scope: common.CommonConstruct,
+    props: types.LogQueryWidgetProps,
+    logGroupNames: string[]
+  ) {
     const widget = new watch.LogQueryWidget({
       logGroupNames: logGroupNames,
       queryString: props.queryString,
@@ -291,13 +313,13 @@ export class CloudWatchManager {
 
   /**
    * @summary Utility method to determine the metrics and dimensions
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {MetricProps[]} metricProps
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.MetricProps[]} metricProps
    */
-  private determineMetrics(scope: CommonConstruct, metricProps: MetricProps[]) {
+  private determineMetrics(scope: common.CommonConstruct, metricProps: types.MetricProps[]) {
     const metrics: watch.IMetric[] = []
     if (metricProps) {
-      metricProps.forEach((metricProp: MetricProps) => {
+      metricProps.forEach((metricProp: types.MetricProps) => {
         let metricDimensions: watch.DimensionHash = metricProp.dimensionsMap || {}
         if (metricProp.functionName) {
           metricDimensions = {
@@ -350,10 +372,10 @@ export class CloudWatchManager {
   /**
    * @summary Utility method to determine the configured alarms
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
    * @param {watch.AlarmProps[]} alarmProps
    */
-  private determineAlarms(id: string, scope: CommonConstruct, alarmProps: watch.AlarmProps[]) {
+  private determineAlarms(id: string, scope: common.CommonConstruct, alarmProps: watch.AlarmProps[]) {
     const alarms: watch.IAlarm[] = []
     if (alarmProps) {
       alarmProps.forEach((alarmProp: watch.AlarmProps) => {

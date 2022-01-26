@@ -1,13 +1,13 @@
 import * as cdk from 'aws-cdk-lib'
+import { Template } from 'aws-cdk-lib/assertions'
 import * as apig from 'aws-cdk-lib/aws-apigateway'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import { Construct } from 'constructs'
-import { Template } from 'aws-cdk-lib/assertions'
-import { GraphQlApiLambdaProps } from '../../lib/types'
-import { CommonStack } from '../../lib/common/commonStack'
+import * as common from '../../lib/common'
 import { GraphQLApiLambda } from '../../lib/construct/graphQLApiLambda'
+import * as types from '../../lib/types'
 
-interface testGraphqlProps extends GraphQlApiLambdaProps {
+interface testGraphqlProps extends types.GraphQlApiLambdaProps {
   testAttribute?: string
 }
 
@@ -27,7 +27,7 @@ const testGraphqlProps = {
   stageContextPath: 'src/test/common/cdkEnv',
 }
 
-class TestCommonStack extends CommonStack {
+class TestCommonStack extends common.CommonStack {
   declare props: testGraphqlProps
 
   constructor(parent: cdk.App, name: string, props: cdk.StackProps) {

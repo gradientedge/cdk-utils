@@ -3,20 +3,20 @@ import * as cloudfront from 'aws-cdk-lib/aws-cloudfront'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import * as s3 from 'aws-cdk-lib/aws-s3'
 import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment'
-import { CommonConstruct } from '../common/commonConstruct'
-import { LifecycleRule, S3BucketProps } from '../types'
-import { createCfnOutput } from '../utils'
+import * as common from '../../common'
+import * as types from '../../types'
+import * as utils from '../../utils'
 
 /**
  * @stability stable
  * @category Storage
  * @summary Provides operations on AWS S3.
- * - A new instance of this class is injected into {@link CommonConstruct} constructor.
- * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
+ * - A new instance of this class is injected into {@link common.CommonConstruct} constructor.
+ * - If a custom construct extends {@link common.CommonConstruct}, an instance is available within the context.
  * @example
  * import * as common from '@gradientedge/cdk-utils'
  *
- * class CustomConstruct extends common.CommonConstruct {
+ * class CustomConstruct extends common.common.CommonConstruct {
  *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
  *     super(parent, id, props)
  *     this.props = props
@@ -29,13 +29,13 @@ import { createCfnOutput } from '../utils'
 export class S3Manager {
   /**
    * @summary Method to determine S3 Bucket lifecycle properties
-   * @param {S3BucketProps} props bucket properties
+   * @param {types.S3BucketProps} props bucket properties
    * @private
    */
-  protected determineBucketLifecycleRules(props: S3BucketProps) {
+  protected determineBucketLifecycleRules(props: types.S3BucketProps) {
     if (!props.lifecycleRules) return undefined
 
-    const bucketLifecycleRules: LifecycleRule[] = []
+    const bucketLifecycleRules: types.LifecycleRule[] = []
     props.lifecycleRules.forEach(lifecycleRule => {
       bucketLifecycleRules.push({
         id: lifecycleRule.id,
@@ -59,11 +59,11 @@ export class S3Manager {
 
   /**
    * @summary Method to determine the bucket name
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {S3BucketProps} props bucket properties
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.S3BucketProps} props bucket properties
    * @private
    */
-  protected static determineBucketName(scope: CommonConstruct, props: S3BucketProps) {
+  protected static determineBucketName(scope: common.CommonConstruct, props: types.S3BucketProps) {
     return scope.isProductionStage()
       ? `${props.bucketName}.${scope.fullyQualifiedDomainName}`
       : `${props.bucketName}-${scope.props.stage}.${scope.fullyQualifiedDomainName}`
@@ -71,11 +71,11 @@ export class S3Manager {
 
   /**
    * @summary Method to determine the log bucket name
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {S3BucketProps} props bucket properties
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.S3BucketProps} props bucket properties
    * @private
    */
-  protected static determineLogBucketName(scope: CommonConstruct, props: S3BucketProps) {
+  protected static determineLogBucketName(scope: common.CommonConstruct, props: types.S3BucketProps) {
     return scope.isProductionStage()
       ? `${props.logBucketName}.${scope.fullyQualifiedDomainName}`
       : `${props.logBucketName}-${scope.props.stage}.${scope.fullyQualifiedDomainName}`
@@ -84,10 +84,10 @@ export class S3Manager {
   /**
    * @summary Method to create a s3 bucket
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {S3BucketProps} props bucket properties
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.S3BucketProps} props bucket properties
    */
-  public createS3Bucket(id: string, scope: CommonConstruct, props: S3BucketProps) {
+  public createS3Bucket(id: string, scope: common.CommonConstruct, props: types.S3BucketProps) {
     if (!props) throw `S3 props undefined`
 
     let bucket: s3.IBucket
@@ -131,8 +131,8 @@ export class S3Manager {
       }
     }
 
-    createCfnOutput(`${id}-bucketName`, scope, bucket.bucketName)
-    createCfnOutput(`${id}-bucketArn`, scope, bucket.bucketArn)
+    utils.createCfnOutput(`${id}-bucketName`, scope, bucket.bucketName)
+    utils.createCfnOutput(`${id}-bucketArn`, scope, bucket.bucketArn)
 
     return bucket
   }
@@ -140,10 +140,10 @@ export class S3Manager {
   /**
    * @summary Method to create an iam bucket policy for cloudtrail
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
    * @param {s3.IBucket} bucket
    */
-  public createBucketPolicyForCloudTrail(id: string, scope: CommonConstruct, bucket: s3.IBucket) {
+  public createBucketPolicyForCloudTrail(id: string, scope: common.CommonConstruct, bucket: s3.IBucket) {
     const bucketPolicyDocument = new iam.PolicyDocument({
       statements: [
         new iam.PolicyStatement({
@@ -172,7 +172,7 @@ export class S3Manager {
   /**
    * @summary Method to create a s3 bucket deployment
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
    * @param {s3.IBucket} siteBucket
    * @param {cloudfront.IDistribution} distribution
    * @param {s3deploy.ISource[]} sources
@@ -181,7 +181,7 @@ export class S3Manager {
    */
   public doBucketDeployment(
     id: string,
-    scope: CommonConstruct,
+    scope: common.CommonConstruct,
     siteBucket: s3.IBucket,
     distribution: cloudfront.IDistribution,
     sources: s3deploy.ISource[],

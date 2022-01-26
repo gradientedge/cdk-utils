@@ -1,6 +1,6 @@
-import { CommonConstruct } from '../common/commonConstruct'
 import * as cdk from 'aws-cdk-lib'
 import * as secretsManager from 'aws-cdk-lib/aws-secretsmanager'
+import * as common from '../../common'
 
 const AWS = require('aws-sdk')
 const fs = require('fs')
@@ -9,12 +9,12 @@ const fs = require('fs')
  * @stability experimental
  * @category Security, Identity & Compliance
  * @summary Provides operations on AWS Secrets Manager.
- * - A new instance of this class is injected into {@link CommonConstruct} constructor.
- * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
+ * - A new instance of this class is injected into {@link common.CommonConstruct} constructor.
+ * - If a custom construct extends {@link common.CommonConstruct}, an instance is available within the context.
  * @example
  * import * as common from '@gradientedge/cdk-utils'
  *
- * class CustomConstruct extends common.CommonConstruct {
+ * class CustomConstruct extends common.common.CommonConstruct {
  *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
  *     super(parent, id, props)
  *     this.props = props
@@ -100,7 +100,12 @@ export class SecretsManager {
    * @param stackName
    * @param exportName
    */
-  public retrieveSecretFromSecretsManager(id: string, scope: CommonConstruct, stackName: string, exportName: string) {
+  public retrieveSecretFromSecretsManager(
+    id: string,
+    scope: common.CommonConstruct,
+    stackName: string,
+    exportName: string
+  ) {
     return secretsManager.Secret.fromSecretNameV2(
       scope,
       `${id}`,

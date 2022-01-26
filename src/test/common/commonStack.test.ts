@@ -1,10 +1,10 @@
 import * as cdk from 'aws-cdk-lib'
 import { CustomResource } from 'aws-cdk-lib'
-import { CommonStack } from '../../lib/common/commonStack'
 import { Template } from 'aws-cdk-lib/assertions'
-import { CommonStackProps } from '../../lib/types'
+import * as common from '../../lib/common'
+import * as types from '../../lib/types'
 
-interface TestStackProps extends CommonStackProps {
+interface TestStackProps extends types.CommonStackProps {
   testAttribute?: string
 }
 
@@ -18,7 +18,7 @@ const testStackProps: TestStackProps = {
   stageContextPath: 'src/test/common/cdkEnv',
 }
 
-class TestCommonStack extends CommonStack {
+class TestCommonStack extends common.CommonStack {
   declare props: TestStackProps
 
   constructor(parent: cdk.App, name: string, props: TestStackProps) {

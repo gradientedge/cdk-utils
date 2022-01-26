@@ -1,19 +1,19 @@
 import * as cdk from 'aws-cdk-lib'
 import * as logs from 'aws-cdk-lib/aws-logs'
-import { CommonConstruct } from '../common/commonConstruct'
-import { LogProps, MetricFilterProps } from '../types'
-import { createCfnOutput } from '../utils'
+import * as common from '../../common'
+import * as types from '../../types'
+import * as utils from '../../utils'
 
 /**
  * @stability stable
  * @category Management & Governance
  * @summary Provides operations on AWS CloudWatch.
- * - A new instance of this class is injected into {@link CommonConstruct} constructor.
- * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
+ * - A new instance of this class is injected into {@link common.CommonConstruct} constructor.
+ * - If a custom construct extends {@link common.CommonConstruct}, an instance is available within the context.
  * @example
  * import * as common from '@gradientedge/cdk-utils'
  *
- * class CustomConstruct extends common.CommonConstruct {
+ * class CustomConstruct extends common.common.CommonConstruct {
  *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
  *     super(parent, id, props)
  *     this.props = props
@@ -27,11 +27,16 @@ export class LogManager {
   /**
    * @summary Method to create a cloudwatch metric filter
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {MetricFilterProps} props
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.MetricFilterProps} props
    * @param {logs.ILogGroup} logGroup
    */
-  public createMetricFilter(id: string, scope: CommonConstruct, props: MetricFilterProps, logGroup: logs.ILogGroup) {
+  public createMetricFilter(
+    id: string,
+    scope: common.CommonConstruct,
+    props: types.MetricFilterProps,
+    logGroup: logs.ILogGroup
+  ) {
     if (!props) throw `MetricFilter props undefined`
 
     const metricFilter = new logs.MetricFilter(scope, `${id}`, {
@@ -57,10 +62,10 @@ export class LogManager {
   /**
    * @summary Method to create a cloudwatch log group (cfn)
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {LogProps} props
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.LogProps} props
    */
-  public createCfnLogGroup(id: string, scope: CommonConstruct, props: LogProps) {
+  public createCfnLogGroup(id: string, scope: common.CommonConstruct, props: types.LogProps) {
     if (!props) throw `Logs props undefined`
 
     const logGroup = new logs.CfnLogGroup(scope, `${id}`, {
@@ -68,7 +73,7 @@ export class LogManager {
       retentionInDays: props.retention,
     })
 
-    createCfnOutput(`${id}-logGroupArn`, scope, logGroup.attrArn)
+    utils.createCfnOutput(`${id}-logGroupArn`, scope, logGroup.attrArn)
 
     return logGroup
   }
@@ -76,10 +81,10 @@ export class LogManager {
   /**
    * @summary Method to create a cloudwatch log group
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {LogProps} props
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.LogProps} props
    */
-  public createLogGroup(id: string, scope: CommonConstruct, props: LogProps) {
+  public createLogGroup(id: string, scope: common.CommonConstruct, props: types.LogProps) {
     if (!props) throw `Logs props undefined`
 
     const logGroup = new logs.LogGroup(scope, `${id}`, {
@@ -88,7 +93,7 @@ export class LogManager {
       removalPolicy: props.removalPolicy ?? cdk.RemovalPolicy.DESTROY,
     })
 
-    createCfnOutput(`${id}-logGroupArn`, scope, logGroup.logGroupArn)
+    utils.createCfnOutput(`${id}-logGroupArn`, scope, logGroup.logGroupArn)
 
     return logGroup
   }

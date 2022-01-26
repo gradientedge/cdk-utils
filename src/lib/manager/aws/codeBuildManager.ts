@@ -1,17 +1,17 @@
-import { CommonConstruct } from '../common/commonConstruct'
-import * as codebuild from 'aws-cdk-lib/aws-codebuild'
 import * as cdk from 'aws-cdk-lib'
+import * as codebuild from 'aws-cdk-lib/aws-codebuild'
+import * as common from '../../common'
 
 /**
  * @stability stable
  * @category Developer Tools
  * @summary Provides operations on AWS Code Build.
- * - A new instance of this class is injected into {@link CommonConstruct} constructor.
- * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
+ * - A new instance of this class is injected into {@link common.CommonConstruct} constructor.
+ * - If a custom construct extends {@link common.CommonConstruct}, an instance is available within the context.
  * @example
- * import { CommonConstruct } from '@gradientedge/cdk-utils'
+ * import { common.CommonConstruct } from '@gradientedge/cdk-utils'
  *
- * class CustomConstruct extends CommonConstruct {
+ * class CustomConstruct extends common.CommonConstruct {
  *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
  *     super(parent, id, props)
  *     this.props = props
@@ -28,7 +28,7 @@ export class CodeBuildManager {
    * @param scope
    * @param dockerfilePath
    */
-  public createImageForCloudfrontInvalidation(id: string, scope: CommonConstruct, dockerfilePath: string) {
+  public createImageForCloudfrontInvalidation(id: string, scope: common.CommonConstruct, dockerfilePath: string) {
     return scope.ecrManager.createDockerImage(`${id}-build-image`, scope, dockerfilePath)
   }
 
@@ -42,7 +42,7 @@ export class CodeBuildManager {
    */
   public createProjectForCloudfrontInvalidation(
     id: string,
-    scope: CommonConstruct,
+    scope: common.CommonConstruct,
     dockerFilepath: string,
     distributionId: string,
     paths?: string

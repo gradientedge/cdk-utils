@@ -1,26 +1,26 @@
+import * as cdk from 'aws-cdk-lib'
 import * as acm from 'aws-cdk-lib/aws-certificatemanager'
 import * as cloudfront from 'aws-cdk-lib/aws-cloudfront'
-import * as lambda from 'aws-cdk-lib/aws-lambda'
-import * as s3 from 'aws-cdk-lib/aws-s3'
-import { CommonConstruct } from '../common/commonConstruct'
-import { CloudFrontProps, DistributionProps, LambdaEdgeProps, CloudfrontFunctionProps } from '../types'
-import { createCfnOutput } from '../utils'
-import * as cdk from 'aws-cdk-lib'
+import * as origins from 'aws-cdk-lib/aws-cloudfront-origins'
 import * as ec2 from 'aws-cdk-lib/aws-ec2'
 import * as efs from 'aws-cdk-lib/aws-efs'
-import * as origins from 'aws-cdk-lib/aws-cloudfront-origins'
+import * as lambda from 'aws-cdk-lib/aws-lambda'
+import * as s3 from 'aws-cdk-lib/aws-s3'
 import * as cr from 'aws-cdk-lib/custom-resources'
+import * as common from '../../common'
+import * as types from '../../types'
+import * as utils from '../../utils'
 
 /**
  * @stability stable
  * @category Networking & Content Delivery
  * @summary Provides operations on AWS CloudFront.
- * - A new instance of this class is injected into {@link CommonConstruct} constructor.
- * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
+ * - A new instance of this class is injected into {@link common.CommonConstruct} constructor.
+ * - If a custom construct extends {@link common.CommonConstruct}, an instance is available within the context.
  * @example
  * import * as common from '@gradientedge/cdk-utils'
  *
- * class CustomConstruct extends common.CommonConstruct {
+ * class CustomConstruct extends common.common.CommonConstruct {
  *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
  *     super(parent, id, props)
  *     this.props = props
@@ -38,7 +38,7 @@ import * as cr from 'aws-cdk-lib/custom-resources'
  * @see [CDK CloudFront Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_cloudfront-readme.html}
  */
 export class CloudFrontManager {
-  public createOriginAccessIdentity(id: string, scope: CommonConstruct, accessBucket?: s3.IBucket) {
+  public createOriginAccessIdentity(id: string, scope: common.CommonConstruct, accessBucket?: s3.IBucket) {
     const oai = new cloudfront.OriginAccessIdentity(scope, `${id}`, {
       comment: `${id} - ${scope.props.stage} stage`,
     })
@@ -52,8 +52,8 @@ export class CloudFrontManager {
    *
    * @summary Method to create a cloudfront distribution
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {CloudFrontProps} props distribution properties
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.CloudFrontProps} props distribution properties
    * @param {s3.IBucket?} siteBucket
    * @param {s3.IBucket?} logBucket
    * @param {cloudfront.OriginAccessIdentity?} oai
@@ -62,8 +62,8 @@ export class CloudFrontManager {
    */
   public createCloudFrontDistribution(
     id: string,
-    scope: CommonConstruct,
-    props: CloudFrontProps,
+    scope: common.CommonConstruct,
+    props: types.CloudFrontProps,
     siteBucket?: s3.IBucket,
     logBucket?: s3.IBucket,
     oai?: cloudfront.OriginAccessIdentity,
@@ -104,8 +104,8 @@ export class CloudFrontManager {
       webACLId: props.webACLId,
     })
 
-    createCfnOutput(`${id}-distributionId`, scope, distribution.distributionId)
-    createCfnOutput(`${id}-distributionDomainName`, scope, distribution.distributionDomainName)
+    utils.createCfnOutput(`${id}-distributionId`, scope, distribution.distributionId)
+    utils.createCfnOutput(`${id}-distributionDomainName`, scope, distribution.distributionDomainName)
 
     return distribution
   }
@@ -113,8 +113,8 @@ export class CloudFrontManager {
   /**
    * Method to create a CloudFront distribution with S3 Origin
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {CloudFrontProps} props distribution properties
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.DistributionProps} props distribution properties
    * @param {origins.S3Origin} origin
    * @param {s3.IBucket} siteBucket
    * @param {s3.IBucket?} logBucket
@@ -125,8 +125,8 @@ export class CloudFrontManager {
    */
   public createDistributionWithS3Origin(
     id: string,
-    scope: CommonConstruct,
-    props: DistributionProps,
+    scope: common.CommonConstruct,
+    props: types.DistributionProps,
     origin: origins.S3Origin,
     siteBucket: s3.IBucket,
     logBucket?: s3.IBucket,
@@ -161,8 +161,8 @@ export class CloudFrontManager {
       webAclId: props.webAclId,
     })
 
-    createCfnOutput(`${id}-distributionId`, scope, distribution.distributionId)
-    createCfnOutput(`${id}-distributionDomainName`, scope, distribution.distributionDomainName)
+    utils.createCfnOutput(`${id}-distributionId`, scope, distribution.distributionId)
+    utils.createCfnOutput(`${id}-distributionDomainName`, scope, distribution.distributionDomainName)
 
     return distribution
   }
@@ -170,8 +170,8 @@ export class CloudFrontManager {
   /**
    * Method to create a CloudFront distribution with HTTP Origin
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {CloudFrontProps} props distribution properties
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.DistributionProps} props distribution properties
    * @param {origins.S3Origin} origin
    * @param {string[]} domainNames
    * @param {s3.IBucket?} logBucket
@@ -180,8 +180,8 @@ export class CloudFrontManager {
    */
   public createDistributionWithHttpOrigin(
     id: string,
-    scope: CommonConstruct,
-    props: DistributionProps,
+    scope: common.CommonConstruct,
+    props: types.DistributionProps,
     origin: origins.HttpOrigin,
     domainNames: string[],
     logBucket?: s3.IBucket,
@@ -214,8 +214,8 @@ export class CloudFrontManager {
       webAclId: props.webAclId,
     })
 
-    createCfnOutput(`${id}-distributionId`, scope, distribution.distributionId)
-    createCfnOutput(`${id}-distributionDomainName`, scope, distribution.distributionDomainName)
+    utils.createCfnOutput(`${id}-distributionId`, scope, distribution.distributionId)
+    utils.createCfnOutput(`${id}-distributionDomainName`, scope, distribution.distributionDomainName)
 
     return distribution
   }
@@ -224,8 +224,8 @@ export class CloudFrontManager {
    * @summary Method to provision a Lambda@Edge function
    *
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {LambdaEdgeProps} props lambda@edge properties
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.LambdaEdgeProps} props lambda@edge properties
    * @param {lambda.ILayerVersion[]} layers
    * @param {lambda.AssetCode} code
    * @param {Map<string, string>} environment
@@ -236,8 +236,8 @@ export class CloudFrontManager {
    */
   public createEdgeFunction(
     id: string,
-    scope: CommonConstruct,
-    props: LambdaEdgeProps,
+    scope: common.CommonConstruct,
+    props: types.LambdaEdgeProps,
     layers: lambda.ILayerVersion[],
     code: lambda.AssetCode,
     environment?: any,
@@ -267,9 +267,9 @@ export class CloudFrontManager {
       vpc: vpc,
     })
 
-    createCfnOutput(`${id}-edgeArn`, scope, edgeFunction.edgeArn)
-    createCfnOutput(`${id}-edgeFunctionArn`, scope, edgeFunction.functionArn)
-    createCfnOutput(`${id}-edgeFunctionName`, scope, edgeFunction.functionName)
+    utils.createCfnOutput(`${id}-edgeArn`, scope, edgeFunction.edgeArn)
+    utils.createCfnOutput(`${id}-edgeFunctionArn`, scope, edgeFunction.functionArn)
+    utils.createCfnOutput(`${id}-edgeFunctionName`, scope, edgeFunction.functionName)
 
     return edgeFunction
   }
@@ -284,7 +284,7 @@ export class CloudFrontManager {
    */
   public invalidateCache(
     id: string,
-    scope: CommonConstruct,
+    scope: common.CommonConstruct,
     dockerFilePath: string,
     distributionId: string,
     paths?: string
@@ -312,10 +312,10 @@ export class CloudFrontManager {
    * @summary Method to provision a Cloudfront function
    *
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {CloudfrontFunctionProps} props
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.CloudfrontFunctionProps} props
    */
-  public createCloudfrontFunction(id: string, scope: CommonConstruct, props: CloudfrontFunctionProps) {
+  public createCloudfrontFunction(id: string, scope: common.CommonConstruct, props: types.CloudfrontFunctionProps) {
     const cloudfrontFunction = new cloudfront.Function(scope, `${id}`, {
       code: cloudfront.FunctionCode.fromFile({
         filePath: props.functionFilePath,
@@ -324,8 +324,8 @@ export class CloudFrontManager {
       functionName: `${props.functionName}-${scope.props.stage}`,
     })
 
-    createCfnOutput(`${id}-functionArn`, scope, cloudfrontFunction.functionArn)
-    createCfnOutput(`${id}-functionName`, scope, cloudfrontFunction.functionName)
+    utils.createCfnOutput(`${id}-functionArn`, scope, cloudfrontFunction.functionArn)
+    utils.createCfnOutput(`${id}-functionName`, scope, cloudfrontFunction.functionName)
 
     return cloudfrontFunction
   }

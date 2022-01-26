@@ -1,20 +1,20 @@
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as sns from 'aws-cdk-lib/aws-sns'
 import * as subs from 'aws-cdk-lib/aws-sns-subscriptions'
-import { CommonConstruct } from '../common/commonConstruct'
-import { SubscriptionProps } from '../types'
-import { createCfnOutput } from '../utils'
+import * as common from '../../common'
+import * as types from '../../types'
+import * as utils from '../../utils'
 
 /**
  * @stability stable
  * @category Application Integration
  * @summary Provides operations on AWS Simple Notification Service.
- * - A new instance of this class is injected into {@link CommonConstruct} constructor.
- * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
+ * - A new instance of this class is injected into {@link common.CommonConstruct} constructor.
+ * - If a custom construct extends {@link common.CommonConstruct}, an instance is available within the context.
  * @example
  * import * as common from '@gradientedge/cdk-utils'
  *
- * class CustomConstruct extends common.CommonConstruct {
+ * class CustomConstruct extends common.common.CommonConstruct {
  *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
  *     super(parent, id, props)
  *     this.props = props
@@ -28,14 +28,14 @@ export class SnsManager {
   /**
    * @summary Method to create an email notification service
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {SubscriptionProps} props
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.SubscriptionProps} props
    * @param {string[]} emails
    */
   public createEmailNotificationService(
     id: string,
-    scope: CommonConstruct,
-    props: SubscriptionProps,
+    scope: common.CommonConstruct,
+    props: types.SubscriptionProps,
     emails: string[]
   ) {
     if (!props) throw `Subscription props undefined`
@@ -50,8 +50,8 @@ export class SnsManager {
       emails.forEach((email: string) => topic.addSubscription(new subs.EmailSubscription(email)))
     }
 
-    createCfnOutput(`${id}-subscriptionArn`, scope, topic.topicArn)
-    createCfnOutput(`${id}-subscriptionName`, scope, topic.topicName)
+    utils.createCfnOutput(`${id}-subscriptionArn`, scope, topic.topicArn)
+    utils.createCfnOutput(`${id}-subscriptionName`, scope, topic.topicName)
 
     return topic
   }
@@ -59,14 +59,14 @@ export class SnsManager {
   /**
    * @summary Method to create a lambda notification service
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {SubscriptionProps} props
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.SubscriptionProps} props
    * @param {lambda.Function} lambdaFunction
    */
   public createLambdaNotificationService(
     id: string,
-    scope: CommonConstruct,
-    props: SubscriptionProps,
+    scope: common.CommonConstruct,
+    props: types.SubscriptionProps,
     lambdaFunction: lambda.Function
   ) {
     if (!props) throw `Subscription props undefined`
@@ -79,8 +79,8 @@ export class SnsManager {
 
     topic.addSubscription(new subs.LambdaSubscription(lambdaFunction))
 
-    createCfnOutput(`${id}-subscriptionArn`, scope, topic.topicArn)
-    createCfnOutput(`${id}-subscriptionName`, scope, topic.topicName)
+    utils.createCfnOutput(`${id}-subscriptionArn`, scope, topic.topicArn)
+    utils.createCfnOutput(`${id}-subscriptionName`, scope, topic.topicName)
 
     return topic
   }
