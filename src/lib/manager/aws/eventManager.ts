@@ -2,20 +2,20 @@ import * as ecs from 'aws-cdk-lib/aws-ecs'
 import * as events from 'aws-cdk-lib/aws-events'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
-import { CommonConstruct } from '../common/commonConstruct'
-import { RuleProps } from '../types'
-import { createCfnOutput } from '../utils'
+import * as common from '../../common'
+import * as types from '../../types'
+import * as utils from '../../utils'
 
 /**
  * @stability stable
  * @category Application Integration
  * @summary Provides operations on AWS EventBridge.
- * - A new instance of this class is injected into {@link CommonConstruct} constructor.
- * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
+ * - A new instance of this class is injected into {@link common.CommonConstruct} constructor.
+ * - If a custom construct extends {@link common.CommonConstruct}, an instance is available within the context.
  * @example
  * import * as common from '@gradientedge/cdk-utils'
  *
- * class CustomConstruct extends common.CommonConstruct {
+ * class CustomConstruct extends common.common.CommonConstruct {
  *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
  *     super(parent, id, props)
  *     this.props = props
@@ -29,8 +29,8 @@ export class EventManager {
   /**
    * @summary Method to create an eventbridge rule with lambda target
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {RuleProps} props
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.RuleProps} props
    * @param {lambda.Function} lambdaFunction
    * @param {string} eventBusName
    * @param {any} eventPattern
@@ -38,8 +38,8 @@ export class EventManager {
    */
   public createLambdaRule(
     id: string,
-    scope: CommonConstruct,
-    props: RuleProps,
+    scope: common.CommonConstruct,
+    props: types.RuleProps,
     lambdaFunction: lambda.Function,
     eventBusName?: string,
     eventPattern?: any,
@@ -64,8 +64,8 @@ export class EventManager {
       sourceArn: eventRule.attrArn,
     })
 
-    createCfnOutput(`${id}-ruleArn`, scope, eventRule.attrArn)
-    createCfnOutput(`${id}-ruleName`, scope, eventRule.name)
+    utils.createCfnOutput(`${id}-ruleArn`, scope, eventRule.attrArn)
+    utils.createCfnOutput(`${id}-ruleName`, scope, eventRule.name)
 
     return eventRule
   }
@@ -73,8 +73,8 @@ export class EventManager {
   /**
    * @summary Method to create an eventbridge rule with fargate task target
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {RuleProps} props
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.RuleProps} props
    * @param {ecs.ICluster} cluster
    * @param {ecs.ITaskDefinition} task
    * @param {string[]} subnetIds
@@ -83,8 +83,8 @@ export class EventManager {
    */
   public createFargateTaskRule(
     id: string,
-    scope: CommonConstruct,
-    props: RuleProps,
+    scope: common.CommonConstruct,
+    props: types.RuleProps,
     cluster: ecs.ICluster,
     task: ecs.ITaskDefinition,
     subnetIds: string[],
@@ -115,8 +115,8 @@ export class EventManager {
       ],
     })
 
-    createCfnOutput(`${id}-ruleArn`, scope, eventRule.attrArn)
-    createCfnOutput(`${id}-ruleName`, scope, eventRule.name)
+    utils.createCfnOutput(`${id}-ruleArn`, scope, eventRule.attrArn)
+    utils.createCfnOutput(`${id}-ruleName`, scope, eventRule.name)
 
     return eventRule
   }

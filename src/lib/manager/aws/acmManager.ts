@@ -1,16 +1,16 @@
+import * as cdk from 'aws-cdk-lib'
 import * as acm from 'aws-cdk-lib/aws-certificatemanager'
 import * as route53 from 'aws-cdk-lib/aws-route53'
-import * as cdk from 'aws-cdk-lib'
-import { CommonConstruct } from '../common/commonConstruct'
-import { AcmProps } from '../types'
-import { createCfnOutput } from '../utils'
+import * as common from '../../common'
+import * as types from '../../types'
+import * as utils from '../../utils'
 
 /**
  * @stability stable
  * @category Security, Identity & Compliance
  * @summary Provides operations on AWS Certificates.
- * - A new instance of this class is injected into {@link CommonConstruct} constructor.
- * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
+ * - A new instance of this class is injected into {@link common.CommonConstruct} constructor.
+ * - If a custom construct extends {@link common.CommonConstruct}, an instance is available within the context.
  * @example
  * import { CommonConstruct } from '@gradientedge/cdk-utils'
  *
@@ -28,8 +28,8 @@ export class AcmManager {
   /**
    * @summary Method to create/import a certificate
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {AcmProps} props certificate props
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.AcmProps} props certificate props
    * @param {route53.HostedZone?} hostedZone optional hosted zone to perform DNS validation
    * @returns {acm.ICertificate}
    *
@@ -46,8 +46,8 @@ export class AcmManager {
    */
   public resolveCertificate(
     id: string,
-    scope: CommonConstruct,
-    props: AcmProps,
+    scope: common.CommonConstruct,
+    props: types.AcmProps,
     hostedZone?: route53.IHostedZone
   ): acm.ICertificate {
     if (!props) throw `Certificate props undefined`
@@ -70,7 +70,7 @@ export class AcmManager {
       })
     }
 
-    createCfnOutput(`${id}-certificateArn`, scope, certificate.certificateArn)
+    utils.createCfnOutput(`${id}-certificateArn`, scope, certificate.certificateArn)
 
     return certificate
   }

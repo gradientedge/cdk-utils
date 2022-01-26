@@ -1,24 +1,24 @@
+import * as pylambda from '@aws-cdk/aws-lambda-python-alpha'
 import * as cdk from 'aws-cdk-lib'
 import * as ec2 from 'aws-cdk-lib/aws-ec2'
 import * as efs from 'aws-cdk-lib/aws-efs'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
-import * as pylambda from '@aws-cdk/aws-lambda-python-alpha'
-import { CommonConstruct } from '../common/commonConstruct'
-import { LambdaEdgeProps, LambdaProps } from '../types'
-import { createCfnOutput } from '../utils'
+import * as common from '../../common'
+import * as types from '../../types'
+import * as utils from '../../utils'
 import { CloudFrontManager } from './cloudFrontManager'
 
 /**
  * @stability stable
  * @category Compute
  * @summary Provides operations on AWS Lambda.
- * - A new instance of this class is injected into {@link CommonConstruct} constructor.
- * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
+ * - A new instance of this class is injected into {@link common.CommonConstruct} constructor.
+ * - If a custom construct extends {@link common.CommonConstruct}, an instance is available within the context.
  * @example
  * import * as common from '@gradientedge/cdk-utils'
  *
- * class CustomConstruct extends common.CommonConstruct {
+ * class CustomConstruct extends common.common.CommonConstruct {
  *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
  *     super(parent, id, props)
  *     this.props = props
@@ -32,10 +32,10 @@ export class LambdaManager {
   /**
    * @summary Method to create a lambda layer (nodejs)
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
    * @param {lambda.AssetCode} code
    */
-  public createLambdaLayer(id: string, scope: CommonConstruct, code: lambda.AssetCode) {
+  public createLambdaLayer(id: string, scope: common.CommonConstruct, code: lambda.AssetCode) {
     const lambdaLayer = new lambda.LayerVersion(scope, `${id}`, {
       compatibleRuntimes: [lambda.Runtime.NODEJS_14_X],
       code: code,
@@ -43,7 +43,7 @@ export class LambdaManager {
       layerVersionName: `${id}-${scope.props.stage}`,
     })
 
-    createCfnOutput(`${id}-lambdaLayerArn`, scope, lambdaLayer.layerVersionArn)
+    utils.createCfnOutput(`${id}-lambdaLayerArn`, scope, lambdaLayer.layerVersionArn)
 
     return lambdaLayer
   }
@@ -51,10 +51,10 @@ export class LambdaManager {
   /**
    * @summary Method to create a lambda layer (python)
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
    * @param {string} entry path to layer source
    */
-  public createPythonLambdaLayer(id: string, scope: CommonConstruct, entry: string) {
+  public createPythonLambdaLayer(id: string, scope: common.CommonConstruct, entry: string) {
     const lambdaLayer = new pylambda.PythonLayerVersion(scope, `${id}`, {
       compatibleRuntimes: [lambda.Runtime.PYTHON_3_8],
       description: `${id}`,
@@ -62,7 +62,7 @@ export class LambdaManager {
       layerVersionName: `${id}-${scope.props.stage}`,
     })
 
-    createCfnOutput(`${id}-lambdaLayerArn`, scope, lambdaLayer.layerVersionArn)
+    utils.createCfnOutput(`${id}-lambdaLayerArn`, scope, lambdaLayer.layerVersionArn)
 
     return lambdaLayer
   }
@@ -70,8 +70,8 @@ export class LambdaManager {
   /**
    * @summary Method to create a lambda function (nodejs)
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {LambdaProps} props
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.LambdaProps} props
    * @param {iam.Role | iam.CfnRole} role
    * @param {lambda.ILayerVersion[]} layers
    * @param {lambda.AssetCode} code
@@ -84,8 +84,8 @@ export class LambdaManager {
    */
   public createLambdaFunction(
     id: string,
-    scope: CommonConstruct,
-    props: LambdaProps,
+    scope: common.CommonConstruct,
+    props: types.LambdaProps,
     role: iam.Role | iam.CfnRole,
     layers: lambda.ILayerVersion[],
     code: lambda.AssetCode,
@@ -120,8 +120,8 @@ export class LambdaManager {
       vpc: vpc,
     })
 
-    createCfnOutput(`${id}-lambdaArn`, scope, lambdaFunction.functionArn)
-    createCfnOutput(`${id}-lambdaName`, scope, lambdaFunction.functionName)
+    utils.createCfnOutput(`${id}-lambdaArn`, scope, lambdaFunction.functionArn)
+    utils.createCfnOutput(`${id}-lambdaName`, scope, lambdaFunction.functionName)
 
     return lambdaFunction
   }
@@ -129,8 +129,8 @@ export class LambdaManager {
   /**
    * @summary Method to create a lambda function (python)
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {LambdaProps} props
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.LambdaProps} props
    * @param {iam.Role | iam.CfnRole} role
    * @param {lambda.ILayerVersion[]} layers
    * @param {string} entry path to lambda source
@@ -145,8 +145,8 @@ export class LambdaManager {
 
   public createPythonLambdaFunction(
     id: string,
-    scope: CommonConstruct,
-    props: LambdaProps,
+    scope: common.CommonConstruct,
+    props: types.LambdaProps,
     role: iam.Role | iam.CfnRole,
     layers: lambda.ILayerVersion[],
     entry: string,
@@ -183,8 +183,8 @@ export class LambdaManager {
       vpc: vpc,
     })
 
-    createCfnOutput(`${id}-lambdaArn`, scope, lambdaFunction.functionArn)
-    createCfnOutput(`${id}-lambdaName`, scope, lambdaFunction.functionName)
+    utils.createCfnOutput(`${id}-lambdaArn`, scope, lambdaFunction.functionArn)
+    utils.createCfnOutput(`${id}-lambdaName`, scope, lambdaFunction.functionName)
 
     return lambdaFunction
   }
@@ -193,8 +193,8 @@ export class LambdaManager {
    * @summary Method to provision a Lambda@Edge function
    *
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {LambdaEdgeProps} props lambda@edge properties
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.LambdaEdgeProps} props lambda@edge properties
    * @param {lambda.ILayerVersion[]} layers
    * @param {lambda.AssetCode} code
    * @param {Map<string, string>} environment
@@ -205,8 +205,8 @@ export class LambdaManager {
    */
   public createEdgeFunction(
     id: string,
-    scope: CommonConstruct,
-    props: LambdaEdgeProps,
+    scope: common.CommonConstruct,
+    props: types.LambdaEdgeProps,
     layers: lambda.ILayerVersion[],
     code: lambda.AssetCode,
     environment?: any,

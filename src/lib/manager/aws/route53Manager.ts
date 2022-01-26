@@ -2,20 +2,20 @@ import * as apig from 'aws-cdk-lib/aws-apigateway'
 import * as cloudfront from 'aws-cdk-lib/aws-cloudfront'
 import * as route53 from 'aws-cdk-lib/aws-route53'
 import * as route53Targets from 'aws-cdk-lib/aws-route53-targets'
-import { Route53Props } from '../types'
-import { CommonConstruct } from '../common/commonConstruct'
-import { createCfnOutput } from '../utils'
+import * as common from '../../common'
+import * as types from '../../types'
+import * as utils from '../../utils'
 
 /**
  * @stability stable
  * @category Networking & Content Delivery
  * @summary Provides operations on AWS Route53.
- * - A new instance of this class is injected into {@link CommonConstruct} constructor.
- * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
+ * - A new instance of this class is injected into {@link common.CommonConstruct} constructor.
+ * - If a custom construct extends {@link common.CommonConstruct}, an instance is available within the context.
  * @example
  * import * as common from '@gradientedge/cdk-utils'
  *
- * class CustomConstruct extends common.CommonConstruct {
+ * class CustomConstruct extends common.common.CommonConstruct {
  *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
  *     super(parent, id, props)
  *     this.props = props
@@ -29,10 +29,10 @@ export class Route53Manager {
   /**
    * @summary Method to create a hosted zone
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {Route53Props} props
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.Route53Props} props
    */
-  public createHostedZone(id: string, scope: CommonConstruct, props: Route53Props) {
+  public createHostedZone(id: string, scope: common.CommonConstruct, props: types.Route53Props) {
     let hostedZone: route53.IHostedZone
 
     if (!props) throw `Route53 props undefined`
@@ -48,8 +48,8 @@ export class Route53Manager {
       })
     }
 
-    createCfnOutput(`${id}-hostedZoneId`, scope, hostedZone.hostedZoneId)
-    createCfnOutput(`${id}-hostedZoneArn`, scope, hostedZone.hostedZoneArn)
+    utils.createCfnOutput(`${id}-hostedZoneId`, scope, hostedZone.hostedZoneId)
+    utils.createCfnOutput(`${id}-hostedZoneArn`, scope, hostedZone.hostedZoneArn)
 
     return hostedZone
   }
@@ -57,12 +57,12 @@ export class Route53Manager {
   /**
    * @summary Method to create/lookup a hosted zone
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
    * @param useExistingHostedZone Flag to indicate whether to lookup vs create new hosted zone
    */
   public withHostedZoneFromFullyQualifiedDomainName(
     id: string,
-    scope: CommonConstruct,
+    scope: common.CommonConstruct,
     useExistingHostedZone: boolean
   ) {
     let hostedZone: route53.IHostedZone
@@ -78,8 +78,8 @@ export class Route53Manager {
       })
     }
 
-    createCfnOutput(`${id}-hostedZoneId`, scope, hostedZone.hostedZoneId)
-    createCfnOutput(`${id}-hostedZoneArn`, scope, hostedZone.hostedZoneArn)
+    utils.createCfnOutput(`${id}-hostedZoneId`, scope, hostedZone.hostedZoneId)
+    utils.createCfnOutput(`${id}-hostedZoneArn`, scope, hostedZone.hostedZoneArn)
 
     return hostedZone
   }
@@ -87,14 +87,14 @@ export class Route53Manager {
   /**
    * @summary Method to create a-record for cloudfront target
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
    * @param {cloudfront.IDistribution} distribution
    * @param {route53.IHostedZone} hostedZone
    * @param {string} recordName
    */
   public createCloudFrontTargetARecord(
     id: string,
-    scope: CommonConstruct,
+    scope: common.CommonConstruct,
     distribution?: cloudfront.IDistribution,
     hostedZone?: route53.IHostedZone,
     recordName?: string
@@ -108,7 +108,7 @@ export class Route53Manager {
       zone: hostedZone,
     })
 
-    createCfnOutput(`${id}-aRecordDomainName`, scope, aRecord.domainName)
+    utils.createCfnOutput(`${id}-aRecordDomainName`, scope, aRecord.domainName)
 
     return aRecord
   }
@@ -116,14 +116,14 @@ export class Route53Manager {
   /**
    * @summary Method to create a-record for cloudfront target
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
    * @param {cloudfront.IDistribution} distribution
    * @param {route53.IHostedZone} hostedZone
    * @param {string} recordName
    */
   public createCloudFrontTargetARecordV2(
     id: string,
-    scope: CommonConstruct,
+    scope: common.CommonConstruct,
     distribution?: cloudfront.IDistribution,
     hostedZone?: route53.IHostedZone,
     recordName?: string
@@ -137,7 +137,7 @@ export class Route53Manager {
       zone: hostedZone,
     })
 
-    createCfnOutput(`${id}-aRecordDomainName`, scope, aRecord.domainName)
+    utils.createCfnOutput(`${id}-aRecordDomainName`, scope, aRecord.domainName)
 
     return aRecord
   }
@@ -145,14 +145,14 @@ export class Route53Manager {
   /**
    * @summary Method to create a-record for api gateway target
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
    * @param recordName
    * @param apiDomain
    * @param hostedZone
    */
   public createApiGatewayARecord(
     id: string,
-    scope: CommonConstruct,
+    scope: common.CommonConstruct,
     recordName: string,
     apiDomain: apig.DomainName,
     hostedZone: route53.IHostedZone
@@ -167,7 +167,7 @@ export class Route53Manager {
       zone: hostedZone,
     })
 
-    createCfnOutput(`${id}-a-record-domain-name`, scope, apiARecord.domainName)
+    utils.createCfnOutput(`${id}-a-record-domain-name`, scope, apiARecord.domainName)
 
     return apiARecord
   }

@@ -1,28 +1,8 @@
 import * as cdk from 'aws-cdk-lib'
-import { createCfnOutput, isDevStage, isPrdStage, isTestStage, isUatStage } from '../utils'
-import { CommonStackProps } from '../types'
-import { Route53Manager } from '../manager/route53Manager'
-import { S3Manager } from '../manager/s3Manager'
-import { AcmManager } from '../manager/acmManager'
-import { CloudFrontManager } from '../manager/cloudFrontManager'
-import { LogManager } from '../manager/logManager'
-import { IamManager } from '../manager/iamManager'
-import { CloudTrailManager } from '../manager/cloudTrailManager'
-import { EcsManager } from '../manager/ecsManager'
-import { EventManager } from '../manager/eventManager'
-import { VpcManager } from '../manager/vpcManager'
-import { EksManager } from '../manager/eksManager'
-import { EcrManager } from '../manager/ecrManager'
-import { LambdaManager } from '../manager/lambdaManager'
-import { SnsManager } from '../manager/snsManager'
-import { SecretsManager } from '../manager/secretsManager'
-import { CloudWatchManager } from '../manager/cloudWatchManager'
-import { WafManager } from '../manager/wafManager'
-import { AppConfigManager } from '../manager/appConfigManager'
 import { Construct } from 'constructs'
-import { ApiManager } from '../manager/apiManager'
-import { SsmManager } from '../manager/ssmManager'
-import { CodeBuildManager } from '../manager/codeBuildManager'
+import * as aws from '../manager/aws'
+import * as types from '../types'
+import * as utils from '../utils'
 
 /**
  * @stability stable
@@ -45,28 +25,28 @@ import { CodeBuildManager } from '../manager/codeBuildManager'
  *     B(Construct)-->|implements|C(IConstruct);
  */
 export class CommonConstruct extends Construct {
-  props: CommonStackProps
-  acmManager: AcmManager
-  apiManager: ApiManager
-  appConfigManager: AppConfigManager
-  codeBuildManager: CodeBuildManager
-  cloudFrontManager: CloudFrontManager
-  cloudTrailManager: CloudTrailManager
-  cloudWatchManager: CloudWatchManager
-  ecrManager: EcrManager
-  ecsManager: EcsManager
-  eksManager: EksManager
-  eventManager: EventManager
-  iamManager: IamManager
-  lambdaManager: LambdaManager
-  logManager: LogManager
-  route53Manager: Route53Manager
-  s3Manager: S3Manager
-  secretsManager: SecretsManager
-  snsManager: SnsManager
-  ssMManager: SsmManager
-  vpcManager: VpcManager
-  wafManager: WafManager
+  props: types.CommonStackProps
+  acmManager: aws.AcmManager
+  apiManager: aws.ApiManager
+  appConfigManager: aws.AppConfigManager
+  codeBuildManager: aws.CodeBuildManager
+  cloudFrontManager: aws.CloudFrontManager
+  cloudTrailManager: aws.CloudTrailManager
+  cloudWatchManager: aws.CloudWatchManager
+  ecrManager: aws.EcrManager
+  ecsManager: aws.EcsManager
+  eksManager: aws.EksManager
+  eventManager: aws.EventManager
+  iamManager: aws.IamManager
+  lambdaManager: aws.LambdaManager
+  logManager: aws.LogManager
+  route53Manager: aws.Route53Manager
+  s3Manager: aws.S3Manager
+  secretsManager: aws.SecretsManager
+  snsManager: aws.SnsManager
+  ssMManager: aws.SsmManager
+  vpcManager: aws.VpcManager
+  wafManager: aws.WafManager
   fullyQualifiedDomainName: string
 
   /**
@@ -75,31 +55,31 @@ export class CommonConstruct extends Construct {
    * @param {string} id scoped id of the resource
    * @param {CommonStackProps} props
    */
-  constructor(parent: Construct, id: string, props: CommonStackProps) {
+  constructor(parent: Construct, id: string, props: types.CommonStackProps) {
     super(parent, id)
     this.props = props
-    this.acmManager = new AcmManager()
-    this.apiManager = new ApiManager()
-    this.appConfigManager = new AppConfigManager()
-    this.codeBuildManager = new CodeBuildManager()
-    this.cloudFrontManager = new CloudFrontManager()
-    this.cloudTrailManager = new CloudTrailManager()
-    this.cloudWatchManager = new CloudWatchManager()
-    this.ecrManager = new EcrManager()
-    this.ecsManager = new EcsManager()
-    this.eksManager = new EksManager()
-    this.eventManager = new EventManager()
-    this.iamManager = new IamManager()
-    this.lambdaManager = new LambdaManager()
-    this.logManager = new LogManager()
-    this.route53Manager = new Route53Manager()
-    this.s3Manager = new S3Manager()
-    this.secretsManager = new SecretsManager()
-    this.snsManager = new SnsManager()
-    this.ssMManager = new SsmManager()
-    this.vpcManager = new VpcManager()
-    this.vpcManager = new VpcManager()
-    this.wafManager = new WafManager()
+    this.acmManager = new aws.AcmManager()
+    this.apiManager = new aws.ApiManager()
+    this.appConfigManager = new aws.AppConfigManager()
+    this.codeBuildManager = new aws.CodeBuildManager()
+    this.cloudFrontManager = new aws.CloudFrontManager()
+    this.cloudTrailManager = new aws.CloudTrailManager()
+    this.cloudWatchManager = new aws.CloudWatchManager()
+    this.ecrManager = new aws.EcrManager()
+    this.ecsManager = new aws.EcsManager()
+    this.eksManager = new aws.EksManager()
+    this.eventManager = new aws.EventManager()
+    this.iamManager = new aws.IamManager()
+    this.lambdaManager = new aws.LambdaManager()
+    this.logManager = new aws.LogManager()
+    this.route53Manager = new aws.Route53Manager()
+    this.s3Manager = new aws.S3Manager()
+    this.secretsManager = new aws.SecretsManager()
+    this.snsManager = new aws.SnsManager()
+    this.ssMManager = new aws.SsmManager()
+    this.vpcManager = new aws.VpcManager()
+    this.vpcManager = new aws.VpcManager()
+    this.wafManager = new aws.WafManager()
 
     this.determineFullyQualifiedDomain()
   }
@@ -112,7 +92,7 @@ export class CommonConstruct extends Construct {
    * @param {boolean} overrideId Flag which indicates whether to override the default logical id of the output
    */
   protected addCfnOutput(id: string, value: string, description?: string, overrideId = true): cdk.CfnOutput {
-    return createCfnOutput(id, this, value, description, overrideId)
+    return utils.createCfnOutput(id, this, value, description, overrideId)
   }
 
   /**
@@ -128,23 +108,23 @@ export class CommonConstruct extends Construct {
    * @summary Utility method to determine if the initialisation is in development (dev) stage
    * This is determined by the stage property injected via cdk context
    */
-  public isDevelopmentStage = () => isDevStage(this.props.stage)
+  public isDevelopmentStage = () => utils.isDevStage(this.props.stage)
 
   /**
    * @summary Utility method to determine if the initialisation is in test (tst) stage
    * This is determined by the stage property injected via cdk context
    */
-  public isTestStage = () => isTestStage(this.props.stage)
+  public isTestStage = () => utils.isTestStage(this.props.stage)
 
   /**
    * @summary Utility method to determine if the initialisation is in uat (uat) stage
    * This is determined by the stage property injected via cdk context
    */
-  public isUatStage = () => isUatStage(this.props.stage)
+  public isUatStage = () => utils.isUatStage(this.props.stage)
 
   /**
    * @summary Utility method to determine if the initialisation is in production (prd) stage
    * This is determined by the stage property injected via cdk context
    */
-  public isProductionStage = () => isPrdStage(this.props.stage)
+  public isProductionStage = () => utils.isPrdStage(this.props.stage)
 }

@@ -1,20 +1,20 @@
 import * as cloudtrail from 'aws-cdk-lib/aws-cloudtrail'
 import * as logs from 'aws-cdk-lib/aws-logs'
 import * as s3 from 'aws-cdk-lib/aws-s3'
-import { CommonConstruct } from '../common/commonConstruct'
-import { CloudTrailProps } from '../types'
-import { createCfnOutput } from '../utils'
+import * as common from '../../common'
+import * as types from '../../types'
+import * as utils from '../../utils'
 
 /**
  * @stability stable
  * @category Management & Governance
  * @summary Provides operations on AWS CloudTrail.
- * - A new instance of this class is injected into {@link CommonConstruct} constructor.
- * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
+ * - A new instance of this class is injected into {@link common.CommonConstruct} constructor.
+ * - If a custom construct extends {@link common.CommonConstruct}, an instance is available within the context.
  * @example
  * import * as common from '@gradientedge/cdk-utils'
  *
- * class CustomConstruct extends common.CommonConstruct {
+ * class CustomConstruct extends common.common.CommonConstruct {
  *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
  *     super(parent, id, props)
  *     this.props = props
@@ -35,8 +35,8 @@ export class CloudTrailManager {
   /**
    * @summary Method to create a cloud trail
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {CloudTrailProps} props
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.CloudTrailProps} props
    * @param {logs.CfnLogGroup} logGroup
    * @param {s3.IBucket} dataBucket
    * @param {s3.IBucket} logBucket
@@ -44,8 +44,8 @@ export class CloudTrailManager {
    */
   public createCloudTrail(
     id: string,
-    scope: CommonConstruct,
-    props: CloudTrailProps,
+    scope: common.CommonConstruct,
+    props: types.CloudTrailProps,
     logGroup: logs.CfnLogGroup,
     dataBucket: s3.IBucket,
     logBucket: s3.IBucket,
@@ -84,8 +84,8 @@ export class CloudTrailManager {
     cloudTrail.addDependsOn(logGroup)
     cloudTrail.addDependsOn(role)
 
-    createCfnOutput(`${id}-trailName`, scope, cloudTrail.trailName)
-    createCfnOutput(`${id}-trailArn`, scope, cloudTrail.attrArn)
+    utils.createCfnOutput(`${id}-trailName`, scope, cloudTrail.trailName)
+    utils.createCfnOutput(`${id}-trailArn`, scope, cloudTrail.attrArn)
 
     return { cloudTrailRole: role, cloudTrail }
   }

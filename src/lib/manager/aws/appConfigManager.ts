@@ -1,8 +1,8 @@
-import * as appconfig from 'aws-cdk-lib/aws-appconfig'
 import * as cdk from 'aws-cdk-lib'
-import { CommonConstruct } from '../common/commonConstruct'
-import { AppConfigProps } from '../types'
-import { createCfnOutput } from '../utils'
+import * as appconfig from 'aws-cdk-lib/aws-appconfig'
+import * as common from '../../common'
+import * as types from '../../types'
+import * as utils from '../../utils'
 
 /**
  * @stability stable
@@ -35,12 +35,12 @@ export const ArnsByRegion: { [key: string]: string } = {
 /**
  * @category Management & Governance
  * @summary Provides operations on AWS AppConfig.
- * - A new instance of this class is injected into {@link CommonConstruct} constructor.
- * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
+ * - A new instance of this class is injected into {@link common.CommonConstruct} constructor.
+ * - If a custom construct extends {@link common.CommonConstruct}, an instance is available within the context.
  * @example
  * import * as common from '@gradientedge/cdk-utils'
  *
- * class CustomConstruct extends common.CommonConstruct {
+ * class CustomConstruct extends common.common.CommonConstruct {
  *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
  *     super(parent, id, props)
  *     this.props = props
@@ -53,20 +53,24 @@ export const ArnsByRegion: { [key: string]: string } = {
 export class AppConfigManager {
   /**
    * Method to get static ARNs for AppConfig extensions
-   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
    */
-  public getArnForAppConfigExtension(scope: CommonConstruct) {
+  public getArnForAppConfigExtension(scope: common.CommonConstruct) {
     return ArnsByRegion[scope.props.region]
   }
 
   /**
    * @summary Method to create an AppConfig Application
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {AppConfigProps} props
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.AppConfigProps} props
    * @returns {appconfig.CfnApplication}
    */
-  public createApplication(id: string, scope: CommonConstruct, props: AppConfigProps): appconfig.CfnApplication {
+  public createApplication(
+    id: string,
+    scope: common.CommonConstruct,
+    props: types.AppConfigProps
+  ): appconfig.CfnApplication {
     if (!props) throw `AppConfig props undefined`
 
     const application = new appconfig.CfnApplication(scope, `${id}`, {
@@ -75,8 +79,8 @@ export class AppConfigManager {
       tags: props.application.tags,
     })
 
-    createCfnOutput(`${id}-ApplicationId`, scope, cdk.Fn.ref(application.logicalId))
-    createCfnOutput(`${id}-ApplicationName`, scope, application.name)
+    utils.createCfnOutput(`${id}-ApplicationId`, scope, cdk.Fn.ref(application.logicalId))
+    utils.createCfnOutput(`${id}-ApplicationName`, scope, application.name)
 
     return application
   }
@@ -84,16 +88,16 @@ export class AppConfigManager {
   /**
    * @summary Method to create an AppConfig Environment for a given application
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
    * @param {string} applicationId id of the application
-   * @param {AppConfigProps} props
+   * @param {types.AppConfigProps} props
    * @returns {appconfig.CfnEnvironment}
    */
   public createEnvironment(
     id: string,
-    scope: CommonConstruct,
+    scope: common.CommonConstruct,
     applicationId: string,
-    props: AppConfigProps
+    props: types.AppConfigProps
   ): appconfig.CfnEnvironment {
     if (!props) throw `AppConfig props undefined`
 
@@ -105,8 +109,8 @@ export class AppConfigManager {
       tags: props.environment.tags,
     })
 
-    createCfnOutput(`${id}-configurationEnvironmentId`, scope, cdk.Fn.ref(environment.logicalId))
-    createCfnOutput(`${id}-configurationEnvironmentName`, scope, environment.name)
+    utils.createCfnOutput(`${id}-configurationEnvironmentId`, scope, cdk.Fn.ref(environment.logicalId))
+    utils.createCfnOutput(`${id}-configurationEnvironmentName`, scope, environment.name)
 
     return environment
   }
@@ -115,16 +119,16 @@ export class AppConfigManager {
    * @summary Method to create an AppConfig Configuration Profile for a given application
    * - <p>&#9888; The <b>locationUri</b> is defaulted to <i>hosted</i> if undefined</p>
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
    * @param {string} applicationId id of the application
-   * @param {AppConfigProps} props
+   * @param {types.AppConfigProps} props
    * @returns {appconfig.CfnConfigurationProfile}
    */
   public createConfigurationProfile(
     id: string,
-    scope: CommonConstruct,
+    scope: common.CommonConstruct,
     applicationId: string,
-    props: AppConfigProps
+    props: types.AppConfigProps
   ): appconfig.CfnConfigurationProfile {
     if (!props) throw `AppConfig props undefined`
 
@@ -138,8 +142,8 @@ export class AppConfigManager {
       validators: props.configurationProfile.validators,
     })
 
-    createCfnOutput(`${id}-configurationProfileId`, scope, cdk.Fn.ref(profile.logicalId))
-    createCfnOutput(`${id}-configurationProfileName`, scope, profile.name)
+    utils.createCfnOutput(`${id}-configurationProfileId`, scope, cdk.Fn.ref(profile.logicalId))
+    utils.createCfnOutput(`${id}-configurationProfileName`, scope, profile.name)
 
     return profile
   }

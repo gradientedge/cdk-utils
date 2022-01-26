@@ -1,12 +1,11 @@
 import * as cdk from 'aws-cdk-lib'
-import { Construct } from 'constructs'
 import { Template } from 'aws-cdk-lib/assertions'
-import { CommonStackProps } from '../../lib/types'
-import { CommonConstruct } from '../../lib/common/commonConstruct'
-import { CommonStack } from '../../lib/common/commonStack'
 import * as watch from 'aws-cdk-lib/aws-cloudwatch'
+import { Construct } from 'constructs'
+import * as common from '../../lib/common'
+import * as types from '../../lib/types'
 
-interface TestStackProps extends CommonStackProps {
+interface TestStackProps extends types.CommonStackProps {
   testLogGroup: any
   testMetric: any
   testAlarm: any
@@ -35,7 +34,7 @@ const testStackProps = {
   stageContextPath: 'src/test/common/cdkEnv',
 }
 
-class TestCommonStack extends CommonStack {
+class TestCommonStack extends common.CommonStack {
   declare props: TestStackProps
 
   constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
@@ -65,7 +64,7 @@ class TestCommonStack extends CommonStack {
   }
 }
 
-class TestInvalidCommonStack extends CommonStack {
+class TestInvalidCommonStack extends common.CommonStack {
   declare props: TestStackProps
 
   constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
@@ -94,7 +93,7 @@ class TestInvalidCommonStack extends CommonStack {
   }
 }
 
-class TestCommonConstruct extends CommonConstruct {
+class TestCommonConstruct extends common.CommonConstruct {
   declare props: TestStackProps
 
   constructor(parent: Construct, name: string, props: TestStackProps) {

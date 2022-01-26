@@ -1,20 +1,20 @@
 import * as ec2 from 'aws-cdk-lib/aws-ec2'
 import * as ecr from 'aws-cdk-lib/aws-ecr-assets'
 import * as eks from 'aws-cdk-lib/aws-eks'
-import { CommonConstruct } from '../common/commonConstruct'
-import { EksClusterProps } from '../types'
-import { createCfnOutput } from '../utils'
+import * as common from '../../common'
+import * as types from '../../types'
+import * as utils from '../../utils'
 
 /**
  * @stability stable
  * @category Containers
  * @summary Provides operations on AWS Elastic Kubernetes Service.
- * - A new instance of this class is injected into {@link CommonConstruct} constructor.
- * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
+ * - A new instance of this class is injected into {@link common.CommonConstruct} constructor.
+ * - If a custom construct extends {@link common.CommonConstruct}, an instance is available within the context.
  * @example
  * import * as common from '@gradientedge/cdk-utils'
  *
- * class CustomConstruct extends common.CommonConstruct {
+ * class CustomConstruct extends common.common.CommonConstruct {
  *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
  *     super(parent, id, props)
  *     this.props = props
@@ -28,15 +28,15 @@ export class EksManager {
   /**
    * @summary Method to create an eks deployment
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {EksClusterProps} props
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.EksClusterProps} props
    * @param {ecr.DockerImageAsset} image
    * @param {ec2.IVpc} vpc
    */
   public createEksDeployment(
     id: string,
-    scope: CommonConstruct,
-    props: EksClusterProps,
+    scope: common.CommonConstruct,
+    props: types.EksClusterProps,
     image: ecr.DockerImageAsset,
     vpc: ec2.IVpc
   ) {
@@ -93,8 +93,8 @@ export class EksManager {
 
     cluster.addManifest(`${id}Pod`, service, deployment)
 
-    createCfnOutput(`${id}-clusterArn`, scope, cluster.clusterArn)
-    createCfnOutput(`${id}-clusterEndpoint`, scope, cluster.clusterEndpoint)
+    utils.createCfnOutput(`${id}-clusterArn`, scope, cluster.clusterArn)
+    utils.createCfnOutput(`${id}-clusterEndpoint`, scope, cluster.clusterEndpoint)
 
     return cluster
   }

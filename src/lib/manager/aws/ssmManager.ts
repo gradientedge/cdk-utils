@@ -1,19 +1,19 @@
-import { CommonConstruct } from '../common/commonConstruct'
 import * as ssm from 'aws-cdk-lib/aws-ssm'
-import { createCfnOutput } from '../utils'
 import * as cr from 'aws-cdk-lib/custom-resources'
-import { SSMParameterReaderProps } from '../types'
+import * as common from '../../common'
+import * as types from '../../types'
+import * as utils from '../../utils'
 
 /**
  * @stability stable
  * @category Management & Governance
  * @summary Provides operations on AWS Systems Manager.
- * - A new instance of this class is injected into {@link CommonConstruct} constructor.
- * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
+ * - A new instance of this class is injected into {@link common.CommonConstruct} constructor.
+ * - If a custom construct extends {@link common.CommonConstruct}, an instance is available within the context.
  * @example
- * import { CommonConstruct } from '@gradientedge/cdk-utils'
+ * import { common.CommonConstruct } from '@gradientedge/cdk-utils'
  *
- * class CustomConstruct extends CommonConstruct {
+ * class CustomConstruct extends common.CommonConstruct {
  *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
  *     super(parent, id, props)
  *     this.props = props
@@ -27,10 +27,10 @@ export class SsmManager {
   /**
    * Method to write a string parameter to the parameters store
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
    * @param {ssm.StringParameterProps} props parameter props
    */
-  public writeStringToParameters(id: string, scope: CommonConstruct, props: ssm.StringParameterProps) {
+  public writeStringToParameters(id: string, scope: common.CommonConstruct, props: ssm.StringParameterProps) {
     if (!props) throw `Parameter props undefined`
 
     const parameter = new ssm.StringParameter(scope, `${id}`, {
@@ -39,8 +39,8 @@ export class SsmManager {
       stringValue: props.stringValue,
     })
 
-    createCfnOutput(`${id}-parameterArn`, scope, parameter.parameterArn)
-    createCfnOutput(`${id}-parameterName`, scope, parameter.parameterName)
+    utils.createCfnOutput(`${id}-parameterArn`, scope, parameter.parameterArn)
+    utils.createCfnOutput(`${id}-parameterName`, scope, parameter.parameterName)
 
     return parameter
   }
@@ -48,10 +48,10 @@ export class SsmManager {
   /**
    * Method to read a string parameter from the parameters store
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
    * @param {string} parameterName parameter name to lookup
    */
-  public readStringParameter(id: string, scope: CommonConstruct, parameterName: string) {
+  public readStringParameter(id: string, scope: common.CommonConstruct, parameterName: string) {
     if (!parameterName || parameterName == '') throw 'Invalid parameter name'
 
     return ssm.StringParameter.fromStringParameterName(scope, `${id}`, parameterName).stringValue
@@ -60,11 +60,16 @@ export class SsmManager {
   /**
    * Method to read a string parameter from the parameters store in a given region
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
    * @param {string} parameterName parameter name to lookup
    * @param {string} region region name to lookup parameter
    */
-  public readStringParameterFromRegion(id: string, scope: CommonConstruct, parameterName: string, region: string) {
+  public readStringParameterFromRegion(
+    id: string,
+    scope: common.CommonConstruct,
+    parameterName: string,
+    region: string
+  ) {
     if (!parameterName || parameterName == '') throw 'Invalid parameter name'
     if (!region || region == '') throw 'Invalid region'
 
@@ -81,11 +86,11 @@ export class SsmManager {
 export class SSMParameterReader extends cr.AwsCustomResource {
   /**
    *
-   * @param scope
-   * @param name
-   * @param props
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {string} name parameter name
+   * @param {types.SSMParameterReaderProps} props
    */
-  constructor(scope: CommonConstruct, name: string, props: SSMParameterReaderProps) {
+  constructor(scope: common.CommonConstruct, name: string, props: types.SSMParameterReaderProps) {
     const { parameterName, region } = props
 
     const ssmAwsSdkCall: cr.AwsSdkCall = {

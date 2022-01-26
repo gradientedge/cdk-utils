@@ -1,12 +1,12 @@
-import { CommonConstruct } from '../common/commonConstruct'
-import * as iam from 'aws-cdk-lib/aws-iam'
-import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager'
-import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as apig from 'aws-cdk-lib/aws-apigateway'
-import * as route53 from 'aws-cdk-lib/aws-route53'
 import * as acm from 'aws-cdk-lib/aws-certificatemanager'
-import { GraphQlApiLambdaEnvironment, GraphQlApiLambdaProps } from '../types'
+import * as iam from 'aws-cdk-lib/aws-iam'
+import * as lambda from 'aws-cdk-lib/aws-lambda'
+import * as route53 from 'aws-cdk-lib/aws-route53'
+import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager'
 import { Construct } from 'constructs'
+import { CommonConstruct } from '../common/commonConstruct'
+import { GraphQlApiLambdaEnvironment, GraphQlApiLambdaProps } from '../types'
 
 /**
  * @stability stable

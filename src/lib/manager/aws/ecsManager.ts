@@ -2,20 +2,20 @@ import * as ec2 from 'aws-cdk-lib/aws-ec2'
 import * as ecs from 'aws-cdk-lib/aws-ecs'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import * as logs from 'aws-cdk-lib/aws-logs'
-import { CommonConstruct } from '../common/commonConstruct'
-import { EcsClusterProps, EcsTaskProps } from '../types'
-import { createCfnOutput } from '../utils'
+import * as common from '../../common'
+import * as types from '../../types'
+import * as utils from '../../utils'
 
 /**
  * @stability stable
  * @category Containers
  * @summary Provides operations on AWS Elastic Container Service.
- * - A new instance of this class is injected into {@link CommonConstruct} constructor.
- * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
+ * - A new instance of this class is injected into {@link common.CommonConstruct} constructor.
+ * - If a custom construct extends {@link common.CommonConstruct}, an instance is available within the context.
  * @example
  * import * as common from '@gradientedge/cdk-utils'
  *
- * class CustomConstruct extends common.CommonConstruct {
+ * class CustomConstruct extends common.common.CommonConstruct {
  *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
  *     super(parent, id, props)
  *     this.props = props
@@ -29,11 +29,11 @@ export class EcsManager {
   /**
    * @summary Method to create an ecs cluster
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {EcsClusterProps} props
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.EcsClusterProps} props
    * @param {ec2.IVpc} vpc
    */
-  public createEcsCluster(id: string, scope: CommonConstruct, props: EcsClusterProps, vpc: ec2.IVpc) {
+  public createEcsCluster(id: string, scope: common.CommonConstruct, props: types.EcsClusterProps, vpc: ec2.IVpc) {
     if (!props) throw `Ecs Cluster props undefined`
 
     const ecsCluster = new ecs.Cluster(scope, `${id}`, {
@@ -41,8 +41,8 @@ export class EcsManager {
       vpc: vpc,
     })
 
-    createCfnOutput(`${id}-clusterArn`, scope, ecsCluster.clusterArn)
-    createCfnOutput(`${id}-clusterName`, scope, ecsCluster.clusterName)
+    utils.createCfnOutput(`${id}-clusterArn`, scope, ecsCluster.clusterArn)
+    utils.createCfnOutput(`${id}-clusterName`, scope, ecsCluster.clusterName)
 
     return ecsCluster
   }
@@ -50,8 +50,8 @@ export class EcsManager {
   /**
    * @summary Method to create an ecs fargate task
    * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {EcsTaskProps} props
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.EcsTaskProps} props
    * @param {ecs.ICluster} cluster
    * @param {iam.Role} role
    * @param {logs.ILogGroup} logGroup
@@ -60,8 +60,8 @@ export class EcsManager {
    */
   public createEcsFargateTask(
     id: string,
-    scope: CommonConstruct,
-    props: EcsTaskProps,
+    scope: common.CommonConstruct,
+    props: types.EcsTaskProps,
     cluster: ecs.ICluster,
     role: iam.Role,
     logGroup: logs.ILogGroup,
@@ -93,7 +93,7 @@ export class EcsManager {
       privileged: false,
     })
 
-    createCfnOutput(`${id}-taskArn`, scope, ecsTask.taskDefinitionArn)
+    utils.createCfnOutput(`${id}-taskArn`, scope, ecsTask.taskDefinitionArn)
 
     return ecsTask
   }

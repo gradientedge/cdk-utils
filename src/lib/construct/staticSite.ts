@@ -1,11 +1,11 @@
+import * as certificateManager from 'aws-cdk-lib/aws-certificatemanager'
+import * as cloudfront from 'aws-cdk-lib/aws-cloudfront'
+import * as origins from 'aws-cdk-lib/aws-cloudfront-origins'
+import * as route53 from 'aws-cdk-lib/aws-route53'
+import * as s3 from 'aws-cdk-lib/aws-s3'
+import { Construct } from 'constructs'
 import { CommonConstruct } from '../common/commonConstruct'
 import { StaticSiteProps } from '../types'
-import * as route53 from 'aws-cdk-lib/aws-route53'
-import * as certificateManager from 'aws-cdk-lib/aws-certificatemanager'
-import * as s3 from 'aws-cdk-lib/aws-s3'
-import * as cloudfront from 'aws-cdk-lib/aws-cloudfront'
-import { Construct } from 'constructs'
-import * as origins from 'aws-cdk-lib/aws-cloudfront-origins'
 
 /**
  * @stability stable
