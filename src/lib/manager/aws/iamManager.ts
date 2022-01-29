@@ -379,10 +379,16 @@ export class IamManager {
    * @param {string} id scoped id of the resource
    * @param {common.CommonConstruct} scope scope in which this resource is defined
    * @param {iam.PolicyDocument} policy
+   * @param {iam.ServicePrincipal} servicePrinicpal
    */
-  public createRoleForLambda(id: string, scope: common.CommonConstruct, policy: iam.PolicyDocument) {
+  public createRoleForLambda(
+    id: string,
+    scope: common.CommonConstruct,
+    policy: iam.PolicyDocument,
+    servicePrinicpal?: iam.ServicePrincipal
+  ) {
     const role = new iam.Role(scope, `${id}`, {
-      assumedBy: new iam.ServicePrincipal('lambda.amazonaws.com'),
+      assumedBy: servicePrinicpal ?? new iam.ServicePrincipal('lambda.amazonaws.com'),
       description: `Role for ${id} Lambda function`,
       inlinePolicies: { policy },
       managedPolicies: [

@@ -8,7 +8,7 @@ import * as utils from '../../utils'
 /**
  * @category Utils
  */
-export enum CloudWatchWidgetType {
+enum CloudWatchWidgetType {
   Text = 'Text',
   SingleValue = 'SingleValue',
   Graph = 'Graph',
