@@ -41,6 +41,7 @@ export class ApiManager {
     const api = new apig.LambdaRestApi(scope, `${id}`, {
       binaryMediaTypes: props.binaryMediaTypes,
       minimumCompressionSize: props.minimumCompressionSize,
+      defaultMethodOptions: props.defaultMethodOptions,
       deploy: props.deploy || true,
       deployOptions: {
         stageName: scope.props.stage,
