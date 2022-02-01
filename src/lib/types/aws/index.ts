@@ -5,6 +5,7 @@ import * as acm from 'aws-cdk-lib/aws-certificatemanager'
 import * as cloudfront from 'aws-cdk-lib/aws-cloudfront'
 import * as cloudtrail from 'aws-cdk-lib/aws-cloudtrail'
 import * as watch from 'aws-cdk-lib/aws-cloudwatch'
+import * as dynamodb from 'aws-cdk-lib/aws-dynamodb'
 import * as ec2 from 'aws-cdk-lib/aws-ec2'
 import * as ecs from 'aws-cdk-lib/aws-ecs'
 import * as ecsPatterns from 'aws-cdk-lib/aws-ecs-patterns'
@@ -284,6 +285,11 @@ export interface LifecycleRule extends s3.LifecycleRule {
   expirationInDays?: number
   noncurrentVersionExpirationInDays?: number
 }
+
+/**
+ * @category Storage
+ */
+export interface TableProps extends dynamodb.TableProps {}
 
 /**
  * @category Storage

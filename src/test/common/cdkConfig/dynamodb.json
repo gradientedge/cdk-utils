@@ -1,0 +1,10 @@
+{
+  "testTable": {
+    "tableName": "test-table",
+    "partitionKey": {
+      "name": "id",
+      "type": "S"
+    },
+    "removalPolicy": "destroy"
+  }
+}

@@ -33,6 +33,7 @@ export class CommonConstruct extends Construct {
   cloudFrontManager: aws.CloudFrontManager
   cloudTrailManager: aws.CloudTrailManager
   cloudWatchManager: aws.CloudWatchManager
+  dynamodbManager: aws.DynamodbManager
   ecrManager: aws.EcrManager
   ecsManager: aws.EcsManager
   eksManager: aws.EksManager
@@ -65,6 +66,7 @@ export class CommonConstruct extends Construct {
     this.cloudFrontManager = new aws.CloudFrontManager()
     this.cloudTrailManager = new aws.CloudTrailManager()
     this.cloudWatchManager = new aws.CloudWatchManager()
+    this.dynamodbManager = new aws.DynamodbManager()
     this.ecrManager = new aws.EcrManager()
     this.ecsManager = new aws.EcsManager()
     this.eksManager = new aws.EksManager()
