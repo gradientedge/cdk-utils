@@ -69,10 +69,7 @@ export class ApiManager {
       },
       restApiName: `${props.restApiName}-${scope.props.stage}`,
       handler: lambdaFunction,
-      defaultCorsPreflightOptions: {
-        allowOrigins: props.defaultCorsPreflightOptions?.allowOrigins || apig.Cors.ALL_ORIGINS,
-        allowMethods: props.defaultCorsPreflightOptions?.allowMethods || apig.Cors.ALL_METHODS,
-      },
+      defaultCorsPreflightOptions: props.defaultCorsPreflightOptions,
       proxy: props.proxy || true,
     })
 
