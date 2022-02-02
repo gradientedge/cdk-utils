@@ -5,7 +5,7 @@ import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as route53 from 'aws-cdk-lib/aws-route53'
 import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager'
 import { Construct } from 'constructs'
-import { CommonConstruct } from '../common/commonConstruct'
+import { CommonConstruct } from '../common'
 import { GraphQlApiLambdaEnvironment, GraphQlApiLambdaProps } from '../types'
 
 /**
@@ -39,16 +39,16 @@ export class GraphQLApiLambda extends CommonConstruct {
 
   /* graphql api resources */
   applicationSecrets: secretsmanager.ISecret[]
-  graphQLApiHostedZone: route53.IHostedZone
-  graphQLApiCertificate: acm.ICertificate
-  graphQLApiDomain: apig.DomainName
-  graphQLApiBasePathMappings: apig.BasePathMapping[] = []
   graphQLApiLambdaPolicy: iam.PolicyDocument
   graphQLApiLambdaRole: iam.Role
   graphQLApiLambdaEnvironment: GraphQlApiLambdaEnvironment
   graphQLApiLambdaLayers: lambda.LayerVersion[] = []
   graphQLApiLambdaFunction: lambda.Function
   graphQLApi: apig.RestApi
+  graphQLApiHostedZone: route53.IHostedZone
+  graphQLApiCertificate: acm.ICertificate
+  graphQLApiDomain: apig.DomainName
+  graphQLApiBasePathMappings: apig.BasePathMapping[] = []
 
   /**
    * @summary Constructor to initialise the GraphQLApiLambda Construct
