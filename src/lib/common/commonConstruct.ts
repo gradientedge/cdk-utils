@@ -80,7 +80,6 @@ export class CommonConstruct extends Construct {
     this.snsManager = new aws.SnsManager()
     this.ssMManager = new aws.SsmManager()
     this.vpcManager = new aws.VpcManager()
-    this.vpcManager = new aws.VpcManager()
     this.wafManager = new aws.WafManager()
 
     this.determineFullyQualifiedDomain()
