@@ -12,7 +12,7 @@ import * as route53 from 'aws-cdk-lib/aws-route53'
 import * as s3 from 'aws-cdk-lib/aws-s3'
 import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager'
 import { Construct } from 'constructs'
-import { CommonConstruct } from '../common/commonConstruct'
+import { CommonConstruct } from '../common'
 import { SiteWithEcsBackendProps } from '../types'
 
 /**
