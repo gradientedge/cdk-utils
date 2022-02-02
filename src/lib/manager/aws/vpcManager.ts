@@ -38,7 +38,7 @@ export class VpcManager {
     if (!props) throw 'Vpc props undefined'
     const vpc = new ec2.Vpc(scope, `${id}`, {
       maxAzs: props.maxAzs,
-      cidr: props.cidr ?? undefined,
+      cidr: props.cidr,
     })
 
     utils.createCfnOutput(`${id}Id`, scope, vpc.vpcId)
