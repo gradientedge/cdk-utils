@@ -79,6 +79,7 @@ export class LambdaManager {
    * @param {Map<string, string>} environment
    * @param {ec2.IVpc} vpc
    * @param {ec2.ISecurityGroup[]} securityGroups
+   * @param {ec2.SubnetSelection} vpcSubnets
    * @param {efs.IAccessPoint} accessPoint
    * @param {string} mountPath
    */
@@ -93,6 +94,7 @@ export class LambdaManager {
     environment?: any,
     vpc?: ec2.IVpc,
     securityGroups?: ec2.ISecurityGroup[],
+    vpcSubnets?: ec2.SubnetSelection,
     accessPoint?: efs.IAccessPoint,
     mountPath?: string
   ) {
@@ -118,6 +120,7 @@ export class LambdaManager {
       securityGroups: securityGroups,
       timeout: props.timeoutInSecs ? cdk.Duration.seconds(props.timeoutInSecs) : cdk.Duration.minutes(1),
       vpc: vpc,
+      vpcSubnets: vpcSubnets,
     })
 
     utils.createCfnOutput(`${id}-lambdaArn`, scope, lambdaFunction.functionArn)
