@@ -39,7 +39,6 @@ export class VpcManager {
     const vpc = new ec2.Vpc(scope, `${id}`, {
       maxAzs: props.maxAzs,
       cidr: props.cidr ?? undefined,
-      vpcName: CommonVpcIdentifier ?? `${id}-${scope.props.stage}`,
     })
 
     utils.createCfnOutput(`${id}Id`, scope, vpc.vpcId)
