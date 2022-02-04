@@ -1,0 +1,30 @@
+{
+  "name": "@gradientedge/cdk-utils-api-destined-function",
+  "version": "0.0.0-SNAPSHOT",
+  "description": "Application for API Destined Function",
+  "main": "dist/index.js",
+  "license": "UNLICENSED",
+  "engines": {
+    "node": ">=14.16.0 <15"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gradientedge/cdk-utils.git"
+  },
+  "scripts": {
+    "build": "yarn package:function && yarn copy:layers",
+    "copy:layers": "cp -R layers ../../dist/app/api-destined-function",
+    "init": "yarn install",
+    "package:function": "mkdirp layers/nodejs && cp -R package.json layers/nodejs && cd layers/nodejs && yarn install --production --no-lockfile",
+    "start": "node dist/index",
+    "test": "npx jest --ci --runInBand --passWithNoTests"
+  },
+  "dependencies": {
+    "@types/uuid": "^8.3.4",
+    "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "mkdirp": "^1.0.4",
+    "rimraf": "^3.0.2"
+  }
+}

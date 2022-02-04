@@ -24,12 +24,5 @@
     "typeRoots": ["node_modules/@types"],
     "allowSyntheticDefaultImports": true
   },
-  "include": ["index.ts", "src/**/*.ts"],
-  "typedocOptions": {
-    "entryPoints": ["src/lib"],
-    "out": "api-docs",
-    "exclude": "**/*+(index|.spec|.e2e).ts",
-    "excludePrivate": false,
-    "theme": "node_modules/typedoc-default-themes/bin/default"
-  }
+  "include": ["index.ts", "src/**/*.ts", "app/**/*.ts"]
 }

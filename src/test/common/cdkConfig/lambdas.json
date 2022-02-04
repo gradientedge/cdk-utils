@@ -5,8 +5,20 @@
     "memorySize": 1024,
     "timeoutInSecs": 300
   },
+  "testApiDestinedLambda": {
+    "functionName": "test-api-destined",
+    "logRetention": 7,
+    "memorySize": 1024,
+    "timeoutInSecs": 60
+  },
   "testLambda": {
     "functionName": "test-lambda",
+    "logRetention": 7,
+    "memorySize": 1024,
+    "timeoutInSecs": 60
+  },
+  "testAnotherLambda": {
+    "functionName": "test-another-lambda",
     "logRetention": 7,
     "memorySize": 1024,
     "timeoutInSecs": 60

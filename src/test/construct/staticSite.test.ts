@@ -3,7 +3,7 @@ import { Template } from 'aws-cdk-lib/assertions'
 import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment'
 import { Construct } from 'constructs'
 import * as common from '../../lib/common'
-import { StaticSite } from '../../lib/construct/staticSite'
+import { StaticSite } from '../../lib/construct'
 import * as types from '../../lib/types'
 
 interface TestStackProps extends types.StaticSiteProps {

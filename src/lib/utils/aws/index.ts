@@ -1,6 +1,6 @@
 import * as cdk from 'aws-cdk-lib'
 import * as _ from 'lodash'
-import { CommonConstruct } from '../../common/commonConstruct'
+import { CommonConstruct } from '../../common'
 
 /**
  * @category Utils

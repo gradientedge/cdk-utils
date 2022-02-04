@@ -12,13 +12,16 @@ import * as ecsPatterns from 'aws-cdk-lib/aws-ecs-patterns'
 import * as eks from 'aws-cdk-lib/aws-eks'
 import * as elb from 'aws-cdk-lib/aws-elasticloadbalancingv2'
 import * as events from 'aws-cdk-lib/aws-events'
+import * as iam from 'aws-cdk-lib/aws-iam'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
+import * as destinations from 'aws-cdk-lib/aws-lambda-destinations'
 import * as logs from 'aws-cdk-lib/aws-logs'
 import * as route53 from 'aws-cdk-lib/aws-route53'
 import * as s3 from 'aws-cdk-lib/aws-s3'
 import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment'
 import * as sns from 'aws-cdk-lib/aws-sns'
 import * as wafv2 from 'aws-cdk-lib/aws-wafv2'
+import * as types from '../index'
 
 /**
  * @category Management & Governance
@@ -45,6 +48,9 @@ export interface CommonStackProps extends cdk.StackProps {
   stageContextPath?: string
 }
 
+/**
+ * @category Constructs
+ */
 export interface SiteWithEcsBackendProps extends CommonStackProps {
   siteCacheInvalidationDockerFilePath?: string
   siteHealthCheck: HealthCheck
@@ -66,6 +72,9 @@ export interface SiteWithEcsBackendProps extends CommonStackProps {
   timezone: string
 }
 
+/**
+ * @category Constructs
+ */
 export interface StaticSiteProps extends CommonStackProps {
   siteCreateAltARecord: boolean
   siteCertificate: AcmProps
@@ -85,19 +94,40 @@ export interface StaticSiteProps extends CommonStackProps {
   timezone: string
 }
 
+/**
+ * @category Compute
+ */
 export interface HealthCheck extends elb.HealthCheck {
   intervalInSecs: number
   timeoutInSecs: number
 }
 
-export interface GraphQlApiLambdaEnvironment {
+/**
+ * @category Constructs
+ */
+export interface LambdaEnvironment {
   NODE_ENV: string
   LOG_LEVEL: string
   TZ: string
 }
 
+/**
+ * @category Constructs
+ */
+export interface ApiDestinedLambdaEnvironment extends LambdaEnvironment {
+  SOURCE_ID: string
+}
+
+/**
+ * @category Constructs
+ */
+export interface GraphQlApiLambdaEnvironment extends LambdaEnvironment {}
+
+/**
+ * @category Constructs
+ */
 export interface GraphQlApiLambdaProps extends CommonStackProps {
-  apiRootPaths: string[]
+  apiRootPaths?: string[]
   apiSubDomain: string
   graphQLApiCertificate: AcmProps
   graphqlRestApi: apig.LambdaRestApiProps
@@ -109,6 +139,104 @@ export interface GraphQlApiLambdaProps extends CommonStackProps {
   nodeEnv: string
   logLevel: string
   timezone: string
+}
+
+/**
+ * @category Constructs
+ */
+export interface ApiDestinationEventType {
+  eventBus: events.IEventBus
+  logGroupFailure: logs.LogGroup
+  logGroupSuccess: logs.LogGroup
+  ruleFailure: events.Rule
+  ruleSuccess: events.Rule
+}
+
+/**
+ }
+ * @category Constructs
+ */
+export interface ApiDestinedRestApiType {
+  api: apig.RestApi
+  certificate: acm.ICertificate
+  domain: apig.DomainName
+  errorResponseModel: apig.Model
+  hostedZone: route53.IHostedZone
+  integration: apig.Integration
+  integrationErrorResponse: apig.IntegrationResponse
+  integrationRequestParameters: { [p: string]: string }
+  integrationRequestTemplates: { [p: string]: string }
+  integrationResponse: apig.IntegrationResponse
+  method: apig.Method
+  methodErrorResponse: apig.MethodResponse
+  methodResponse: apig.MethodResponse
+  resource: apig.Resource
+  responseModel: apig.Model
+  topic: sns.Topic
+  topicRole: iam.Role
+}
+
+/**
+ }
+ * @category Constructs
+ */
+export interface ApiDestinedLambdaType {
+  destinationFailure: destinations.EventBridgeDestination
+  destinationSuccess: destinations.EventBridgeDestination
+  environment: types.ApiDestinedLambdaEnvironment
+  function: lambda.Function
+  layers: lambda.LayerVersion[]
+  policy: iam.PolicyDocument
+  role: iam.Role
+}
+
+export interface ApiToEventBridgeTargetRestApiProps {
+  certificate: AcmProps
+  integrationResponse?: apig.IntegrationResponse
+  integrationErrorResponse?: apig.IntegrationResponse
+  methodResponse?: apig.MethodResponse
+  methodErrorResponse?: apig.MethodResponse
+  integrationOptions?: apig.IntegrationOptions
+  resource: string
+  errorResponseModel?: apig.ModelOptions
+  responseModel?: apig.ModelOptions
+  restApi?: apig.RestApiProps
+}
+
+/**
+ * @category Constructs
+ */
+interface ApiToEventBridgeTargetLambdaProps {
+  useNative?: boolean
+  function: LambdaProps
+  source?: lambda.AssetCode
+  layerSource?: lambda.AssetCode
+}
+
+/**
+ * @category Constructs
+ */
+interface ApiToEventBridgeTargetEventProps {
+  eventBusName?: string
+  logGroupSuccess?: LogProps
+  logGroupFailure?: LogProps
+  ruleSuccess: EventRuleProps
+  ruleFailure: EventRuleProps
+}
+
+/**
+ * @category Constructs
+ */
+export interface ApiToEventBridgeTargetProps extends CommonStackProps {
+  apiRootPaths?: string[]
+  apiSubDomain: string
+  api: ApiToEventBridgeTargetRestApiProps
+  event: ApiToEventBridgeTargetEventProps
+  lambda: ApiToEventBridgeTargetLambdaProps
+  logLevel: string
+  nodeEnv: string
+  timezone: string
+  useExistingHostedZone: boolean
 }
 
 /**
@@ -246,6 +374,16 @@ export interface EksClusterProps extends eks.ClusterProps {
  * @category Application Integration
  */
 export interface RuleProps extends events.CfnRuleProps {}
+
+/**
+ * @category Application Integration
+ */
+export interface EventRuleProps extends events.RuleProps {}
+
+/**
+ * @category Application Integration
+ */
+export interface EventBusProps extends events.EventBusProps {}
 
 /**
  * @category Compute
