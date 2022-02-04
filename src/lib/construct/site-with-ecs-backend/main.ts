@@ -12,13 +12,13 @@ import * as route53 from 'aws-cdk-lib/aws-route53'
 import * as s3 from 'aws-cdk-lib/aws-s3'
 import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager'
 import { Construct } from 'constructs'
-import { CommonConstruct } from '../common'
-import { SiteWithEcsBackendProps } from '../types'
+import { CommonConstruct } from '../../common'
+import { SiteWithEcsBackendProps } from '../../types'
 
 /**
  * @stability stable
  * @category Constructs
- * @summary Provides a construct to create and deploy a site hosted with an clustered ECS/ELB backend
+ * @classdesc Provides a construct to create and deploy a site hosted with an clustered ECS/ELB backend
  *
  * @example
  * import { SiteWithEcsBackend, SiteWithEcsBackendProps } '@gradientedge/cdk-utils'
@@ -32,12 +32,6 @@ import { SiteWithEcsBackendProps } from '../types'
  *     this.initResources()
  *   }
  * }
- *
- * @mermaid
- *   graph LR;
- *     A[StaticSite]-.->|extends|B(CommonConstruct);
- *     B(CommonConstruct)-->|extends|C(Construct);
- *     C(Construct)-->|implements|D(IConstruct);
  */
 export class SiteWithEcsBackend extends CommonConstruct {
   /* site properties */
@@ -71,12 +65,6 @@ export class SiteWithEcsBackend extends CommonConstruct {
   siteCloudfrontFunction: cloudfront.Function
   siteFunctionAssociations: cloudfront.FunctionAssociation[]
 
-  /**
-   * @summary Constructor to initialise the SiteWithEcsBackend Construct
-   * @param {Construct} parent
-   * @param {string} id
-   * @param {SiteWithEcsBackendProps} props
-   */
   constructor(parent: Construct, id: string, props: SiteWithEcsBackendProps) {
     super(parent, id, props)
 

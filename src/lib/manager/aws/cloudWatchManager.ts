@@ -19,7 +19,7 @@ enum CloudWatchWidgetType {
 /**
  * @stability stable
  * @category Management & Governance
- * @summary Provides operations on AWS CloudWatch.
+ * @classdesc Provides operations on AWS CloudWatch.
  * - A new instance of this class is injected into {@link common.CommonConstruct} constructor.
  * - If a custom construct extends {@link common.CommonConstruct}, an instance is available within the context.
  * @example

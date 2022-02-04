@@ -34,7 +34,7 @@ export const ArnsByRegion: { [key: string]: string } = {
 
 /**
  * @category Management & Governance
- * @summary Provides operations on AWS AppConfig.
+ * @classdesc Provides operations on AWS AppConfig.
  * - A new instance of this class is injected into {@link common.CommonConstruct} constructor.
  * - If a custom construct extends {@link common.CommonConstruct}, an instance is available within the context.
  * @example

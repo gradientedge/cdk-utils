@@ -13,6 +13,7 @@ const defaultResponseObject = {
 }
 
 /**
+ * @category Utils
  * LogLevel enumeration
  */
 export enum LogLevel {

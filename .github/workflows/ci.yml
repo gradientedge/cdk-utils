@@ -70,7 +70,7 @@ jobs:
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && success() }}
         with:
           name: docs-artifact
-          path: ./api-docs/
+          path: ./restApi-docs/
 
   release:
     name: Release Package(s)
@@ -110,7 +110,7 @@ jobs:
       - uses: actions/download-artifact@v2
         with:
           name: docs-artifact
-          path: ./api-docs/
+          path: ./restApi-docs/
       - name: Deploy Package(s)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -120,7 +120,7 @@ jobs:
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ env.GITHUB_TOKEN }}
-          publish_dir: ./api-docs
+          publish_dir: ./restApi-docs
       - uses: geekyeggo/delete-artifact@v1
         with:
           name: |

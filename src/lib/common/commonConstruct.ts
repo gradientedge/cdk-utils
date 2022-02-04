@@ -7,7 +7,7 @@ import * as utils from '../utils'
 /**
  * @stability stable
  * @category Constructs
- * @summary Common construct to use as a base for all higher level constructs.
+ * @classdesc Common construct to use as a base for all higher level constructs.
  *
  * @example
  * import { CommonConstruct } from '@gradientedge/cdk-utils';
@@ -18,11 +18,6 @@ import * as utils from '../utils'
  *     this.props = props;
  *   };
  * };
- *
- * @mermaid
- *   graph LR;
- *     A[CommonConstruct]-.->|extends|B(Construct);
- *     B(Construct)-->|implements|C(IConstruct);
  */
 export class CommonConstruct extends Construct {
   props: types.CommonStackProps
@@ -50,12 +45,6 @@ export class CommonConstruct extends Construct {
   wafManager: aws.WafManager
   fullyQualifiedDomainName: string
 
-  /**
-   * @summary Constructor to initialise the CommonConstruct
-   * @param {Construct} parent
-   * @param {string} id scoped id of the resource
-   * @param {CommonStackProps} props
-   */
   constructor(parent: Construct, id: string, props: types.CommonStackProps) {
     super(parent, id)
     this.props = props

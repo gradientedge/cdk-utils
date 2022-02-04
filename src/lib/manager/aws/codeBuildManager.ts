@@ -5,7 +5,7 @@ import * as common from '../../common'
 /**
  * @stability stable
  * @category Developer Tools
- * @summary Provides operations on AWS Code Build.
+ * @classdesc Provides operations on AWS Code Build.
  * - A new instance of this class is injected into {@link common.CommonConstruct} constructor.
  * - If a custom construct extends {@link common.CommonConstruct}, an instance is available within the context.
  * @example

@@ -8,7 +8,7 @@ const fs = require('fs')
 /**
  * @stability experimental
  * @category Security, Identity & Compliance
- * @summary Provides operations on AWS Secrets Manager.
+ * @classdesc Provides operations on AWS Secrets Manager.
  * - A new instance of this class is injected into {@link common.CommonConstruct} constructor.
  * - If a custom construct extends {@link common.CommonConstruct}, an instance is available within the context.
  * @example

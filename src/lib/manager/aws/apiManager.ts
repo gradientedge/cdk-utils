@@ -7,7 +7,7 @@ import * as utils from '../../utils'
 /**
  * @stability stable
  * @category Networking & Content Delivery
- * @summary Provides operations on AWS API Gateway.
+ * @classdesc Provides operations on AWS API Gateway.
  * - A new instance of this class is injected into {@link common.CommonConstruct} constructor.
  * - If a custom construct extends {@link common.CommonConstruct}, an instance is available within the context.
  * @example
@@ -29,7 +29,7 @@ export class ApiManager {
    * @summary Method to create a Rest API with Lambda backend/target
    * @param {string} id scoped id of the resource
    * @param {common.CommonConstruct} scope scope in which this resource is defined
-   * @param {AcmProps} props lambda rest api props
+   * @param {AcmProps} props lambda rest restApi props
    * @param lambdaFunction
    */
   public createLambdaRestApi(
@@ -80,11 +80,11 @@ export class ApiManager {
   }
 
   /**
-   * @summary Method to create custom api domain
+   * @summary Method to create custom restApi domain
    * @param {string} id scoped id of the resource
    * @param {common.CommonConstruct} scope scope in which this resource is defined
    * @param domainName the domain name to use
-   * @param certificate the certificate used for custom api domain
+   * @param certificate the certificate used for custom restApi domain
    */
   public createApiDomain(id: string, scope: common.CommonConstruct, domainName: string, certificate: acm.ICertificate) {
     const apiDomain = new apig.DomainName(scope, `${id}`, {

@@ -9,7 +9,7 @@ import * as utils from '../../utils'
 /**
  * @stability stable
  * @category Application Integration
- * @summary Provides operations on AWS EventBridge.
+ * @classdesc Provides operations on AWS EventBridge.
  * - A new instance of this class is injected into {@link common.CommonConstruct} constructor.
  * - If a custom construct extends {@link common.CommonConstruct}, an instance is available within the context.
  * @example
@@ -26,6 +26,60 @@ import * as utils from '../../utils'
  * @see [CDK EventBridge Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_events-readme.html}
  */
 export class EventManager {
+  /**
+   * Method to create an event bus
+   * @param {string} id scoped id of the resource
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.EventBusProps} props event bus properties
+   */
+  public createEventBus(id: string, scope: common.CommonConstruct, props: types.EventBusProps) {
+    if (!props) throw 'EventBus props undefined'
+
+    const eventBus = new events.EventBus(scope, `${id}`, {
+      eventBusName: `${props.eventBusName}-${scope.props.stage}`,
+    })
+
+    utils.createCfnOutput(`${id}-eventBusName`, scope, eventBus.eventBusName)
+    utils.createCfnOutput(`${id}-eventBusArn`, scope, eventBus.eventBusArn)
+
+    return eventBus
+  }
+
+  /**
+   * Method to create an event rule
+   * @param {string} id scoped id of the resource
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.EventRuleProps} props event rule properties
+   * @param {events.IEventBus?} eventBus optional custom event bus
+   * @param {events.IRuleTarget[]?} targets optional event targets
+   */
+  public createRule(
+    id: string,
+    scope: common.CommonConstruct,
+    props: types.EventRuleProps,
+    eventBus?: events.IEventBus,
+    targets?: events.IRuleTarget[]
+  ) {
+    if (!props) throw `EventRule props undefined`
+
+    const rule = new events.Rule(scope, `${id}`, {
+      eventBus: eventBus,
+      description: props.description,
+      ruleName: `${props.ruleName}-${scope.props.stage}`,
+      eventPattern: props.eventPattern,
+    })
+
+    if (targets && targets.length > 0) {
+      targets.forEach(target => {
+        rule.addTarget(target)
+      })
+    }
+
+    utils.createCfnOutput(`${id}-ruleArn`, scope, rule.ruleArn)
+    utils.createCfnOutput(`${id}-ruleName`, scope, rule.ruleName)
+
+    return rule
+  }
   /**
    * @summary Method to create an eventbridge rule with lambda target
    * @param {string} id scoped id of the resource

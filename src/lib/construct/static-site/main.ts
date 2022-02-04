@@ -4,13 +4,13 @@ import * as origins from 'aws-cdk-lib/aws-cloudfront-origins'
 import * as route53 from 'aws-cdk-lib/aws-route53'
 import * as s3 from 'aws-cdk-lib/aws-s3'
 import { Construct } from 'constructs'
-import { CommonConstruct } from '../common'
-import { StaticSiteProps } from '../types'
+import { CommonConstruct } from '../../common'
+import { StaticSiteProps } from '../../types'
 
 /**
  * @stability stable
  * @category Constructs
- * @summary Provides a construct to create and deploy a s3 hosted static site
+ * @classdesc Provides a construct to create and deploy a s3 hosted static site
  *
  * @example
  * import { StaticSite, StaticSiteProps } '@gradientedge/cdk-utils'
@@ -24,12 +24,6 @@ import { StaticSiteProps } from '../types'
  *     this.initResources()
  *   }
  * }
- *
- * @mermaid
- *   graph LR;
- *     A[StaticSite]-.->|extends|B(CommonConstruct);
- *     B(CommonConstruct)-->|extends|C(Construct);
- *     C(Construct)-->|implements|D(IConstruct);
  */
 export class StaticSite extends CommonConstruct {
   /* static site properties */
@@ -49,12 +43,6 @@ export class StaticSite extends CommonConstruct {
   siteCloudfrontFunction: cloudfront.Function
   siteFunctionAssociations: cloudfront.FunctionAssociation[]
 
-  /**
-   * @summary Constructor to initialise the StaticSite Construct
-   * @param {Construct} parent
-   * @param {string} id
-   * @param {StaticSiteProps} props
-   */
   constructor(parent: Construct, id: string, props: StaticSiteProps) {
     super(parent, id, props)
 

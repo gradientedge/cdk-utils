@@ -7,7 +7,7 @@ import * as utils from '../../utils'
 /**
  * @stability stable
  * @category Management & Governance
- * @summary Provides operations on AWS Systems Manager.
+ * @classdesc Provides operations on AWS Systems Manager.
  * - A new instance of this class is injected into {@link common.CommonConstruct} constructor.
  * - If a custom construct extends {@link common.CommonConstruct}, an instance is available within the context.
  * @example
@@ -81,15 +81,10 @@ export class SsmManager {
 }
 
 /**
- *
+ * @category Management & Governance
+ * @classdesc Provides utilities to read same/cross region SSM parameters
  */
 export class SSMParameterReader extends cr.AwsCustomResource {
-  /**
-   *
-   * @param {common.CommonConstruct} scope scope in which this resource is defined
-   * @param {string} name parameter name
-   * @param {types.SSMParameterReaderProps} props
-   */
   constructor(scope: common.CommonConstruct, name: string, props: types.SSMParameterReaderProps) {
     const { parameterName, region } = props
 

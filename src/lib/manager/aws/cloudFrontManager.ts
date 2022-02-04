@@ -14,7 +14,7 @@ import * as utils from '../../utils'
 /**
  * @stability stable
  * @category Networking & Content Delivery
- * @summary Provides operations on AWS CloudFront.
+ * @classdesc Provides operations on AWS CloudFront.
  * - A new instance of this class is injected into {@link common.CommonConstruct} constructor.
  * - If a custom construct extends {@link common.CommonConstruct}, an instance is available within the context.
  * @example

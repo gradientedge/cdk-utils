@@ -11,7 +11,7 @@ const CommonVpcIdentifier = 'CommonVpc'
 
 /**
  * @category Networking & Content Delivery
- * @summary Provides operations on AWS VPC.
+ * @classdesc Provides operations on AWS VPC.
  * - A new instance of this class is injected into {@link common.CommonConstruct} constructor.
  * - If a custom construct extends {@link common.CommonConstruct}, an instance is available within the context.
  * @example

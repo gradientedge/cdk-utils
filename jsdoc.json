@@ -2,7 +2,20 @@
   "source": {
     "includePattern": "\\.(ts|tsx)$",
     "excludePattern": ".+\\.(test|spec).(t|j)s(doc|x)?$",
-    "exclude": ["__snapshots__", "test", "__tests__", "build", "coverage", "logo", "node_modules", "private", "public"]
+    "exclude": [
+      "__snapshots__",
+      "test",
+      "__tests__",
+      "build",
+      "coverage",
+      "logo",
+      "node_modules",
+      "app/api-destined-function/node_modules",
+      "app/api-destined-function/layers",
+      "dist",
+      "private",
+      "public"
+    ]
   },
   "plugins": [
     "plugins/markdown",
@@ -27,6 +40,11 @@
     "cleverLinks": false,
     "monospaceLinks": false,
     "search": true,
+    "default": {
+      "staticFiles": {
+        "include": ["./img/ApiToEventBridgeTarget.jpg", "./img/GraphQLApiLambda.jpg"]
+      }
+    },
     "better-docs": {
       "name": "Gradient Edge CDK Utils Documentation",
       "title": "Gradient Edge CDK Utils",

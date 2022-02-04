@@ -5,13 +5,15 @@ import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as route53 from 'aws-cdk-lib/aws-route53'
 import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager'
 import { Construct } from 'constructs'
-import { CommonConstruct } from '../common'
-import { GraphQlApiLambdaEnvironment, GraphQlApiLambdaProps } from '../types'
+import { CommonConstruct } from '../../common'
+import { GraphQlApiLambdaEnvironment, GraphQlApiLambdaProps } from '../../types'
 
 /**
  * @stability stable
  * @category Constructs
- * @summary Provides a construct to create and deploy a Graphql API as Lambda
+ * @classdesc Provides a construct to create and deploy a Graphql API as Lambda
+ *
+ * <b>Architecture</b> ![Architecture](./GraphQLApiLambda.jpg)
  *
  * @example
  * import { GraphQLApiLambda, GraphQlApiLambdaProps } '@gradientedge/cdk-utils'
@@ -25,19 +27,13 @@ import { GraphQlApiLambdaEnvironment, GraphQlApiLambdaProps } from '../types'
  *     this.initResources()
  *   }
  * }
- *
- * @mermaid
- *   graph LR;
- *     A[GraphQLApiLambda]-.->|extends|B(CommonConstruct);
- *     B(CommonConstruct)-->|extends|C(Construct);
- *     C(Construct)-->|implements|D(IConstruct);
  */
 export class GraphQLApiLambda extends CommonConstruct {
-  /* graphql api props */
+  /* graphql restApi props */
   props: GraphQlApiLambdaProps
   id: string
 
-  /* graphql api resources */
+  /* graphql restApi resources */
   applicationSecrets: secretsmanager.ISecret[]
   graphQLApiLambdaPolicy: iam.PolicyDocument
   graphQLApiLambdaRole: iam.Role
@@ -50,12 +46,6 @@ export class GraphQLApiLambda extends CommonConstruct {
   graphQLApiDomain: apig.DomainName
   graphQLApiBasePathMappings: apig.BasePathMapping[] = []
 
-  /**
-   * @summary Constructor to initialise the GraphQLApiLambda Construct
-   * @param {Construct} parent
-   * @param {string} id
-   * @param {GraphQlApiLambdaProps} props
-   */
   constructor(parent: Construct, id: string, props: GraphQlApiLambdaProps) {
     super(parent, id, props)
 
@@ -196,7 +186,7 @@ export class GraphQLApiLambda extends CommonConstruct {
   }
 
   /**
-   * @summary Method to create rest api for GraphQL
+   * @summary Method to create rest restApi for GraphQL
    * @protected
    */
   protected createRestApi() {
@@ -209,7 +199,7 @@ export class GraphQLApiLambda extends CommonConstruct {
   }
 
   /**
-   * @summary Method to create custom api domain for GraphQL API
+   * @summary Method to create custom restApi domain for GraphQL API
    * @protected
    */
   protected createApiDomain() {

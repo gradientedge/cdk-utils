@@ -6,5 +6,9 @@
   "testLambdaRule": {
     "name": "test-lambda-rule",
     "state": "DISABLED"
+  },
+  "testAnotherLambdaRule": {
+    "name": "test-another-lambda-rule",
+    "state": "DISABLED"
   }
 }

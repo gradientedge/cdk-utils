@@ -9,7 +9,7 @@ import * as utils from '../../utils'
 /**
  * @stability stable
  * @category Security, Identity & Compliance
- * @summary Provides operations on AWS IAM.
+ * @classdesc Provides operations on AWS IAM.
  * - A new instance of this class is injected into {@link common.CommonConstruct} constructor.
  * - If a custom construct extends {@link common.CommonConstruct}, an instance is available within the context.
  * @example
@@ -39,10 +39,20 @@ export class IamManager {
   }
 
   /**
-   * @summary Method to create iam statement to read app config
-   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @summary Method to create iam statement to put events
    */
-  public statementForReadAnyAppConfig(scope: common.CommonConstruct) {
+  public statementForPutEvents() {
+    return new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: ['events:PutEvents'],
+      resources: ['*'],
+    })
+  }
+
+  /**
+   * @summary Method to create iam statement to read app config
+   */
+  public statementForReadAnyAppConfig() {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: [
@@ -78,9 +88,8 @@ export class IamManager {
 
   /**
    * @summary Method to create iam statement to list all s3 buckets
-   * @param {common.CommonConstruct} scope scope in which this resource is defined
    */
-  public statementForListAllMyBuckets(scope: common.CommonConstruct) {
+  public statementForListAllMyBuckets() {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: ['s3:ListAllMyBuckets'],
@@ -129,9 +138,8 @@ export class IamManager {
 
   /**
    * @summary Method to create iam statement to pass iam role
-   * @param {common.CommonConstruct} scope scope in which this resource is defined
    */
-  public statementForPassRole(scope: common.CommonConstruct) {
+  public statementForPassRole() {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: ['iam:PassRole'],
@@ -141,9 +149,8 @@ export class IamManager {
 
   /**
    * @summary Method to create iam statement to invalidate cloudfront cache
-   * @param {common.CommonConstruct} scope scope in which this resource is defined
    */
-  public statementForCloudfrontInvalidation(scope: common.CommonConstruct) {
+  public statementForCloudfrontInvalidation() {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: ['cloudfront:GetInvalidation', 'cloudfront:CreateInvalidation'],
@@ -153,14 +160,13 @@ export class IamManager {
 
   /**
    * @summary Method to create iam policy to invalidate cloudfront cache
-   * @param {common.CommonConstruct} scope scope in which this resource is defined
    */
-  public policyForCloudfrontInvalidation(scope: common.CommonConstruct) {
+  public policyForCloudfrontInvalidation() {
     return new iam.PolicyDocument({
       statements: [
         this.statementForCreateAnyLogStream(),
         this.statementForPutAnyLogEvent(),
-        this.statementForCloudfrontInvalidation(scope),
+        this.statementForCloudfrontInvalidation(),
         new iam.PolicyStatement({
           effect: iam.Effect.ALLOW,
           actions: [
@@ -184,7 +190,7 @@ export class IamManager {
     return new iam.Role(scope, `${id}-install-deps-project-role`, {
       assumedBy: new iam.ServicePrincipal('codebuild.amazonaws.com'),
       inlinePolicies: {
-        codeBuildPolicy: this.policyForCloudfrontInvalidation(scope),
+        codeBuildPolicy: this.policyForCloudfrontInvalidation(),
       },
     })
   }
@@ -204,9 +210,8 @@ export class IamManager {
 
   /**
    * @summary Method to create iam statement to pass ecs role
-   * @param {common.CommonConstruct} scope scope in which this resource is defined
    */
-  public statementForEcsPassRole(scope: common.CommonConstruct) {
+  public statementForEcsPassRole() {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: ['iam:PassRole'],
@@ -331,7 +336,7 @@ export class IamManager {
     task: ecs.ITaskDefinition
   ) {
     const policy = new iam.PolicyDocument({
-      statements: [this.statementForRunEcsTask(scope, cluster, task), this.statementForEcsPassRole(scope)],
+      statements: [this.statementForRunEcsTask(scope, cluster, task), this.statementForEcsPassRole()],
     })
 
     const role = new iam.Role(scope, `${id}`, {

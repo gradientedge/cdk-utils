@@ -8,7 +8,7 @@ import * as utils from '../../utils'
 /**
  * @stability stable
  * @category Security, Identity & Compliance
- * @summary Provides operations on AWS Certificates.
+ * @classdesc Provides operations on AWS Certificates.
  * - A new instance of this class is injected into {@link common.CommonConstruct} constructor.
  * - If a custom construct extends {@link common.CommonConstruct}, an instance is available within the context.
  * @example

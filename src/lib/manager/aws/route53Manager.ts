@@ -9,7 +9,7 @@ import * as utils from '../../utils'
 /**
  * @stability stable
  * @category Networking & Content Delivery
- * @summary Provides operations on AWS Route53.
+ * @classdesc Provides operations on AWS Route53.
  * - A new instance of this class is injected into {@link common.CommonConstruct} constructor.
  * - If a custom construct extends {@link common.CommonConstruct}, an instance is available within the context.
  * @example
@@ -143,7 +143,7 @@ export class Route53Manager {
   }
 
   /**
-   * @summary Method to create a-record for api gateway target
+   * @summary Method to create a-record for restApi gateway target
    * @param {string} id scoped id of the resource
    * @param {common.CommonConstruct} scope scope in which this resource is defined
    * @param recordName

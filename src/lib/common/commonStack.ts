@@ -9,7 +9,7 @@ const fs = require('fs')
 /**
  * @stability stable
  * @category Stacks
- * @summary Common stack to use as a base for all higher level constructs.
+ * @classdesc Common stack to use as a base for all higher level constructs.
  *
  * @example
  * import { CommonStack } from '@gradientedge/cdk-utils'
@@ -20,21 +20,11 @@ const fs = require('fs')
  *     // provision resources
  *   }
  * }
- *
- * @mermaid
- *   graph LR;
- *     A[CommonStack]-.->|extends|B(cdk.Stack);
- *     B(cdk.Stack)-->|implements|C(cdk.ITaggable);
  */
 export class CommonStack extends cdk.Stack {
   construct: CommonConstruct
   props: CommonStackProps
-  /**
-   * @summary Constructor to initialise the CommonStack
-   * @param {cdk.App} parent
-   * @param {string} name
-   * @param {cdk.StackProps} props
-   */
+
   constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
     super(parent, name, props)
 
