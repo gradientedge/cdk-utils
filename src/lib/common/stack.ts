@@ -1,7 +1,7 @@
 import * as cdk from 'aws-cdk-lib'
 import { CommonStackProps } from '../types'
 import { isDevStage } from '../utils'
-import { CommonConstruct } from './commonConstruct'
+import { CommonConstruct } from './construct'
 
 const appRoot = require('app-root-path')
 const fs = require('fs')

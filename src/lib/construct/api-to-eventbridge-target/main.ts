@@ -7,9 +7,9 @@ import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager'
 import { Construct } from 'constructs'
 import { CommonConstruct } from '../../common'
 import * as types from '../../types'
-import { ApiDestinationEvent } from './apiDestinationEvent'
-import { ApiDestinedLambda } from './apiDestinedLambda'
-import { ApiDestinedRestApi } from './apiDestinedRestApi'
+import { ApiDestinationEvent } from './api-destination-event'
+import { ApiDestinedLambda } from './api-destined-lambda'
+import { ApiDestinedRestApi } from './api-destined-rest-api'
 
 /**
  * @stability stable

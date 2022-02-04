@@ -7,7 +7,7 @@ import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as common from '../../common'
 import * as types from '../../types'
 import * as utils from '../../utils'
-import { CloudFrontManager } from './cloudFrontManager'
+import { CloudFrontManager } from './cloudfront-manager'
 
 /**
  * @stability stable
