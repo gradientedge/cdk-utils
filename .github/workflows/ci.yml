@@ -72,7 +72,7 @@ jobs:
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && success() }}
         with:
           name: docs-artifact
-          path: ./restApi-docs/
+          path: ./api-docs/
 
   release:
     name: Release Package(s)
