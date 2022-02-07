@@ -76,8 +76,9 @@ export class VpcManager {
    * @summary Method to retrieve a common vpc
    * @param {string} id scoped id of the resource
    * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {string?} vpcIdentifier optional identifier for VPC
    */
-  public retrieveCommonVpc(id: string, scope: common.CommonConstruct) {
-    return ec2.Vpc.fromLookup(scope, `${id}`, { vpcName: CommonVpcIdentifier })
+  public retrieveCommonVpc(id: string, scope: common.CommonConstruct, vpcIdentifier?: string) {
+    return ec2.Vpc.fromLookup(scope, `${id}`, { vpcName: vpcIdentifier ?? CommonVpcIdentifier })
   }
 }

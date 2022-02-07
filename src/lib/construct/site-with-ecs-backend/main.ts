@@ -44,7 +44,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
   siteEcsPolicy: iam.PolicyDocument
   siteEcsRole: iam.Role
   siteEcsEnvironment: { [key: string]: string }
-  siteVpc: ec2.Vpc
+  siteVpc: ec2.IVpc
   siteSecrets: any
   siteEcsCluster: ecs.Cluster
   siteEcsLogGroup: logs.LogGroup
