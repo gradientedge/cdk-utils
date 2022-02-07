@@ -7,7 +7,8 @@ import * as types from '../../types/aws'
 
 /**
  * @stability stable
- * @category Constructs
+ * @category cdk-utils.api-to-eventbridge-target
+ * @subcategory member
  * @classdesc Provides a construct to contain api resources for ApiToEventBridgeTarget
  */
 export class ApiDestinedRestApi implements types.ApiDestinedRestApiType {

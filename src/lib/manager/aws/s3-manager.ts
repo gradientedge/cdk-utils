@@ -9,7 +9,8 @@ import * as utils from '../../utils'
 
 /**
  * @stability stable
- * @category Storage
+ * @category cdk-utils.s3-manager
+ * @subcategory Construct
  * @classdesc Provides operations on AWS S3.
  * - A new instance of this class is injected into {@link common.CommonConstruct} constructor.
  * - If a custom construct extends {@link common.CommonConstruct}, an instance is available within the context.

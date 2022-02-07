@@ -5,12 +5,14 @@ import * as utils from '../../utils'
 
 /**
  * @stability stable
- * @category Utils
+ * @category cdk-utils.vpc-manager
+ * @subcategory Construct
  */
 const CommonVpcIdentifier = 'CommonVpc'
 
 /**
- * @category Networking & Content Delivery
+ * @category cdk-utils.vpc-manager
+ * @subcategory Construct
  * @classdesc Provides operations on AWS VPC.
  * - A new instance of this class is injected into {@link common.CommonConstruct} constructor.
  * - If a custom construct extends {@link common.CommonConstruct}, an instance is available within the context.

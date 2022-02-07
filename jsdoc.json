@@ -42,13 +42,20 @@
     "search": true,
     "default": {
       "staticFiles": {
-        "include": ["./img/ApiToEventBridgeTarget.jpg", "./img/GraphQLApiLambda.jpg"]
+        "include": [
+          "./img/logo.png",
+          "./img/ApiToEventBridgeTarget.jpg",
+          "./img/GraphQLApiLambda.jpg",
+          "./theme/styles.css"
+        ]
       }
     },
     "better-docs": {
       "name": "Gradient Edge CDK Utils Documentation",
       "title": "Gradient Edge CDK Utils",
+      "logo": "logo.png",
       "hideGenerator": true,
+      "css": "styles.css",
       "navLinks": [
         {
           "label": "Github",

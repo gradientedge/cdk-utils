@@ -13,7 +13,8 @@ import { ApiDestinedRestApi } from './api-destined-rest-api'
 
 /**
  * @stability stable
- * @category Constructs
+ * @category cdk-utils.api-to-eventbridge-target
+ * @subcategory construct
  * @classdesc Provides a construct to create and deploy API Gateway invocations to EventBridge
  *
  * <b>Architecture</b> ![Architecture](./ApiToEventBridgeTarget.jpg)

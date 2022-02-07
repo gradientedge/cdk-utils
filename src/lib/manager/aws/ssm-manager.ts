@@ -6,7 +6,8 @@ import * as utils from '../../utils'
 
 /**
  * @stability stable
- * @category Management & Governance
+ * @category cdk-utils.ssm-manager
+ * @subcategory Construct
  * @classdesc Provides operations on AWS Systems Manager.
  * - A new instance of this class is injected into {@link common.CommonConstruct} constructor.
  * - If a custom construct extends {@link common.CommonConstruct}, an instance is available within the context.
@@ -81,7 +82,8 @@ export class SsmManager {
 }
 
 /**
- * @category Management & Governance
+ * @category cdk-utils.ssm-manager
+ * @subcategory Construct
  * @classdesc Provides utilities to read same/cross region SSM parameters
  */
 export class SSMParameterReader extends cr.AwsCustomResource {

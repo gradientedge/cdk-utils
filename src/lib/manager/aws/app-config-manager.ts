@@ -6,7 +6,8 @@ import * as utils from '../../utils'
 
 /**
  * @stability stable
- * @category Utils
+ * @category cdk-utils.app-config-manager
+ * @subcategory Construct
  * @returns { Map<string, string> } ArnsByRegion
  */
 export const ArnsByRegion: { [key: string]: string } = {
@@ -33,7 +34,8 @@ export const ArnsByRegion: { [key: string]: string } = {
 }
 
 /**
- * @category Management & Governance
+ * @category cdk-utils.app-config-manager
+ * @subcategory Construct
  * @classdesc Provides operations on AWS AppConfig.
  * - A new instance of this class is injected into {@link common.CommonConstruct} constructor.
  * - If a custom construct extends {@link common.CommonConstruct}, an instance is available within the context.

@@ -4,7 +4,8 @@ import * as types from '../../types/aws'
 
 /**
  * @stability stable
- * @category Constructs
+ * @category cdk-utils.api-to-eventbridge-target
+ * @subcategory member
  * @classdesc Provides a construct to contain event resources for ApiToEventBridgeTarget
  */
 export class ApiDestinationEvent implements types.ApiDestinationEventType {

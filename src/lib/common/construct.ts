@@ -6,7 +6,8 @@ import * as utils from '../utils'
 
 /**
  * @stability stable
- * @category Constructs
+ * @category cdk-utils.common-construct
+ * @subcategory Construct
  * @classdesc Common construct to use as a base for all higher level constructs.
  *
  * @example

@@ -8,7 +8,8 @@ const fs = require('fs')
 
 /**
  * @stability stable
- * @category Stacks
+ * @category cdk-utils.common-stack
+ * @subcategory Construct
  * @classdesc Common stack to use as a base for all higher level constructs.
  *
  * @example

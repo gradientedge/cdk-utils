@@ -9,7 +9,8 @@ import { StaticSiteProps } from '../../types'
 
 /**
  * @stability stable
- * @category Constructs
+ * @category cdk-utils.static-site
+ * @subcategory construct
  * @classdesc Provides a construct to create and deploy a s3 hosted static site
  *
  * @example

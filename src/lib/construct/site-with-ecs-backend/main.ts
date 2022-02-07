@@ -17,7 +17,8 @@ import { SiteWithEcsBackendProps } from '../../types'
 
 /**
  * @stability stable
- * @category Constructs
+ * @category cdk-utils.site-with-ecs-backend
+ * @subcategory construct
  * @classdesc Provides a construct to create and deploy a site hosted with an clustered ECS/ELB backend
  *
  * @example

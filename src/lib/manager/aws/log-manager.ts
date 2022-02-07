@@ -6,7 +6,8 @@ import * as utils from '../../utils'
 
 /**
  * @stability stable
- * @category Management & Governance
+ * @category cdk-utils.cloudwatch-manager
+ * @subcategory Construct
  * @classdesc Provides operations on AWS CloudWatch.
  * - A new instance of this class is injected into {@link common.CommonConstruct} constructor.
  * - If a custom construct extends {@link common.CommonConstruct}, an instance is available within the context.

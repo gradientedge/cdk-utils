@@ -11,7 +11,8 @@ import { CloudFrontManager } from './cloudfront-manager'
 
 /**
  * @stability stable
- * @category Compute
+ * @category cdk-utils.lambda-manager
+ * @subcategory Construct
  * @classdesc Provides operations on AWS Lambda.
  * - A new instance of this class is injected into {@link common.CommonConstruct} constructor.
  * - If a custom construct extends {@link common.CommonConstruct}, an instance is available within the context.

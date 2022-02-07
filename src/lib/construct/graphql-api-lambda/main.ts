@@ -10,7 +10,8 @@ import { GraphQlApiLambdaEnvironment, GraphQlApiLambdaProps } from '../../types'
 
 /**
  * @stability stable
- * @category Constructs
+ * @category cdk-utils.graphql-api-lambda
+ * @subcategory construct
  * @classdesc Provides a construct to create and deploy a Graphql API as Lambda
  *
  * <b>Architecture</b> ![Architecture](./GraphQLApiLambda.jpg)

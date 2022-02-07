@@ -7,7 +7,8 @@ import * as utils from '../../utils'
 
 /**
  * @stability stable
- * @category Security, Identity & Compliance
+ * @category cdk-utils.acm-manager
+ * @subcategory Construct
  * @classdesc Provides operations on AWS Certificates.
  * - A new instance of this class is injected into {@link common.CommonConstruct} constructor.
  * - If a custom construct extends {@link common.CommonConstruct}, an instance is available within the context.

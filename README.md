@@ -1,10 +1,6 @@
-<div style='text-align:center'>
+[![Gradient Edge][logo]](https://gradientedge.com)
 
-<a href="https://gradientedge.com">![Gradient Edge][logo]</a>
-
-</div>
-
-# Gradient Edge AWS CDK Utils
+# Gradient Edge CDK Utils
 
 [![Release][release]][release-url]
 [![version][version]][version-url]
