@@ -5,6 +5,7 @@ import * as acm from 'aws-cdk-lib/aws-certificatemanager'
 import * as cloudfront from 'aws-cdk-lib/aws-cloudfront'
 import * as cloudtrail from 'aws-cdk-lib/aws-cloudtrail'
 import * as watch from 'aws-cdk-lib/aws-cloudwatch'
+import * as dynamodb from 'aws-cdk-lib/aws-dynamodb'
 import * as ec2 from 'aws-cdk-lib/aws-ec2'
 import * as ecs from 'aws-cdk-lib/aws-ecs'
 import * as ecsPatterns from 'aws-cdk-lib/aws-ecs-patterns'
@@ -12,16 +13,20 @@ import * as eks from 'aws-cdk-lib/aws-eks'
 import * as elasticache from 'aws-cdk-lib/aws-elasticache'
 import * as elb from 'aws-cdk-lib/aws-elasticloadbalancingv2'
 import * as events from 'aws-cdk-lib/aws-events'
+import * as iam from 'aws-cdk-lib/aws-iam'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
+import * as destinations from 'aws-cdk-lib/aws-lambda-destinations'
 import * as logs from 'aws-cdk-lib/aws-logs'
 import * as route53 from 'aws-cdk-lib/aws-route53'
 import * as s3 from 'aws-cdk-lib/aws-s3'
 import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment'
 import * as sns from 'aws-cdk-lib/aws-sns'
 import * as wafv2 from 'aws-cdk-lib/aws-wafv2'
+import * as types from '../index'
 
 /**
- * @category Management & Governance
+ * @category cdk-utils.app-config-manager
+ * @subcategory Properties
  */
 export interface AppConfigProps {
   id: string
@@ -33,7 +38,8 @@ export interface AppConfigProps {
 }
 
 /**
- * @category Constructs
+ * @category cdk-utils.common-stack
+ * @subcategory Properties
  */
 export interface CommonStackProps extends cdk.StackProps {
   name: string
@@ -45,6 +51,10 @@ export interface CommonStackProps extends cdk.StackProps {
   stageContextPath?: string
 }
 
+/**
+ * @category cdk-utils.site-with-ecs-backend
+ * @subcategory Properties
+ */
 export interface SiteWithEcsBackendProps extends CommonStackProps {
   siteCacheInvalidationDockerFilePath?: string
   siteHealthCheck: HealthCheck
@@ -66,6 +76,10 @@ export interface SiteWithEcsBackendProps extends CommonStackProps {
   timezone: string
 }
 
+/**
+ * @category cdk-utils.static-site
+ * @subcategory Properties
+ */
 export interface StaticSiteProps extends CommonStackProps {
   siteCreateAltARecord: boolean
   siteCertificate: AcmProps
@@ -85,19 +99,45 @@ export interface StaticSiteProps extends CommonStackProps {
   timezone: string
 }
 
+/**
+ * @category cdk-utils.site-with-ecs-backend
+ * @subcategory Properties
+ */
 export interface HealthCheck extends elb.HealthCheck {
   intervalInSecs: number
   timeoutInSecs: number
 }
 
-export interface GraphQlApiLambdaEnvironment {
+/**
+ * @category cdk-utils.lambda-manager
+ * @subcategory Types
+ */
+export interface LambdaEnvironment {
   NODE_ENV: string
   LOG_LEVEL: string
   TZ: string
 }
 
+/**
+ * @category cdk-utils.api-to-eventbridge-target
+ * @subcategory Types
+ */
+export interface ApiDestinedLambdaEnvironment extends LambdaEnvironment {
+  SOURCE_ID: string
+}
+
+/**
+ * @category cdk-utils.graphql-api-lambda
+ * @subcategory Types
+ */
+export interface GraphQlApiLambdaEnvironment extends LambdaEnvironment {}
+
+/**
+ * @category cdk-utils.graphql-api-lambda
+ * @subcategory Properties
+ */
 export interface GraphQlApiLambdaProps extends CommonStackProps {
-  apiRootPaths: string[]
+  apiRootPaths?: string[]
   apiSubDomain: string
   graphQLApiCertificate: AcmProps
   graphqlRestApi: apig.LambdaRestApiProps
@@ -112,7 +152,114 @@ export interface GraphQlApiLambdaProps extends CommonStackProps {
 }
 
 /**
- * @category Security, Identity & Compliance
+ * @category cdk-utils.api-to-eventbridge-target
+ * @subcategory Types
+ */
+export interface ApiDestinationEventType {
+  eventBus: events.IEventBus
+  logGroupFailure: logs.LogGroup
+  logGroupSuccess: logs.LogGroup
+  ruleFailure: events.Rule
+  ruleSuccess: events.Rule
+}
+
+/**
+ * @category cdk-utils.api-to-eventbridge-target
+ * @subcategory Types
+ */
+export interface ApiDestinedRestApiType {
+  api: apig.RestApi
+  certificate: acm.ICertificate
+  domain: apig.DomainName
+  errorResponseModel: apig.Model
+  hostedZone: route53.IHostedZone
+  integration: apig.Integration
+  integrationErrorResponse: apig.IntegrationResponse
+  integrationRequestParameters: { [p: string]: string }
+  integrationRequestTemplates: { [p: string]: string }
+  integrationResponse: apig.IntegrationResponse
+  method: apig.Method
+  methodErrorResponse: apig.MethodResponse
+  methodResponse: apig.MethodResponse
+  resource: apig.Resource
+  responseModel: apig.Model
+  topic: sns.Topic
+  topicRole: iam.Role
+}
+
+/**
+ * @category cdk-utils.api-to-eventbridge-target
+ * @subcategory Types
+ */
+export interface ApiDestinedLambdaType {
+  destinationFailure: destinations.EventBridgeDestination
+  destinationSuccess: destinations.EventBridgeDestination
+  environment: types.ApiDestinedLambdaEnvironment
+  function: lambda.Function
+  layers: lambda.LayerVersion[]
+  policy: iam.PolicyDocument
+  role: iam.Role
+}
+
+/**
+ * @category cdk-utils.api-to-eventbridge-target
+ * @subcategory Properties
+ */
+export interface ApiToEventBridgeTargetRestApiProps {
+  certificate: AcmProps
+  integrationResponse?: apig.IntegrationResponse
+  integrationErrorResponse?: apig.IntegrationResponse
+  methodResponse?: apig.MethodResponse
+  methodErrorResponse?: apig.MethodResponse
+  integrationOptions?: apig.IntegrationOptions
+  resource: string
+  errorResponseModel?: apig.ModelOptions
+  responseModel?: apig.ModelOptions
+  restApi?: apig.RestApiProps
+}
+
+/**
+ * @category cdk-utils.api-to-eventbridge-target
+ * @subcategory Properties
+ */
+interface ApiToEventBridgeTargetLambdaProps {
+  useNative?: boolean
+  function: LambdaProps
+  source?: lambda.AssetCode
+  layerSource?: lambda.AssetCode
+}
+
+/**
+ * @category cdk-utils.api-to-eventbridge-target
+ * @subcategory Properties
+ */
+interface ApiToEventBridgeTargetEventProps {
+  eventBusName?: string
+  logGroupSuccess?: LogProps
+  logGroupFailure?: LogProps
+  ruleSuccess: EventRuleProps
+  ruleFailure: EventRuleProps
+}
+
+/**
+ * @category cdk-utils.api-to-eventbridge-target
+ * @subcategory Properties
+ */
+export interface ApiToEventBridgeTargetProps extends CommonStackProps {
+  apiRootPaths?: string[]
+  apiSubDomain: string
+  api: ApiToEventBridgeTargetRestApiProps
+  event: ApiToEventBridgeTargetEventProps
+  lambda: ApiToEventBridgeTargetLambdaProps
+  logLevel: string
+  nodeEnv: string
+  timezone: string
+  useExistingHostedZone: boolean
+}
+
+/**
+ * @category cdk-utils.acm-manager
+ * @subcategory Properties
  */
 export interface AcmProps extends acm.CertificateProps {
   certificateSsmName?: string
@@ -124,7 +271,8 @@ export interface AcmProps extends acm.CertificateProps {
 }
 
 /**
- * @category Management & Governance
+ * @category cdk-utils.ssm-manager
+ * @subcategory Properties
  */
 export interface SSMParameterReaderProps {
   parameterName: string
@@ -132,12 +280,14 @@ export interface SSMParameterReaderProps {
 }
 
 /**
- * @category Networking & Content Delivery
+ * @category cdk-utils.cloudfront-manager
+ * @subcategory Properties
  */
 export interface CloudFrontProps extends cloudfront.CloudFrontWebDistributionProps {}
 
 /**
- * @category Networking & Content Delivery
+ * @category cdk-utils.cloudfront-manager
+ * @subcategory Properties
  */
 export interface CloudfrontFunctionProps extends cloudfront.FunctionProps {
   functionFilePath: string
@@ -145,17 +295,20 @@ export interface CloudfrontFunctionProps extends cloudfront.FunctionProps {
 }
 
 /**
- * @category Networking & Content Delivery
+ * @category cdk-utils.cloudfront-manager
+ * @subcategory Properties
  */
 export interface DistributionProps extends cloudfront.DistributionProps {}
 
 /**
- * @category Management & Governance
+ * @category cdk-utils.cloudtrail-manager
+ * @subcategory Properties
  */
 export interface CloudTrailProps extends cloudtrail.CfnTrailProps {}
 
 /**
- * @category Management & Governance
+ * @category cdk-utils.cloudwatch-manager
+ * @subcategory Properties
  */
 export interface DashboardProps extends watch.DashboardProps {
   positionX: number
@@ -163,7 +316,8 @@ export interface DashboardProps extends watch.DashboardProps {
 }
 
 /**
- * @category Management & Governance
+ * @category cdk-utils.cloudwatch-manager
+ * @subcategory Properties
  */
 export interface AlarmProps extends watch.AlarmProps {
   expression?: string
@@ -172,7 +326,8 @@ export interface AlarmProps extends watch.AlarmProps {
 }
 
 /**
- * @category Management & Governance
+ * @category cdk-utils.cloudwatch-manager
+ * @subcategory Properties
  */
 export interface MetricProps extends watch.MetricProps {
   stageSuffix: boolean
@@ -182,7 +337,8 @@ export interface MetricProps extends watch.MetricProps {
 }
 
 /**
- * @category Management & Governance
+ * @category cdk-utils.cloudwatch-manager
+ * @subcategory Properties
  */
 export interface TextWidgetProps extends watch.TextWidgetProps {
   positionX: number
@@ -190,7 +346,8 @@ export interface TextWidgetProps extends watch.TextWidgetProps {
 }
 
 /**
- * @category Management & Governance
+ * @category cdk-utils.cloudwatch-manager
+ * @subcategory Properties
  */
 export interface NumericWidgetProps extends watch.SingleValueWidgetProps {
   positionX: number
@@ -199,7 +356,8 @@ export interface NumericWidgetProps extends watch.SingleValueWidgetProps {
 }
 
 /**
- * @category Management & Governance
+ * @category cdk-utils.cloudwatch-manager
+ * @subcategory Properties
  */
 export interface GraphWidgetProps extends watch.GraphWidgetProps {
   positionX: number
@@ -208,7 +366,8 @@ export interface GraphWidgetProps extends watch.GraphWidgetProps {
 }
 
 /**
- * @category Management & Governance
+ * @category cdk-utils.cloudwatch-manager
+ * @subcategory Properties
  */
 export interface AlarmStatusWidgetProps extends watch.AlarmStatusWidgetProps {
   positionX: number
@@ -217,7 +376,8 @@ export interface AlarmStatusWidgetProps extends watch.AlarmStatusWidgetProps {
 }
 
 /**
- * @category Management & Governance
+ * @category cdk-utils.cloudwatch-manager
+ * @subcategory Properties
  */
 export interface LogQueryWidgetProps extends watch.LogQueryWidgetProps {
   positionX: number
@@ -225,17 +385,20 @@ export interface LogQueryWidgetProps extends watch.LogQueryWidgetProps {
 }
 
 /**
- * @category Containers
+ * @category cdk-utils.ecs-manager
+ * @subcategory Properties
  */
 export interface EcsClusterProps extends ecs.ClusterProps {}
 
 /**
- * @category Containers
+ * @category cdk-utils.ecs-manager
+ * @subcategory Properties
  */
 export interface EcsTaskProps extends ecs.TaskDefinitionProps {}
 
 /**
- * @category Containers
+ * @category cdk-utils.eks-manager
+ * @subcategory Properties
  */
 export interface EksClusterProps extends eks.ClusterProps {
   appContainerPort: number
@@ -243,31 +406,48 @@ export interface EksClusterProps extends eks.ClusterProps {
 }
 
 /**
- * @category Application Integration
+ * @category cdk-utils.event-manager
+ * @subcategory Properties
  */
 export interface RuleProps extends events.CfnRuleProps {}
 
 /**
- * @category Compute
+ * @category cdk-utils.event-manager
+ * @subcategory Properties
+ */
+export interface EventRuleProps extends events.RuleProps {}
+
+/**
+ * @category cdk-utils.event-manager
+ * @subcategory Properties
+ */
+export interface EventBusProps extends events.EventBusProps {}
+
+/**
+ * @category cdk-utils.lambda-manager
+ * @subcategory Properties
  */
 export interface LambdaProps extends lambda.FunctionProps {
   timeoutInSecs?: number
 }
 
 /**
- * @category Compute
+ * @category cdk-utils.lambda-manager
+ * @subcategory Properties
  */
 export interface LambdaEdgeProps extends cloudfront.experimental.EdgeFunctionProps {
   timeoutInSecs?: number
 }
 
 /**
- * @category Management & Governance
+ * @category cdk-utils.cloudwatch-manager
+ * @subcategory Properties
  */
 export interface LogProps extends logs.LogGroupProps {}
 
 /**
- * @category Management & Governance
+ * @category cdk-utils.cloudwatch-manager
+ * @subcategory Properties
  */
 export interface MetricFilterProps extends logs.MetricFilterProps {
   periodInSecs: number
@@ -275,19 +455,31 @@ export interface MetricFilterProps extends logs.MetricFilterProps {
 }
 
 /**
- * @category Networking & Content Delivery
+ * @category cdk-utils.route53-manager
+ * @subcategory Properties
  */
 export interface Route53Props extends route53.HostedZoneProps {
   useExistingHostedZone?: boolean
 }
 
+/**
+ * @category cdk-utils.s3-manager
+ * @subcategory Properties
+ */
 export interface LifecycleRule extends s3.LifecycleRule {
   expirationInDays?: number
   noncurrentVersionExpirationInDays?: number
 }
 
 /**
- * @category Storage
+ * @category cdk-utils.dynamodb-manager
+ * @subcategory Properties
+ */
+export interface TableProps extends dynamodb.TableProps {}
+
+/**
+ * @category cdk-utils.s3-manager
+ * @subcategory Properties
  */
 export interface S3BucketProps extends s3.BucketProps {
   enableEventBridge?: boolean
@@ -298,21 +490,25 @@ export interface S3BucketProps extends s3.BucketProps {
 }
 
 /**
- * @category Application Integration
+ * @category cdk-utils.sns-manager
+ * @subcategory Properties
  */
 export interface SubscriptionProps extends sns.TopicProps {}
 
 /**
- * @category Security, Identity & Compliance
+ * @category cdk-utils.waf-manager
+ * @subcategory Properties
  */
 export interface WafIPSetProps extends wafv2.CfnIPSetProps {}
 
 /**
- * @category Security, Identity & Compliance
+ * @category cdk-utils.waf-manager
+ * @subcategory Properties
  */
 export interface WafWebACLProps extends wafv2.CfnWebACLProps {}
 
 /**
+ * @category cdk-utils.elasticache-manager
  * @category Compute
  */
 export interface ElasticacheProps extends elasticache.CfnCacheClusterProps {}

@@ -35,7 +35,9 @@ jobs:
         env:
           cache-name: cache-node-modules
         with:
-          path: node_modules
+          path: |
+            ./node_modules
+            ./app/api-destined-function/node_modules
           key: ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
       - name: Install Packages
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
@@ -98,7 +100,9 @@ jobs:
         env:
           cache-name: cache-node-modules
         with:
-          path: node_modules
+          path: |
+            ./node_modules
+            ./app/api-destined-function/node_modules
           key: ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
       - name: Install Packages
         if: steps.cache-node-modules.outputs.cache-hit != 'true'

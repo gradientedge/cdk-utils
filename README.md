@@ -1,33 +1,29 @@
-<div align='center'>
+[![Gradient Edge][logo]](https://gradientedge.com)
 
-<a href="https://gradientedge.com">![Gradient Edge][logo]</a>
+# Gradient Edge CDK Utils
 
-</div>
+[![Release][release]][release-url]
+[![version][version]][version-url]
 
-# Gradient Edge AWS CDK Utils
+[![License][license]][license-url]
+[![Maintained][maintained]][repo-url]
+[![Dependencies][dependencies]][dependencies-url]
+[![Twitter][twitter]][twitter-url]
 
-![Release][release]
-![version][version]
+[![AWS CLI][aws-cli-badge]][aws-cli-url]
+[![Node][node-badge]][node-url]
+[![Yarn][yarn-badge]][yarn-url]
+[![CDK][cdk-badge]][cdk-url]
 
-![License][license]
-![Maintained][maintained]
-![Dependencies][dependencies]
-![Twitter][twitter]
+[![Builds][builds]][builds-url]
+[![Coverage][coverage]][codecov-url]
+[![Code Size][code-size]][version-url]
 
-![AWS CLI][aws-cli-badge]
-![Node][node-badge]
-![Yarn][yarn-badge]
-![CDK][cdk-badge]
-
-![Builds][builds]
-![Coverage][coverage]
-![Code Size][code-size]
-
-![Downloads][downloads]
-![Commits][commits]
-![Last Commits][last-commit]
-![Issues][issues]
-![Pull Requests][pr]
+[![Downloads][downloads]][version-url]
+[![Commits][commits]][commits-url]
+[![Last Commits][last-commit]][commits-url]
+[![Issues][issues]][issues-url]
+[![Pull Requests][pr]][pr-url]
 
 ## Introduction
 
@@ -60,25 +56,40 @@ yarn add @gradientedge/cdk-utils
 <!-- references -->
 
 [aws-cdk]: https://docs.aws.amazon.com/cdk/latest/guide/home.html
+[aws-cli-badge]: https://img.shields.io/badge/aws--cli-2.3.4-777BB4?logo=amazon-aws
+[aws-cli-url]: https://aws.amazon.com/cli/
 [builds]: https://img.shields.io/github/workflow/status/gradientedge/cdk-utils/CI-Pipeline/main
+[builds-url]: https://github.com/gradientedge/cdk-utils/actions
 [cdk-badge]: https://img.shields.io/github/package-json/dependency-version/gradientedge/cdk-utils/aws-cdk-lib
+[cdk-url]: https://aws.amazon.com/cdk/
 [checks]: https://img.shields.io/github/checks-status/gradientedge/cdk-utils/main
 [cmd]: https://img.shields.io/badge/command--line-4D4D4D?logo=windows-terminal&style=for-the-badge
 [code-size]: https://img.shields.io/github/languages/code-size/gradientedge/cdk-utils
+[codecov-url]: https://app.codecov.io/gh/gradientedge/cdk-utils
 [coverage]: https://codecov.io/gh/gradientedge/cdk-utils/branch/main/graph/badge.svg
 [commits]: https://img.shields.io/github/commit-activity/m/gradientedge/cdk-utils
+[commits-url]: https://github.com/gradientedge/cdk-utils/commits/main
 [downloads]: https://img.shields.io/npm/dw/@gradientedge/cdk-utils
 [dependencies]: https://img.shields.io/librariesio/release/npm/@gradientedge/cdk-utils
+[dependencies-url]: https://github.com/gradientedge/cdk-utils/blob/main/package.json
 [issues]: https://img.shields.io/github/issues/gradientedge/cdk-utils.svg
+[issues-url]: https://github.com/gradientedge/cdk-utils/issues
 [pr]: https://img.shields.io/github/issues-pr/gradientedge/cdk-utils.svg
-[version]: https://img.shields.io/npm/v/@gradientedge/cdk-utils
+[pr-url]: https://github.com/gradientedge/cdk-utils/pulls
 [last-commit]: https://img.shields.io/github/last-commit/gradientedge/cdk-utils
 [license]: https://img.shields.io/github/license/gradientedge/cdk-utils
-[logo]: https://cdn-images-1.medium.com/max/980/1*WsecR3i1TM7DbxKW_3VNQA@2x.png
+[license-url]: https://github.com/gradientedge/cdk-utils/blob/main/LICENSE
+[logo]: https://cdn.gradientedge.io/images/ge-logo-1200.png
 [maintained]: https://img.shields.io/badge/maintained-YES-green
 [node-badge]: https://img.shields.io/node/v/@gradientedge/cdk-utils
+[node-url]: https://nodejs.dev
 [purescript]: https://img.shields.io/badge/package.json-4D4D4D?logo=purescript
 [release]: https://img.shields.io/github/release/gradientedge/cdk-utils.svg
-[yarn-badge]: https://img.shields.io/badge/yarn-1.22.10-green?logo=yarn
-[aws-cli-badge]: https://img.shields.io/badge/aws--cli-2.3.4-777BB4?logo=amazon-aws
+[release-url]: https://gradientedge.github.io/cdk-utils/
+[repo-url]: https://github.com/gradientedge/cdk-utils
 [twitter]: https://img.shields.io/twitter/follow/gradientedge
+[twitter-url]: https://twitter.com/gradientedge
+[version]: https://img.shields.io/npm/v/@gradientedge/cdk-utils
+[version-url]: https://www.npmjs.com/package/@gradientedge/cdk-utils
+[yarn-badge]: https://img.shields.io/badge/yarn-1.22.10-green?logo=yarn
+[yarn-url]: https://yarnpkg.com

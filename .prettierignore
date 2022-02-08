@@ -11,4 +11,4 @@ package-lock.json
 
 # Docs
 **/docs/**
-**/api-docs/**
+**/restApi-docs/**

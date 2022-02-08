@@ -4,7 +4,7 @@ import * as apig from 'aws-cdk-lib/aws-apigateway'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import { Construct } from 'constructs'
 import * as common from '../../lib/common'
-import { GraphQLApiLambda } from '../../lib/construct/graphQLApiLambda'
+import { GraphQLApiLambda } from '../../lib/construct'
 import * as types from '../../lib/types'
 
 interface testGraphqlProps extends types.GraphQlApiLambdaProps {

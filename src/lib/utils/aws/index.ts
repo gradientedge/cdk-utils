@@ -1,9 +1,9 @@
 import * as cdk from 'aws-cdk-lib'
 import * as _ from 'lodash'
-import { CommonConstruct } from '../../common/commonConstruct'
+import { CommonConstruct } from '../../common'
 
 /**
- * @category Utils
+ * @category cdk-utils.utils
  * @summary Helper method to add CloudFormation outputs from the construct
  * @param {string} id scoped id of the resource
  * @param {CommonConstruct} scope scope in which this resource is defined

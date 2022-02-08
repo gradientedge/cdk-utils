@@ -1,7 +1,7 @@
 export * from './aws'
 
 /**
- * @category Utils
+ * @category cdk-utils.utils
  */
 const defaultResponseObject = {
   statusCode: 200,
@@ -13,7 +13,7 @@ const defaultResponseObject = {
 }
 
 /**
- * LogLevel enumeration
+ * @category cdk-utils.utils
  */
 export enum LogLevel {
   DEBUG = 'DEBUG',
@@ -25,28 +25,28 @@ export enum LogLevel {
 }
 
 /**
- * @category Utils
+ * @category cdk-utils.utils
  * @param stage
  */
 export const isDevStage = (stage: string) => stage === 'dev'
 /**
- * @category Utils
+ * @category cdk-utils.utils
  * @param stage
  */
 export const isTestStage = (stage: string) => stage === 'tst'
 /**
- * @category Utils
+ * @category cdk-utils.utils
  * @param stage
  */
 export const isUatStage = (stage: string) => stage === 'uat'
 /**
- * @category Utils
+ * @category cdk-utils.utils
  * @param stage
  */
 export const isPrdStage = (stage: string) => stage === 'prd'
 
 /**
- * @category Utils
+ * @category cdk-utils.utils
  * @param error
  */
 export function redirectError(error: any) {
@@ -58,7 +58,7 @@ export function redirectError(error: any) {
 }
 
 /**
- * @category Utils
+ * @category cdk-utils.utils
  * @param message
  */
 export function redirectSuccess(message: any) {
