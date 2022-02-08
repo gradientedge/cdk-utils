@@ -28,7 +28,6 @@ restApi-docs
 *.md
 .yarnrc
 .github
-lerna.json
 .circleci
 **/coverage
 **/tsconfig.json
