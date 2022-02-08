@@ -9,6 +9,7 @@ import * as ec2 from 'aws-cdk-lib/aws-ec2'
 import * as ecs from 'aws-cdk-lib/aws-ecs'
 import * as ecsPatterns from 'aws-cdk-lib/aws-ecs-patterns'
 import * as eks from 'aws-cdk-lib/aws-eks'
+import * as elasticache from 'aws-cdk-lib/aws-elasticache'
 import * as elb from 'aws-cdk-lib/aws-elasticloadbalancingv2'
 import * as events from 'aws-cdk-lib/aws-events'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
@@ -310,3 +311,8 @@ export interface WafIPSetProps extends wafv2.CfnIPSetProps {}
  * @category Security, Identity & Compliance
  */
 export interface WafWebACLProps extends wafv2.CfnWebACLProps {}
+
+/**
+ * @category Compute
+ */
+export interface ElasticacheProps extends elasticache.CfnCacheClusterProps {}
