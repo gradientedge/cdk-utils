@@ -36,3 +36,7 @@ restApi-docs
 **/cdk.out/**
 **/__tests__/**
 **/test/**
+**/api-docs
+**/img
+**/theme
+**/*.md
