@@ -25,16 +25,16 @@
   },
   "homepage": "https://github.com/gradientedge/cdk-utils#readme",
   "scripts": {
-    "build": "rimraf dist/ && npx tsc && npx lerna run build",
+    "build": "npx rimraf dist/ && npx tsc && npx lerna run build",
     "ci": "yarn install --frozen-lockfile && yarn build && yarn validate && yarn docs",
     "cz": "npx cz",
-    "docs": "rimraf api-docs && npx jsdoc --pedantic -c jsdoc.json .",
+    "docs": "npx rimraf api-docs && npx jsdoc --pedantic -c jsdoc.json .",
     "lint": "yarn prettify && eslint **/*.ts --max-warnings=0",
     "fix": "yarn prettify && eslint --fix **/*.ts",
     "postinstall": "npx lerna bootstrap && yarn build",
     "prettier": "npx prettier --check \"**/*.{ts,json,md}\"",
     "prettify": "npx prettier --write \"**/*.{ts,json,md}\"",
-    "test": "rimraf coverage && npx jest --ci --runInBand",
+    "test": "npx rimraf coverage && npx jest --ci --runInBand",
     "validate": "yarn prettier && yarn test"
   },
   "husky": {
@@ -52,6 +52,7 @@
     "constructs": "^10.0.55",
     "lerna": "^4.0.0",
     "lodash": "^4.17.21",
+    "mkdirp": "^1.0.4",
     "moment": "^2.29.1",
     "nconf": "^0.11.3",
     "pluralize": "^8.0.0",
