@@ -33,6 +33,7 @@ lerna.json
 **/coverage
 **/tsconfig.json
 **/yarn.lock
+**/dist/**
 **/cdk.out/**
 **/__tests__/**
 **/test/**
