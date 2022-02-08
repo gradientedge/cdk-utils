@@ -14,12 +14,17 @@
   "scripts": {
     "build": "yarn package:function && yarn copy:layers",
     "copy:layers": "cp -R layers ../../dist/app/api-destined-function",
-    "package:function": "npx mkdirp layers/nodejs && cp -R package.json layers/nodejs && cd layers/nodejs && yarn install --frozen-lockfile",
+    "init": "yarn install",
+    "package:function": "mkdirp layers/nodejs && cp -R package.json layers/nodejs && cd layers/nodejs && yarn install --production --no-lockfile",
     "start": "node dist/index",
     "test": "npx jest --ci --runInBand --passWithNoTests"
   },
   "dependencies": {
     "@types/uuid": "^8.3.4",
     "uuid": "^8.3.2"
+  },
+  "devDependencies": {
+    "mkdirp": "^1.0.4",
+    "rimraf": "^3.0.2"
   }
 }
