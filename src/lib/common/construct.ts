@@ -44,7 +44,7 @@ export class CommonConstruct extends Construct {
   ssMManager: aws.SsmManager
   vpcManager: aws.VpcManager
   wafManager: aws.WafManager
-  elasticacheManager: aws.ElasticacheManager
+  elasticacheManager: aws.ElastiCacheManager
   fullyQualifiedDomainName: string
 
   constructor(parent: Construct, id: string, props: types.CommonStackProps) {
@@ -72,7 +72,7 @@ export class CommonConstruct extends Construct {
     this.ssMManager = new aws.SsmManager()
     this.vpcManager = new aws.VpcManager()
     this.wafManager = new aws.WafManager()
-    this.elasticacheManager = new aws.ElasticacheManager()
+    this.elasticacheManager = new aws.ElastiCacheManager()
 
     this.determineFullyQualifiedDomain()
   }

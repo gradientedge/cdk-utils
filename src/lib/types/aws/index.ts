@@ -511,4 +511,4 @@ export interface WafWebACLProps extends wafv2.CfnWebACLProps {}
  * @category cdk-utils.elasticache-manager
  * @category Compute
  */
-export interface ElasticacheProps extends elasticache.CfnCacheClusterProps {}
+export interface ElastiCacheProps extends elasticache.CfnCacheClusterProps {}

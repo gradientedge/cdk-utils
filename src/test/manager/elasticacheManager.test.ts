@@ -6,7 +6,7 @@ import * as types from '../../lib/types'
 
 interface TestStackProps extends types.CommonStackProps {
   testVpc: any
-  testElasticache: any
+  testElastiCache: any
 }
 
 const testStackProps = {
@@ -37,7 +37,7 @@ class TestCommonStack extends common.CommonStack {
       ...super.determineConstructProps(props),
       ...{
         testVpc: this.node.tryGetContext('testVpc'),
-        testElasticache: this.node.tryGetContext('testElasticache'),
+        testElastiCache: this.node.tryGetContext('testElastiCache'),
       },
     }
   }
@@ -69,10 +69,10 @@ class TestCommonConstruct extends common.CommonConstruct {
     super(parent, name, props)
     const testVpc = this.vpcManager.createCommonVpc(this, this.props.testVpc)
 
-    this.elasticacheManager.createElasticache(
+    this.elasticacheManager.createElastiCache(
       'test-elasticache',
       this,
-      this.props.testElasticache,
+      this.props.testElastiCache,
       testVpc.privateSubnets.map(subnet => subnet.subnetId),
       [testVpc.vpcDefaultSecurityGroup]
     )
@@ -83,14 +83,14 @@ const app = new cdk.App({ context: testStackProps })
 const commonStack = new TestCommonStack(app, 'test-common-stack', testStackProps)
 const template = Template.fromStack(commonStack)
 
-describe('TestElasticacheConstruct', () => {
+describe('TestElastiCacheConstruct', () => {
   test('handles mis-configurations as expected', () => {
     const error = () => new TestInvalidCommonStack(app, 'test-invalid-stack', testStackProps)
-    expect(error).toThrow('Elasticache props undefined')
+    expect(error).toThrow('ElastiCache props undefined')
   })
 })
 
-describe('TestElasticacheConstruct', () => {
+describe('TestElastiCacheConstruct', () => {
   test('synthesises as expected', () => {
     /* test if number of resources are correctly synthesised */
     template.resourceCountIs('AWS::ElastiCache::CacheCluster', 1)
@@ -98,7 +98,7 @@ describe('TestElasticacheConstruct', () => {
   })
 })
 
-describe('TestElasticacheConstruct', () => {
+describe('TestElastiCacheConstruct', () => {
   test('outputs as expected', () => {
     template.hasOutput('testElasticacheConfigurationEndpointAddress', {})
     template.hasOutput('testElasticacheConfigurationEndpointPort', {})
@@ -108,8 +108,8 @@ describe('TestElasticacheConstruct', () => {
   })
 })
 
-describe('TestElasticacheConstruct', () => {
-  test('provisions new elasticache as expected', () => {
+describe('TestElastiCacheConstruct', () => {
+  test('provisions new elastiCache as expected', () => {
     template.hasResourceProperties('AWS::ElastiCache::CacheCluster', {
       ClusterName: 'test-elasticache-test',
       Engine: 'redis',

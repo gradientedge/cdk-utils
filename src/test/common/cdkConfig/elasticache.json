@@ -1,5 +1,5 @@
 {
-  "testElasticache": {
+  "testElastiCache": {
     "engine": "redis",
     "cacheNodeType": "cache.t2.micro",
     "numCacheNodes": 1,

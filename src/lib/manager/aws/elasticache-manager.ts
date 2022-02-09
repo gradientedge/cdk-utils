@@ -6,8 +6,8 @@ import * as utils from '../../utils'
 /**
  * @stability stable
  * @category cdk-utils.elasticache-manager
- * @subcategory Compute
- * @summary Provides operations on AWS Elasticache Service.
+ * @subcategory Construct
+ * @summary Provides operations on AWS ElastiCache Service.
  * - A new instance of scope class is injected into {@link common.CommonConstruct} constructor.
  * - If a custom construct extends {@link common.CommonConstruct}, an instance is available within the context.
  * @example
@@ -17,24 +17,24 @@ import * as utils from '../../utils'
  *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
  *     super(parent, id, props)
  *     this.props = props
- *     this.elasticacheManager.createElasticache('MyElasticache', scope, props)
+ *     this.elasticacheManager.createElastiCache('MyElastiCache', scope, props)
  *   }
  * }
  *
- * @see [CDK Elasticache Module]{@link https://docs.aws.amazon.com/cdk/api/v1/docs/@aws-cdk_aws-elasticache.CfnCacheCluster.html}
+ * @see [CDK ElastiCache Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_elasticache-readme.html}
  */
-export class ElasticacheManager {
+export class ElastiCacheManager {
   /**
    * @summary Method to create an elasticache resource
    * @param {string} id scoped id of the resource
    * @param {common.CommonConstruct} scope scope in which scope resource is defined
    * @param {string[]} subnetIds
    */
-  public createElasticacheSubnetGroup(id: string, scope: common.CommonConstruct, subnetIds: string[]) {
+  public createElastiCacheSubnetGroup(id: string, scope: common.CommonConstruct, subnetIds: string[]) {
     const elasticacheSubnetGroup = new elasticache.CfnSubnetGroup(scope, `${id}`, {
-      cacheSubnetGroupName: `${id}SubnetGroup`,
+      cacheSubnetGroupName: `${id}-subnet-group-${scope.props.stage}`,
       subnetIds: subnetIds,
-      description: `${id} Subnet Group`,
+      description: `${id}-subnet-group-${scope.props.stage}`,
     })
 
     return elasticacheSubnetGroup
@@ -44,22 +44,22 @@ export class ElasticacheManager {
    * @summary Method to create an elasticache resource
    * @param {string} id scoped id of the resource
    * @param {common.CommonConstruct} scope scope in which scope resource is defined
-   * @param {types.ElasticacheProps} props
+   * @param {types.ElastiCacheProps} props
    * @param {string[]} subnetIds
    * @param {string[]} securityGroupIds
    * @param {string[]} logDeliveryConfigurations
    */
-  public createElasticache(
+  public createElastiCache(
     id: string,
     scope: common.CommonConstruct,
-    props: types.ElasticacheProps,
+    props: types.ElastiCacheProps,
     subnetIds: string[],
     securityGroupIds: string[],
     logDeliveryConfigurations?: any
   ) {
-    if (!props) throw `Elasticache props undefined`
+    if (!props) throw `ElastiCache props undefined`
 
-    const subnetGroup = this.createElasticacheSubnetGroup(`${id}-subnetGroup`, scope, subnetIds)
+    const subnetGroup = this.createElastiCacheSubnetGroup(`${id}-subnetGroup`, scope, subnetIds)
 
     const elasticacheCluster = new elasticache.CfnCacheCluster(scope, `${id}`, {
       engine: props.engine,
@@ -83,15 +83,15 @@ export class ElasticacheManager {
       logDeliveryConfigurations: logDeliveryConfigurations,
     })
 
-    utils.createCfnOutput(`${id}-ClusterName`, scope, elasticacheCluster.clusterName)
+    utils.createCfnOutput(`${id}-clusterName`, scope, elasticacheCluster.clusterName)
     utils.createCfnOutput(
-      `${id}-ConfigurationEndpointAddress`,
+      `${id}-configurationEndpointAddress`,
       scope,
       elasticacheCluster.attrConfigurationEndpointAddress
     )
-    utils.createCfnOutput(`${id}-ConfigurationEndpointPort`, scope, elasticacheCluster.attrConfigurationEndpointPort)
-    utils.createCfnOutput(`${id}-RedisEndpointPort`, scope, elasticacheCluster.attrRedisEndpointPort)
-    utils.createCfnOutput(`${id}-RedisEndpointAddress`, scope, elasticacheCluster.attrRedisEndpointAddress)
+    utils.createCfnOutput(`${id}-configurationEndpointPort`, scope, elasticacheCluster.attrConfigurationEndpointPort)
+    utils.createCfnOutput(`${id}-redisEndpointPort`, scope, elasticacheCluster.attrRedisEndpointPort)
+    utils.createCfnOutput(`${id}-redisEndpointAddress`, scope, elasticacheCluster.attrRedisEndpointAddress)
 
     return elasticacheCluster
   }
