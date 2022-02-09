@@ -10,6 +10,7 @@ import * as ec2 from 'aws-cdk-lib/aws-ec2'
 import * as ecs from 'aws-cdk-lib/aws-ecs'
 import * as ecsPatterns from 'aws-cdk-lib/aws-ecs-patterns'
 import * as eks from 'aws-cdk-lib/aws-eks'
+import * as elasticache from 'aws-cdk-lib/aws-elasticache'
 import * as elb from 'aws-cdk-lib/aws-elasticloadbalancingv2'
 import * as events from 'aws-cdk-lib/aws-events'
 import * as iam from 'aws-cdk-lib/aws-iam'
@@ -505,3 +506,9 @@ export interface WafIPSetProps extends wafv2.CfnIPSetProps {}
  * @subcategory Properties
  */
 export interface WafWebACLProps extends wafv2.CfnWebACLProps {}
+
+/**
+ * @category cdk-utils.elasticache-manager
+ * @category Compute
+ */
+export interface ElastiCacheProps extends elasticache.CfnCacheClusterProps {}
