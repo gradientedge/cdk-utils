@@ -17,11 +17,7 @@ describe('TestApiDestinedFunction', () => {
         statusCode: 200,
         message: 'Webhook call successful',
         body: {
-          payload: {
-            body: {
-              test: true,
-            },
-          },
+          event: validEvent,
         },
         origin: 'https://example.gradientedge.io',
         source: 'custom:api-destined-lambda',
