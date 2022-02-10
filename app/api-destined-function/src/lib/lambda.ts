@@ -8,9 +8,7 @@ export const processEvent = (event: any) => {
     id: uuidv4(),
     message: 'Webhook call successful',
     body: {
-      payload: {
-        body: event.body,
-      },
+      event: event,
     },
     origin: event.headers?.origin,
     source: 'custom:api-destined-lambda',
