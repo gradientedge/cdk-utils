@@ -1,5 +1,6 @@
 import * as cdk from 'aws-cdk-lib'
 import { Template } from 'aws-cdk-lib/assertions'
+import * as lambda from 'aws-cdk-lib/aws-lambda'
 import { Construct } from 'constructs'
 import * as common from '../../lib/common'
 import { ApiToEventBridgeTarget } from '../../lib/construct'
@@ -48,8 +49,9 @@ class TestCommonStack extends common.CommonStack {
           resource: 'notify',
         },
         lambda: {
-          useNative: true,
           function: this.node.tryGetContext('testApiDestinedLambda'),
+          layerSource: new lambda.AssetCode('./dist/app/api-destined-function/layers'),
+          source: new lambda.AssetCode('./dist/app/api-destined-function/src/lib'),
         },
         event: {
           eventBusName: 'test',
@@ -73,6 +75,7 @@ class TestApiToEventBridgeTarget extends ApiToEventBridgeTarget {
     this.props = props
 
     this.id = 'test'
+
     this.initResources()
   }
 }

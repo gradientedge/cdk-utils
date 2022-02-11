@@ -197,8 +197,10 @@ export interface ApiDestinedLambdaType {
   environment: types.ApiDestinedLambdaEnvironment
   function: lambda.Function
   layers: lambda.LayerVersion[]
+  layerSource?: lambda.AssetCode
   policy: iam.PolicyDocument
   role: iam.Role
+  source?: lambda.AssetCode
 }
 
 /**
@@ -223,7 +225,6 @@ export interface ApiToEventBridgeTargetRestApiProps {
  * @subcategory Properties
  */
 interface ApiToEventBridgeTargetLambdaProps {
-  useNative?: boolean
   function: LambdaProps
   source?: lambda.AssetCode
   layerSource?: lambda.AssetCode

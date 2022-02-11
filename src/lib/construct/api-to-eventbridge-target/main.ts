@@ -190,12 +190,11 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
     }
   }
 
-  private createApiDestinedLambdaLayersSource() {
-    return this.props.lambda.useNative
-      ? lambda.AssetCode.fromAsset(`${this.apiDestinedLambdaDirectory}/layers`)
-      : lambda.AssetCode.fromAsset(
-          `../node_modules/@gradientedge/cdk-utils/dist/${this.apiDestinedLambdaDirectory}/layers`
-        )
+  protected createApiDestinedLambdaLayersSource() {
+    return (
+      this.props.lambda.layerSource ??
+      new lambda.AssetCode(`../node_modules/@gradientedge/cdk-utils/dist/${this.apiDestinedLambdaDirectory}/layers`)
+    )
   }
 
   /**
@@ -223,12 +222,11 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
     this.apiDestinedLambda.destinationFailure = new destinations.EventBridgeDestination(this.apiEvent.eventBus)
   }
 
-  private createApiDestinedLambdaFunctionSource() {
-    return this.props.lambda.useNative
-      ? lambda.AssetCode.fromAsset(`${this.apiDestinedLambdaDirectory}/src/lib`)
-      : lambda.AssetCode.fromAsset(
-          `../node_modules/@gradientedge/cdk-utils/dist/${this.apiDestinedLambdaDirectory}/src/lib`
-        )
+  protected createApiDestinedLambdaFunctionSource() {
+    return (
+      this.props.lambda.source ??
+      new lambda.AssetCode(`../node_modules/@gradientedge/cdk-utils/dist/${this.apiDestinedLambdaDirectory}/src/lib`)
+    )
   }
 
   /**
