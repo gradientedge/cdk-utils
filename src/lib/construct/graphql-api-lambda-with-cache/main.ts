@@ -2,10 +2,10 @@ import * as cdk from 'aws-cdk-lib'
 import * as ec2 from 'aws-cdk-lib/aws-ec2'
 import * as elasticache from 'aws-cdk-lib/aws-elasticache'
 import * as iam from 'aws-cdk-lib/aws-iam'
-import * as utils from '../../utils'
 import { Construct } from 'constructs'
 import { GraphQLApiLambda } from '..'
 import { GraphQlApiLambdaWithCacheProps } from '../../types'
+import * as utils from '../../utils'
 
 /**
  * @stability stable
