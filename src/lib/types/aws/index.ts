@@ -225,6 +225,7 @@ export interface ApiToEventBridgeTargetRestApiProps {
  * @subcategory Properties
  */
 interface ApiToEventBridgeTargetLambdaProps {
+  handler?: string
   function: LambdaProps
   source?: lambda.AssetCode
   layerSource?: lambda.AssetCode

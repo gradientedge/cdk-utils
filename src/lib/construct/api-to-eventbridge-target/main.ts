@@ -247,7 +247,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
       this.apiDestinedLambda.role,
       this.apiDestinedLambda.layers,
       this.createApiDestinedLambdaFunctionSource(),
-      'lambda.handler',
+      this.props.lambda.handler ?? 'lambda.handler',
       this.apiDestinedLambda.environment
     )
   }
