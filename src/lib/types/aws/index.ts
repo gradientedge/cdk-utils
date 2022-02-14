@@ -113,6 +113,8 @@ export interface HealthCheck extends elb.HealthCheck {
  * @subcategory Types
  */
 export interface LambdaEnvironment {
+  CACHE_REDIS_HOST?: string
+  CACHE_REDIS_PORT?: string
   NODE_ENV: string
   LOG_LEVEL: string
   TZ: string
@@ -149,6 +151,17 @@ export interface GraphQlApiLambdaProps extends CommonStackProps {
   nodeEnv: string
   logLevel: string
   timezone: string
+}
+
+/**
+ * @category cdk-utils.graphql-api-lambda-with-cache
+ * @subcategory Properties
+ */
+export interface GraphQlApiLambdaWithCacheProps extends GraphQlApiLambdaProps {
+  graphQLVpc: ec2.VpcProps
+  graphQLElastiCache: ElastiCacheProps
+  securityGroupExportName: string
+  vpcExportName: string
 }
 
 /**

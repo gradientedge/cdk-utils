@@ -57,6 +57,7 @@ export class VpcManager {
       vpc.privateSubnets.map(subnet => subnet.routeTable.routeTableId).toString()
     )
     utils.createCfnOutput(`${id}AvailabilityZones`, scope, vpc.availabilityZones.toString())
+    utils.createCfnOutput(`${id}DefaultSecurityGroup`, scope, vpc.vpcDefaultSecurityGroup.toString())
 
     return vpc
   }
