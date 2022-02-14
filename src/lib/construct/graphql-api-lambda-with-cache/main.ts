@@ -2,6 +2,7 @@ import * as cdk from 'aws-cdk-lib'
 import * as ec2 from 'aws-cdk-lib/aws-ec2'
 import * as elasticache from 'aws-cdk-lib/aws-elasticache'
 import * as iam from 'aws-cdk-lib/aws-iam'
+import * as utils from '../../utils'
 import { Construct } from 'constructs'
 import { GraphQLApiLambda } from '..'
 import { GraphQlApiLambdaWithCacheProps } from '../../types'
@@ -33,11 +34,12 @@ export class GraphQLApiLambdaWithCache extends GraphQLApiLambda {
   id: string
 
   /* graphql restApi resources */
-  graphQLVpc: ec2.Vpc
+  graphQLVpc: ec2.IVpc
   graphQLElastiCache: elasticache.CfnCacheCluster
   graphQLSecurityGroup: ec2.ISecurityGroup
   securityGroupStackName: string
   securityGroupExportName: string
+  vpcExportName: string
 
   constructor(parent: Construct, id: string, props: GraphQlApiLambdaWithCacheProps) {
     super(parent, id, props)
@@ -58,7 +60,11 @@ export class GraphQLApiLambdaWithCache extends GraphQLApiLambda {
    * @protected
    */
   protected setVpc() {
-    this.graphQLVpc = this.vpcManager.createCommonVpc(this, this.props.graphQLVpc, this.props.graphQLVpc.vpcName)
+    if (this.props.vpcExportName) {
+      this.graphQLVpc = this.vpcManager.retrieveCommonVpc(`${this.id}`, this, this.props.vpcExportName)
+    } else {
+      this.graphQLVpc = this.vpcManager.createCommonVpc(this, this.props.graphQLVpc, this.props.graphQLVpc.vpcName)
+    }
   }
 
   /**
@@ -66,11 +72,22 @@ export class GraphQLApiLambdaWithCache extends GraphQLApiLambda {
    * @protected
    */
   protected setSecurityGroup() {
-    this.graphQLSecurityGroup = ec2.SecurityGroup.fromSecurityGroupId(
-      this,
-      `${this.id}`,
-      cdk.Fn.importValue(`${this.securityGroupStackName}-${this.props.stage}-${this.securityGroupExportName}`)
-    )
+    if (this.props.securityGroupExportName) {
+      this.graphQLSecurityGroup = ec2.SecurityGroup.fromSecurityGroupId(
+        this,
+        `${this.id}`,
+        cdk.Fn.importValue(this.props.securityGroupExportName)
+      )
+    } else {
+      this.graphQLSecurityGroup = new ec2.SecurityGroup(this, `${this.id}-security-group-${this.props.stage}`, {
+        securityGroupName: `${this.id}-security-group-${this.props.stage}`,
+        vpc: this.graphQLVpc,
+      })
+
+      this.graphQLSecurityGroup.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.allIcmp(), 'All Traffic')
+
+      utils.createCfnOutput(`${this.id}-security-group-id`, this, this.graphQLSecurityGroup.securityGroupId)
+    }
   }
 
   /**

@@ -66,7 +66,7 @@ class testGraphqlWithCacheApiConstruct extends GraphQLApiLambdaWithCache {
 
     this.id = 'test-graphql'
     this.props.graphQLApiSource = new lambda.AssetCode('src/test/common/nodejs/lib')
-    this.props.graphqlRestApi = {
+    ;(this.props.graphqlRestApi = {
       deploy: true,
       restApiName: 'test-lambda-rest-api',
       deployOptions: {
@@ -81,9 +81,8 @@ class testGraphqlWithCacheApiConstruct extends GraphQLApiLambdaWithCache {
         allowOrigins: apig.Cors.ALL_ORIGINS,
       },
       proxy: true,
-    }
-    this.securityGroupStackName = this.id
-    this.securityGroupExportName = 'VpcDefaultSecurityGroup'
+    }),
+      (this.props.securityGroupExportName = `${this.id}-${this.props.stage}-VpcDefaultSecurityGroup`)
 
     this.initResources()
   }

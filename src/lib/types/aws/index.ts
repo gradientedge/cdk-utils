@@ -160,6 +160,8 @@ export interface GraphQlApiLambdaProps extends CommonStackProps {
 export interface GraphQlApiLambdaWithCacheProps extends GraphQlApiLambdaProps {
   graphQLVpc: ec2.VpcProps
   graphQLElastiCache: ElastiCacheProps
+  securityGroupExportName: string
+  vpcExportName: string
 }
 
 /**
