@@ -420,18 +420,22 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
   }
 
   protected createApiDestinedResource() {
+    if (!this.props.api.withResource) return
+
     this.apiDestinedRestApi.resource = this.apiDestinedRestApi.api.root.addResource(
       this.props.api.resource ?? this.apiResource
     )
   }
 
   protected createApiDestinedIntegrationRequestParameters() {
+    if (!this.props.api.withResource) return
     this.apiDestinedRestApi.integrationRequestParameters = {
       'integration.request.header.Content-Type': "'application/x-www-form-urlencoded'",
     }
   }
 
   protected createApiDestinedIntegrationRequestTemplates() {
+    if (!this.props.api.withResource) return
     this.apiDestinedRestApi.integrationRequestTemplates = {
       'application/json': [
         'Action=Publish',
@@ -443,6 +447,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
   }
 
   protected createApiDestinedIntegrationResponse() {
+    if (!this.props.api.withResource) return
     this.apiDestinedRestApi.integrationResponse = {
       ...{
         statusCode: '200',
@@ -455,6 +460,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
   }
 
   protected createApiDestinedIntegrationErrorResponse() {
+    if (!this.props.api.withResource) return
     this.apiDestinedRestApi.integrationErrorResponse = {
       ...{
         selectionPattern: '^\\[Error\\].*',
@@ -476,6 +482,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
   }
 
   protected createApiDestinedIntegration() {
+    if (!this.props.api.withResource) return
     this.apiDestinedRestApi.integration = new apig.Integration({
       type: apig.IntegrationType.AWS,
       integrationHttpMethod: 'POST',
@@ -497,6 +504,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
   }
 
   protected createApiDestinedMethodResponse() {
+    if (!this.props.api.withResource) return
     this.apiDestinedRestApi.methodResponse = {
       ...{
         statusCode: '200',
@@ -514,6 +522,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
   }
 
   protected createApiDestinedMethodErrorResponse() {
+    if (!this.props.api.withResource) return
     this.apiDestinedRestApi.methodErrorResponse = {
       ...{
         statusCode: '400',
@@ -531,6 +540,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
   }
 
   protected createApiDestinedResourceMethod() {
+    if (!this.props.api.withResource) return
     this.apiDestinedRestApi.method = this.apiDestinedRestApi.resource.addMethod(
       'POST',
       this.apiDestinedRestApi.integration,

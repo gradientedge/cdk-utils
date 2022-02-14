@@ -208,6 +208,7 @@ export interface ApiDestinedLambdaType {
  * @subcategory Properties
  */
 export interface ApiToEventBridgeTargetRestApiProps {
+  withResource?: boolean
   certificate: AcmProps
   integrationResponse?: apig.IntegrationResponse
   integrationErrorResponse?: apig.IntegrationResponse

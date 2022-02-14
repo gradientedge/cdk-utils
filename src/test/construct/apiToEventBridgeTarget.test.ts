@@ -47,6 +47,7 @@ class TestCommonStack extends common.CommonStack {
         api: {
           certificate: this.node.tryGetContext('siteCertificate'),
           resource: 'notify',
+          withResource: true,
         },
         lambda: {
           function: this.node.tryGetContext('testApiDestinedLambda'),
