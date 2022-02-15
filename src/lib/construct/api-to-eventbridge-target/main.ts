@@ -640,6 +640,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
       'POST',
       this.apiDestinedRestApi.integration,
       {
+        authorizer: this.apiDestinedRestApi.authoriser,
         methodResponses: [this.apiDestinedRestApi.methodResponse, this.apiDestinedRestApi.methodErrorResponse],
       }
     )

@@ -182,6 +182,7 @@ export interface ApiDestinationEventType {
  */
 export interface ApiDestinedRestApiType {
   api: apig.IRestApi
+  authoriser?: apig.IAuthorizer
   certificate: acm.ICertificate
   domain: apig.DomainName
   errorResponseModel: apig.Model
