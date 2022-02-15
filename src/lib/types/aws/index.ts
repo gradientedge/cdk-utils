@@ -181,7 +181,7 @@ export interface ApiDestinationEventType {
  * @subcategory Types
  */
 export interface ApiDestinedRestApiType {
-  api: apig.RestApi
+  api: apig.IRestApi
   certificate: acm.ICertificate
   domain: apig.DomainName
   errorResponseModel: apig.Model
@@ -196,7 +196,7 @@ export interface ApiDestinedRestApiType {
   methodResponse: apig.MethodResponse
   resource: apig.Resource
   responseModel: apig.Model
-  topic: sns.Topic
+  topic: sns.ITopic
   topicRole: iam.Role
 }
 
@@ -221,7 +221,6 @@ export interface ApiDestinedLambdaType {
  * @subcategory Properties
  */
 export interface ApiToEventBridgeTargetRestApiProps {
-  withResource?: boolean
   certificate: AcmProps
   integrationResponse?: apig.IntegrationResponse
   integrationErrorResponse?: apig.IntegrationResponse
@@ -232,6 +231,8 @@ export interface ApiToEventBridgeTargetRestApiProps {
   errorResponseModel?: apig.ModelOptions
   responseModel?: apig.ModelOptions
   restApi?: apig.RestApiProps
+  useExisting: boolean
+  withResource?: boolean
 }
 
 /**

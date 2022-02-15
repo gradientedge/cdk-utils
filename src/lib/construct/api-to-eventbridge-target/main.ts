@@ -1,9 +1,11 @@
+import * as cdk from 'aws-cdk-lib'
 import * as apig from 'aws-cdk-lib/aws-apigateway'
 import * as eventstargets from 'aws-cdk-lib/aws-events-targets'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as destinations from 'aws-cdk-lib/aws-lambda-destinations'
 import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager'
+import * as sns from 'aws-cdk-lib/aws-sns'
 import { Construct } from 'constructs'
 import { CommonConstruct } from '../../common'
 import * as types from '../../types'
@@ -134,6 +136,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
    * @protected
    */
   protected resolveCertificate() {
+    if (this.props.api.useExisting) return
     if (
       this.props.api.certificate.useExistingCertificate &&
       this.props.api.certificate.certificateSsmName &&
@@ -159,6 +162,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
    * @protected
    */
   protected createApiDestinedLambdaPolicy() {
+    if (this.props.api.useExisting) return
     this.apiDestinedLambda.policy = new iam.PolicyDocument({
       statements: [this.iamManager.statementForReadSecrets(this), this.iamManager.statementForPutEvents()],
     })
@@ -169,6 +173,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
    * @protected
    */
   protected createApiDestinedLambdaRole() {
+    if (this.props.api.useExisting) return
     this.apiDestinedLambda.role = this.iamManager.createRoleForLambda(
       `${this.id}-lambda-destined-role`,
       this,
@@ -181,6 +186,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
    * @protected
    */
   protected createApiDestinedLambdaEnvironment() {
+    if (this.props.api.useExisting) return
     this.apiDestinedLambda.environment = {
       NODE_ENV: this.props.nodeEnv,
       LOG_LEVEL: this.props.logLevel,
@@ -194,6 +200,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
    * @protected
    */
   protected createApiDestinedLambdaLayers() {
+    if (this.props.api.useExisting) return
     const layers: lambda.LayerVersion[] = []
     if (this.props.lambda.layerSource) {
       layers.push(
@@ -209,6 +216,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
    * @protected
    */
   protected createApiDestinedLambdaDestinations() {
+    if (this.props.api.useExisting) return
     this.apiDestinedLambda.destinationSuccess = new destinations.EventBridgeDestination(this.apiEvent.eventBus)
     this.apiDestinedLambda.destinationFailure = new destinations.EventBridgeDestination(this.apiEvent.eventBus)
   }
@@ -218,6 +226,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
    * @protected
    */
   protected createApiDestinedLambdaFunction() {
+    if (this.props.api.useExisting) return
     if (!this.props.lambda.source) throw 'Api Destined Lambda props undefined'
 
     this.apiDestinedLambda.function = this.lambdaManager.createLambdaFunction(
@@ -239,12 +248,14 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
   }
 
   protected createApiDestinedEventBus() {
+    if (this.props.api.useExisting) return
     this.apiEvent.eventBus = this.eventManager.createEventBus(`${this.id}-destined-event-bus`, this, {
       eventBusName: `${this.props.event.eventBusName}`,
     })
   }
 
   protected createApiDestinationLogGroupSuccess() {
+    if (this.props.api.useExisting) return
     this.apiEvent.logGroupSuccess = this.logManager.createLogGroup(`${this.id}-destination-success-log`, this, {
       ...{
         logGroupName: `/${this.id}/events/api-destination-success`,
@@ -258,6 +269,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
    * @protected
    */
   protected createApiDestinationRuleSuccess() {
+    if (this.props.api.useExisting) return
     this.props.event.ruleSuccess = {
       ...{
         ruleName: `${this.id}-api-destination-success`,
@@ -285,6 +297,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
   }
 
   protected createApiDestinationLogGroupFailure() {
+    if (this.props.api.useExisting) return
     this.apiEvent.logGroupFailure = this.logManager.createLogGroup(`${this.id}-destination-failure-log`, this, {
       ...{
         logGroupName: `/${this.id}/events/api-destination-failure`,
@@ -298,6 +311,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
    * @protected
    */
   protected createApiDestinationRuleFailure() {
+    if (this.props.api.useExisting) return
     this.props.event.ruleFailure = {
       ...{
         ruleName: `${this.id}-api-destination-failure`,
@@ -321,12 +335,20 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
   }
 
   protected createApiDestinedTopicRole() {
+    if (this.props.api.useExisting) return
     this.apiDestinedRestApi.topicRole = new iam.Role(this, `${this.id}-sns-rest-api-role`, {
       assumedBy: new iam.ServicePrincipal('apigateway.amazonaws.com'),
     })
   }
 
   protected createApiDestinedTopic() {
+    if (this.props.api.useExisting) {
+      this.apiDestinedRestApi.topic = sns.Topic.fromTopicArn(
+        this,
+        `${this.id}-destined-topic`,
+        `arn:aws:sns:${this.props.region}:${cdk.Stack.of(this).account}:${this.id}-destined-topic-${this.props.stage}`
+      )
+    }
     this.apiDestinedRestApi.topic = this.snsManager.createLambdaNotificationService(
       `${this.id}-destined-topic`,
       this,
@@ -344,6 +366,13 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
    * @protected
    */
   protected createApiDestinedRestApi() {
+    if (this.props.api.useExisting) {
+      this.apiDestinedRestApi.api = apig.RestApi.fromRestApiId(
+        this,
+        `${this.id}-sns-rest-api`,
+        cdk.Fn.importValue('importedRestApiRef')
+      )
+    }
     this.apiDestinedRestApi.api = new apig.RestApi(this, `${this.id}-sns-rest-api`, {
       ...{
         deployOptions: {
@@ -365,26 +394,32 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
       },
       ...this.props.api,
     })
+    this.addCfnOutput(`${this.id}-restApiId`, this.apiDestinedRestApi.api.restApiId)
   }
 
   protected createApiDestinedResponseModel() {
-    this.apiDestinedRestApi.responseModel = this.apiDestinedRestApi.api.addModel(`${this.id}-response-model`, {
-      ...{
-        contentType: 'application/json',
-        modelName: 'ResponseModel',
-        schema: {
-          schema: apig.JsonSchemaVersion.DRAFT4,
-          title: 'pollResponse',
-          type: apig.JsonSchemaType.OBJECT,
-          properties: { message: { type: apig.JsonSchemaType.STRING } },
+    if (this.props.api.useExisting) return
+    this.apiDestinedRestApi.responseModel = (this.apiDestinedRestApi.api as apig.RestApi).addModel(
+      `${this.id}-response-model`,
+      {
+        ...{
+          contentType: 'application/json',
+          modelName: 'ResponseModel',
+          schema: {
+            schema: apig.JsonSchemaVersion.DRAFT4,
+            title: 'pollResponse',
+            type: apig.JsonSchemaType.OBJECT,
+            properties: { message: { type: apig.JsonSchemaType.STRING } },
+          },
         },
-      },
-      ...this.props.api.responseModel,
-    })
+        ...this.props.api.responseModel,
+      }
+    )
   }
 
   protected createApiDestinedErrorResponseModel() {
-    this.apiDestinedRestApi.errorResponseModel = this.apiDestinedRestApi.api.addModel(
+    if (this.props.api.useExisting) return
+    this.apiDestinedRestApi.errorResponseModel = (this.apiDestinedRestApi.api as apig.RestApi).addModel(
       `${this.id}-error-response-model`,
       {
         ...{
@@ -407,7 +442,6 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
 
   protected createApiDestinedResource() {
     if (!this.props.api.withResource) return
-
     this.apiDestinedRestApi.resource = this.apiDestinedRestApi.api.root.addResource(
       this.props.api.resource ?? this.apiResource
     )
@@ -541,6 +575,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
    * @protected
    */
   protected createApiDomain() {
+    if (this.props.api.useExisting) return
     this.apiDestinedRestApi.domain = this.apiManager.createApiDomain(
       `${this.id}-api-domain`,
       this,
