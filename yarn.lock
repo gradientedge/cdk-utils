@@ -3964,10 +3964,10 @@ constantinople@^3.0.1, constantinople@^3.1.2:
     babel-types "^6.26.0"
     babylon "^6.18.0"
 
-constructs@^10.0.62:
-  version "10.0.62"
-  resolved "https://registry.yarnpkg.com/constructs/-/constructs-10.0.62.tgz#d21d544d671873597bcf9de02b9b5210e2e464a7"
-  integrity sha512-Wxy2JBzhsoP1onx68CgGDGVsFqsHfCs8hmZLx9PNoH2hu7iFBP8uoo2zZzE/P/N11QUfwliR/BgBRp3PGXdbzQ==
+constructs@^10.0.63:
+  version "10.0.63"
+  resolved "https://registry.yarnpkg.com/constructs/-/constructs-10.0.63.tgz#992ef12a477e7bb9cfe8943c1b485b30f62e4342"
+  integrity sha512-2AQEHHZsdUTbRynOpP9EP/M4ApkZbRCjHd4A9lnls+8dBonPwk2zAfu66v8ofctUOF4uEXWqje1ZSvde38/f9g==
 
 conventional-changelog-angular@^5.0.0, conventional-changelog-angular@^5.0.12:
   version "5.0.13"
