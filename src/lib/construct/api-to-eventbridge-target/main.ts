@@ -591,19 +591,12 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
    * @protected
    */
   protected createApiBasePathMapping() {
-    const apiRootPaths = this.props.apiRootPaths
-    if (apiRootPaths && apiRootPaths.length > 0) {
-      apiRootPaths.forEach((apiRootPath: string) => {
-        this.apiDestinedBasePathMappings.push(
-          new apig.BasePathMapping(this, `${this.id}-base-bath-mapping-${apiRootPath}`, {
-            basePath: this.props.api.resource,
-            domainName: this.apiDestinedRestApi.domain,
-            restApi: this.apiDestinedRestApi.api,
-            stage: this.apiDestinedRestApi.api.deploymentStage,
-          })
-        )
-      })
-    }
+    new apig.BasePathMapping(this, `${this.id}-base-bath-mapping`, {
+      basePath: '',
+      domainName: this.apiDestinedRestApi.domain,
+      restApi: this.apiDestinedRestApi.api,
+      stage: this.apiDestinedRestApi.api.deploymentStage,
+    })
   }
 
   /**
