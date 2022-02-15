@@ -51,8 +51,8 @@ class TestCommonStack extends common.CommonStack {
         },
         lambda: {
           function: this.node.tryGetContext('testApiDestinedLambda'),
-          layerSource: new lambda.AssetCode('./dist/app/api-destined-function/layers'),
-          source: new lambda.AssetCode('./dist/app/api-destined-function/src/lib'),
+          layerSource: new lambda.AssetCode('./app/api-destined-function/layers'),
+          source: new lambda.AssetCode('./app/api-destined-function/src/lib'),
         },
         event: {
           eventBusName: 'test',

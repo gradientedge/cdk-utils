@@ -41,7 +41,6 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
   applicationSecrets: secretsmanager.ISecret[]
 
   /* destined lambda related resources */
-  apiDestinedLambdaDirectory = 'app/api-destined-function'
   apiDestinedLambda: types.ApiDestinedLambdaType
 
   /* event related resources */
@@ -190,26 +189,18 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
     }
   }
 
-  protected createApiDestinedLambdaLayersSource() {
-    return (
-      this.props.lambda.layerSource ??
-      new lambda.AssetCode(`../node_modules/@gradientedge/cdk-utils/dist/${this.apiDestinedLambdaDirectory}/layers`)
-    )
-  }
-
   /**
    * @summary Method to create layers for Api Destined Lambda function
    * @protected
    */
   protected createApiDestinedLambdaLayers() {
     const layers: lambda.LayerVersion[] = []
-    layers.push(
-      this.lambdaManager.createLambdaLayer(
-        `${this.id}-lambda-destined-layer`,
-        this,
-        this.createApiDestinedLambdaLayersSource()
+    if (this.props.lambda.layerSource) {
+      layers.push(
+        this.lambdaManager.createLambdaLayer(`${this.id}-lambda-destined-layer`, this, this.props.lambda.layerSource)
       )
-    )
+    }
+
     this.apiDestinedLambda.layers = layers
   }
 
@@ -222,18 +213,13 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
     this.apiDestinedLambda.destinationFailure = new destinations.EventBridgeDestination(this.apiEvent.eventBus)
   }
 
-  protected createApiDestinedLambdaFunctionSource() {
-    return (
-      this.props.lambda.source ??
-      new lambda.AssetCode(`../node_modules/@gradientedge/cdk-utils/dist/${this.apiDestinedLambdaDirectory}/src/lib`)
-    )
-  }
-
   /**
    * @summary Method to create lambda function for Api Destined
    * @protected
    */
   protected createApiDestinedLambdaFunction() {
+    if (!this.props.lambda.source) throw 'Api Destined Lambda props undefined'
+
     this.apiDestinedLambda.function = this.lambdaManager.createLambdaFunction(
       `${this.id}-lambda-destined`,
       this,
@@ -246,7 +232,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
       },
       this.apiDestinedLambda.role,
       this.apiDestinedLambda.layers,
-      this.createApiDestinedLambdaFunctionSource(),
+      this.props.lambda.source,
       this.props.lambda.handler ?? 'lambda.handler',
       this.apiDestinedLambda.environment
     )
