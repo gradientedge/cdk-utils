@@ -50,7 +50,6 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
 
   /* rest restApi related resources */
   apiDestinedRestApi: types.ApiDestinedRestApiType
-  apiDestinedBasePathMappings: apig.BasePathMapping[] = []
   apiResource: string
 
   constructor(parent: Construct, id: string, props: types.ApiToEventBridgeTargetProps) {
@@ -348,6 +347,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
         `${this.id}-destined-topic`,
         `arn:aws:sns:${this.props.region}:${cdk.Stack.of(this).account}:${this.id}-destined-topic-${this.props.stage}`
       )
+      return
     }
     this.apiDestinedRestApi.topic = this.snsManager.createLambdaNotificationService(
       `${this.id}-destined-topic`,
@@ -372,6 +372,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
         `${this.id}-sns-rest-api`,
         cdk.Fn.importValue('importedRestApiRef')
       )
+      return
     }
     this.apiDestinedRestApi.api = new apig.RestApi(this, `${this.id}-sns-rest-api`, {
       ...{
