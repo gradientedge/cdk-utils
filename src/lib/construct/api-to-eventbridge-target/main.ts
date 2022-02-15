@@ -591,6 +591,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
    * @protected
    */
   protected createApiBasePathMapping() {
+    if (this.props.api.useExisting) return
     new apig.BasePathMapping(this, `${this.id}-base-bath-mapping`, {
       basePath: '',
       domainName: this.apiDestinedRestApi.domain,
@@ -604,6 +605,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
    * @protected
    */
   protected createApiRouteAssets() {
+    if (this.props.api.useExisting) return
     this.route53Manager.createApiGatewayARecord(
       `${this.id}-custom-domain-a-record`,
       this,
