@@ -1,5 +1,6 @@
 import * as cdk from 'aws-cdk-lib'
 import * as apig from 'aws-cdk-lib/aws-apigateway'
+import * as events from 'aws-cdk-lib/aws-events'
 import * as eventstargets from 'aws-cdk-lib/aws-events-targets'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
@@ -245,13 +246,28 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
     )
   }
 
+  /**
+   * @summary Method to create or use an existing eventbus for api destined payload deliveries
+   * @protected
+   */
   protected createApiDestinedEventBus() {
-    if (this.props.api.useExisting) return
+    if (this.props.api.useExisting) {
+      this.apiEvent.eventBus = events.EventBus.fromEventBusName(
+        this,
+        `${this.id}-destined-event-bus`,
+        `${this.props.event.eventBusName}-${this.props.stage}`
+      )
+      return
+    }
     this.apiEvent.eventBus = this.eventManager.createEventBus(`${this.id}-destined-event-bus`, this, {
       eventBusName: `${this.props.event.eventBusName}`,
     })
   }
 
+  /**
+   * @summary Method to create a log group for successful api destined payload deliveries
+   * @protected
+   */
   protected createApiDestinationLogGroupSuccess() {
     if (this.props.api.useExisting) return
     this.apiEvent.logGroupSuccess = this.logManager.createLogGroup(`${this.id}-destination-success-log`, this, {
@@ -294,6 +310,10 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
     )
   }
 
+  /**
+   * @summary Method to create a log group for failed api destined payload deliveries
+   * @protected
+   */
   protected createApiDestinationLogGroupFailure() {
     if (this.props.api.useExisting) return
     this.apiEvent.logGroupFailure = this.logManager.createLogGroup(`${this.id}-destination-failure-log`, this, {
@@ -332,12 +352,20 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
     )
   }
 
+  /**
+   * @summary Method to create a role for sns topic
+   * @protected
+   */
   protected createApiDestinedTopicRole() {
     this.apiDestinedRestApi.topicRole = new iam.Role(this, `${this.id}-sns-rest-api-role`, {
       assumedBy: new iam.ServicePrincipal('apigateway.amazonaws.com'),
     })
   }
 
+  /**
+   * @summary Method to create API destined SNS topic
+   * @protected
+   */
   protected createApiDestinedTopic() {
     if (!this.props.api.withResource) return
     this.apiDestinedRestApi.topic = this.snsManager.createLambdaNotificationService(
@@ -352,6 +380,10 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
     this.apiDestinedRestApi.topic.grantPublish(this.apiDestinedRestApi.topicRole)
   }
 
+  /**
+   * @summary Method to create api integration request parameters
+   * @protected
+   */
   protected createApiDestinedIntegrationRequestParameters() {
     if (!this.props.api.withResource) return
     this.apiDestinedRestApi.integrationRequestParameters = {
@@ -359,6 +391,10 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
     }
   }
 
+  /**
+   * @summary Method to create api integration request templates
+   * @protected
+   */
   protected createApiDestinedIntegrationRequestTemplates() {
     if (!this.props.api.withResource) return
     this.apiDestinedRestApi.integrationRequestTemplates = {
@@ -371,6 +407,10 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
     }
   }
 
+  /**
+   * @summary Method to create api integration response
+   * @protected
+   */
   protected createApiDestinedIntegrationResponse() {
     if (!this.props.api.withResource) return
     this.apiDestinedRestApi.integrationResponse = {
@@ -384,6 +424,10 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
     }
   }
 
+  /**
+   * @summary Method to create api integration error response
+   * @protected
+   */
   protected createApiDestinedIntegrationErrorResponse() {
     if (!this.props.api.withResource) return
     this.apiDestinedRestApi.integrationErrorResponse = {
@@ -406,6 +450,10 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
     }
   }
 
+  /**
+   * @summary Method to create api integration
+   * @protected
+   */
   protected createApiDestinedIntegration() {
     if (!this.props.api.withResource) return
     this.apiDestinedRestApi.integration = new apig.Integration({
@@ -428,6 +476,10 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
     })
   }
 
+  /**
+   * @summary Method to create api integration method response
+   * @protected
+   */
   protected createApiDestinedMethodResponse() {
     if (!this.props.api.withResource) return
     this.apiDestinedRestApi.methodResponse = {
@@ -446,6 +498,10 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
     }
   }
 
+  /**
+   * @summary Method to create api integration method error response
+   * @protected
+   */
   protected createApiDestinedMethodErrorResponse() {
     if (!this.props.api.withResource) return
     this.apiDestinedRestApi.methodErrorResponse = {
@@ -506,6 +562,10 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
     this.addCfnOutput(`${this.id}-restApiRootResourceId`, this.apiDestinedRestApi.api.root.resourceId)
   }
 
+  /**
+   * @summary Method to create api integration response model
+   * @protected
+   */
   protected createApiDestinedResponseModel() {
     if (!this.props.api.withResource) return
     this.apiDestinedRestApi.responseModel = new apig.Model(this, `${this.id}-response-model`, {
@@ -524,6 +584,10 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
     })
   }
 
+  /**
+   * @summary Method to create api integration error response model
+   * @protected
+   */
   protected createApiDestinedErrorResponseModel() {
     if (!this.props.api.withResource) return
     this.apiDestinedRestApi.errorResponseModel = new apig.Model(this, `${this.id}-error-response-model`, {
@@ -545,6 +609,10 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
     })
   }
 
+  /**
+   * @summary Method to create api integration resource
+   * @protected
+   */
   protected createApiDestinedResource() {
     if (!this.props.api.withResource) return
 
@@ -562,6 +630,10 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
     this.apiDestinedRestApi.resource = rootResource.addResource(this.props.api.resource ?? this.apiResource)
   }
 
+  /**
+   * @summary Method to create api integration resource method
+   * @protected
+   */
   protected createApiDestinedResourceMethod() {
     if (!this.props.api.withResource) return
     this.apiDestinedRestApi.method = this.apiDestinedRestApi.resource.addMethod(

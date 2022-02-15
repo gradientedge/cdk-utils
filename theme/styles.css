@@ -57,10 +57,8 @@ a {
 }
 
 .category h2 {
-    background: rgb(71, 130, 218);
     border-radius: 25px;
-    color: #fff !important;
-    padding-left: 10px;
+    color: orange !important;
     font-weight: bold;
 }
 
