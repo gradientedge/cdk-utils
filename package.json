@@ -26,6 +26,7 @@
   "homepage": "https://github.com/gradientedge/cdk-utils#readme",
   "scripts": {
     "build": "rimraf dist/ && npx tsc && npx lerna run build",
+    "build:production": "rimraf dist/ && npx tsc -p tsconfig.prd.json && npx lerna run build",
     "ci": "yarn install --frozen-lockfile && yarn build && yarn validate && yarn docs",
     "cz": "npx cz",
     "docs": "rimraf api-docs && npx jsdoc --pedantic -c jsdoc.json .",

@@ -66,11 +66,6 @@ jobs:
       - uses: actions/upload-artifact@v2
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && success() }}
         with:
-          name: build-artifact
-          path: ./dist/
-      - uses: actions/upload-artifact@v2
-        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && success() }}
-        with:
           name: docs-artifact
           path: ./api-docs/
 
@@ -109,12 +104,10 @@ jobs:
         run: yarn install --frozen-lockfile
       - uses: actions/download-artifact@v2
         with:
-          name: build-artifact
-          path: ./dist/
-      - uses: actions/download-artifact@v2
-        with:
           name: docs-artifact
           path: ./api-docs/
+      - name: Build Production
+        run: yarn build:production
       - name: Deploy Package(s)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -128,6 +121,5 @@ jobs:
       - uses: geekyeggo/delete-artifact@v1
         with:
           name: |
-            build-artifact
             docs-artifact
           failOnError: false
