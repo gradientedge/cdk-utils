@@ -5,7 +5,6 @@ import * as iam from 'aws-cdk-lib/aws-iam'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as destinations from 'aws-cdk-lib/aws-lambda-destinations'
 import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager'
-import * as sns from 'aws-cdk-lib/aws-sns'
 import { Construct } from 'constructs'
 import { CommonConstruct } from '../../common'
 import * as types from '../../types'
@@ -92,15 +91,15 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
     /* restApi related resources */
     this.createApiDestinedTopicRole()
     this.createApiDestinedTopic()
-    this.createApiDestinedRestApi()
-    this.createApiDestinedResponseModel()
-    this.createApiDestinedErrorResponseModel()
-    this.createApiDestinedResource()
     this.createApiDestinedIntegrationRequestParameters()
     this.createApiDestinedIntegrationRequestTemplates()
     this.createApiDestinedIntegrationResponse()
     this.createApiDestinedIntegrationErrorResponse()
     this.createApiDestinedIntegration()
+    this.createApiDestinedRestApi()
+    this.createApiDestinedResource()
+    this.createApiDestinedResponseModel()
+    this.createApiDestinedErrorResponseModel()
     this.createApiDestinedMethodResponse()
     this.createApiDestinedMethodErrorResponse()
     this.createApiDestinedResourceMethod()
@@ -334,21 +333,13 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
   }
 
   protected createApiDestinedTopicRole() {
-    if (this.props.api.useExisting) return
     this.apiDestinedRestApi.topicRole = new iam.Role(this, `${this.id}-sns-rest-api-role`, {
       assumedBy: new iam.ServicePrincipal('apigateway.amazonaws.com'),
     })
   }
 
   protected createApiDestinedTopic() {
-    if (this.props.api.useExisting) {
-      this.apiDestinedRestApi.topic = sns.Topic.fromTopicArn(
-        this,
-        `${this.id}-destined-topic`,
-        `arn:aws:sns:${this.props.region}:${cdk.Stack.of(this).account}:${this.id}-destined-topic-${this.props.stage}`
-      )
-      return
-    }
+    if (!this.props.api.withResource) return
     this.apiDestinedRestApi.topic = this.snsManager.createLambdaNotificationService(
       `${this.id}-destined-topic`,
       this,
@@ -359,93 +350,6 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
     )
 
     this.apiDestinedRestApi.topic.grantPublish(this.apiDestinedRestApi.topicRole)
-  }
-
-  /**
-   * @summary Method to create rest restApi for Api
-   * @protected
-   */
-  protected createApiDestinedRestApi() {
-    if (this.props.api.useExisting) {
-      this.apiDestinedRestApi.api = apig.RestApi.fromRestApiId(
-        this,
-        `${this.id}-sns-rest-api`,
-        cdk.Fn.importValue('importedRestApiRef')
-      )
-      return
-    }
-    this.apiDestinedRestApi.api = new apig.RestApi(this, `${this.id}-sns-rest-api`, {
-      ...{
-        deployOptions: {
-          dataTraceEnabled: true,
-          description: `${this.id} - ${this.props.stage} stage`,
-          loggingLevel: apig.MethodLoggingLevel.INFO,
-          metricsEnabled: true,
-          stageName: this.props.stage,
-        },
-        endpointConfiguration: {
-          types: [apig.EndpointType.REGIONAL],
-        },
-        defaultCorsPreflightOptions: {
-          allowOrigins: apig.Cors.ALL_ORIGINS,
-          allowMethods: ['POST'],
-          allowHeaders: apig.Cors.DEFAULT_HEADERS,
-        },
-        restApiName: `${this.id}-destined-rest-api-${this.props.stage}`,
-      },
-      ...this.props.api,
-    })
-    this.addCfnOutput(`${this.id}-restApiId`, this.apiDestinedRestApi.api.restApiId)
-  }
-
-  protected createApiDestinedResponseModel() {
-    if (this.props.api.useExisting) return
-    this.apiDestinedRestApi.responseModel = (this.apiDestinedRestApi.api as apig.RestApi).addModel(
-      `${this.id}-response-model`,
-      {
-        ...{
-          contentType: 'application/json',
-          modelName: 'ResponseModel',
-          schema: {
-            schema: apig.JsonSchemaVersion.DRAFT4,
-            title: 'pollResponse',
-            type: apig.JsonSchemaType.OBJECT,
-            properties: { message: { type: apig.JsonSchemaType.STRING } },
-          },
-        },
-        ...this.props.api.responseModel,
-      }
-    )
-  }
-
-  protected createApiDestinedErrorResponseModel() {
-    if (this.props.api.useExisting) return
-    this.apiDestinedRestApi.errorResponseModel = (this.apiDestinedRestApi.api as apig.RestApi).addModel(
-      `${this.id}-error-response-model`,
-      {
-        ...{
-          contentType: 'application/json',
-          modelName: 'ErrorResponseModel',
-          schema: {
-            schema: apig.JsonSchemaVersion.DRAFT4,
-            title: 'errorResponse',
-            type: apig.JsonSchemaType.OBJECT,
-            properties: {
-              state: { type: apig.JsonSchemaType.STRING },
-              message: { type: apig.JsonSchemaType.STRING },
-            },
-          },
-        },
-        ...this.props.api.errorResponseModel,
-      }
-    )
-  }
-
-  protected createApiDestinedResource() {
-    if (!this.props.api.withResource) return
-    this.apiDestinedRestApi.resource = this.apiDestinedRestApi.api.root.addResource(
-      this.props.api.resource ?? this.apiResource
-    )
   }
 
   protected createApiDestinedIntegrationRequestParameters() {
@@ -558,6 +462,104 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
       },
       ...this.props.api.methodErrorResponse,
     }
+  }
+
+  /**
+   * @summary Method to create rest restApi for Api
+   * @protected
+   */
+  protected createApiDestinedRestApi() {
+    if (this.props.api.useExisting && this.props.api.importedRestApiRef) {
+      this.apiDestinedRestApi.api = apig.RestApi.fromRestApiId(
+        this,
+        `${this.id}-sns-rest-api`,
+        cdk.Fn.importValue(this.props.api.importedRestApiRef)
+      )
+      return
+    }
+    this.apiDestinedRestApi.api = new apig.RestApi(this, `${this.id}-sns-rest-api`, {
+      ...{
+        defaultIntegration: this.apiDestinedRestApi.integration,
+        defaultMethodOptions: {
+          methodResponses: [this.apiDestinedRestApi.methodResponse, this.apiDestinedRestApi.methodErrorResponse],
+        },
+        deployOptions: {
+          dataTraceEnabled: true,
+          description: `${this.id} - ${this.props.stage} stage`,
+          loggingLevel: apig.MethodLoggingLevel.INFO,
+          metricsEnabled: true,
+          stageName: this.props.stage,
+        },
+        endpointConfiguration: {
+          types: [apig.EndpointType.REGIONAL],
+        },
+        defaultCorsPreflightOptions: {
+          allowOrigins: apig.Cors.ALL_ORIGINS,
+          allowMethods: ['POST'],
+          allowHeaders: apig.Cors.DEFAULT_HEADERS,
+        },
+        restApiName: `${this.id}-destined-rest-api-${this.props.stage}`,
+      },
+      ...this.props.api,
+    })
+    this.addCfnOutput(`${this.id}-restApiId`, this.apiDestinedRestApi.api.restApiId)
+    this.addCfnOutput(`${this.id}-restApiRootResourceId`, this.apiDestinedRestApi.api.root.resourceId)
+  }
+
+  protected createApiDestinedResponseModel() {
+    if (!this.props.api.withResource) return
+    this.apiDestinedRestApi.responseModel = new apig.Model(this, `${this.id}-response-model`, {
+      restApi: this.apiDestinedRestApi.api,
+      ...{
+        contentType: 'application/json',
+        modelName: 'ResponseModel',
+        schema: {
+          schema: apig.JsonSchemaVersion.DRAFT4,
+          title: 'pollResponse',
+          type: apig.JsonSchemaType.OBJECT,
+          properties: { message: { type: apig.JsonSchemaType.STRING } },
+        },
+      },
+      ...this.props.api.responseModel,
+    })
+  }
+
+  protected createApiDestinedErrorResponseModel() {
+    if (!this.props.api.withResource) return
+    this.apiDestinedRestApi.errorResponseModel = new apig.Model(this, `${this.id}-error-response-model`, {
+      restApi: this.apiDestinedRestApi.api,
+      ...{
+        contentType: 'application/json',
+        modelName: 'ErrorResponseModel',
+        schema: {
+          schema: apig.JsonSchemaVersion.DRAFT4,
+          title: 'errorResponse',
+          type: apig.JsonSchemaType.OBJECT,
+          properties: {
+            state: { type: apig.JsonSchemaType.STRING },
+            message: { type: apig.JsonSchemaType.STRING },
+          },
+        },
+      },
+      ...this.props.api.errorResponseModel,
+    })
+  }
+
+  protected createApiDestinedResource() {
+    if (!this.props.api.withResource) return
+
+    let rootResource
+    if (this.props.api.withResource && this.props.api.importedRestApiRootResourceRef) {
+      rootResource = apig.Resource.fromResourceAttributes(this, `${this.id}-root-resource`, {
+        resourceId: cdk.Fn.importValue(this.props.api.importedRestApiRootResourceRef),
+        restApi: this.apiDestinedRestApi.api,
+        path: '/',
+      })
+    } else {
+      rootResource = this.apiDestinedRestApi.api.root
+    }
+
+    this.apiDestinedRestApi.resource = rootResource.addResource(this.props.api.resource ?? this.apiResource)
   }
 
   protected createApiDestinedResourceMethod() {

@@ -62,13 +62,13 @@ export class SnsManager {
    * @param {string} id scoped id of the resource
    * @param {common.CommonConstruct} scope scope in which this resource is defined
    * @param {types.SubscriptionProps} props
-   * @param {lambda.Function} lambdaFunction
+   * @param {lambda.IFunction} lambdaFunction
    */
   public createLambdaNotificationService(
     id: string,
     scope: common.CommonConstruct,
     props: types.SubscriptionProps,
-    lambdaFunction: lambda.Function
+    lambdaFunction: lambda.IFunction
   ) {
     if (!props) throw `Subscription props undefined`
 

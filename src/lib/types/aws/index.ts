@@ -208,7 +208,7 @@ export interface ApiDestinedLambdaType {
   destinationFailure: destinations.EventBridgeDestination
   destinationSuccess: destinations.EventBridgeDestination
   environment: types.ApiDestinedLambdaEnvironment
-  function: lambda.Function
+  function: lambda.IFunction
   layers: lambda.LayerVersion[]
   layerSource?: lambda.AssetCode
   policy: iam.PolicyDocument
@@ -231,6 +231,8 @@ export interface ApiToEventBridgeTargetRestApiProps {
   errorResponseModel?: apig.ModelOptions
   responseModel?: apig.ModelOptions
   restApi?: apig.RestApiProps
+  importedRestApiRef?: string
+  importedRestApiRootResourceRef?: string
   useExisting: boolean
   withResource?: boolean
 }
