@@ -38,7 +38,6 @@ export class GraphQLApiLambdaWithCache extends GraphQLApiLambda {
   graphQLElastiCache: elasticache.CfnCacheCluster
   graphQLSecurityGroup: ec2.ISecurityGroup
   securityGroupExportName: string
-  vpcExportName: string
 
   constructor(parent: Construct, id: string, props: GraphQlApiLambdaWithCacheProps) {
     super(parent, id, props)
@@ -99,7 +98,7 @@ export class GraphQLApiLambdaWithCache extends GraphQLApiLambda {
       this,
       this.props.graphQLElastiCache,
       this.graphQLVpc.privateSubnets.map(subnet => subnet.subnetId),
-      [this.graphQLSecurityGroup.toString()]
+      [this.graphQLSecurityGroup.securityGroupId]
     )
   }
 
