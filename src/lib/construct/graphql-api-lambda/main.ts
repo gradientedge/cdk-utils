@@ -234,6 +234,7 @@ export class GraphQLApiLambda extends CommonConstruct {
       return
     }
 
+    // add default mapping if apiRootPaths not set
     new apig.BasePathMapping(this, `${this.id}-base-bath-mapping`, {
       domainName: this.graphQLApiDomain,
       restApi: this.graphQLApi,
