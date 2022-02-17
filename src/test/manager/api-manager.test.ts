@@ -110,6 +110,7 @@ class TestCommonConstruct extends common.CommonConstruct {
       ['GET', 'POST'],
       ['Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token,X-Site-Key,X-Site-Lang,X-Site-Locale']
     )
+    this.apiManager.createApiDeployment('test-deployment', this, api)
   }
 }
 
@@ -132,7 +133,7 @@ describe('TestApiConstruct', () => {
     template.resourceCountIs('AWS::Lambda::Permission', 16)
     template.resourceCountIs('AWS::Lambda::Function', 2)
     template.resourceCountIs('AWS::ApiGateway::RestApi', 1)
-    template.resourceCountIs('AWS::ApiGateway::Deployment', 1)
+    template.resourceCountIs('AWS::ApiGateway::Deployment', 2)
     template.resourceCountIs('AWS::ApiGateway::Stage', 1)
     template.resourceCountIs('AWS::ApiGateway::Resource', 4)
     template.resourceCountIs('AWS::ApiGateway::Method', 13)

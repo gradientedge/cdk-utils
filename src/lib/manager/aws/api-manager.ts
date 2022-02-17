@@ -150,4 +150,17 @@ export class ApiManager {
 
     return resource
   }
+
+  /**
+   * @summary Method to create an api deployment
+   * @param {string} id
+   * @param {common.CommonConstruct} scope
+   * @param {apig.IRestApi} restApi
+   */
+  public createApiDeployment(id: string, scope: common.CommonConstruct, restApi: apig.IRestApi) {
+    new apig.Deployment(scope, `${id}`, {
+      api: restApi,
+      retainDeployments: false,
+    })
+  }
 }
