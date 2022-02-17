@@ -12,13 +12,13 @@ updates:
     labels:
       - "npm"
       - "dependencies"
-      
- - package-ecosystem: "github-actions"
-   directory: "/"
-   schedule:
-     interval: "weekly"
-     time: "09:00"
-     timezone: "Europe/London"
-   labels:
-     - "gh-actions"
-     - "dependencies"
+
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      time: "09:00"
+      timezone: "Europe/London"
+    labels:
+      - "gh-actions"
+      - "dependencies"
