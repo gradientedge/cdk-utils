@@ -3965,9 +3965,9 @@ constantinople@^3.0.1, constantinople@^3.1.2:
     babylon "^6.18.0"
 
 constructs@^10.0.63:
-  version "10.0.63"
-  resolved "https://registry.yarnpkg.com/constructs/-/constructs-10.0.63.tgz#992ef12a477e7bb9cfe8943c1b485b30f62e4342"
-  integrity sha512-2AQEHHZsdUTbRynOpP9EP/M4ApkZbRCjHd4A9lnls+8dBonPwk2zAfu66v8ofctUOF4uEXWqje1ZSvde38/f9g==
+  version "10.0.64"
+  resolved "https://registry.yarnpkg.com/constructs/-/constructs-10.0.64.tgz#9e5abddfa892e99413abc7a8d0b300ef775ce4b9"
+  integrity sha512-6wzjZT8T0GST7OMzxm8UCXJ8prGmsaO5w8dKun/hFaKDwlTozZmo5QMoS7aLwN4HDeMgL/Aq0cULIFs1gM5iXQ==
 
 conventional-changelog-angular@^5.0.0, conventional-changelog-angular@^5.0.12:
   version "5.0.13"
