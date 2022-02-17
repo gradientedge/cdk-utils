@@ -128,6 +128,10 @@ export class GraphQLApiLambdaWithCache extends GraphQLApiLambda {
     }
   }
 
+  /**
+   * @summary Method to create lambda function for GraphQL API
+   * @protected
+   */
   protected createLambdaFunction() {
     this.graphQLApiLambdaFunction = this.lambdaManager.createLambdaFunction(
       `${this.id}-graphql-server`,
