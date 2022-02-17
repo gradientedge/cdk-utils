@@ -108,6 +108,7 @@ export class ApiManager {
    * @param {string} path
    * @param {apig.Integration} integration
    * @param {boolean} addProxy
+   * @param {apig.IAuthorizer} authorizer
    * @param {string[]?} allowedOrigins
    * @param {string[]?} allowedMethods
    * @param {string[]?} allowedHeaders
@@ -119,6 +120,7 @@ export class ApiManager {
     path: string,
     integration: apig.Integration,
     addProxy: boolean,
+    authorizer?: apig.IAuthorizer,
     allowedOrigins?: string[],
     allowedMethods?: string[],
     allowedHeaders?: string[]
@@ -132,7 +134,7 @@ export class ApiManager {
         allowCredentials: true,
       },
     })
-    methods.forEach(method => resource.addMethod(method, integration))
+    methods.forEach(method => resource.addMethod(method, integration, { authorizer }))
     utils.createCfnOutput(`${id}-${path}ResourceId`, scope, resource.resourceId)
 
     if (addProxy) {
@@ -144,7 +146,7 @@ export class ApiManager {
           allowCredentials: true,
         },
       })
-      methods.forEach(method => resourceProxy.addMethod(method, integration))
+      methods.forEach(method => resourceProxy.addMethod(method, integration, { authorizer }))
       utils.createCfnOutput(`${id}-${path}ProxyResourceId`, scope, resourceProxy.resourceId)
     }
 
