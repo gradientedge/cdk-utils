@@ -100,7 +100,6 @@ describe('TestElastiCacheConstruct', () => {
 
 describe('TestElastiCacheConstruct', () => {
   test('outputs as expected', () => {
-    template.hasOutput('testElasticacheConfigurationEndpointAddress', {})
     template.hasOutput('testElasticacheConfigurationEndpointPort', {})
     template.hasOutput('testElasticacheRedisEndpointAddress', {})
     template.hasOutput('testElasticacheRedisEndpointPort', {})
