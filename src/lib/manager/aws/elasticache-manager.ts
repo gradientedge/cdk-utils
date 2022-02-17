@@ -84,7 +84,6 @@ export class ElastiCacheManager {
     })
 
     utils.createCfnOutput(`${id}-clusterName`, scope, elasticacheCluster.clusterName)
-    utils.createCfnOutput(`${id}-configurationEndpointPort`, scope, elasticacheCluster.attrConfigurationEndpointPort)
     utils.createCfnOutput(`${id}-redisEndpointPort`, scope, elasticacheCluster.attrRedisEndpointPort)
     utils.createCfnOutput(`${id}-redisEndpointAddress`, scope, elasticacheCluster.attrRedisEndpointAddress)
 
