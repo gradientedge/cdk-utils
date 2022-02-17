@@ -95,6 +95,7 @@ class TestCommonConstruct extends common.CommonConstruct {
       'test',
       new apig.LambdaIntegration(testLambdaFunction),
       true,
+      undefined,
       ['https://example.gradientedge.io'],
       ['GET', 'POST'],
       ['Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token,X-Site-Key,X-Site-Lang,X-Site-Locale']
@@ -105,7 +106,8 @@ class TestCommonConstruct extends common.CommonConstruct {
       api.root,
       'test-another',
       new apig.LambdaIntegration(testLambdaFunction),
-      true,
+      false,
+      undefined,
       ['https://example.gradientedge.io'],
       ['GET', 'POST'],
       ['Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token,X-Site-Key,X-Site-Lang,X-Site-Locale']
@@ -130,13 +132,13 @@ describe('TestApiConstruct', () => {
     /* test if number of resources are correctly synthesised */
     template.resourceCountIs('AWS::IAM::Role', 2)
     template.resourceCountIs('AWS::Lambda::LayerVersion', 1)
-    template.resourceCountIs('AWS::Lambda::Permission', 16)
+    template.resourceCountIs('AWS::Lambda::Permission', 12)
     template.resourceCountIs('AWS::Lambda::Function', 2)
     template.resourceCountIs('AWS::ApiGateway::RestApi', 1)
     template.resourceCountIs('AWS::ApiGateway::Deployment', 2)
     template.resourceCountIs('AWS::ApiGateway::Stage', 1)
-    template.resourceCountIs('AWS::ApiGateway::Resource', 4)
-    template.resourceCountIs('AWS::ApiGateway::Method', 13)
+    template.resourceCountIs('AWS::ApiGateway::Resource', 3)
+    template.resourceCountIs('AWS::ApiGateway::Method', 10)
   })
 })
 
@@ -152,7 +154,6 @@ describe('TestApiConstruct', () => {
     template.hasOutput('testResource1TestResourceId', {})
     template.hasOutput('testResource1TestProxyResourceId', {})
     template.hasOutput('testResource2TestAnotherResourceId', {})
-    template.hasOutput('testResource2TestAnotherProxyResourceId', {})
   })
 })
 
@@ -193,10 +194,6 @@ describe('TestApiConstruct', () => {
 
     template.hasResourceProperties('AWS::ApiGateway::Resource', {
       PathPart: 'test-another',
-    })
-
-    template.hasResourceProperties('AWS::ApiGateway::Resource', {
-      PathPart: '{test-another+}',
     })
   })
 })
