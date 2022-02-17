@@ -37,7 +37,6 @@ export class GraphQLApiLambdaWithCache extends GraphQLApiLambda {
   graphQLVpc: ec2.IVpc
   graphQLElastiCache: elasticache.CfnCacheCluster
   graphQLSecurityGroup: ec2.ISecurityGroup
-  securityGroupStackName: string
   securityGroupExportName: string
   vpcExportName: string
 
@@ -60,8 +59,8 @@ export class GraphQLApiLambdaWithCache extends GraphQLApiLambda {
    * @protected
    */
   protected setVpc() {
-    if (this.props.vpcExportName) {
-      this.graphQLVpc = this.vpcManager.retrieveCommonVpc(`${this.id}`, this, this.props.vpcExportName)
+    if (this.props.useExistingVpc) {
+      this.graphQLVpc = this.vpcManager.retrieveCommonVpc(`${this.id}`, this, this.props.vpcName)
     } else {
       this.graphQLVpc = this.vpcManager.createCommonVpc(this, this.props.graphQLVpc, this.props.graphQLVpc.vpcName)
     }

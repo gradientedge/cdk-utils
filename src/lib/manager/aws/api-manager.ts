@@ -71,7 +71,7 @@ export class ApiManager {
       restApiName: `${props.restApiName}-${scope.props.stage}`,
       handler: lambdaFunction,
       defaultCorsPreflightOptions: props.defaultCorsPreflightOptions,
-      proxy: props.proxy || true,
+      proxy: props.proxy ?? true,
     })
 
     utils.createCfnOutput(`${id}-restApiId`, scope, api.restApiId)
@@ -98,5 +98,56 @@ export class ApiManager {
     utils.createCfnOutput(`${id}-customDomainName`, scope, apiDomain.domainName)
 
     return apiDomain
+  }
+
+  /**
+   * @summary Method to create an API gateway resource
+   * @param {string} id
+   * @param {common.CommonConstruct} scope
+   * @param {apig.IResource} parent
+   * @param {string} path
+   * @param {apig.Integration} integration
+   * @param {boolean} addProxy
+   * @param {string[]?} allowedOrigins
+   * @param {string[]?} allowedMethods
+   * @param {string[]?} allowedHeaders
+   */
+  public createApiResource(
+    id: string,
+    scope: common.CommonConstruct,
+    parent: apig.IResource,
+    path: string,
+    integration: apig.Integration,
+    addProxy: boolean,
+    allowedOrigins?: string[],
+    allowedMethods?: string[],
+    allowedHeaders?: string[]
+  ) {
+    const methods = allowedMethods ?? apig.Cors.ALL_METHODS
+    const resource = parent.addResource(path, {
+      defaultCorsPreflightOptions: {
+        allowOrigins: allowedOrigins ?? apig.Cors.ALL_ORIGINS,
+        allowMethods: [...methods, 'OPTIONS'],
+        allowHeaders: allowedHeaders ?? apig.Cors.DEFAULT_HEADERS,
+        allowCredentials: true,
+      },
+    })
+    methods.forEach(method => resource.addMethod(method, integration))
+    utils.createCfnOutput(`${id}-${path}ResourceId`, scope, resource.resourceId)
+
+    if (addProxy) {
+      const resourceProxy = resource.addResource(`{${path}+}`, {
+        defaultCorsPreflightOptions: {
+          allowOrigins: allowedOrigins ?? apig.Cors.ALL_ORIGINS,
+          allowMethods: [...methods, 'OPTIONS'],
+          allowHeaders: allowedHeaders ?? apig.Cors.DEFAULT_HEADERS,
+          allowCredentials: true,
+        },
+      })
+      methods.forEach(method => resourceProxy.addMethod(method, integration))
+      utils.createCfnOutput(`${id}-${path}ProxyResourceId`, scope, resourceProxy.resourceId)
+    }
+
+    return resource
   }
 }
