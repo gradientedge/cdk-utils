@@ -231,7 +231,14 @@ export class GraphQLApiLambda extends CommonConstruct {
           })
         )
       })
+      return
     }
+
+    new apig.BasePathMapping(this, `${this.id}-base-bath-mapping`, {
+      domainName: this.graphQLApiDomain,
+      restApi: this.graphQLApi,
+      stage: this.graphQLApi.deploymentStage,
+    })
   }
 
   /**
