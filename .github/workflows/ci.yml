@@ -56,7 +56,7 @@ jobs:
       - name: Publish Code Coverage
         run: npx codecov
       - name: Monitor coverage
-        if: ${{ github.event_name == 'pull_request' && success() }}
+        if: ${{ github.event_name == 'push' && success() }}
         uses: slavcodev/coverage-monitor-action@1.2.0
         with:
           github_token: ${{ secrets.GIT_TOKEN }}
