@@ -15,6 +15,8 @@ interface TestStackProps extends types.CommonStackProps {
   testFargateRule: any
   testLambdaRule: any
   testBucket: any
+  testSqs: any
+  testSqsRule: any
 }
 
 const testStackProps = {
@@ -34,6 +36,7 @@ const testStackProps = {
     'src/test/common/cdkConfig/logs.json',
     'src/test/common/cdkConfig/rules.json',
     'src/test/common/cdkConfig/vpc.json',
+    'src/test/common/cdkConfig/sqs.json',
   ],
   stageContextPath: 'src/test/common/cdkEnv',
 }
@@ -59,6 +62,8 @@ class TestCommonStack extends common.CommonStack {
         testFargateRule: this.node.tryGetContext('testLambda'),
         testLambdaRule: this.node.tryGetContext('testLambda'),
         testBucket: this.node.tryGetContext('siteBucket'),
+        testSqs: this.node.tryGetContext('testSqs'),
+        testSqsRule: this.node.tryGetContext('testSqsRule'),
       },
     }
   }
@@ -86,6 +91,8 @@ class TestCommonConstruct extends common.CommonConstruct {
       testLogGroup2,
       testImage
     )
+    const testSqs = this.sqsManager.createQueueService('test-sqs', this, this.props.testSqs)
+    const testSqsRule = this.eventManager.createSqsRule('test-sqs-rule', this, this.props.testSqsRule, testSqs)
 
     this.iamManager.statementForReadSecrets(this)
     this.iamManager.statementForReadAnyAppConfig()
@@ -107,6 +114,7 @@ class TestCommonConstruct extends common.CommonConstruct {
       this,
       new iam.PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this)] })
     )
+    this.iamManager.createPolicyForSqsEvent('test-policy-sqs-event', this, testSqs, testSqsRule)
   }
 }
 

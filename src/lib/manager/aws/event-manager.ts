@@ -2,6 +2,7 @@ import * as ecs from 'aws-cdk-lib/aws-ecs'
 import * as events from 'aws-cdk-lib/aws-events'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
+import * as sqs from 'aws-cdk-lib/aws-sqs'
 import * as common from '../../common'
 import * as types from '../../types'
 import * as utils from '../../utils'
@@ -81,6 +82,7 @@ export class EventManager {
 
     return rule
   }
+
   /**
    * @summary Method to create an eventbridge rule with lambda target
    * @param {string} id scoped id of the resource
@@ -168,6 +170,40 @@ export class EventManager {
           roleArn: role instanceof iam.Role ? role.roleArn : role.attrArn,
         },
       ],
+    })
+
+    utils.createCfnOutput(`${id}-ruleArn`, scope, eventRule.attrArn)
+    utils.createCfnOutput(`${id}-ruleName`, scope, eventRule.name)
+
+    return eventRule
+  }
+
+  /**
+   * @summary Method to create an eventbridge rule with sqs target
+   * @param {string} id scoped id of the resource
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.RuleProps} props
+   * @param {sqs.Queue} sqs
+   * @param {string} eventBusName
+   * @param {any} eventPattern
+   */
+  public createSqsRule(
+    id: string,
+    scope: common.CommonConstruct,
+    props: types.RuleProps,
+    sqs: sqs.Queue,
+    eventBusName?: string,
+    eventPattern?: any
+  ) {
+    if (!props) throw `EventRule props undefined`
+
+    const eventRule = new events.CfnRule(scope, `${id}`, {
+      description: 'Rule to send notification to sqs target',
+      eventBusName: eventBusName,
+      eventPattern: eventPattern,
+      name: `${props.name}-${scope.props.stage}`,
+      state: props.state,
+      targets: [{ arn: sqs.queueArn, id: `${id}-${scope.props.stage}` }],
     })
 
     utils.createCfnOutput(`${id}-ruleArn`, scope, eventRule.attrArn)

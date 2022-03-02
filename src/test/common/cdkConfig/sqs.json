@@ -1,0 +1,7 @@
+{
+  "testSqs": {
+    "queueName": "test-sqs",
+    "visibilityTimeoutInSecs": 300,
+    "receiveMessageWaitTimeInSecs": 20
+  }
+}

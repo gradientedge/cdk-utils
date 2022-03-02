@@ -1,8 +1,10 @@
 import * as cdk from 'aws-cdk-lib'
 import * as ecs from 'aws-cdk-lib/aws-ecs'
+import * as events from 'aws-cdk-lib/aws-events'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import * as logs from 'aws-cdk-lib/aws-logs'
 import * as s3 from 'aws-cdk-lib/aws-s3'
+import * as sqs from 'aws-cdk-lib/aws-sqs'
 import * as common from '../../common'
 import * as utils from '../../utils'
 
@@ -411,5 +413,37 @@ export class IamManager {
     utils.createCfnOutput(`${id}Name`, scope, role.roleName)
 
     return role
+  }
+
+  /**
+   * @summary Method to create iam policy for sqs
+   * @param {string} id scoped id of the resource
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {iam.ServicePrincipal} servicePrinicpal
+   */
+  public createPolicyForSqsEvent(
+    id: string,
+    scope: common.CommonConstruct,
+    sqsQueue: sqs.Queue,
+    eventBridgeRule: events.CfnRule,
+    servicePrincipals?: iam.ServicePrincipal[]
+  ) {
+    const policy = new iam.PolicyDocument({
+      statements: [
+        new iam.PolicyStatement({
+          actions: ['sqs:*'],
+          effect: iam.Effect.ALLOW,
+          conditions: {
+            ArnEquals: {
+              'aws:SourceArn': eventBridgeRule,
+            },
+          },
+          principals: servicePrincipals ?? [new iam.ServicePrincipal('events.amazonaws.com')],
+          resources: [sqsQueue.queueArn],
+        }),
+      ],
+    })
+
+    return policy
   }
 }

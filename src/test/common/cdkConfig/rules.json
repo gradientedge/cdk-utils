@@ -10,5 +10,9 @@
   "testAnotherLambdaRule": {
     "name": "test-another-lambda-rule",
     "state": "DISABLED"
+  },
+  "testSqsRule": {
+    "name": "test-sqs-rule",
+    "state": "DISABLED"
   }
 }
