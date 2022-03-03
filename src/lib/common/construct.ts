@@ -33,8 +33,10 @@ export class CommonConstruct extends Construct {
   ecrManager: aws.EcrManager
   ecsManager: aws.EcsManager
   eksManager: aws.EksManager
+  elasticacheManager: aws.ElastiCacheManager
   eventManager: aws.EventManager
   iamManager: aws.IamManager
+  kmsManager: aws.KmsManager
   lambdaManager: aws.LambdaManager
   logManager: aws.LogManager
   route53Manager: aws.Route53Manager
@@ -46,6 +48,7 @@ export class CommonConstruct extends Construct {
   wafManager: aws.WafManager
   sqsManager: aws.SqsManager
   elasticacheManager: aws.ElastiCacheManager
+
   fullyQualifiedDomainName: string
 
   constructor(parent: Construct, id: string, props: types.CommonStackProps) {
@@ -62,8 +65,10 @@ export class CommonConstruct extends Construct {
     this.ecrManager = new aws.EcrManager()
     this.ecsManager = new aws.EcsManager()
     this.eksManager = new aws.EksManager()
+    this.elasticacheManager = new aws.ElastiCacheManager()
     this.eventManager = new aws.EventManager()
     this.iamManager = new aws.IamManager()
+    this.kmsManager = new aws.KmsManager()
     this.lambdaManager = new aws.LambdaManager()
     this.logManager = new aws.LogManager()
     this.route53Manager = new aws.Route53Manager()
@@ -73,8 +78,8 @@ export class CommonConstruct extends Construct {
     this.ssMManager = new aws.SsmManager()
     this.vpcManager = new aws.VpcManager()
     this.wafManager = new aws.WafManager()
-    this.elasticacheManager = new aws.ElastiCacheManager()
     this.sqsManager = new aws.SqsManager()
+    this.elasticacheManager = new aws.ElastiCacheManager()
 
     this.determineFullyQualifiedDomain()
   }

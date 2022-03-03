@@ -1,0 +1,6 @@
+{
+  "testKmsKey": {
+    "alias": "test-key",
+    "enableKeyRotation": true
+  }
+}

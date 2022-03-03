@@ -14,6 +14,7 @@ import * as elasticache from 'aws-cdk-lib/aws-elasticache'
 import * as elb from 'aws-cdk-lib/aws-elasticloadbalancingv2'
 import * as events from 'aws-cdk-lib/aws-events'
 import * as iam from 'aws-cdk-lib/aws-iam'
+import * as kms from 'aws-cdk-lib/aws-kms'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as destinations from 'aws-cdk-lib/aws-lambda-destinations'
 import * as logs from 'aws-cdk-lib/aws-logs'
@@ -108,6 +109,12 @@ export interface HealthCheck extends elb.HealthCheck {
   intervalInSecs: number
   timeoutInSecs: number
 }
+
+/**
+ * @category cdk-utils.kms-manager
+ * @subcategory Properties
+ */
+export interface KmsKeyProps extends kms.KeyProps {}
 
 /**
  * @category cdk-utils.lambda-manager
