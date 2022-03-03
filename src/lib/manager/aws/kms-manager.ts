@@ -35,7 +35,7 @@ export class KmsManager {
 
     const key = new kms.Key(scope, `${id}`, {
       description: props.description,
-      alias: props.alias,
+      alias: `${props.alias}-${scope.props.stage}`,
       enableKeyRotation: props.enableKeyRotation,
       enabled: props.enabled,
       keySpec: props.keySpec,
