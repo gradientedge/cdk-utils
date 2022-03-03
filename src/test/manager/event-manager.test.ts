@@ -15,8 +15,6 @@ interface TestStackProps extends types.CommonStackProps {
   testLambda: any
   testFargateRule: any
   testLambdaRule: any
-  testSqs: any
-  testSqsRule: any
 }
 
 const testStackProps = {
@@ -35,7 +33,6 @@ const testStackProps = {
     'src/test/common/cdkConfig/logs.json',
     'src/test/common/cdkConfig/rules.json',
     'src/test/common/cdkConfig/vpc.json',
-    'src/test/common/cdkConfig/sqs.json',
   ],
   stageContextPath: 'src/test/common/cdkEnv',
 }
@@ -60,8 +57,6 @@ class TestCommonStack extends common.CommonStack {
         testLambda: this.node.tryGetContext('testLambda'),
         testFargateRule: this.node.tryGetContext('testLambda'),
         testLambdaRule: this.node.tryGetContext('testLambda'),
-        testSqs: this.node.tryGetContext('testSqs'),
-        testSqsRule: this.node.tryGetContext('testSqsRule'),
       },
     }
   }
@@ -130,9 +125,6 @@ class TestCommonConstruct extends common.CommonConstruct {
       new lambda.AssetCode('src/test/common/nodejs/lib')
     )
     this.eventManager.createLambdaRule('test-lambda-rule', this, this.props.testLambdaRule, testLambda)
-
-    const testSqs = this.sqsManager.createQueueService('test-sqs', this, this.props.testSqs)
-    this.eventManager.createSqsRule('test-sqs-rule', this, this.props.testSqsRule, testSqs)
   }
 }
 
@@ -150,7 +142,7 @@ describe('TestEventConstruct', () => {
 describe('TestEventConstruct', () => {
   test('synthesises as expected', () => {
     /* test if number of resources are correctly synthesised */
-    template.resourceCountIs('AWS::Events::Rule', 3)
+    template.resourceCountIs('AWS::Events::Rule', 2)
     template.resourceCountIs('AWS::Lambda::Permission', 1)
   })
 })
@@ -161,8 +153,6 @@ describe('TestEventConstruct', () => {
     template.hasOutput('testFargateRuleRuleName', {})
     template.hasOutput('testLambdaRuleRuleArn', {})
     template.hasOutput('testLambdaRuleRuleName', {})
-    template.hasOutput('testSqsRuleRuleArn', {})
-    template.hasOutput('testSqsRuleRuleName', {})
   })
 })
 
@@ -206,20 +196,6 @@ describe('TestEventConstruct', () => {
             'Fn::GetAtt': ['testcommonstacktestlambda5B168AC2', 'Arn'],
           },
           Id: 'test-lambda-rule-test',
-        },
-      ],
-    })
-  })
-
-  test('provisions new sqs event rule as expected', () => {
-    template.hasResourceProperties('AWS::Events::Rule', {
-      Description: 'Rule to send notification to sqs target',
-      Targets: [
-        {
-          Arn: {
-            'Fn::GetAtt': ['testcommonstacktestsqs99C34404', 'Arn'],
-          },
-          Id: 'test-sqs-rule-test',
         },
       ],
     })

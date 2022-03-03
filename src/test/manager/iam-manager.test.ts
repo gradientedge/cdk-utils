@@ -1,6 +1,7 @@
 import * as cdk from 'aws-cdk-lib'
 import { Template } from 'aws-cdk-lib/assertions'
 import * as ecs from 'aws-cdk-lib/aws-ecs'
+import * as eventsTargets from 'aws-cdk-lib/aws-events-targets'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import { Construct } from 'constructs'
 import * as common from '../../lib/common'
@@ -91,8 +92,6 @@ class TestCommonConstruct extends common.CommonConstruct {
       testLogGroup2,
       testImage
     )
-    const testSqs = this.sqsManager.createQueueService('test-sqs', this, this.props.testSqs)
-    const testSqsRule = this.eventManager.createSqsRule('test-sqs-rule', this, this.props.testSqsRule, testSqs)
 
     this.iamManager.statementForReadSecrets(this)
     this.iamManager.statementForReadAnyAppConfig()
@@ -114,6 +113,12 @@ class TestCommonConstruct extends common.CommonConstruct {
       this,
       new iam.PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this)] })
     )
+
+    /* Test SQS Document Policy Creation */
+    const testSqs = this.sqsManager.createQueueService('test-sqs', this, this.props.testSqs)
+    const testSqsRule = this.eventManager.createRule('test-sqs-rule', this, this.props.testSqsRule, undefined, [
+      new eventsTargets.SqsQueue(testSqs),
+    ])
     this.iamManager.createPolicyForSqsEvent('test-policy-sqs-event', this, testSqs, testSqsRule)
   }
 }

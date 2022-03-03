@@ -425,7 +425,7 @@ export class IamManager {
     id: string,
     scope: common.CommonConstruct,
     sqsQueue: sqs.Queue,
-    eventBridgeRule: events.CfnRule,
+    eventBridgeRule: events.IRule,
     servicePrincipals?: iam.ServicePrincipal[]
   ) {
     const policy = new iam.PolicyDocument({
