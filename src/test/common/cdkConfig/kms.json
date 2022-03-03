@@ -1,0 +1,5 @@
+{
+  "testKmsKey": {
+    "enableKeyRotation": true
+  }
+}
