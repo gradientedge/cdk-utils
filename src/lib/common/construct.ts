@@ -46,6 +46,8 @@ export class CommonConstruct extends Construct {
   ssMManager: aws.SsmManager
   vpcManager: aws.VpcManager
   wafManager: aws.WafManager
+  sqsManager: aws.SqsManager
+
   fullyQualifiedDomainName: string
 
   constructor(parent: Construct, id: string, props: types.CommonStackProps) {
@@ -75,6 +77,7 @@ export class CommonConstruct extends Construct {
     this.ssMManager = new aws.SsmManager()
     this.vpcManager = new aws.VpcManager()
     this.wafManager = new aws.WafManager()
+    this.sqsManager = new aws.SqsManager()
 
     this.determineFullyQualifiedDomain()
   }

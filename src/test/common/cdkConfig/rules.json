@@ -10,5 +10,12 @@
   "testAnotherLambdaRule": {
     "name": "test-another-lambda-rule",
     "state": "DISABLED"
+  },
+  "testSqsRule": {
+    "ruleName": "test-sqs-rule",
+    "description": "Rule to send notification to SQS target",
+    "eventPattern": {
+      "detail-type": ["Test"]
+    }
   }
 }

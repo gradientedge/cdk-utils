@@ -22,6 +22,7 @@ import * as route53 from 'aws-cdk-lib/aws-route53'
 import * as s3 from 'aws-cdk-lib/aws-s3'
 import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment'
 import * as sns from 'aws-cdk-lib/aws-sns'
+import * as sqs from 'aws-cdk-lib/aws-sqs'
 import * as wafv2 from 'aws-cdk-lib/aws-wafv2'
 import * as types from '../index'
 
@@ -540,3 +541,14 @@ export interface WafWebACLProps extends wafv2.CfnWebACLProps {}
  * @category Compute
  */
 export interface ElastiCacheProps extends elasticache.CfnCacheClusterProps {}
+
+/**
+ * @category cdk-utils.sqs-manager
+ * @subcategory Properties
+ */
+export interface QueueProps extends sqs.QueueProps {
+  visibilityTimeoutInSecs: number
+  receiveMessageWaitTimeInSecs: number
+  dataKeyReuseInSecs: number
+  deliveryDelayInSecs: number
+}

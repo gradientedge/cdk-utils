@@ -81,6 +81,7 @@ export class EventManager {
 
     return rule
   }
+
   /**
    * @summary Method to create an eventbridge rule with lambda target
    * @param {string} id scoped id of the resource
