@@ -438,7 +438,9 @@ export interface EksClusterProps extends eks.ClusterProps {
  * @category cdk-utils.event-manager
  * @subcategory Properties
  */
-export interface RuleProps extends events.CfnRuleProps {}
+export interface RuleProps extends events.CfnRuleProps {
+input?: events.CfnRuleProps.target.input
+}
 
 /**
  * @category cdk-utils.event-manager

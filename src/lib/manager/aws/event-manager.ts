@@ -91,7 +91,6 @@ export class EventManager {
    * @param {string} eventBusName
    * @param {any} eventPattern
    * @param {string} scheduleExpression
-   * @param {string} jsonInput
    */
   public createLambdaRule(
     id: string,
@@ -100,8 +99,7 @@ export class EventManager {
     lambdaFunction: lambda.Function,
     eventBusName?: string,
     eventPattern?: any,
-    scheduleExpression?: string,
-    input?: string
+    scheduleExpression?: string
   ) {
     if (!props) throw `EventRule props undefined`
 
@@ -112,7 +110,7 @@ export class EventManager {
       scheduleExpression: scheduleExpression,
       name: `${props.name}-${scope.props.stage}`,
       state: props.state,
-      targets: [{ arn: lambdaFunction.functionArn, id: `${id}-${scope.props.stage}`, input: input ?? undefined }],
+      targets: [{ arn: lambdaFunction.functionArn, id: `${id}-${scope.props.stage}`, input: props.input ?? undefined }],
     })
 
     new lambda.CfnPermission(scope, `${id}LambdaPermission`, {
