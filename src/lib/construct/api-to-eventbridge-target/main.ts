@@ -687,7 +687,8 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
       this,
       this.props.apiSubDomain,
       this.apiDestinedRestApi.domain,
-      this.apiDestinedRestApi.hostedZone
+      this.apiDestinedRestApi.hostedZone,
+      this.props.skipStageForARecords
     )
   }
 }

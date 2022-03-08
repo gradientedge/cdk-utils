@@ -26,6 +26,7 @@ const testStackProps = {
     'src/test/common/cdkConfig/function.json',
   ],
   stageContextPath: 'src/test/common/cdkEnv',
+  skipStageForARecords: true,
 }
 
 class TestCommonStack extends common.CommonStack {
@@ -88,7 +89,7 @@ describe('TestStaticSiteConstruct', () => {
     template.resourceCountIs('AWS::Route53::HostedZone', 1)
     template.resourceCountIs('AWS::S3::Bucket', 2)
     template.resourceCountIs('AWS::CloudFront::Distribution', 1)
-    template.resourceCountIs('AWS::Route53::RecordSet', 2)
+    template.resourceCountIs('AWS::Route53::RecordSet', 1)
     template.resourceCountIs('AWS::Lambda::Function', 2)
     template.resourceCountIs('Custom::S3AutoDeleteObjects', 2)
     template.resourceCountIs('Custom::CDKBucketDeployment', 1)
@@ -242,10 +243,6 @@ describe('TestStaticSiteConstruct', () => {
   test('provisions route53 records as expected', () => {
     template.hasResourceProperties('AWS::Route53::RecordSet', {
       Name: 'site.test.gradientedge.io.',
-      Type: 'A',
-    })
-    template.hasResourceProperties('AWS::Route53::RecordSet', {
-      Name: 'site-test.test.gradientedge.io.',
       Type: 'A',
     })
   })

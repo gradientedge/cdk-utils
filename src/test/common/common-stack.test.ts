@@ -16,6 +16,7 @@ const testStackProps: TestStackProps = {
   stage: 'test',
   extraContexts: ['src/test/common/cdkConfig/dummy.json'],
   stageContextPath: 'src/test/common/cdkEnv',
+  skipStageForARecords: false,
 }
 
 class TestCommonStack extends common.CommonStack {

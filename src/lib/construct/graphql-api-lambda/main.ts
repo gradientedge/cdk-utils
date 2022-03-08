@@ -252,7 +252,8 @@ export class GraphQLApiLambda extends CommonConstruct {
       this,
       this.props.apiSubDomain,
       this.graphQLApiDomain,
-      this.graphQLApiHostedZone
+      this.graphQLApiHostedZone,
+      this.props.skipStageForARecords
     )
   }
 }
