@@ -55,6 +55,7 @@ export class CommonStack extends cdk.Stack {
       domainName: this.node.tryGetContext('domainName'),
       subDomain: this.node.tryGetContext('subDomain'),
       extraContexts: this.node.tryGetContext('extraContexts'),
+      skipStageForARecords: this.node.tryGetContext('skipStageForARecords'),
     }
   }
 

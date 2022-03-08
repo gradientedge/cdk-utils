@@ -51,6 +51,7 @@ export interface CommonStackProps extends cdk.StackProps {
   subDomain?: string
   extraContexts?: string[]
   stageContextPath?: string
+  skipStageForARecords: boolean
 }
 
 /**

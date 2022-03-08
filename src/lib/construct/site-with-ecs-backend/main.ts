@@ -365,7 +365,8 @@ export class SiteWithEcsBackend extends CommonConstruct {
       this,
       this.siteDistribution,
       this.siteHostedZone,
-      this.props.siteRecordName
+      this.props.siteRecordName,
+      this.props.skipStageForARecords
     )
   }
 

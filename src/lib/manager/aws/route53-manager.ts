@@ -92,19 +92,24 @@ export class Route53Manager {
    * @param {cloudfront.IDistribution} distribution
    * @param {route53.IHostedZone} hostedZone
    * @param {string} recordName
+   * @param skipStageFromRecord
    */
   public createCloudFrontTargetARecord(
     id: string,
     scope: common.CommonConstruct,
     distribution?: cloudfront.IDistribution,
     hostedZone?: route53.IHostedZone,
-    recordName?: string
+    recordName?: string,
+    skipStageFromRecord?: boolean
   ) {
     if (!distribution) throw `Distribution undefined`
     if (!hostedZone) throw `HostedZone undefined`
 
     const aRecord = new route53.ARecord(scope, `${id}`, {
-      recordName: recordName && scope.isProductionStage() ? `${recordName}` : `${recordName}-${scope.props.stage}`,
+      recordName:
+        (recordName && scope.isProductionStage()) || skipStageFromRecord
+          ? `${recordName}`
+          : `${recordName}-${scope.props.stage}`,
       target: route53.RecordTarget.fromAlias(new route53Targets.CloudFrontTarget(distribution)),
       zone: hostedZone,
     })
@@ -150,17 +155,20 @@ export class Route53Manager {
    * @param recordName
    * @param apiDomain
    * @param hostedZone
+   * @param skipStageFromRecord
    */
   public createApiGatewayARecord(
     id: string,
     scope: common.CommonConstruct,
     recordName: string,
     apiDomain: apig.DomainName,
-    hostedZone: route53.IHostedZone
+    hostedZone: route53.IHostedZone,
+    skipStageFromRecord?: boolean
   ) {
     let apiRecordName = ''
     if (recordName && recordName !== '')
-      apiRecordName = scope.isProductionStage() ? `${recordName}` : `${recordName}-${scope.props.stage}`
+      apiRecordName =
+        scope.isProductionStage() || skipStageFromRecord ? `${recordName}` : `${recordName}-${scope.props.stage}`
 
     const apiARecord = new route53.ARecord(scope, `${id}`, {
       recordName: apiRecordName,

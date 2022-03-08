@@ -184,18 +184,9 @@ export class StaticSite extends CommonConstruct {
       this,
       this.siteDistribution,
       this.siteHostedZone,
-      this.props.siteRecordName
+      this.props.siteRecordName,
+      this.props.skipStageForARecords
     )
-
-    if (!this.isProductionStage() && this.props.siteCreateAltARecord) {
-      this.siteARecordAlt = this.route53Manager.createCloudFrontTargetARecordV2(
-        `${this.id}-domain-a-record-alt`,
-        this,
-        this.siteDistribution,
-        this.siteHostedZone,
-        this.props.siteRecordName
-      )
-    }
   }
 
   /**
