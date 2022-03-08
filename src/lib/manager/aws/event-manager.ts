@@ -110,7 +110,7 @@ export class EventManager {
       scheduleExpression: scheduleExpression,
       name: `${props.name}-${scope.props.stage}`,
       state: props.state,
-      targets: [{ arn: lambdaFunction.functionArn, id: `${id}-${scope.props.stage}` }],
+      targets: [{ arn: lambdaFunction.functionArn, id: `${id}-${scope.props.stage}`, input: props.input ?? undefined }],
     })
 
     new lambda.CfnPermission(scope, `${id}LambdaPermission`, {
