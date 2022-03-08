@@ -26,6 +26,7 @@ const testStackProps = {
     'src/test/common/cdkConfig/function.json',
   ],
   stageContextPath: 'src/test/common/cdkEnv',
+  skipStageForARecords: true,
 }
 
 class TestCommonStack extends common.CommonStack {
@@ -241,7 +242,7 @@ describe('TestStaticSiteConstruct', () => {
 describe('TestStaticSiteConstruct', () => {
   test('provisions route53 records as expected', () => {
     template.hasResourceProperties('AWS::Route53::RecordSet', {
-      Name: 'site-test.test.gradientedge.io.',
+      Name: 'site.test.gradientedge.io.',
       Type: 'A',
     })
   })
