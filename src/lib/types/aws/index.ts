@@ -439,7 +439,7 @@ export interface EksClusterProps extends eks.ClusterProps {
  * @subcategory Properties
  */
 export interface RuleProps extends events.CfnRuleProps {
-  input?: events.CfnRuleProps.target.input
+  input?: string
 }
 
 /**
