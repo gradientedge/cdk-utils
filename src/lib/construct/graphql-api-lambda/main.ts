@@ -207,7 +207,7 @@ export class GraphQLApiLambda extends CommonConstruct {
     this.graphQLApiDomain = this.apiManager.createApiDomain(
       `${this.id}-api-domain`,
       this,
-      this.isProductionStage()
+      this.isProductionStage() || this.props.skipStageForARecords
         ? `${this.props.apiSubDomain}.${this.fullyQualifiedDomainName}`
         : `${this.props.apiSubDomain}-${this.props.stage}.${this.fullyQualifiedDomainName}`,
       this.graphQLApiCertificate
