@@ -655,7 +655,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
     this.apiDestinedRestApi.domain = this.apiManager.createApiDomain(
       `${this.id}-api-domain`,
       this,
-      this.isProductionStage()
+      this.isProductionStage() || this.props.skipStageForARecords
         ? `${this.props.apiSubDomain}.${this.fullyQualifiedDomainName}`
         : `${this.props.apiSubDomain}-${this.props.stage}.${this.fullyQualifiedDomainName}`,
       this.apiDestinedRestApi.certificate
