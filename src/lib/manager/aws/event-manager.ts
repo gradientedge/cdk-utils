@@ -68,6 +68,8 @@ export class EventManager {
       description: props.description,
       ruleName: `${props.ruleName}-${scope.props.stage}`,
       eventPattern: props.eventPattern,
+      enabled: props.enabled,
+      schedule: props.schedule,
     })
 
     if (targets && targets.length > 0) {
