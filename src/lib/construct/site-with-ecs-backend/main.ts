@@ -155,9 +155,10 @@ export class SiteWithEcsBackend extends CommonConstruct {
       : `${this.props.siteSubDomain}-internal-${this.props.stage}.${this.fullyQualifiedDomainName}`
 
     /* the external domain name exposed to CloudFront */
-    this.siteExternalDomainName = this.isProductionStage()
-      ? `${this.props.siteSubDomain}.${this.fullyQualifiedDomainName}`
-      : `${this.props.siteSubDomain}-${this.props.stage}.${this.fullyQualifiedDomainName}`
+    this.siteExternalDomainName =
+      this.isProductionStage() || this.props.skipStageForARecords
+        ? `${this.props.siteSubDomain}.${this.fullyQualifiedDomainName}`
+        : `${this.props.siteSubDomain}-${this.props.stage}.${this.fullyQualifiedDomainName}`
 
     this.siteDomainNames = [this.siteExternalDomainName]
   }
