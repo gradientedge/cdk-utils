@@ -123,7 +123,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
       this.props.siteCertificate.certificateSsmName &&
       this.props.siteCertificate.certificateRegion
     ) {
-      this.props.siteCertificate.certificateArn = this.ssMManager.readStringParameterFromRegion(
+      this.props.siteCertificate.certificateArn = this.ssmManager.readStringParameterFromRegion(
         `${this.id}-certificate-parameter`,
         this,
         this.props.siteCertificate.certificateSsmName,

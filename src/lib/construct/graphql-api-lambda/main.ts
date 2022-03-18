@@ -104,7 +104,7 @@ export class GraphQLApiLambda extends CommonConstruct {
       this.props.graphQLApiCertificate.certificateSsmName &&
       this.props.graphQLApiCertificate.certificateRegion
     ) {
-      this.props.graphQLApiCertificate.certificateArn = this.ssMManager.readStringParameterFromRegion(
+      this.props.graphQLApiCertificate.certificateArn = this.ssmManager.readStringParameterFromRegion(
         `${this.id}-certificate-param`,
         this,
         this.props.graphQLApiCertificate.certificateSsmName,

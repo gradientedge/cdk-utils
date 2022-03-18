@@ -37,13 +37,13 @@ class TestCommonConstruct extends common.CommonConstruct {
 
   constructor(parent: Construct, name: string, props: TestStackProps) {
     super(parent, name, props)
-    this.ssMManager.writeStringToParameters('test-param-write', this, {
+    this.ssmManager.writeStringToParameters('test-param-write', this, {
       parameterName: 'test-param',
       description: `test param description`,
       stringValue: 'Hello World!',
     })
-    this.paramValue = this.ssMManager.readStringParameter('test-param-read', this, 'test-param-test')
-    this.paramValueFromRegion = this.ssMManager.readStringParameterFromRegion(
+    this.paramValue = this.ssmManager.readStringParameter('test-param-read', this, 'test-param-test')
+    this.paramValueFromRegion = this.ssmManager.readStringParameterFromRegion(
       'test-param-read-from-region',
       this,
       'test-param-test',

@@ -42,11 +42,12 @@ export class CommonConstruct extends Construct {
   route53Manager: aws.Route53Manager
   s3Manager: aws.S3Manager
   secretsManager: aws.SecretsManager
+  sfnManager: aws.SfnManager
   snsManager: aws.SnsManager
-  ssMManager: aws.SsmManager
+  sqsManager: aws.SqsManager
+  ssmManager: aws.SsmManager
   vpcManager: aws.VpcManager
   wafManager: aws.WafManager
-  sqsManager: aws.SqsManager
 
   fullyQualifiedDomainName: string
 
@@ -73,11 +74,12 @@ export class CommonConstruct extends Construct {
     this.route53Manager = new aws.Route53Manager()
     this.s3Manager = new aws.S3Manager()
     this.secretsManager = new aws.SecretsManager()
+    this.sfnManager = new aws.SfnManager()
     this.snsManager = new aws.SnsManager()
-    this.ssMManager = new aws.SsmManager()
+    this.sqsManager = new aws.SqsManager()
+    this.ssmManager = new aws.SsmManager()
     this.vpcManager = new aws.VpcManager()
     this.wafManager = new aws.WafManager()
-    this.sqsManager = new aws.SqsManager()
 
     this.determineFullyQualifiedDomain()
   }
