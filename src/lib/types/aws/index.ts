@@ -23,6 +23,8 @@ import * as s3 from 'aws-cdk-lib/aws-s3'
 import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment'
 import * as sns from 'aws-cdk-lib/aws-sns'
 import * as sqs from 'aws-cdk-lib/aws-sqs'
+import * as sfn from 'aws-cdk-lib/aws-stepfunctions'
+import * as tasks from 'aws-cdk-lib/aws-stepfunctions-tasks'
 import * as wafv2 from 'aws-cdk-lib/aws-wafv2'
 import * as types from '../index'
 
@@ -116,6 +118,68 @@ export interface HealthCheck extends elb.HealthCheck {
  * @subcategory Properties
  */
 export interface KmsKeyProps extends kms.KeyProps {}
+
+/**
+ * @category cdk-utils.step-functions-manager
+ * @subcategory Properties
+ */
+export interface SfnSucceedProps extends sfn.SucceedProps {
+  name: string
+}
+
+/**
+ * @category cdk-utils.step-functions-manager
+ * @subcategory Properties
+ */
+export interface SfnFailProps extends sfn.FailProps {
+  name: string
+}
+
+/**
+ * @category cdk-utils.step-functions-manager
+ * @subcategory Properties
+ */
+export interface SfnPassProps extends sfn.PassProps {
+  name: string
+}
+
+/**
+ * @category cdk-utils.step-functions-manager
+ * @subcategory Properties
+ */
+export interface SfnParallelProps extends sfn.ParallelProps {
+  name: string
+}
+
+/**
+ * @category cdk-utils.step-functions-manager
+ * @subcategory Properties
+ */
+export interface SfnChoiceProps extends sfn.ChoiceProps {
+  name: string
+}
+
+/**
+ * @category cdk-utils.step-functions-manager
+ * @subcategory Properties
+ */
+export interface SfnLambdaInvokeProps extends tasks.LambdaInvokeProps {
+  name: string
+}
+
+/**
+ * @category cdk-utils.step-functions-manager
+ * @subcategory Properties
+ */
+export interface SfnCallApiGatewayRestApiEndpointProps extends tasks.CallApiGatewayRestApiEndpointProps {
+  name: string
+}
+
+/**
+ * @category cdk-utils.step-functions-manager
+ * @subcategory Properties
+ */
+export interface SfnStateMachineProps extends sfn.StateMachineProps {}
 
 /**
  * @category cdk-utils.lambda-manager

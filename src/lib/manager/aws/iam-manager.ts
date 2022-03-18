@@ -53,6 +53,18 @@ export class IamManager {
   }
 
   /**
+   * @summary Method to create iam statement to invoke lambda function
+   * @param {string[]} resourceArns list of ARNs to allow access to
+   */
+  public statementForInvokeLambda(resourceArns?: string[]) {
+    return new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: ['lambda:InvokeFunction'],
+      resources: resourceArns ?? ['*'],
+    })
+  }
+
+  /**
    * @summary Method to create iam statement to read app config
    */
   public statementForReadAnyAppConfig() {
@@ -397,6 +409,39 @@ export class IamManager {
   ) {
     const role = new iam.Role(scope, `${id}`, {
       assumedBy: servicePrinicpal ?? new iam.ServicePrincipal('lambda.amazonaws.com'),
+      description: `Role for ${id} Lambda function`,
+      inlinePolicies: { policy },
+      managedPolicies: [
+        iam.ManagedPolicy.fromManagedPolicyArn(
+          scope,
+          `${id}-AWSLambdaBasicExecutionRole`,
+          'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+        ),
+      ],
+      roleName: `${id}-${scope.props.stage}`,
+    })
+
+    utils.createCfnOutput(`${id}Arn`, scope, role.roleArn)
+    utils.createCfnOutput(`${id}Name`, scope, role.roleName)
+
+    return role
+  }
+
+  /**
+   * @summary Method to create iam statement for step function execution
+   * @param {string} id scoped id of the resource
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {iam.PolicyDocument} policy
+   * @param {iam.ServicePrincipal} servicePrinicpal
+   */
+  public createRoleForStepFunction(
+    id: string,
+    scope: common.CommonConstruct,
+    policy: iam.PolicyDocument,
+    servicePrinicpal?: iam.ServicePrincipal
+  ) {
+    const role = new iam.Role(scope, `${id}`, {
+      assumedBy: servicePrinicpal ?? new iam.ServicePrincipal('states.amazonaws.com'),
       description: `Role for ${id} Lambda function`,
       inlinePolicies: { policy },
       managedPolicies: [

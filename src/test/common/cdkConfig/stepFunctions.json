@@ -1,0 +1,39 @@
+{
+  "testSubmitStepSuccess": {
+    "name": "workflow:Complete"
+  },
+  "testSubmitStepFailure": {
+    "name": "workflow:Failed"
+  },
+  "testSubmitStepValidateSomething": {
+    "name": "step:Something Validated?"
+  },
+  "testSubmitStepValidateSomethingElse": {
+    "name": "step:Something Else Validated?"
+  },
+  "testSubmitStepCreateSomething": {
+    "name": "step:Create Something",
+    "outputPath": "$.Payload"
+  },
+  "testSubmitStepCreateSomethingParallel": {
+    "name": "parallel:Create Something"
+  },
+  "testSubmitStepApi": {
+    "name": "step:Call Some API"
+  },
+  "testSubmitStepCreateSomethingNew": {
+    "name": "step:Create Something New"
+  },
+  "testSubmitStepCreateSomethingElse": {
+    "name": "step:Create Something Else"
+  },
+  "testSubmitWorkflow": {
+    "stateMachineName": "test-workflow",
+    "stateMachineType": "STANDARD",
+    "logs": {
+      "includeExecutionData": true,
+      "level": "ALL"
+    },
+    "tracingEnabled": false
+  }
+}

@@ -90,7 +90,7 @@ export class StaticSite extends CommonConstruct {
       this.props.siteCertificate.certificateSsmName &&
       this.props.siteCertificate.certificateRegion
     ) {
-      this.props.siteCertificate.certificateArn = this.ssMManager.readStringParameterFromRegion(
+      this.props.siteCertificate.certificateArn = this.ssmManager.readStringParameterFromRegion(
         `${this.id}-certificate-param`,
         this,
         this.props.siteCertificate.certificateSsmName,

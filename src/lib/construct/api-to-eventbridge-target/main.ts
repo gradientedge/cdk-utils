@@ -141,7 +141,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
       this.props.api.certificate.certificateSsmName &&
       this.props.api.certificate.certificateRegion
     ) {
-      this.props.api.certificate.certificateArn = this.ssMManager.readStringParameterFromRegion(
+      this.props.api.certificate.certificateArn = this.ssmManager.readStringParameterFromRegion(
         `${this.id}-certificate-param`,
         this,
         this.props.api.certificate.certificateSsmName,
