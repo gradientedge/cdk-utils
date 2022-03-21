@@ -3177,30 +3177,15 @@ aws-cdk@*:
     yaml "1.10.2"
     yargs "^16.2.0"
 
-aws-sdk@^2.1093.0:
-  version "2.1093.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1093.0.tgz#43fd6ded15330b3185d37d81ea8f311f4d980e5c"
-  integrity sha512-YD6VNemoKkzDMHsUiGP/MwpM0T20ukp3KTSxPY34Xw3Ww0zP19C54CfjaXhn//R27f2c57BtVez+he2RZ5GwyQ==
+aws-sdk@^2.1093.0, aws-sdk@^2.848.0, aws-sdk@^2.979.0:
+  version "2.1096.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1096.0.tgz#d41d6c6afe44b00977d4fe4c68e9450941d72931"
+  integrity sha512-q+hotU57U8bGpz1pf5CkO4z630ay0xGJ9HedahKPZ0Xk3/X0GH+QFYPBWJ5IMTtO30bjfPH0zTaL2vJmMXLBrQ==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
     ieee754 "1.1.13"
     jmespath "0.16.0"
-    querystring "0.2.0"
-    sax "1.2.1"
-    url "0.10.3"
-    uuid "3.3.2"
-    xml2js "0.4.19"
-
-aws-sdk@^2.848.0, aws-sdk@^2.979.0:
-  version "2.1046.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1046.0.tgz#9147b0fa1c86acbebd1a061e951ab5012f4499d7"
-  integrity sha512-ocwHclMXdIA+NWocUyvp9Ild3/zy2vr5mHp3mTyodf0WU5lzBE8PocCVLSWhMAXLxyia83xv2y5f5AzAcetbqA==
-  dependencies:
-    buffer "4.9.2"
-    events "1.1.1"
-    ieee754 "1.1.13"
-    jmespath "0.15.0"
     querystring "0.2.0"
     sax "1.2.1"
     url "0.10.3"
@@ -6748,11 +6733,6 @@ jest@^27.5.1:
     "@jest/core" "^27.5.1"
     import-local "^3.0.2"
     jest-cli "^27.5.1"
-
-jmespath@0.15.0:
-  version "0.15.0"
-  resolved "https://registry.yarnpkg.com/jmespath/-/jmespath-0.15.0.tgz#a3f222a9aae9f966f5d27c796510e28091764217"
-  integrity sha1-o/Iiqarp+Wb10nx5ZRDigJF2Qhc=
 
 jmespath@0.16.0:
   version "0.16.0"
