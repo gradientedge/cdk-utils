@@ -121,6 +121,7 @@ describe('TestLambdaConstruct', () => {
     /* test if number of resources are correctly synthesised */
     template.resourceCountIs('AWS::Lambda::LayerVersion', 2)
     template.resourceCountIs('AWS::Lambda::Function', 4)
+    template.resourceCountIs('AWS::SQS::Queue', 1)
   })
 })
 
@@ -192,6 +193,14 @@ describe('TestLambdaConstruct', () => {
       MemorySize: 1024,
       Runtime: 'nodejs14.x',
       Timeout: 60,
+    })
+  })
+})
+
+describe('TestLambdaConstruct', () => {
+  test('provisions dlq as expected', () => {
+    template.hasResourceProperties('AWS::SQS::Queue', {
+      MessageRetentionPeriod: 1209600,
     })
   })
 })

@@ -33,6 +33,7 @@
     "functionName": "test-lambda-python",
     "logRetention": 7,
     "memorySize": 1024,
-    "timeoutInSecs": 60
+    "timeoutInSecs": 60,
+    "deadLetterQueueEnabled": true
   }
 }
