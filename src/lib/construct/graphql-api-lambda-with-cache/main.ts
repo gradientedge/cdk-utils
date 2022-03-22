@@ -82,7 +82,7 @@ export class GraphQLApiLambdaWithCache extends GraphQLApiLambda {
         vpc: this.graphQLVpc,
       })
 
-      this.graphQLSecurityGroup.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.allIcmp(), 'All Traffic')
+      this.graphQLSecurityGroup.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.allTraffic(), 'All Traffic')
 
       utils.createCfnOutput(`${this.id}-security-group-id`, this, this.graphQLSecurityGroup.securityGroupId)
     }
