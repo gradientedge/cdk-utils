@@ -106,28 +106,29 @@ export class LambdaManager {
 
     const functionName = `${props.functionName}-${scope.props.stage}`
     const lambdaFunction = new pylambda.PythonFunction(scope, `${id}`, {
-      allowPublicSubnet: !!vpc,
-      functionName: functionName,
-      index: index,
-      handler: handler,
-      runtime: lambda.Runtime.PYTHON_3_8,
-      entry: entry,
-      environment: {
-        REGION: scope.props.region,
-        ...environment,
+      ...props,
+      ...{
+        allowPublicSubnet: !!vpc,
+        functionName: functionName,
+        index: index,
+        handler: handler,
+        runtime: lambda.Runtime.PYTHON_3_8,
+        entry: entry,
+        environment: {
+          REGION: scope.props.region,
+          ...environment,
+        },
+        filesystem: accessPoint
+          ? lambda.FileSystem.fromEfsAccessPoint(accessPoint, mountPath || '/mnt/msg')
+          : undefined,
+        layers: layers,
+        reservedConcurrentExecutions: props.reservedConcurrentExecutions,
+        role: role instanceof iam.Role ? role : undefined,
+        securityGroups: securityGroups,
+        timeout: props.timeoutInSecs ? cdk.Duration.seconds(props.timeoutInSecs) : cdk.Duration.minutes(1),
+        vpc: vpc,
+        vpcSubnets: vpcSubnets,
       },
-      filesystem: accessPoint ? lambda.FileSystem.fromEfsAccessPoint(accessPoint, mountPath || '/mnt/msg') : undefined,
-      layers: layers,
-      logRetention: props.logRetention,
-      memorySize: props.memorySize,
-      onFailure: props.onFailure,
-      onSuccess: props.onSuccess,
-      reservedConcurrentExecutions: props.reservedConcurrentExecutions,
-      role: role instanceof iam.Role ? role : undefined,
-      securityGroups: securityGroups,
-      timeout: props.timeoutInSecs ? cdk.Duration.seconds(props.timeoutInSecs) : cdk.Duration.minutes(1),
-      vpc: vpc,
-      vpcSubnets: vpcSubnets,
     })
 
     utils.createCfnOutput(`${id}-lambdaArn`, scope, lambdaFunction.functionArn)
@@ -171,27 +172,28 @@ export class LambdaManager {
 
     const functionName = `${props.functionName}-${scope.props.stage}`
     const lambdaFunction = new lambda.Function(scope, `${id}`, {
-      allowPublicSubnet: !!vpc,
-      functionName: functionName,
-      handler: handler || 'index.lambda_handler',
-      runtime: lambda.Runtime.NODEJS_14_X,
-      code: code,
-      environment: {
-        REGION: scope.props.region,
-        ...environment,
+      ...props,
+      ...{
+        allowPublicSubnet: !!vpc,
+        functionName: functionName,
+        handler: handler || 'index.lambda_handler',
+        runtime: lambda.Runtime.NODEJS_14_X,
+        code: code,
+        environment: {
+          REGION: scope.props.region,
+          ...environment,
+        },
+        filesystem: accessPoint
+          ? lambda.FileSystem.fromEfsAccessPoint(accessPoint, mountPath || '/mnt/msg')
+          : undefined,
+        layers: layers,
+        reservedConcurrentExecutions: props.reservedConcurrentExecutions,
+        role: role instanceof iam.Role ? role : undefined,
+        securityGroups: securityGroups,
+        timeout: props.timeoutInSecs ? cdk.Duration.seconds(props.timeoutInSecs) : cdk.Duration.minutes(1),
+        vpc: vpc,
+        vpcSubnets: vpcSubnets,
       },
-      filesystem: accessPoint ? lambda.FileSystem.fromEfsAccessPoint(accessPoint, mountPath || '/mnt/msg') : undefined,
-      layers: layers,
-      logRetention: props.logRetention,
-      memorySize: props.memorySize,
-      onFailure: props.onFailure,
-      onSuccess: props.onSuccess,
-      reservedConcurrentExecutions: props.reservedConcurrentExecutions,
-      role: role instanceof iam.Role ? role : undefined,
-      securityGroups: securityGroups,
-      timeout: props.timeoutInSecs ? cdk.Duration.seconds(props.timeoutInSecs) : cdk.Duration.minutes(1),
-      vpc: vpc,
-      vpcSubnets: vpcSubnets,
     })
 
     utils.createCfnOutput(`${id}-lambdaArn`, scope, lambdaFunction.functionArn)
