@@ -208,7 +208,7 @@ describe('TestSiteWithEcsBackendConstruct', () => {
           ],
           Compress: true,
           TargetOriginId: 'testsitestacktestsitedistributionOrigin14E765772',
-          ViewerProtocolPolicy: 'allow-all',
+          ViewerProtocolPolicy: 'redirect-to-https',
         },
         Enabled: true,
         HttpVersion: 'http2',

@@ -11,7 +11,10 @@
         "responseCode": 200,
         "responsePagePath": "/server/pages/index.html"
       }
-    ]
+    ],
+    "defaultBehavior": {
+      "viewerProtocolPolicy": "redirect-to-https"
+    }
   },
   "testEdgeDistribution": {
     "errorResponses": [

@@ -183,7 +183,7 @@ describe('TestStaticSiteConstruct', () => {
           ],
           Compress: true,
           TargetOriginId: 'teststaticsitestackteststaticsitedistributionOrigin17FDFDB75',
-          ViewerProtocolPolicy: 'allow-all',
+          ViewerProtocolPolicy: 'redirect-to-https',
         },
         Enabled: true,
         HttpVersion: 'http2',
