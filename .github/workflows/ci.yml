@@ -55,7 +55,7 @@ jobs:
           files: coverage/junit.xml
       - name: Publish Code Coverage
         run: npx codecov
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && success() }}
         with:
           name: docs-artifact
