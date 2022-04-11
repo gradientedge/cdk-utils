@@ -94,7 +94,7 @@ jobs:
       - name: Install Packages
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: docs-artifact
           path: ./api-docs/
