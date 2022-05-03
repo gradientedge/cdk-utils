@@ -81,20 +81,6 @@ class TestCommonConstruct extends common.CommonConstruct {
       new lambda.AssetCode('src/test/common/nodejs/lib')
     )
 
-    const testPythonLayer = this.lambdaManager.createPythonLambdaLayer(
-      'test-lambda-layer-python',
-      this,
-      'src/test/common/python/layers'
-    )
-    this.lambdaManager.createPythonLambdaFunction(
-      'test-lambda-python',
-      this,
-      this.props.testLambdaPython,
-      testRole,
-      [testPythonLayer],
-      'src/test/common/python/lib'
-    )
-
     this.lambdaManager.createEdgeFunction(
       'test-lambda-edge',
       this,
@@ -119,8 +105,8 @@ describe('TestLambdaConstruct', () => {
 describe('TestLambdaConstruct', () => {
   test('synthesises as expected', () => {
     /* test if number of resources are correctly synthesised */
-    template.resourceCountIs('AWS::Lambda::LayerVersion', 2)
-    template.resourceCountIs('AWS::Lambda::Function', 4)
+    template.resourceCountIs('AWS::Lambda::LayerVersion', 1)
+    template.resourceCountIs('AWS::Lambda::Function', 3)
     template.resourceCountIs('AWS::SQS::Queue', 1)
   })
 })
@@ -130,9 +116,6 @@ describe('TestLambdaConstruct', () => {
     template.hasOutput('testLambdaLayerLambdaLayerArn', {})
     template.hasOutput('testLambdaLambdaArn', {})
     template.hasOutput('testLambdaLambdaName', {})
-    template.hasOutput('testLambdaLayerPythonLambdaLayerArn', {})
-    template.hasOutput('testLambdaPythonLambdaArn', {})
-    template.hasOutput('testLambdaPythonLambdaName', {})
     template.hasOutput('testLambdaEdgeEdgeArn', {})
     template.hasOutput('testLambdaEdgeEdgeFunctionArn', {})
     template.hasOutput('testLambdaEdgeEdgeFunctionName', {})
@@ -148,14 +131,6 @@ describe('TestLambdaConstruct', () => {
     })
   })
 
-  test('provisions new python layer as expected', () => {
-    template.hasResourceProperties('AWS::Lambda::LayerVersion', {
-      CompatibleRuntimes: ['python3.8'],
-      Description: 'test-lambda-layer-python',
-      LayerName: 'test-lambda-layer-python-test',
-    })
-  })
-
   test('provisions new lambda as expected', () => {
     template.hasResourceProperties('AWS::Lambda::Function', {
       Environment: {
@@ -167,21 +142,6 @@ describe('TestLambdaConstruct', () => {
       Handler: 'index.lambda_handler',
       MemorySize: 1024,
       Runtime: 'nodejs14.x',
-      Timeout: 60,
-    })
-  })
-
-  test('provisions new python lambda as expected', () => {
-    template.hasResourceProperties('AWS::Lambda::Function', {
-      Environment: {
-        Variables: {
-          REGION: 'us-east-1',
-        },
-      },
-      FunctionName: 'test-lambda-python-test',
-      Handler: 'index.handler',
-      MemorySize: 1024,
-      Runtime: 'python3.8',
       Timeout: 60,
     })
   })

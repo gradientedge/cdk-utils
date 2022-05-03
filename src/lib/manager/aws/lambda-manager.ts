@@ -1,4 +1,3 @@
-import * as pylambda from '@aws-cdk/aws-lambda-python-alpha'
 import * as cdk from 'aws-cdk-lib'
 import * as ec2 from 'aws-cdk-lib/aws-ec2'
 import * as efs from 'aws-cdk-lib/aws-efs'
@@ -47,94 +46,6 @@ export class LambdaManager {
     utils.createCfnOutput(`${id}-lambdaLayerArn`, scope, lambdaLayer.layerVersionArn)
 
     return lambdaLayer
-  }
-
-  /**
-   * @summary Method to create a lambda layer (python)
-   * @param {string} id scoped id of the resource
-   * @param {common.CommonConstruct} scope scope in which this resource is defined
-   * @param {string} entry path to layer source
-   */
-  public createPythonLambdaLayer(id: string, scope: common.CommonConstruct, entry: string) {
-    const lambdaLayer = new pylambda.PythonLayerVersion(scope, `${id}`, {
-      compatibleRuntimes: [lambda.Runtime.PYTHON_3_8],
-      description: `${id}`,
-      entry: entry,
-      layerVersionName: `${id}-${scope.props.stage}`,
-    })
-
-    utils.createCfnOutput(`${id}-lambdaLayerArn`, scope, lambdaLayer.layerVersionArn)
-
-    return lambdaLayer
-  }
-
-  /**
-   * @summary Method to create a lambda function (python)
-   * @param {string} id scoped id of the resource
-   * @param {common.CommonConstruct} scope scope in which this resource is defined
-   * @param {types.LambdaProps} props
-   * @param {iam.Role | iam.CfnRole} role
-   * @param {lambda.ILayerVersion[]} layers
-   * @param {string} entry path to lambda source
-   * @param {string?} index
-   * @param {string?} handler
-   * @param {Map<string, string>?} environment
-   * @param {ec2.IVpc?} vpc
-   * @param {ec2.ISecurityGroup[]?} securityGroups
-   * @param {efs.IAccessPoint?} accessPoint
-   * @param {string?} mountPath
-   * @param {ec2.SubnetSelection?} vpcSubnets
-   */
-
-  public createPythonLambdaFunction(
-    id: string,
-    scope: common.CommonConstruct,
-    props: types.LambdaProps,
-    role: iam.Role | iam.CfnRole,
-    layers: lambda.ILayerVersion[],
-    entry: string,
-    index?: string,
-    handler?: string,
-    environment?: any,
-    vpc?: ec2.IVpc,
-    securityGroups?: ec2.ISecurityGroup[],
-    accessPoint?: efs.IAccessPoint,
-    mountPath?: string,
-    vpcSubnets?: ec2.SubnetSelection
-  ) {
-    if (!props) throw `Lambda props undefined`
-
-    const functionName = `${props.functionName}-${scope.props.stage}`
-    const lambdaFunction = new pylambda.PythonFunction(scope, `${id}`, {
-      ...props,
-      ...{
-        allowPublicSubnet: !!vpc,
-        functionName: functionName,
-        index: index,
-        handler: handler,
-        runtime: lambda.Runtime.PYTHON_3_8,
-        entry: entry,
-        environment: {
-          REGION: scope.props.region,
-          ...environment,
-        },
-        filesystem: accessPoint
-          ? lambda.FileSystem.fromEfsAccessPoint(accessPoint, mountPath || '/mnt/msg')
-          : undefined,
-        layers: layers,
-        reservedConcurrentExecutions: props.reservedConcurrentExecutions,
-        role: role instanceof iam.Role ? role : undefined,
-        securityGroups: securityGroups,
-        timeout: props.timeoutInSecs ? cdk.Duration.seconds(props.timeoutInSecs) : cdk.Duration.minutes(1),
-        vpc: vpc,
-        vpcSubnets: vpcSubnets,
-      },
-    })
-
-    utils.createCfnOutput(`${id}-lambdaArn`, scope, lambdaFunction.functionArn)
-    utils.createCfnOutput(`${id}-lambdaName`, scope, lambdaFunction.functionName)
-
-    return lambdaFunction
   }
 
   /**
