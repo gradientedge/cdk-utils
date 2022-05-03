@@ -55,7 +55,7 @@ jobs:
           files: coverage/junit.xml
       - name: Publish Code Coverage
         run: npx codecov
-      - uses: actions/upload-artifact@v2
+      - uses: actions/upload-artifact@v3
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && success() }}
         with:
           name: docs-artifact
@@ -94,7 +94,7 @@ jobs:
       - name: Install Packages
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
         run: yarn install --frozen-lockfile
-      - uses: actions/download-artifact@v2
+      - uses: actions/download-artifact@v3
         with:
           name: docs-artifact
           path: ./api-docs/
