@@ -401,7 +401,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
       'application/json': [
         'Action=Publish',
         `TargetArn=$util.urlEncode('${this.apiDestinedRestApi.topic.topicArn}')`,
-        'Message=$input.body',
+        'Message=$util.urlEncode($input.body)',
         'Version=2010-03-31',
       ].join('&'),
     }
