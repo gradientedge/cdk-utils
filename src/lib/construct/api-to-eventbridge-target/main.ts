@@ -413,14 +413,13 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
    */
   protected createApiDestinedIntegrationResponse() {
     if (!this.props.api.withResource) return
-    this.apiDestinedRestApi.integrationResponse = {
+    this.apiDestinedRestApi.integrationResponse = this.props.api.integrationResponse ?? {
       ...{
         statusCode: '200',
         responseTemplates: {
           'application/json': JSON.stringify({ message: 'Payload Submitted' }),
         },
       },
-      ...this.props.api.integrationResponse,
     }
   }
 
