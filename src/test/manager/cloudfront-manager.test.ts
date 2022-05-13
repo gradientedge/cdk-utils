@@ -198,7 +198,7 @@ describe('TestCloudFrontConstruct', () => {
       FunctionName: 'test-lambda-edge-test',
       Handler: 'index.handler',
       MemorySize: 1024,
-      Runtime: 'nodejs14.x',
+      Runtime: 'nodejs16.x',
       Timeout: 60,
     })
   })
@@ -301,7 +301,7 @@ describe('TestCloudFrontConstruct', () => {
               {
                 EventType: 'origin-request',
                 LambdaFunctionARN: {
-                  Ref: 'testcommonstacktestlambdaedgeFnCurrentVersionD68B801De80736812ed8c9012095c5d4c5bd9973',
+                  Ref: 'testcommonstacktestlambdaedgeFnCurrentVersionD68B801Dcb52f7c389395f80e8e99e70c71da949',
                 },
               },
             ],
@@ -326,6 +326,14 @@ describe('TestCloudFrontConstruct', () => {
         DefaultCacheBehavior: {
           CachePolicyId: '658327ea-f89d-4fab-a63d-7e88639e58f6',
           Compress: true,
+          FunctionAssociations: [
+            {
+              EventType: 'viewer-response',
+              FunctionARN: {
+                'Fn::GetAtt': ['testcommonstacktestfunction800AF467', 'FunctionARN'],
+              },
+            },
+          ],
           TargetOriginId: 'testcommonstacktestedgedistributionOrigin1F7D3F0CB',
           ViewerProtocolPolicy: 'allow-all',
         },

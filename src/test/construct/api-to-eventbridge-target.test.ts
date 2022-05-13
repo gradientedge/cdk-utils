@@ -231,7 +231,7 @@ describe('TestApiToEventBridgeTargetConstruct', () => {
       FunctionName: 'test-api-destined-test',
       Handler: 'lambda.handler',
       MemorySize: 1024,
-      Runtime: 'nodejs14.x',
+      Runtime: 'nodejs16.x',
       Timeout: 60,
     })
   })

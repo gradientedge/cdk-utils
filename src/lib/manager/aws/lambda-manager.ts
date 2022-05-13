@@ -29,6 +29,7 @@ import { CloudFrontManager } from './cloudfront-manager'
  * @see [CDK Lambda Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_lambda-readme.html}
  */
 export class LambdaManager {
+  public static NODEJS_RUNTIME = lambda.Runtime.NODEJS_16_X
   /**
    * @summary Method to create a lambda layer (nodejs)
    * @param {string} id scoped id of the resource
@@ -37,7 +38,7 @@ export class LambdaManager {
    */
   public createLambdaLayer(id: string, scope: common.CommonConstruct, code: lambda.AssetCode) {
     const lambdaLayer = new lambda.LayerVersion(scope, `${id}`, {
-      compatibleRuntimes: [lambda.Runtime.NODEJS_14_X],
+      compatibleRuntimes: [LambdaManager.NODEJS_RUNTIME],
       code: code,
       description: `${id}`,
       layerVersionName: `${id}-${scope.props.stage}`,
@@ -88,7 +89,7 @@ export class LambdaManager {
         allowPublicSubnet: !!vpc,
         functionName: functionName,
         handler: handler || 'index.lambda_handler',
-        runtime: lambda.Runtime.NODEJS_14_X,
+        runtime: LambdaManager.NODEJS_RUNTIME,
         code: code,
         environment: {
           REGION: scope.props.region,
