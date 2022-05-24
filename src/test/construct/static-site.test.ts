@@ -68,6 +68,7 @@ class TestStaticSiteConstruct extends StaticSite {
     this.id = 'test-static-site'
 
     this.initResources()
+    this.s3Manager.createBucketFolders('test-folders', this, this.siteBucket, ['test1', 'test2'])
   }
 }
 
@@ -90,9 +91,9 @@ describe('TestStaticSiteConstruct', () => {
     template.resourceCountIs('AWS::S3::Bucket', 2)
     template.resourceCountIs('AWS::CloudFront::Distribution', 1)
     template.resourceCountIs('AWS::Route53::RecordSet', 1)
-    template.resourceCountIs('AWS::Lambda::Function', 2)
+    template.resourceCountIs('AWS::Lambda::Function', 3)
     template.resourceCountIs('Custom::S3AutoDeleteObjects', 2)
-    template.resourceCountIs('Custom::CDKBucketDeployment', 1)
+    template.resourceCountIs('Custom::CDKBucketDeployment', 3)
     template.resourceCountIs('AWS::CloudFront::Function', 1)
   })
 })

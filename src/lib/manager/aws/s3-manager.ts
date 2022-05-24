@@ -200,4 +200,26 @@ export class S3Manager {
       sources: sources,
     })
   }
+
+  /**
+   *
+   * @param {string} id scoped id of the resource
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {s3.IBucket} bucket bucket to create the folders in
+   * @param {string[]} folders list of folder names to be created in the bucket
+   */
+  public createBucketFolders(id: string, scope: common.CommonConstruct, bucket: s3.IBucket, folders: string[]) {
+    if (!folders || folders.length == 0) {
+      throw `Folder unspecified for ${id}`
+    }
+
+    folders.forEach(folder => {
+      new s3deploy.BucketDeployment(scope, `${id}-${folder}`, {
+        destinationBucket: bucket,
+        destinationKeyPrefix: folder,
+        sources: [s3deploy.Source.data('README.md', `This is the ${folder} folder for ${id}`)],
+        prune: false,
+      })
+    })
+  }
 }
