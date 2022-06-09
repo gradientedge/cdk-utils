@@ -71,7 +71,7 @@ export class CodeBuildManager {
       logging: {
         cloudWatch: {
           logGroup: scope.logManager.createLogGroup(`${id}-project-log-group`, scope, {
-            logGroupName: 'cloudfront-invalidation',
+            logGroupName: `${id}-cloudfront-invalidation`,
           }),
           enabled: true,
         },
