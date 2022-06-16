@@ -115,7 +115,7 @@ class TestCommonConstruct extends common.CommonConstruct {
     )
 
     /* Test SQS Document Policy Creation */
-    const testSqs = this.sqsManager.createQueueService('test-sqs', this, this.props.testSqs)
+    const testSqs = this.sqsManager.createQueue('test-sqs', this, this.props.testSqs)
     const testSqsRule = this.eventManager.createRule('test-sqs-rule', this, this.props.testSqsRule, undefined, [
       new eventsTargets.SqsQueue(testSqs),
     ])

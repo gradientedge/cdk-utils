@@ -15,8 +15,22 @@
     "functionName": "test-lambda",
     "logRetention": 7,
     "memorySize": 1024,
+    "timeoutInSecs": 60
+  },
+  "testLambdaWithDlq": {
+    "functionName": "test-lambda-with-error-handling",
+    "logRetention": 7,
+    "memorySize": 1024,
     "timeoutInSecs": 60,
-    "deadLetterQueueEnabled": true
+    "deadLetterQueueEnabled": true,
+    "dlq": {
+      "visibilityTimeoutInSecs": 300,
+      "receiveMessageWaitTimeInSecs": 20,
+      "retentionInDays": 7
+    },
+    "redriveq": {
+      "maxReceiveCount": 3
+    }
   },
   "testAnotherLambda": {
     "functionName": "test-another-lambda",

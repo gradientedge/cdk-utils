@@ -8,6 +8,7 @@ import * as types from '../../lib/types'
 
 interface TestStackProps extends types.CommonStackProps {
   testLambda: any
+  testLambdaWithDlq: any
   testLambdaEdge: any
   testLambdaPython: any
 }
@@ -40,6 +41,7 @@ class TestCommonStack extends common.CommonStack {
       ...super.determineConstructProps(props),
       ...{
         testLambda: this.node.tryGetContext('testLambda'),
+        testLambdaWithDlq: this.node.tryGetContext('testLambdaWithDlq'),
         testLambdaEdge: this.node.tryGetContext('testLambdaEdge'),
         testLambdaPython: this.node.tryGetContext('testLambdaPython'),
       },
@@ -80,6 +82,14 @@ class TestCommonConstruct extends common.CommonConstruct {
       [testLayer],
       new lambda.AssetCode('src/test/common/nodejs/lib')
     )
+    this.lambdaManager.createLambdaFunction(
+      'test-lambda-with-dlq',
+      this,
+      this.props.testLambdaWithDlq,
+      testRole,
+      [testLayer],
+      new lambda.AssetCode('src/test/common/nodejs/lib')
+    )
 
     this.lambdaManager.createEdgeFunction(
       'test-lambda-edge',
@@ -106,8 +116,8 @@ describe('TestLambdaConstruct', () => {
   test('synthesises as expected', () => {
     /* test if number of resources are correctly synthesised */
     template.resourceCountIs('AWS::Lambda::LayerVersion', 1)
-    template.resourceCountIs('AWS::Lambda::Function', 3)
-    template.resourceCountIs('AWS::SQS::Queue', 1)
+    template.resourceCountIs('AWS::Lambda::Function', 4)
+    template.resourceCountIs('AWS::SQS::Queue', 2)
   })
 })
 
@@ -119,6 +129,14 @@ describe('TestLambdaConstruct', () => {
     template.hasOutput('testLambdaEdgeEdgeArn', {})
     template.hasOutput('testLambdaEdgeEdgeFunctionArn', {})
     template.hasOutput('testLambdaEdgeEdgeFunctionName', {})
+    template.hasOutput('testLambdaWithDlqRdqQueueArn', {})
+    template.hasOutput('testLambdaWithDlqRdqQueueName', {})
+    template.hasOutput('testLambdaWithDlqRdqQueueUrl', {})
+    template.hasOutput('testLambdaWithDlqDlqQueueArn', {})
+    template.hasOutput('testLambdaWithDlqDlqQueueName', {})
+    template.hasOutput('testLambdaWithDlqDlqQueueUrl', {})
+    template.hasOutput('testLambdaWithDlqLambdaArn', {})
+    template.hasOutput('testLambdaWithDlqLambdaName', {})
   })
 })
 
@@ -158,9 +176,21 @@ describe('TestLambdaConstruct', () => {
 })
 
 describe('TestLambdaConstruct', () => {
-  test('provisions dlq as expected', () => {
+  test('provisions new redrive queue as expected', () => {
     template.hasResourceProperties('AWS::SQS::Queue', {
-      MessageRetentionPeriod: 1209600,
+      QueueName: 'test-lambda-with-error-handling-redriveq-test',
+      ReceiveMessageWaitTimeSeconds: 20,
+      VisibilityTimeout: 300,
+      MessageRetentionPeriod: 604800,
+    })
+  })
+
+  test('provisions new dead letter queue as expected', () => {
+    template.hasResourceProperties('AWS::SQS::Queue', {
+      QueueName: 'test-lambda-with-error-handling-dlq-test',
+      ReceiveMessageWaitTimeSeconds: 20,
+      VisibilityTimeout: 300,
+      MessageRetentionPeriod: 604800,
     })
   })
 })
