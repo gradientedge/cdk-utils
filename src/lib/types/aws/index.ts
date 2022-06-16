@@ -524,6 +524,8 @@ export interface EventBusProps extends events.EventBusProps {}
  * @subcategory Properties
  */
 export interface LambdaProps extends lambda.FunctionProps {
+  dlq?: QueueProps
+  redriveq?: QueueProps
   timeoutInSecs?: number
 }
 
@@ -614,8 +616,10 @@ export interface ElastiCacheProps extends elasticache.CfnCacheClusterProps {}
  * @subcategory Properties
  */
 export interface QueueProps extends sqs.QueueProps {
+  maxReceiveCount: number
   visibilityTimeoutInSecs: number
   receiveMessageWaitTimeInSecs: number
   dataKeyReuseInSecs: number
   deliveryDelayInSecs: number
+  retentionInDays: number
 }

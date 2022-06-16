@@ -30,6 +30,7 @@ import { CloudFrontManager } from './cloudfront-manager'
  */
 export class LambdaManager {
   public static NODEJS_RUNTIME = lambda.Runtime.NODEJS_16_X
+
   /**
    * @summary Method to create a lambda layer (nodejs)
    * @param {string} id scoped id of the resource
@@ -83,6 +84,13 @@ export class LambdaManager {
     if (!props) throw `Lambda props undefined`
 
     const functionName = `${props.functionName}-${scope.props.stage}`
+
+    let deadLetterQueue
+    if (props.deadLetterQueueEnabled && props.dlq) {
+      const redriveQueue = scope.sqsManager.createRedriveQueueForLambda(`${id}-rdq`, scope, props)
+      deadLetterQueue = scope.sqsManager.createDeadLetterQueueForLambda(`${id}-dlq`, scope, props, redriveQueue)
+    }
+
     const lambdaFunction = new lambda.Function(scope, `${id}`, {
       ...props,
       ...{
@@ -91,6 +99,7 @@ export class LambdaManager {
         handler: handler || 'index.lambda_handler',
         runtime: LambdaManager.NODEJS_RUNTIME,
         code: code,
+        deadLetterQueue: deadLetterQueue,
         environment: {
           REGION: scope.props.region,
           ...environment,

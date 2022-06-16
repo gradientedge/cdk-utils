@@ -18,7 +18,7 @@ import * as utils from '../../utils'
  *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
  *     super(parent, id, props)
  *     this.props = props
- *     this.sqsManager.createSqsQueue('MySqs', this)
+ *     this.sqsManager.createQueue('MySqs', this, {...})
  *   }
  * }
  *
@@ -30,14 +30,9 @@ export class SqsManager {
    * @param {string} id scoped id of the resource
    * @param {common.CommonConstruct} scope scope in which this resource is defined
    * @param {types.QueueProps} props
-   * @param {sqs.deadLetterQueue} deadLetterQueue
+   * @param {sqs.IQueue} deadLetterQueue
    */
-  public createQueueService(
-    id: string,
-    scope: common.CommonConstruct,
-    props: types.QueueProps,
-    deadLetterQueue?: sqs.DeadLetterQueue
-  ) {
+  public createQueue(id: string, scope: common.CommonConstruct, props: types.QueueProps, deadLetterQueue?: sqs.IQueue) {
     if (!props) throw `Queue props undefined`
 
     const queue = new sqs.Queue(scope, id, {
@@ -46,7 +41,12 @@ export class SqsManager {
       receiveMessageWaitTime: cdk.Duration.seconds(props.receiveMessageWaitTimeInSecs),
       contentBasedDeduplication: props.contentBasedDeduplication,
       dataKeyReuse: cdk.Duration.seconds(props.dataKeyReuseInSecs),
-      deadLetterQueue: deadLetterQueue,
+      deadLetterQueue: !deadLetterQueue
+        ? undefined
+        : {
+            queue: deadLetterQueue,
+            maxReceiveCount: props.maxReceiveCount,
+          },
       deduplicationScope: props.deduplicationScope,
       deliveryDelay: cdk.Duration.seconds(props.deliveryDelayInSecs),
       encryption: props.encryption,
@@ -54,8 +54,8 @@ export class SqsManager {
       fifo: props.fifo,
       fifoThroughputLimit: props.fifoThroughputLimit,
       maxMessageSizeBytes: props.maxMessageSizeBytes,
-      removalPolicy: props.removalPolicy,
-      retentionPeriod: props.retentionPeriod,
+      removalPolicy: props.removalPolicy ?? cdk.RemovalPolicy.DESTROY,
+      retentionPeriod: cdk.Duration.days(props.retentionInDays),
     })
 
     utils.createCfnOutput(`${id}-queueArn`, scope, queue.queueArn)
@@ -63,5 +63,51 @@ export class SqsManager {
     utils.createCfnOutput(`${id}-queueUrl`, scope, queue.queueUrl)
 
     return queue
+  }
+
+  /**
+   * @summary Method to create a redrive queue for a lambda function
+   * @param {string} id scoped id of the resource
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.LambdaProps} props the lambda properties
+   */
+  public createRedriveQueueForLambda(id: string, scope: common.CommonConstruct, props: types.LambdaProps) {
+    if (!props.dlq || !props.redriveq) throw `Redrive queue props for Lambda undefined`
+
+    return this.createQueue(`${id}`, scope, {
+      ...props.dlq,
+      ...props.redriveq,
+      ...{
+        queueName: `${props.functionName}-redriveq-${scope.props.stage}`,
+      },
+    })
+  }
+
+  /**
+   * @summary Method to create a dead letter queue for a lambda function
+   * @param {string} id scoped id of the resource
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.LambdaProps} props the lambda properties
+   * @param {sqs.IQueue} deadLetterQueue
+   */
+  public createDeadLetterQueueForLambda(
+    id: string,
+    scope: common.CommonConstruct,
+    props: types.LambdaProps,
+    deadLetterQueue: sqs.IQueue
+  ) {
+    if (!props.dlq) throw `Dead letter queue props for Lambda undefined`
+
+    return this.createQueue(
+      `${id}`,
+      scope,
+      {
+        ...props.dlq,
+        ...{
+          queueName: `${props.functionName}-dlq-${scope.props.stage}`,
+        },
+      },
+      deadLetterQueue
+    )
   }
 }

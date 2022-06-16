@@ -6,6 +6,7 @@ import * as types from '../../lib/types'
 
 interface TestStackProps extends types.CommonStackProps {
   testSqs: any
+  testLambdaWithDlq: any
 }
 
 const testStackProps = {
@@ -40,6 +41,7 @@ class TestCommonStack extends common.CommonStack {
       ...super.determineConstructProps(props),
       ...{
         testSqs: this.node.tryGetContext('testSqs'),
+        testLambdaWithDlq: this.node.tryGetContext('testLambdaWithDlq'),
       },
     }
   }
@@ -70,7 +72,9 @@ class TestCommonConstruct extends common.CommonConstruct {
   constructor(parent: Construct, name: string, props: TestStackProps) {
     super(parent, name, props)
 
-    this.sqsManager.createQueueService('test-sqs', this, this.props.testSqs)
+    this.sqsManager.createQueue('test-sqs', this, this.props.testSqs)
+    const redriveQueue = this.sqsManager.createRedriveQueueForLambda('test-rdq', this, this.props.testLambdaWithDlq)
+    this.sqsManager.createDeadLetterQueueForLambda('test-dlq', this, this.props.testLambdaWithDlq, redriveQueue)
   }
 }
 
@@ -88,7 +92,7 @@ describe('TestSqsConstruct', () => {
 describe('TestSqsConstruct', () => {
   test('synthesises as expected', () => {
     /* test if number of resources are correctly synthesised */
-    template.resourceCountIs('AWS::SQS::Queue', 1)
+    template.resourceCountIs('AWS::SQS::Queue', 3)
   })
 })
 
@@ -97,6 +101,12 @@ describe('TestSqsConstruct', () => {
     template.hasOutput('testSqsQueueArn', {})
     template.hasOutput('testSqsQueueName', {})
     template.hasOutput('testSqsQueueUrl', {})
+    template.hasOutput('testRdqQueueArn', {})
+    template.hasOutput('testRdqQueueName', {})
+    template.hasOutput('testRdqQueueUrl', {})
+    template.hasOutput('testDlqQueueArn', {})
+    template.hasOutput('testDlqQueueName', {})
+    template.hasOutput('testDlqQueueUrl', {})
   })
 })
 
@@ -106,6 +116,25 @@ describe('TestSqsConstruct', () => {
       QueueName: 'test-sqs',
       ReceiveMessageWaitTimeSeconds: 20,
       VisibilityTimeout: 300,
+      MessageRetentionPeriod: 604800,
+    })
+  })
+
+  test('provisions new redrive queue as expected', () => {
+    template.hasResourceProperties('AWS::SQS::Queue', {
+      QueueName: 'test-lambda-with-error-handling-redriveq-test',
+      ReceiveMessageWaitTimeSeconds: 20,
+      VisibilityTimeout: 300,
+      MessageRetentionPeriod: 604800,
+    })
+  })
+
+  test('provisions new dead letter queue as expected', () => {
+    template.hasResourceProperties('AWS::SQS::Queue', {
+      QueueName: 'test-lambda-with-error-handling-dlq-test',
+      ReceiveMessageWaitTimeSeconds: 20,
+      VisibilityTimeout: 300,
+      MessageRetentionPeriod: 604800,
     })
   })
 })
