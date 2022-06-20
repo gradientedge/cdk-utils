@@ -106,6 +106,7 @@ class TestCommonConstruct extends common.CommonConstruct {
     this.iamManager.statementForRunEcsTask(this, testCluster, testTask)
     this.iamManager.statementForCreateLogStream(this, testLogGroup)
     this.iamManager.statementForPutLogEvent(this, testLogGroup)
+    this.iamManager.statementForReadTableItems()
     this.iamManager.createRoleForCloudTrail('test-role-trail', this, testLogGroup)
     this.iamManager.createRoleForEcsEvent('test-role-ecs-event', this, testCluster, testTask)
     this.iamManager.createRoleForLambda(

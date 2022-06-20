@@ -309,6 +309,25 @@ export class IamManager {
   }
 
   /**
+   * @summary Method to create iam statement to read items from dynamodb table
+   */
+  public statementForReadTableItems() {
+    return new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: [
+        'dynamodb:PartiQLSelect',
+        'dynamodb:DescribeTable',
+        'dynamodb:ListTables',
+        'dynamodb:GetItem',
+        'dynamodb:Scan',
+        'dynamodb:Query',
+        'dynamodb:GetRecords',
+      ],
+      resources: ['*'],
+    })
+  }
+
+  /**
    * @summary Method to create iam statement for cloud trail
    * @param {string} id scoped id of the resource
    * @param {common.CommonConstruct} scope scope in which this resource is defined
