@@ -66,9 +66,10 @@ export class CommonStack extends cdk.Stack {
    */
   protected determineExtraContexts() {
     const extraContexts = this.node.tryGetContext('extraContexts')
+    const debug = this.node.tryGetContext('debug')
 
     if (!extraContexts) {
-      console.info(`No additional contexts provided. Using default context properties from cdk.json`)
+      if (debug) console.debug(`No additional contexts provided. Using default context properties from cdk.json`)
       return
     }
 
@@ -80,7 +81,7 @@ export class CommonStack extends cdk.Stack {
 
       /* read the extra properties */
       const extraContextPropsBuffer = fs.readFileSync(extraContextPath)
-      console.info(`Adding additional contexts provided in ${extraContextPath}`)
+      if (debug) console.debug(`Adding additional contexts provided in ${extraContextPath}`)
 
       /* parse as JSON properties */
       const extraContextProps = JSON.parse(extraContextPropsBuffer)
@@ -101,21 +102,22 @@ export class CommonStack extends cdk.Stack {
     const stage = this.node.tryGetContext('stage')
     const stageContextPath = this.node.tryGetContext('stageContextPath') || 'cdkEnv'
     const stageContextFilePath = `${appRoot.path}/${stageContextPath}/${stage}.json`
+    const debug = this.node.tryGetContext('debug')
 
     if (isDevStage(stage)) {
-      console.info(`Development stage. Using default stage context properties`)
+      if (debug) console.debug(`Development stage. Using default stage context properties`)
     }
 
     /* alert default context usage when extra stage config is missing */
     if (!fs.existsSync(stageContextFilePath)) {
-      console.info(`Stage specific context properties unavailable in path:${stageContextFilePath}`)
-      console.info(`Using default stage context properties for ${stage} stage`)
+      if (debug) console.debug(`Stage specific context properties unavailable in path:${stageContextFilePath}`)
+      if (debug) console.debug(`Using default stage context properties for ${stage} stage`)
       return
     }
 
     /* read the extra properties */
     const stageContextPropsBuffer = fs.readFileSync(stageContextFilePath)
-    console.info(`Adding additional stage contexts provided in ${stageContextFilePath}`)
+    if (debug) console.debug(`Adding additional stage contexts provided in ${stageContextFilePath}`)
 
     /* parse as JSON properties */
     const stageContextProps = JSON.parse(stageContextPropsBuffer)
