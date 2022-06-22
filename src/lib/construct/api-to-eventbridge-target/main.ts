@@ -532,6 +532,12 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
       )
       return
     }
+
+    const accessLogGroup = this.logManager.createLogGroup(`${this.id}-sns-rest-api-access-log`, this, {
+      logGroupName: `/custom/api/${this.id}-destined-rest-api-access-${this.props.stage}`,
+      removalPolicy: cdk.RemovalPolicy.DESTROY,
+    })
+
     this.apiDestinedRestApi.api = new apig.RestApi(this, `${this.id}-sns-rest-api`, {
       ...{
         defaultIntegration: this.apiDestinedRestApi.integration,
@@ -544,6 +550,8 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
           loggingLevel: apig.MethodLoggingLevel.INFO,
           metricsEnabled: true,
           stageName: this.props.stage,
+          accessLogDestination: new apig.LogGroupLogDestination(accessLogGroup),
+          accessLogFormat: apig.AccessLogFormat.jsonWithStandardFields(),
         },
         endpointConfiguration: {
           types: [apig.EndpointType.REGIONAL],
