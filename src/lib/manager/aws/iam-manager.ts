@@ -38,7 +38,9 @@ export class IamManager {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: ['secretsmanager:GetSecretValue'],
-      resources: resourceArns ?? [`arn:aws:secretsmanager:${cdk.Stack.of(scope).region}:${cdk.Stack.of(scope).account}:secret:*`],
+      resources: resourceArns ?? [
+        `arn:aws:secretsmanager:${cdk.Stack.of(scope).region}:${cdk.Stack.of(scope).account}:secret:*`,
+      ],
     })
   }
 
