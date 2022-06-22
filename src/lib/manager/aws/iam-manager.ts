@@ -32,23 +32,27 @@ export class IamManager {
   /**
    * @summary Method to create iam statement to read secrets
    * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {string[]} resourceArns list of ARNs to allow access to
    */
-  public statementForReadSecrets(scope: common.CommonConstruct) {
+  public statementForReadSecrets(scope: common.CommonConstruct, resourceArns?: string[]) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: ['secretsmanager:GetSecretValue'],
-      resources: [`arn:aws:secretsmanager:${cdk.Stack.of(scope).region}:${cdk.Stack.of(scope).account}:secret:*`],
+      resources: resourceArns ?? [
+        `arn:aws:secretsmanager:${cdk.Stack.of(scope).region}:${cdk.Stack.of(scope).account}:secret:*`,
+      ],
     })
   }
 
   /**
    * @summary Method to create iam statement to put events
+   * @param {string[]} resourceArns list of ARNs to allow access to
    */
-  public statementForPutEvents() {
+  public statementForPutEvents(resourceArns?: string[]) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: ['events:PutEvents'],
-      resources: ['*'],
+      resources: resourceArns ?? ['*'],
     })
   }
 
@@ -66,8 +70,9 @@ export class IamManager {
 
   /**
    * @summary Method to create iam statement to read app config
+   * @param {string[]} resourceArns list of ARNs to allow access to
    */
-  public statementForReadAnyAppConfig() {
+  public statementForReadAnyAppConfig(resourceArns?: string[]) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: [
@@ -84,7 +89,7 @@ export class IamManager {
         'appconfig:GetConfiguration',
         'appconfig:ListDeployments',
       ],
-      resources: ['*'],
+      resources: resourceArns ?? ['*'],
     })
   }
 
@@ -103,12 +108,13 @@ export class IamManager {
 
   /**
    * @summary Method to create iam statement to list all s3 buckets
+   * @param {string[]} resourceArns list of ARNs to allow access to
    */
-  public statementForListAllMyBuckets() {
+  public statementForListAllMyBuckets(resourceArns?: string[]) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: ['s3:ListAllMyBuckets'],
-      resources: ['*'],
+      resources: resourceArns ?? ['*'],
     })
   }
 
@@ -116,12 +122,13 @@ export class IamManager {
    * @summary Method to create iam statement to get s3 objects in buckets
    * @param {common.CommonConstruct} scope scope in which this resource is defined
    * @param {s3.IBucket} bucket
+   * @param {string[]} resourceArns list of ARNs to allow access to
    */
-  public statementForGetAnyS3Objects(scope: common.CommonConstruct, bucket: s3.IBucket) {
+  public statementForGetAnyS3Objects(scope: common.CommonConstruct, bucket: s3.IBucket, resourceArns?: string[]) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: ['s3:GetObject', 's3:GetObjectAcl'],
-      resources: [bucket.arnForObjects(`*`)],
+      resources: resourceArns ?? [bucket.arnForObjects(`*`)],
     })
   }
 
@@ -129,12 +136,13 @@ export class IamManager {
    * @summary Method to create iam statement to delete s3 objects in buckets
    * @param {common.CommonConstruct} scope scope in which this resource is defined
    * @param {s3.IBucket} bucket
+   * @param {string[]} resourceArns list of ARNs to allow access to
    */
-  public statementForDeleteAnyS3Objects(scope: common.CommonConstruct, bucket: s3.IBucket) {
+  public statementForDeleteAnyS3Objects(scope: common.CommonConstruct, bucket: s3.IBucket, resourceArns?: string[]) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: ['s3:DeleteObject'],
-      resources: [bucket.arnForObjects(`*`)],
+      resources: resourceArns ?? [bucket.arnForObjects(`*`)],
     })
   }
 
@@ -142,41 +150,45 @@ export class IamManager {
    * @summary Method to create iam statement to write s3 objects in buckets
    * @param {common.CommonConstruct} scope scope in which this resource is defined
    * @param {s3.IBucket} bucket
+   * @param {string[]} resourceArns list of ARNs to allow access to
    */
-  public statementForPutAnyS3Objects(scope: common.CommonConstruct, bucket: s3.IBucket) {
+  public statementForPutAnyS3Objects(scope: common.CommonConstruct, bucket: s3.IBucket, resourceArns?: string[]) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: ['s3:PutObject', 's3:PutObjectAcl'],
-      resources: [bucket.arnForObjects(`*`)],
+      resources: resourceArns ?? [bucket.arnForObjects(`*`)],
     })
   }
 
   /**
    * @summary Method to create iam statement to pass iam role
+   * @param {string[]} resourceArns list of ARNs to allow access to
    */
-  public statementForPassRole() {
+  public statementForPassRole(resourceArns?: string[]) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: ['iam:PassRole'],
-      resources: ['*'],
+      resources: resourceArns ?? ['*'],
     })
   }
 
   /**
    * @summary Method to create iam statement to invalidate cloudfront cache
+   * @param {string[]} resourceArns list of ARNs to allow access to
    */
-  public statementForCloudfrontInvalidation() {
+  public statementForCloudfrontInvalidation(resourceArns?: string[]) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: ['cloudfront:GetInvalidation', 'cloudfront:CreateInvalidation'],
-      resources: ['*'],
+      resources: resourceArns ?? ['*'],
     })
   }
 
   /**
    * @summary Method to create iam policy to invalidate cloudfront cache
+   * @param {string[]} resourceArns list of ARNs to allow access to
    */
-  public policyForCloudfrontInvalidation() {
+  public policyForCloudfrontInvalidation(resourceArns?: string[]) {
     return new iam.PolicyDocument({
       statements: [
         this.statementForCreateAnyLogStream(),
@@ -190,7 +202,7 @@ export class IamManager {
             'ecr:BatchCheckLayerAvailability',
             'ecr:GetAuthorizationToken',
           ],
-          resources: ['*'],
+          resources: resourceArns ?? ['*'],
         }),
       ],
     })
@@ -225,12 +237,13 @@ export class IamManager {
 
   /**
    * @summary Method to create iam statement to pass ecs role
+   * @param {string[]} resourceArns list of ARNs to allow access to
    */
-  public statementForEcsPassRole() {
+  public statementForEcsPassRole(resourceArns?: string[]) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: ['iam:PassRole'],
-      resources: ['*'],
+      resources: resourceArns ?? ['*'],
       conditions: { StringLike: { 'iam:PassedToService': 'ecs-tasks.amazonaws.com' } },
     })
   }
@@ -270,12 +283,13 @@ export class IamManager {
 
   /**
    * @summary Method to create iam statement to create any log stream
+   * @param {string[]} resourceArns list of ARNs to allow access to
    */
-  public statementForCreateAnyLogStream() {
+  public statementForCreateAnyLogStream(resourceArns?: string[]) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: ['logs:CreateLogStream'],
-      resources: ['*'],
+      resources: resourceArns ?? ['*'],
     })
   }
 
@@ -299,19 +313,21 @@ export class IamManager {
 
   /**
    * @summary Method to create iam statement to write any log events
+   * @param {string[]} resourceArns list of ARNs to allow access to
    */
-  public statementForPutAnyLogEvent() {
+  public statementForPutAnyLogEvent(resourceArns?: string[]) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: ['logs:PutLogEvents'],
-      resources: ['*'],
+      resources: resourceArns ?? ['*'],
     })
   }
 
   /**
    * @summary Method to create iam statement to read items from dynamodb table
+   * @param {string[]} resourceArns list of ARNs to allow access to
    */
-  public statementForReadTableItems() {
+  public statementForReadTableItems(resourceArns?: string[]) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
       actions: [
@@ -323,7 +339,7 @@ export class IamManager {
         'dynamodb:Query',
         'dynamodb:GetRecords',
       ],
-      resources: ['*'],
+      resources: resourceArns ?? ['*'],
     })
   }
 
@@ -483,7 +499,9 @@ export class IamManager {
    * @summary Method to create iam policy for sqs
    * @param {string} id scoped id of the resource
    * @param {common.CommonConstruct} scope scope in which this resource is defined
-   * @param {iam.ServicePrincipal} servicePrinicpal
+   * @param sqsQueue
+   * @param eventBridgeRule
+   * @param servicePrincipals
    */
   public createPolicyForSqsEvent(
     id: string,
@@ -492,7 +510,7 @@ export class IamManager {
     eventBridgeRule: events.IRule,
     servicePrincipals?: iam.ServicePrincipal[]
   ) {
-    const policy = new iam.PolicyDocument({
+    return new iam.PolicyDocument({
       statements: [
         new iam.PolicyStatement({
           actions: ['sqs:*'],
@@ -507,7 +525,5 @@ export class IamManager {
         }),
       ],
     })
-
-    return policy
   }
 }
