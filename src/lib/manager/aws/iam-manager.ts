@@ -350,12 +350,7 @@ export class IamManager {
   public statementForWriteTableItems(resourceArns?: string[]) {
     return new iam.PolicyStatement({
       effect: iam.Effect.ALLOW,
-      actions: [
-        'dynamodb:BatchWriteItem',
-        'dynamodb:DeleteItem',
-        'dynamodb:PutItem',
-        'dynamodb:UpdateItem',
-      ],
+      actions: ['dynamodb:BatchWriteItem', 'dynamodb:DeleteItem', 'dynamodb:PutItem', 'dynamodb:UpdateItem'],
       resources: resourceArns ?? ['*'],
     })
   }
