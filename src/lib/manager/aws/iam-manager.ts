@@ -344,6 +344,23 @@ export class IamManager {
   }
 
   /**
+   * @summary Method to create iam statement to write items from dynamodb table
+   * @param {string[]} resourceArns list of ARNs to allow access to
+   */
+  public statementForWriteTableItems(resourceArns?: string[]) {
+    return new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: [
+        'dynamodb:BatchWriteItem',
+        'dynamodb:DeleteItem',
+        'dynamodb:PutItem',
+        'dynamodb:UpdateItem',
+      ],
+      resources: resourceArns ?? ['*'],
+    })
+  }
+
+  /**
    * @summary Method to create iam statement for cloud trail
    * @param {string} id scoped id of the resource
    * @param {common.CommonConstruct} scope scope in which this resource is defined
