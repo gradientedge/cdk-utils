@@ -49,7 +49,7 @@ jobs:
       - name: Test Packages
         run: yarn validate
       - name: Publish Unit Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v1
+        uses: EnricoMi/publish-unit-test-result-action@v2
         if: ${{ github.event_name == 'push' && success() }}
         with:
           files: coverage/junit.xml
