@@ -11,6 +11,7 @@ import * as logs from 'aws-cdk-lib/aws-logs'
 import * as route53 from 'aws-cdk-lib/aws-route53'
 import * as s3 from 'aws-cdk-lib/aws-s3'
 import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager'
+import * as wafv2 from 'aws-cdk-lib/aws-wafv2'
 import { Construct } from 'constructs'
 import { CommonConstruct } from '../../common'
 import { SiteWithEcsBackendProps } from '../../types'
@@ -65,6 +66,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
   siteDomainNames: string[]
   siteCloudfrontFunction: cloudfront.Function
   siteFunctionAssociations: cloudfront.FunctionAssociation[]
+  siteWebAcl: wafv2.CfnWebACL
 
   constructor(parent: Construct, id: string, props: SiteWithEcsBackendProps) {
     super(parent, id, props)
@@ -95,6 +97,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
     this.createSiteOrigin()
     this.createSiteCloudfrontFunction()
     this.resolveSiteFunctionAssociations()
+    this.createSiteWebAcl()
     this.createDistribution()
     this.createNetworkMappings()
     this.invalidateDistributionCache()
@@ -340,6 +343,16 @@ export class SiteWithEcsBackend extends CommonConstruct {
   }
 
   /**
+   * @summary Method to create WAF
+   * @protected
+   */
+  protected createSiteWebAcl() {
+    if (!this.props.siteWebAcl) throw 'SiteWebAcl props undefined'
+
+    this.siteWebAcl = this.wafManager.createWebAcl(`${this.id}-waf`, this, this.props.siteWebAcl)
+  }
+
+  /**
    * Method to create Site distribution
    * @protected
    */
@@ -352,7 +365,8 @@ export class SiteWithEcsBackend extends CommonConstruct {
       this.siteDomainNames,
       this.siteLogBucket,
       this.siteCertificate,
-      this.siteFunctionAssociations
+      this.siteFunctionAssociations,
+      this.siteWebAcl.attrId
     )
   }
 

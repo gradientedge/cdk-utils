@@ -3,6 +3,7 @@ import * as cloudfront from 'aws-cdk-lib/aws-cloudfront'
 import * as origins from 'aws-cdk-lib/aws-cloudfront-origins'
 import * as route53 from 'aws-cdk-lib/aws-route53'
 import * as s3 from 'aws-cdk-lib/aws-s3'
+import * as wafv2 from 'aws-cdk-lib/aws-wafv2'
 import { Construct } from 'constructs'
 import { CommonConstruct } from '../../common'
 import { StaticSiteProps } from '../../types'
@@ -43,6 +44,7 @@ export class StaticSite extends CommonConstruct {
   siteOriginAccessIdentity: cloudfront.OriginAccessIdentity
   siteCloudfrontFunction: cloudfront.Function
   siteFunctionAssociations: cloudfront.FunctionAssociation[]
+  siteWebAcl: wafv2.CfnWebACL
 
   constructor(parent: Construct, id: string, props: StaticSiteProps) {
     super(parent, id, props)
@@ -63,6 +65,7 @@ export class StaticSite extends CommonConstruct {
     this.createSiteOrigin()
     this.createSiteCloudfrontFunction()
     this.resolveSiteFunctionAssociations()
+    this.createSiteWebAcl()
     this.createSiteDistribution()
     this.createSiteRouteAssets()
     this.deploySite()
@@ -154,6 +157,16 @@ export class StaticSite extends CommonConstruct {
   }
 
   /**
+   * @summary Method to create WAF
+   * @protected
+   */
+  protected createSiteWebAcl() {
+    if (!this.props.siteWebAcl) throw 'SiteWebAcl props undefined'
+
+    this.siteWebAcl = this.wafManager.createWebAcl(`${this.id}-waf`, this, this.props.siteWebAcl)
+  }
+
+  /**
    * @summary Method to create a site cloudfront distribution
    * @protected
    */
@@ -170,7 +183,8 @@ export class StaticSite extends CommonConstruct {
       this.siteOriginAccessIdentity,
       this.siteCertificate,
       this.props.siteAliases,
-      this.siteFunctionAssociations
+      this.siteFunctionAssociations,
+      this.siteWebAcl.attrId
     )
   }
 

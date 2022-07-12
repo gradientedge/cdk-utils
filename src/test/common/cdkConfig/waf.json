@@ -17,5 +17,18 @@
       "metricName": "test-metric",
       "sampledRequestsEnabled": false
     }
+  },
+  "siteWebAcl": {
+    "name": "site-webacl",
+    "defaultAction": {
+      "allow": {},
+      "block": {}
+    },
+    "scope": "CLOUDFRONT",
+    "visibilityConfig": {
+      "cloudWatchMetricsEnabled": true,
+      "metricName": "site-metric",
+      "sampledRequestsEnabled": false
+    }
   }
 }
