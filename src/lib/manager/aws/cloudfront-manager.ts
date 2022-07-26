@@ -61,7 +61,6 @@ export class CloudFrontManager {
    * @param {cloudfront.OriginAccessIdentity?} oai
    * @param {acm.ICertificate?} certificate
    * @param {string[]?} aliases
-   * @param {string?} webAclId
    */
   public createCloudFrontDistribution(
     id: string,
@@ -71,8 +70,7 @@ export class CloudFrontManager {
     logBucket?: s3.IBucket,
     oai?: cloudfront.OriginAccessIdentity,
     certificate?: acm.ICertificate,
-    aliases?: string[],
-    webAclId?: string
+    aliases?: string[]
   ) {
     if (!siteBucket) throw `SiteBucket not defined`
     if (!certificate) throw `Certificate not defined`
@@ -105,7 +103,7 @@ export class CloudFrontManager {
         securityPolicy: cloudfront.SecurityPolicyProtocol.TLS_V1_1_2016,
         sslMethod: cloudfront.SSLMethod.SNI,
       }),
-      webACLId: webAclId,
+      webACLId: props.webACLId,
     })
 
     utils.createCfnOutput(`${id}-distributionId`, scope, distribution.distributionId)
@@ -126,7 +124,6 @@ export class CloudFrontManager {
    * @param {acm.ICertificate?} certificate
    * @param {string[]?} aliases
    * @param {cloudfront.FunctionAssociation?} defaultFunctionAssociations
-   * @param {string?} webAclId
    */
   public createDistributionWithS3Origin(
     id: string,
@@ -138,8 +135,7 @@ export class CloudFrontManager {
     oai?: cloudfront.OriginAccessIdentity,
     certificate?: acm.ICertificate,
     aliases?: string[],
-    defaultFunctionAssociations?: cloudfront.FunctionAssociation[],
-    webAclId?: string
+    defaultFunctionAssociations?: cloudfront.FunctionAssociation[]
   ) {
     const distribution = new cloudfront.Distribution(scope, `${id}`, {
       certificate: certificate,
@@ -165,7 +161,7 @@ export class CloudFrontManager {
       logFilePrefix: props.logFilePrefix ?? `edge/`,
       minimumProtocolVersion: props.minimumProtocolVersion ?? cloudfront.SecurityPolicyProtocol.TLS_V1_2_2021,
       priceClass: props.priceClass ?? cloudfront.PriceClass.PRICE_CLASS_ALL,
-      webAclId: webAclId,
+      webAclId: props.webAclId,
     })
 
     utils.createCfnOutput(`${id}-distributionId`, scope, distribution.distributionId)
@@ -184,7 +180,6 @@ export class CloudFrontManager {
    * @param {s3.IBucket?} logBucket
    * @param {acm.ICertificate?} certificate
    * @param {cloudfront.FunctionAssociation?} defaultFunctionAssociations
-   * @param {string?} webAclId
    */
   public createDistributionWithHttpOrigin(
     id: string,
@@ -194,8 +189,7 @@ export class CloudFrontManager {
     domainNames: string[],
     logBucket?: s3.IBucket,
     certificate?: acm.ICertificate,
-    defaultFunctionAssociations?: cloudfront.FunctionAssociation[],
-    webAclId?: string
+    defaultFunctionAssociations?: cloudfront.FunctionAssociation[]
   ) {
     const distribution = new cloudfront.Distribution(scope, `${id}`, {
       certificate: certificate,
@@ -221,7 +215,7 @@ export class CloudFrontManager {
       logFilePrefix: props.logFilePrefix ?? `edge/`,
       minimumProtocolVersion: props.minimumProtocolVersion ?? cloudfront.SecurityPolicyProtocol.TLS_V1_2_2021,
       priceClass: props.priceClass ?? cloudfront.PriceClass.PRICE_CLASS_ALL,
-      webAclId: webAclId,
+      webAclId: props.webAclId,
     })
 
     utils.createCfnOutput(`${id}-distributionId`, scope, distribution.distributionId)

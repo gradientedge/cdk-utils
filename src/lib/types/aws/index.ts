@@ -75,7 +75,6 @@ export interface SiteWithEcsBackendProps extends CommonStackProps {
   siteSubDomain: string
   siteTask: ecsPatterns.ApplicationLoadBalancedFargateServiceProps
   siteVpc: ec2.VpcProps
-  siteWebAcl?: WafWebACLProps
   useExistingHostedZone: boolean
   nodeEnv: string
   logLevel: string
@@ -99,7 +98,6 @@ export interface StaticSiteProps extends CommonStackProps {
   siteRecordName?: string
   siteSubDomain?: string
   siteAliases?: string[]
-  siteWebAcl?: WafWebACLProps
   useExistingHostedZone: boolean
   nodeEnv: string
   logLevel: string

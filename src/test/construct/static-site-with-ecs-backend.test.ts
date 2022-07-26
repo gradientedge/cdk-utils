@@ -33,7 +33,6 @@ const testStackProps = {
     'src/test/common/cdkConfig/tasks.json',
     'src/test/common/cdkConfig/vpc.json',
     'src/test/common/cdkConfig/function.json',
-    'src/test/common/cdkConfig/waf.json',
   ],
   stageContextPath: 'src/test/common/cdkEnv',
 }
@@ -71,7 +70,6 @@ class TestCommonStack extends common.CommonStack {
         timezone: this.node.tryGetContext('timezone'),
         useExistingHostedZone: this.node.tryGetContext('useExistingHostedZone'),
         siteCloudfrontFunctionProps: this.node.tryGetContext('testSite'),
-        siteWebAcl: this.node.tryGetContext('siteWebAcl'),
       },
     }
   }
@@ -131,7 +129,6 @@ describe('TestSiteWithEcsBackendConstruct', () => {
     template.resourceCountIs('AWS::CloudFront::Distribution', 1)
     template.resourceCountIs('AWS::Lambda::Function', 2)
     template.resourceCountIs('AWS::CloudFront::Function', 1)
-    template.resourceCountIs('AWS::WAFv2::WebACL', 1)
   })
 })
 
@@ -160,8 +157,6 @@ describe('TestSiteWithEcsBackendConstruct', () => {
     template.hasOutput('testSiteARecordARecordDomainName', {})
     template.hasOutput('testSiteCacheInvalidationBuildImageDockerImageArn', {})
     template.hasOutput('testSiteCacheInvalidationProjectLogGroupLogGroupArn', {})
-    template.hasOutput('testSiteWafWebAclId', {})
-    template.hasOutput('testSiteWafWebAclArn', {})
   })
 })
 
@@ -243,9 +238,6 @@ describe('TestSiteWithEcsBackendConstruct', () => {
           AcmCertificateArn: 'arn:aws:acm:us-east-1:123456789:certificate/12345a67-8f85-46da-8441-88c998b4bd64',
           MinimumProtocolVersion: 'TLSv1.2_2021',
           SslSupportMethod: 'sni-only',
-        },
-        WebACLId: {
-          'Fn::GetAtt': ['testsitestacktestsitewaf528BA5DC', 'Id'],
         },
       },
     })
@@ -343,31 +335,6 @@ describe('TestSiteWithEcsBackendConstruct', () => {
       FunctionConfig: {
         Comment: 'test comment',
       },
-    })
-  })
-})
-
-describe('TestSiteWithEcsBackendConstruct', () => {
-  test('provisions new web acl as expected', () => {
-    template.hasResourceProperties('AWS::WAFv2::WebACL', {
-      DefaultAction: {
-        Allow: {},
-        Block: {},
-      },
-      Scope: 'CLOUDFRONT',
-      VisibilityConfig: {
-        CloudWatchMetricsEnabled: true,
-        MetricName: 'site-metric',
-        SampledRequestsEnabled: false,
-      },
-      Description: 'Web Acl for test-site-waf - test stage',
-      Name: 'site-webacl-test',
-      Tags: [
-        {
-          Key: 'service',
-          Value: 'test',
-        },
-      ],
     })
   })
 })
