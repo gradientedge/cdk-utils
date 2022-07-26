@@ -24,7 +24,6 @@ const testStackProps = {
     'src/test/common/cdkConfig/certificates.json',
     'src/test/common/cdkConfig/distributions.json',
     'src/test/common/cdkConfig/function.json',
-    'src/test/common/cdkConfig/waf.json',
   ],
   stageContextPath: 'src/test/common/cdkEnv',
   skipStageForARecords: true,
@@ -54,7 +53,6 @@ class TestCommonStack extends common.CommonStack {
         siteAliases: [`${this.node.tryGetContext('siteSubDomain')}.${this.fullyQualifiedDomain()}`],
         testAttribute: this.node.tryGetContext('testAttribute'),
         siteCloudfrontFunctionProps: this.node.tryGetContext('testStaticSite'),
-        siteWebAcl: this.node.tryGetContext('siteWebAcl'),
       },
     }
   }
@@ -97,7 +95,6 @@ describe('TestStaticSiteConstruct', () => {
     template.resourceCountIs('Custom::S3AutoDeleteObjects', 2)
     template.resourceCountIs('Custom::CDKBucketDeployment', 3)
     template.resourceCountIs('AWS::CloudFront::Function', 1)
-    template.resourceCountIs('AWS::WAFv2::WebACL', 1)
   })
 })
 
@@ -113,8 +110,6 @@ describe('TestStaticSiteConstruct', () => {
     template.hasOutput('testStaticSiteDistributionDistributionId', {})
     template.hasOutput('testStaticSiteDistributionDistributionDomainName', {})
     template.hasOutput('testStaticSiteDomainARecordARecordDomainName', {})
-    template.hasOutput('testStaticSiteWafWebAclId', {})
-    template.hasOutput('testStaticSiteWafWebAclArn', {})
   })
 })
 
@@ -240,9 +235,6 @@ describe('TestStaticSiteConstruct', () => {
           MinimumProtocolVersion: 'TLSv1.2_2021',
           SslSupportMethod: 'sni-only',
         },
-        WebACLId: {
-          'Fn::GetAtt': ['teststaticsitestackteststaticsitewafA33F6917', 'Id'],
-        },
       },
     })
   })
@@ -264,31 +256,6 @@ describe('TestStaticSiteConstruct', () => {
       FunctionConfig: {
         Comment: 'test comment',
       },
-    })
-  })
-})
-
-describe('TestStaticSiteConstruct', () => {
-  test('provisions new web acl as expected', () => {
-    template.hasResourceProperties('AWS::WAFv2::WebACL', {
-      DefaultAction: {
-        Allow: {},
-        Block: {},
-      },
-      Scope: 'CLOUDFRONT',
-      VisibilityConfig: {
-        CloudWatchMetricsEnabled: true,
-        MetricName: 'site-metric',
-        SampledRequestsEnabled: false,
-      },
-      Description: 'Web Acl for test-static-site-waf - test stage',
-      Name: 'site-webacl-test',
-      Tags: [
-        {
-          Key: 'service',
-          Value: 'test',
-        },
-      ],
     })
   })
 })
