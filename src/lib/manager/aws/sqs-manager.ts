@@ -35,12 +35,18 @@ export class SqsManager {
   public createQueue(id: string, scope: common.CommonConstruct, props: types.QueueProps, deadLetterQueue?: sqs.IQueue) {
     if (!props) throw `Queue props undefined`
 
+    console.log(props)
+
     const queue = new sqs.Queue(scope, id, {
       queueName: props.queueName,
-      visibilityTimeout: cdk.Duration.seconds(props.visibilityTimeoutInSecs),
-      receiveMessageWaitTime: cdk.Duration.seconds(props.receiveMessageWaitTimeInSecs),
+      visibilityTimeout: props.visibilityTimeoutInSecs
+        ? cdk.Duration.seconds(props.visibilityTimeoutInSecs)
+        : undefined,
+      receiveMessageWaitTime: props.receiveMessageWaitTimeInSecs
+        ? cdk.Duration.seconds(props.receiveMessageWaitTimeInSecs)
+        : undefined,
       contentBasedDeduplication: props.contentBasedDeduplication,
-      dataKeyReuse: cdk.Duration.seconds(props.dataKeyReuseInSecs),
+      dataKeyReuse: props.dataKeyReuseInSecs ? cdk.Duration.seconds(props.dataKeyReuseInSecs) : undefined,
       deadLetterQueue: !deadLetterQueue
         ? undefined
         : {
@@ -48,7 +54,7 @@ export class SqsManager {
             maxReceiveCount: props.maxReceiveCount,
           },
       deduplicationScope: props.deduplicationScope,
-      deliveryDelay: cdk.Duration.seconds(props.deliveryDelayInSecs),
+      deliveryDelay: props.deliveryDelayInSecs ? cdk.Duration.seconds(props.deliveryDelayInSecs) : undefined,
       encryption: props.encryption,
       encryptionMasterKey: props.encryptionMasterKey,
       fifo: props.fifo,
@@ -72,10 +78,9 @@ export class SqsManager {
    * @param {types.LambdaProps} props the lambda properties
    */
   public createRedriveQueueForLambda(id: string, scope: common.CommonConstruct, props: types.LambdaProps) {
-    if (!props.dlq || !props.redriveq) throw `Redrive queue props for Lambda undefined`
+    if (!props.redriveq) throw `Redrive queue props for Lambda undefined`
 
     return this.createQueue(`${id}`, scope, {
-      ...props.dlq,
       ...props.redriveq,
       ...{
         queueName: `${props.functionName}-redriveq-${scope.props.stage}`,

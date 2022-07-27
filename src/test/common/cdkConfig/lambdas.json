@@ -29,7 +29,10 @@
       "retentionInDays": 7
     },
     "redriveq": {
-      "maxReceiveCount": 3
+      "maxReceiveCount": 3,
+      "visibilityTimeoutInSecs": 300,
+      "receiveMessageWaitTimeInSecs": 20,
+      "retentionInDays": 7
     }
   },
   "testAnotherLambda": {
