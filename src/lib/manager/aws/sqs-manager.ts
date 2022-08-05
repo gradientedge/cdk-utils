@@ -35,8 +35,6 @@ export class SqsManager {
   public createQueue(id: string, scope: common.CommonConstruct, props: types.QueueProps, deadLetterQueue?: sqs.IQueue) {
     if (!props) throw `Queue props undefined`
 
-    console.log(props)
-
     const queue = new sqs.Queue(scope, id, {
       queueName: props.queueName,
       visibilityTimeout: props.visibilityTimeoutInSecs
