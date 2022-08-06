@@ -8,10 +8,9 @@ import * as destinations from 'aws-cdk-lib/aws-lambda-destinations'
 import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager'
 import { Construct } from 'constructs'
 import { CommonConstruct } from '../../common'
+import * as helper from '../../helper'
 import * as types from '../../types'
-import { ApiDestinationEvent } from './api-destination-event'
 import { ApiDestinedLambda } from './api-destined-lambda'
-import { ApiDestinedRestApi } from './api-destined-rest-api'
 
 /**
  * @stability stable
@@ -46,10 +45,10 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
   apiDestinedLambda: types.ApiDestinedLambdaType
 
   /* event related resources */
-  apiEvent: types.ApiDestinationEventType
+  apiEvent: types.ApiToEventBridgeTargetEventType
 
   /* rest restApi related resources */
-  apiDestinedRestApi: types.ApiDestinedRestApiType
+  apiDestinedRestApi: types.ApiToEventBridgeTargetRestApiType
   apiResource: string
 
   constructor(parent: Construct, id: string, props: types.ApiToEventBridgeTargetProps) {
@@ -59,8 +58,8 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
     this.id = id
 
     this.apiDestinedLambda = new ApiDestinedLambda()
-    this.apiEvent = new ApiDestinationEvent()
-    this.apiDestinedRestApi = new ApiDestinedRestApi()
+    this.apiEvent = new helper.ApiToEventbridgeTargetEvent()
+    this.apiDestinedRestApi = new helper.ApiToEventbridgeTargetRestApi()
     this.apiResource = 'notify'
   }
 
@@ -201,7 +200,7 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
   protected createApiDestinedLambdaLayers() {
     if (this.props.api.useExisting) return
     const layers: lambda.LayerVersion[] = []
-    if (this.props.lambda.layerSource) {
+    if (this.props.lambda && this.props.lambda.layerSource) {
       layers.push(
         this.lambdaManager.createLambdaLayer(`${this.id}-lambda-destined-layer`, this, this.props.lambda.layerSource)
       )
@@ -226,7 +225,7 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
    */
   protected createApiDestinedLambdaFunction() {
     if (this.props.api.useExisting) return
-    if (!this.props.lambda.source) throw 'Api Destined Lambda props undefined'
+    if (!this.props.lambda || !this.props.lambda.source) throw 'Api Destined Lambda props undefined'
 
     this.apiDestinedLambda.function = this.lambdaManager.createLambdaFunction(
       `${this.id}-lambda-destined`,
@@ -357,7 +356,7 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
    * @protected
    */
   protected createApiDestinedTopicRole() {
-    this.apiDestinedRestApi.topicRole = new iam.Role(this, `${this.id}-sns-rest-api-role`, {
+    this.apiDestinedRestApi.role = new iam.Role(this, `${this.id}-sns-rest-api-role`, {
       assumedBy: new iam.ServicePrincipal('apigateway.amazonaws.com'),
     })
   }
@@ -377,7 +376,9 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
       this.apiDestinedLambda.function
     )
 
-    this.apiDestinedRestApi.topic.grantPublish(this.apiDestinedRestApi.topicRole)
+    if (this.apiDestinedRestApi.role) {
+      this.apiDestinedRestApi.topic.grantPublish(this.apiDestinedRestApi.role)
+    }
   }
 
   /**
@@ -397,6 +398,7 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
    */
   protected createApiDestinedIntegrationRequestTemplates() {
     if (!this.props.api.withResource) return
+    if (!this.apiDestinedRestApi.topic) throw 'Topic undefined'
     this.apiDestinedRestApi.integrationRequestTemplates = {
       'application/json': [
         'Action=Publish',
@@ -461,7 +463,7 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
       uri: `arn:aws:apigateway:${this.props.region}:sns:path//`,
       options: {
         ...{
-          credentialsRole: this.apiDestinedRestApi.topicRole,
+          credentialsRole: this.apiDestinedRestApi.role,
           requestParameters: this.apiDestinedRestApi.integrationRequestParameters,
           requestTemplates: this.apiDestinedRestApi.integrationRequestTemplates,
           passthroughBehavior: apig.PassthroughBehavior.NEVER,

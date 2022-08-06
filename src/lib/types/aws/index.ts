@@ -242,10 +242,12 @@ export interface GraphQlApiLambdaWithCacheProps extends GraphQlApiLambdaProps {
  * @category cdk-utils.api-to-eventbridge-target
  * @subcategory Types
  */
-export interface ApiDestinationEventType {
+export interface ApiToEventBridgeTargetEventType {
   eventBus: events.IEventBus
+  logGroup: logs.LogGroup
   logGroupFailure: logs.LogGroup
   logGroupSuccess: logs.LogGroup
+  rule: events.Rule
   ruleFailure: events.Rule
   ruleSuccess: events.Rule
 }
@@ -254,7 +256,7 @@ export interface ApiDestinationEventType {
  * @category cdk-utils.api-to-eventbridge-target
  * @subcategory Types
  */
-export interface ApiDestinedRestApiType {
+export interface ApiToEventBridgeTargetRestApiType {
   api: apig.IRestApi
   authoriser?: apig.IAuthorizer
   certificate: acm.ICertificate
@@ -271,8 +273,9 @@ export interface ApiDestinedRestApiType {
   methodResponse: apig.MethodResponse
   resource: apig.Resource
   responseModel: apig.Model
-  topic: sns.ITopic
-  topicRole: iam.Role
+  topic?: sns.ITopic
+  role?: iam.Role
+  policy?: iam.PolicyDocument
 }
 
 /**
@@ -329,8 +332,10 @@ interface ApiToEventBridgeTargetLambdaProps {
  */
 interface ApiToEventBridgeTargetEventProps {
   eventBusName?: string
+  logGroup?: LogProps
   logGroupSuccess?: LogProps
   logGroupFailure?: LogProps
+  rule: EventRuleProps
   ruleSuccess: EventRuleProps
   ruleFailure: EventRuleProps
 }
@@ -344,7 +349,7 @@ export interface ApiToEventBridgeTargetProps extends CommonStackProps {
   apiSubDomain: string
   api: ApiToEventBridgeTargetRestApiProps
   event: ApiToEventBridgeTargetEventProps
-  lambda: ApiToEventBridgeTargetLambdaProps
+  lambda?: ApiToEventBridgeTargetLambdaProps
   logLevel: string
   nodeEnv: string
   timezone: string

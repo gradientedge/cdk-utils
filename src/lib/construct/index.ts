@@ -1,3 +1,4 @@
+export * from './api-to-eventbridge-target'
 export * from './api-to-eventbridge-target-with-sns'
 export * from './graphql-api-lambda'
 export * from './graphql-api-lambda-with-cache'
