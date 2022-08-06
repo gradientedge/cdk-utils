@@ -45,6 +45,7 @@
         "include": [
           "./img/logo.png",
           "./img/ApiToEventBridgeTarget.jpg",
+          "./img/ApiToEventBridgeTargetWithSns.jpg",
           "./img/GraphQLApiLambda.jpg",
           "./theme/styles.css"
         ]
