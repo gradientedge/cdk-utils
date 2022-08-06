@@ -3,7 +3,7 @@ import { Template } from 'aws-cdk-lib/assertions'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import { Construct } from 'constructs'
 import * as common from '../../lib/common'
-import { ApiToEventBridgeTarget } from '../../lib/construct'
+import { ApiToEventBridgeTargetWithSns } from '../../lib/construct'
 import * as types from '../../lib/types'
 
 interface TestStackProps extends types.ApiToEventBridgeTargetProps {}
@@ -69,7 +69,7 @@ class TestCommonStack extends common.CommonStack {
   }
 }
 
-class TestApiToEventBridgeTarget extends ApiToEventBridgeTarget {
+class TestApiToEventBridgeTarget extends ApiToEventBridgeTargetWithSns {
   declare props: TestStackProps
 
   constructor(parent: Construct, id: string, props: TestStackProps) {
