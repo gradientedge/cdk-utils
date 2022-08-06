@@ -19,13 +19,13 @@ import { ApiDestinedRestApi } from './api-destined-rest-api'
  * @subcategory construct
  * @classdesc Provides a construct to create and deploy API Gateway invocations to EventBridge
  *
- * <b>Architecture</b> ![Architecture](./ApiToEventBridgeTarget.jpg)
+ * <b>Architecture</b> ![Architecture](./ApiToEventBridgeTargetWithSns.jpg)
  *
  * @example
- * import { ApiToEventBridgeTarget, ApiToEventBridgeTargetProps } '@gradientedge/cdk-utils'
+ * import { ApiToEventBridgeTargetWithSns, ApiToEventBridgeTargetProps } '@gradientedge/cdk-utils'
  * import { Construct } from 'constructs'
  *
- * class CustomConstruct extends ApiToEventBridgeTarget {
+ * class CustomConstruct extends ApiToEventBridgeTargetWithSns {
  *   constructor(parent: Construct, id: string, props: ApiToEventBridgeTargetProps) {
  *     super(parent, id, props)
  *     this.props = props
@@ -35,7 +35,7 @@ import { ApiDestinedRestApi } from './api-destined-rest-api'
  * }
  *
  */
-export class ApiToEventBridgeTarget extends CommonConstruct {
+export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
   props: types.ApiToEventBridgeTargetProps
   id: string
 
