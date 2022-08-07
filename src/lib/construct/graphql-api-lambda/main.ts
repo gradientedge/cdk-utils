@@ -125,7 +125,7 @@ export class GraphQLApiLambda extends CommonConstruct {
    */
   protected createLambdaPolicy() {
     this.graphQLApiLambdaPolicy = new iam.PolicyDocument({
-      statements: [this.iamManager.statementForReadSecrets(this)],
+      statements: [this.iamManager.statementForCreateAnyLogStream()],
     })
   }
 

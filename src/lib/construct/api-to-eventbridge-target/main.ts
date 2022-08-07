@@ -377,12 +377,13 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
     }
 
     const accessLogGroup = this.logManager.createLogGroup(`${this.id}-rest-api-access-log`, this, {
-      logGroupName: `/custom/api/${this.id}-rest-api-access-${this.props.stage}`,
+      logGroupName: `/custom/api/${this.id}-rest-api-access`,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     })
 
     this.apiToEventBridgeTargetRestApi.api = new apig.RestApi(this, `${this.id}-rest-api`, {
       ...{
+        cloudWatchRole: this.props.api.restApi?.cloudWatchRole ?? true,
         defaultIntegration: this.apiToEventBridgeTargetRestApi.integration,
         defaultMethodOptions: {
           methodResponses: [
@@ -391,7 +392,8 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
           ],
         },
         deployOptions: {
-          dataTraceEnabled: true,
+          tracingEnabled: this.props.api.restApi?.deployOptions?.tracingEnabled,
+          dataTraceEnabled: this.props.api.restApi?.deployOptions?.dataTraceEnabled,
           description: `${this.id} - ${this.props.stage} stage`,
           loggingLevel: apig.MethodLoggingLevel.INFO,
           metricsEnabled: true,
@@ -409,7 +411,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
         },
         restApiName: `${this.id}-rest-api-${this.props.stage}`,
       },
-      ...this.props.api,
+      ...this.props.api.restApi,
     })
     this.addCfnOutput(`${this.id}-restApiId`, this.apiToEventBridgeTargetRestApi.api.restApiId)
     this.addCfnOutput(`${this.id}-restApiRootResourceId`, this.apiToEventBridgeTargetRestApi.api.root.resourceId)

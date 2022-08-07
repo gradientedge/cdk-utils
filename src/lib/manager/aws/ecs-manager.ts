@@ -40,6 +40,11 @@ export class EcsManager {
     const ecsCluster = new ecs.Cluster(scope, `${id}`, {
       clusterName: `${props.clusterName}-${scope.props.stage}`,
       vpc: vpc,
+      defaultCloudMapNamespace: props.defaultCloudMapNamespace,
+      capacity: props.capacity,
+      enableFargateCapacityProviders: props.enableFargateCapacityProviders,
+      containerInsights: props.containerInsights,
+      executeCommandConfiguration: props.executeCommandConfiguration,
     })
 
     utils.createCfnOutput(`${id}-clusterArn`, scope, ecsCluster.clusterArn)

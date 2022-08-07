@@ -162,7 +162,7 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
   protected createApiDestinedLambdaPolicy() {
     if (this.props.api.useExisting) return
     this.apiDestinedLambda.policy = new iam.PolicyDocument({
-      statements: [this.iamManager.statementForReadSecrets(this), this.iamManager.statementForPutEvents()],
+      statements: [this.iamManager.statementForPutEvents([this.apiEvent.eventBus.eventBusArn])],
     })
   }
 
@@ -536,7 +536,7 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
     }
 
     const accessLogGroup = this.logManager.createLogGroup(`${this.id}-sns-rest-api-access-log`, this, {
-      logGroupName: `/custom/api/${this.id}-destined-rest-api-access-${this.props.stage}`,
+      logGroupName: `/custom/api/${this.id}-destined-rest-api-access`,
       removalPolicy: cdk.RemovalPolicy.DESTROY,
     })
 

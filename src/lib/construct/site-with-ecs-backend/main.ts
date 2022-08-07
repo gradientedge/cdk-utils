@@ -177,7 +177,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
    */
   protected createEcsPolicy() {
     this.siteEcsPolicy = new iam.PolicyDocument({
-      statements: [this.iamManager.statementForReadSecrets(this)],
+      statements: [this.iamManager.statementForCreateAnyLogStream()],
     })
   }
 
