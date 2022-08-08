@@ -532,7 +532,6 @@ export interface LambdaProps extends lambda.FunctionProps {
   dlq?: QueueProps
   redriveq?: QueueProps
   timeoutInSecs?: number
-  tracingConfigMode?: string
 }
 
 /**
