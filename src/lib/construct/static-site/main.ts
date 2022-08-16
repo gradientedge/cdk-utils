@@ -35,7 +35,6 @@ export class StaticSite extends CommonConstruct {
   siteHostedZone: route53.IHostedZone
   siteCertificate: certificateManager.ICertificate
   siteARecord: route53.ARecord
-  siteARecordAlt: route53.ARecord
   siteBucket: s3.IBucket
   siteOrigin: origins.S3Origin
   siteDistribution: cloudfront.Distribution
@@ -64,9 +63,9 @@ export class StaticSite extends CommonConstruct {
     this.createSiteCloudfrontFunction()
     this.resolveSiteFunctionAssociations()
     this.createSiteDistribution()
-    this.invalidateDistributionCache()
     this.createSiteRouteAssets()
     this.deploySite()
+    this.invalidateDistributionCache()
   }
 
   /**
@@ -176,21 +175,6 @@ export class StaticSite extends CommonConstruct {
   }
 
   /**
-   * Method to invalidation the cloudfront distribution cache after a deployment
-   * @protected
-   */
-  protected invalidateDistributionCache() {
-    if (this.props.siteCacheInvalidationDockerFilePath) {
-      this.cloudFrontManager.invalidateCache(
-        `${this.id}-cache-invalidation`,
-        this,
-        this.props.siteCacheInvalidationDockerFilePath,
-        this.siteDistribution.distributionId
-      )
-    }
-  }
-
-  /**
    * @summary Method to create route53 records for static site
    * @protected
    */
@@ -219,5 +203,20 @@ export class StaticSite extends CommonConstruct {
       '',
       true
     )
+  }
+
+  /**
+   * Method to invalidation the cloudfront distribution cache after a deployment
+   * @protected
+   */
+  protected invalidateDistributionCache() {
+    if (this.props.siteCacheInvalidationDockerFilePath) {
+      this.cloudFrontManager.invalidateCache(
+        `${this.id}-cache-invalidation`,
+        this,
+        this.props.siteCacheInvalidationDockerFilePath,
+        this.siteDistribution.distributionId
+      )
+    }
   }
 }
