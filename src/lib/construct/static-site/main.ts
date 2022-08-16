@@ -64,6 +64,7 @@ export class StaticSite extends CommonConstruct {
     this.createSiteCloudfrontFunction()
     this.resolveSiteFunctionAssociations()
     this.createSiteDistribution()
+    this.invalidateDistributionCache()
     this.createSiteRouteAssets()
     this.deploySite()
   }
@@ -172,6 +173,21 @@ export class StaticSite extends CommonConstruct {
       this.props.siteAliases,
       this.siteFunctionAssociations
     )
+  }
+
+  /**
+   * Method to invalidation the cloudfront distribution cache after a deployment
+   * @protected
+   */
+  protected invalidateDistributionCache() {
+    if (this.props.siteCacheInvalidationDockerFilePath) {
+      this.cloudFrontManager.invalidateCache(
+        `${this.id}-cache-invalidation`,
+        this,
+        this.props.siteCacheInvalidationDockerFilePath,
+        this.siteDistribution.distributionId
+      )
+    }
   }
 
   /**

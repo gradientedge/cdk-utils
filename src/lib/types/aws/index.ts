@@ -86,6 +86,7 @@ export interface SiteWithEcsBackendProps extends CommonStackProps {
  * @subcategory Properties
  */
 export interface StaticSiteProps extends CommonStackProps {
+  siteCacheInvalidationDockerFilePath?: string
   siteCreateAltARecord: boolean
   siteCertificate: AcmProps
   siteBucket: S3BucketProps
