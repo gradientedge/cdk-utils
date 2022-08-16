@@ -180,6 +180,7 @@ export class CloudFrontManager {
    * @param {s3.IBucket?} logBucket
    * @param {acm.ICertificate?} certificate
    * @param {cloudfront.FunctionAssociation?} defaultFunctionAssociations
+   * @param {cloudfront.IResponseHeadersPolicy?} responseHeadersPolicy
    */
   public createDistributionWithHttpOrigin(
     id: string,
@@ -189,7 +190,8 @@ export class CloudFrontManager {
     domainNames: string[],
     logBucket?: s3.IBucket,
     certificate?: acm.ICertificate,
-    defaultFunctionAssociations?: cloudfront.FunctionAssociation[]
+    defaultFunctionAssociations?: cloudfront.FunctionAssociation[],
+    responseHeadersPolicy?: cloudfront.IResponseHeadersPolicy
   ) {
     const distribution = new cloudfront.Distribution(scope, `${id}`, {
       certificate: certificate,
@@ -200,6 +202,7 @@ export class CloudFrontManager {
         originRequestPolicy: props.defaultBehavior ? props.defaultBehavior.originRequestPolicy : undefined,
         functionAssociations: defaultFunctionAssociations ?? undefined,
         viewerProtocolPolicy: props.defaultBehavior ? props.defaultBehavior.viewerProtocolPolicy : undefined,
+        responseHeadersPolicy: responseHeadersPolicy ?? undefined,
       },
       additionalBehaviors: props.additionalBehaviors,
       defaultRootObject: props.defaultRootObject,
