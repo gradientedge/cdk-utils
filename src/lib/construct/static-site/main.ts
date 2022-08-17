@@ -37,7 +37,7 @@ export class StaticSite extends CommonConstruct {
   siteARecord: route53.ARecord
   siteBucket: s3.IBucket
   siteOrigin: origins.S3Origin
-  siteDistribution: cloudfront.Distribution
+  siteDistribution: cloudfront.IDistribution
   siteLogBucket: s3.IBucket
   siteOriginAccessIdentity: cloudfront.OriginAccessIdentity
   siteCloudfrontFunction: cloudfront.Function
@@ -62,6 +62,7 @@ export class StaticSite extends CommonConstruct {
     this.createSiteOrigin()
     this.createSiteCloudfrontFunction()
     this.resolveSiteFunctionAssociations()
+    this.createSiteOriginAccessIdentity()
     this.createSiteDistribution()
     this.createSiteRouteAssets()
     this.deploySite()
@@ -152,6 +153,12 @@ export class StaticSite extends CommonConstruct {
       ]
     }
   }
+
+  /**
+   * @summary Method to create a site origin access identity
+   * @protected
+   */
+  protected createSiteOriginAccessIdentity() {}
 
   /**
    * @summary Method to create a site cloudfront distribution

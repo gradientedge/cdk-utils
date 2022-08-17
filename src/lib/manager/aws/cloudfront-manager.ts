@@ -50,8 +50,6 @@ export class CloudFrontManager {
   }
 
   /**
-   * @deprecated Use `createDistributionWithS3Origin` instead
-   *
    * @summary Method to create a cloudfront distribution
    * @param {string} id scoped id of the resource
    * @param {common.CommonConstruct} scope scope in which this resource is defined
