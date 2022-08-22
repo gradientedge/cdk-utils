@@ -102,6 +102,7 @@ export class LambdaManager {
         deadLetterQueue: deadLetterQueue,
         environment: {
           REGION: scope.props.region,
+          LAST_MODIFIED_TS: new Date().toISOString(),
           ...environment,
         },
         filesystem: accessPoint
