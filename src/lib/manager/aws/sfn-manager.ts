@@ -1,3 +1,4 @@
+import * as cdk from 'aws-cdk-lib'
 import * as apig from 'aws-cdk-lib/aws-apigateway'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
@@ -106,6 +107,22 @@ export class SfnManager {
       ...props,
       ...{
         comment: `Choice step for ${props.name} - ${scope.props.stage} stage`,
+      },
+    })
+  }
+
+  /**
+   * @summary Method to create a wait step
+   * @param {string} id scoped id of the resource
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.SfnWaitProps} props
+   */
+  public createWaitStep(id: string, scope: common.CommonConstruct, props: types.SfnWaitProps) {
+    return new sfn.Wait(scope, `${props.name}`, {
+      ...props,
+      ...{
+        comment: `Choice step for ${props.name} - ${scope.props.stage} stage`,
+        time: sfn.WaitTime.duration(cdk.Duration.seconds(props.delayInSeconds)),
       },
     })
   }

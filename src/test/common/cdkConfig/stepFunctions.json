@@ -27,6 +27,10 @@
   "testSubmitStepCreateSomethingElse": {
     "name": "step:Create Something Else"
   },
+  "testSubmitStepWait": {
+    "name": "step:Wait",
+    "delayInSeconds": 10
+  },
   "testSubmitWorkflow": {
     "stateMachineName": "test-workflow",
     "stateMachineType": "STANDARD",

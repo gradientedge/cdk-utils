@@ -18,6 +18,7 @@ interface TestStackProps extends types.CommonStackProps {
   testSubmitStepCreateSomethingParallel: any
   testSubmitStepCreateSomethingNew: any
   testSubmitStepApi: any
+  testSubmitStepWait: any
   testSubmitWorkflow: any
   testAnotherLogGroup: any
 }
@@ -62,6 +63,7 @@ class TestCommonStack extends common.CommonStack {
         testSubmitStepCreateSomethingParallel: this.node.tryGetContext('testSubmitStepCreateSomethingParallel'),
         testSubmitStepCreateSomethingNew: this.node.tryGetContext('testSubmitStepCreateSomethingNew'),
         testSubmitStepApi: this.node.tryGetContext('testSubmitStepApi'),
+        testSubmitStepWait: this.node.tryGetContext('testSubmitStepWait'),
         testAnotherLogGroup: this.node.tryGetContext('testAnotherLogGroup'),
         testSubmitWorkflow: this.node.tryGetContext('testSubmitWorkflow'),
       },
@@ -169,6 +171,7 @@ class TestCommonConstruct extends common.CommonConstruct {
       this,
       this.props.testSubmitStepCreateSomethingParallel
     )
+    const testSubmitStepWait = this.sfnManager.createWaitStep('test-wait-step', this, this.props.testSubmitStepWait)
     const testSubmitStepCreateSomethingNew = this.sfnManager.createPassStep(
       'test-pass-step',
       this,
@@ -183,6 +186,7 @@ class TestCommonConstruct extends common.CommonConstruct {
           .otherwise(testSubmitStepCreateSomethingElse)
           .afterwards()
       )
+      .next(testSubmitStepWait)
       .next(
         testSubmitStepCreateSomethingParallel
           .branch(testSubmitStepCreateSomethingNew)
@@ -258,7 +262,7 @@ describe('TestSfnConstruct', () => {
             {
               'Fn::GetAtt': ['testcommonstacktestlambda5B168AC2', 'Arn'],
             },
-            '","Payload.$":"$"}},"step:Something Validated?":{"Type":"Choice","Comment":"Choice step for step:Something Validated? - test stage","Choices":[{"Variable":"$.detail.id","IsNull":true,"Next":"workflow:Failed"}],"Default":"step:Create Something Else"},"step:Create Something Else":{"Next":"parallel:Create Something","Retry":[{"ErrorEquals":["Lambda.ServiceException","Lambda.AWSLambdaException","Lambda.SdkClientException"],"IntervalSeconds":2,"MaxAttempts":6,"BackoffRate":2}],"Type":"Task","Comment":"Lambda step for step:Create Something Else - test stage","Resource":"arn:',
+            '","Payload.$":"$"}},"step:Something Validated?":{"Type":"Choice","Comment":"Choice step for step:Something Validated? - test stage","Choices":[{"Variable":"$.detail.id","IsNull":true,"Next":"workflow:Failed"}],"Default":"step:Create Something Else"},"step:Create Something Else":{"Next":"step:Wait","Retry":[{"ErrorEquals":["Lambda.ServiceException","Lambda.AWSLambdaException","Lambda.SdkClientException"],"IntervalSeconds":2,"MaxAttempts":6,"BackoffRate":2}],"Type":"Task","Comment":"Lambda step for step:Create Something Else - test stage","Resource":"arn:',
             {
               Ref: 'AWS::Partition',
             },
@@ -266,7 +270,7 @@ describe('TestSfnConstruct', () => {
             {
               'Fn::GetAtt': ['testcommonstacktestlambda5B168AC2', 'Arn'],
             },
-            '","Payload.$":"$"}},"parallel:Create Something":{"Type":"Parallel","Comment":"Parallel step for parallel:Create Something - test stage","Next":"workflow:Complete","Catch":[{"ErrorEquals":["States.ALL"],"Next":"workflow:Failed"}],"Branches":[{"StartAt":"step:Create Something New","States":{"step:Create Something New":{"Type":"Pass","Comment":"Pass step for step:Create Something New - test stage","End":true}}},{"StartAt":"step:Call Some API","States":{"step:Call Some API":{"End":true,"Type":"Task","Comment":"API step for step:Call Some API - test stage","Resource":"arn:',
+            '","Payload.$":"$"}},"step:Wait":{"Type":"Wait","Comment":"Choice step for step:Wait - test stage","Seconds":10,"Next":"parallel:Create Something"},"parallel:Create Something":{"Type":"Parallel","Comment":"Parallel step for parallel:Create Something - test stage","Next":"workflow:Complete","Catch":[{"ErrorEquals":["States.ALL"],"Next":"workflow:Failed"}],"Branches":[{"StartAt":"step:Create Something New","States":{"step:Create Something New":{"Type":"Pass","Comment":"Pass step for step:Create Something New - test stage","End":true}}},{"StartAt":"step:Call Some API","States":{"step:Call Some API":{"End":true,"Type":"Task","Comment":"API step for step:Call Some API - test stage","Resource":"arn:',
             {
               Ref: 'AWS::Partition',
             },

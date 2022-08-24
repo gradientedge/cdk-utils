@@ -164,6 +164,15 @@ export interface SfnChoiceProps extends sfn.ChoiceProps {
  * @category cdk-utils.step-functions-manager
  * @subcategory Properties
  */
+export interface SfnWaitProps extends sfn.WaitProps {
+  name: string
+  delayInSeconds: number
+}
+
+/**
+ * @category cdk-utils.step-functions-manager
+ * @subcategory Properties
+ */
 export interface SfnLambdaInvokeProps extends tasks.LambdaInvokeProps {
   name: string
 }
