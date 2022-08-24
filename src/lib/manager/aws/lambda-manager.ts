@@ -103,6 +103,7 @@ export class LambdaManager {
         environment: {
           REGION: scope.props.region,
           LAST_MODIFIED_TS: new Date().toISOString(),
+          STAGE: scope.props.stage,
           ...environment,
         },
         filesystem: accessPoint
