@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@types/uuid": "^8.3.4",
-    "uuid": "^8.3.2"
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "mkdirp": "^1.0.4",
