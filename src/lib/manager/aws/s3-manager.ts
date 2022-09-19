@@ -214,7 +214,7 @@ export class S3Manager {
     }
 
     folders.forEach(folder => {
-      new s3deploy.BucketDeployment(scope, `${folder}`, {
+      new s3deploy.BucketDeployment(scope, `${id}-${folder}`, {
         destinationBucket: bucket,
         destinationKeyPrefix: folder,
         sources: [s3deploy.Source.data('README.md', `This is the ${folder} folder for ${id}`)],
