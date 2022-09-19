@@ -4,7 +4,7 @@ import * as iam from 'aws-cdk-lib/aws-iam'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import { Construct } from 'constructs'
 import * as common from '../../lib/common'
-import { ApiToLambdaTarget } from '../../lib/construct/api-to-lambda-target'
+import { ApiToLambdaTarget } from '../../lib/construct'
 import * as types from '../../lib/types'
 
 interface TestStackProps extends types.ApiToLambdaTargetProps {
