@@ -1,6 +1,7 @@
 import * as apig from 'aws-cdk-lib/aws-apigateway'
 import * as acm from 'aws-cdk-lib/aws-certificatemanager'
 import * as iam from 'aws-cdk-lib/aws-iam'
+import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as route53 from 'aws-cdk-lib/aws-route53'
 import * as sns from 'aws-cdk-lib/aws-sns'
 import * as types from '../types/aws'
@@ -23,6 +24,7 @@ export class ApiToLambdaTargetRestApi implements types.ApiToLambdaTargetRestApiT
   integrationRequestParameters: { [p: string]: string }
   integrationRequestTemplates: { [p: string]: string }
   integrationResponse: apig.IntegrationResponse
+  lambda: lambda.IFunction
   method: apig.Method
   methodErrorResponse: apig.MethodResponse
   methodResponse: apig.MethodResponse

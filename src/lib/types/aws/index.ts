@@ -305,6 +305,7 @@ export interface ApiToLambdaTargetRestApiType {
   integrationRequestParameters: { [p: string]: string }
   integrationRequestTemplates: { [p: string]: string }
   integrationResponse: apig.IntegrationResponse
+  lambda: lambda.IFunction
   method: apig.Method
   methodErrorResponse: apig.MethodResponse
   methodResponse: apig.MethodResponse
@@ -398,11 +399,15 @@ export interface ApiToEventBridgeTargetProps extends CommonStackProps {
  * @subcategory Properties
  */
 export interface ApiToLambdaTargetRestApiProps {
+  resource: string
   certificate: AcmProps
   restApi: apig.LambdaRestApiProps
   importedRestApiRef?: string
   importedRestApiRootResourceRef?: string
   useExisting: boolean
+  withResource?: boolean
+  methodErrorResponse: apig.MethodResponse
+  methodResponse: apig.MethodResponse
 }
 
 /**

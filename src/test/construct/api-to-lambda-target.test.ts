@@ -51,7 +51,9 @@ class TestCommonStack extends common.CommonStack {
         api: {
           certificate: this.node.tryGetContext('siteCertificate'),
           restApi: this.node.tryGetContext('testRestApi'),
+          withResource: true,
           useExisting: false,
+          resource: 'my-resource',
         },
         lambdaFunctionName: `test-lambda-test`,
         testLambda: this.node.tryGetContext('testLambda'),
@@ -114,7 +116,7 @@ describe('TestApiToLambdaTargetConstruct', () => {
     template.resourceCountIs('AWS::Route53::HostedZone', 0)
     template.resourceCountIs('AWS::ApiGateway::RestApi', 1)
     template.resourceCountIs('AWS::ApiGateway::Stage', 1)
-    template.resourceCountIs('AWS::ApiGateway::Method', 2)
+    template.resourceCountIs('AWS::ApiGateway::Method', 1)
     template.resourceCountIs('AWS::ApiGateway::Resource', 1)
     template.resourceCountIs('AWS::ApiGateway::DomainName', 1)
     template.resourceCountIs('AWS::Route53::RecordSet', 1)
@@ -171,7 +173,7 @@ describe('TestApiToLambdaTargetConstruct', () => {
 describe('TestApiToLambdaTargetConstruct', () => {
   test('provisions api gateway resources as expected', () => {
     template.hasResourceProperties('AWS::ApiGateway::Resource', {
-      PathPart: '{proxy+}',
+      PathPart: 'my-resource',
     })
   })
 })
@@ -179,12 +181,30 @@ describe('TestApiToLambdaTargetConstruct', () => {
 describe('TestApiToLambdaTargetConstruct', () => {
   test('provisions api gateway methods as expected', () => {
     template.hasResourceProperties('AWS::ApiGateway::Method', {
-      HttpMethod: 'ANY',
+      HttpMethod: 'POST',
       AuthorizationType: 'NONE',
       Integration: {
         IntegrationHttpMethod: 'POST',
         Type: 'AWS_PROXY',
       },
+      MethodResponses: [
+        {
+          ResponseParameters: {
+            'method.response.header.Content-Type': true,
+            'method.response.header.Access-Control-Allow-Origin': true,
+            'method.response.header.Access-Control-Allow-Credentials': true,
+          },
+          StatusCode: '200',
+        },
+        {
+          ResponseParameters: {
+            'method.response.header.Content-Type': true,
+            'method.response.header.Access-Control-Allow-Origin': true,
+            'method.response.header.Access-Control-Allow-Credentials': true,
+          },
+          StatusCode: '400',
+        },
+      ],
     })
   })
 })
@@ -194,14 +214,6 @@ describe('TestApiToLambdaTargetConstruct', () => {
     template.hasResourceProperties('AWS::Logs::LogGroup', {
       LogGroupName: '/custom/api/test-rest-api-access-test',
       RetentionInDays: 731,
-    })
-  })
-})
-
-describe('TestApiToLambdaTargetConstruct', () => {
-  test('provisions base path mappings as expected', () => {
-    template.hasResourceProperties('AWS::ApiGateway::BasePathMapping', {
-      BasePath: 'create-order',
     })
   })
 })

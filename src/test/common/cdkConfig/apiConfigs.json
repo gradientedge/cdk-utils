@@ -4,6 +4,7 @@
     "deployOptions": {
       "dataTraceEnabled": true,
       "tracingEnabled": true
-    }
+    },
+    "proxy": false
   }
 }

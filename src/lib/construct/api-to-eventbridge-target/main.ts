@@ -391,6 +391,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
             this.apiToEventBridgeTargetRestApi.methodErrorResponse,
           ],
         },
+        deploy: this.props.api.restApi?.deploy ?? true,
         deployOptions: {
           tracingEnabled: this.props.api.restApi?.deployOptions?.tracingEnabled,
           dataTraceEnabled: this.props.api.restApi?.deployOptions?.dataTraceEnabled,
@@ -505,7 +506,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
   }
 
   /**
-   * @summary Method to create custom restApi domain for Api API
+   * @summary Method to create custom restApi domain for Api
    * @protected
    */
   protected createApiDomain() {
@@ -521,7 +522,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
   }
 
   /**
-   * @summary Method to create base path mappings for Api API
+   * @summary Method to create base path mappings for Api
    * @protected
    */
   protected createApiBasePathMapping() {
@@ -535,7 +536,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
   }
 
   /**
-   * @summary Method to create route53 records for Api API
+   * @summary Method to create route53 records for Api
    * @protected
    */
   protected createApiRouteAssets() {

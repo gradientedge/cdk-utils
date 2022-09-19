@@ -1,5 +1,6 @@
 import * as cdk from 'aws-cdk-lib'
 import * as apig from 'aws-cdk-lib/aws-apigateway'
+import * as iam from 'aws-cdk-lib/aws-iam'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager'
 import { Construct } from 'constructs'
@@ -16,6 +17,7 @@ export class ApiToLambdaTarget extends CommonConstruct {
 
   /* rest restApi related resources */
   apiToLambdaTargetRestApi: types.ApiToLambdaTargetRestApiType
+  apiResource: string
 
   constructor(parent: Construct, id: string, props: types.ApiToLambdaTargetProps) {
     super(parent, id, props)
@@ -35,7 +37,13 @@ export class ApiToLambdaTarget extends CommonConstruct {
     this.resolveCertificate()
 
     /* restApi related resources */
+    this.createApiToLambdaTargetMethodResponse()
+    this.createApiToLambdaTargetMethodErrorResponse()
+    this.resolveApiToLambdaTargetFunction()
     this.createApiToLambdaTargetRestApi()
+    this.createApiToLambdaTargetResource()
+    this.createApiToLambdaTargetIntegration()
+    this.createApiToLambdaTargetResourceMethod()
     this.createApiDomain()
     this.createApiBasePathMapping()
     this.createApiRouteAssets()
@@ -89,6 +97,52 @@ export class ApiToLambdaTarget extends CommonConstruct {
   }
 
   /**
+   * @summary Method to create api integration method response
+   * @protected
+   */
+  protected createApiToLambdaTargetMethodResponse() {
+    if (!this.props.api.withResource) return
+    this.apiToLambdaTargetRestApi.methodResponse = {
+      ...{
+        statusCode: '200',
+        responseParameters: {
+          'method.response.header.Content-Type': true,
+          'method.response.header.Access-Control-Allow-Origin': true,
+          'method.response.header.Access-Control-Allow-Credentials': true,
+        },
+      },
+      ...this.props.api.methodResponse,
+    }
+  }
+
+  /**
+   * @summary Method to create api integration method error response
+   * @protected
+   */
+  protected createApiToLambdaTargetMethodErrorResponse() {
+    if (!this.props.api.withResource) return
+    this.apiToLambdaTargetRestApi.methodErrorResponse = {
+      ...{
+        statusCode: '400',
+        responseParameters: {
+          'method.response.header.Content-Type': true,
+          'method.response.header.Access-Control-Allow-Origin': true,
+          'method.response.header.Access-Control-Allow-Credentials': true,
+        },
+      },
+      ...this.props.api.methodErrorResponse,
+    }
+  }
+
+  protected resolveApiToLambdaTargetFunction() {
+    this.apiToLambdaTargetRestApi.lambda = lambda.Function.fromFunctionName(
+      this,
+      `${this.id}-lambda`,
+      this.props.lambdaFunctionName
+    )
+  }
+
+  /**
    * @summary Method to create rest restApi for Api
    * @protected
    */
@@ -110,6 +164,12 @@ export class ApiToLambdaTarget extends CommonConstruct {
     this.props.api.restApi = {
       ...this.props.api.restApi,
       ...{
+        defaultMethodOptions: {
+          methodResponses: [
+            this.apiToLambdaTargetRestApi.methodResponse,
+            this.apiToLambdaTargetRestApi.methodErrorResponse,
+          ],
+        },
         deployOptions: {
           accessLogDestination: new apig.LogGroupLogDestination(accessLogGroup),
         },
@@ -120,7 +180,7 @@ export class ApiToLambdaTarget extends CommonConstruct {
       `${this.id}-lambda-rest-api`,
       this,
       this.props.api.restApi,
-      lambda.Function.fromFunctionName(this, `${this.id}-lambda`, this.props.lambdaFunctionName)
+      this.apiToLambdaTargetRestApi.lambda
     )
 
     this.addCfnOutput(`${this.id}-restApiId`, this.apiToLambdaTargetRestApi.api.restApiId)
@@ -128,7 +188,59 @@ export class ApiToLambdaTarget extends CommonConstruct {
   }
 
   /**
-   * @summary Method to create custom restApi domain for Api API
+   * @summary Method to create api integration resource
+   * @protected
+   */
+  protected createApiToLambdaTargetResource() {
+    if (!this.props.api.withResource) return
+
+    let rootResource
+    if (this.props.api.withResource && this.props.api.importedRestApiRootResourceRef) {
+      rootResource = apig.Resource.fromResourceAttributes(this, `${this.id}-root-resource`, {
+        resourceId: cdk.Fn.importValue(this.props.api.importedRestApiRootResourceRef),
+        restApi: this.apiToLambdaTargetRestApi.api,
+        path: '/',
+      })
+    } else {
+      rootResource = this.apiToLambdaTargetRestApi.api.root
+    }
+
+    this.apiToLambdaTargetRestApi.resource = rootResource.addResource(this.props.api.resource ?? this.apiResource)
+  }
+
+  /**
+   * @summary Method to create api integration resource method
+   * @protected
+   */
+  protected createApiToLambdaTargetIntegration() {
+    this.apiToLambdaTargetRestApi.integration = new apig.LambdaIntegration(this.apiToLambdaTargetRestApi.lambda)
+    this.apiToLambdaTargetRestApi.lambda.addPermission(`${this.id}-perms`, {
+      principal: new iam.ServicePrincipal('apigateway.amazonaws.com'),
+      sourceArn: this.apiToLambdaTargetRestApi.api.arnForExecuteApi('*'),
+    })
+  }
+
+  /**
+   * @summary Method to create api integration resource method
+   * @protected
+   */
+  protected createApiToLambdaTargetResourceMethod() {
+    if (!this.props.api.withResource) return
+    this.apiToLambdaTargetRestApi.method = this.apiToLambdaTargetRestApi.resource.addMethod(
+      'POST',
+      this.apiToLambdaTargetRestApi.integration,
+      {
+        authorizer: this.apiToLambdaTargetRestApi.authoriser,
+        methodResponses: [
+          this.apiToLambdaTargetRestApi.methodResponse,
+          this.apiToLambdaTargetRestApi.methodErrorResponse,
+        ],
+      }
+    )
+  }
+
+  /**
+   * @summary Method to create custom restApi domain for Api
    * @protected
    */
   protected createApiDomain() {
@@ -144,27 +256,13 @@ export class ApiToLambdaTarget extends CommonConstruct {
   }
 
   /**
-   * @summary Method to create base path mappings for GraphQL API
+   * @summary Method to create base path mappings for Api
    * @protected
    */
   protected createApiBasePathMapping() {
-    const apiRootPaths = this.props.apiRootPaths
-    if (apiRootPaths && apiRootPaths.length > 0) {
-      apiRootPaths.forEach((apiRootPath: string) => {
-        this.apiToLambdaTargetRestApi.basePathMappings.push(
-          new apig.BasePathMapping(this, `${this.id}-base-bath-mapping-${apiRootPath}`, {
-            basePath: apiRootPath,
-            domainName: this.apiToLambdaTargetRestApi.domain,
-            restApi: this.apiToLambdaTargetRestApi.api,
-            stage: this.apiToLambdaTargetRestApi.api.deploymentStage,
-          })
-        )
-      })
-      return
-    }
-
-    // add default mapping if apiRootPaths not set
+    if (this.props.api.useExisting) return
     new apig.BasePathMapping(this, `${this.id}-base-bath-mapping`, {
+      basePath: '',
       domainName: this.apiToLambdaTargetRestApi.domain,
       restApi: this.apiToLambdaTargetRestApi.api,
       stage: this.apiToLambdaTargetRestApi.api.deploymentStage,
