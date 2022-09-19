@@ -42,6 +42,8 @@ export class ApiToLambdaTarget extends CommonConstruct {
     this.resolveApiToLambdaTargetFunction()
     this.createApiToLambdaTargetRestApi()
     this.createApiToLambdaTargetResource()
+    this.createApiToLambdaTargetPolicy()
+    this.createApiToLambdaTargetRole()
     this.createApiToLambdaTargetIntegration()
     this.createApiToLambdaTargetResourceMethod()
     this.createApiDomain()
@@ -208,15 +210,36 @@ export class ApiToLambdaTarget extends CommonConstruct {
     this.apiToLambdaTargetRestApi.resource = rootResource.addResource(this.props.api.resource ?? this.apiResource)
   }
 
+  protected createApiToLambdaTargetPolicy() {
+    this.apiToLambdaTargetRestApi.policy = new iam.PolicyDocument({
+      statements: [
+        this.iamManager.statementForPutEvents(),
+        this.iamManager.statementForInvokeLambda([this.apiToLambdaTargetRestApi.lambda.functionArn]),
+      ],
+    })
+  }
+
+  /**
+   * @summary Method to create a role for api integration
+   * @protected
+   */
+  protected createApiToLambdaTargetRole() {
+    if (!this.apiToLambdaTargetRestApi.policy) throw 'Policy undefined'
+
+    this.apiToLambdaTargetRestApi.role = new iam.Role(this, `${this.id}-rest-api-role`, {
+      assumedBy: new iam.ServicePrincipal('apigateway.amazonaws.com'),
+      inlinePolicies: { policy: this.apiToLambdaTargetRestApi.policy },
+    })
+  }
+
   /**
    * @summary Method to create api integration resource method
    * @protected
    */
   protected createApiToLambdaTargetIntegration() {
-    this.apiToLambdaTargetRestApi.integration = new apig.LambdaIntegration(this.apiToLambdaTargetRestApi.lambda)
-    this.apiToLambdaTargetRestApi.lambda.addPermission(`${this.id}-perms`, {
-      principal: new iam.ServicePrincipal('apigateway.amazonaws.com'),
-      sourceArn: this.apiToLambdaTargetRestApi.api.arnForExecuteApi('*'),
+    this.apiToLambdaTargetRestApi.integration = new apig.LambdaIntegration(this.apiToLambdaTargetRestApi.lambda, {
+      allowTestInvoke: true,
+      credentialsRole: this.apiToLambdaTargetRestApi.role,
     })
   }
 
