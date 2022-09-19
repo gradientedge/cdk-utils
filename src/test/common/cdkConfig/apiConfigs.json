@@ -1,0 +1,9 @@
+{
+  "testRestApi": {
+    "restApiName": "test-rest-api",
+    "deployOptions": {
+      "dataTraceEnabled": true,
+      "tracingEnabled": true
+    }
+  }
+}

@@ -37,7 +37,7 @@ export class ApiManager {
     id: string,
     scope: common.CommonConstruct,
     props: apig.LambdaRestApiProps,
-    lambdaFunction: lambda.Function
+    lambdaFunction: lambda.IFunction
   ) {
     const api = new apig.LambdaRestApi(scope, `${id}`, {
       binaryMediaTypes: props.binaryMediaTypes,

@@ -289,6 +289,33 @@ export interface ApiToEventBridgeTargetRestApiType {
 }
 
 /**
+ * @category cdk-utils.api-to-lambda-target
+ * @subcategory Types
+ */
+export interface ApiToLambdaTargetRestApiType {
+  api: apig.IRestApi
+  authoriser?: apig.IAuthorizer
+  basePathMappings: apig.BasePathMapping[]
+  certificate: acm.ICertificate
+  domain: apig.DomainName
+  errorResponseModel: apig.Model
+  hostedZone: route53.IHostedZone
+  integration: apig.Integration
+  integrationErrorResponse: apig.IntegrationResponse
+  integrationRequestParameters: { [p: string]: string }
+  integrationRequestTemplates: { [p: string]: string }
+  integrationResponse: apig.IntegrationResponse
+  method: apig.Method
+  methodErrorResponse: apig.MethodResponse
+  methodResponse: apig.MethodResponse
+  resource: apig.Resource
+  responseModel: apig.Model
+  topic?: sns.ITopic
+  role?: iam.Role
+  policy?: iam.PolicyDocument
+}
+
+/**
  * @category cdk-utils.api-to-eventbridge-target
  * @subcategory Types
  */
@@ -360,6 +387,33 @@ export interface ApiToEventBridgeTargetProps extends CommonStackProps {
   api: ApiToEventBridgeTargetRestApiProps
   event: ApiToEventBridgeTargetEventProps
   lambda?: ApiToEventBridgeTargetLambdaProps
+  logLevel: string
+  nodeEnv: string
+  timezone: string
+  useExistingHostedZone: boolean
+}
+
+/**
+ * @category cdk-utils.api-to-lambda-target
+ * @subcategory Properties
+ */
+export interface ApiToLambdaTargetRestApiProps {
+  certificate: AcmProps
+  restApi: apig.LambdaRestApiProps
+  importedRestApiRef?: string
+  importedRestApiRootResourceRef?: string
+  useExisting: boolean
+}
+
+/**
+ * @category cdk-utils.api-to-lambda-target
+ * @subcategory Properties
+ */
+export interface ApiToLambdaTargetProps extends CommonStackProps {
+  apiRootPaths?: string[]
+  apiSubDomain: string
+  api: ApiToLambdaTargetRestApiProps
+  lambdaFunctionName: string
   logLevel: string
   nodeEnv: string
   timezone: string
