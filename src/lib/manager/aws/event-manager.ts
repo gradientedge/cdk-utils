@@ -40,7 +40,7 @@ export class EventManager {
       eventBusName: `${props.eventBusName}-${scope.props.stage}`,
     })
 
-    utils.createCfnOutput(`${id}-eventBusName`, scope, eventBus.eventBusName)
+    utils.createCfnOutput(`${id}-eventBusName`, scope, `${props.eventBusName}-${scope.props.stage}`)
     utils.createCfnOutput(`${id}-eventBusArn`, scope, eventBus.eventBusArn)
 
     return eventBus
