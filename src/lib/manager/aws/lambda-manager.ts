@@ -81,7 +81,7 @@ export class LambdaManager {
     mountPath?: string,
     vpcSubnets?: ec2.SubnetSelection
   ) {
-    if (!props) throw `Lambda props undefined`
+    if (!props) throw `Lambda props undefined for ${id}`
 
     const functionName = `${props.functionName}-${scope.props.stage}`
 
