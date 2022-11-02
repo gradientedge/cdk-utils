@@ -201,6 +201,7 @@ export class CloudFrontManager {
         functionAssociations: defaultFunctionAssociations ?? undefined,
         viewerProtocolPolicy: props.defaultBehavior ? props.defaultBehavior.viewerProtocolPolicy : undefined,
         responseHeadersPolicy: responseHeadersPolicy ?? undefined,
+        edgeLambdas: props.defaultBehavior ? props.defaultBehavior.edgeLambdas : undefined,
       },
       additionalBehaviors: props.additionalBehaviors,
       defaultRootObject: props.defaultRootObject,
