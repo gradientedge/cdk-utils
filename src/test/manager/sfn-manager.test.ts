@@ -4,6 +4,7 @@ import * as apig from 'aws-cdk-lib/aws-apigateway'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as sfn from 'aws-cdk-lib/aws-stepfunctions'
+import * as tasks from 'aws-cdk-lib/aws-stepfunctions-tasks'
 import { Construct } from 'constructs'
 import * as common from '../../lib/common'
 import * as types from '../../lib/types'
@@ -17,10 +18,12 @@ interface TestStackProps extends types.CommonStackProps {
   testSubmitStepCreateSomethingElse: any
   testSubmitStepCreateSomethingParallel: any
   testSubmitStepCreateSomethingNew: any
+  testSubmitStepGetItem: any
   testSubmitStepApi: any
   testSubmitStepWait: any
   testSubmitWorkflow: any
   testAnotherLogGroup: any
+  testTable: types.TableProps
 }
 
 const testStackProps = {
@@ -34,6 +37,7 @@ const testStackProps = {
   stackName: 'test',
   stage: 'test',
   extraContexts: [
+    'src/test/common/cdkConfig/dynamodb.json',
     'src/test/common/cdkConfig/lambdas.json',
     'src/test/common/cdkConfig/logs.json',
     'src/test/common/cdkConfig/stepFunctions.json',
@@ -62,10 +66,12 @@ class TestCommonStack extends common.CommonStack {
         testSubmitStepCreateSomethingElse: this.node.tryGetContext('testSubmitStepCreateSomethingElse'),
         testSubmitStepCreateSomethingParallel: this.node.tryGetContext('testSubmitStepCreateSomethingParallel'),
         testSubmitStepCreateSomethingNew: this.node.tryGetContext('testSubmitStepCreateSomethingNew'),
+        testSubmitStepGetItem: this.node.tryGetContext('testSubmitStepGetItem'),
         testSubmitStepApi: this.node.tryGetContext('testSubmitStepApi'),
         testSubmitStepWait: this.node.tryGetContext('testSubmitStepWait'),
         testAnotherLogGroup: this.node.tryGetContext('testAnotherLogGroup'),
         testSubmitWorkflow: this.node.tryGetContext('testSubmitWorkflow'),
+        testTable: this.node.tryGetContext('testTable'),
       },
     }
   }
@@ -160,6 +166,15 @@ class TestCommonConstruct extends common.CommonConstruct {
       this.props.testSubmitStepCreateSomething,
       testLambda
     )
+
+    const testTable = this.dynamodbManager.createTable('test-table', this, this.props.testTable)
+    const testSubmitStepGetItem = this.sfnManager.createDynamoDbGetItemStep(
+      'test-ddb-get-item',
+      this,
+      this.props.testSubmitStepGetItem,
+      testTable,
+      { id: tasks.DynamoAttributeValue.fromString('test') }
+    )
     const testSubmitStepCreateSomethingElse = this.sfnManager.createLambdaStep(
       'test-choice-step-2',
       this,
@@ -191,6 +206,7 @@ class TestCommonConstruct extends common.CommonConstruct {
         testSubmitStepCreateSomethingParallel
           .branch(testSubmitStepCreateSomethingNew)
           .branch(testSubmitStepApi)
+          .branch(testSubmitStepGetItem)
           .addCatch(testSubmitStepFailure)
           .next(testSubmitStepSuccess)
       )
@@ -282,7 +298,15 @@ describe('TestSfnConstruct', () => {
             {
               Ref: 'AWS::URLSuffix',
             },
-            '","Stage":"test","AuthType":"NO_AUTH"}}}}]},"workflow:Complete":{"Type":"Succeed","Comment":"Succeed step for workflow:Complete - test stage"},"workflow:Failed":{"Type":"Fail","Comment":"Fail step for workflow:Failed - test stage"}}}',
+            '","Stage":"test","AuthType":"NO_AUTH"}}}},{"StartAt":"step:Get Item from dynamodb","States":{"step:Get Item from dynamodb":{"End":true,"Type":"Task","Comment":"DynamoDB GetItem step for step:Get Item from dynamodb - test stage","OutputPath":"$.Payload","Resource":"arn:',
+            {
+              Ref: 'AWS::Partition',
+            },
+            ':states:::dynamodb:getItem","Parameters":{"Key":{"id":{"S":"test"}},"TableName":"',
+            {
+              Ref: 'testcommonstacktesttableF9EEAE8E',
+            },
+            '","ConsistentRead":false}}}}]},"workflow:Complete":{"Type":"Succeed","Comment":"Succeed step for workflow:Complete - test stage"},"workflow:Failed":{"Type":"Fail","Comment":"Fail step for workflow:Failed - test stage"}}}',
           ],
         ],
       },

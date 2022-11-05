@@ -15,6 +15,10 @@
     "name": "step:Create Something",
     "outputPath": "$.Payload"
   },
+  "testSubmitStepGetItem": {
+    "name": "step:Get Item from dynamodb",
+    "outputPath": "$.Payload"
+  },
   "testSubmitStepCreateSomethingParallel": {
     "name": "parallel:Create Something"
   },

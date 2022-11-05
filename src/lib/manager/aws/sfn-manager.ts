@@ -1,5 +1,6 @@
 import * as cdk from 'aws-cdk-lib'
 import * as apig from 'aws-cdk-lib/aws-apigateway'
+import * as dynamodb from 'aws-cdk-lib/aws-dynamodb'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as logs from 'aws-cdk-lib/aws-logs'
@@ -7,7 +8,6 @@ import * as sfn from 'aws-cdk-lib/aws-stepfunctions'
 import * as tasks from 'aws-cdk-lib/aws-stepfunctions-tasks'
 import * as common from '../../common'
 import * as types from '../../types'
-import { SfnStateMachineProps } from '../../types'
 import * as utils from '../../utils'
 
 /**
@@ -128,6 +128,34 @@ export class SfnManager {
   }
 
   /**
+   * @summary Method to create a DynamoDB get item step
+   * @param {string} id scoped id of the resource
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.SfnPassProps} props
+   * @param {dynamodb.ITable} table
+   * @param {[key: string]: tasks.DynamoAttributeValue} tableKey
+   */
+  public createDynamoDbGetItemStep(
+    id: string,
+    scope: common.CommonConstruct,
+    props: types.SfnDynamoGetItemProps,
+    table: dynamodb.ITable,
+    tableKey: { [key: string]: tasks.DynamoAttributeValue }
+  ) {
+    if (!props) throw 'Step props undefined'
+    return new tasks.DynamoGetItem(scope, `${props.name}`, {
+      ...props,
+      ...{
+        table: table,
+        key: tableKey,
+        consistentRead: props.consistentRead,
+        resultPath: props.resultPath,
+        comment: `DynamoDB GetItem step for ${props.name} - ${scope.props.stage} stage`,
+      },
+    })
+  }
+
+  /**
    * @summary Method to create a lambda invoke step
    * @param {string} id scoped id of the resource
    * @param {common.CommonConstruct} scope scope in which this resource is defined
@@ -186,7 +214,7 @@ export class SfnManager {
   public createStateMachine(
     id: string,
     scope: common.CommonConstruct,
-    props: SfnStateMachineProps,
+    props: types.SfnStateMachineProps,
     definition: sfn.IChainable,
     logGroup: logs.ILogGroup,
     role?: iam.IRole

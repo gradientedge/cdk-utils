@@ -148,6 +148,14 @@ export interface SfnPassProps extends sfn.PassProps {
  * @category cdk-utils.step-functions-manager
  * @subcategory Properties
  */
+export interface SfnDynamoGetItemProps extends tasks.DynamoGetItemProps {
+  name: string
+}
+
+/**
+ * @category cdk-utils.step-functions-manager
+ * @subcategory Properties
+ */
 export interface SfnParallelProps extends sfn.ParallelProps {
   name: string
 }
