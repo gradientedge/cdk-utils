@@ -341,7 +341,15 @@ describe('TestSfnConstruct', () => {
             {
               Ref: 'testcommonstacktesttableF9EEAE8E',
             },
-            '"}}}}]},"workflow:Complete":{"Type":"Succeed","Comment":"Succeed step for workflow:Complete - test stage"},"workflow:Failed":{"Type":"Fail","Comment":"Fail step for workflow:Failed - test stage"}}}',
+            '"}}}},{"StartAt":"step:Send message to SQS","States":{"step:Send message to SQS":{"End":true,"Type":"Task","Comment":"DynamoDB PutItem step for step:Send message to SQS - test stage","OutputPath":"$.Payload","Resource":"arn:',
+            {
+              Ref: 'AWS::Partition',
+            },
+            ':states:::sqs:sendMessage","Parameters":{"QueueUrl":"',
+            {
+              Ref: 'testcommonstacktestsqs99C34404',
+            },
+            '","MessageGroupId":"test"}}}}]},"workflow:Complete":{"Type":"Succeed","Comment":"Succeed step for workflow:Complete - test stage"},"workflow:Failed":{"Type":"Fail","Comment":"Fail step for workflow:Failed - test stage"}}}',
           ],
         ],
       },
