@@ -19,6 +19,18 @@
     "name": "step:Get Item from dynamodb",
     "outputPath": "$.Payload"
   },
+  "testSubmitStepPutItem": {
+    "name": "step:Put Item into dynamodb",
+    "outputPath": "$.Payload"
+  },
+  "testSubmitStepSendMessage": {
+    "name": "step:Send message to SQS",
+    "outputPath": "$.Payload",
+    "messageBody": {
+      "test": true
+    },
+    "messageGroupId": "test"
+  },
   "testSubmitStepCreateSomethingParallel": {
     "name": "parallel:Create Something"
   },
