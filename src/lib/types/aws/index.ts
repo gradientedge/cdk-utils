@@ -156,6 +156,22 @@ export interface SfnDynamoGetItemProps extends tasks.DynamoGetItemProps {
  * @category cdk-utils.step-functions-manager
  * @subcategory Properties
  */
+export interface SfnDynamoPutItemProps extends tasks.DynamoPutItemProps {
+  name: string
+}
+
+/**
+ * @category cdk-utils.step-functions-manager
+ * @subcategory Properties
+ */
+export interface SfnSqsSendMessageProps extends tasks.SqsSendMessageProps {
+  name: string
+}
+
+/**
+ * @category cdk-utils.step-functions-manager
+ * @subcategory Properties
+ */
 export interface SfnParallelProps extends sfn.ParallelProps {
   name: string
 }

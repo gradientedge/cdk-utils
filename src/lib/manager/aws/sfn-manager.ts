@@ -4,6 +4,7 @@ import * as dynamodb from 'aws-cdk-lib/aws-dynamodb'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as logs from 'aws-cdk-lib/aws-logs'
+import * as sqs from 'aws-cdk-lib/aws-sqs'
 import * as sfn from 'aws-cdk-lib/aws-stepfunctions'
 import * as tasks from 'aws-cdk-lib/aws-stepfunctions-tasks'
 import * as common from '../../common'
@@ -131,9 +132,9 @@ export class SfnManager {
    * @summary Method to create a DynamoDB get item step
    * @param {string} id scoped id of the resource
    * @param {common.CommonConstruct} scope scope in which this resource is defined
-   * @param {types.SfnPassProps} props
-   * @param {dynamodb.ITable} table
-   * @param tableKey
+   * @param {types.SfnDynamoGetItemProps} props
+   * @param {dynamodb.ITable} table The table to get the item from
+   * @param tableKey The table key for query/scan
    */
   public createDynamoDbGetItemStep(
     id: string,
@@ -149,8 +150,91 @@ export class SfnManager {
         table: table,
         key: tableKey,
         consistentRead: props.consistentRead,
+        inputPath: props.inputPath,
+        outputPath: props.outputPath,
         resultPath: props.resultPath,
+        resultSelector: props.resultSelector,
+        timeout: props.timeout,
+        heartbeat: props.heartbeat,
+        integrationPattern: props.integrationPattern,
+        expressionAttributeNames: props.expressionAttributeNames,
+        projectionExpression: props.projectionExpression,
+        returnConsumedCapacity: props.returnConsumedCapacity,
         comment: `DynamoDB GetItem step for ${props.name} - ${scope.props.stage} stage`,
+      },
+    })
+  }
+
+  /**
+   * @summary Method to create a DynamoDB put item step
+   * @param {string} id scoped id of the resource
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.SfnDynamoPutItemProps} props
+   * @param {dynamodb.ITable} table The table to put the item in
+   * @param tableItem The item to add to the table
+   */
+  public createDynamoDbPutItemStep(
+    id: string,
+    scope: common.CommonConstruct,
+    props: types.SfnDynamoPutItemProps,
+    table: dynamodb.ITable,
+    tableItem: { [key: string]: tasks.DynamoAttributeValue }
+  ) {
+    if (!props) throw 'Step props undefined'
+    return new tasks.DynamoPutItem(scope, `${props.name}`, {
+      ...props,
+      ...{
+        table: table,
+        item: tableItem,
+        inputPath: props.inputPath,
+        outputPath: props.outputPath,
+        resultPath: props.resultPath,
+        resultSelector: props.resultSelector,
+        timeout: props.timeout,
+        heartbeat: props.heartbeat,
+        integrationPattern: props.integrationPattern,
+        conditionExpression: props.conditionExpression,
+        expressionAttributeNames: props.expressionAttributeNames,
+        expressionAttributeValues: props.expressionAttributeValues,
+        returnConsumedCapacity: props.returnConsumedCapacity,
+        returnItemCollectionMetrics: props.returnItemCollectionMetrics,
+        returnValues: props.returnValues,
+        comment: `DynamoDB PutItem step for ${props.name} - ${scope.props.stage} stage`,
+      },
+    })
+  }
+
+  /**
+   * @summary Method to send a message to SQS step
+   * @param {string} id scoped id of the resource
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.SfnSqsSendMessageProps} props
+   * @param {sqs.IQueue} queue The queue to send the message to
+   */
+  public createSendSqsMessageStep(
+    id: string,
+    scope: common.CommonConstruct,
+    props: types.SfnSqsSendMessageProps,
+    queue: sqs.IQueue
+  ) {
+    if (!props) throw 'Step props undefined'
+    if (!props.messageBody) throw 'Message body undefined'
+    return new tasks.SqsSendMessage(scope, `${props.name}`, {
+      ...props,
+      ...{
+        queue: queue,
+        messageBody: props.messageBody,
+        messageGroupId: props.messageGroupId,
+        messageDeduplicationId: props.messageDeduplicationId,
+        delay: props.delay,
+        inputPath: props.inputPath,
+        outputPath: props.outputPath,
+        resultPath: props.resultPath,
+        resultSelector: props.resultSelector,
+        timeout: props.timeout,
+        heartbeat: props.heartbeat,
+        integrationPattern: props.integrationPattern,
+        comment: `DynamoDB PutItem step for ${props.name} - ${scope.props.stage} stage`,
       },
     })
   }

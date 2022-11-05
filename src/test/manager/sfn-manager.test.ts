@@ -19,11 +19,14 @@ interface TestStackProps extends types.CommonStackProps {
   testSubmitStepCreateSomethingParallel: any
   testSubmitStepCreateSomethingNew: any
   testSubmitStepGetItem: any
+  testSubmitStepPutItem: any
+  testSubmitStepSendMessage: any
   testSubmitStepApi: any
   testSubmitStepWait: any
   testSubmitWorkflow: any
   testAnotherLogGroup: any
   testTable: types.TableProps
+  testSqs: any
 }
 
 const testStackProps = {
@@ -40,6 +43,7 @@ const testStackProps = {
     'src/test/common/cdkConfig/dynamodb.json',
     'src/test/common/cdkConfig/lambdas.json',
     'src/test/common/cdkConfig/logs.json',
+    'src/test/common/cdkConfig/sqs.json',
     'src/test/common/cdkConfig/stepFunctions.json',
   ],
   stageContextPath: 'src/test/common/cdkEnv',
@@ -67,11 +71,14 @@ class TestCommonStack extends common.CommonStack {
         testSubmitStepCreateSomethingParallel: this.node.tryGetContext('testSubmitStepCreateSomethingParallel'),
         testSubmitStepCreateSomethingNew: this.node.tryGetContext('testSubmitStepCreateSomethingNew'),
         testSubmitStepGetItem: this.node.tryGetContext('testSubmitStepGetItem'),
+        testSubmitStepPutItem: this.node.tryGetContext('testSubmitStepPutItem'),
+        testSubmitStepSendMessage: this.node.tryGetContext('testSubmitStepSendMessage'),
         testSubmitStepApi: this.node.tryGetContext('testSubmitStepApi'),
         testSubmitStepWait: this.node.tryGetContext('testSubmitStepWait'),
         testAnotherLogGroup: this.node.tryGetContext('testAnotherLogGroup'),
         testSubmitWorkflow: this.node.tryGetContext('testSubmitWorkflow'),
         testTable: this.node.tryGetContext('testTable'),
+        testSqs: this.node.tryGetContext('testSqs'),
       },
     }
   }
@@ -92,6 +99,8 @@ class TestInvalidCommonStack extends common.CommonStack {
       ...{
         testLambda: this.node.tryGetContext('testLambda'),
         testAnotherLogGroup: this.node.tryGetContext('testAnotherLogGroup'),
+        testSqs: this.node.tryGetContext('testSqs'),
+        testSubmitStepSendMessage: this.node.tryGetContext('testSubmitStepSendMessage'),
       },
     }
   }
@@ -175,6 +184,23 @@ class TestCommonConstruct extends common.CommonConstruct {
       testTable,
       { id: tasks.DynamoAttributeValue.fromString('test') }
     )
+
+    const testSubmitStepPutItem = this.sfnManager.createDynamoDbPutItemStep(
+      'test-ddb-put-item',
+      this,
+      this.props.testSubmitStepPutItem,
+      testTable,
+      { id: tasks.DynamoAttributeValue.fromString('test-put') }
+    )
+
+    const testSqs = this.sqsManager.createQueue('test-sqs', this, this.props.testSqs)
+    const testSubmitStepSendMessage = this.sfnManager.createSendSqsMessageStep(
+      'test-sqs-send-msg',
+      this,
+      this.props.testSubmitStepSendMessage,
+      testSqs
+    )
+
     const testSubmitStepCreateSomethingElse = this.sfnManager.createLambdaStep(
       'test-choice-step-2',
       this,
@@ -206,7 +232,8 @@ class TestCommonConstruct extends common.CommonConstruct {
         testSubmitStepCreateSomethingParallel
           .branch(testSubmitStepCreateSomethingNew)
           .branch(testSubmitStepApi)
-          .branch(testSubmitStepGetItem)
+          .branch(testSubmitStepGetItem.next(testSubmitStepPutItem))
+          .branch(testSubmitStepSendMessage)
           .addCatch(testSubmitStepFailure)
           .next(testSubmitStepSuccess)
       )
@@ -298,7 +325,7 @@ describe('TestSfnConstruct', () => {
             {
               Ref: 'AWS::URLSuffix',
             },
-            '","Stage":"test","AuthType":"NO_AUTH"}}}},{"StartAt":"step:Get Item from dynamodb","States":{"step:Get Item from dynamodb":{"End":true,"Type":"Task","Comment":"DynamoDB GetItem step for step:Get Item from dynamodb - test stage","OutputPath":"$.Payload","Resource":"arn:',
+            '","Stage":"test","AuthType":"NO_AUTH"}}}},{"StartAt":"step:Get Item from dynamodb","States":{"step:Get Item from dynamodb":{"Next":"step:Put Item into dynamodb","Type":"Task","Comment":"DynamoDB GetItem step for step:Get Item from dynamodb - test stage","OutputPath":"$.Payload","Resource":"arn:',
             {
               Ref: 'AWS::Partition',
             },
@@ -306,7 +333,15 @@ describe('TestSfnConstruct', () => {
             {
               Ref: 'testcommonstacktesttableF9EEAE8E',
             },
-            '","ConsistentRead":false}}}}]},"workflow:Complete":{"Type":"Succeed","Comment":"Succeed step for workflow:Complete - test stage"},"workflow:Failed":{"Type":"Fail","Comment":"Fail step for workflow:Failed - test stage"}}}',
+            '","ConsistentRead":false}},"step:Put Item into dynamodb":{"End":true,"Type":"Task","Comment":"DynamoDB PutItem step for step:Put Item into dynamodb - test stage","OutputPath":"$.Payload","Resource":"arn:',
+            {
+              Ref: 'AWS::Partition',
+            },
+            ':states:::dynamodb:putItem","Parameters":{"Item":{"id":{"S":"test-put"}},"TableName":"',
+            {
+              Ref: 'testcommonstacktesttableF9EEAE8E',
+            },
+            '"}}}}]},"workflow:Complete":{"Type":"Succeed","Comment":"Succeed step for workflow:Complete - test stage"},"workflow:Failed":{"Type":"Fail","Comment":"Fail step for workflow:Failed - test stage"}}}',
           ],
         ],
       },
