@@ -133,7 +133,7 @@ export class SfnManager {
    * @param {common.CommonConstruct} scope scope in which this resource is defined
    * @param {types.SfnPassProps} props
    * @param {dynamodb.ITable} table
-   * @param {[key: string]: tasks.DynamoAttributeValue} tableKey
+   * @param tableKey
    */
   public createDynamoDbGetItemStep(
     id: string,
