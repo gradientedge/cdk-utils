@@ -63,6 +63,7 @@ export class EcsManager {
    * @param {logs.ILogGroup} logGroup
    * @param {ecs.ContainerImage} containerImage
    * @param {Map<string, string>} environment
+   * @param {Map<string, string>} secrets
    */
   public createEcsFargateTask(
     id: string,
@@ -72,7 +73,8 @@ export class EcsManager {
     role: iam.Role,
     logGroup: logs.ILogGroup,
     containerImage: ecs.ContainerImage,
-    environment?: any
+    environment?: any,
+    secrets?: any
   ) {
     if (!props) throw `EcsTask props undefined`
 
@@ -97,6 +99,7 @@ export class EcsManager {
       }),
       memoryLimitMiB: props.memoryMiB ? parseInt(props.memoryMiB) : undefined,
       privileged: false,
+      secrets: secrets,
     })
 
     utils.createCfnOutput(`${id}-taskArn`, scope, ecsTask.taskDefinitionArn)
