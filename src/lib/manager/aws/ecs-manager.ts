@@ -81,11 +81,22 @@ export class EcsManager {
     const ecsTask = new ecs.TaskDefinition(scope, `${id}`, {
       compatibility: ecs.Compatibility.FARGATE,
       cpu: props.cpu,
+      ephemeralStorageGiB: props.ephemeralStorageGiB,
       executionRole: role,
       family: `${props.family}-${scope.props.stage}`,
+      ipcMode: props.ipcMode,
+      inferenceAccelerators: props.inferenceAccelerators,
       memoryMiB: props.memoryMiB,
       networkMode: ecs.NetworkMode.AWS_VPC,
+      pidMode: props.pidMode,
+      placementConstraints: props.placementConstraints,
+      proxyConfiguration: props.proxyConfiguration,
+      runtimePlatform: {
+        operatingSystemFamily: props.runtimePlatform?.operatingSystemFamily ?? ecs.OperatingSystemFamily.LINUX,
+        cpuArchitecture: props.runtimePlatform?.cpuArchitecture ?? ecs.CpuArchitecture.ARM64,
+      },
       taskRole: role,
+      volumes: props.volumes,
     })
 
     ecsTask.addContainer('EcsContainer', {
