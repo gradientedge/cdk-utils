@@ -143,6 +143,7 @@ export class EcsManager {
       desiredCount: props.desiredCount,
       enableECSManagedTags: true,
       serviceName: `${id}-${scope.props.stage}`,
+      certificate: props.certificate,
       cpu: props.cpu,
       loadBalancerName: `${id}-${scope.props.stage}`,
       domainName: props.domainName,
