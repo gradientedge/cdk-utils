@@ -1,8 +1,10 @@
+import * as cdk from 'aws-cdk-lib'
 import * as certificateManager from 'aws-cdk-lib/aws-certificatemanager'
 import * as cloudfront from 'aws-cdk-lib/aws-cloudfront'
 import * as origins from 'aws-cdk-lib/aws-cloudfront-origins'
 import * as ec2 from 'aws-cdk-lib/aws-ec2'
 import * as ecs from 'aws-cdk-lib/aws-ecs'
+import * as ecsPatterns from 'aws-cdk-lib/aws-ecs-patterns'
 import * as elb from 'aws-cdk-lib/aws-elasticloadbalancingv2'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import * as logs from 'aws-cdk-lib/aws-logs'
@@ -241,30 +243,48 @@ export class SiteWithEcsBackend extends CommonConstruct {
    * @protected
    */
   protected createEcsService() {
-    const fargateService = this.ecsManager.createLoadBalancedFargateService(
-      this.id,
-      this,
-      {
-        ...this.props.siteTask,
-        ...{
-          domainName: this.siteInternalDomainName,
-          domainZone: this.siteHostedZone,
-          healthCheck: this.props.siteHealthCheck,
-          taskImageOptions: {
-            ...this.props.siteTask.taskImageOptions,
-            ...{
-              environment: this.siteEcsEnvironment,
-              executionRole: this.siteEcsRole,
-              taskRole: this.siteEcsRole,
-              image: this.siteEcsContainerImage,
-              secrets: this.siteSecrets,
-            },
-          },
-        },
+    const fargateService = new ecsPatterns.ApplicationLoadBalancedFargateService(this, `${this.id}-ecs-service`, {
+      cluster: this.siteEcsCluster,
+      desiredCount: this.props.siteTask.desiredCount,
+      enableECSManagedTags: true,
+      serviceName: `${this.id}-${this.props.stage}`,
+      cpu: this.props.siteTask.cpu,
+      loadBalancerName: `${this.id}-${this.props.stage}`,
+      domainName: this.siteInternalDomainName,
+      domainZone: this.siteHostedZone,
+      listenerPort: this.props.siteTask.listenerPort,
+      memoryLimitMiB: this.props.siteTask.memoryLimitMiB,
+      healthCheckGracePeriod: cdk.Duration.seconds(60),
+      assignPublicIp: true,
+      taskImageOptions: {
+        enableLogging: true,
+        logDriver: ecs.LogDriver.awsLogs({
+          logGroup: this.siteEcsLogGroup,
+          streamPrefix: `${this.id}-${this.props.stage}/ecs`,
+        }),
+        image: this.siteEcsContainerImage,
+        executionRole: this.siteEcsRole,
+        taskRole: this.siteEcsRole,
+        containerPort: this.props.siteTask.taskImageOptions?.containerPort,
+        environment: this.siteEcsEnvironment,
+        secrets: this.siteSecrets,
       },
-      this.siteEcsCluster,
-      this.siteEcsLogGroup
-    )
+    })
+
+    if (this.props.siteHealthCheck) {
+      fargateService.targetGroup.configureHealthCheck({
+        enabled: this.props.siteHealthCheck.enabled ?? true,
+        path: this.props.siteHealthCheck.path ?? '/',
+        port: this.props.siteHealthCheck.port,
+        interval: cdk.Duration.seconds(this.props.siteHealthCheck.intervalInSecs),
+        timeout: cdk.Duration.seconds(this.props.siteHealthCheck.timeoutInSecs),
+        healthyThresholdCount: this.props.siteHealthCheck.healthyThresholdCount,
+        unhealthyThresholdCount: this.props.siteHealthCheck.unhealthyThresholdCount,
+        healthyGrpcCodes: this.props.siteHealthCheck.healthyGrpcCodes,
+        healthyHttpCodes: this.props.siteHealthCheck.healthyHttpCodes,
+        protocol: this.props.siteHealthCheck.protocol,
+      })
+    }
 
     this.siteEcsService = fargateService.service
     this.siteEcsTaskDefinition = fargateService.taskDefinition
