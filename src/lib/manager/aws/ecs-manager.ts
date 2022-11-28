@@ -95,7 +95,7 @@ export class EcsManager {
       proxyConfiguration: props.proxyConfiguration,
       runtimePlatform: {
         operatingSystemFamily: props.runtimePlatform?.operatingSystemFamily ?? ecs.OperatingSystemFamily.LINUX,
-        cpuArchitecture: props.runtimePlatform?.cpuArchitecture ?? ecs.CpuArchitecture.ARM64,
+        cpuArchitecture: props.runtimePlatform?.cpuArchitecture ?? ecs.CpuArchitecture.X86_64,
       },
       taskRole: role,
       volumes: props.volumes,
@@ -153,7 +153,7 @@ export class EcsManager {
       memoryLimitMiB: props.memoryLimitMiB,
       runtimePlatform: {
         operatingSystemFamily: props.runtimePlatform?.operatingSystemFamily ?? ecs.OperatingSystemFamily.LINUX,
-        cpuArchitecture: props.runtimePlatform?.cpuArchitecture ?? ecs.CpuArchitecture.ARM64,
+        cpuArchitecture: props.runtimePlatform?.cpuArchitecture ?? ecs.CpuArchitecture.X86_64,
       },
       serviceName: `${id}-${scope.props.stage}`,
       taskImageOptions: {
