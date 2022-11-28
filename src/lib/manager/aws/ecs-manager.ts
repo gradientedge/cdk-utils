@@ -139,19 +139,23 @@ export class EcsManager {
     if (!props.taskImageOptions) throw `TaskImageOptions for EcsLoadbalanced Fargate Serivice props undefined`
 
     const fargateService = new ecsPatterns.ApplicationLoadBalancedFargateService(scope, `${id}-ecs-service`, {
-      cluster: cluster,
-      desiredCount: props.desiredCount,
-      enableECSManagedTags: true,
-      serviceName: `${id}-${scope.props.stage}`,
+      assignPublicIp: props.assignPublicIp ?? true,
       certificate: props.certificate,
+      cluster: cluster,
       cpu: props.cpu,
-      loadBalancerName: `${id}-${scope.props.stage}`,
+      desiredCount: props.desiredCount,
       domainName: props.domainName,
       domainZone: props.domainZone,
-      listenerPort: props.listenerPort,
-      memoryLimitMiB: props.memoryLimitMiB,
+      enableECSManagedTags: true,
       healthCheckGracePeriod: props.healthCheckGracePeriod ?? cdk.Duration.seconds(60),
-      assignPublicIp: props.assignPublicIp ?? true,
+      listenerPort: props.listenerPort,
+      loadBalancerName: `${id}-${scope.props.stage}`,
+      memoryLimitMiB: props.memoryLimitMiB,
+      runtimePlatform: {
+        operatingSystemFamily: props.runtimePlatform?.operatingSystemFamily ?? ecs.OperatingSystemFamily.LINUX,
+        cpuArchitecture: props.runtimePlatform?.cpuArchitecture ?? ecs.CpuArchitecture.ARM64,
+      },
+      serviceName: `${id}-${scope.props.stage}`,
       taskImageOptions: {
         enableLogging: props.taskImageOptions?.enableLogging ?? true,
         logDriver:
@@ -172,15 +176,15 @@ export class EcsManager {
     if (props.healthCheck) {
       fargateService.targetGroup.configureHealthCheck({
         enabled: props.healthCheck.enabled ?? true,
-        path: props.healthCheck.path ?? '/',
-        port: props.healthCheck.port,
-        interval: props.healthCheck.interval ?? cdk.Duration.seconds(props.healthCheck.intervalInSecs),
-        timeout: props.healthCheck.timeout ?? cdk.Duration.seconds(props.healthCheck.timeoutInSecs),
-        healthyThresholdCount: props.healthCheck.healthyThresholdCount,
-        unhealthyThresholdCount: props.healthCheck.unhealthyThresholdCount,
         healthyGrpcCodes: props.healthCheck.healthyGrpcCodes,
         healthyHttpCodes: props.healthCheck.healthyHttpCodes,
+        healthyThresholdCount: props.healthCheck.healthyThresholdCount,
+        interval: props.healthCheck.interval ?? cdk.Duration.seconds(props.healthCheck.intervalInSecs),
+        path: props.healthCheck.path ?? '/',
+        port: props.healthCheck.port,
         protocol: props.healthCheck.protocol,
+        timeout: props.healthCheck.timeout ?? cdk.Duration.seconds(props.healthCheck.timeoutInSecs),
+        unhealthyThresholdCount: props.healthCheck.unhealthyThresholdCount,
       })
     }
 
