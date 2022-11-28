@@ -1,5 +1,7 @@
+import * as cdk from 'aws-cdk-lib'
 import * as ec2 from 'aws-cdk-lib/aws-ec2'
 import * as ecs from 'aws-cdk-lib/aws-ecs'
+import * as ecsPatterns from 'aws-cdk-lib/aws-ecs-patterns'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import * as logs from 'aws-cdk-lib/aws-logs'
 import * as common from '../../common'
@@ -116,5 +118,71 @@ export class EcsManager {
     utils.createCfnOutput(`${id}-taskArn`, scope, ecsTask.taskDefinitionArn)
 
     return ecsTask
+  }
+
+  /**
+   * @summary Method to create an application loadbalanced ecs fargate task
+   * @param {string} id scoped id of the resource
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.EcsApplicationLoadBalancedFargateServiceProps} props
+   * @param {ecs.ICluster} cluster
+   * @param {logs.ILogGroup} logGroup
+   */
+  public createLoadBalancedFargateService(
+    id: string,
+    scope: common.CommonConstruct,
+    props: types.EcsApplicationLoadBalancedFargateServiceProps,
+    cluster: ecs.ICluster,
+    logGroup: logs.ILogGroup
+  ) {
+    if (!props) throw `EcsLoadbalanced Fargate Serivice props undefined`
+    if (!props.taskImageOptions) throw `TaskImageOptions for EcsLoadbalanced Fargate Serivice props undefined`
+
+    const fargateService = new ecsPatterns.ApplicationLoadBalancedFargateService(scope, `${id}-ecs-service`, {
+      cluster: cluster,
+      desiredCount: props.desiredCount,
+      enableECSManagedTags: true,
+      serviceName: `${id}-${scope.props.stage}`,
+      cpu: props.cpu,
+      loadBalancerName: `${id}-${scope.props.stage}`,
+      domainName: props.domainName,
+      domainZone: props.domainZone,
+      listenerPort: props.listenerPort,
+      memoryLimitMiB: props.memoryLimitMiB,
+      healthCheckGracePeriod: props.healthCheckGracePeriod ?? cdk.Duration.seconds(60),
+      assignPublicIp: props.assignPublicIp ?? true,
+      taskImageOptions: {
+        enableLogging: props.taskImageOptions?.enableLogging ?? true,
+        logDriver:
+          props.taskImageOptions?.logDriver ??
+          ecs.LogDriver.awsLogs({
+            logGroup: logGroup,
+            streamPrefix: `${id}-${scope.props.stage}/ecs`,
+          }),
+        image: props.taskImageOptions.image,
+        executionRole: props.taskImageOptions?.executionRole,
+        taskRole: props.taskImageOptions?.taskRole,
+        containerPort: props.taskImageOptions?.containerPort,
+        environment: props.taskImageOptions?.environment,
+        secrets: props.taskImageOptions?.secrets,
+      },
+    })
+
+    if (props.healthCheck) {
+      fargateService.targetGroup.configureHealthCheck({
+        enabled: props.healthCheck.enabled ?? true,
+        path: props.healthCheck.path ?? '/',
+        port: props.healthCheck.port,
+        interval: props.healthCheck.interval ?? cdk.Duration.seconds(props.healthCheck.intervalInSecs),
+        timeout: props.healthCheck.timeout ?? cdk.Duration.seconds(props.healthCheck.timeoutInSecs),
+        healthyThresholdCount: props.healthCheck.healthyThresholdCount,
+        unhealthyThresholdCount: props.healthCheck.unhealthyThresholdCount,
+        healthyGrpcCodes: props.healthCheck.healthyGrpcCodes,
+        healthyHttpCodes: props.healthCheck.healthyHttpCodes,
+        protocol: props.healthCheck.protocol,
+      })
+    }
+
+    return fargateService
   }
 }

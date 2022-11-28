@@ -589,6 +589,15 @@ export interface EcsClusterProps extends ecs.ClusterProps {}
 export interface EcsTaskProps extends ecs.TaskDefinitionProps {}
 
 /**
+ * @category cdk-utils.ecs-manager
+ * @subcategory Properties
+ */
+export interface EcsApplicationLoadBalancedFargateServiceProps
+  extends ecsPatterns.ApplicationLoadBalancedFargateServiceProps {
+  healthCheck?: HealthCheck
+}
+
+/**
  * @category cdk-utils.eks-manager
  * @subcategory Properties
  */
