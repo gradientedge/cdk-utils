@@ -100,6 +100,7 @@ export class LambdaManager {
         runtime: LambdaManager.NODEJS_RUNTIME,
         code: code,
         deadLetterQueue: deadLetterQueue,
+        architecture: props.architecture ?? lambda.Architecture.ARM_64,
         environment: {
           REGION: scope.props.region,
           LAST_MODIFIED_TS: new Date().toISOString(),
