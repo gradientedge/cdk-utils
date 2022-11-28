@@ -251,6 +251,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
           domainZone: this.siteHostedZone,
           healthCheck: this.props.siteHealthCheck,
           taskImageOptions: {
+            ...this.props.siteTask.taskImageOptions,
             environment: this.siteEcsEnvironment,
             executionRole: this.siteEcsRole,
             taskRole: this.siteEcsRole,
