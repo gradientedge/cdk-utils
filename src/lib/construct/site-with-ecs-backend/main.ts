@@ -252,11 +252,13 @@ export class SiteWithEcsBackend extends CommonConstruct {
           healthCheck: this.props.siteHealthCheck,
           taskImageOptions: {
             ...this.props.siteTask.taskImageOptions,
-            environment: this.siteEcsEnvironment,
-            executionRole: this.siteEcsRole,
-            taskRole: this.siteEcsRole,
-            image: this.siteEcsContainerImage,
-            secrets: this.siteSecrets,
+            ...{
+              environment: this.siteEcsEnvironment,
+              executionRole: this.siteEcsRole,
+              taskRole: this.siteEcsRole,
+              image: this.siteEcsContainerImage,
+              secrets: this.siteSecrets,
+            },
           },
         },
       },
