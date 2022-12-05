@@ -98,6 +98,14 @@ class TestCommonConstruct extends common.CommonConstruct {
       [],
       new lambda.AssetCode('src/test/common/nodejs/lib')
     )
+
+    this.lambdaManager.createLambdaDockerFunction(
+      'test-lambda-docker',
+      this,
+      this.props.testLambda,
+      testRole,
+      lambda.DockerImageCode.fromImageAsset('src/test/common/docker')
+    )
   }
 }
 
@@ -116,7 +124,7 @@ describe('TestLambdaConstruct', () => {
   test('synthesises as expected', () => {
     /* test if number of resources are correctly synthesised */
     template.resourceCountIs('AWS::Lambda::LayerVersion', 1)
-    template.resourceCountIs('AWS::Lambda::Function', 4)
+    template.resourceCountIs('AWS::Lambda::Function', 5)
     template.resourceCountIs('AWS::SQS::Queue', 2)
   })
 })
@@ -137,6 +145,8 @@ describe('TestLambdaConstruct', () => {
     template.hasOutput('testLambdaWithDlqDlqQueueUrl', {})
     template.hasOutput('testLambdaWithDlqLambdaArn', {})
     template.hasOutput('testLambdaWithDlqLambdaName', {})
+    template.hasOutput('testLambdaLambdaDockerArn', {})
+    template.hasOutput('testLambdaLambdaDockerName', {})
   })
 })
 
