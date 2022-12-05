@@ -145,8 +145,8 @@ describe('TestLambdaConstruct', () => {
     template.hasOutput('testLambdaWithDlqDlqQueueUrl', {})
     template.hasOutput('testLambdaWithDlqLambdaArn', {})
     template.hasOutput('testLambdaWithDlqLambdaName', {})
-    template.hasOutput('testLambdaLambdaDockerArn', {})
-    template.hasOutput('testLambdaLambdaDockerName', {})
+    template.hasOutput('testLambdaDockerLambdaArn', {})
+    template.hasOutput('testLambdaDockerLambdaName', {})
   })
 })
 
