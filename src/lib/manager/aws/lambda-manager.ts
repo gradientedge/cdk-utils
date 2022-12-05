@@ -166,4 +166,75 @@ export class LambdaManager {
       mountPath
     )
   }
+
+  /**
+   * @summary Method to create a lambda function (nodejs) with docker image
+   * @param {string} id scoped id of the resource
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.LambdaProps} props
+   * @param {iam.Role | iam.CfnRole} role
+   * @param {lambda.DockerImageCode} code
+   * @param {Map<string, string>?} environment
+   * @param {ec2.IVpc?} vpc
+   * @param {ec2.ISecurityGroup[]?} securityGroups
+   * @param {efs.IAccessPoint?} accessPoint
+   * @param {string?} mountPath
+   * @param {ec2.SubnetSelection?} vpcSubnets
+   */
+  public createLambdaDockerFunction(
+    id: string,
+    scope: common.CommonConstruct,
+    props: types.LambdaProps,
+    role: iam.Role | iam.CfnRole,
+    code: lambda.DockerImageCode,
+    environment?: any,
+    vpc?: ec2.IVpc,
+    securityGroups?: ec2.ISecurityGroup[],
+    accessPoint?: efs.IAccessPoint,
+    mountPath?: string,
+    vpcSubnets?: ec2.SubnetSelection
+  ) {
+    if (!props) throw `Lambda props undefined for ${id}`
+
+    const functionName = `${props.functionName}-${scope.props.stage}`
+
+    let deadLetterQueue
+    if (props.deadLetterQueueEnabled && props.dlq) {
+      const redriveQueue = scope.sqsManager.createRedriveQueueForLambda(`${id}-rdq`, scope, props)
+      deadLetterQueue = scope.sqsManager.createDeadLetterQueueForLambda(`${id}-dlq`, scope, props, redriveQueue)
+    }
+
+    const lambdaFunction = new lambda.DockerImageFunction(scope, `${id}`, {
+      ...props,
+      ...{
+        allowPublicSubnet: !!vpc,
+        functionName: functionName,
+        runtime: LambdaManager.NODEJS_RUNTIME,
+        code: code,
+        deadLetterQueue: deadLetterQueue,
+        architecture: props.architecture ?? lambda.Architecture.ARM_64,
+        environment: {
+          REGION: scope.props.region,
+          LAST_MODIFIED_TS: new Date().toISOString(),
+          STAGE: scope.props.stage,
+          ...environment,
+        },
+        filesystem: accessPoint
+          ? lambda.FileSystem.fromEfsAccessPoint(accessPoint, mountPath || '/mnt/msg')
+          : undefined,
+        reservedConcurrentExecutions: props.reservedConcurrentExecutions,
+        role: role instanceof iam.Role ? role : undefined,
+        securityGroups: securityGroups,
+        timeout: props.timeoutInSecs ? cdk.Duration.seconds(props.timeoutInSecs) : cdk.Duration.minutes(1),
+        vpc: vpc,
+        vpcSubnets: vpcSubnets,
+        tracing: props.tracing,
+      },
+    })
+
+    utils.createCfnOutput(`${id}-lambdaArn`, scope, lambdaFunction.functionArn)
+    utils.createCfnOutput(`${id}-lambdaName`, scope, lambdaFunction.functionName)
+
+    return lambdaFunction
+  }
 }
