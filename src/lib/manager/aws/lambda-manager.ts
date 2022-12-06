@@ -7,6 +7,7 @@ import * as common from '../../common'
 import * as types from '../../types'
 import * as utils from '../../utils'
 import { CloudFrontManager } from './cloudfront-manager'
+import { SsmManager } from './ssm-manager'
 
 /**
  * @stability stable
@@ -103,8 +104,14 @@ export class LambdaManager {
         architecture: props.architecture ?? lambda.Architecture.ARM_64,
         environment: {
           REGION: scope.props.region,
-          LAST_MODIFIED_TS: new Date().toISOString(),
           STAGE: scope.props.stage,
+          LAST_MODIFIED_TS: props.excludeLastModifiedTimestamp
+            ? ''
+            : scope.ssmManager.readStringParameter(
+                `${id}-sm-ts`,
+                scope,
+                `${SsmManager.SECRETS_MODIFIED_TIMESTAMP_PARAM}-${scope.props.stage}`
+              ),
           ...environment,
         },
         filesystem: accessPoint
