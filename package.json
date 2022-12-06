@@ -38,7 +38,7 @@
     "prettier": "npx prettier --check \"**/*.{ts,json,md}\"",
     "prettify": "npx prettier --write \"**/*.{ts,json,md}\"",
     "test": "rimraf coverage && npx jest --ci --runInBand",
-    "upgrade": "ncu -u -x lerna",
+    "update:deps": "ncu -u -x lerna",
     "validate": "yarn prettier && yarn test"
   },
   "husky": {
@@ -47,12 +47,12 @@
     }
   },
   "dependencies": {
-    "@types/lodash": "^4.14.190",
-    "@types/node": "^18.11.9",
+    "@types/lodash": "^4.14.191",
+    "@types/node": "^18.11.11",
     "app-root-path": "^3.1.0",
-    "aws-cdk-lib": "^2.52.0",
-    "aws-sdk": "^2.1262.0",
-    "constructs": "^10.1.173",
+    "aws-cdk-lib": "^2.53.0",
+    "aws-sdk": "^2.1268.0",
+    "constructs": "^10.1.181",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
     "nconf": "^0.12.0",
@@ -61,16 +61,16 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-class-properties": "^7.18.6",
-    "@types/jest": "^29.2.3",
-    "@typescript-eslint/eslint-plugin": "^5.44.0",
-    "@typescript-eslint/parser": "^5.44.0",
+    "@types/jest": "^29.2.4",
+    "@typescript-eslint/eslint-plugin": "^5.45.1",
+    "@typescript-eslint/parser": "^5.45.1",
     "aws-cdk": "*",
     "babel-eslint": "^10.1.0",
     "better-docs": "^2.7.2",
     "codecov": "^3.8.3",
-    "commitizen": "^4.2.5",
+    "commitizen": "^4.2.6",
     "dotenv": "^16.0.3",
-    "eslint": "^8.28.0",
+    "eslint": "^8.29.0",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-import": "^2.26.0",
     "husky": "^8.0.2",
@@ -91,7 +91,7 @@
     "typescript": "4.9.3"
   },
   "optionalDependencies": {
-    "@babel/core": "^7.20.2",
+    "@babel/core": "^7.20.5",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
     "react-dom": "^18.2.0"

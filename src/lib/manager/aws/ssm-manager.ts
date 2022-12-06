@@ -25,6 +25,7 @@ import * as utils from '../../utils'
  * @see [CDK Systems Manager Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_ssm-readme.html}
  */
 export class SsmManager {
+  public static SECRETS_MODIFIED_TIMESTAMP_PARAM = 'secrets-last-modified-timestamp'
   /**
    * Method to write a string parameter to the parameters store
    * @param {string} id scoped id of the resource
