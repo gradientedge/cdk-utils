@@ -502,10 +502,7 @@ export interface CloudTrailProps extends cloudtrail.CfnTrailProps {}
  * @category cdk-utils.cloudwatch-manager
  * @subcategory Properties
  */
-export interface DashboardProps extends watch.DashboardProps {
-  positionX: number
-  positionY: number
-}
+export interface DashboardProps extends watch.DashboardProps {}
 
 /**
  * @category cdk-utils.cloudwatch-manager
