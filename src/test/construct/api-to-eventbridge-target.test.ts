@@ -210,8 +210,7 @@ describe('TestApiToEventBridgeTargetConstruct', () => {
   test('provisions new event rule as expected', () => {
     template.hasResourceProperties('AWS::Events::Rule', {
       EventPattern: {
-        'source': ['api-to-eventbridge-target'],
-        'detail-type': ['external-client-event'],
+        source: ['api-to-eventbridge-target'],
       },
       Name: 'test-api-to-eventbridge-target-test',
       State: 'ENABLED',

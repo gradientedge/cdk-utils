@@ -181,7 +181,6 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
         ruleName: `${this.id}-api-to-eventbridge-target`,
         eventPattern: {
           source: ['api-to-eventbridge-target'],
-          detailType: ['external-client-event'],
         },
       },
       ...this.props.event.rule,
