@@ -291,6 +291,11 @@ export class SiteWithEcsBackend extends CommonConstruct {
     this.siteEcsListener = fargateService.listener
     this.siteEcsLoadBalancer = fargateService.loadBalancer
     this.siteEcsTargetGroup = fargateService.targetGroup
+
+    this.addCfnOutput(`${this.id}-loadBalancerArn`, this.siteEcsLoadBalancer.loadBalancerArn ?? '')
+    this.addCfnOutput(`${this.id}-loadBalancerName`, this.siteEcsLoadBalancer.loadBalancerName ?? '')
+    this.addCfnOutput(`${this.id}-loadBalancerFullName`, this.siteEcsLoadBalancer.loadBalancerFullName ?? '')
+    this.addCfnOutput(`${this.id}-loadBalancerDnsName`, this.siteEcsLoadBalancer.loadBalancerDnsName ?? '')
   }
 
   /**
