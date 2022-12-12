@@ -134,6 +134,7 @@ describe('TestSiteWithEcsBackendConstruct', () => {
 
 describe('TestSiteWithEcsBackendConstruct', () => {
   test('outputs as expected', () => {
+    console.log(template.toJSON())
     template.hasOutput('testSiteHostedZoneHostedZoneId', {})
     template.hasOutput('testSiteHostedZoneHostedZoneArn', {})
     template.hasOutput('testSiteCertificateCertificateArn', {})
@@ -157,6 +158,10 @@ describe('TestSiteWithEcsBackendConstruct', () => {
     template.hasOutput('testSiteARecordARecordDomainName', {})
     template.hasOutput('testSiteCacheInvalidationBuildImageDockerImageArn', {})
     template.hasOutput('testSiteCacheInvalidationProjectLogGroupLogGroupArn', {})
+    template.hasOutput('testSiteLoadBalancerArn', {})
+    template.hasOutput('testSiteLoadBalancerName', {})
+    template.hasOutput('testSiteLoadBalancerFullName', {})
+    template.hasOutput('testSiteLoadBalancerDnsName', {})
   })
 })
 
