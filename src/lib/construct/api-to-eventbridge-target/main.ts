@@ -240,7 +240,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
               "EventBusName": "${this.apiEvent.eventBus.eventBusName}",
               "Source": "api-to-eventbridge-target",
               "DetailType": "$util.escapeJavaScript($context.domainName)$util.escapeJavaScript($context.resourcePath)",
-              "Detail": "$util.escapeJavaScript($input.body).replaceAll("\\'","'")"
+              "Detail": "$util.escapeJavaScript($input.body).replaceAll("\\\\'","'")"
             }
           ]
         }`,
