@@ -39,12 +39,12 @@ export class SqsManager {
       queueName: props.queueName,
       visibilityTimeout: props.visibilityTimeoutInSecs
         ? cdk.Duration.seconds(props.visibilityTimeoutInSecs)
-        : undefined,
+        : props.visibilityTimeout,
       receiveMessageWaitTime: props.receiveMessageWaitTimeInSecs
         ? cdk.Duration.seconds(props.receiveMessageWaitTimeInSecs)
-        : undefined,
+        : props.receiveMessageWaitTime,
       contentBasedDeduplication: props.contentBasedDeduplication,
-      dataKeyReuse: props.dataKeyReuseInSecs ? cdk.Duration.seconds(props.dataKeyReuseInSecs) : undefined,
+      dataKeyReuse: props.dataKeyReuseInSecs ? cdk.Duration.seconds(props.dataKeyReuseInSecs) : props.dataKeyReuse,
       deadLetterQueue: !deadLetterQueue
         ? undefined
         : {
