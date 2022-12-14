@@ -87,7 +87,7 @@ export class LambdaManager {
     const functionName = `${props.functionName}-${scope.props.stage}`
 
     let deadLetterQueue
-    if (props.deadLetterQueueEnabled && props.dlq) {
+    if (props.deadLetterQueueEnabled) {
       const redriveQueue = scope.sqsManager.createRedriveQueueForLambda(`${id}-rdq`, scope, props)
       deadLetterQueue = scope.sqsManager.createDeadLetterQueueForLambda(`${id}-dlq`, scope, props, redriveQueue)
     }
@@ -206,7 +206,7 @@ export class LambdaManager {
     const functionName = `${props.functionName}-${scope.props.stage}`
 
     let deadLetterQueue
-    if (props.deadLetterQueueEnabled && props.dlq) {
+    if (props.deadLetterQueueEnabled) {
       const redriveQueue = scope.sqsManager.createRedriveQueueForLambda(`${id}-rdq`, scope, props)
       deadLetterQueue = scope.sqsManager.createDeadLetterQueueForLambda(`${id}-dlq`, scope, props, redriveQueue)
     }

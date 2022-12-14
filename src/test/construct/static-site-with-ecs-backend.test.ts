@@ -134,7 +134,6 @@ describe('TestSiteWithEcsBackendConstruct', () => {
 
 describe('TestSiteWithEcsBackendConstruct', () => {
   test('outputs as expected', () => {
-    console.log(template.toJSON())
     template.hasOutput('testSiteHostedZoneHostedZoneId', {})
     template.hasOutput('testSiteHostedZoneHostedZoneArn', {})
     template.hasOutput('testSiteCertificateCertificateArn', {})

@@ -39,27 +39,29 @@ export class SqsManager {
       queueName: props.queueName,
       visibilityTimeout: props.visibilityTimeoutInSecs
         ? cdk.Duration.seconds(props.visibilityTimeoutInSecs)
-        : undefined,
+        : props.visibilityTimeout,
       receiveMessageWaitTime: props.receiveMessageWaitTimeInSecs
         ? cdk.Duration.seconds(props.receiveMessageWaitTimeInSecs)
-        : undefined,
+        : props.receiveMessageWaitTime,
       contentBasedDeduplication: props.contentBasedDeduplication,
-      dataKeyReuse: props.dataKeyReuseInSecs ? cdk.Duration.seconds(props.dataKeyReuseInSecs) : undefined,
+      dataKeyReuse: props.dataKeyReuseInSecs ? cdk.Duration.seconds(props.dataKeyReuseInSecs) : props.dataKeyReuse,
       deadLetterQueue: !deadLetterQueue
         ? undefined
         : {
             queue: deadLetterQueue,
-            maxReceiveCount: props.maxReceiveCount,
+            maxReceiveCount: props.maxReceiveCount ?? 5,
           },
       deduplicationScope: props.deduplicationScope,
-      deliveryDelay: props.deliveryDelayInSecs ? cdk.Duration.seconds(props.deliveryDelayInSecs) : undefined,
+      deliveryDelay: props.deliveryDelayInSecs
+        ? cdk.Duration.seconds(props.deliveryDelayInSecs)
+        : cdk.Duration.minutes(15),
       encryption: props.encryption,
       encryptionMasterKey: props.encryptionMasterKey,
       fifo: props.fifo,
       fifoThroughputLimit: props.fifoThroughputLimit,
       maxMessageSizeBytes: props.maxMessageSizeBytes,
       removalPolicy: props.removalPolicy ?? cdk.RemovalPolicy.DESTROY,
-      retentionPeriod: cdk.Duration.days(props.retentionInDays),
+      retentionPeriod: props.retentionInDays ? cdk.Duration.days(props.retentionInDays) : cdk.Duration.days(7),
     })
 
     utils.createCfnOutput(`${id}-queueArn`, scope, queue.queueArn)
@@ -76,8 +78,6 @@ export class SqsManager {
    * @param {types.LambdaProps} props the lambda properties
    */
   public createRedriveQueueForLambda(id: string, scope: common.CommonConstruct, props: types.LambdaProps) {
-    if (!props.redriveq) throw `Redrive queue props for Lambda undefined`
-
     return this.createQueue(`${id}`, scope, {
       ...props.redriveq,
       ...{
@@ -99,18 +99,20 @@ export class SqsManager {
     props: types.LambdaProps,
     deadLetterQueue: sqs.IQueue
   ) {
-    if (!props.dlq) throw `Dead letter queue props for Lambda undefined`
-
-    return this.createQueue(
-      `${id}`,
-      scope,
-      {
+    let queueProps
+    if (props.dlq) {
+      queueProps = {
         ...props.dlq,
         ...{
           queueName: `${props.functionName}-dlq-${scope.props.stage}`,
         },
-      },
-      deadLetterQueue
-    )
+      }
+    } else {
+      queueProps = {
+        queueName: `${props.functionName}-dlq-${scope.props.stage}`,
+      }
+    }
+
+    return this.createQueue(`${id}`, scope, queueProps, deadLetterQueue)
   }
 }
