@@ -26,10 +26,10 @@
     "dlq": {
       "visibilityTimeoutInSecs": 300,
       "receiveMessageWaitTimeInSecs": 20,
-      "retentionInDays": 7
+      "retentionInDays": 7,
+      "maxReceiveCount": 3
     },
     "redriveq": {
-      "maxReceiveCount": 3,
       "visibilityTimeoutInSecs": 300,
       "receiveMessageWaitTimeInSecs": 20,
       "retentionInDays": 7

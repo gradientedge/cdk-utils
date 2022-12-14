@@ -37,7 +37,7 @@
     "postinstall": "npx lerna run init",
     "prettier": "npx prettier --check \"**/*.{ts,json,md}\"",
     "prettify": "npx prettier --write \"**/*.{ts,json,md}\"",
-    "test": "rimraf coverage && npx jest --ci --runInBand",
+    "test": "rimraf coverage && npx jest --ci --maxWorkers=100%",
     "update:deps": "ncu -u -x lerna",
     "validate": "yarn prettier && yarn test"
   },

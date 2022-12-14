@@ -721,10 +721,10 @@ export interface ElastiCacheProps extends elasticache.CfnCacheClusterProps {}
  * @subcategory Properties
  */
 export interface QueueProps extends sqs.QueueProps {
-  maxReceiveCount: number
-  visibilityTimeoutInSecs: number
-  receiveMessageWaitTimeInSecs: number
-  dataKeyReuseInSecs: number
-  deliveryDelayInSecs: number
-  retentionInDays: number
+  maxReceiveCount?: number
+  visibilityTimeoutInSecs?: number
+  receiveMessageWaitTimeInSecs?: number
+  dataKeyReuseInSecs?: number
+  deliveryDelayInSecs?: number
+  retentionInDays?: number
 }
