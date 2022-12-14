@@ -61,7 +61,7 @@ export class SqsManager {
       fifoThroughputLimit: props.fifoThroughputLimit,
       maxMessageSizeBytes: props.maxMessageSizeBytes,
       removalPolicy: props.removalPolicy ?? cdk.RemovalPolicy.DESTROY,
-      retentionPeriod: props.retentionInDays ? cdk.Duration.days(props.retentionInDays) : undefined,
+      retentionPeriod: props.retentionInDays ? cdk.Duration.days(props.retentionInDays) : cdk.Duration.days(7),
     })
 
     utils.createCfnOutput(`${id}-queueArn`, scope, queue.queueArn)
