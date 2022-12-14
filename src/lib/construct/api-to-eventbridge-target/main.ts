@@ -234,14 +234,13 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
       'application/json': [
         '#set($context.requestOverride.header.X-Amz-Target = "AWSEvents.PutEvents")',
         '#set($context.requestOverride.header.Content-Type = "application/x-amz-json-1.1")',
-        "#set($inputRoot = $input.path('$'))",
         `{
           "Entries": [
             {
               "EventBusName": "${this.apiEvent.eventBus.eventBusName}",
               "Source": "api-to-eventbridge-target",
               "DetailType": "$util.escapeJavaScript($context.domainName)$util.escapeJavaScript($context.resourcePath)",
-              "Detail": "$util.escapeJavaScript($input.json('$'))"
+              "Detail": "$util.escapeJavaScript($input.body).replaceAll("\\'","'")"
             }
           ]
         }`,
