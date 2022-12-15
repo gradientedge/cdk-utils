@@ -52,9 +52,7 @@ export class SqsManager {
             maxReceiveCount: props.maxReceiveCount ?? 5,
           },
       deduplicationScope: props.deduplicationScope,
-      deliveryDelay: props.deliveryDelayInSecs
-        ? cdk.Duration.seconds(props.deliveryDelayInSecs)
-        : cdk.Duration.minutes(15),
+      deliveryDelay: props.deliveryDelayInSecs ? cdk.Duration.seconds(props.deliveryDelayInSecs) : undefined,
       encryption: props.encryption,
       encryptionMasterKey: props.encryptionMasterKey,
       fifo: props.fifo,
