@@ -83,9 +83,64 @@ export class ElastiCacheManager {
       logDeliveryConfigurations: logDeliveryConfigurations,
     })
 
+    elasticacheCluster.addDependsOn(subnetGroup)
+
     utils.createCfnOutput(`${id}-clusterName`, scope, elasticacheCluster.clusterName)
     utils.createCfnOutput(`${id}-redisEndpointPort`, scope, elasticacheCluster.attrRedisEndpointPort)
     utils.createCfnOutput(`${id}-redisEndpointAddress`, scope, elasticacheCluster.attrRedisEndpointAddress)
+
+    return elasticacheCluster
+  }
+
+  /**
+   * @summary Method to create an replicated elasticache resource
+   * @param {string} id scoped id of the resource
+   * @param {common.CommonConstruct} scope scope in which scope resource is defined
+   * @param {types.ReplicatedElastiCacheProps} props
+   * @param {string[]} subnetIds
+   * @param {string[]} securityGroupIds
+   * @param {string[]} logDeliveryConfigurations
+   */
+  public createReplicatedElastiCache(
+    id: string,
+    scope: common.CommonConstruct,
+    props: types.ReplicatedElastiCacheProps,
+    subnetIds: string[],
+    securityGroupIds: string[],
+    logDeliveryConfigurations?: any
+  ) {
+    if (!props) throw `ElastiCache props undefined`
+
+    const subnetGroup = this.createElastiCacheSubnetGroup(`${id}-subnetGroup`, scope, subnetIds)
+
+    const elasticacheCluster = new elasticache.CfnReplicationGroup(scope, `${id}`, {
+      replicationGroupDescription: `${id} Redis Replication Cluster`,
+      replicationGroupId: `${id}-${scope.props.stage}`,
+      cacheNodeType: props.cacheNodeType,
+      engine: props.engine,
+      cacheSubnetGroupName: subnetGroup.cacheSubnetGroupName,
+      securityGroupIds: securityGroupIds,
+      numNodeGroups: props.numNodeGroups,
+      replicasPerNodeGroup: props.replicasPerNodeGroup,
+      automaticFailoverEnabled: props.automaticFailoverEnabled,
+      multiAzEnabled: props.multiAzEnabled,
+      cacheParameterGroupName: props.cacheParameterGroupName,
+      cacheSecurityGroupNames: props.cacheSecurityGroupNames,
+      engineVersion: props.engineVersion,
+      globalReplicationGroupId: props.globalReplicationGroupId,
+      logDeliveryConfigurations: props.logDeliveryConfigurations,
+      numCacheClusters: props.numCacheClusters,
+      port: props.port,
+      preferredCacheClusterAZs: props.preferredCacheClusterAZs,
+      preferredMaintenanceWindow: props.preferredMaintenanceWindow,
+      primaryClusterId: props.primaryClusterId,
+      autoMinorVersionUpgrade: props.autoMinorVersionUpgrade,
+    })
+
+    elasticacheCluster.addDependsOn(subnetGroup)
+
+    utils.createCfnOutput(`${id}-primaryEndPointPort`, scope, elasticacheCluster.attrPrimaryEndPointPort)
+    utils.createCfnOutput(`${id}-primaryEndPointAddress`, scope, elasticacheCluster.attrPrimaryEndPointAddress)
 
     return elasticacheCluster
   }

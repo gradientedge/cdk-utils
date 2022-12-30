@@ -51,7 +51,7 @@ class TestCommonStack extends common.CommonStack {
         testAttribute: this.node.tryGetContext('testAttribute'),
         timezone: this.node.tryGetContext('timezone'),
         graphQLVpc: this.node.tryGetContext('testVpc'),
-        graphQLElastiCache: this.node.tryGetContext('testElastiCache'),
+        graphQLElastiCache: this.node.tryGetContext('testReplicatedElastiCache'),
       },
     }
   }
@@ -120,7 +120,7 @@ describe('testGraphqlWithCacheConstruct', () => {
     template.resourceCountIs('AWS::ApiGateway::DomainName', 1)
     template.resourceCountIs('AWS::Route53::RecordSet', 1)
     template.resourceCountIs('AWS::Lambda::Function', 2)
-    template.resourceCountIs('AWS::ElastiCache::CacheCluster', 1)
+    template.resourceCountIs('AWS::ElastiCache::ReplicationGroup', 1)
   })
 })
 
@@ -137,9 +137,8 @@ describe('TestGraphQLApiLambdaConstruct', () => {
     template.hasOutput('testGraphqlLambdaRestApiRestApiId', {})
     template.hasOutput('testGraphqlLambdaRestApiRestApiName', {})
     template.hasOutput('testGraphqlApiDomainCustomDomainName', {})
-    template.hasOutput('testGraphqlElasticacheClusterName', {})
-    template.hasOutput('testGraphqlElasticacheRedisEndpointPort', {})
-    template.hasOutput('testGraphqlElasticacheRedisEndpointAddress', {})
+    template.hasOutput('testGraphqlElasticachePrimaryEndPointPort', {})
+    template.hasOutput('testGraphqlElasticachePrimaryEndPointPort', {})
   })
 })
 

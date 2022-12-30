@@ -7,6 +7,7 @@ import * as types from '../../lib/types'
 interface TestStackProps extends types.CommonStackProps {
   testVpc: any
   testElastiCache: any
+  testReplicatedElastiCache: any
 }
 
 const testStackProps = {
@@ -38,6 +39,7 @@ class TestCommonStack extends common.CommonStack {
       ...{
         testVpc: this.node.tryGetContext('testVpc'),
         testElastiCache: this.node.tryGetContext('testElastiCache'),
+        testReplicatedElastiCache: this.node.tryGetContext('testReplicatedElastiCache'),
       },
     }
   }
@@ -76,6 +78,14 @@ class TestCommonConstruct extends common.CommonConstruct {
       testVpc.privateSubnets.map(subnet => subnet.subnetId),
       [testVpc.vpcDefaultSecurityGroup]
     )
+
+    this.elasticacheManager.createReplicatedElastiCache(
+      'test-replicated-elasticache',
+      this,
+      this.props.testReplicatedElastiCache,
+      testVpc.privateSubnets.map(subnet => subnet.subnetId),
+      [testVpc.vpcDefaultSecurityGroup]
+    )
   }
 }
 
@@ -94,7 +104,8 @@ describe('TestElastiCacheConstruct', () => {
   test('synthesises as expected', () => {
     /* test if number of resources are correctly synthesised */
     template.resourceCountIs('AWS::ElastiCache::CacheCluster', 1)
-    template.resourceCountIs('AWS::ElastiCache::SubnetGroup', 1)
+    template.resourceCountIs('AWS::ElastiCache::ReplicationGroup', 1)
+    template.resourceCountIs('AWS::ElastiCache::SubnetGroup', 2)
   })
 })
 
@@ -103,6 +114,8 @@ describe('TestElastiCacheConstruct', () => {
     template.hasOutput('testElasticacheRedisEndpointAddress', {})
     template.hasOutput('testElasticacheRedisEndpointPort', {})
     template.hasOutput('testElasticacheClusterName', {})
+    template.hasOutput('testReplicatedElasticachePrimaryEndPointAddress', {})
+    template.hasOutput('testReplicatedElasticachePrimaryEndPointPort', {})
   })
 })
 
@@ -110,6 +123,15 @@ describe('TestElastiCacheConstruct', () => {
   test('provisions new elastiCache as expected', () => {
     template.hasResourceProperties('AWS::ElastiCache::CacheCluster', {
       ClusterName: 'test-elasticache-test',
+      Engine: 'redis',
+    })
+  })
+})
+
+describe('TestElastiCacheConstruct', () => {
+  test('provisions new replicated elastiCache as expected', () => {
+    template.hasResourceProperties('AWS::ElastiCache::ReplicationGroup', {
+      ReplicationGroupId: 'test-replicated-elasticache-test',
       Engine: 'redis',
     })
   })

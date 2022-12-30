@@ -266,7 +266,7 @@ export interface GraphQlApiLambdaProps extends CommonStackProps {
  */
 export interface GraphQlApiLambdaWithCacheProps extends GraphQlApiLambdaProps {
   graphQLVpc: ec2.VpcProps
-  graphQLElastiCache: ElastiCacheProps
+  graphQLElastiCache: ReplicatedElastiCacheProps
   securityGroupExportName: string
   useExistingVpc: boolean
   vpcName?: string
@@ -715,6 +715,12 @@ export interface WafWebACLProps extends wafv2.CfnWebACLProps {}
  * @category Compute
  */
 export interface ElastiCacheProps extends elasticache.CfnCacheClusterProps {}
+
+/**
+ * @category cdk-utils.elasticache-manager
+ * @category Compute
+ */
+export interface ReplicatedElastiCacheProps extends elasticache.CfnReplicationGroupProps {}
 
 /**
  * @category cdk-utils.sqs-manager

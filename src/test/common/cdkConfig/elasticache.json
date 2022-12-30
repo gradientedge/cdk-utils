@@ -5,5 +5,13 @@
     "numCacheNodes": 1,
     "use_redis": "true",
     "default_ttl_seconds": 300
+  },
+  "testReplicatedElastiCache": {
+    "engine": "redis",
+    "cacheNodeType": "cache.t2.micro",
+    "numNodeGroups": 1,
+    "replicasPerNodeGroup": 1,
+    "automaticFailoverEnabled": true,
+    "multiAzEnabled": true
   }
 }
