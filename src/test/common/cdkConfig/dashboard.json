@@ -100,6 +100,165 @@
     "width": 24,
     "height": 1
   },
+  "testCloudfrontDistributionWidget": {
+    "type": "SingleValue",
+    "title": "Request Count",
+    "setPeriodToTimeRange": true,
+    "region": "us-east-1",
+    "width": 3,
+    "height": 5,
+    "metricProps": [
+      {
+        "namespace": "AWS/CloudFront",
+        "metricName": "Requests",
+        "statistic": "Sum"
+      }
+    ]
+  },
+  "testApiGatewayWidget": {
+    "type": "SingleValue",
+    "title": "Total Requests",
+    "setPeriodToTimeRange": true,
+    "width": 3,
+    "height": 4,
+    "metricProps": [
+      {
+        "namespace": "AWS/ApiGateway",
+        "metricName": "Count",
+        "statistic": "SampleCount"
+      }
+    ]
+  },
+  "testLambdaWidget": {
+    "type": "SingleValue",
+    "title": "Total Invocations",
+    "setPeriodToTimeRange": true,
+    "width": 3,
+    "height": 5,
+    "metricProps": [
+      {
+        "namespace": "AWS/Lambda",
+        "metricName": "Invocations",
+        "statistic": "Sum"
+      }
+    ]
+  },
+  "testEcsClusterWidget": {
+    "type": "Gauge",
+    "title": "Avg. Memory Utilisation",
+    "setPeriodToTimeRange": true,
+    "width": 6,
+    "height": 5,
+    "metricProps": [
+      {
+        "namespace": "AWS/ECS",
+        "metricName": "CPUUtilization",
+        "statistic": "Average"
+      }
+    ]
+  },
+  "testEcsServiceWidget": {
+    "type": "Graph",
+    "title": "Avg. ECS CPU Utilisation",
+    "view": "timeSeries",
+    "stacked": true,
+    "width": 6,
+    "height": 5,
+    "metricProps": [
+      {
+        "namespace": "AWS/ECS",
+        "metricName": "CPUUtilization",
+        "statistic": "Average"
+      }
+    ]
+  },
+  "testElbWidget": {
+    "type": "SingleValue",
+    "title": "ELB Active Connections",
+    "setPeriodToTimeRange": true,
+    "width": 3,
+    "height": 4,
+    "metricProps": [
+      {
+        "namespace": "AWS/ApplicationELB",
+        "metricName": "ActiveConnectionCount",
+        "statistic": "Sum"
+      }
+    ]
+  },
+  "testCacheWidget": {
+    "type": "Graph",
+    "title": "Cache Hit/Miss",
+    "view": "timeSeries",
+    "stacked": true,
+    "width": 8,
+    "height": 5,
+    "metricProps": [
+      {
+        "namespace": "AWS/ElastiCache",
+        "metricName": "CacheHits",
+        "statistic": "Average"
+      },
+      {
+        "namespace": "AWS/ElastiCache",
+        "metricName": "CacheMisses",
+        "statistic": "Average"
+      }
+    ]
+  },
+  "testStateWidget": {
+    "type": "SingleValue",
+    "title": "Pipeline Stats",
+    "setPeriodToTimeRange": true,
+    "width": 21,
+    "height": 4,
+    "metricProps": [
+      {
+        "namespace": "AWS/States",
+        "metricName": "ExecutionsSucceeded",
+        "statistic": "Sum"
+      },
+      {
+        "namespace": "AWS/States",
+        "metricName": "ExecutionsFailed",
+        "statistic": "Sum"
+      },
+      {
+        "namespace": "AWS/States",
+        "metricName": "ExecutionsAborted",
+        "statistic": "Sum"
+      },
+      {
+        "namespace": "AWS/States",
+        "metricName": "ExecutionsTimedOut",
+        "statistic": "Sum"
+      },
+      {
+        "namespace": "AWS/States",
+        "metricName": "ExecutionThrottled",
+        "statistic": "Sum"
+      },
+      {
+        "namespace": "AWS/States",
+        "metricName": "ExecutionTime",
+        "statistic": "Average"
+      }
+    ]
+  },
+  "testEventWidget": {
+    "type": "SingleValue",
+    "title": "Count of triggered rules",
+    "setPeriodToTimeRange": true,
+    "width": 3,
+    "height": 4,
+    "metricProps": [
+      {
+        "namespace": "AWS/Events",
+        "metricName": "TriggeredRules",
+        "statistic": "Sum"
+      }
+    ]
+  },
   "testWidget": {
     "type": "SingleValue",
     "title": "Errors",

@@ -523,6 +523,15 @@ export interface MetricProps extends watch.MetricProps {
   periodInSecs?: number
   functionName?: string
   dbClusterIdentifier?: string
+  distributionId?: string
+  loadBalancer?: string
+  serviceName?: string
+  clusterName?: string
+  apiName?: string
+  cacheClusterId?: string
+  stateMachineArn?: string
+  eventBusName?: string
+  ruleName?: string
 }
 
 /**
@@ -530,6 +539,7 @@ export interface MetricProps extends watch.MetricProps {
  * @subcategory Properties
  */
 export interface TextWidgetProps extends watch.TextWidgetProps {
+  type: string
   positionX: number
   positionY: number
 }
@@ -539,9 +549,21 @@ export interface TextWidgetProps extends watch.TextWidgetProps {
  * @subcategory Properties
  */
 export interface NumericWidgetProps extends watch.SingleValueWidgetProps {
+  type: string
   positionX: number
   positionY: number
-  metricProps?: watch.MetricProps[]
+  metricProps: watch.MetricProps[]
+}
+
+/**
+ * @category cdk-utils.cloudwatch-manager
+ * @subcategory Properties
+ */
+export interface GuageWidgetProps extends watch.GaugeWidgetProps {
+  type: string
+  positionX: number
+  positionY: number
+  metricProps: watch.MetricProps[]
 }
 
 /**
@@ -549,9 +571,10 @@ export interface NumericWidgetProps extends watch.SingleValueWidgetProps {
  * @subcategory Properties
  */
 export interface GraphWidgetProps extends watch.GraphWidgetProps {
+  type: string
   positionX: number
   positionY: number
-  metricProps?: MetricProps[]
+  metricProps: MetricProps[]
 }
 
 /**
@@ -559,9 +582,10 @@ export interface GraphWidgetProps extends watch.GraphWidgetProps {
  * @subcategory Properties
  */
 export interface AlarmStatusWidgetProps extends watch.AlarmStatusWidgetProps {
+  type: string
   positionX: number
   positionY: number
-  alarmProps?: watch.AlarmProps[]
+  alarmProps: watch.AlarmProps[]
 }
 
 /**
@@ -569,6 +593,7 @@ export interface AlarmStatusWidgetProps extends watch.AlarmStatusWidgetProps {
  * @subcategory Properties
  */
 export interface LogQueryWidgetProps extends watch.LogQueryWidgetProps {
+  type: string
   positionX: number
   positionY: number
 }

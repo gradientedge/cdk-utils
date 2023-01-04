@@ -12,6 +12,7 @@ import * as utils from '../../utils'
 enum CloudWatchWidgetType {
   Text = 'Text',
   SingleValue = 'SingleValue',
+  Gauge = 'Gauge',
   Graph = 'Graph',
   AlarmStatus = 'AlarmStatus',
   LogQuery = 'LogQuery',
@@ -45,7 +46,7 @@ export class CloudWatchManager {
    * @param {types.AlarmProps} props
    */
   public createAlarmForExpression(id: string, scope: common.CommonConstruct, props: types.AlarmProps) {
-    if (!props) throw `Alarm props undefined`
+    if (!props) throw `Alarm props undefined for ${id}`
 
     if (!props.expression) throw `Could not find expression for Alarm props for id:${id}`
     if (!props.metricProps) throw `Could not find metricProps for Alarm props for id:${id}`
@@ -89,7 +90,7 @@ export class CloudWatchManager {
     props: types.AlarmProps,
     metric: watch.Metric
   ) {
-    if (!props) throw `Alarm props undefined`
+    if (!props) throw `Alarm props undefined for ${id}`
 
     const alarm = metric.createAlarm(scope, `${id}`, {
       alarmName: props.alarmName,
@@ -120,7 +121,7 @@ export class CloudWatchManager {
     props: types.DashboardProps,
     widgets?: watch.IWidget[][]
   ) {
-    if (!props) throw `Dashboard props undefined`
+    if (!props) throw `Dashboard props undefined for ${id}`
 
     const dashboard = new watch.Dashboard(scope, `${id}`, {
       dashboardName: props.dashboardName,
@@ -156,7 +157,7 @@ export class CloudWatchManager {
    * @param props
    */
   public createWidget(id: string, scope: common.CommonConstruct, props: any) {
-    if (!props) throw `Widget props undefined`
+    if (!props) throw `Widget props undefined for ${id}`
 
     const metrics = this.determineMetrics(scope, props.metricProps)
     let alarms,
@@ -166,6 +167,8 @@ export class CloudWatchManager {
         return this.createTextWidget(id, scope, props)
       case CloudWatchWidgetType.SingleValue:
         return this.createSingleValueWidget(id, scope, props, metrics)
+      case CloudWatchWidgetType.Gauge:
+        return this.createGuageWidget(id, scope, props, metrics)
       case CloudWatchWidgetType.Graph:
         return this.createGraphWidget(id, scope, props, metrics)
       case CloudWatchWidgetType.AlarmStatus:
@@ -175,8 +178,195 @@ export class CloudWatchManager {
         logGroupNames = props.logGroupNames.map((name: string) => `${name}-${scope.props.stage}`)
         return this.createLogQueryWidget(id, scope, props, logGroupNames)
       default:
-        throw 'Unsupported widget type'
+        throw `Unsupported widget type ${props.type}`
     }
+  }
+
+  /**
+   * @summary Method to create a cloudfront distribution widget
+   * @param {string} id scoped id of the resource
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.TextWidgetProps} props
+   * @param {string} distributionId the cloudfront distribution id
+   */
+  public createCloudfrontDistributionWidget(
+    id: string,
+    scope: common.CommonConstruct,
+    props: any,
+    distributionId: string
+  ) {
+    if (!props) throw `Widget props undefined for ${id}`
+    const metricProps: any[] = props.metricProps
+    return this.createWidget(id, scope, {
+      ...props,
+      ...{
+        metricProps: metricProps.map(metricProp => ({ ...metricProp, ...{ distributionId: distributionId } })),
+      },
+    })
+  }
+
+  /**
+   * @summary Method to create a step function widget
+   * @param {string} id scoped id of the resource
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.TextWidgetProps} props
+   * @param {string} stateMachineArn the step function arn
+   */
+  public createStateWidget(id: string, scope: common.CommonConstruct, props: any, stateMachineArn: string) {
+    if (!props) throw `Widget props undefined for ${id}`
+    const metricProps: any[] = props.metricProps
+    return this.createWidget(id, scope, {
+      ...props,
+      ...{
+        metricProps: metricProps.map(metricProp => ({ ...metricProp, ...{ stateMachineArn: stateMachineArn } })),
+      },
+    })
+  }
+
+  /**
+   * @summary Method to create an event widget
+   * @param {string} id scoped id of the resource
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.TextWidgetProps} props
+   * @param {string} eventBusName the event bus name
+   * @param {string} ruleName the event rule name
+   */
+  public createEventWidget(
+    id: string,
+    scope: common.CommonConstruct,
+    props: any,
+    eventBusName: string,
+    ruleName: string
+  ) {
+    if (!props) throw `Widget props undefined for ${id}`
+    const metricProps: any[] = props.metricProps
+    return this.createWidget(id, scope, {
+      ...props,
+      ...{
+        metricProps: metricProps.map(metricProp => ({
+          ...metricProp,
+          ...{ eventBusName: eventBusName, ruleName: ruleName },
+        })),
+      },
+    })
+  }
+
+  /**
+   * @summary Method to create an api gateway widget
+   * @param {string} id scoped id of the resource
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.TextWidgetProps} props
+   * @param {string} apiName the api name
+   */
+  public createApiGatewayWidget(id: string, scope: common.CommonConstruct, props: any, apiName: string) {
+    if (!props) throw `Widget props undefined for ${id}`
+    const metricProps: any[] = props.metricProps
+    return this.createWidget(id, scope, {
+      ...props,
+      ...{
+        metricProps: metricProps.map(metricProp => ({ ...metricProp, ...{ apiName: apiName } })),
+      },
+    })
+  }
+
+  /**
+   * @summary Method to create a lambda function widget
+   * @param {string} id scoped id of the resource
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.TextWidgetProps} props
+   * @param {string} functionName the lambda function name
+   */
+  public createLambdaWidget(id: string, scope: common.CommonConstruct, props: any, functionName: string) {
+    if (!props) throw `Widget props undefined for ${id}`
+    const metricProps: any[] = props.metricProps
+    return this.createWidget(id, scope, {
+      ...props,
+      ...{
+        metricProps: metricProps.map(metricProp => ({ ...metricProp, ...{ functionName: functionName } })),
+      },
+    })
+  }
+
+  /**
+   * @summary Method to create an ecs cluster widget
+   * @param {string} id scoped id of the resource
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.TextWidgetProps} props
+   * @param {string} clusterName the ecs cluster name
+   */
+  public createEcsClusterWidget(id: string, scope: common.CommonConstruct, props: any, clusterName: string) {
+    if (!props) throw `Widget props undefined for ${id}`
+    const metricProps: any[] = props.metricProps
+    return this.createWidget(id, scope, {
+      ...props,
+      ...{
+        metricProps: metricProps.map(metricProp => ({ ...metricProp, ...{ clusterName: clusterName } })),
+      },
+    })
+  }
+
+  /**
+   * @summary Method to create an ecs service widget
+   * @param {string} id scoped id of the resource
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.TextWidgetProps} props
+   * @param {string} clusterName the ecs cluster name
+   * @param {string} serviceName the ecs service name
+   */
+  public createEcsServiceWidget(
+    id: string,
+    scope: common.CommonConstruct,
+    props: any,
+    clusterName: string,
+    serviceName: string
+  ) {
+    if (!props) throw `Widget props undefined for ${id}`
+    const metricProps: any[] = props.metricProps
+    return this.createWidget(id, scope, {
+      ...props,
+      ...{
+        metricProps: metricProps.map(metricProp => ({
+          ...metricProp,
+          ...{ clusterName: clusterName, serviceName: serviceName },
+        })),
+      },
+    })
+  }
+
+  /**
+   * @summary Method to create an elb widget
+   * @param {string} id scoped id of the resource
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.TextWidgetProps} props
+   * @param {string} loadBalancer the loadbalancer reference
+   */
+  public createElbWidget(id: string, scope: common.CommonConstruct, props: any, loadBalancer: string) {
+    if (!props) throw `Widget props undefined for ${id}`
+    const metricProps: any[] = props.metricProps
+    return this.createWidget(id, scope, {
+      ...props,
+      ...{
+        metricProps: metricProps.map(metricProp => ({ ...metricProp, ...{ loadBalancer: loadBalancer } })),
+      },
+    })
+  }
+
+  /**
+   * @summary Method to create an elasticache widget
+   * @param {string} id scoped id of the resource
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.TextWidgetProps} props
+   * @param {string} cacheClusterId the elasticache cluster id
+   */
+  public createCacheWidget(id: string, scope: common.CommonConstruct, props: any, cacheClusterId: string) {
+    if (!props) throw `Widget props undefined for ${id}`
+    const metricProps: any[] = props.metricProps
+    return this.createWidget(id, scope, {
+      ...props,
+      ...{
+        metricProps: metricProps.map(metricProp => ({ ...metricProp, ...{ cacheClusterId: cacheClusterId } })),
+      },
+    })
   }
 
   /**
@@ -186,6 +376,7 @@ export class CloudWatchManager {
    * @param {types.TextWidgetProps} props
    */
   public createTextWidget(id: string, scope: common.CommonConstruct, props: types.TextWidgetProps) {
+    if (!props) throw `Widget props undefined for ${id}`
     const widget = new watch.TextWidget({
       markdown: props.markdown,
       width: props.width,
@@ -210,10 +401,43 @@ export class CloudWatchManager {
     props: types.NumericWidgetProps,
     metrics: IMetric[]
   ) {
+    if (!props) throw `Widget props undefined for ${id}`
     const widget = new watch.SingleValueWidget({
+      region: props.region ?? scope.props.region,
       metrics: metrics,
       setPeriodToTimeRange: props.setPeriodToTimeRange,
       fullPrecision: props.fullPrecision,
+      sparkline: props.sparkline,
+      title: props.title,
+      width: props.width,
+      height: props.height,
+    })
+
+    if (props.positionX && props.positionY) widget.position(props.positionX, props.positionY)
+
+    return widget
+  }
+
+  /**
+   * @summary Method to create a cloudwatch guage widget
+   * @param {string} id scoped id of the resource
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.GuageWidgetProps} props
+   * @param metrics
+   */
+  public createGuageWidget(
+    id: string,
+    scope: common.CommonConstruct,
+    props: types.GuageWidgetProps,
+    metrics: IMetric[]
+  ) {
+    if (!props) throw `Widget props undefined for ${id}`
+    const widget = new watch.GaugeWidget({
+      region: props.region ?? scope.props.region,
+      metrics: metrics,
+      leftYAxis: props.leftYAxis,
+      statistic: props.statistic,
+      setPeriodToTimeRange: props.setPeriodToTimeRange,
       title: props.title,
       width: props.width,
       height: props.height,
@@ -239,7 +463,9 @@ export class CloudWatchManager {
     leftYMetrics?: IMetric[],
     rightYMetrics?: IMetric[]
   ) {
+    if (!props) throw `Widget props undefined for ${id}`
     const widget = new watch.GraphWidget({
+      region: props.region ?? scope.props.region,
       left: leftYMetrics,
       right: rightYMetrics,
       leftAnnotations: props.leftAnnotations,
@@ -273,6 +499,7 @@ export class CloudWatchManager {
     props: types.AlarmStatusWidgetProps,
     alarms: watch.IAlarm[]
   ) {
+    if (!props) throw `Widget props undefined for ${id}`
     const widget = new watch.AlarmStatusWidget({
       alarms: alarms,
       title: props.title,
@@ -298,7 +525,9 @@ export class CloudWatchManager {
     props: types.LogQueryWidgetProps,
     logGroupNames: string[]
   ) {
+    if (!props) throw `Widget props undefined for ${id}`
     const widget = new watch.LogQueryWidget({
+      region: props.region ?? scope.props.region,
       logGroupNames: logGroupNames,
       queryString: props.queryString,
       queryLines: props.queryLines,
@@ -327,7 +556,65 @@ export class CloudWatchManager {
           metricDimensions = {
             ...metricProp.dimensionsMap,
             ...{
-              FunctionName: `${metricProp.functionName}-${scope.props.stage}`,
+              FunctionName: `${metricProp.functionName}`,
+            },
+          }
+        }
+        if (metricProp.serviceName && metricProp.clusterName) {
+          metricDimensions = {
+            ...metricProp.dimensionsMap,
+            ...{
+              ServiceName: `${metricProp.serviceName}`,
+              ClusterName: `${metricProp.clusterName}`,
+            },
+          }
+        }
+        if (!metricProp.serviceName && metricProp.clusterName) {
+          metricDimensions = {
+            ...metricProp.dimensionsMap,
+            ...{
+              ClusterName: `${metricProp.clusterName}`,
+            },
+          }
+        }
+        if (metricProp.serviceName && !metricProp.clusterName) {
+          metricDimensions = {
+            ...metricProp.dimensionsMap,
+            ...{
+              ServiceName: `${metricProp.serviceName}`,
+            },
+          }
+        }
+        if (metricProp.loadBalancer) {
+          metricDimensions = {
+            ...metricProp.dimensionsMap,
+            ...{
+              LoadBalancer: `${metricProp.loadBalancer}`,
+            },
+          }
+        }
+        if (metricProp.distributionId) {
+          metricDimensions = {
+            ...metricProp.dimensionsMap,
+            ...{
+              Region: `Global`,
+              DistributionId: `${metricProp.distributionId}`,
+            },
+          }
+        }
+        if (metricProp.apiName) {
+          metricDimensions = {
+            ...metricProp.dimensionsMap,
+            ...{
+              ApiName: `${metricProp.apiName}`,
+            },
+          }
+        }
+        if (metricProp.cacheClusterId) {
+          metricDimensions = {
+            ...metricProp.dimensionsMap,
+            ...{
+              CacheClusterId: `${metricProp.cacheClusterId}`,
             },
           }
         }
@@ -335,7 +622,25 @@ export class CloudWatchManager {
           metricDimensions = {
             ...metricProp.dimensionsMap,
             ...{
-              DBClusterIdentifier: `${metricProp.dbClusterIdentifier}-${scope.props.stage}`,
+              DBClusterIdentifier: `${metricProp.dbClusterIdentifier}`,
+            },
+          }
+        }
+        if (metricProp.stateMachineArn) {
+          metricDimensions = {
+            ...metricProp.dimensionsMap,
+            ...{
+              StateMachineArn: `${metricProp.stateMachineArn}`,
+            },
+          }
+        }
+
+        if (metricProp.eventBusName && metricProp.ruleName) {
+          metricDimensions = {
+            ...metricProp.dimensionsMap,
+            ...{
+              EventBusName: `${metricProp.eventBusName}`,
+              RuleName: `${metricProp.ruleName}`,
             },
           }
         }
