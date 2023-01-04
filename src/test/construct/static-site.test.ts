@@ -140,7 +140,7 @@ describe('TestStaticSiteConstruct', () => {
 describe('TestStaticSiteConstruct', () => {
   test('provisions site bucket as expected', () => {
     template.hasResourceProperties('AWS::S3::Bucket', {
-      AccessControl: 'Private',
+      AccessControl: 'LogDeliveryWrite',
       BucketEncryption: {
         ServerSideEncryptionConfiguration: [
           {

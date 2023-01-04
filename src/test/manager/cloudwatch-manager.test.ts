@@ -16,6 +16,15 @@ interface TestStackProps extends types.CommonStackProps {
   testSingleValueWidget: any
   testTextWidget: any
   testWidget: any
+  testCloudfrontDistributionWidget: any
+  testApiGatewayWidget: any
+  testLambdaWidget: any
+  testEcsClusterWidget: any
+  testEcsServiceWidget: any
+  testElbWidget: any
+  testCacheWidget: any
+  testStateWidget: any
+  testEventWidget: any
   testWidgets: any
   testDashboard: any
 }
@@ -57,6 +66,15 @@ class TestCommonStack extends common.CommonStack {
         testSingleValueWidget: this.node.tryGetContext('testSingleValueWidget'),
         testTextWidget: this.node.tryGetContext('testTextWidget'),
         testWidget: this.node.tryGetContext('testWidget'),
+        testCloudfrontDistributionWidget: this.node.tryGetContext('testCloudfrontDistributionWidget'),
+        testApiGatewayWidget: this.node.tryGetContext('testApiGatewayWidget'),
+        testLambdaWidget: this.node.tryGetContext('testLambdaWidget'),
+        testEcsClusterWidget: this.node.tryGetContext('testEcsClusterWidget'),
+        testEcsServiceWidget: this.node.tryGetContext('testEcsServiceWidget'),
+        testElbWidget: this.node.tryGetContext('testElbWidget'),
+        testCacheWidget: this.node.tryGetContext('testCacheWidget'),
+        testStateWidget: this.node.tryGetContext('testStateWidget'),
+        testEventWidget: this.node.tryGetContext('testEventWidget'),
         testWidgets: this.node.tryGetContext('testWidgets'),
         testDashboard: this.node.tryGetContext('testDashboard'),
       },
@@ -87,6 +105,15 @@ class TestInvalidCommonStack extends common.CommonStack {
         testSingleValueWidget: this.node.tryGetContext('testSingleValueWidget'),
         testTextWidget: this.node.tryGetContext('testTextWidget'),
         testWidget: this.node.tryGetContext('testWidget'),
+        testCloudfrontDistributionWidget: this.node.tryGetContext('testCloudfrontDistributionWidget'),
+        testApiGatewayWidget: this.node.tryGetContext('testApiGatewayWidget'),
+        testLambdaWidget: this.node.tryGetContext('testLambdaWidget'),
+        testEcsClusterWidget: this.node.tryGetContext('testEcsClusterWidget'),
+        testEcsServiceWidget: this.node.tryGetContext('testEcsServiceWidget'),
+        testElbWidget: this.node.tryGetContext('testElbWidget'),
+        testCacheWidget: this.node.tryGetContext('testCacheWidget'),
+        testStateWidget: this.node.tryGetContext('testStateWidget'),
+        testEventWidget: this.node.tryGetContext('testEventWidget'),
         testWidgets: this.node.tryGetContext('testWidgets'),
       },
     }
@@ -128,10 +155,81 @@ class TestCommonConstruct extends common.CommonConstruct {
       [testMetric]
     )
     const textWidget = this.cloudWatchManager.createTextWidget('test-text-widget', this, this.props.testTextWidget)
+    const cloudfrontDistributionWidget = this.cloudWatchManager.createCloudfrontDistributionWidget(
+      'test-cf-widget',
+      this,
+      this.props.testCloudfrontDistributionWidget,
+      'testDistributionId'
+    )
+    const apiGatewayWidget = this.cloudWatchManager.createApiGatewayWidget(
+      'test-apig-widget',
+      this,
+      this.props.testApiGatewayWidget,
+      'testApi'
+    )
+    const lambdaWidget = this.cloudWatchManager.createLambdaWidget(
+      'test-lambda-widget',
+      this,
+      this.props.testLambdaWidget,
+      'testLambda'
+    )
+    const ecsClusterWidget = this.cloudWatchManager.createEcsClusterWidget(
+      'test-ecs-cluster-widget',
+      this,
+      this.props.testEcsClusterWidget,
+      'testCluster'
+    )
+    const ecsServiceWidget = this.cloudWatchManager.createEcsServiceWidget(
+      'test-ecs-service-widget',
+      this,
+      this.props.testEcsServiceWidget,
+      'testCluster',
+      'testService'
+    )
+    const elbWidget = this.cloudWatchManager.createElbWidget(
+      'test-elb-widget',
+      this,
+      this.props.testElbWidget,
+      'testLoadBalancer'
+    )
+    const cacheWidget = this.cloudWatchManager.createCacheWidget(
+      'test-cache-widget',
+      this,
+      this.props.testCacheWidget,
+      'testClusterId'
+    )
+    const stateWidget = this.cloudWatchManager.createStateWidget(
+      'test-sfn-widget',
+      this,
+      this.props.testStateWidget,
+      'testSfnArn'
+    )
+    const eventWidget = this.cloudWatchManager.createEventWidget(
+      'test-event-widget',
+      this,
+      this.props.testEventWidget,
+      'testBus',
+      'testRule'
+    )
     this.cloudWatchManager.createWidget('test-widget', this, this.props.testWidget)
     this.cloudWatchManager.createWidgets(this, this.props.testWidgets)
     this.cloudWatchManager.createDashboard('test-dashboard', this, this.props.testDashboard, [
-      [alarmStatusWidget, graphWidget, logQueryWidget, singleValueWidget, textWidget],
+      [
+        alarmStatusWidget,
+        graphWidget,
+        logQueryWidget,
+        singleValueWidget,
+        textWidget,
+        cloudfrontDistributionWidget,
+        apiGatewayWidget,
+        lambdaWidget,
+        ecsClusterWidget,
+        ecsServiceWidget,
+        elbWidget,
+        cacheWidget,
+        stateWidget,
+        eventWidget,
+      ],
     ])
   }
 }
@@ -185,7 +283,7 @@ describe('TestCloudWatchConstruct', () => {
               Dimensions: [
                 {
                   Name: 'FunctionName',
-                  Value: 'test-lambda-test',
+                  Value: 'test-lambda',
                 },
               ],
               MetricName: 'Errors',

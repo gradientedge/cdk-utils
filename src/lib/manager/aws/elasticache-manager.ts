@@ -31,13 +31,11 @@ export class ElastiCacheManager {
    * @param {string[]} subnetIds
    */
   public createElastiCacheSubnetGroup(id: string, scope: common.CommonConstruct, subnetIds: string[]) {
-    const elasticacheSubnetGroup = new elasticache.CfnSubnetGroup(scope, `${id}`, {
+    return new elasticache.CfnSubnetGroup(scope, `${id}`, {
       cacheSubnetGroupName: `${id}-subnet-group-${scope.props.stage}`,
       subnetIds: subnetIds,
       description: `${id}-subnet-group-${scope.props.stage}`,
     })
-
-    return elasticacheSubnetGroup
   }
 
   /**
@@ -57,7 +55,7 @@ export class ElastiCacheManager {
     securityGroupIds: string[],
     logDeliveryConfigurations?: any
   ) {
-    if (!props) throw `ElastiCache props undefined`
+    if (!props) throw `ElastiCache props undefined for ${id}`
 
     const subnetGroup = this.createElastiCacheSubnetGroup(`${id}-subnetGroup`, scope, subnetIds)
 
@@ -83,7 +81,7 @@ export class ElastiCacheManager {
       logDeliveryConfigurations: logDeliveryConfigurations,
     })
 
-    elasticacheCluster.addDependsOn(subnetGroup)
+    elasticacheCluster.addDependency(subnetGroup)
 
     utils.createCfnOutput(`${id}-clusterName`, scope, elasticacheCluster.clusterName)
     utils.createCfnOutput(`${id}-redisEndpointPort`, scope, elasticacheCluster.attrRedisEndpointPort)
@@ -109,7 +107,7 @@ export class ElastiCacheManager {
     securityGroupIds: string[],
     logDeliveryConfigurations?: any
   ) {
-    if (!props) throw `ElastiCache props undefined`
+    if (!props) throw `ElastiCache props undefined for ${id}`
 
     const subnetGroup = this.createElastiCacheSubnetGroup(`${id}-subnetGroup`, scope, subnetIds)
 
@@ -137,7 +135,7 @@ export class ElastiCacheManager {
       autoMinorVersionUpgrade: props.autoMinorVersionUpgrade,
     })
 
-    elasticacheCluster.addDependsOn(subnetGroup)
+    elasticacheCluster.addDependency(subnetGroup)
 
     utils.createCfnOutput(`${id}-primaryEndPointPort`, scope, elasticacheCluster.attrPrimaryEndPointPort)
     utils.createCfnOutput(`${id}-primaryEndPointAddress`, scope, elasticacheCluster.attrPrimaryEndPointAddress)

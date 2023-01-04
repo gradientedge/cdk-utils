@@ -41,7 +41,7 @@ export class EksManager {
     image: ecr.DockerImageAsset,
     vpc: ec2.IVpc
   ) {
-    if (!props) throw `EksCluster props undefined`
+    if (!props) throw `EksCluster props undefined for ${id}`
 
     const appLabel = { app: `${id}`.toLowerCase() }
 

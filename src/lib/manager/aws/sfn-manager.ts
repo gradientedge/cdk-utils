@@ -39,7 +39,7 @@ export class SfnManager {
    * @param {types.SfnSucceedProps} props
    */
   public createSuccessStep(id: string, scope: common.CommonConstruct, props: types.SfnSucceedProps) {
-    if (!props) throw 'Step props undefined'
+    if (!props) throw `Step props undefined for ${id}`
     return new sfn.Succeed(scope, `${props.name}`, {
       ...props,
       ...{
@@ -55,7 +55,7 @@ export class SfnManager {
    * @param {types.SfnFailProps} props
    */
   public createFailStep(id: string, scope: common.CommonConstruct, props: types.SfnFailProps) {
-    if (!props) throw 'Step props undefined'
+    if (!props) throw `Step props undefined for ${id}`
     return new sfn.Fail(scope, `${props.name}`, {
       ...props,
       ...{
@@ -71,7 +71,7 @@ export class SfnManager {
    * @param {types.SfnPassProps} props
    */
   public createPassStep(id: string, scope: common.CommonConstruct, props: types.SfnPassProps) {
-    if (!props) throw 'Step props undefined'
+    if (!props) throw `Step props undefined for ${id}`
     return new sfn.Pass(scope, `${props.name}`, {
       ...props,
       ...{
@@ -87,7 +87,7 @@ export class SfnManager {
    * @param {types.SfnParallelProps} props
    */
   public createParallelStep(id: string, scope: common.CommonConstruct, props: types.SfnParallelProps) {
-    if (!props) throw 'Step props undefined'
+    if (!props) throw `Step props undefined for ${id}`
     return new sfn.Parallel(scope, `${props.name}`, {
       ...props,
       ...{
@@ -103,7 +103,7 @@ export class SfnManager {
    * @param {types.SfnChoiceProps} props
    */
   public createChoiceStep(id: string, scope: common.CommonConstruct, props: types.SfnChoiceProps) {
-    if (!props) throw 'Step props undefined'
+    if (!props) throw `Step props undefined for ${id}`
     return new sfn.Choice(scope, `${props.name}`, {
       ...props,
       ...{
@@ -143,7 +143,7 @@ export class SfnManager {
     table: dynamodb.ITable,
     tableKey: { [key: string]: tasks.DynamoAttributeValue }
   ) {
-    if (!props) throw 'Step props undefined'
+    if (!props) throw `Step props undefined for ${id}`
     return new tasks.DynamoGetItem(scope, `${props.name}`, {
       ...props,
       ...{
@@ -180,7 +180,7 @@ export class SfnManager {
     table: dynamodb.ITable,
     tableItem: { [key: string]: tasks.DynamoAttributeValue }
   ) {
-    if (!props) throw 'Step props undefined'
+    if (!props) throw `Step props undefined for ${id}`
     return new tasks.DynamoPutItem(scope, `${props.name}`, {
       ...props,
       ...{
@@ -217,7 +217,7 @@ export class SfnManager {
     props: types.SfnSqsSendMessageProps,
     queue: sqs.IQueue
   ) {
-    if (!props) throw 'Step props undefined'
+    if (!props) throw `Step props undefined for ${id}`
     if (!props.messageBody) throw 'Message body undefined'
     return new tasks.SqsSendMessage(scope, `${props.name}`, {
       ...props,
@@ -252,7 +252,7 @@ export class SfnManager {
     props: types.SfnLambdaInvokeProps,
     lambdaFunction: lambda.IFunction
   ) {
-    if (!props) throw 'Step props undefined'
+    if (!props) throw `Step props undefined for ${id}`
     return new tasks.LambdaInvoke(scope, `${props.name}`, {
       ...props,
       ...{
@@ -275,7 +275,7 @@ export class SfnManager {
     props: types.SfnCallApiGatewayRestApiEndpointProps,
     api: apig.IRestApi
   ) {
-    if (!props) throw 'Step props undefined'
+    if (!props) throw `Step props undefined for ${id}`
     return new tasks.CallApiGatewayRestApiEndpoint(scope, `${props.name}`, {
       ...props,
       ...{
@@ -303,7 +303,7 @@ export class SfnManager {
     logGroup: logs.ILogGroup,
     role?: iam.IRole
   ) {
-    if (!props) throw 'State Machine props undefined'
+    if (!props) throw `State Machine props undefined for ${id}`
     const stateMachine = new sfn.StateMachine(scope, `${id}`, {
       stateMachineName: `${props.stateMachineName}-${scope.props.stage}`,
       definition,

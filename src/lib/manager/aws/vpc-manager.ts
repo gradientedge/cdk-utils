@@ -37,7 +37,7 @@ export class VpcManager {
    * @param {ec2.VpcProps} props
    */
   public createVpc(id: string, scope: common.CommonConstruct, props: ec2.VpcProps) {
-    if (!props) throw 'Vpc props undefined'
+    if (!props) throw `Vpc props undefined for ${id}`
     const vpc = new ec2.Vpc(scope, `${id}`, {
       maxAzs: props.maxAzs,
       ipAddresses: props.ipAddresses,

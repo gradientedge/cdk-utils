@@ -33,7 +33,7 @@ export class SsmManager {
    * @param {ssm.StringParameterProps} props parameter props
    */
   public writeStringToParameters(id: string, scope: common.CommonConstruct, props: ssm.StringParameterProps) {
-    if (!props) throw `Parameter props undefined`
+    if (!props) throw `Parameter props undefined for ${id}`
 
     const parameter = new ssm.StringParameter(scope, `${id}`, {
       parameterName: `${props.parameterName}-${scope.props.stage}`,
@@ -72,8 +72,8 @@ export class SsmManager {
     parameterName: string,
     region: string
   ) {
-    if (!parameterName || parameterName == '') throw 'Invalid parameter name'
-    if (!region || region == '') throw 'Invalid region'
+    if (!parameterName || parameterName == '') throw `Invalid parameter name for ${id}`
+    if (!region || region == '') throw `Invalid region for ${id}`
 
     return new SSMParameterReader(scope, `${id}`, {
       parameterName: parameterName,

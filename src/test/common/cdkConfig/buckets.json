@@ -9,7 +9,7 @@
   "siteBucket": {
     "bucketName": "site",
     "logBucketName": "site-logs",
-    "accessControl": "Private",
+    "accessControl": "LogDeliveryWrite",
     "autoDeleteObjects": true,
     "removalPolicy": "destroy",
     "serverAccessLogsPrefix": "logs/",

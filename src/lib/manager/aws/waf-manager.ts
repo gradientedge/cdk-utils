@@ -31,7 +31,7 @@ export class WafManager {
    * @param {types.WafIPSetProps} props
    */
   public createIpSet(id: string, scope: common.CommonConstruct, props: types.WafIPSetProps) {
-    if (!props) throw `WAF Ip Set props undefined`
+    if (!props) throw `WAF Ip Set props undefined for ${id}`
 
     const ipSet = new wafv2.CfnIPSet(scope, `${id}`, {
       name: scope.isProductionStage() ? props.name : `${props.name}-${scope.props.stage}`,
@@ -54,7 +54,7 @@ export class WafManager {
    * @param {types.WafWebACLProps} props
    */
   public createWebAcl(id: string, scope: common.CommonConstruct, props: types.WafWebACLProps) {
-    if (!props) throw `WAF WebACL props undefined`
+    if (!props) throw `WAF WebACL props undefined for ${id}`
 
     const webAcl = new wafv2.CfnWebACL(scope, `${id}`, {
       name: scope.isProductionStage() ? props.name : `${props.name}-${scope.props.stage}`,
