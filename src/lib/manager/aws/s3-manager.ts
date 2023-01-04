@@ -89,7 +89,7 @@ export class S3Manager {
    * @param {types.S3BucketProps} props bucket properties
    */
   public createS3Bucket(id: string, scope: common.CommonConstruct, props: types.S3BucketProps) {
-    if (!props) throw `S3 props undefined`
+    if (!props) throw `S3 props undefined for ${id}`
 
     let bucket: s3.IBucket
 

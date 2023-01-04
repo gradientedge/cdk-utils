@@ -51,7 +51,7 @@ export class AcmManager {
     props: types.AcmProps,
     hostedZone?: route53.IHostedZone
   ): acm.ICertificate {
-    if (!props) throw `Certificate props undefined`
+    if (!props) throw `Certificate props undefined for ${id}`
 
     let certificate
 

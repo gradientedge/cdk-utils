@@ -70,9 +70,9 @@ export class CloudFrontManager {
     certificate?: acm.ICertificate,
     aliases?: string[]
   ) {
-    if (!siteBucket) throw `SiteBucket not defined`
-    if (!certificate) throw `Certificate not defined`
-    if (!props) throw `CloudFront props undefined`
+    if (!siteBucket) throw `SiteBucket not defined for ${id}`
+    if (!certificate) throw `Certificate not defined for ${id}`
+    if (!props) throw `CloudFront props undefined for ${id}`
 
     const distribution = new cloudfront.CloudFrontWebDistribution(scope, `${id}`, {
       comment: `${id} - ${scope.props.stage} stage`,
@@ -253,7 +253,7 @@ export class CloudFrontManager {
     accessPoint?: efs.IAccessPoint,
     mountPath?: string
   ) {
-    if (!props) throw 'EdgeFunction props undefined'
+    if (!props) throw `EdgeFunction props undefined for ${id}`
 
     const edgeFunction = new cloudfront.experimental.EdgeFunction(scope, `${id}`, {
       code: code,

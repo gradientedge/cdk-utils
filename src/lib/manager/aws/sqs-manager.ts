@@ -33,7 +33,7 @@ export class SqsManager {
    * @param {sqs.IQueue} deadLetterQueue
    */
   public createQueue(id: string, scope: common.CommonConstruct, props: types.QueueProps, deadLetterQueue?: sqs.IQueue) {
-    if (!props) throw `Queue props undefined`
+    if (!props) throw `Queue props undefined for ${id}`
 
     const queue = new sqs.Queue(scope, id, {
       queueName: props.queueName,

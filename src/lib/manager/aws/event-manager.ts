@@ -34,7 +34,7 @@ export class EventManager {
    * @param {types.EventBusProps} props event bus properties
    */
   public createEventBus(id: string, scope: common.CommonConstruct, props: types.EventBusProps) {
-    if (!props) throw 'EventBus props undefined'
+    if (!props) throw `EventBus props undefined for ${id}`
 
     const eventBus = new events.EventBus(scope, `${id}`, {
       eventBusName: `${props.eventBusName}-${scope.props.stage}`,
@@ -61,7 +61,7 @@ export class EventManager {
     eventBus?: events.IEventBus,
     targets?: events.IRuleTarget[]
   ) {
-    if (!props) throw `EventRule props undefined`
+    if (!props) throw `EventRule props undefined for ${id}`
 
     const rule = new events.Rule(scope, `${id}`, {
       eventBus: eventBus,
@@ -103,7 +103,7 @@ export class EventManager {
     eventPattern?: any,
     scheduleExpression?: string
   ) {
-    if (!props) throw `EventRule props undefined`
+    if (!props) throw `EventRule props undefined for ${id}`
 
     const eventRule = new events.CfnRule(scope, `${id}`, {
       description: 'Rule to send notification to lambda function target',
@@ -149,7 +149,7 @@ export class EventManager {
     role: iam.Role | iam.CfnRole,
     eventPattern?: any
   ) {
-    if (!props) throw `EventRule props undefined`
+    if (!props) throw `EventRule props undefined for ${id}`
 
     const eventRule = new events.CfnRule(scope, `${id}`, {
       description: 'Rule to send notification on new objects in data bucket to ecs task target',

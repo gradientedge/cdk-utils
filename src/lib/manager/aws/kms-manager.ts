@@ -31,7 +31,7 @@ export class KmsManager {
    * @param {types.AcmProps} props KMS key props
    */
   public createKey(id: string, scope: common.CommonConstruct, props: types.KmsKeyProps) {
-    if (!props) throw `KMS Key props undefined`
+    if (!props) throw `KMS Key props undefined for ${id}`
 
     const key = new kms.Key(scope, `${id}`, {
       description: props.description,

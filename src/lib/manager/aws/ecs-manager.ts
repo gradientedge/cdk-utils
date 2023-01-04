@@ -37,7 +37,7 @@ export class EcsManager {
    * @param {ec2.IVpc} vpc
    */
   public createEcsCluster(id: string, scope: common.CommonConstruct, props: types.EcsClusterProps, vpc: ec2.IVpc) {
-    if (!props) throw `Ecs Cluster props undefined`
+    if (!props) throw `Ecs Cluster props undefined for ${id}`
 
     const ecsCluster = new ecs.Cluster(scope, `${id}`, {
       clusterName: `${props.clusterName}-${scope.props.stage}`,
@@ -78,7 +78,7 @@ export class EcsManager {
     environment?: any,
     secrets?: any
   ) {
-    if (!props) throw `EcsTask props undefined`
+    if (!props) throw `EcsTask props undefined for ${id}`
 
     const ecsTask = new ecs.TaskDefinition(scope, `${id}`, {
       compatibility: ecs.Compatibility.FARGATE,
@@ -135,8 +135,8 @@ export class EcsManager {
     cluster: ecs.ICluster,
     logGroup: logs.ILogGroup
   ) {
-    if (!props) throw `EcsLoadbalanced Fargate Serivice props undefined`
-    if (!props.taskImageOptions) throw `TaskImageOptions for EcsLoadbalanced Fargate Serivice props undefined`
+    if (!props) throw `EcsLoadbalanced Fargate Serivice props undefined for ${id}`
+    if (!props.taskImageOptions) throw `TaskImageOptions for EcsLoadbalanced Fargate Serivice props undefined for ${id}`
 
     const fargateService = new ecsPatterns.ApplicationLoadBalancedFargateService(scope, `${id}-ecs-service`, {
       assignPublicIp: props.assignPublicIp ?? true,
