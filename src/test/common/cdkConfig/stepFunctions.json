@@ -13,7 +13,15 @@
   },
   "testSubmitStepCreateSomething": {
     "name": "step:Create Something",
-    "outputPath": "$.Payload"
+    "outputPath": "$.Payload",
+    "retries": [
+      {
+        "errors": ["Lambda.TooManyRequestsException"],
+        "intervalInSecs": 10,
+        "maxAttempts": 6,
+        "backoffRate": 2
+      }
+    ]
   },
   "testSubmitStepGetItem": {
     "name": "step:Get Item from dynamodb",

@@ -132,6 +132,14 @@ export interface SfnSucceedProps extends sfn.SucceedProps {
  * @category cdk-utils.step-functions-manager
  * @subcategory Properties
  */
+export interface SfnRetryProps extends sfn.RetryProps {
+  intervalInSecs: number
+}
+
+/**
+ * @category cdk-utils.step-functions-manager
+ * @subcategory Properties
+ */
 export interface SfnFailProps extends sfn.FailProps {
   name: string
 }
@@ -150,6 +158,7 @@ export interface SfnPassProps extends sfn.PassProps {
  */
 export interface SfnDynamoGetItemProps extends tasks.DynamoGetItemProps {
   name: string
+  retries?: SfnRetryProps[]
 }
 
 /**
@@ -158,6 +167,7 @@ export interface SfnDynamoGetItemProps extends tasks.DynamoGetItemProps {
  */
 export interface SfnDynamoPutItemProps extends tasks.DynamoPutItemProps {
   name: string
+  retries?: SfnRetryProps[]
 }
 
 /**
@@ -166,6 +176,7 @@ export interface SfnDynamoPutItemProps extends tasks.DynamoPutItemProps {
  */
 export interface SfnSqsSendMessageProps extends tasks.SqsSendMessageProps {
   name: string
+  retries?: SfnRetryProps[]
 }
 
 /**
@@ -174,6 +185,7 @@ export interface SfnSqsSendMessageProps extends tasks.SqsSendMessageProps {
  */
 export interface SfnParallelProps extends sfn.ParallelProps {
   name: string
+  retries?: SfnRetryProps[]
 }
 
 /**
@@ -199,6 +211,7 @@ export interface SfnWaitProps extends sfn.WaitProps {
  */
 export interface SfnLambdaInvokeProps extends tasks.LambdaInvokeProps {
   name: string
+  retries?: SfnRetryProps[]
 }
 
 /**
@@ -207,6 +220,7 @@ export interface SfnLambdaInvokeProps extends tasks.LambdaInvokeProps {
  */
 export interface SfnCallApiGatewayRestApiEndpointProps extends tasks.CallApiGatewayRestApiEndpointProps {
   name: string
+  retries?: SfnRetryProps[]
 }
 
 /**
