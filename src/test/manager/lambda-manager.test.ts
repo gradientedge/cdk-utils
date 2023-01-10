@@ -11,6 +11,7 @@ interface TestStackProps extends types.CommonStackProps {
   testLambdaWithDlq: any
   testLambdaEdge: any
   testLambdaPython: any
+  testLambdaAlias: any
 }
 
 const testStackProps = {
@@ -44,6 +45,7 @@ class TestCommonStack extends common.CommonStack {
         testLambdaWithDlq: this.node.tryGetContext('testLambdaWithDlq'),
         testLambdaEdge: this.node.tryGetContext('testLambdaEdge'),
         testLambdaPython: this.node.tryGetContext('testLambdaPython'),
+        testLambdaAlias: this.node.tryGetContext('testLambdaAlias'),
       },
     }
   }
@@ -74,7 +76,7 @@ class TestCommonConstruct extends common.CommonConstruct {
       this,
       new iam.PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this)] })
     )
-    this.lambdaManager.createLambdaFunction(
+    const testLambda = this.lambdaManager.createLambdaFunction(
       'test-lambda',
       this,
       this.props.testLambda,
@@ -106,6 +108,13 @@ class TestCommonConstruct extends common.CommonConstruct {
       testRole,
       lambda.DockerImageCode.fromImageAsset('src/test/common/docker')
     )
+
+    this.lambdaManager.createLambdaFunctionAlias(
+      'test-lambda-alias',
+      this,
+      this.props.testLambdaAlias,
+      testLambda.latestVersion
+    )
   }
 }
 
@@ -126,6 +135,7 @@ describe('TestLambdaConstruct', () => {
     template.resourceCountIs('AWS::Lambda::LayerVersion', 1)
     template.resourceCountIs('AWS::Lambda::Function', 5)
     template.resourceCountIs('AWS::SQS::Queue', 2)
+    template.resourceCountIs('AWS::Lambda::Alias', 1)
   })
 })
 
@@ -181,6 +191,13 @@ describe('TestLambdaConstruct', () => {
       MemorySize: 1024,
       Runtime: 'nodejs16.x',
       Timeout: 60,
+    })
+  })
+
+  test('provisions new lambda alias as expected', () => {
+    template.hasResourceProperties('AWS::Lambda::Alias', {
+      ProvisionedConcurrencyConfig: { ProvisionedConcurrentExecutions: 1 },
+      Name: 'test-lambda-alias-lambda-alias',
     })
   })
 })

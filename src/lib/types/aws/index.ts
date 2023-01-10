@@ -663,6 +663,12 @@ export interface LambdaProps extends lambda.FunctionProps {
  * @category cdk-utils.lambda-manager
  * @subcategory Properties
  */
+export interface LambdaAliasProps extends lambda.AliasProps {}
+
+/**
+ * @category cdk-utils.lambda-manager
+ * @subcategory Properties
+ */
 export interface LambdaEdgeProps extends cloudfront.experimental.EdgeFunctionProps {
   timeoutInSecs?: number
 }
