@@ -244,4 +244,40 @@ export class LambdaManager {
 
     return lambdaFunction
   }
+
+  /**
+   * @summary Method to create a lambda function Alias
+   * @param {string} id scoped id of the resource
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.LambdaAliasProps} props
+   * @param {types.LambdaAliasProps} lambdaVersion
+   */
+  public createLambdaFunctionAlias(
+    id: string,
+    scope: common.CommonConstruct,
+    props: types.LambdaAliasProps,
+    lambdaVersion: lambda.IVersion
+  ) {
+    if (!props) throw `Lambda Alias props undefined for ${id}`
+
+    const lambdaFunctionAlias = new lambda.Alias(scope, `${id}`, {
+      ...props,
+      ...{
+        aliasName: `${id}-lambda-alias`,
+        version: lambdaVersion,
+        additionalVersions: props.additionalVersions,
+        description: props.description,
+        maxEventAge: props.maxEventAge,
+        onFailure: props.onFailure,
+        onSuccess: props.onSuccess,
+        provisionedConcurrentExecutions: props.provisionedConcurrentExecutions,
+        retryAttempts: props.retryAttempts,
+      },
+    })
+
+    utils.createCfnOutput(`${id}-lambdaAliasName`, scope, lambdaFunctionAlias.functionArn)
+    utils.createCfnOutput(`${id}-lambdaAliasArn`, scope, lambdaFunctionAlias.functionName)
+
+    return lambdaFunctionAlias
+  }
 }
