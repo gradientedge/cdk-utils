@@ -88,12 +88,23 @@ export class SfnManager {
    */
   public createParallelStep(id: string, scope: common.CommonConstruct, props: types.SfnParallelProps) {
     if (!props) throw `Step props undefined for ${id}`
-    return new sfn.Parallel(scope, `${props.name}`, {
+    const step = new sfn.Parallel(scope, `${props.name}`, {
       ...props,
       ...{
         comment: `Parallel step for ${props.name} - ${scope.props.stage} stage`,
       },
     })
+
+    if (props.retries && props.retries.length > 0) {
+      props.retries.forEach(retry =>
+        step.addRetry({
+          ...retry,
+          ...{ interval: retry.intervalInSecs ? cdk.Duration.seconds(retry.intervalInSecs) : retry.interval },
+        })
+      )
+    }
+
+    return step
   }
 
   /**
@@ -144,7 +155,7 @@ export class SfnManager {
     tableKey: { [key: string]: tasks.DynamoAttributeValue }
   ) {
     if (!props) throw `Step props undefined for ${id}`
-    return new tasks.DynamoGetItem(scope, `${props.name}`, {
+    const step = new tasks.DynamoGetItem(scope, `${props.name}`, {
       ...props,
       ...{
         table: table,
@@ -163,6 +174,17 @@ export class SfnManager {
         comment: `DynamoDB GetItem step for ${props.name} - ${scope.props.stage} stage`,
       },
     })
+
+    if (props.retries && props.retries.length > 0) {
+      props.retries.forEach(retry =>
+        step.addRetry({
+          ...retry,
+          ...{ interval: retry.intervalInSecs ? cdk.Duration.seconds(retry.intervalInSecs) : retry.interval },
+        })
+      )
+    }
+
+    return step
   }
 
   /**
@@ -181,7 +203,7 @@ export class SfnManager {
     tableItem: { [key: string]: tasks.DynamoAttributeValue }
   ) {
     if (!props) throw `Step props undefined for ${id}`
-    return new tasks.DynamoPutItem(scope, `${props.name}`, {
+    const step = new tasks.DynamoPutItem(scope, `${props.name}`, {
       ...props,
       ...{
         table: table,
@@ -202,6 +224,17 @@ export class SfnManager {
         comment: `DynamoDB PutItem step for ${props.name} - ${scope.props.stage} stage`,
       },
     })
+
+    if (props.retries && props.retries.length > 0) {
+      props.retries.forEach(retry =>
+        step.addRetry({
+          ...retry,
+          ...{ interval: retry.intervalInSecs ? cdk.Duration.seconds(retry.intervalInSecs) : retry.interval },
+        })
+      )
+    }
+
+    return step
   }
 
   /**
@@ -219,7 +252,7 @@ export class SfnManager {
   ) {
     if (!props) throw `Step props undefined for ${id}`
     if (!props.messageBody) throw 'Message body undefined'
-    return new tasks.SqsSendMessage(scope, `${props.name}`, {
+    const step = new tasks.SqsSendMessage(scope, `${props.name}`, {
       ...props,
       ...{
         queue: queue,
@@ -237,6 +270,17 @@ export class SfnManager {
         comment: `DynamoDB PutItem step for ${props.name} - ${scope.props.stage} stage`,
       },
     })
+
+    if (props.retries && props.retries.length > 0) {
+      props.retries.forEach(retry =>
+        step.addRetry({
+          ...retry,
+          ...{ interval: retry.intervalInSecs ? cdk.Duration.seconds(retry.intervalInSecs) : retry.interval },
+        })
+      )
+    }
+
+    return step
   }
 
   /**
@@ -253,13 +297,24 @@ export class SfnManager {
     lambdaFunction: lambda.IFunction
   ) {
     if (!props) throw `Step props undefined for ${id}`
-    return new tasks.LambdaInvoke(scope, `${props.name}`, {
+    const step = new tasks.LambdaInvoke(scope, `${props.name}`, {
       ...props,
       ...{
         lambdaFunction,
         comment: `Lambda step for ${props.name} - ${scope.props.stage} stage`,
       },
     })
+
+    if (props.retries && props.retries.length > 0) {
+      props.retries.forEach(retry =>
+        step.addRetry({
+          ...retry,
+          ...{ interval: retry.intervalInSecs ? cdk.Duration.seconds(retry.intervalInSecs) : retry.interval },
+        })
+      )
+    }
+
+    return step
   }
 
   /**
@@ -276,7 +331,7 @@ export class SfnManager {
     api: apig.IRestApi
   ) {
     if (!props) throw `Step props undefined for ${id}`
-    return new tasks.CallApiGatewayRestApiEndpoint(scope, `${props.name}`, {
+    const step = new tasks.CallApiGatewayRestApiEndpoint(scope, `${props.name}`, {
       ...props,
       ...{
         api,
@@ -284,6 +339,17 @@ export class SfnManager {
         comment: `API step for ${props.name} - ${scope.props.stage} stage`,
       },
     })
+
+    if (props.retries && props.retries.length > 0) {
+      props.retries.forEach(retry =>
+        step.addRetry({
+          ...retry,
+          ...{ interval: retry.intervalInSecs ? cdk.Duration.seconds(retry.intervalInSecs) : retry.interval },
+        })
+      )
+    }
+
+    return step
   }
 
   /**
