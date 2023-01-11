@@ -238,6 +238,56 @@ export class SfnManager {
   }
 
   /**
+   * @summary Method to create a DynamoDB delete item step
+   * @param {string} id scoped id of the resource
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.SfnDynamoDeleteItemProps} props
+   * @param {dynamodb.ITable} table The table to put the item in
+   * @param tableKey The table key for query/scan
+   */
+  public createDynamoDbDeleteItemStep(
+    id: string,
+    scope: common.CommonConstruct,
+    props: types.SfnDynamoDeleteItemProps,
+    table: dynamodb.ITable,
+    tableKey: { [key: string]: tasks.DynamoAttributeValue }
+  ) {
+    if (!props) throw `Step props undefined for ${id}`
+    const step = new tasks.DynamoDeleteItem(scope, `${props.name}`, {
+      ...props,
+      ...{
+        table: table,
+        key: tableKey,
+        conditionExpression: props.conditionExpression,
+        expressionAttributeNames: props.expressionAttributeNames,
+        expressionAttributeValues: props.expressionAttributeValues,
+        heartbeat: props.heartbeat,
+        inputPath: props.inputPath,
+        outputPath: props.outputPath,
+        resultPath: props.resultPath,
+        resultSelector: props.resultSelector,
+        timeout: props.timeout,
+        integrationPattern: props.integrationPattern,
+        returnConsumedCapacity: props.returnConsumedCapacity,
+        returnItemCollectionMetrics: props.returnItemCollectionMetrics,
+        returnValues: props.returnValues,
+        comment: `DynamoDB DeleteItem step for ${props.name} - ${scope.props.stage} stage`,
+      },
+    })
+
+    if (props.retries && props.retries.length > 0) {
+      props.retries.forEach(retry =>
+        step.addRetry({
+          ...retry,
+          ...{ interval: retry.intervalInSecs ? cdk.Duration.seconds(retry.intervalInSecs) : retry.interval },
+        })
+      )
+    }
+
+    return step
+  }
+
+  /**
    * @summary Method to send a message to SQS step
    * @param {string} id scoped id of the resource
    * @param {common.CommonConstruct} scope scope in which this resource is defined
