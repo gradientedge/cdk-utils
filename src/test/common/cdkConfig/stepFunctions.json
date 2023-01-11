@@ -31,6 +31,10 @@
     "name": "step:Put Item into dynamodb",
     "outputPath": "$.Payload"
   },
+  "testSubmitStepDeleteItem": {
+    "name": "step:Delete Item from dynamodb",
+    "outputPath": "$.Payload"
+  },
   "testSubmitStepSendMessage": {
     "name": "step:Send message to SQS",
     "outputPath": "$.Payload",

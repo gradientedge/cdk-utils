@@ -174,6 +174,15 @@ export interface SfnDynamoPutItemProps extends tasks.DynamoPutItemProps {
  * @category cdk-utils.step-functions-manager
  * @subcategory Properties
  */
+export interface SfnDynamoDeleteItemProps extends tasks.DynamoDeleteItemProps {
+  name: string
+  retries?: SfnRetryProps[]
+}
+
+/**
+ * @category cdk-utils.step-functions-manager
+ * @subcategory Properties
+ */
 export interface SfnSqsSendMessageProps extends tasks.SqsSendMessageProps {
   name: string
   retries?: SfnRetryProps[]

@@ -20,6 +20,7 @@ interface TestStackProps extends types.CommonStackProps {
   testSubmitStepCreateSomethingNew: any
   testSubmitStepGetItem: any
   testSubmitStepPutItem: any
+  testSubmitStepDeleteItem: any
   testSubmitStepSendMessage: any
   testSubmitStepApi: any
   testSubmitStepWait: any
@@ -72,6 +73,7 @@ class TestCommonStack extends common.CommonStack {
         testSubmitStepCreateSomethingNew: this.node.tryGetContext('testSubmitStepCreateSomethingNew'),
         testSubmitStepGetItem: this.node.tryGetContext('testSubmitStepGetItem'),
         testSubmitStepPutItem: this.node.tryGetContext('testSubmitStepPutItem'),
+        testSubmitStepDeleteItem: this.node.tryGetContext('testSubmitStepDeleteItem'),
         testSubmitStepSendMessage: this.node.tryGetContext('testSubmitStepSendMessage'),
         testSubmitStepApi: this.node.tryGetContext('testSubmitStepApi'),
         testSubmitStepWait: this.node.tryGetContext('testSubmitStepWait'),
@@ -193,6 +195,14 @@ class TestCommonConstruct extends common.CommonConstruct {
       { id: tasks.DynamoAttributeValue.fromString('test-put') }
     )
 
+    const testSubmitStepDeleteItem = this.sfnManager.createDynamoDbDeleteItemStep(
+      'test-ddb-put-item',
+      this,
+      this.props.testSubmitStepDeleteItem,
+      testTable,
+      { id: tasks.DynamoAttributeValue.fromString('test-delete') }
+    )
+
     const testSqs = this.sqsManager.createQueue('test-sqs', this, this.props.testSqs)
     const testSubmitStepSendMessage = this.sfnManager.createSendSqsMessageStep(
       'test-sqs-send-msg',
@@ -232,7 +242,7 @@ class TestCommonConstruct extends common.CommonConstruct {
         testSubmitStepCreateSomethingParallel
           .branch(testSubmitStepCreateSomethingNew)
           .branch(testSubmitStepApi)
-          .branch(testSubmitStepGetItem.next(testSubmitStepPutItem))
+          .branch(testSubmitStepGetItem.next(testSubmitStepPutItem).next(testSubmitStepDeleteItem))
           .branch(testSubmitStepSendMessage)
           .addCatch(testSubmitStepFailure)
           .next(testSubmitStepSuccess)
@@ -325,6 +335,7 @@ describe('TestSfnConstruct', () => {
             {
               Ref: 'AWS::URLSuffix',
             },
+
             '","Stage":"test","AuthType":"NO_AUTH"}}}},{"StartAt":"step:Get Item from dynamodb","States":{"step:Get Item from dynamodb":{"Next":"step:Put Item into dynamodb","Type":"Task","Comment":"DynamoDB GetItem step for step:Get Item from dynamodb - test stage","OutputPath":"$.Payload","Resource":"arn:',
             {
               Ref: 'AWS::Partition',
@@ -333,11 +344,19 @@ describe('TestSfnConstruct', () => {
             {
               Ref: 'testcommonstacktesttableF9EEAE8E',
             },
-            '","ConsistentRead":false}},"step:Put Item into dynamodb":{"End":true,"Type":"Task","Comment":"DynamoDB PutItem step for step:Put Item into dynamodb - test stage","OutputPath":"$.Payload","Resource":"arn:',
+            '","ConsistentRead":false}},"step:Put Item into dynamodb":{"Next":"step:Delete Item from dynamodb","Type":"Task","Comment":"DynamoDB PutItem step for step:Put Item into dynamodb - test stage","OutputPath":"$.Payload","Resource":"arn:',
             {
               Ref: 'AWS::Partition',
             },
             ':states:::dynamodb:putItem","Parameters":{"Item":{"id":{"S":"test-put"}},"TableName":"',
+            {
+              Ref: 'testcommonstacktesttableF9EEAE8E',
+            },
+            '"}},"step:Delete Item from dynamodb":{"End":true,"Type":"Task","Comment":"DynamoDB DeleteItem step for step:Delete Item from dynamodb - test stage","OutputPath":"$.Payload","Resource":"arn:',
+            {
+              Ref: 'AWS::Partition',
+            },
+            ':states:::dynamodb:deleteItem","Parameters":{"Key":{"id":{"S":"test-delete"}},"TableName":"',
             {
               Ref: 'testcommonstacktesttableF9EEAE8E',
             },
