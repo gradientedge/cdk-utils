@@ -197,7 +197,7 @@ describe('TestLambdaConstruct', () => {
   test('provisions new lambda alias as expected', () => {
     template.hasResourceProperties('AWS::Lambda::Alias', {
       ProvisionedConcurrencyConfig: { ProvisionedConcurrentExecutions: 1 },
-      Name: 'test-lambda-alias-lambda-alias',
+      Name: 'test-alias',
     })
   })
 })

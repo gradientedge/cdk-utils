@@ -263,7 +263,7 @@ export class LambdaManager {
     const lambdaFunctionAlias = new lambda.Alias(scope, `${id}`, {
       ...props,
       ...{
-        aliasName: `${id}-lambda-alias`,
+        aliasName: props.aliasName,
         version: lambdaVersion,
         additionalVersions: props.additionalVersions,
         description: props.description,

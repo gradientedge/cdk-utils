@@ -48,6 +48,7 @@
     "timeoutInSecs": 60
   },
   "testLambdaAlias": {
+    "aliasName": "test-alias",
     "provisionedConcurrentExecutions": 1
   }
 }
