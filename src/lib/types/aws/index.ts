@@ -54,6 +54,7 @@ export interface CommonStackProps extends cdk.StackProps {
   extraContexts?: string[]
   stageContextPath?: string
   skipStageForARecords: boolean
+  logRetention?: logs.RetentionDays
 }
 
 /**

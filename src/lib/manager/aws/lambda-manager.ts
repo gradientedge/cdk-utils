@@ -118,6 +118,7 @@ export class LambdaManager {
           ? lambda.FileSystem.fromEfsAccessPoint(accessPoint, mountPath || '/mnt/msg')
           : undefined,
         layers: layers,
+        logRetention: scope.props.logRetention ?? props.logRetention,
         reservedConcurrentExecutions: props.reservedConcurrentExecutions,
         role: role instanceof iam.Role ? role : undefined,
         securityGroups: securityGroups,
