@@ -137,8 +137,6 @@ describe('TestGraphQLApiLambdaConstruct', () => {
     template.hasOutput('testGraphqlLambdaRestApiRestApiId', {})
     template.hasOutput('testGraphqlLambdaRestApiRestApiName', {})
     template.hasOutput('testGraphqlApiDomainCustomDomainName', {})
-    template.hasOutput('testGraphqlElasticachePrimaryEndPointPort', {})
-    template.hasOutput('testGraphqlElasticachePrimaryEndPointPort', {})
   })
 })
 

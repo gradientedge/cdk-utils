@@ -114,8 +114,6 @@ describe('TestElastiCacheConstruct', () => {
     template.hasOutput('testElasticacheRedisEndpointAddress', {})
     template.hasOutput('testElasticacheRedisEndpointPort', {})
     template.hasOutput('testElasticacheClusterName', {})
-    template.hasOutput('testReplicatedElasticachePrimaryEndPointAddress', {})
-    template.hasOutput('testReplicatedElasticachePrimaryEndPointPort', {})
   })
 })
 

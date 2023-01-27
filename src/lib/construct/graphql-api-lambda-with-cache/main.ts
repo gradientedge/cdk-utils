@@ -120,8 +120,6 @@ export class GraphQLApiLambdaWithCache extends GraphQLApiLambda {
    */
   protected createLambdaEnvironment() {
     this.graphQLApiLambdaEnvironment = {
-      CACHE_REDIS_HOST: `${this.graphQLElastiCache.attrPrimaryEndPointAddress}`,
-      CACHE_REDIS_PORT: `${this.graphQLElastiCache.attrPrimaryEndPointPort}`,
       NODE_ENV: this.props.nodeEnv,
       LOG_LEVEL: this.props.logLevel,
       TZ: this.props.timezone,
