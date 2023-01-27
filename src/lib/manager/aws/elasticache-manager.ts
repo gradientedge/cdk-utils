@@ -137,20 +137,6 @@ export class ElastiCacheManager {
 
     elasticacheCluster.addDependency(subnetGroup)
 
-    if (elasticacheCluster.attrPrimaryEndPointAddress) {
-      utils.createCfnOutput(`${id}-primaryEndPointAddress`, scope, elasticacheCluster.attrPrimaryEndPointAddress)
-      utils.createCfnOutput(`${id}-primaryEndPointPort`, scope, elasticacheCluster.attrPrimaryEndPointPort)
-    }
-
-    if (elasticacheCluster.attrConfigurationEndPointAddress) {
-      utils.createCfnOutput(
-        `${id}-configurationEndPointAddress`,
-        scope,
-        elasticacheCluster.attrConfigurationEndPointAddress
-      )
-      utils.createCfnOutput(`${id}-configurationEndPointPort`, scope, elasticacheCluster.attrConfigurationEndPointPort)
-    }
-
     return elasticacheCluster
   }
 }
