@@ -288,6 +288,24 @@ export class CloudWatchManager {
   }
 
   /**
+   * @summary Method to create a custom widget
+   * @param {string} id scoped id of the resource
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.TextWidgetProps} props
+   * @param {string} service the service identifier
+   */
+  public createCustomWidget(id: string, scope: common.CommonConstruct, props: any, service: string) {
+    if (!props) throw `Widget props undefined for ${id}`
+    const metricProps: any[] = props.metricProps
+    return this.createWidget(id, scope, {
+      ...props,
+      ...{
+        metricProps: metricProps.map(metricProp => ({ ...metricProp, ...{ service: service } })),
+      },
+    })
+  }
+
+  /**
    * @summary Method to create an ecs cluster widget
    * @param {string} id scoped id of the resource
    * @param {common.CommonConstruct} scope scope in which this resource is defined
@@ -590,6 +608,14 @@ export class CloudWatchManager {
             ...metricProp.dimensionsMap,
             ...{
               LoadBalancer: `${metricProp.loadBalancer}`,
+            },
+          }
+        }
+        if (metricProp.service) {
+          metricDimensions = {
+            ...metricProp.dimensionsMap,
+            ...{
+              service: `${metricProp.service}`,
             },
           }
         }

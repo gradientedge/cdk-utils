@@ -556,6 +556,7 @@ export interface MetricProps extends watch.MetricProps {
   stateMachineArn?: string
   eventBusName?: string
   ruleName?: string
+  service?: string
 }
 
 /**
