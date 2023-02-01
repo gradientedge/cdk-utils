@@ -273,6 +273,20 @@
       }
     ]
   },
+  "testCustomWidget": {
+    "type": "SingleValue",
+    "title": "Custom Widget",
+    "setPeriodToTimeRange": true,
+    "width": 3,
+    "height": 3,
+    "metricProps": [
+      {
+        "namespace": "test",
+        "metricName": "test-metric",
+        "statistic": "Sum"
+      }
+    ]
+  },
   "testWidgets": [
     {
       "type": "Graph",

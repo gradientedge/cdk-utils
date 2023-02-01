@@ -25,6 +25,7 @@ interface TestStackProps extends types.CommonStackProps {
   testCacheWidget: any
   testStateWidget: any
   testEventWidget: any
+  testCustomWidget: any
   testWidgets: any
   testDashboard: any
 }
@@ -75,6 +76,7 @@ class TestCommonStack extends common.CommonStack {
         testCacheWidget: this.node.tryGetContext('testCacheWidget'),
         testStateWidget: this.node.tryGetContext('testStateWidget'),
         testEventWidget: this.node.tryGetContext('testEventWidget'),
+        testCustomWidget: this.node.tryGetContext('testCustomWidget'),
         testWidgets: this.node.tryGetContext('testWidgets'),
         testDashboard: this.node.tryGetContext('testDashboard'),
       },
@@ -114,6 +116,7 @@ class TestInvalidCommonStack extends common.CommonStack {
         testCacheWidget: this.node.tryGetContext('testCacheWidget'),
         testStateWidget: this.node.tryGetContext('testStateWidget'),
         testEventWidget: this.node.tryGetContext('testEventWidget'),
+        testCustomWidget: this.node.tryGetContext('testCustomWidget'),
         testWidgets: this.node.tryGetContext('testWidgets'),
       },
     }
@@ -211,6 +214,12 @@ class TestCommonConstruct extends common.CommonConstruct {
       'testBus',
       'testRule'
     )
+    const customWidget = this.cloudWatchManager.createCustomWidget(
+      'test-custom-widget',
+      this,
+      this.props.testCustomWidget,
+      'testService'
+    )
     this.cloudWatchManager.createWidget('test-widget', this, this.props.testWidget)
     this.cloudWatchManager.createWidgets(this, this.props.testWidgets)
     this.cloudWatchManager.createDashboard('test-dashboard', this, this.props.testDashboard, [
@@ -229,6 +238,7 @@ class TestCommonConstruct extends common.CommonConstruct {
         cacheWidget,
         stateWidget,
         eventWidget,
+        customWidget,
       ],
     ])
   }
