@@ -154,7 +154,9 @@ export class ApiManager {
           allowCredentials: true,
         },
       })
-      methods.forEach(method => resourceProxy.addMethod(method, integration, { authorizer, requestParameters }))
+      methods.forEach(method =>
+        resourceProxy.addMethod(method, integration, { authorizer, requestParameters: methodRequestParameters })
+      )
       utils.createCfnOutput(`${id}-${path}ProxyResourceId`, scope, resourceProxy.resourceId)
     }
 
