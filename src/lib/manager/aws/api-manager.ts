@@ -58,6 +58,7 @@ export class ApiManager {
         variables: props.deployOptions?.variables,
         methodOptions: props.deployOptions?.methodOptions,
         loggingLevel: props.deployOptions?.loggingLevel,
+        dataTraceEnabled: props.deployOptions?.dataTraceEnabled
       },
       retainDeployments: props.retainDeployments,
       parameters: props.parameters,
