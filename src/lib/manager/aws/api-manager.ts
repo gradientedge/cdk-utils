@@ -59,6 +59,7 @@ export class ApiManager {
         methodOptions: props.deployOptions?.methodOptions,
         loggingLevel: props.deployOptions?.loggingLevel,
         dataTraceEnabled: props.deployOptions?.dataTraceEnabled,
+        cachingEnabled: props.deployOptions?.cachingEnabled,
       },
       retainDeployments: props.retainDeployments,
       parameters: props.parameters,
@@ -115,6 +116,7 @@ export class ApiManager {
    * @param {string[]?} allowedOrigins
    * @param {string[]?} allowedMethods
    * @param {string[]?} allowedHeaders
+   * @param {{}?} requestParameters
    */
   public createApiResource(
     id: string,
@@ -126,7 +128,8 @@ export class ApiManager {
     authorizer?: apig.IAuthorizer,
     allowedOrigins?: string[],
     allowedMethods?: string[],
-    allowedHeaders?: string[]
+    allowedHeaders?: string[],
+    methodRequestParameters?: {}
   ) {
     const methods = allowedMethods ?? apig.Cors.ALL_METHODS
     const resource = parent.addResource(path, {
@@ -137,7 +140,9 @@ export class ApiManager {
         allowCredentials: true,
       },
     })
-    methods.forEach(method => resource.addMethod(method, integration, { authorizer }))
+    methods.forEach(method =>
+      resource.addMethod(method, integration, { authorizer, requestParameters: methodRequestParameters })
+    )
     utils.createCfnOutput(`${id}-${path}ResourceId`, scope, resource.resourceId)
 
     if (addProxy) {
@@ -149,7 +154,7 @@ export class ApiManager {
           allowCredentials: true,
         },
       })
-      methods.forEach(method => resourceProxy.addMethod(method, integration, { authorizer }))
+      methods.forEach(method => resourceProxy.addMethod(method, integration, { authorizer, requestParameters }))
       utils.createCfnOutput(`${id}-${path}ProxyResourceId`, scope, resourceProxy.resourceId)
     }
 
