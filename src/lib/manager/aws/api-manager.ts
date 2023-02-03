@@ -116,7 +116,8 @@ export class ApiManager {
    * @param {string[]?} allowedOrigins
    * @param {string[]?} allowedMethods
    * @param {string[]?} allowedHeaders
-   * @param {{}?} requestParameters
+   * @param {{}?} methodRequestParameters
+   * @param {apig.Integration} proxyIntegration
    */
   public createApiResource(
     id: string,
@@ -129,7 +130,8 @@ export class ApiManager {
     allowedOrigins?: string[],
     allowedMethods?: string[],
     allowedHeaders?: string[],
-    methodRequestParameters?: {}
+    methodRequestParameters?: {},
+    proxyIntegration?: apig.Integration
   ) {
     const methods = allowedMethods ?? apig.Cors.ALL_METHODS
     const resource = parent.addResource(path, {
@@ -155,7 +157,10 @@ export class ApiManager {
         },
       })
       methods.forEach(method =>
-        resourceProxy.addMethod(method, integration, { authorizer, requestParameters: methodRequestParameters })
+        resourceProxy.addMethod(method, proxyIntegration ?? integration, {
+          authorizer,
+          requestParameters: methodRequestParameters,
+        })
       )
       utils.createCfnOutput(`${id}-${path}ProxyResourceId`, scope, resourceProxy.resourceId)
     }
