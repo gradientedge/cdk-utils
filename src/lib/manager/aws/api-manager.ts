@@ -117,7 +117,8 @@ export class ApiManager {
    * @param {string[]?} allowedMethods
    * @param {string[]?} allowedHeaders
    * @param {{}?} methodRequestParameters
-   */
+   * @param {apig.Integration} proxyIntegration
+  */
   public createApiResource(
     id: string,
     scope: common.CommonConstruct,
