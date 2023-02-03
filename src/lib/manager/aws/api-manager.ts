@@ -118,7 +118,7 @@ export class ApiManager {
    * @param {string[]?} allowedHeaders
    * @param {{}?} methodRequestParameters
    * @param {apig.Integration} proxyIntegration
-  */
+   */
   public createApiResource(
     id: string,
     scope: common.CommonConstruct,
@@ -157,7 +157,7 @@ export class ApiManager {
         },
       })
       methods.forEach(method =>
-        resourceProxy.addMethod(method, proxyIntegration || integration, {
+        resourceProxy.addMethod(method, proxyIntegration ?? integration, {
           authorizer,
           requestParameters: methodRequestParameters,
         })
