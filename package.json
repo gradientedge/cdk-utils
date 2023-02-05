@@ -38,7 +38,7 @@
     "prettier": "npx prettier --check \"**/*.{ts,json,md}\"",
     "prettify": "npx prettier --write \"**/*.{ts,json,md}\"",
     "test": "rimraf coverage && npx jest --ci --maxWorkers=100%",
-    "update:deps": "ncu -u -x lerna -x semantic-release",
+    "update:deps": "ncu -u -x lerna,semantic-release",
     "validate": "yarn prettier && yarn test"
   },
   "husky": {
@@ -48,11 +48,11 @@
   },
   "dependencies": {
     "@types/lodash": "^4.14.191",
-    "@types/node": "^18.11.18",
+    "@types/node": "^18.11.19",
     "app-root-path": "^3.1.0",
-    "aws-cdk-lib": "^2.63.1",
+    "aws-cdk-lib": "^2.63.2",
     "aws-sdk": "^2.1309.0",
-    "constructs": "^10.1.240",
+    "constructs": "^10.1.241",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
     "nconf": "^0.12.0",
