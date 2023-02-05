@@ -39,13 +39,6 @@ export class CommonStack extends cdk.Stack {
 
     /* initialise the construct */
     this.construct = new CommonConstruct(this, 'cdk-utils', this.props)
-
-    /* add common tags */
-    cdk.Tags.of(this).add('designedBy', '@gradientedge/cdk-utils')
-    cdk.Tags.of(this).add('deployedBy', 'CDK')
-    cdk.Tags.of(this).add('stage', parent.node.tryGetContext('stage'))
-    cdk.Tags.of(this).add('app', props.description ?? name)
-    cdk.Tags.of(this).add('stackName', name)
   }
 
   /**
