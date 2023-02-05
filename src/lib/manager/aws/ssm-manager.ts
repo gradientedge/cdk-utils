@@ -98,7 +98,7 @@ export class SSMParameterReader extends cr.AwsCustomResource {
         Name: `${parameterName}-${scope.props.stage}`,
       },
       region,
-      physicalResourceId: cr.PhysicalResourceId.of(Date.now().toString()),
+      physicalResourceId: cr.PhysicalResourceId.of(name),
     }
 
     super(scope, name, {
