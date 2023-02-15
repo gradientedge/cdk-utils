@@ -13,7 +13,7 @@
   },
   "scripts": {
     "build": "yarn package:function",
-    "init": "yarn install",
+    "initialise": "yarn install",
     "package:function": "mkdirp layers/nodejs && cp -R package.json layers/nodejs && cd layers/nodejs && yarn install --production --no-lockfile",
     "start": "node dist/index",
     "test": "npx jest --ci --runInBand --passWithNoTests"
