@@ -80,7 +80,7 @@
     "jsdoc": "^4.0.0",
     "jsdoc-babel": "^0.5.0",
     "jsdoc-mermaid": "^1.0.0",
-    "lerna": "^5.6.2",
+    "lerna": "^6.5.1",
     "prettier": "^2.8.4",
     "prettier-plugin-organize-imports": "^3.2.2",
     "rimraf": "^4.1.2",
