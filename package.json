@@ -34,11 +34,11 @@
     "docs": "rimraf api-docs && npx jsdoc --pedantic -c jsdoc.json .",
     "lint": "yarn prettify && eslint **/*.ts --max-warnings=0",
     "fix": "yarn prettify && eslint --fix **/*.ts",
-    "postinstall": "npx lerna run init",
+    "postinstall": "npx lerna run initialise",
     "prettier": "npx prettier --check \"**/*.{ts,json,md}\"",
     "prettify": "npx prettier --write \"**/*.{ts,json,md}\"",
     "test": "rimraf coverage && npx jest --ci --maxWorkers=100%",
-    "update:deps": "ncu -u -x lerna,semantic-release",
+    "update:deps": "ncu -u -x semantic-release",
     "validate": "yarn prettier && yarn test"
   },
   "husky": {
@@ -80,7 +80,7 @@
     "jsdoc": "^4.0.0",
     "jsdoc-babel": "^0.5.0",
     "jsdoc-mermaid": "^1.0.0",
-    "lerna": "^5.6.2",
+    "lerna": "^6.5.1",
     "prettier": "^2.8.4",
     "prettier-plugin-organize-imports": "^3.2.2",
     "rimraf": "^4.1.2",
