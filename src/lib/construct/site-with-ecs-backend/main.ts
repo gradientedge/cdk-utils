@@ -80,6 +80,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
     this.resolveCertificate()
     this.resolveSiteSecrets()
     this.resolveSiteDomainNames()
+    this.createSiteLogBucket()
     this.createVpc()
     this.createEcsPolicy()
     this.createEcsRole()
@@ -89,7 +90,6 @@ export class SiteWithEcsBackend extends CommonConstruct {
     this.createEcsBuildArgs()
     this.createEcsContainerImage()
     this.createEcsService()
-    this.createSiteLogBucket()
     this.createSiteOrigin()
     this.createSiteCloudfrontFunction()
     this.resolveSiteFunctionAssociations()
@@ -291,6 +291,8 @@ export class SiteWithEcsBackend extends CommonConstruct {
     this.siteEcsListener = fargateService.listener
     this.siteEcsLoadBalancer = fargateService.loadBalancer
     this.siteEcsTargetGroup = fargateService.targetGroup
+
+    fargateService.loadBalancer.logAccessLogs(this.siteLogBucket, 'alb')
 
     this.addCfnOutput(`${this.id}-loadBalancerArn`, this.siteEcsLoadBalancer.loadBalancerArn ?? '')
     this.addCfnOutput(`${this.id}-loadBalancerName`, this.siteEcsLoadBalancer.loadBalancerName ?? '')
