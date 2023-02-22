@@ -428,7 +428,7 @@ export class IamManager {
       managedPolicies: [
         iam.ManagedPolicy.fromManagedPolicyArn(
           scope,
-          'AmazonECSTaskExecutionRolePolicy',
+          `${id}-AmazonECSTaskExecutionRolePolicy`,
           'arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy'
         ),
       ],
