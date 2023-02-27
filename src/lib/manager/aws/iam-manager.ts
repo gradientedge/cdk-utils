@@ -338,6 +338,7 @@ export class IamManager {
         'dynamodb:Scan',
         'dynamodb:Query',
         'dynamodb:GetRecords',
+        'dynamodb:BatchGetItem',
       ],
       resources: resourceArns ?? ['*'],
     })
