@@ -122,7 +122,7 @@ export class LambdaManager {
         reservedConcurrentExecutions: props.reservedConcurrentExecutions,
         role: role instanceof iam.Role ? role : undefined,
         securityGroups: securityGroups,
-        timeout: props.timeoutInSecs ? cdk.Duration.seconds(props.timeoutInSecs) : cdk.Duration.minutes(1),
+        timeout: props.timeoutInSecs ? cdk.Duration.seconds(props.timeoutInSecs) : cdk.Duration.minutes(5),
         vpc: vpc,
         vpcSubnets: vpcSubnets,
         tracing: props.tracing,
