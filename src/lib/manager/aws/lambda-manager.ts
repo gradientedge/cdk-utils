@@ -247,7 +247,7 @@ export class LambdaManager {
         vpc: vpc,
         vpcSubnets: vpcSubnets,
         tracing: props.tracing,
-        insightsVersion: props.insightsVersion
+        insightsVersion: props.insightsVersion,
       },
     })
 
