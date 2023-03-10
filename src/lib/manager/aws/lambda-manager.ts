@@ -143,6 +143,7 @@ export class LambdaManager {
    * @param {types.LambdaEdgeProps} props lambda@edge properties
    * @param {lambda.ILayerVersion[]} layers
    * @param {lambda.AssetCode} code
+   * @param {iam.Role} role
    * @param {Map<string, string>?} environment
    * @param {ec2.IVpc?} vpc
    * @param {ec2.ISecurityGroup[]?} securityGroups
@@ -155,6 +156,7 @@ export class LambdaManager {
     props: types.LambdaEdgeProps,
     layers: lambda.ILayerVersion[],
     code: lambda.AssetCode,
+    role: iam.Role,
     environment?: any,
     vpc?: ec2.IVpc,
     securityGroups?: ec2.ISecurityGroup[],
@@ -167,6 +169,7 @@ export class LambdaManager {
       props,
       layers,
       code,
+      role,
       environment,
       vpc,
       securityGroups,

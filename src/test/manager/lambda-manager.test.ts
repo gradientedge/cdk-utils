@@ -98,7 +98,8 @@ class TestCommonConstruct extends common.CommonConstruct {
       this,
       this.props.testLambdaEdge,
       [],
-      new lambda.AssetCode('src/test/common/nodejs/lib')
+      new lambda.AssetCode('src/test/common/nodejs/lib'),
+      testRole
     )
 
     this.lambdaManager.createLambdaDockerFunction(
