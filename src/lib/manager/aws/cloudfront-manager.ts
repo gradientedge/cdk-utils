@@ -4,6 +4,7 @@ import * as cloudfront from 'aws-cdk-lib/aws-cloudfront'
 import * as origins from 'aws-cdk-lib/aws-cloudfront-origins'
 import * as ec2 from 'aws-cdk-lib/aws-ec2'
 import * as efs from 'aws-cdk-lib/aws-efs'
+import * as iam from 'aws-cdk-lib/aws-iam'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as s3 from 'aws-cdk-lib/aws-s3'
 import * as cr from 'aws-cdk-lib/custom-resources'
@@ -235,6 +236,7 @@ export class CloudFrontManager {
    * @param {types.LambdaEdgeProps} props lambda@edge properties
    * @param {lambda.ILayerVersion[]} layers
    * @param {lambda.AssetCode} code
+   * @param {iam.Role} role
    * @param {Map<string, string>} environment
    * @param {ec2.IVpc} vpc
    * @param {ec2.ISecurityGroup[]} securityGroups
@@ -247,6 +249,7 @@ export class CloudFrontManager {
     props: types.LambdaEdgeProps,
     layers: lambda.ILayerVersion[],
     code: lambda.AssetCode,
+    role: iam.Role,
     environment?: any,
     vpc?: ec2.IVpc,
     securityGroups?: ec2.ISecurityGroup[],
@@ -257,6 +260,7 @@ export class CloudFrontManager {
 
     const edgeFunction = new cloudfront.experimental.EdgeFunction(scope, `${id}`, {
       code: code,
+      description: props.description,
       environment: {
         ...environment,
       },
@@ -267,6 +271,7 @@ export class CloudFrontManager {
       logRetention: props.logRetention,
       memorySize: props.memorySize,
       reservedConcurrentExecutions: props.reservedConcurrentExecutions,
+      role: role,
       runtime: props.runtime ?? LambdaManager.NODEJS_RUNTIME,
       securityGroups: securityGroups,
       stackId: `${id}-stack-id-${scope.props.stage}`,

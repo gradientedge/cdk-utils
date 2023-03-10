@@ -2,6 +2,7 @@ import * as cdk from 'aws-cdk-lib'
 import { Template } from 'aws-cdk-lib/assertions'
 import * as cloudfront from 'aws-cdk-lib/aws-cloudfront'
 import * as origins from 'aws-cdk-lib/aws-cloudfront-origins'
+import * as iam from 'aws-cdk-lib/aws-iam'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import { Construct } from 'constructs'
 import * as common from '../../lib/common'
@@ -96,6 +97,11 @@ class TestCommonConstruct extends common.CommonConstruct {
     const oai = this.cloudFrontManager.createOriginAccessIdentity('test-oai-bucket', this, siteBucket)
     const certificate = this.acmManager.resolveCertificate('test-certificate', this, this.props.testCertificate)
     const siteOrigin = new origins.S3Origin(siteBucket, { originAccessIdentity: oai })
+    const testRole = this.iamManager.createRoleForLambda(
+      'test-role',
+      this,
+      new iam.PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this)] })
+    )
     const cloudfrontFunction = this.cloudFrontManager.createCloudfrontFunction(
       'test-function',
       this,
@@ -126,7 +132,8 @@ class TestCommonConstruct extends common.CommonConstruct {
       this,
       this.props.testLambdaEdge,
       [testLayer],
-      new lambda.AssetCode('src/test/common/nodejs/lib')
+      new lambda.AssetCode('src/test/common/nodejs/lib'),
+      testRole
     )
     const distribution = this.cloudFrontManager.createDistributionWithS3Origin(
       'test-edge-distribution',
@@ -301,7 +308,7 @@ describe('TestCloudFrontConstruct', () => {
               {
                 EventType: 'origin-request',
                 LambdaFunctionARN: {
-                  Ref: 'testcommonstacktestlambdaedgeFnCurrentVersionD68B801Dcb52f7c389395f80e8e99e70c71da949',
+                  Ref: 'testcommonstacktestlambdaedgeFnCurrentVersionD68B801D6da240d082a2e0e525853b8eac481718',
                 },
               },
             ],
