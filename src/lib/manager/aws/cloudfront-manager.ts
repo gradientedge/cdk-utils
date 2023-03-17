@@ -9,9 +9,9 @@ import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as s3 from 'aws-cdk-lib/aws-s3'
 import * as cr from 'aws-cdk-lib/custom-resources'
 import * as common from '../../common'
+import { CommonStack } from '../../common'
 import * as types from '../../types'
 import * as utils from '../../utils'
-import { LambdaManager } from './lambda-manager'
 
 /**
  * @stability stable
@@ -272,7 +272,7 @@ export class CloudFrontManager {
       memorySize: props.memorySize,
       reservedConcurrentExecutions: props.reservedConcurrentExecutions,
       role: role,
-      runtime: props.runtime ?? LambdaManager.NODEJS_RUNTIME,
+      runtime: props.runtime ?? scope.props.nodejsRuntime ?? CommonStack.NODEJS_RUNTIME,
       securityGroups: securityGroups,
       stackId: `${id}-stack-id-${scope.props.stage}`,
       timeout: props.timeoutInSecs ? cdk.Duration.seconds(props.timeoutInSecs) : cdk.Duration.minutes(1),

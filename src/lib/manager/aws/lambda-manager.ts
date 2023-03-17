@@ -4,6 +4,7 @@ import * as efs from 'aws-cdk-lib/aws-efs'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as common from '../../common'
+import { CommonStack } from '../../common'
 import * as types from '../../types'
 import * as utils from '../../utils'
 import { CloudFrontManager } from './cloudfront-manager'
@@ -30,8 +31,6 @@ import { SsmManager } from './ssm-manager'
  * @see [CDK Lambda Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_lambda-readme.html}
  */
 export class LambdaManager {
-  public static NODEJS_RUNTIME = lambda.Runtime.NODEJS_16_X
-
   /**
    * @summary Method to create a lambda layer (nodejs)
    * @param {string} id scoped id of the resource
@@ -40,7 +39,7 @@ export class LambdaManager {
    */
   public createLambdaLayer(id: string, scope: common.CommonConstruct, code: lambda.AssetCode) {
     const lambdaLayer = new lambda.LayerVersion(scope, `${id}`, {
-      compatibleRuntimes: [LambdaManager.NODEJS_RUNTIME],
+      compatibleRuntimes: [scope.props.nodejsRuntime ?? CommonStack.NODEJS_RUNTIME],
       code: code,
       description: `${id}`,
       layerVersionName: `${id}-${scope.props.stage}`,
@@ -98,7 +97,7 @@ export class LambdaManager {
         allowPublicSubnet: !!vpc,
         functionName: functionName,
         handler: handler || 'index.lambda_handler',
-        runtime: LambdaManager.NODEJS_RUNTIME,
+        runtime: props.runtime ?? scope.props.nodejsRuntime ?? CommonStack.NODEJS_RUNTIME,
         code: code,
         deadLetterQueue: deadLetterQueue,
         architecture: props.architecture ?? lambda.Architecture.ARM_64,
@@ -221,7 +220,7 @@ export class LambdaManager {
       ...{
         allowPublicSubnet: !!vpc,
         functionName: functionName,
-        runtime: LambdaManager.NODEJS_RUNTIME,
+        runtime: props.runtime ?? scope.props.nodejsRuntime ?? CommonStack.NODEJS_RUNTIME,
         code: code,
         deadLetterQueue: deadLetterQueue,
         architecture: props.architecture ?? lambda.Architecture.ARM_64,
