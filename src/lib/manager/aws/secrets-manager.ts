@@ -1,9 +1,7 @@
+import { SecretsManager as SM } from '@aws-sdk/client-secrets-manager'
 import * as cdk from 'aws-cdk-lib'
 import * as secretsManager from 'aws-cdk-lib/aws-secretsmanager'
 import * as common from '../../common'
-
-const AWS = require('aws-sdk')
-const fs = require('fs')
 
 /**
  * @stability experimental
@@ -31,7 +29,7 @@ export class SecretsManager {
    * @param {string} region
    */
   public getAwsSecretsManager(region: string) {
-    return new AWS.SecretsManager({ region: region })
+    return new SM({ region: region })
   }
 
   /**
@@ -42,7 +40,7 @@ export class SecretsManager {
    */
   public async loadSecret(secretName: string, region: string) {
     const secretsManager = this.getAwsSecretsManager(region)
-    const secret: any = await Promise.all([secretsManager.getSecretValue({ SecretId: secretName }).promise()])
+    const secret: any = await Promise.all([secretsManager.getSecretValue({ SecretId: secretName })])
 
     return secret ? JSON.parse(secret[0].SecretString) : {}
   }
@@ -60,37 +58,6 @@ export class SecretsManager {
     }
 
     return secrets
-  }
-
-  /**
-   * @stability experimental
-   * @summary Method to export secrets from secrets manager to a dot env format
-   */
-  public exportToDotEnv() {
-    let nconf = require('nconf')
-    nconf.argv().env()
-    const appRoot = require('app-root-path')
-
-    if (nconf.get('profile')) {
-      console.log(`Using named aws profile ${nconf.get('profile')}`)
-      AWS.config.credentials = new AWS.SharedIniFileCredentials({ profile: nconf.get('profile') })
-    }
-
-    const region = nconf.get('region')
-    AWS.config.update({ region: nconf.get('region') })
-
-    const outFileName = nconf.get('out') ? nconf.get('out') : '.env'
-
-    this.loadSecret(nconf.get('name'), region).then((secretString: any) => {
-      if (nconf.get('overwrite')) {
-        fs.writeFileSync(`${appRoot.path}/.env`, '')
-      }
-
-      Object.keys(secretString).forEach(function (key) {
-        console.log(`Adding environment variable for key: ${key}`)
-        fs.appendFileSync(`${appRoot.path}/${outFileName}`, `${key}=${secretString[key]}\r\n`)
-      })
-    })
   }
 
   /**
