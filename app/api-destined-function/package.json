@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "license": "UNLICENSED",
   "engines": {
-    "node": ">=14.16.0 <17"
+    "node": ">=14.16.0 <=18"
   },
   "repository": {
     "type": "git",
