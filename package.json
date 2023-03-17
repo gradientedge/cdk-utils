@@ -4,7 +4,7 @@
   "description": "Utilities for AWS CDK provisioning",
   "main": "dist/index.js",
   "engines": {
-    "node": ">=14.16.0 <17"
+    "node": ">=14.16.0 <=18"
   },
   "repository": {
     "type": "git",
