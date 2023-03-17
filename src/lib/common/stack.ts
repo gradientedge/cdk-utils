@@ -1,4 +1,5 @@
 import * as cdk from 'aws-cdk-lib'
+import * as lambda from 'aws-cdk-lib/aws-lambda'
 import { CommonStackProps } from '../types'
 import { isDevStage } from '../utils'
 import { CommonConstruct } from './construct'
@@ -23,6 +24,8 @@ const fs = require('fs')
  * }
  */
 export class CommonStack extends cdk.Stack {
+  public static NODEJS_RUNTIME = lambda.Runtime.NODEJS_16_X
+
   construct: CommonConstruct
   props: CommonStackProps
 
@@ -57,6 +60,7 @@ export class CommonStack extends cdk.Stack {
       extraContexts: this.node.tryGetContext('extraContexts'),
       skipStageForARecords: this.node.tryGetContext('skipStageForARecords'),
       logRetention: this.node.tryGetContext('logRetention'),
+      nodejsRuntime: this.node.tryGetContext('nodejsRuntime') ?? CommonStack.NODEJS_RUNTIME,
     }
   }
 
