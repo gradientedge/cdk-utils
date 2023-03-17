@@ -42,7 +42,7 @@ export class ApiManager {
     if (!props) throw `Api props undefined for ${id}`
     const api = new apig.LambdaRestApi(scope, `${id}`, {
       binaryMediaTypes: props.binaryMediaTypes,
-      minimumCompressionSize: props.minimumCompressionSize,
+      minCompressionSize: props.minCompressionSize,
       defaultMethodOptions: props.defaultMethodOptions,
       deploy: props.deploy || true,
       deployOptions: {
