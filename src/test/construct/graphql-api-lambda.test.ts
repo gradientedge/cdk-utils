@@ -48,7 +48,6 @@ class TestCommonStack extends common.CommonStack {
         nodeEnv: this.node.tryGetContext('nodeEnv'),
         testAttribute: this.node.tryGetContext('testAttribute'),
         timezone: this.node.tryGetContext('timezone'),
-        excludeLastModifiedTimestamp: true,
       },
     }
   }

@@ -52,7 +52,6 @@ class TestCommonStack extends common.CommonStack {
         timezone: this.node.tryGetContext('timezone'),
         graphQLVpc: this.node.tryGetContext('testVpc'),
         graphQLElastiCache: this.node.tryGetContext('testReplicatedElastiCache'),
-        excludeLastModifiedTimestamp: true,
       },
     }
   }
