@@ -35,8 +35,8 @@
     "lint": "yarn prettify && eslint **/*.ts --max-warnings=0",
     "fix": "yarn prettify && eslint --fix **/*.ts",
     "postinstall": "npx lerna run initialise",
-    "prettier": "npx prettier --check \"**/*.{ts,json,md}\"",
-    "prettify": "npx prettier --write \"**/*.{ts,json,md}\"",
+    "prettier": "npx prettier --cache --check \"**/*.{ts,json,md}\"",
+    "prettify": "npx prettier --cache --write \"**/*.{ts,json,md}\"",
     "test": "rimraf coverage && npx jest --ci --maxWorkers=100%",
     "update:deps": "ncu -u -x semantic-release",
     "validate": "yarn prettier && yarn test"
