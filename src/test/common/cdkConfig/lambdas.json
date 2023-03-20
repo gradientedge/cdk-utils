@@ -3,7 +3,8 @@
     "functionName": "test-graphql-server",
     "logRetention": 30,
     "memorySize": 1024,
-    "timeoutInSecs": 300
+    "timeoutInSecs": 300,
+    "excludeLastModifiedTimestamp": true
   },
   "testApiDestinedLambda": {
     "functionName": "test-api-destined",

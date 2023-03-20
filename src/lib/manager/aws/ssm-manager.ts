@@ -56,7 +56,7 @@ export class SsmManager {
   public readStringParameter(id: string, scope: common.CommonConstruct, parameterName: string) {
     if (!parameterName || parameterName == '') throw 'Invalid parameter name'
 
-    return ssm.StringParameter.fromStringParameterName(scope, `${id}`, parameterName).stringValue
+    return ssm.StringParameter.valueFromLookup(scope, parameterName)
   }
 
   /**
