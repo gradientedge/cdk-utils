@@ -229,11 +229,10 @@ export class LambdaManager {
           STAGE: scope.props.stage,
           LAST_MODIFIED_TS: props.excludeLastModifiedTimestamp
             ? ''
-            : scope.ssmManager.readStringParameterFromRegion(
+            : scope.ssmManager.readStringParameter(
                 `${id}-sm-ts`,
                 scope,
-                `${SsmManager.SECRETS_MODIFIED_TIMESTAMP_PARAM}-${scope.props.stage}`,
-                scope.props.region
+                `${SsmManager.SECRETS_MODIFIED_TIMESTAMP_PARAM}-${scope.props.stage}`
               ),
           ...environment,
         },
