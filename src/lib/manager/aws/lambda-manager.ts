@@ -227,7 +227,14 @@ export class LambdaManager {
         environment: {
           REGION: scope.props.region,
           STAGE: scope.props.stage,
-          LAST_MODIFIED_TS: new Date().toISOString(),
+          LAST_MODIFIED_TS: props.excludeLastModifiedTimestamp
+            ? ''
+            : scope.ssmManager.readStringParameterFromRegion(
+                `${id}-sm-ts`,
+                scope,
+                `${SsmManager.SECRETS_MODIFIED_TIMESTAMP_PARAM}-${scope.props.stage}`,
+                scope.props.region
+              ),
           ...environment,
         },
         filesystem: accessPoint
