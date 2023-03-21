@@ -105,58 +105,6 @@ importers:
       mkdirp: 2.1.5
       rimraf: 4.4.0
 
-  app/api-destined-function/layers/nodejs:
-    specifiers:
-      '@types/uuid': ^9.0.1
-      mkdirp: ^2.1.5
-      rimraf: ^4.4.0
-      uuid: ^9.0.0
-    dependencies:
-      '@types/uuid': 9.0.1
-      uuid: 9.0.0
-    devDependencies:
-      mkdirp: 2.1.5
-      rimraf: 4.4.0
-
-  app/api-destined-function/layers/nodejs/layers/nodejs:
-    specifiers:
-      '@types/uuid': ^9.0.1
-      mkdirp: ^2.1.5
-      rimraf: ^4.4.0
-      uuid: ^9.0.0
-    dependencies:
-      '@types/uuid': 9.0.1
-      uuid: 9.0.0
-    devDependencies:
-      mkdirp: 2.1.5
-      rimraf: 4.4.0
-
-  app/api-destined-function/layers/nodejs/layers/nodejs/layers/nodejs:
-    specifiers:
-      '@types/uuid': ^9.0.1
-      mkdirp: ^2.1.5
-      rimraf: ^4.4.0
-      uuid: ^9.0.0
-    dependencies:
-      '@types/uuid': 9.0.1
-      uuid: 9.0.0
-    devDependencies:
-      mkdirp: 2.1.5
-      rimraf: 4.4.0
-
-  app/api-destined-function/layers/nodejs/layers/nodejs/layers/nodejs/layers/nodejs:
-    specifiers:
-      '@types/uuid': ^9.0.1
-      mkdirp: ^2.1.5
-      rimraf: ^4.4.0
-      uuid: ^9.0.0
-    dependencies:
-      '@types/uuid': 9.0.1
-      uuid: 9.0.0
-    devDependencies:
-      mkdirp: 2.1.5
-      rimraf: 4.4.0
-
 packages:
 
   /@ampproject/remapping/2.2.0:

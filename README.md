@@ -47,6 +47,12 @@ With **yarn**:
 yarn add @gradientedge/cdk-utils
 ```
 
+With **pnpm**:
+
+```shell
+pnpm add @gradientedge/cdk-utils
+```
+
 ### ![purescript]
 
 ```
