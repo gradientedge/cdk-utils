@@ -64,7 +64,7 @@
     "@types/jest": "^29.5.0",
     "@typescript-eslint/eslint-plugin": "^5.56.0",
     "@typescript-eslint/parser": "^5.56.0",
-    "aws-cdk": "*",
+    "aws-cdk": "^2.69.0",
     "babel-eslint": "^10.1.0",
     "better-docs": "^2.7.2",
     "codecov": "^3.8.3",
