@@ -1,0 +1,21 @@
+name: Build Application(s)
+description: Build Application(s)
+
+inputs:
+  use-cache:
+    description: 'Determine if to use build cache'
+    required: true
+    default: 'false'
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install Applications
+      id: install-application
+      if: inputs.use-cache != 'true'
+      shell: bash
+      run: pnpm install --frozen-lockfile
+    - name: Build Applications
+      id: build-applications
+      shell: bash
+      run: pnpm build
