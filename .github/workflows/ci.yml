@@ -46,7 +46,7 @@ jobs:
       - name: Build Packages
         run: pnpm build
       - name: Validate Documentation
-        run: pnpm docs
+        run: pnpm run docs
       - name: Test Packages
         run: pnpm validate
       - name: Publish Unit Test Results
