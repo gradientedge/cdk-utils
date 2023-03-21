@@ -1,0 +1,14 @@
+name: Test Applications
+description: Test Applications
+
+runs:
+  using: "composite"
+  steps:
+    - name: Test Applications
+      id: test-applications
+      shell: bash
+      run: pnpm validate
+    - name: Validate Documentation
+      id: validate-docs
+      shell: bash
+      run: pnpm run docs

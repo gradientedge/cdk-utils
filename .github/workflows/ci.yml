@@ -28,27 +28,30 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Install PNPM
-        run: npm install -g pnpm@7
+      - name: Setup Environment
+        id: setup-environment
+        uses: ./.github/actions/setup-env
       - name: Cache dependencies
         uses: actions/cache@v3
-        id: cache-node-modules
+        id: cache-dependencies
         env:
-          cache-name: cache-node-modules
+          cache-name: cache-dependencies
         with:
           path: |
             ./node_modules
             ./app/api-destined-function/node_modules
           key: ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-${{ hashFiles('**/pnpm-lock.yaml') }}
       - name: Install Packages
-        if: steps.cache-node-modules.outputs.cache-hit != 'true'
+        if: steps.cache-dependencies.outputs.cache-hit != 'true'
         run: pnpm install --frozen-lockfile
-      - name: Build Packages
-        run: pnpm build
-      - name: Validate Documentation
-        run: pnpm run docs
-      - name: Test Packages
-        run: pnpm validate
+      - name: Build Applications
+        id: build-applications
+        uses: ./.github/actions/build
+        with:
+          use-cache: steps.cache-dependencies.outputs.cache-hit
+      - name: Test Applications
+        id: test-applications
+        uses: ./.github/actions/test
       - name: Publish Unit Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: ${{ github.event_name == 'push' && success() }}
@@ -80,21 +83,19 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Install PNPM
-        run: npm install -g pnpm@7
+      - name: Setup Environment
+        id: setup-environment
+        uses: ./.github/actions/setup-env
       - name: Cache dependencies
         uses: actions/cache@v3
-        id: cache-node-modules
+        id: cache-dependencies
         env:
-          cache-name: cache-node-modules
+          cache-name: cache-dependencies
         with:
           path: |
             ./node_modules
             ./app/api-destined-function/node_modules
           key: ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-      - name: Install Packages
-        if: steps.cache-node-modules.outputs.cache-hit != 'true'
-        run: pnpm install --frozen-lockfile
       - uses: actions/download-artifact@v3
         with:
           name: docs-artifact
