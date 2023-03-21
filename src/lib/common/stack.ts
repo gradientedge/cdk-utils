@@ -24,7 +24,7 @@ const fs = require('fs')
  * }
  */
 export class CommonStack extends cdk.Stack {
-  public static NODEJS_RUNTIME = lambda.Runtime.NODEJS_16_X
+  public static NODEJS_RUNTIME = lambda.Runtime.NODEJS_18_X
 
   construct: CommonConstruct
   props: CommonStackProps
