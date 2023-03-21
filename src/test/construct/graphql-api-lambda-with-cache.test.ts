@@ -231,7 +231,7 @@ describe('testGraphqlWithCacheConstruct', () => {
       FunctionName: 'test-graphql-server-test',
       Handler: 'index.handler',
       MemorySize: 1024,
-      Runtime: 'nodejs16.x',
+      Runtime: 'nodejs18.x',
       Timeout: 300,
     })
   })

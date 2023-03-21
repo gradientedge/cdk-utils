@@ -20,7 +20,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        node-version: [ 16.x ]
+        node-version: [ 18.x ]
     steps:
       - name: Checkout Code
         uses: actions/checkout@v3
@@ -69,7 +69,7 @@ jobs:
     needs: [ validate ]
     strategy:
       matrix:
-        node-version: [ 16.x ]
+        node-version: [ 18.x ]
     env:
       GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
       NODE_AUTH_TOKEN: ${{ secrets.GIT_TOKEN }}

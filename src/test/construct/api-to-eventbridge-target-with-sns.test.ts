@@ -231,7 +231,7 @@ describe('TestApiToEventBridgeTargetWithSnsConstruct', () => {
       FunctionName: 'test-api-destined-test',
       Handler: 'lambda.handler',
       MemorySize: 1024,
-      Runtime: 'nodejs16.x',
+      Runtime: 'nodejs18.x',
       Timeout: 60,
     })
   })

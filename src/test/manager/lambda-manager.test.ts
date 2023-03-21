@@ -164,7 +164,7 @@ describe('TestLambdaConstruct', () => {
 describe('TestLambdaConstruct', () => {
   test('provisions new layer as expected', () => {
     template.hasResourceProperties('AWS::Lambda::LayerVersion', {
-      CompatibleRuntimes: ['nodejs16.x'],
+      CompatibleRuntimes: ['nodejs18.x'],
       Description: 'test-lambda-layer',
       LayerName: 'test-lambda-layer-test',
     })
@@ -180,7 +180,7 @@ describe('TestLambdaConstruct', () => {
       FunctionName: 'test-lambda-test',
       Handler: 'index.lambda_handler',
       MemorySize: 1024,
-      Runtime: 'nodejs16.x',
+      Runtime: 'nodejs18.x',
       Timeout: 60,
     })
   })
@@ -190,7 +190,7 @@ describe('TestLambdaConstruct', () => {
       FunctionName: 'test-lambda-edge-test',
       Handler: 'index.handler',
       MemorySize: 1024,
-      Runtime: 'nodejs16.x',
+      Runtime: 'nodejs18.x',
       Timeout: 60,
     })
   })
