@@ -13,6 +13,8 @@ import * as types from '../../types'
 import { ApiDestinedLambda } from './api-destined-lambda'
 
 /**
+ * @deprecated Use ApiToEventBridgeTarget instead. This will be removed in a future release.
+ *
  * @stability stable
  * @category cdk-utils.api-to-eventbridge-target
  * @subcategory construct

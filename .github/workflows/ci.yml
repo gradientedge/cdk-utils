@@ -28,8 +28,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Install Yarn
-        run: npm install -g yarn
+      - name: Install PNPM
+        run: npm install -g pnpm@7
       - name: Cache dependencies
         uses: actions/cache@v3
         id: cache-node-modules
@@ -39,16 +39,16 @@ jobs:
           path: |
             ./node_modules
             ./app/api-destined-function/node_modules
-          key: ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-${{ hashFiles('**/pnpm-lock.yaml') }}
       - name: Install Packages
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
       - name: Build Packages
-        run: yarn build
+        run: pnpm build
       - name: Validate Documentation
-        run: yarn docs
+        run: pnpm docs
       - name: Test Packages
-        run: yarn validate
+        run: pnpm validate
       - name: Publish Unit Test Results
         uses: EnricoMi/publish-unit-test-result-action@v2
         if: ${{ github.event_name == 'push' && success() }}
@@ -80,8 +80,8 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Install Yarn
-        run: npm install -g yarn
+      - name: Install PNPM
+        run: npm install -g pnpm@7
       - name: Cache dependencies
         uses: actions/cache@v3
         id: cache-node-modules
@@ -91,16 +91,16 @@ jobs:
           path: |
             ./node_modules
             ./app/api-destined-function/node_modules
-          key: ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-${{ hashFiles('**/yarn.lock') }}
+          key: ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-${{ hashFiles('**/pnpm-lock.yaml') }}
       - name: Install Packages
         if: steps.cache-node-modules.outputs.cache-hit != 'true'
-        run: yarn install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
       - uses: actions/download-artifact@v3
         with:
           name: docs-artifact
           path: ./api-docs/
       - name: Build Production
-        run: yarn build:production
+        run: pnpm build:production
       - name: Deploy Package(s)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

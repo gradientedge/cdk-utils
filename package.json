@@ -26,24 +26,22 @@
   },
   "homepage": "https://github.com/gradientedge/cdk-utils#readme",
   "scripts": {
-    "build": "rimraf dist/ && npx tsc && npx lerna run build",
-    "build:production": "rimraf dist/ && npx tsc -p tsconfig.prd.json && npx lerna run build",
-    "cu": "ncu -x lerna",
-    "ci": "yarn install --frozen-lockfile && yarn build && yarn validate && yarn docs",
+    "build": "npx rimraf dist/ && npx tsc && pnpm -r build",
+    "build:production": "rimraf dist/ && npx tsc -p tsconfig.prd.json && pnpm -r build",
+    "ci": "pnpm install --frozen-lockfile && pnpm build && pnpm validate && pnpm run docs",
     "cz": "npx cz",
-    "docs": "rimraf api-docs && npx jsdoc --pedantic -c jsdoc.json .",
-    "lint": "yarn prettify && eslint **/*.ts --max-warnings=0",
-    "fix": "yarn prettify && eslint --fix **/*.ts",
-    "postinstall": "npx lerna run initialise",
+    "docs": "npx rimraf api-docs && npx jsdoc --pedantic -c jsdoc.json .",
+    "lint": "pnpm prettify && eslint **/*.ts --cache --max-warnings=0",
+    "fix": "pnpm prettify && eslint --fix **/*.ts",
     "prettier": "npx prettier --cache --check \"**/*.{ts,json,md}\"",
     "prettify": "npx prettier --cache --write \"**/*.{ts,json,md}\"",
-    "test": "rimraf coverage && npx jest --ci --maxWorkers=100%",
+    "test": "npx rimraf coverage && npx jest --ci --maxWorkers=100%",
     "update:deps": "ncu -u --deep",
-    "validate": "yarn prettier && yarn test"
+    "validate": "pnpm prettier && pnpm test"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "yarn prettify && yarn validate"
+      "pre-commit": "pnpm prettify && pnpm validate"
     }
   },
   "dependencies": {
@@ -80,7 +78,6 @@
     "jsdoc": "^4.0.2",
     "jsdoc-babel": "^0.5.0",
     "jsdoc-mermaid": "^1.0.0",
-    "lerna": "^6.5.1",
     "prettier": "^2.8.6",
     "prettier-plugin-organize-imports": "^3.2.2",
     "rimraf": "^4.4.0",
@@ -93,12 +90,16 @@
   "optionalDependencies": {
     "@babel/core": "^7.21.00",
     "prop-types": "^15.8.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react": "^17.0.0",
+    "react-dom": "^17.0.0"
   },
   "config": {
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
-  }
+  },
+  "workspaces": [
+    "app/api-destined-function/*",
+    "src/*"
+  ]
 }

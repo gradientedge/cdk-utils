@@ -12,10 +12,7 @@
     "url": "git+https://github.com/gradientedge/cdk-utils.git"
   },
   "scripts": {
-    "build": "yarn package:function",
-    "initialise": "yarn install",
-    "package:function": "mkdirp layers/nodejs && cp -R package.json layers/nodejs && cd layers/nodejs && yarn install --production --no-lockfile",
-    "start": "node dist/index",
+    "build": "tsc --build",
     "test": "npx jest --ci --runInBand --passWithNoTests"
   },
   "dependencies": {

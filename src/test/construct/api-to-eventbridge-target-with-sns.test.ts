@@ -52,7 +52,6 @@ class TestCommonStack extends common.CommonStack {
         },
         lambda: {
           function: this.node.tryGetContext('testApiDestinedLambda'),
-          layerSource: new lambda.AssetCode('./app/api-destined-function/layers'),
           source: new lambda.AssetCode('./app/api-destined-function/src/lib'),
         },
         event: {
@@ -122,7 +121,6 @@ describe('TestApiToEventBridgeTargetWithSnsConstruct', () => {
     template.hasOutput('testCertificateCertificateArn', {})
     template.hasOutput('testLambdaDestinedRoleArn', {})
     template.hasOutput('testLambdaDestinedRoleName', {})
-    template.hasOutput('testLambdaDestinedLayerLambdaLayerArn', {})
     template.hasOutput('testLambdaDestinedLambdaArn', {})
     template.hasOutput('testLambdaDestinedLambdaName', {})
     template.hasOutput('testDestinedEventBusEventBusName', {})
