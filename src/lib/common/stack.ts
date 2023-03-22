@@ -60,6 +60,7 @@ export class CommonStack extends cdk.Stack {
       extraContexts: this.node.tryGetContext('extraContexts'),
       skipStageForARecords: this.node.tryGetContext('skipStageForARecords'),
       logRetention: this.node.tryGetContext('logRetention'),
+      excludeDomainNameForBuckets: this.node.tryGetContext('excludeDomainNameForBuckets'),
       nodejsRuntime: this.node.tryGetContext('nodejsRuntime') ?? CommonStack.NODEJS_RUNTIME,
     }
   }
