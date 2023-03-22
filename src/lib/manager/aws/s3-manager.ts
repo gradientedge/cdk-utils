@@ -59,27 +59,38 @@ export class S3Manager {
   }
 
   /**
-   * @summary Method to determine the bucket name
+   * @summary Method to determine the bucket name using account and region
    * @param {common.CommonConstruct} scope scope in which this resource is defined
-   * @param {types.S3BucketProps} props bucket properties
-   * @private
+   * @param {string} bucketName the bucket name
+   * @protected
    */
-  protected static determineBucketName(scope: common.CommonConstruct, props: types.S3BucketProps) {
-    return scope.isProductionStage()
-      ? `${props.bucketName}.${scope.fullyQualifiedDomainName}`
-      : `${props.bucketName}-${scope.props.stage}.${scope.fullyQualifiedDomainName}`
+  protected static determineBucketNameByAccountAndRegion(scope: common.CommonConstruct, bucketName: string) {
+    return `${bucketName}-${cdk.Stack.of(scope).account}-${scope.props.region}-${scope.props.stage}`
   }
 
   /**
-   * @summary Method to determine the log bucket name
+   * @summary Method to determine the bucket name using domain name
    * @param {common.CommonConstruct} scope scope in which this resource is defined
-   * @param {types.S3BucketProps} props bucket properties
+   * @param {string} bucketName the bucket name
+   * @protected
+   */
+  protected static determineBucketNameByDomainName(scope: common.CommonConstruct, bucketName: string) {
+    return scope.isProductionStage()
+      ? `${bucketName}.${scope.fullyQualifiedDomainName}`
+      : `${bucketName}-${scope.props.stage}.${scope.fullyQualifiedDomainName}`
+  }
+
+  /**
+   * @summary Method to determine the bucket name
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {string} bucketName the bucket name
    * @private
    */
-  protected static determineLogBucketName(scope: common.CommonConstruct, props: types.S3BucketProps) {
-    return scope.isProductionStage()
-      ? `${props.logBucketName}.${scope.fullyQualifiedDomainName}`
-      : `${props.logBucketName}-${scope.props.stage}.${scope.fullyQualifiedDomainName}`
+  protected static determineBucketName(scope: common.CommonConstruct, bucketName: string) {
+    const sanitisedBucketName = scope.props.excludeDomainNameForBuckets
+      ? S3Manager.determineBucketNameByAccountAndRegion(scope, bucketName)
+      : S3Manager.determineBucketNameByDomainName(scope, bucketName)
+    return sanitisedBucketName
   }
 
   /**
@@ -93,14 +104,14 @@ export class S3Manager {
 
     let bucket: s3.IBucket
 
-    const bucketName = S3Manager.determineBucketName(scope, props)
+    const bucketName = S3Manager.determineBucketName(scope, props.bucketName)
 
     if (props.existingBucket && props.bucketName) {
       bucket = s3.Bucket.fromBucketName(scope, `${id}`, bucketName)
     } else {
       let logBucket
       if (props.logBucketName) {
-        const logBucketName = S3Manager.determineLogBucketName(scope, props)
+        const logBucketName = S3Manager.determineBucketName(scope, props.logBucketName)
         logBucket = s3.Bucket.fromBucketName(scope, `${id}-logs`, logBucketName)
       }
 
