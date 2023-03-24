@@ -636,7 +636,7 @@ export interface EcsClusterProps extends ecs.ClusterProps {}
  * @subcategory Properties
  */
 export interface EcsTaskProps extends ecs.TaskDefinitionProps {
-  logging: ecs.AwsLogDriverProps
+  logging?: ecs.AwsLogDriverProps
 }
 
 /**

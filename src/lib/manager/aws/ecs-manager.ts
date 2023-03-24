@@ -111,8 +111,8 @@ export class EcsManager {
       logging: ecs.LogDriver.awsLogs({
         logGroup: logGroup,
         streamPrefix: `${id}`,
-        multilinePattern: props.logging?.multilinePattern ?? undefined,
-        logRetention: props.logging?.logRetention ?? undefined,
+        multilinePattern: props.logging?.multilinePattern,
+        logRetention: props.logging?.logRetention,
       }),
       memoryLimitMiB: props.memoryMiB ? parseInt(props.memoryMiB) : undefined,
       privileged: false,
