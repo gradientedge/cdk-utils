@@ -635,7 +635,9 @@ export interface EcsClusterProps extends ecs.ClusterProps {}
  * @category cdk-utils.ecs-manager
  * @subcategory Properties
  */
-export interface EcsTaskProps extends ecs.TaskDefinitionProps {}
+export interface EcsTaskProps extends ecs.TaskDefinitionProps {
+  logging?: ecs.AwsLogDriverProps
+}
 
 /**
  * @category cdk-utils.ecs-manager
