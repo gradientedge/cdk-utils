@@ -76,7 +76,7 @@ export interface SiteWithEcsBackendProps extends CommonStackProps {
   siteLogBucket: S3BucketProps
   siteRecordName?: string
   siteSubDomain: string
-  siteTask: ecsPatterns.ApplicationLoadBalancedFargateServiceProps
+  siteTask: EcsApplicationLoadBalancedFargateServiceProps
   siteVpc: ec2.VpcProps
   useExistingHostedZone: boolean
   nodeEnv: string
@@ -646,6 +646,7 @@ export interface EcsTaskProps extends ecs.TaskDefinitionProps {
 export interface EcsApplicationLoadBalancedFargateServiceProps
   extends ecsPatterns.ApplicationLoadBalancedFargateServiceProps {
   healthCheck?: HealthCheck
+  logging?: ecs.AwsLogDriverProps
 }
 
 /**

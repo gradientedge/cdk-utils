@@ -168,6 +168,8 @@ export class EcsManager {
           ecs.LogDriver.awsLogs({
             logGroup: logGroup,
             streamPrefix: `${id}-${scope.props.stage}/ecs`,
+            multilinePattern: props.logging?.multilinePattern,
+            logRetention: props.logging?.logRetention,
           }),
         image: props.taskImageOptions.image,
         executionRole: props.taskImageOptions?.executionRole,

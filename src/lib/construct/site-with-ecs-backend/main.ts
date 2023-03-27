@@ -261,6 +261,8 @@ export class SiteWithEcsBackend extends CommonConstruct {
         logDriver: ecs.LogDriver.awsLogs({
           logGroup: this.siteEcsLogGroup,
           streamPrefix: `${this.id}-${this.props.stage}/ecs`,
+          multilinePattern: this.props.siteTask.logging?.multilinePattern,
+          logRetention: this.props.siteTask.logging?.logRetention,
         }),
         image: this.siteEcsContainerImage,
         executionRole: this.siteEcsRole,

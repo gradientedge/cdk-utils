@@ -138,6 +138,18 @@ describe('TestEcsConstruct', () => {
       Memory: '512',
       NetworkMode: 'awsvpc',
       RequiresCompatibilities: ['FARGATE'],
+      ContainerDefinitions: [
+        {
+          LogConfiguration: {
+            LogDriver: 'awslogs',
+            Options: {
+              'awslogs-region': 'eu-west-1',
+              'awslogs-stream-prefix': 'test-task',
+              'awslogs-multiline-pattern': '^(DEBUG|ERROR|INFO|LOG|WARN)',
+            },
+          },
+        },
+      ],
     })
   })
 })
