@@ -5,6 +5,9 @@
   "testTask": {
     "family": "test-task",
     "cpu": "256",
-    "memoryMiB": "512"
+    "memoryMiB": "512",
+    "logging": {
+      "multilinePattern": "^(DEBUG|ERROR|INFO|LOG|WARN)"
+    }
   }
 }
