@@ -348,6 +348,18 @@ describe('TestSiteWithEcsBackendAndEfsConstruct', () => {
               'awslogs-region': 'eu-west-1',
             },
           },
+          MountPoints: [
+            {
+              ContainerPath: '/test',
+              ReadOnly: false,
+              SourceVolume: 'test-site-fs',
+            },
+            {
+              ContainerPath: '/test2',
+              ReadOnly: false,
+              SourceVolume: 'test-site-fs',
+            },
+          ],
           Name: 'web',
           PortMappings: [
             {

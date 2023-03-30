@@ -667,6 +667,7 @@ export interface EcsApplicationLoadBalancedFargateServiceProps
   extends ecsPatterns.ApplicationLoadBalancedFargateServiceProps {
   healthCheck?: HealthCheck
   logging?: ecs.AwsLogDriverProps
+  mountPoints?: ecs.MountPoint[]
 }
 
 /**

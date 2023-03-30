@@ -6,6 +6,18 @@
     "listenerPort": 80,
     "taskImageOptions": {
       "containerPort": 3000
-    }
+    },
+    "mountPoints": [
+      {
+        "sourceVolume": "testVolume",
+        "containerPath": "/test",
+        "readOnly": false
+      },
+      {
+        "sourceVolume": "testVolume2",
+        "containerPath": "/test2",
+        "readOnly": false
+      }
+    ]
   }
 }
