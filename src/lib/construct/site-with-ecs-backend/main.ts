@@ -10,6 +10,7 @@ import * as iam from 'aws-cdk-lib/aws-iam'
 import * as logs from 'aws-cdk-lib/aws-logs'
 import * as route53 from 'aws-cdk-lib/aws-route53'
 import * as s3 from 'aws-cdk-lib/aws-s3'
+import * as efs from 'aws-cdk-lib/aws-efs'
 import { Construct } from 'constructs'
 import { CommonConstruct } from '../../common'
 import { SiteWithEcsBackendProps } from '../../types'
@@ -55,6 +56,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
   siteEcsListener: elb.ApplicationListener
   siteEcsLoadBalancer: elb.ApplicationLoadBalancer
   siteEcsTargetGroup: elb.ApplicationTargetGroup
+  siteFileSystem: efs.FileSystem
   siteLogBucket: s3.IBucket
   siteOrigin: origins.HttpOrigin
   siteDistribution: cloudfront.Distribution
@@ -295,6 +297,32 @@ export class SiteWithEcsBackend extends CommonConstruct {
     this.siteEcsTargetGroup = fargateService.targetGroup
 
     fargateService.loadBalancer.logAccessLogs(this.siteLogBucket, 'alb')
+
+    /* if enabled, add efs with access point and mount */
+    if (this.props.siteFileSystem) {
+      this.siteFileSystem = this.efsManager.createFileSystem(
+        `${this.id}-fs`,
+        this,
+        this.props.siteFileSystem,
+        this.siteVpc,
+        this.props.siteFileSystemAccessPoints
+      )
+
+      /* allow access to EFS from Fargate ECS service */
+      this.siteFileSystem.connections.allowDefaultPortFrom(this.siteEcsService.connections)
+
+      /* add the efs volume to ecs task definition */
+      this.siteEcsTaskDefinition.addVolume({
+        name: `${this.id}-fs`,
+        efsVolumeConfiguration: {
+          fileSystemId: this.siteFileSystem.fileSystemId,
+          rootDirectory: this.props.siteFileSystem.rootDirectory,
+          transitEncryption: this.props.siteFileSystem.transitEncryption,
+          transitEncryptionPort: this.props.siteFileSystem.transitEncryptionPort,
+          authorizationConfig: this.props.siteFileSystem.authorizationConfig,
+        },
+      })
+    }
 
     this.addCfnOutput(`${this.id}-loadBalancerArn`, this.siteEcsLoadBalancer.loadBalancerArn ?? '')
     this.addCfnOutput(`${this.id}-loadBalancerName`, this.siteEcsLoadBalancer.loadBalancerName ?? '')

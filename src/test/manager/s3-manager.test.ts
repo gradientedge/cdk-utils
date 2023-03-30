@@ -1,6 +1,5 @@
 import * as cdk from 'aws-cdk-lib'
 import { Template } from 'aws-cdk-lib/assertions'
-import * as apig from 'aws-cdk-lib/aws-apigateway'
 import { Construct } from 'constructs'
 import * as common from '../../lib/common'
 import * as types from '../../lib/types'
