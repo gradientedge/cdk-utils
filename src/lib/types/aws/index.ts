@@ -12,6 +12,7 @@ import * as ecsPatterns from 'aws-cdk-lib/aws-ecs-patterns'
 import * as eks from 'aws-cdk-lib/aws-eks'
 import * as elasticache from 'aws-cdk-lib/aws-elasticache'
 import * as elb from 'aws-cdk-lib/aws-elasticloadbalancingv2'
+import * as efs from 'aws-cdk-lib/aws-efs'
 import * as events from 'aws-cdk-lib/aws-events'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import * as kms from 'aws-cdk-lib/aws-kms'
@@ -78,6 +79,8 @@ export interface SiteWithEcsBackendProps extends CommonStackProps {
   siteSubDomain: string
   siteTask: EcsApplicationLoadBalancedFargateServiceProps
   siteVpc: ec2.VpcProps
+  siteFileSystem?: EfsFileSystemProps
+  siteFileSystemAccessPoints?: EfsAccessPointOptions[]
   useExistingHostedZone: boolean
   nodeEnv: string
   logLevel: string
@@ -624,6 +627,23 @@ export interface LogQueryWidgetProps extends watch.LogQueryWidgetProps {
   positionX: number
   positionY: number
 }
+
+/**
+ * @category cdk-utils.efs-manager
+ * @subcategory Properties
+ */
+export interface EfsFileSystemProps extends efs.FileSystemProps {
+  rootDirectory?: string
+  transitEncryption?: string
+  transitEncryptionPort?: number
+  authorizationConfig?: ecs.AuthorizationConfig
+}
+
+/**
+ * @category cdk-utils.efs-manager
+ * @subcategory Properties
+ */
+export interface EfsAccessPointOptions extends efs.AccessPointOptions {}
 
 /**
  * @category cdk-utils.ecs-manager

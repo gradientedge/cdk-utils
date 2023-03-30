@@ -1,0 +1,21 @@
+{
+  "testFileSystem": {
+    "fileSystemName": "testfs"
+  },
+  "testFileSystemAccessPoints": [
+    {
+      "path": "/uploads"
+    }
+  ],
+  "siteFileSystem": {
+    "fileSystemName": "sitefs"
+  },
+  "siteFileSystemAccessPoints": [
+    {
+      "path": "/uploads"
+    },
+    {
+      "path": "/downloads"
+    }
+  ]
+}

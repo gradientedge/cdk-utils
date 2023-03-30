@@ -3,6 +3,7 @@ import { Construct } from 'constructs'
 import * as aws from '../manager/aws'
 import * as types from '../types'
 import * as utils from '../utils'
+import { EfsManager } from '../manager/aws/efs-manager'
 
 /**
  * @stability stable
@@ -32,6 +33,7 @@ export class CommonConstruct extends Construct {
   dynamodbManager: aws.DynamodbManager
   ecrManager: aws.EcrManager
   ecsManager: aws.EcsManager
+  efsManager: aws.EfsManager
   eksManager: aws.EksManager
   elasticacheManager: aws.ElastiCacheManager
   eventManager: aws.EventManager
@@ -65,6 +67,7 @@ export class CommonConstruct extends Construct {
     this.dynamodbManager = new aws.DynamodbManager()
     this.ecrManager = new aws.EcrManager()
     this.ecsManager = new aws.EcsManager()
+    this.efsManager = new aws.EfsManager()
     this.eksManager = new aws.EksManager()
     this.elasticacheManager = new aws.ElastiCacheManager()
     this.eventManager = new aws.EventManager()

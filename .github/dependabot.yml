@@ -9,9 +9,9 @@ updates:
       interval: "weekly"
       time: "09:00"
       timezone: "Europe/London"
-    labels:
-      - "npm"
-      - "dependencies"
+    allow:
+      - dependency-type: "direct"
+    versioning-strategy: increase
 
   - package-ecosystem: "github-actions"
     directory: "/"
@@ -19,6 +19,3 @@ updates:
       interval: "weekly"
       time: "09:00"
       timezone: "Europe/London"
-    labels:
-      - "gh-actions"
-      - "dependencies"
