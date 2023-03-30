@@ -322,6 +322,16 @@ export class SiteWithEcsBackend extends CommonConstruct {
           authorizationConfig: this.props.siteFileSystem.authorizationConfig,
         },
       })
+
+      if (this.props.siteTask.mountPoints && this.props.siteTask.mountPoints.length > 0) {
+        this.props.siteTask.mountPoints.forEach(mountPoint =>
+          this.siteEcsTaskDefinition.defaultContainer?.addMountPoints({
+            containerPath: mountPoint.containerPath,
+            readOnly: mountPoint.readOnly,
+            sourceVolume: `${this.id}-fs`,
+          })
+        )
+      }
     }
 
     this.addCfnOutput(`${this.id}-loadBalancerArn`, this.siteEcsLoadBalancer.loadBalancerArn ?? '')
