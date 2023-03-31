@@ -28,6 +28,7 @@ import * as sfn from 'aws-cdk-lib/aws-stepfunctions'
 import * as tasks from 'aws-cdk-lib/aws-stepfunctions-tasks'
 import * as wafv2 from 'aws-cdk-lib/aws-wafv2'
 import * as types from '../index'
+import * as appAutoscaling from 'aws-cdk-lib/aws-applicationautoscaling'
 
 /**
  * @category cdk-utils.app-config-manager
@@ -659,6 +660,15 @@ export interface EcsTaskProps extends ecs.TaskDefinitionProps {
   logging?: ecs.AwsLogDriverProps
 }
 
+export interface EcsScalingProps {
+  minCapacity?: number
+  maxCapacity?: number
+  scaleOnCpuUtilization?: number
+  scaleOnMemoryUtilization?: number
+  scaleOnRequestsPerTarget?: number
+  scaleOnSchedule?: appAutoscaling.ScalingSchedule
+}
+
 /**
  * @category cdk-utils.ecs-manager
  * @subcategory Properties
@@ -668,6 +678,7 @@ export interface EcsApplicationLoadBalancedFargateServiceProps
   healthCheck?: HealthCheck
   logging?: ecs.AwsLogDriverProps
   mountPoints?: ecs.MountPoint[]
+  siteScaling?: EcsScalingProps
 }
 
 /**

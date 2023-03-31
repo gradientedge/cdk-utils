@@ -298,6 +298,36 @@ export class SiteWithEcsBackend extends CommonConstruct {
 
     fargateService.loadBalancer.logAccessLogs(this.siteLogBucket, 'alb')
 
+    if (this.props.siteTask.siteScaling) {
+      const scalableTaskCount = this.siteEcsService.autoScaleTaskCount({
+        minCapacity: this.props.siteTask.siteScaling.minCapacity,
+        maxCapacity: this.props.siteTask.siteScaling.maxCapacity ?? 4,
+      })
+
+      if (this.props.siteTask.siteScaling.scaleOnCpuUtilization) {
+        scalableTaskCount.scaleOnCpuUtilization(`${this.id}-cpu-scaling`, {
+          targetUtilizationPercent: this.props.siteTask.siteScaling.scaleOnCpuUtilization ?? 50,
+        })
+      }
+
+      if (this.props.siteTask.siteScaling.scaleOnMemoryUtilization) {
+        scalableTaskCount.scaleOnMemoryUtilization(`${this.id}-mem-scaling`, {
+          targetUtilizationPercent: this.props.siteTask.siteScaling.scaleOnMemoryUtilization ?? 50,
+        })
+      }
+
+      if (this.props.siteTask.siteScaling.scaleOnRequestsPerTarget) {
+        scalableTaskCount.scaleOnRequestCount(`${this.id}-req-count`, {
+          requestsPerTarget: this.props.siteTask.siteScaling.scaleOnRequestsPerTarget ?? 10000,
+          targetGroup: this.siteEcsTargetGroup,
+        })
+      }
+
+      if (this.props.siteTask.siteScaling.scaleOnSchedule) {
+        scalableTaskCount.scaleOnSchedule(`${this.id}-schedule`, this.props.siteTask.siteScaling.scaleOnSchedule)
+      }
+    }
+
     /* if enabled, add efs with access point and mount */
     if (this.props.siteFileSystem) {
       this.siteFileSystem = this.efsManager.createFileSystem(
