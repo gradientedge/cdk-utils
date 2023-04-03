@@ -86,7 +86,7 @@ export class S3Manager {
    * @param {string} bucketName the bucket name
    * @private
    */
-  protected static determineBucketName(scope: common.CommonConstruct, bucketName: string) {
+  public static determineBucketName(scope: common.CommonConstruct, bucketName: string) {
     const sanitisedBucketName = scope.props.excludeDomainNameForBuckets
       ? S3Manager.determineBucketNameByAccountAndRegion(scope, bucketName)
       : S3Manager.determineBucketNameByDomainName(scope, bucketName)
