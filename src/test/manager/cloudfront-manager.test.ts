@@ -120,7 +120,8 @@ class TestCommonConstruct extends common.CommonConstruct {
       siteBucket,
       siteLogBucket,
       oai,
-      certificate
+      certificate,
+      ['test.gradientedge.io']
     )
     const testLayer = this.lambdaManager.createLambdaLayer(
       'test-lambda-layer',
@@ -144,7 +145,7 @@ class TestCommonConstruct extends common.CommonConstruct {
       siteLogBucket,
       oai,
       certificate,
-      undefined,
+      ['test.gradientedge.io'],
       defaultFunctionAssociations
     )
     distribution.addBehavior('product/*', siteOrigin, {
@@ -215,11 +216,7 @@ describe('TestCloudFrontConstruct', () => {
   test('provisions new web distribution as expected', () => {
     template.hasResourceProperties('AWS::CloudFront::Distribution', {
       DistributionConfig: {
-        Aliases: [
-          {
-            Ref: 'testcommonstacktestbucketbucketF5398BC0',
-          },
-        ],
+        Aliases: ['test.gradientedge.io'],
         Comment: 'test-distribution - test stage',
         CustomErrorResponses: [
           {
@@ -295,11 +292,7 @@ describe('TestCloudFrontConstruct', () => {
   test('provisions new edge distribution as expected', () => {
     template.hasResourceProperties('AWS::CloudFront::Distribution', {
       DistributionConfig: {
-        Aliases: [
-          {
-            Ref: 'testcommonstacktestbucketbucketF5398BC0',
-          },
-        ],
+        Aliases: ['test.gradientedge.io'],
         CacheBehaviors: [
           {
             CachePolicyId: '658327ea-f89d-4fab-a63d-7e88639e58f6',
