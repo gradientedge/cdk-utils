@@ -98,7 +98,7 @@ export class CloudFrontManager {
       ],
       priceClass: props.priceClass ?? cloudfront.PriceClass.PRICE_CLASS_ALL,
       viewerCertificate: cloudfront.ViewerCertificate.fromAcmCertificate(certificate, {
-        aliases: aliases ? [...aliases, ...[siteBucket.bucketName]] : [siteBucket.bucketName],
+        aliases: aliases,
         securityPolicy: cloudfront.SecurityPolicyProtocol.TLS_V1_1_2016,
         sslMethod: cloudfront.SSLMethod.SNI,
       }),
@@ -149,7 +149,7 @@ export class CloudFrontManager {
       },
       additionalBehaviors: props.additionalBehaviors,
       defaultRootObject: props.defaultRootObject,
-      domainNames: aliases ? [...aliases, ...[siteBucket.bucketName]] : [siteBucket.bucketName],
+      domainNames: aliases,
       enabled: props.enabled ?? true,
       enableIpv6: props.enableIpv6,
       enableLogging: props.enableLogging ?? true,

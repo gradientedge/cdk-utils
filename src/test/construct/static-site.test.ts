@@ -163,17 +163,14 @@ describe('TestStaticSiteConstruct', () => {
 
 describe('TestStaticSiteConstruct', () => {
   test('provisions site distribution as expected', () => {
+    console.log(JSON.stringify(template.findResources('AWS::CloudFront::Distribution')))
     template.hasResourceProperties('AWS::CloudFront::Distribution', {
       DistributionConfig: {
-        Aliases: [
-          'site.test.gradientedge.io',
-          {
-            Ref: 'teststaticsitestackteststaticsitesitebucketDBC08543',
-          },
-        ],
+        Aliases: ['site.test.gradientedge.io'],
         Comment: 'test-static-site-distribution - test stage',
         DefaultCacheBehavior: {
           CachePolicyId: '658327ea-f89d-4fab-a63d-7e88639e58f6',
+          Compress: true,
           FunctionAssociations: [
             {
               EventType: 'viewer-request',
@@ -182,7 +179,6 @@ describe('TestStaticSiteConstruct', () => {
               },
             },
           ],
-          Compress: true,
           TargetOriginId: 'teststaticsitestackteststaticsitedistributionOrigin17FDFDB75',
           ViewerProtocolPolicy: 'redirect-to-https',
         },

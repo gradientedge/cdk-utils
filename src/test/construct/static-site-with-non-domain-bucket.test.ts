@@ -166,12 +166,7 @@ describe('TestStaticSiteConstruct', () => {
   test('provisions site distribution as expected', () => {
     template.hasResourceProperties('AWS::CloudFront::Distribution', {
       DistributionConfig: {
-        Aliases: [
-          'site.test.gradientedge.io',
-          {
-            Ref: 'teststaticsitestackteststaticsitesitebucketDBC08543',
-          },
-        ],
+        Aliases: ['site.test.gradientedge.io'],
         Comment: 'test-static-site-distribution - test stage',
         DefaultCacheBehavior: {
           CachePolicyId: '658327ea-f89d-4fab-a63d-7e88639e58f6',
