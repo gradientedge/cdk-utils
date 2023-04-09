@@ -163,7 +163,6 @@ describe('TestStaticSiteConstruct', () => {
 
 describe('TestStaticSiteConstruct', () => {
   test('provisions site distribution as expected', () => {
-    console.log(JSON.stringify(template.findResources('AWS::CloudFront::Distribution')))
     template.hasResourceProperties('AWS::CloudFront::Distribution', {
       DistributionConfig: {
         Aliases: ['site.test.gradientedge.io'],
