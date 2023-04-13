@@ -505,7 +505,9 @@ export interface SSMParameterReaderProps {
  * @category cdk-utils.cloudfront-manager
  * @subcategory Properties
  */
-export interface CloudFrontProps extends cloudfront.CloudFrontWebDistributionProps {}
+export interface CloudFrontProps extends cloudfront.CloudFrontWebDistributionProps {
+  tags?: TagProps[]
+}
 
 /**
  * @category cdk-utils.cloudfront-manager
@@ -520,7 +522,9 @@ export interface CloudfrontFunctionProps extends cloudfront.FunctionProps {
  * @category cdk-utils.cloudfront-manager
  * @subcategory Properties
  */
-export interface DistributionProps extends cloudfront.DistributionProps {}
+export interface DistributionProps extends cloudfront.DistributionProps {
+  tags?: TagProps[]
+}
 
 /**
  * @category cdk-utils.cloudtrail-manager
@@ -650,7 +654,9 @@ export interface EfsAccessPointOptions extends efs.AccessPointOptions {}
  * @category cdk-utils.ecs-manager
  * @subcategory Properties
  */
-export interface EcsClusterProps extends ecs.ClusterProps {}
+export interface EcsClusterProps extends ecs.ClusterProps {
+  tags?: TagProps[]
+}
 
 /**
  * @category cdk-utils.ecs-manager
@@ -658,6 +664,7 @@ export interface EcsClusterProps extends ecs.ClusterProps {}
  */
 export interface EcsTaskProps extends ecs.TaskDefinitionProps {
   logging?: ecs.AwsLogDriverProps
+  tags?: TagProps[]
 }
 
 export interface EcsScalingProps {
@@ -702,13 +709,24 @@ export interface RuleProps extends events.CfnRuleProps {
  * @category cdk-utils.event-manager
  * @subcategory Properties
  */
-export interface EventRuleProps extends events.RuleProps {}
+export interface EventRuleProps extends events.RuleProps {
+  tags?: TagProps[]
+}
 
 /**
  * @category cdk-utils.event-manager
  * @subcategory Properties
  */
 export interface EventBusProps extends events.EventBusProps {}
+
+/**
+ * @category cdk-utils.common-stack
+ * @subcategory Properties
+ */
+export interface TagProps {
+  key: string
+  value: string
+}
 
 /**
  * @category cdk-utils.lambda-manager
@@ -719,6 +737,7 @@ export interface LambdaProps extends lambda.FunctionProps {
   redriveq?: QueueProps
   timeoutInSecs?: number
   excludeLastModifiedTimestamp?: boolean
+  tags?: TagProps[]
 }
 
 /**
@@ -733,13 +752,24 @@ export interface LambdaAliasProps extends lambda.AliasProps {}
  */
 export interface LambdaEdgeProps extends cloudfront.experimental.EdgeFunctionProps {
   timeoutInSecs?: number
+  tags?: TagProps[]
+}
+
+/**
+ * @category cdk-utils.api-manager
+ * @subcategory Properties
+ */
+export interface LambdaRestApiProps extends apig.LambdaRestApiProps {
+  tags?: TagProps[]
 }
 
 /**
  * @category cdk-utils.cloudwatch-manager
  * @subcategory Properties
  */
-export interface LogProps extends logs.LogGroupProps {}
+export interface LogProps extends logs.LogGroupProps {
+  tags?: TagProps[]
+}
 
 /**
  * @category cdk-utils.cloudwatch-manager
@@ -771,7 +801,9 @@ export interface LifecycleRule extends s3.LifecycleRule {
  * @category cdk-utils.dynamodb-manager
  * @subcategory Properties
  */
-export interface TableProps extends dynamodb.TableProps {}
+export interface TableProps extends dynamodb.TableProps {
+  tags?: TagProps[]
+}
 
 /**
  * @category cdk-utils.s3-manager
@@ -783,6 +815,7 @@ export interface S3BucketProps extends s3.BucketProps {
   bucketName: string
   logBucketName?: string
   existingBucket?: boolean
+  tags?: TagProps[]
 }
 
 /**
@@ -826,4 +859,5 @@ export interface QueueProps extends sqs.QueueProps {
   dataKeyReuseInSecs?: number
   deliveryDelayInSecs?: number
   retentionInDays?: number
+  tags?: TagProps[]
 }

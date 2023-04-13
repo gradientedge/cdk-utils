@@ -129,6 +129,12 @@ export class LambdaManager {
       },
     })
 
+    if (props.tags && props.tags.length > 0) {
+      props.tags.forEach(tag => {
+        cdk.Tags.of(lambdaFunction).add(tag.key, tag.value)
+      })
+    }
+
     utils.createCfnOutput(`${id}-lambdaArn`, scope, lambdaFunction.functionArn)
     utils.createCfnOutput(`${id}-lambdaName`, scope, lambdaFunction.functionName)
 

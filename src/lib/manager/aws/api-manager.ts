@@ -3,6 +3,8 @@ import * as acm from 'aws-cdk-lib/aws-certificatemanager'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as common from '../../common'
 import * as utils from '../../utils'
+import * as cdk from 'aws-cdk-lib'
+import * as types from '../../types'
 
 /**
  * @stability stable
@@ -36,7 +38,7 @@ export class ApiManager {
   public createLambdaRestApi(
     id: string,
     scope: common.CommonConstruct,
-    props: apig.LambdaRestApiProps,
+    props: types.LambdaRestApiProps,
     lambdaFunction: lambda.IFunction
   ) {
     if (!props) throw `Api props undefined for ${id}`
@@ -77,6 +79,12 @@ export class ApiManager {
       defaultCorsPreflightOptions: props.defaultCorsPreflightOptions,
       proxy: props.proxy ?? true,
     })
+
+    if (props.tags && props.tags.length > 0) {
+      props.tags.forEach(tag => {
+        cdk.Tags.of(api).add(tag.key, tag.value)
+      })
+    }
 
     utils.createCfnOutput(`${id}-restApiId`, scope, api.restApiId)
     utils.createCfnOutput(`${id}-restApiName`, scope, api.restApiName)

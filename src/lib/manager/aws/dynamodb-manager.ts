@@ -2,6 +2,7 @@ import * as dynamodb from 'aws-cdk-lib/aws-dynamodb'
 import * as common from '../../common'
 import * as types from '../../types'
 import * as utils from '../../utils'
+import * as cdk from 'aws-cdk-lib'
 
 /**
  * @stability stable
@@ -52,6 +53,12 @@ export class DynamodbManager {
       waitForReplicationToFinish: props.waitForReplicationToFinish,
       contributorInsightsEnabled: props.contributorInsightsEnabled,
     })
+
+    if (props.tags && props.tags.length > 0) {
+      props.tags.forEach(tag => {
+        cdk.Tags.of(table).add(tag.key, tag.value)
+      })
+    }
 
     utils.createCfnOutput(`${id}-tableName`, scope, table.tableName)
     utils.createCfnOutput(`${id}-tableArn`, scope, table.tableArn)

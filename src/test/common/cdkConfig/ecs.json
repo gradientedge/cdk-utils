@@ -1,6 +1,16 @@
 {
   "testCluster": {
-    "clusterName": "test-cluster"
+    "clusterName": "test-cluster",
+    "tags": [
+      {
+        "key": "testTagName1",
+        "value": "testTagValue1"
+      },
+      {
+        "key": "testTagName2",
+        "value": "testTagValue2"
+      }
+    ]
   },
   "testTask": {
     "family": "test-task",

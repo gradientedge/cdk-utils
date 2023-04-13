@@ -143,6 +143,12 @@ export class S3Manager {
       }
     }
 
+    if (props.tags && props.tags.length > 0) {
+      props.tags.forEach(tag => {
+        cdk.Tags.of(bucket).add(tag.key, tag.value)
+      })
+    }
+
     utils.createCfnOutput(`${id}-bucketName`, scope, bucket.bucketName)
     utils.createCfnOutput(`${id}-bucketArn`, scope, bucket.bucketArn)
 

@@ -2,6 +2,7 @@ import * as elasticache from 'aws-cdk-lib/aws-elasticache'
 import * as common from '../../common'
 import * as types from '../../types'
 import * as utils from '../../utils'
+import * as cdk from 'aws-cdk-lib'
 
 /**
  * @stability stable
@@ -82,6 +83,12 @@ export class ElastiCacheManager {
     })
 
     elasticacheCluster.addDependency(subnetGroup)
+
+    if (props.tags && props.tags.length > 0) {
+      props.tags.forEach(tag => {
+        cdk.Tags.of(elasticacheCluster).add(tag.key, tag.value)
+      })
+    }
 
     utils.createCfnOutput(`${id}-clusterName`, scope, elasticacheCluster.clusterName)
     utils.createCfnOutput(`${id}-redisEndpointPort`, scope, elasticacheCluster.attrRedisEndpointPort)

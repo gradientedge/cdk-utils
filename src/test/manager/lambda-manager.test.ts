@@ -182,6 +182,16 @@ describe('TestLambdaConstruct', () => {
       MemorySize: 1024,
       Runtime: 'nodejs18.x',
       Timeout: 60,
+      Tags: [
+        {
+          Key: 'testTagName1',
+          Value: 'testTagValue1',
+        },
+        {
+          Key: 'testTagName2',
+          Value: 'testTagValue2',
+        },
+      ],
     })
   })
 

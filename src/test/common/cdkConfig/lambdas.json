@@ -16,7 +16,17 @@
     "functionName": "test-lambda",
     "logRetention": 7,
     "memorySize": 1024,
-    "timeoutInSecs": 60
+    "timeoutInSecs": 60,
+    "tags": [
+      {
+        "key": "testTagName1",
+        "value": "testTagValue1"
+      },
+      {
+        "key": "testTagName2",
+        "value": "testTagValue2"
+      }
+    ]
   },
   "testLambdaWithDlq": {
     "functionName": "test-lambda-with-error-handling",

@@ -1,5 +1,15 @@
 {
   "testCluster": {
-    "clusterName": "test-storefront"
+    "clusterName": "test-storefront",
+    "tags": [
+      {
+        "key": "testTagName1",
+        "value": "testTagValue1"
+      },
+      {
+        "key": "testTagName2",
+        "value": "testTagValue2"
+      }
+    ]
   }
 }

@@ -5,6 +5,7 @@ import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as common from '../../common'
 import * as types from '../../types'
 import * as utils from '../../utils'
+import * as cdk from 'aws-cdk-lib'
 
 /**
  * @stability stable
@@ -75,6 +76,12 @@ export class EventManager {
     if (targets && targets.length > 0) {
       targets.forEach(target => {
         rule.addTarget(target)
+      })
+    }
+
+    if (props.tags && props.tags.length > 0) {
+      props.tags.forEach(tag => {
+        cdk.Tags.of(rule).add(tag.key, tag.value)
       })
     }
 

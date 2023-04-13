@@ -105,6 +105,12 @@ export class CloudFrontManager {
       webACLId: props.webACLId,
     })
 
+    if (props.tags && props.tags.length > 0) {
+      props.tags.forEach(tag => {
+        cdk.Tags.of(distribution).add(tag.key, tag.value)
+      })
+    }
+
     utils.createCfnOutput(`${id}-distributionId`, scope, distribution.distributionId)
     utils.createCfnOutput(`${id}-distributionDomainName`, scope, distribution.distributionDomainName)
 
@@ -164,6 +170,12 @@ export class CloudFrontManager {
       webAclId: props.webAclId,
     })
 
+    if (props.tags && props.tags.length > 0) {
+      props.tags.forEach(tag => {
+        cdk.Tags.of(distribution).add(tag.key, tag.value)
+      })
+    }
+
     utils.createCfnOutput(`${id}-distributionId`, scope, distribution.distributionId)
     utils.createCfnOutput(`${id}-distributionDomainName`, scope, distribution.distributionDomainName)
 
@@ -222,6 +234,12 @@ export class CloudFrontManager {
       webAclId: props.webAclId,
     })
 
+    if (props.tags && props.tags.length > 0) {
+      props.tags.forEach(tag => {
+        cdk.Tags.of(distribution).add(tag.key, tag.value)
+      })
+    }
+
     utils.createCfnOutput(`${id}-distributionId`, scope, distribution.distributionId)
     utils.createCfnOutput(`${id}-distributionDomainName`, scope, distribution.distributionDomainName)
 
@@ -278,6 +296,12 @@ export class CloudFrontManager {
       timeout: props.timeoutInSecs ? cdk.Duration.seconds(props.timeoutInSecs) : cdk.Duration.minutes(1),
       vpc: vpc,
     })
+
+    if (props.tags && props.tags.length > 0) {
+      props.tags.forEach(tag => {
+        cdk.Tags.of(edgeFunction).add(tag.key, tag.value)
+      })
+    }
 
     utils.createCfnOutput(`${id}-edgeArn`, scope, edgeFunction.edgeArn)
     utils.createCfnOutput(`${id}-edgeFunctionArn`, scope, edgeFunction.functionArn)
