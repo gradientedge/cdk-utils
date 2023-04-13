@@ -14,7 +14,17 @@
     ],
     "defaultBehavior": {
       "viewerProtocolPolicy": "redirect-to-https"
-    }
+    },
+    "tags": [
+      {
+        "key": "testTagName1",
+        "value": "testTagValue1"
+      },
+      {
+        "key": "testTagName2",
+        "value": "testTagValue2"
+      }
+    ]
   },
   "testEdgeDistribution": {
     "errorResponses": [

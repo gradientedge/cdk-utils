@@ -74,6 +74,12 @@ export class LogManager {
       retentionInDays: props.retention,
     })
 
+    if (props.tags && props.tags.length > 0) {
+      props.tags.forEach(tag => {
+        cdk.Tags.of(logGroup).add(tag.key, tag.value)
+      })
+    }
+
     utils.createCfnOutput(`${id}-logGroupArn`, scope, logGroup.attrArn)
 
     return logGroup
@@ -93,6 +99,12 @@ export class LogManager {
       retention: props.retention,
       removalPolicy: props.removalPolicy ?? cdk.RemovalPolicy.DESTROY,
     })
+
+    if (props.tags && props.tags.length > 0) {
+      props.tags.forEach(tag => {
+        cdk.Tags.of(logGroup).add(tag.key, tag.value)
+      })
+    }
 
     utils.createCfnOutput(`${id}-logGroupArn`, scope, logGroup.logGroupArn)
 

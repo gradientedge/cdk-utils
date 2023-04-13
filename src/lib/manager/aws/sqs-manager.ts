@@ -62,6 +62,12 @@ export class SqsManager {
       retentionPeriod: props.retentionInDays ? cdk.Duration.days(props.retentionInDays) : cdk.Duration.days(7),
     })
 
+    if (props.tags && props.tags.length > 0) {
+      props.tags.forEach(tag => {
+        cdk.Tags.of(queue).add(tag.key, tag.value)
+      })
+    }
+
     utils.createCfnOutput(`${id}-queueArn`, scope, queue.queueArn)
     utils.createCfnOutput(`${id}-queueName`, scope, queue.queueName)
     utils.createCfnOutput(`${id}-queueUrl`, scope, queue.queueUrl)

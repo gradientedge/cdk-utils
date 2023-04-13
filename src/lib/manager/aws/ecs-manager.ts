@@ -49,6 +49,12 @@ export class EcsManager {
       executeCommandConfiguration: props.executeCommandConfiguration,
     })
 
+    if (props.tags && props.tags.length > 0) {
+      props.tags.forEach(tag => {
+        cdk.Tags.of(ecsCluster).add(tag.key, tag.value)
+      })
+    }
+
     utils.createCfnOutput(`${id}-clusterArn`, scope, ecsCluster.clusterArn)
     utils.createCfnOutput(`${id}-clusterName`, scope, ecsCluster.clusterName)
 
@@ -119,6 +125,12 @@ export class EcsManager {
       secrets: secrets,
       command: command,
     })
+
+    if (props.tags && props.tags.length > 0) {
+      props.tags.forEach(tag => {
+        cdk.Tags.of(ecsTask).add(tag.key, tag.value)
+      })
+    }
 
     utils.createCfnOutput(`${id}-taskArn`, scope, ecsTask.taskDefinitionArn)
 

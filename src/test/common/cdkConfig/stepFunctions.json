@@ -66,6 +66,16 @@
       "includeExecutionData": true,
       "level": "ALL"
     },
-    "tracingEnabled": false
+    "tracingEnabled": false,
+    "tags": [
+      {
+        "key": "testTagName1",
+        "value": "testTagValue1"
+      },
+      {
+        "key": "testTagName2",
+        "value": "testTagValue2"
+      }
+    ]
   }
 }
