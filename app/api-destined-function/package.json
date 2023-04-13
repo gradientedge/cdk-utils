@@ -20,7 +20,7 @@
     "uuid": "^9.0.0"
   },
   "devDependencies": {
-    "mkdirp": "^2.1.6",
-    "rimraf": "^4.4.1"
+    "mkdirp": "^3.0.0",
+    "rimraf": "^5.0.0"
   }
 }
