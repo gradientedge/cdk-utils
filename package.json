@@ -75,7 +75,7 @@
     "husky": "^8.0.3",
     "jest": "^29.5.0",
     "jest-extended": "^3.2.4",
-    "jest-junit": "^15.0.0",
+    "jest-junit": "^16.0.0",
     "jsdoc": "^4.0.2",
     "jsdoc-babel": "^0.5.0",
     "jsdoc-mermaid": "^1.0.0",
