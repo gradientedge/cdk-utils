@@ -125,6 +125,7 @@ export class S3Manager {
         encryptionKey: props.encryptionKey,
         lifecycleRules: this.determineBucketLifecycleRules(props),
         metrics: props.metrics,
+        objectOwnership: props.objectOwnership,
         publicReadAccess: props.publicReadAccess,
         removalPolicy: props.removalPolicy || cdk.RemovalPolicy.RETAIN,
         serverAccessLogsBucket: logBucket,
