@@ -258,6 +258,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
       memoryLimitMiB: this.props.siteTask.memoryLimitMiB,
       healthCheckGracePeriod: cdk.Duration.seconds(60),
       assignPublicIp: true,
+      taskDefinition: this.props.siteTask.taskDefinition,
       taskImageOptions: {
         enableLogging: true,
         logDriver: ecs.LogDriver.awsLogs({
