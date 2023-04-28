@@ -124,7 +124,7 @@ describe('TestSiteWithEcsBackendAndEfsConstruct', () => {
     template.resourceCountIs('AWS::ECS::TaskDefinition', 1)
     template.resourceCountIs('AWS::Logs::LogGroup', 2)
     template.resourceCountIs('AWS::EC2::SecurityGroup', 3)
-    template.resourceCountIs('AWS::EC2::SecurityGroupIngress', 2)
+    template.resourceCountIs('AWS::EC2::SecurityGroupIngress', 3)
     template.resourceCountIs('AWS::ElasticLoadBalancingV2::LoadBalancer', 1)
     template.resourceCountIs('AWS::ElasticLoadBalancingV2::Listener', 1)
     template.resourceCountIs('AWS::ElasticLoadBalancingV2::TargetGroup', 1)
