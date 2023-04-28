@@ -340,8 +340,9 @@ export class SiteWithEcsBackend extends CommonConstruct {
         this.props.siteFileSystemAccessPoints
       )
 
-      /* allow access to EFS from Fargate ECS service */
+      /* allow access to/from EFS from Fargate ECS service */
       this.siteFileSystem.connections.allowDefaultPortFrom(this.siteEcsService.connections)
+      this.siteFileSystem.connections.allowDefaultPortTo(this.siteEcsService.connections)
 
       /* add the efs volume to ecs task definition */
       this.siteEcsTaskDefinition.addVolume({
