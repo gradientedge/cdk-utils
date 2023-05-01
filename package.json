@@ -64,7 +64,7 @@
     "@types/jest": "^29.5.0",
     "@typescript-eslint/eslint-plugin": "^5.58.0",
     "@typescript-eslint/parser": "^5.58.0",
-    "aws-cdk": "^2.73.0",
+    "aws-cdk": "^2.77.0",
     "better-docs": "^2.7.2",
     "codecov": "^3.8.3",
     "commitizen": "^4.3.0",
