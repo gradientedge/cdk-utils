@@ -732,12 +732,23 @@ export interface TagProps {
  * @category cdk-utils.lambda-manager
  * @subcategory Properties
  */
+export interface ProvisionedConcurrencyProps {
+  minCapacity: number
+  maxCapacity: number
+  utilizationTarget: number
+}
+
+/**
+ * @category cdk-utils.lambda-manager
+ * @subcategory Properties
+ */
 export interface LambdaProps extends lambda.FunctionProps {
   dlq?: QueueProps
   redriveq?: QueueProps
   timeoutInSecs?: number
   excludeLastModifiedTimestamp?: boolean
   tags?: TagProps[]
+  provisionedConcurrency?: ProvisionedConcurrencyProps
 }
 
 /**
