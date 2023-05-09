@@ -118,7 +118,7 @@ export class LambdaManager {
           : undefined,
         layers: layers,
         logRetention: scope.props.logRetention ?? props.logRetention,
-        reservedConcurrentExecutions: props.reservedConcurrentExecutions,
+        reservedConcurrentExecutions: props.reservedConcurrentExecutions ?? 20,
         role: role instanceof iam.Role ? role : undefined,
         securityGroups: securityGroups,
         timeout: props.timeoutInSecs ? cdk.Duration.seconds(props.timeoutInSecs) : cdk.Duration.minutes(15),
