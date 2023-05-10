@@ -28,6 +28,22 @@
       }
     ]
   },
+  "testLambdaWithConcurrency": {
+    "functionName": "test-lambda-concurrency",
+    "logRetention": 7,
+    "memorySize": 1024,
+    "lambdaAlias": {
+      "aliasName": "test-concurrent-alias",
+      "provisionedConcurrentExecutions": 2,
+      "retryAttempts": 2
+    },
+    "provisionedConcurrency": {
+      "minCapacity": 2,
+      "maxCapacity": 6,
+      "utilizationTarget": 0.8
+    },
+    "timeoutInSecs": 60
+  },
   "testLambdaWithDlq": {
     "functionName": "test-lambda-with-error-handling",
     "logRetention": 7,

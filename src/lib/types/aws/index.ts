@@ -57,6 +57,7 @@ export interface CommonStackProps extends cdk.StackProps {
   stageContextPath?: string
   skipStageForARecords: boolean
   logRetention?: logs.RetentionDays
+  defaultReservedLambdaConcurrentExecutions?: number
   excludeDomainNameForBuckets?: boolean
   nodejsRuntime?: lambda.Runtime
 }
@@ -749,6 +750,7 @@ export interface LambdaProps extends lambda.FunctionProps {
   excludeLastModifiedTimestamp?: boolean
   tags?: TagProps[]
   provisionedConcurrency?: ProvisionedConcurrencyProps
+  lambdaAlias?: LambdaAliasProps
 }
 
 /**
