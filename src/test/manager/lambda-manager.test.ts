@@ -12,6 +12,7 @@ interface TestStackProps extends types.CommonStackProps {
   testLambdaEdge: any
   testLambdaPython: any
   testLambdaAlias: any
+  testLambdaWithConcurrency: any
 }
 
 const testStackProps = {
@@ -46,6 +47,7 @@ class TestCommonStack extends common.CommonStack {
         testLambdaEdge: this.node.tryGetContext('testLambdaEdge'),
         testLambdaPython: this.node.tryGetContext('testLambdaPython'),
         testLambdaAlias: this.node.tryGetContext('testLambdaAlias'),
+        testLambdaWithConcurrency: this.node.tryGetContext('testLambdaWithConcurrency'),
       },
     }
   }
@@ -92,6 +94,14 @@ class TestCommonConstruct extends common.CommonConstruct {
       [testLayer],
       new lambda.AssetCode('src/test/common/nodejs/lib')
     )
+    this.lambdaManager.createLambdaFunction(
+      'test-lambda-with-concurrency',
+      this,
+      this.props.testLambdaWithConcurrency,
+      testRole,
+      [testLayer],
+      new lambda.AssetCode('src/test/common/nodejs/lib')
+    )
 
     this.lambdaManager.createEdgeFunction(
       'test-lambda-edge',
@@ -134,9 +144,9 @@ describe('TestLambdaConstruct', () => {
   test('synthesises as expected', () => {
     /* test if number of resources are correctly synthesised */
     template.resourceCountIs('AWS::Lambda::LayerVersion', 1)
-    template.resourceCountIs('AWS::Lambda::Function', 5)
+    template.resourceCountIs('AWS::Lambda::Function', 6)
     template.resourceCountIs('AWS::SQS::Queue', 2)
-    template.resourceCountIs('AWS::Lambda::Alias', 1)
+    template.resourceCountIs('AWS::Lambda::Alias', 2)
   })
 })
 
@@ -158,6 +168,8 @@ describe('TestLambdaConstruct', () => {
     template.hasOutput('testLambdaWithDlqLambdaName', {})
     template.hasOutput('testLambdaDockerLambdaArn', {})
     template.hasOutput('testLambdaDockerLambdaName', {})
+    template.hasOutput('testLambdaWithConcurrencyLambdaArn', {})
+    template.hasOutput('testLambdaWithConcurrencyLambdaName', {})
   })
 })
 
@@ -209,6 +221,30 @@ describe('TestLambdaConstruct', () => {
     template.hasResourceProperties('AWS::Lambda::Alias', {
       ProvisionedConcurrencyConfig: { ProvisionedConcurrentExecutions: 1 },
       Name: 'test-alias',
+    })
+  })
+})
+
+describe('TestLambdaConstruct', () => {
+  test('provisions new lambda with concurrency settings as expected', () => {
+    template.hasResourceProperties('AWS::Lambda::Function', {
+      Environment: {
+        Variables: {
+          REGION: 'us-east-1',
+        },
+      },
+      FunctionName: 'test-lambda-concurrency-test',
+      Handler: 'index.lambda_handler',
+      MemorySize: 1024,
+      Runtime: 'nodejs18.x',
+      Timeout: 60,
+    })
+  })
+
+  test('provisions new lambda alias as expected', () => {
+    template.hasResourceProperties('AWS::Lambda::Alias', {
+      ProvisionedConcurrencyConfig: { ProvisionedConcurrentExecutions: 2 },
+      Name: 'test-concurrent-alias',
     })
   })
 })

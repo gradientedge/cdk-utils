@@ -118,7 +118,8 @@ export class LambdaManager {
           : undefined,
         layers: layers,
         logRetention: scope.props.logRetention ?? props.logRetention,
-        reservedConcurrentExecutions: props.reservedConcurrentExecutions ?? 20,
+        reservedConcurrentExecutions:
+          props.reservedConcurrentExecutions ?? scope.props.defaultReservedLambdaConcurrentExecutions,
         role: role instanceof iam.Role ? role : undefined,
         securityGroups: securityGroups,
         timeout: props.timeoutInSecs ? cdk.Duration.seconds(props.timeoutInSecs) : cdk.Duration.minutes(15),
@@ -128,6 +129,20 @@ export class LambdaManager {
         insightsVersion: props.insightsVersion,
       },
     })
+
+    if (props.provisionedConcurrency && props.lambdaAlias) {
+      const functionAlias = this.createLambdaFunctionAlias(
+        `${id}-alias`,
+        scope,
+        props.lambdaAlias,
+        lambdaFunction.currentVersion
+      )
+
+      const functionAutoScaling = functionAlias.addAutoScaling(props.provisionedConcurrency)
+      functionAutoScaling.scaleOnUtilization({
+        utilizationTarget: props.provisionedConcurrency.utilizationTarget,
+      })
+    }
 
     if (props.tags && props.tags.length > 0) {
       props.tags.forEach(tag => {
