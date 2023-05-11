@@ -84,9 +84,9 @@ export class SqsManager {
   public createRedriveQueueForLambda(id: string, scope: common.CommonConstruct, props: types.LambdaProps) {
     return this.createQueue(`${id}`, scope, {
       ...props.redriveq,
-      ...{
-        queueName: `${props.functionName}-redriveq-${scope.props.stage}`,
-      },
+      queueName: props.redriveq?.fifo
+        ? `${props.functionName}-redriveq-${scope.props.stage}.fifo`
+        : `${props.functionName}-redriveq-${scope.props.stage}`,
     })
   }
 
@@ -107,9 +107,9 @@ export class SqsManager {
     if (props.dlq) {
       queueProps = {
         ...props.dlq,
-        ...{
-          queueName: `${props.functionName}-dlq-${scope.props.stage}`,
-        },
+        queueName: props.dlq.fifo
+          ? `${props.functionName}-dlq-${scope.props.stage}.fifo`
+          : `${props.functionName}-dlq-${scope.props.stage}`,
       }
     } else {
       queueProps = {
