@@ -749,15 +749,16 @@ export interface LambdaProps extends lambda.FunctionProps {
   timeoutInSecs?: number
   excludeLastModifiedTimestamp?: boolean
   tags?: TagProps[]
-  provisionedConcurrency?: ProvisionedConcurrencyProps
-  lambdaAlias?: LambdaAliasProps
+  lambdaAliases?: LambdaAliasProps[]
 }
 
 /**
  * @category cdk-utils.lambda-manager
  * @subcategory Properties
  */
-export interface LambdaAliasProps extends lambda.AliasProps {}
+export interface LambdaAliasProps extends lambda.AliasProps {
+  provisionedConcurrency?: ProvisionedConcurrencyProps
+}
 
 /**
  * @category cdk-utils.lambda-manager

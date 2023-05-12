@@ -130,17 +130,16 @@ export class LambdaManager {
       },
     })
 
-    if (props.provisionedConcurrency && props.lambdaAlias) {
-      const functionAlias = this.createLambdaFunctionAlias(
-        `${id}-alias`,
-        scope,
-        props.lambdaAlias,
-        lambdaFunction.currentVersion
-      )
+    if (props.lambdaAliases && props.lambdaAliases.length > 0) {
+      props.lambdaAliases.forEach(alias => {
+        const functionAlias = this.createLambdaFunctionAlias(`${id}-alias`, scope, alias, lambdaFunction.currentVersion)
 
-      const functionAutoScaling = functionAlias.addAutoScaling(props.provisionedConcurrency)
-      functionAutoScaling.scaleOnUtilization({
-        utilizationTarget: props.provisionedConcurrency.utilizationTarget,
+        if (alias.provisionedConcurrency) {
+          const functionAutoScaling = functionAlias.addAutoScaling(alias.provisionedConcurrency)
+          functionAutoScaling.scaleOnUtilization({
+            utilizationTarget: alias.provisionedConcurrency.utilizationTarget,
+          })
+        }
       })
     }
 
