@@ -757,6 +757,7 @@ export interface LambdaProps extends lambda.FunctionProps {
  * @subcategory Properties
  */
 export interface LambdaAliasProps extends lambda.AliasProps {
+  id?: string
   provisionedConcurrency?: ProvisionedConcurrencyProps
 }
 
