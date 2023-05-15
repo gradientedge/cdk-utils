@@ -708,6 +708,13 @@ export interface RuleProps extends events.CfnRuleProps {
 }
 
 /**
+ * @category cdk-utils.sfn-manager
+ * @subcategory Properties
+ */
+export interface SfnMapProps extends sfn.MapProps {}
+
+/**
+   }
  * @category cdk-utils.event-manager
  * @subcategory Properties
  */

@@ -10,6 +10,7 @@ import * as tasks from 'aws-cdk-lib/aws-stepfunctions-tasks'
 import * as common from '../../common'
 import * as types from '../../types'
 import * as utils from '../../utils'
+import { SfnMapProps } from '../../types'
 
 /**
  * @stability stable
@@ -400,6 +401,16 @@ export class SfnManager {
     }
 
     return step
+  }
+
+  /**
+   * @summary Method to create a step function map state
+   * @param {string} id scoped id of the resource
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.SfnMapProps} props props for the map state
+   */
+  public createMapState(id: string, scope: common.CommonConstruct, props: types.SfnMapProps) {
+    return new sfn.Map(scope, `${id}`, props)
   }
 
   /**
