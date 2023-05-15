@@ -6,6 +6,7 @@ import * as lambda from 'aws-cdk-lib/aws-lambda'
 import { Construct } from 'constructs'
 import * as common from '../../lib/common'
 import * as types from '../../lib/types'
+import * as sfn from 'aws-cdk-lib/aws-stepfunctions'
 
 interface TestStackProps extends types.CommonStackProps {
   testVpc: any
@@ -15,6 +16,11 @@ interface TestStackProps extends types.CommonStackProps {
   testLambda: any
   testFargateRule: any
   testLambdaRule: any
+  testSqs: any
+  testSubmitStepCreateSomething: any
+  testSubmitStepSuccess: any
+  testSubmitWorkflow: any
+  testSqsToSfnPipe: any
 }
 
 const testStackProps = {
@@ -31,7 +37,10 @@ const testStackProps = {
     'src/test/common/cdkConfig/ecs.json',
     'src/test/common/cdkConfig/lambdas.json',
     'src/test/common/cdkConfig/logs.json',
+    'src/test/common/cdkConfig/pipes.json',
     'src/test/common/cdkConfig/rules.json',
+    'src/test/common/cdkConfig/sqs.json',
+    'src/test/common/cdkConfig/stepFunctions.json',
     'src/test/common/cdkConfig/vpc.json',
   ],
   stageContextPath: 'src/test/common/cdkEnv',
@@ -57,6 +66,11 @@ class TestCommonStack extends common.CommonStack {
         testLambda: this.node.tryGetContext('testLambda'),
         testFargateRule: this.node.tryGetContext('testLambda'),
         testLambdaRule: this.node.tryGetContext('testLambda'),
+        testSqs: this.node.tryGetContext('testSqs'),
+        testSubmitStepCreateSomething: this.node.tryGetContext('testSubmitStepCreateSomething'),
+        testSubmitStepSuccess: this.node.tryGetContext('testSubmitStepSuccess'),
+        testSubmitWorkflow: this.node.tryGetContext('testSubmitWorkflow'),
+        testSqsToSfnPipe: this.node.tryGetContext('testSqsToSfnPipe'),
       },
     }
   }
@@ -80,6 +94,11 @@ class TestInvalidCommonStack extends common.CommonStack {
         testLogGroup: this.node.tryGetContext('testLogGroup'),
         testTask: this.node.tryGetContext('testTask'),
         testLambda: this.node.tryGetContext('testLambda'),
+        testSqs: this.node.tryGetContext('testSqs'),
+        testSubmitStepCreateSomething: this.node.tryGetContext('testSubmitStepCreateSomething'),
+        testSubmitStepSuccess: this.node.tryGetContext('testSubmitStepSuccess'),
+        testSubmitWorkflow: this.node.tryGetContext('testSubmitWorkflow'),
+        testSqsToSfnPipe: this.node.tryGetContext('testSqsToSfnPipe'),
       },
     }
   }
@@ -125,6 +144,34 @@ class TestCommonConstruct extends common.CommonConstruct {
       new lambda.AssetCode('src/test/common/nodejs/lib')
     )
     this.eventManager.createLambdaRule('test-lambda-rule', this, this.props.testLambdaRule, testLambda)
+
+    const testQueue = this.sqsManager.createQueue('test-sqs', this, this.props.testSqs)
+    const testSubmitStepCreateSomething = this.sfnManager.createLambdaStep(
+      'test-choice-step-2',
+      this,
+      this.props.testSubmitStepCreateSomething,
+      testLambda
+    )
+    const testSubmitStepSuccess = this.sfnManager.createSuccessStep(
+      'test-pass-step',
+      this,
+      this.props.testSubmitStepSuccess
+    )
+    const testWorkflow = sfn.Chain.start(testSubmitStepCreateSomething).next(testSubmitStepSuccess)
+    const testStateMachine = this.sfnManager.createStateMachine(
+      'test-parallel-step',
+      this,
+      this.props.testSubmitWorkflow,
+      testWorkflow,
+      testLogGroup
+    )
+    this.eventManager.createSqsToSfnCfnPipe(
+      'test-sqs-to-sfn-pipe',
+      this,
+      this.props.testSqsToSfnPipe,
+      testQueue,
+      testStateMachine
+    )
   }
 }
 
@@ -144,6 +191,9 @@ describe('TestEventConstruct', () => {
     /* test if number of resources are correctly synthesised */
     template.resourceCountIs('AWS::Events::Rule', 2)
     template.resourceCountIs('AWS::Lambda::Permission', 1)
+    template.resourceCountIs('AWS::SQS::Queue', 1)
+    template.resourceCountIs('AWS::StepFunctions::StateMachine', 1)
+    template.resourceCountIs('AWS::Pipes::Pipe', 1)
   })
 })
 
@@ -153,6 +203,15 @@ describe('TestEventConstruct', () => {
     template.hasOutput('testFargateRuleRuleName', {})
     template.hasOutput('testLambdaRuleRuleArn', {})
     template.hasOutput('testLambdaRuleRuleName', {})
+    template.hasOutput('testSqsQueueArn', {})
+    template.hasOutput('testSqsQueueName', {})
+    template.hasOutput('testSqsQueueUrl', {})
+    template.hasOutput('testParallelStepStateMachineName', {})
+    template.hasOutput('testParallelStepStateMachineArn', {})
+    template.hasOutput('testSqsToSfnPipeRoleArn', {})
+    template.hasOutput('testSqsToSfnPipeRoleName', {})
+    template.hasOutput('testSqsToSfnPipePipeArn', {})
+    template.hasOutput('testSqsToSfnPipePipeName', {})
   })
 })
 
@@ -198,6 +257,42 @@ describe('TestEventConstruct', () => {
           Id: 'test-lambda-rule-test',
         },
       ],
+    })
+  })
+})
+
+describe('TestEventConstruct', () => {
+  test('provisions new eventbridge pipe as expected', () => {
+    template.hasResourceProperties('AWS::Pipes::Pipe', {
+      RoleArn: {
+        'Fn::GetAtt': ['testcommonstacktestsqstosfnpiperole2EFA5C05', 'Arn'],
+      },
+      Source: {
+        'Fn::GetAtt': ['testcommonstacktestsqs99C34404', 'Arn'],
+      },
+      Target: {
+        Ref: 'testcommonstacktestparallelstep535C7CF2',
+      },
+      Description: '',
+      Name: 'test-sqs-to-sfn-pipe-test',
+      SourceParameters: {
+        FilterCriteria: {
+          Filters: [
+            {
+              Pattern: '{"detail":{"type":["testType"]}}',
+            },
+          ],
+        },
+        SqsQueueParameters: {
+          BatchSize: 10,
+        },
+      },
+      TargetParameters: {
+        InputTemplate: '<$.body>',
+        StepFunctionStateMachineParameters: {
+          InvocationType: 'FIRE_AND_FORGET',
+        },
+      },
     })
   })
 })

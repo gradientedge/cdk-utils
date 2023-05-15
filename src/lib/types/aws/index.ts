@@ -29,6 +29,7 @@ import * as tasks from 'aws-cdk-lib/aws-stepfunctions-tasks'
 import * as wafv2 from 'aws-cdk-lib/aws-wafv2'
 import * as types from '../index'
 import * as appAutoscaling from 'aws-cdk-lib/aws-applicationautoscaling'
+import * as pipes from 'aws-cdk-lib/aws-pipes'
 
 /**
  * @category cdk-utils.app-config-manager
@@ -704,6 +705,18 @@ export interface EksClusterProps extends eks.ClusterProps {
  */
 export interface RuleProps extends events.CfnRuleProps {
   input?: string
+}
+
+/**
+ * @category cdk-utils.event-manager
+ * @subcategory Properties
+ */
+export interface SqsToSfnPipeProps extends pipes.CfnPipeProps {
+  pipeFilterPattern?: any
+  sqsBatchSize?: number
+  sqsMaximumBatchingWindowInSeconds?: number
+  sfnInvocationType?: string
+  sfnInputTemplate?: string
 }
 
 /**

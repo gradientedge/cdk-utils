@@ -57,6 +57,30 @@ export class IamManager {
   }
 
   /**
+   * @summary Method to create iam statement to start stepfunction execution
+   * @param {string[]} resourceArns list of ARNs to allow access to
+   */
+  public statementForStartExecution(resourceArns?: string[]) {
+    return new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: ['states:StartExecution'],
+      resources: resourceArns ?? ['*'],
+    })
+  }
+
+  /**
+   * @summary Method to create iam statement to poll queue
+   * @param {string[]} resourceArns list of ARNs to allow access to
+   */
+  public statementForPollQueue(resourceArns?: string[]) {
+    return new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: ['sqs:ReceiveMessage', 'sqs:DeleteMessage', 'sqs:GetQueueAttributes'],
+      resources: resourceArns ?? ['*'],
+    })
+  }
+
+  /**
    * @summary Method to create iam statement to invoke lambda function
    * @param {string[]} resourceArns list of ARNs to allow access to
    */
@@ -501,6 +525,34 @@ export class IamManager {
       ],
       roleName: `${id}-${scope.props.stage}`,
     })
+
+    utils.createCfnOutput(`${id}Arn`, scope, role.roleArn)
+    utils.createCfnOutput(`${id}Name`, scope, role.roleName)
+
+    return role
+  }
+
+  /**
+   * @summary Method to create iam statement for sqs to step function pipe
+   * @param {string} id scoped id of the resource
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {string} queueArn the arn of the sqs queue
+   * @param {string} stepFunctionArn the arn of the step function
+   */
+  public createRoleForSqsToSfnPipe(
+    id: string,
+    scope: common.CommonConstruct,
+    queueArn: string,
+    stepFunctionArn: string
+  ) {
+    const role = new iam.Role(scope, `${id}`, {
+      assumedBy: new iam.ServicePrincipal('pipes.amazonaws.com'),
+      description: `Role for ${id} Pipe`,
+      roleName: `${id}-${scope.props.stage}`,
+    })
+
+    role.addToPolicy(this.statementForPollQueue([queueArn]))
+    role.addToPolicy(this.statementForStartExecution([stepFunctionArn]))
 
     utils.createCfnOutput(`${id}Arn`, scope, role.roleArn)
     utils.createCfnOutput(`${id}Name`, scope, role.roleName)

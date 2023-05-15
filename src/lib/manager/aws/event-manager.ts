@@ -6,6 +6,9 @@ import * as common from '../../common'
 import * as types from '../../types'
 import * as utils from '../../utils'
 import * as cdk from 'aws-cdk-lib'
+import * as pipes from 'aws-cdk-lib/aws-pipes'
+import * as sqs from 'aws-cdk-lib/aws-sqs'
+import * as sfn from 'aws-cdk-lib/aws-stepfunctions'
 
 /**
  * @stability stable
@@ -184,5 +187,65 @@ export class EventManager {
     utils.createCfnOutput(`${id}-ruleName`, scope, eventRule.name)
 
     return eventRule
+  }
+
+  /**
+   * @summary Method to create an eventbridge pipe with sqs queue as source and step function as target
+   * @param {string} id scoped id of the resource
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param props the props for the pipe
+   * @param sourceQueue the source sqs queue
+   * @param targetStepFunction the target step function
+   */
+  public createSqsToSfnCfnPipe(
+    id: string,
+    scope: common.CommonConstruct,
+    props: types.SqsToSfnPipeProps,
+    sourceQueue: sqs.IQueue,
+    targetStepFunction: sfn.IStateMachine
+  ) {
+    const pipeRole = scope.iamManager.createRoleForSqsToSfnPipe(
+      `${id}-role`,
+      scope,
+      sourceQueue.queueArn,
+      targetStepFunction.stateMachineArn
+    )
+
+    const pipe = new pipes.CfnPipe(scope, `${id}`, {
+      ...props,
+      name: `${props.name}-${scope.props.stage}`,
+      description: '',
+      source: sourceQueue.queueArn,
+      sourceParameters: {
+        filterCriteria: props.pipeFilterPattern
+          ? {
+              filters: [
+                {
+                  pattern: JSON.stringify(props.pipeFilterPattern),
+                },
+              ],
+            }
+          : undefined,
+        sqsQueueParameters: {
+          batchSize: props.sqsBatchSize,
+          maximumBatchingWindowInSeconds: props.sqsMaximumBatchingWindowInSeconds,
+        },
+      },
+      target: targetStepFunction.stateMachineArn,
+      targetParameters: {
+        inputTemplate: props.sfnInputTemplate,
+        stepFunctionStateMachineParameters: {
+          invocationType: props.sfnInvocationType ?? 'FIRE_AND_FORGET',
+        },
+      },
+      enrichment: props.enrichment,
+      enrichmentParameters: props.enrichmentParameters,
+      roleArn: pipeRole.roleArn,
+    })
+
+    utils.createCfnOutput(`${id}-pipeArn`, scope, pipe.attrArn)
+    utils.createCfnOutput(`${id}-pipeName`, scope, pipe.name)
+
+    return pipe
   }
 }
