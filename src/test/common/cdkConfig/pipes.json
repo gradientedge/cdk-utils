@@ -1,0 +1,12 @@
+{
+  "testSqsToSfnPipe": {
+    "name": "test-sqs-to-sfn-pipe",
+    "sqsBatchSize": 10,
+    "sfnInputTemplate": "<$.body>",
+    "pipeFilterPattern": {
+      "detail": {
+        "type": ["testType"]
+      }
+    }
+  }
+}
