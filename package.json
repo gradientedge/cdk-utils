@@ -50,7 +50,7 @@
     "app-root-path": "^3.1.0",
     "aws-cdk-lib": "^2.79.1",
     "@aws-sdk/client-secrets-manager": "^3.332.0",
-    "constructs": "^10.2.21",
+    "constructs": "^10.2.24",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
     "nconf": "^0.12.0",
