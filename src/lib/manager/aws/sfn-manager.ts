@@ -12,6 +12,15 @@ import * as types from '../../types'
 import * as utils from '../../utils'
 import { SfnMapProps } from '../../types'
 
+const DEFAULT_RETRY_CONFIG = [
+  {
+    errors: ['States.ALL'],
+    intervalInSecs: 30,
+    maxAttempts: 6,
+    backoffRate: 2,
+  },
+]
+
 /**
  * @stability stable
  * @category cdk-utils.step-functions-manager
@@ -96,14 +105,17 @@ export class SfnManager {
       },
     })
 
-    if (props.retries && props.retries.length > 0) {
-      props.retries.forEach(retry =>
-        step.addRetry({
-          ...retry,
-          ...{ interval: retry.intervalInSecs ? cdk.Duration.seconds(retry.intervalInSecs) : retry.interval },
-        })
-      )
+    let retries = props.retries
+    if (!retries || retries.length === 0) {
+      retries = DEFAULT_RETRY_CONFIG
     }
+
+    retries.forEach(retry =>
+      step.addRetry({
+        ...retry,
+        ...{ interval: retry.intervalInSecs ? cdk.Duration.seconds(retry.intervalInSecs) : retry.interval },
+      })
+    )
 
     return step
   }
@@ -176,14 +188,17 @@ export class SfnManager {
       },
     })
 
-    if (props.retries && props.retries.length > 0) {
-      props.retries.forEach(retry =>
-        step.addRetry({
-          ...retry,
-          ...{ interval: retry.intervalInSecs ? cdk.Duration.seconds(retry.intervalInSecs) : retry.interval },
-        })
-      )
+    let retries = props.retries
+    if (!retries || retries.length === 0) {
+      retries = DEFAULT_RETRY_CONFIG
     }
+
+    retries.forEach(retry =>
+      step.addRetry({
+        ...retry,
+        ...{ interval: retry.intervalInSecs ? cdk.Duration.seconds(retry.intervalInSecs) : retry.interval },
+      })
+    )
 
     return step
   }
@@ -226,14 +241,17 @@ export class SfnManager {
       },
     })
 
-    if (props.retries && props.retries.length > 0) {
-      props.retries.forEach(retry =>
-        step.addRetry({
-          ...retry,
-          ...{ interval: retry.intervalInSecs ? cdk.Duration.seconds(retry.intervalInSecs) : retry.interval },
-        })
-      )
+    let retries = props.retries
+    if (!retries || retries.length === 0) {
+      retries = DEFAULT_RETRY_CONFIG
     }
+
+    retries.forEach(retry =>
+      step.addRetry({
+        ...retry,
+        ...{ interval: retry.intervalInSecs ? cdk.Duration.seconds(retry.intervalInSecs) : retry.interval },
+      })
+    )
 
     return step
   }
@@ -276,14 +294,17 @@ export class SfnManager {
       },
     })
 
-    if (props.retries && props.retries.length > 0) {
-      props.retries.forEach(retry =>
-        step.addRetry({
-          ...retry,
-          ...{ interval: retry.intervalInSecs ? cdk.Duration.seconds(retry.intervalInSecs) : retry.interval },
-        })
-      )
+    let retries = props.retries
+    if (!retries || retries.length === 0) {
+      retries = DEFAULT_RETRY_CONFIG
     }
+
+    retries.forEach(retry =>
+      step.addRetry({
+        ...retry,
+        ...{ interval: retry.intervalInSecs ? cdk.Duration.seconds(retry.intervalInSecs) : retry.interval },
+      })
+    )
 
     return step
   }
@@ -322,14 +343,17 @@ export class SfnManager {
       },
     })
 
-    if (props.retries && props.retries.length > 0) {
-      props.retries.forEach(retry =>
-        step.addRetry({
-          ...retry,
-          ...{ interval: retry.intervalInSecs ? cdk.Duration.seconds(retry.intervalInSecs) : retry.interval },
-        })
-      )
+    let retries = props.retries
+    if (!retries || retries.length === 0) {
+      retries = DEFAULT_RETRY_CONFIG
     }
+
+    retries.forEach(retry =>
+      step.addRetry({
+        ...retry,
+        ...{ interval: retry.intervalInSecs ? cdk.Duration.seconds(retry.intervalInSecs) : retry.interval },
+      })
+    )
 
     return step
   }
@@ -356,14 +380,17 @@ export class SfnManager {
       },
     })
 
-    if (props.retries && props.retries.length > 0) {
-      props.retries.forEach(retry =>
-        step.addRetry({
-          ...retry,
-          ...{ interval: retry.intervalInSecs ? cdk.Duration.seconds(retry.intervalInSecs) : retry.interval },
-        })
-      )
+    let retries = props.retries
+    if (!retries || retries.length === 0) {
+      retries = DEFAULT_RETRY_CONFIG
     }
+
+    retries.forEach(retry =>
+      step.addRetry({
+        ...retry,
+        ...{ interval: retry.intervalInSecs ? cdk.Duration.seconds(retry.intervalInSecs) : retry.interval },
+      })
+    )
 
     return step
   }
@@ -391,14 +418,17 @@ export class SfnManager {
       },
     })
 
-    if (props.retries && props.retries.length > 0) {
-      props.retries.forEach(retry =>
-        step.addRetry({
-          ...retry,
-          ...{ interval: retry.intervalInSecs ? cdk.Duration.seconds(retry.intervalInSecs) : retry.interval },
-        })
-      )
+    let retries = props.retries
+    if (!retries || retries.length === 0) {
+      retries = DEFAULT_RETRY_CONFIG
     }
+
+    retries.forEach(retry =>
+      step.addRetry({
+        ...retry,
+        ...{ interval: retry.intervalInSecs ? cdk.Duration.seconds(retry.intervalInSecs) : retry.interval },
+      })
+    )
 
     return step
   }
