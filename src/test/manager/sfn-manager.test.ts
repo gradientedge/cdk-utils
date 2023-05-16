@@ -315,7 +315,7 @@ describe('TestSfnConstruct', () => {
             {
               'Fn::GetAtt': ['testcommonstacktestlambda5B168AC2', 'Arn'],
             },
-            '","Payload.$":"$"}},"step:Something Validated?":{"Type":"Choice","Comment":"Choice step for step:Something Validated? - test stage","Choices":[{"Variable":"$.detail.id","IsNull":true,"Next":"workflow:Failed"}],"Default":"step:Create Something Else"},"step:Create Something Else":{"Next":"step:Wait","Retry":[{"ErrorEquals":["Lambda.ServiceException","Lambda.AWSLambdaException","Lambda.SdkClientException"],"IntervalSeconds":2,"MaxAttempts":6,"BackoffRate":2}],"Type":"Task","Comment":"Lambda step for step:Create Something Else - test stage","Resource":"arn:',
+            '","Payload.$":"$"}},"step:Something Validated?":{"Type":"Choice","Comment":"Choice step for step:Something Validated? - test stage","Choices":[{"Variable":"$.detail.id","IsNull":true,"Next":"workflow:Failed"}],"Default":"step:Create Something Else"},"step:Create Something Else":{"Next":"step:Wait","Retry":[{"ErrorEquals":["Lambda.ServiceException","Lambda.AWSLambdaException","Lambda.SdkClientException"],"IntervalSeconds":2,"MaxAttempts":6,"BackoffRate":2},{"ErrorEquals":["States.ALL"],"IntervalSeconds":30,"MaxAttempts":6,"BackoffRate":2}],"Type":"Task","Comment":"Lambda step for step:Create Something Else - test stage","Resource":"arn:',
             {
               Ref: 'AWS::Partition',
             },
@@ -323,7 +323,7 @@ describe('TestSfnConstruct', () => {
             {
               'Fn::GetAtt': ['testcommonstacktestlambda5B168AC2', 'Arn'],
             },
-            '","Payload.$":"$"}},"step:Wait":{"Type":"Wait","Comment":"Choice step for step:Wait - test stage","Seconds":10,"Next":"parallel:Create Something"},"parallel:Create Something":{"Type":"Parallel","Comment":"Parallel step for parallel:Create Something - test stage","Next":"workflow:Complete","Catch":[{"ErrorEquals":["States.ALL"],"Next":"workflow:Failed"}],"Branches":[{"StartAt":"step:Create Something New","States":{"step:Create Something New":{"Type":"Pass","Comment":"Pass step for step:Create Something New - test stage","End":true}}},{"StartAt":"step:Call Some API","States":{"step:Call Some API":{"End":true,"Type":"Task","Comment":"API step for step:Call Some API - test stage","Resource":"arn:',
+            '","Payload.$":"$"}},"step:Wait":{"Type":"Wait","Comment":"Choice step for step:Wait - test stage","Seconds":10,"Next":"parallel:Create Something"},"parallel:Create Something":{"Type":"Parallel","Comment":"Parallel step for parallel:Create Something - test stage","Next":"workflow:Complete","Retry":[{"ErrorEquals":["States.ALL"],"IntervalSeconds":30,"MaxAttempts":6,"BackoffRate":2}],"Catch":[{"ErrorEquals":["States.ALL"],"Next":"workflow:Failed"}],"Branches":[{"StartAt":"step:Create Something New","States":{"step:Create Something New":{"Type":"Pass","Comment":"Pass step for step:Create Something New - test stage","End":true}}},{"StartAt":"step:Call Some API","States":{"step:Call Some API":{"End":true,"Retry":[{"ErrorEquals":["States.ALL"],"IntervalSeconds":30,"MaxAttempts":6,"BackoffRate":2}],"Type":"Task","Comment":"API step for step:Call Some API - test stage","Resource":"arn:',
             {
               Ref: 'AWS::Partition',
             },
@@ -335,8 +335,7 @@ describe('TestSfnConstruct', () => {
             {
               Ref: 'AWS::URLSuffix',
             },
-
-            '","Stage":"test","AuthType":"NO_AUTH"}}}},{"StartAt":"step:Get Item from dynamodb","States":{"step:Get Item from dynamodb":{"Next":"step:Put Item into dynamodb","Type":"Task","Comment":"DynamoDB GetItem step for step:Get Item from dynamodb - test stage","OutputPath":"$.Payload","Resource":"arn:',
+            '","Stage":"test","AuthType":"NO_AUTH"}}}},{"StartAt":"step:Get Item from dynamodb","States":{"step:Get Item from dynamodb":{"Next":"step:Put Item into dynamodb","Retry":[{"ErrorEquals":["States.ALL"],"IntervalSeconds":30,"MaxAttempts":6,"BackoffRate":2}],"Type":"Task","Comment":"DynamoDB GetItem step for step:Get Item from dynamodb - test stage","OutputPath":"$.Payload","Resource":"arn:',
             {
               Ref: 'AWS::Partition',
             },
@@ -344,7 +343,7 @@ describe('TestSfnConstruct', () => {
             {
               Ref: 'testcommonstacktesttableF9EEAE8E',
             },
-            '","ConsistentRead":false}},"step:Put Item into dynamodb":{"Next":"step:Delete Item from dynamodb","Type":"Task","Comment":"DynamoDB PutItem step for step:Put Item into dynamodb - test stage","OutputPath":"$.Payload","Resource":"arn:',
+            '","ConsistentRead":false}},"step:Put Item into dynamodb":{"Next":"step:Delete Item from dynamodb","Retry":[{"ErrorEquals":["States.ALL"],"IntervalSeconds":30,"MaxAttempts":6,"BackoffRate":2}],"Type":"Task","Comment":"DynamoDB PutItem step for step:Put Item into dynamodb - test stage","OutputPath":"$.Payload","Resource":"arn:',
             {
               Ref: 'AWS::Partition',
             },
@@ -352,7 +351,7 @@ describe('TestSfnConstruct', () => {
             {
               Ref: 'testcommonstacktesttableF9EEAE8E',
             },
-            '"}},"step:Delete Item from dynamodb":{"End":true,"Type":"Task","Comment":"DynamoDB DeleteItem step for step:Delete Item from dynamodb - test stage","OutputPath":"$.Payload","Resource":"arn:',
+            '"}},"step:Delete Item from dynamodb":{"End":true,"Retry":[{"ErrorEquals":["States.ALL"],"IntervalSeconds":30,"MaxAttempts":6,"BackoffRate":2}],"Type":"Task","Comment":"DynamoDB DeleteItem step for step:Delete Item from dynamodb - test stage","OutputPath":"$.Payload","Resource":"arn:',
             {
               Ref: 'AWS::Partition',
             },
@@ -360,7 +359,7 @@ describe('TestSfnConstruct', () => {
             {
               Ref: 'testcommonstacktesttableF9EEAE8E',
             },
-            '"}}}},{"StartAt":"step:Send message to SQS","States":{"step:Send message to SQS":{"End":true,"Type":"Task","Comment":"DynamoDB PutItem step for step:Send message to SQS - test stage","OutputPath":"$.Payload","Resource":"arn:',
+            '"}}}},{"StartAt":"step:Send message to SQS","States":{"step:Send message to SQS":{"End":true,"Retry":[{"ErrorEquals":["States.ALL"],"IntervalSeconds":30,"MaxAttempts":6,"BackoffRate":2}],"Type":"Task","Comment":"DynamoDB PutItem step for step:Send message to SQS - test stage","OutputPath":"$.Payload","Resource":"arn:',
             {
               Ref: 'AWS::Partition',
             },
