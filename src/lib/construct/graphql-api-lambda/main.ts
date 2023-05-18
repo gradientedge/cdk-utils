@@ -14,7 +14,7 @@ import { GraphQlApiLambdaEnvironment, GraphQlApiLambdaProps } from '../../types'
  * @subcategory construct
  * @classdesc Provides a construct to create and deploy a Graphql API as Lambda
  *
- * <b>Architecture</b> ![Architecture](./GraphQLApiLambda.jpg)
+ * <b>Architecture</b><br/> ![Architecture](./GraphQLApiLambda.jpg)
  *
  * @example
  * import { GraphQLApiLambda, GraphQlApiLambdaProps } '@gradientedge/cdk-utils'
@@ -28,6 +28,7 @@ import { GraphQlApiLambdaEnvironment, GraphQlApiLambdaProps } from '../../types'
  *     this.initResources()
  *   }
  * }
+ * @mixin
  */
 export class GraphQLApiLambda extends CommonConstruct {
   /* graphql restApi props */

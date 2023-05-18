@@ -8,6 +8,9 @@ import { CommonConstruct } from '../../common'
 import * as helper from '../../helper'
 import * as types from '../../types/aws'
 
+/**
+ * @mixin
+ */
 export class ApiToLambdaTarget extends CommonConstruct {
   props: types.ApiToLambdaTargetProps
   id: string

@@ -161,6 +161,7 @@ cdk.context.json
 # Typedoc & jsDoc
 api-docs/
 typedocs/
+!theme/type-converter.js
 
 # Misc
 !.eslintrc.js

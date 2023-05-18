@@ -1,6 +1,4 @@
-[![Gradient Edge][logo]](https://gradientedge.com)
-
-# Gradient Edge CDK Utils
+# <img src="https://cdn.gradientedge.io/images/ge-logo-1200.png" width="175px" alt="Gradient Edge"> CDK Utils
 
 [![Release][release]][release-url]
 [![version][version]][version-url]
@@ -27,9 +25,9 @@
 
 ## Introduction
 
-Toolkit for working with the [AWS CDK][aws-cdk] Toolkit.
+Toolkit for working with the [AWS CDK][aws-cdk].
 
-For more details, see our full [API documentation](https://gradientedge.github.io/cdk-utils/).
+For more details, see the full [API documentation](https://gradientedge.github.io/cdk-utils/).
 
 ## Installation
 

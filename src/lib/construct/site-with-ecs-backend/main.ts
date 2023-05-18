@@ -33,6 +33,7 @@ import { SiteWithEcsBackendProps } from '../../types'
  *     this.initResources()
  *   }
  * }
+ * @mixin
  */
 export class SiteWithEcsBackend extends CommonConstruct {
   /* site properties */

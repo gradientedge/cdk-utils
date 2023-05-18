@@ -25,6 +25,7 @@ import { StaticSiteProps } from '../../types'
  *     this.initResources()
  *   }
  * }
+ * @mixin
  */
 export class StaticSite extends CommonConstruct {
   /* static site properties */

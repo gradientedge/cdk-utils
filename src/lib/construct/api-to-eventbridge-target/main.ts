@@ -15,7 +15,7 @@ import * as types from '../../types/aws'
  * @subcategory construct
  * @classdesc Provides a construct to create and deploy API Gateway invocations to EventBridge
  *
- * <b>Architecture</b> ![Architecture](./ApiToEventBridgeTarget.jpg)
+ * <b>Architecture</b><br/> ![Architecture](./ApiToEventBridgeTarget.jpg)
  *
  * @example
  * import { ApiToEventBridgeTarget, ApiToEventBridgeTargetProps } '@gradientedge/cdk-utils'
@@ -29,7 +29,7 @@ import * as types from '../../types/aws'
  *     this.initResources()
  *   }
  * }
- *
+ * @mixin
  */
 export class ApiToEventBridgeTarget extends CommonConstruct {
   props: types.ApiToEventBridgeTargetProps

@@ -13,7 +13,7 @@ import * as utils from '../../utils'
  * @subcategory construct
  * @classdesc Provides a construct to create and deploy a Graphql API as Lambda with Caching
  *
- * <b>Architecture</b> ![Architecture](./GraphQLApiLambda.jpg)
+ * <b>Architecture</b><br/> ![Architecture](./GraphQLApiLambda.jpg)
  *
  * @example
  * import { GraphQlApiLambdaWithCacheProps } '@gradientedge/cdk-utils'
@@ -27,6 +27,7 @@ import * as utils from '../../utils'
  *     this.initResources()
  *   }
  * }
+ * @mixin
  */
 export class GraphQLApiLambdaWithCache extends GraphQLApiLambda {
   /* graphql restApi props */

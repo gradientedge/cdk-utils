@@ -20,7 +20,7 @@ import { ApiDestinedLambda } from './api-destined-lambda'
  * @subcategory construct
  * @classdesc Provides a construct to create and deploy API Gateway invocations to EventBridge
  *
- * <b>Architecture</b> ![Architecture](./ApiToEventBridgeTargetWithSns.jpg)
+ * <b>Architecture</b><br/> ![Architecture](./ApiToEventBridgeTargetWithSns.jpg)
  *
  * @example
  * import { ApiToEventBridgeTargetWithSns, ApiToEventBridgeTargetProps } '@gradientedge/cdk-utils'
@@ -34,7 +34,7 @@ import { ApiDestinedLambda } from './api-destined-lambda'
  *     this.initResources()
  *   }
  * }
- *
+ * @mixin
  */
 export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
   props: types.ApiToEventBridgeTargetProps

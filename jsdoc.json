@@ -1,10 +1,11 @@
 {
   "source": {
-    "includePattern": "\\.(ts|tsx)$",
+    "includePattern": "\\.(ts)$",
     "excludePattern": ".+\\.(test|spec).(t|j)s(doc|x)?$",
     "exclude": [
       "__snapshots__",
       "test",
+      "src/test",
       "__tests__",
       "build",
       "coverage",
@@ -21,16 +22,49 @@
     "plugins/markdown",
     "plugins/summarize",
     "jsdoc-mermaid",
-    "node_modules/better-docs/category",
+    "jsdoc-plugin-typescript",
     "node_modules/better-docs/typescript"
   ],
+  "typescript": {
+    "moduleRoot": "src"
+  },
+  "docdash": {
+    "static": true,
+    "sort": true,
+    "search": true,
+    "collapse": true,
+    "typedefs": true,
+    "removeQuotes": "none",
+    "commonNav": true,
+    "wrap": false,
+    "scripts": [],
+    "menu": {
+      "Github repo": {
+        "href": "https://github.com/gradientedge/cdk-utils",
+        "target": "_blank",
+        "class": "menu-item",
+        "id": "repository"
+      }
+    },
+    "sectionOrder": [
+      "Mixins",
+      "Classes",
+      "Interfaces",
+      "Modules",
+      "Externals",
+      "Events",
+      "Namespaces",
+      "Globals",
+      "Tutorials"
+    ]
+  },
   "opts": {
     "destination": "api-docs/",
     "encoding": "utf8",
     "readme": "README.md",
     "recurse": true,
     "tutorials": "docs/",
-    "template": "node_modules/better-docs"
+    "template": "node_modules/docdash"
   },
   "tags": {
     "allowUnknownTags": true,
@@ -41,28 +75,18 @@
     "monospaceLinks": false,
     "search": true,
     "default": {
+      "useLongnameInNav": true,
+      "layoutFile": "./theme/layout.tmpl",
+      "outputSourceFiles": true,
       "staticFiles": {
         "include": [
           "./img/logo.png",
           "./img/ApiToEventBridgeTarget.jpg",
           "./img/ApiToEventBridgeTargetWithSns.jpg",
           "./img/GraphQLApiLambda.jpg",
-          "./theme/styles.css"
+          "./theme/main.css"
         ]
       }
-    },
-    "better-docs": {
-      "name": "Gradient Edge CDK Utils Documentation",
-      "title": "Gradient Edge CDK Utils",
-      "logo": "logo.png",
-      "hideGenerator": true,
-      "css": "styles.css",
-      "navLinks": [
-        {
-          "label": "Github",
-          "href": "https://github.com/gradientedge/cdk-utils"
-        }
-      ]
     }
   }
 }
