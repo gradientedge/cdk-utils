@@ -59,6 +59,7 @@ export interface CommonStackProps extends cdk.StackProps {
   skipStageForARecords: boolean
   logRetention?: logs.RetentionDays
   defaultReservedLambdaConcurrentExecutions?: number
+  defaultTracing?: lambda.Tracing
   excludeDomainNameForBuckets?: boolean
   nodejsRuntime?: lambda.Runtime
 }
