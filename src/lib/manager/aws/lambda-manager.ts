@@ -125,7 +125,7 @@ export class LambdaManager {
         timeout: props.timeoutInSecs ? cdk.Duration.seconds(props.timeoutInSecs) : cdk.Duration.minutes(15),
         vpc: vpc,
         vpcSubnets: vpcSubnets,
-        tracing: props.tracing,
+        tracing: scope.props.defaultTracing ?? props.tracing,
         insightsVersion: props.insightsVersion,
       },
     })

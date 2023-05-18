@@ -214,7 +214,7 @@ export class EventManager {
     const pipe = new pipes.CfnPipe(scope, `${id}`, {
       ...props,
       name: `${props.name}-${scope.props.stage}`,
-      description: '',
+      description: props.description,
       source: sourceQueue.queueArn,
       sourceParameters: {
         filterCriteria: props.pipeFilterPattern

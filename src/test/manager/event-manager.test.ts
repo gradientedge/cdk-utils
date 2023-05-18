@@ -273,7 +273,6 @@ describe('TestEventConstruct', () => {
       Target: {
         Ref: 'testcommonstacktestparallelstep535C7CF2',
       },
-      Description: '',
       Name: 'test-sqs-to-sfn-pipe-test',
       SourceParameters: {
         FilterCriteria: {
