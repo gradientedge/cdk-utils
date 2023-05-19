@@ -77,5 +77,28 @@
         "value": "testTagValue2"
       }
     ]
+  },
+  "testSfnExecution": {
+    "associateWithParent": true,
+    "name": "test-sfn-execution-task"
+  },
+  "testSecondSubmitWorkflow": {
+    "stateMachineName": "test-second-workflow",
+    "stateMachineType": "STANDARD",
+    "logs": {
+      "includeExecutionData": true,
+      "level": "ALL"
+    },
+    "tracingEnabled": false,
+    "tags": [
+      {
+        "key": "testTagName1",
+        "value": "testTagValue1"
+      },
+      {
+        "key": "testTagName2",
+        "value": "testTagValue2"
+      }
+    ]
   }
 }

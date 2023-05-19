@@ -715,6 +715,14 @@ export interface RuleProps extends events.CfnRuleProps {
 export interface SfnMapProps extends sfn.MapProps {}
 
 /**
+ * @category cdk-utils.sfn-manager
+ * @subcategory Properties
+ */
+export interface SfnStartExecutionProps extends tasks.StepFunctionsStartExecutionProps {
+  retries?: SfnRetryProps[]
+}
+
+/**
    }
  * @category cdk-utils.event-manager
  * @subcategory Properties
