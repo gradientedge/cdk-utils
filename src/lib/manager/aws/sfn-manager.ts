@@ -11,6 +11,7 @@ import * as common from '../../common'
 import * as types from '../../types'
 import * as utils from '../../utils'
 import { SfnMapProps } from '../../types'
+import { v4 as uuidv4 } from 'uuid'
 
 const DEFAULT_RETRY_CONFIG = [
   {
@@ -416,6 +417,42 @@ export class SfnManager {
         stageName: scope.props.stage,
         comment: `API step for ${props.name} - ${scope.props.stage} stage`,
       },
+    })
+
+    let retries = props.retries
+    if (!retries || retries.length === 0) {
+      retries = DEFAULT_RETRY_CONFIG
+    }
+
+    retries.forEach(retry =>
+      step.addRetry({
+        ...retry,
+        ...{ interval: retry.intervalInSecs ? cdk.Duration.seconds(retry.intervalInSecs) : retry.interval },
+      })
+    )
+
+    return step
+  }
+
+  /**
+   * @summary Method to create a step function execution step
+   * @param {string} id scoped id of the resource
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {types.SfnStartExecutionProps} props props for the step
+   * @param {sfn.IStateMachine} stateMachine the state machine to execute
+   */
+  public createSfnExecutionStep(
+    id: string,
+    scope: common.CommonConstruct,
+    props: types.SfnStartExecutionProps,
+    stateMachine: sfn.IStateMachine
+  ) {
+    const step = new tasks.StepFunctionsStartExecution(scope, `${id}`, {
+      ...props,
+      associateWithParent: props.associateWithParent ?? true,
+      inputPath: props.inputPath,
+      name: props.name ?? uuidv4(),
+      stateMachine: stateMachine,
     })
 
     let retries = props.retries

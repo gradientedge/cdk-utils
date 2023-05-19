@@ -28,6 +28,8 @@ interface TestStackProps extends types.CommonStackProps {
   testAnotherLogGroup: any
   testTable: types.TableProps
   testSqs: any
+  testSfnExecution: any
+  testSecondSubmitWorkflow: any
 }
 
 const testStackProps = {
@@ -81,6 +83,8 @@ class TestCommonStack extends common.CommonStack {
         testSubmitWorkflow: this.node.tryGetContext('testSubmitWorkflow'),
         testTable: this.node.tryGetContext('testTable'),
         testSqs: this.node.tryGetContext('testSqs'),
+        testSfnExecution: this.node.tryGetContext('testSfnExecution'),
+        testSecondSubmitWorkflow: this.node.tryGetContext('testSecondSubmitWorkflow'),
       },
     }
   }
@@ -229,7 +233,6 @@ class TestCommonConstruct extends common.CommonConstruct {
       this.props.testSubmitStepCreateSomethingNew
     )
     const testSubmitStepApi = this.sfnManager.createApiStep('test-api', this, this.props.testSubmitStepApi, api)
-
     const testWorkflowIntegration = sfn.Chain.start(testSubmitStepCreateSomething)
       .next(
         testSubmitStepValidateSomething
@@ -247,11 +250,26 @@ class TestCommonConstruct extends common.CommonConstruct {
           .addCatch(testSubmitStepFailure)
           .next(testSubmitStepSuccess)
       )
-    this.sfnManager.createStateMachine(
+    const stateMachine = this.sfnManager.createStateMachine(
       'test-parallel-step',
       this,
       this.props.testSubmitWorkflow,
       testWorkflowIntegration,
+      testLogGroup
+    )
+
+    const testSfnExecution = this.sfnManager.createSfnExecutionStep(
+      'test-sfn-task',
+      this,
+      this.props.testSfnExecution,
+      stateMachine
+    )
+    const testSecondWorkflowIntegration = sfn.Chain.start(testSfnExecution)
+    this.sfnManager.createStateMachine(
+      'test-second-sfn',
+      this,
+      this.props.testSecondSubmitWorkflow,
+      testSecondWorkflowIntegration,
       testLogGroup
     )
   }
@@ -273,11 +291,11 @@ describe('TestSfnConstruct', () => {
     /* test if number of resources are correctly synthesised */
     template.resourceCountIs('AWS::Lambda::LayerVersion', 1)
     template.resourceCountIs('AWS::Lambda::Function', 2)
-    template.resourceCountIs('AWS::IAM::Role', 3)
-    template.resourceCountIs('AWS::IAM::Policy', 2)
+    template.resourceCountIs('AWS::IAM::Role', 4)
+    template.resourceCountIs('AWS::IAM::Policy', 3)
     template.resourceCountIs('AWS::ApiGateway::Stage', 1)
     template.resourceCountIs('AWS::ApiGateway::Deployment', 1)
-    template.resourceCountIs('AWS::StepFunctions::StateMachine', 1)
+    template.resourceCountIs('AWS::StepFunctions::StateMachine', 2)
     template.resourceCountIs('Custom::LogRetention', 1)
   })
 })
@@ -385,6 +403,47 @@ describe('TestSfnConstruct', () => {
         Level: 'ALL',
       },
       StateMachineName: 'test-workflow-test',
+      StateMachineType: 'STANDARD',
+    })
+  })
+})
+
+describe('TestSfnConstruct', () => {
+  test('provisions new state machine with sfn execution as expected', () => {
+    template.hasResourceProperties('AWS::StepFunctions::StateMachine', {
+      RoleArn: {
+        'Fn::GetAtt': ['testcommonstacktestsecondsfnRole66E6DE7B', 'Arn'],
+      },
+      DefinitionString: {
+        'Fn::Join': [
+          '',
+          [
+            '{"StartAt":"test-sfn-task","States":{"test-sfn-task":{"End":true,"Retry":[{"ErrorEquals":["States.ALL"],"IntervalSeconds":30,"MaxAttempts":6,"BackoffRate":2}],"Type":"Task","Resource":"arn:',
+            {
+              Ref: 'AWS::Partition',
+            },
+            ':states:::states:startExecution","Parameters":{"Input":{"AWS_STEP_FUNCTIONS_STARTED_BY_EXECUTION_ID.$":"$$.Execution.Id"},"StateMachineArn":"',
+            {
+              Ref: 'testcommonstacktestparallelstep535C7CF2',
+            },
+            '","Name":"test-sfn-execution-task"}}}}',
+          ],
+        ],
+      },
+      LoggingConfiguration: {
+        Destinations: [
+          {
+            CloudWatchLogsLogGroup: {
+              LogGroupArn: {
+                'Fn::GetAtt': ['testcommonstacktestcfnlog5E1E2001', 'Arn'],
+              },
+            },
+          },
+        ],
+        IncludeExecutionData: true,
+        Level: 'ALL',
+      },
+      StateMachineName: 'test-second-workflow-test',
       StateMachineType: 'STANDARD',
     })
   })
