@@ -46,7 +46,7 @@
     }
   },
   "dependencies": {
-    "@aws-sdk/client-secrets-manager": "^3.334.0",
+    "@aws-sdk/client-secrets-manager": "^3.335.0",
     "@types/lodash": "^4.14.194",
     "@types/node": "^20.2.0",
     "@types/uuid": "^9.0.1",
