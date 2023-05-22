@@ -52,7 +52,7 @@
     "@types/uuid": "^9.0.1",
     "app-root-path": "^3.1.0",
     "aws-cdk-lib": "^2.79.1",
-    "constructs": "^10.2.27",
+    "constructs": "^10.2.31",
     "lodash": "^4.17.21",
     "moment": "^2.29.4",
     "nconf": "^0.12.0",
