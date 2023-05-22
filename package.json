@@ -48,7 +48,7 @@
   "dependencies": {
     "@aws-sdk/client-secrets-manager": "^3.334.0",
     "@types/lodash": "^4.14.194",
-    "@types/node": "^20.2.0",
+    "@types/node": "^20.2.3",
     "@types/uuid": "^9.0.1",
     "app-root-path": "^3.1.0",
     "aws-cdk-lib": "^2.79.1",
