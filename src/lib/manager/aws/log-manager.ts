@@ -70,6 +70,7 @@ export class LogManager {
     if (!props) throw `Logs props undefined for ${id}`
 
     const logGroup = new logs.CfnLogGroup(scope, `${id}`, {
+      ...props,
       logGroupName: `${props.logGroupName}-${scope.props.stage}`,
       retentionInDays: props.retention,
     })
@@ -95,6 +96,7 @@ export class LogManager {
     if (!props) throw `Logs props undefined for ${id}`
 
     const logGroup = new logs.LogGroup(scope, `${id}`, {
+      ...props,
       logGroupName: `${props.logGroupName}-${scope.props.stage}`,
       retention: props.retention,
       removalPolicy: props.removalPolicy ?? cdk.RemovalPolicy.DESTROY,
