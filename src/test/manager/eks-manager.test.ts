@@ -88,7 +88,7 @@ describe('TestEksConstruct', () => {
   test('synthesises as expected', () => {
     /* test if number of resources are correctly synthesised */
     template.resourceCountIs('AWS::IAM::Role', 4)
-    template.resourceCountIs('AWS::IAM::Policy', 1)
+    template.resourceCountIs('AWS::IAM::Policy', 2)
     template.resourceCountIs('AWS::EC2::SecurityGroup', 1)
     template.resourceCountIs('AWS::SSM::Parameter', 1)
     template.resourceCountIs('AWS::CloudFormation::Stack', 2)
