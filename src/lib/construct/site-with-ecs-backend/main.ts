@@ -260,6 +260,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
       healthCheckGracePeriod: cdk.Duration.seconds(60),
       assignPublicIp: true,
       minHealthyPercent: this.props.siteTask.minHealthyPercent,
+      maxHealthyPercent: this.props.siteTask.maxHealthyPercent,
       taskDefinition: this.props.siteTask.taskDefinition,
       taskImageOptions: {
         enableLogging: true,

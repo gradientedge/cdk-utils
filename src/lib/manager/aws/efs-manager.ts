@@ -58,7 +58,8 @@ export class EfsManager {
   ) {
     if (!props) throw `EFS props undefined for ${id}`
 
-    const fileSystem = new efs.FileSystem(scope, `${id}`, {
+    const fileSystemId = props.provisionNewOnDeployment ? `${id}-${new Date().getMilliseconds()}` : `${id}`
+    const fileSystem = new efs.FileSystem(scope, `${fileSystemId}`, {
       ...props,
       vpc,
       securityGroup,
