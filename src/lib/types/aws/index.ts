@@ -641,6 +641,7 @@ export interface LogQueryWidgetProps extends watch.LogQueryWidgetProps {
  * @subcategory Properties
  */
 export interface EfsFileSystemProps extends efs.FileSystemProps {
+  provisionNewOnDeployment?: boolean
   rootDirectory?: string
   transitEncryption?: string
   transitEncryptionPort?: number
