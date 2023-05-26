@@ -13,7 +13,7 @@ import * as s3 from 'aws-cdk-lib/aws-s3'
 import * as efs from 'aws-cdk-lib/aws-efs'
 import { Construct } from 'constructs'
 import { CommonConstruct } from '../../common'
-import { SiteWithEcsBackendProps } from '../../types'
+import { SiteWithEcsBackendProps, AcmProps } from '../../types'
 
 /**
  * @stability stable
@@ -43,6 +43,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
   /* site resources */
   siteHostedZone: route53.IHostedZone
   siteCertificate: certificateManager.ICertificate
+  siteRegionalCertificate: certificateManager.ICertificate
   siteEcsPolicy: iam.PolicyDocument
   siteEcsRole: iam.Role
   siteEcsEnvironment: { [key: string]: string }
@@ -135,6 +136,19 @@ export class SiteWithEcsBackend extends CommonConstruct {
       `${this.id}-certificate`,
       this,
       this.props.siteCertificate
+    )
+
+    const regionalCertificate: AcmProps = {
+      domainName: this.fullyQualifiedDomainName,
+      subjectAlternativeNames: [`*.${this.fullyQualifiedDomainName}`],
+      useExistingCertificate: false,
+    }
+
+    this.siteRegionalCertificate = this.acmManager.resolveCertificate(
+      `${this.id}-regional-certificate`,
+      this,
+      regionalCertificate,
+      this.siteHostedZone
     )
   }
 
@@ -253,6 +267,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
       serviceName: `${this.id}-${this.props.stage}`,
       cpu: this.props.siteTask.cpu,
       loadBalancerName: `${this.id}-${this.props.stage}`,
+      certificate: this.siteRegionalCertificate,
       domainName: this.siteInternalDomainName,
       domainZone: this.siteHostedZone,
       listenerPort: this.props.siteTask.listenerPort,
@@ -385,7 +400,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
   protected createSiteOrigin() {
     this.siteOrigin = new origins.HttpOrigin(this.siteEcsLoadBalancer.loadBalancerDnsName, {
       httpPort: this.props.siteTask.listenerPort,
-      protocolPolicy: cloudfront.OriginProtocolPolicy.HTTP_ONLY,
+      protocolPolicy: cloudfront.OriginProtocolPolicy.HTTPS_ONLY,
     })
   }
 
