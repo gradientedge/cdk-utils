@@ -906,4 +906,5 @@ export interface QueueProps extends sqs.QueueProps {
   deliveryDelayInSecs?: number
   retentionInDays?: number
   tags?: TagProps[]
+  retriesEnabled?: boolean
 }
