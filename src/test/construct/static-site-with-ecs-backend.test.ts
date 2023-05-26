@@ -53,6 +53,11 @@ class TestCommonStack extends common.CommonStack {
         logLevel: this.node.tryGetContext('logLevel'),
         nodeEnv: this.node.tryGetContext('nodeEnv'),
         siteCertificate: this.node.tryGetContext('siteCertificate'),
+        siteRegionalCertificate: {
+          domainName: this.fullyQualifiedDomain(),
+          subjectAlternativeNames: [`*.${this.fullyQualifiedDomain()}`],
+          useExistingCertificate: false,
+        },
         siteEcsContainerImagePath: `src/test/common/docker`,
         siteLog: this.node.tryGetContext('testLogGroup'),
         siteLogBucket: this.node.tryGetContext('siteLogBucket'),

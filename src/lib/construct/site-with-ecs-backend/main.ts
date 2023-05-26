@@ -13,7 +13,7 @@ import * as s3 from 'aws-cdk-lib/aws-s3'
 import * as efs from 'aws-cdk-lib/aws-efs'
 import { Construct } from 'constructs'
 import { CommonConstruct } from '../../common'
-import { SiteWithEcsBackendProps, AcmProps } from '../../types'
+import { SiteWithEcsBackendProps } from '../../types'
 
 /**
  * @stability stable
@@ -138,16 +138,10 @@ export class SiteWithEcsBackend extends CommonConstruct {
       this.props.siteCertificate
     )
 
-    const regionalCertificate: AcmProps = {
-      domainName: this.fullyQualifiedDomainName,
-      subjectAlternativeNames: [`*.${this.fullyQualifiedDomainName}`],
-      useExistingCertificate: false,
-    }
-
     this.siteRegionalCertificate = this.acmManager.resolveCertificate(
       `${this.id}-regional-certificate`,
       this,
-      regionalCertificate,
+      this.props.siteRegionalCertificate,
       this.siteHostedZone
     )
   }

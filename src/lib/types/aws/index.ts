@@ -72,6 +72,7 @@ export interface SiteWithEcsBackendProps extends CommonStackProps {
   siteCacheInvalidationDockerFilePath?: string
   siteHealthCheck: HealthCheck
   siteCertificate: AcmProps
+  siteRegionalCertificate: AcmProps
   siteCluster: EcsClusterProps
   siteDistribution: DistributionProps
   siteCloudfrontFunctionProps?: CloudfrontFunctionProps
