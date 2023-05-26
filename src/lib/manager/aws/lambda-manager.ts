@@ -3,6 +3,7 @@ import * as ec2 from 'aws-cdk-lib/aws-ec2'
 import * as efs from 'aws-cdk-lib/aws-efs'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
+import * as eventSources from 'aws-cdk-lib/aws-lambda-event-sources'
 import * as common from '../../common'
 import { CommonStack } from '../../common'
 import * as types from '../../types'
@@ -129,6 +130,14 @@ export class LambdaManager {
         insightsVersion: props.insightsVersion,
       },
     })
+
+    if (lambdaFunction.deadLetterQueue && props.dlq?.retriesEnabled) {
+      lambdaFunction.addEventSource(
+        new eventSources.SqsEventSource(lambdaFunction.deadLetterQueue, {
+          reportBatchItemFailures: true,
+        })
+      )
+    }
 
     if (props.lambdaAliases && props.lambdaAliases.length > 0) {
       props.lambdaAliases.forEach(alias => {
@@ -270,6 +279,14 @@ export class LambdaManager {
         insightsVersion: props.insightsVersion,
       },
     })
+
+    if (lambdaFunction.deadLetterQueue && props.dlq?.retriesEnabled) {
+      lambdaFunction.addEventSource(
+        new eventSources.SqsEventSource(lambdaFunction.deadLetterQueue, {
+          reportBatchItemFailures: true,
+        })
+      )
+    }
 
     utils.createCfnOutput(`${id}-lambdaArn`, scope, lambdaFunction.functionArn)
     utils.createCfnOutput(`${id}-lambdaName`, scope, lambdaFunction.functionName)
