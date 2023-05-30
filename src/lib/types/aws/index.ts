@@ -907,4 +907,5 @@ export interface QueueProps extends sqs.QueueProps {
   retentionInDays?: number
   tags?: TagProps[]
   retriesEnabled?: boolean
+  retryBatchSize?: number
 }
