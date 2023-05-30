@@ -246,7 +246,7 @@ describe('TestSiteWithEcsBackendAndEfsConstruct', () => {
         Origins: [
           {
             CustomOriginConfig: {
-              HTTPPort: 80,
+              HTTPPort: 443,
               OriginProtocolPolicy: 'https-only',
               OriginSSLProtocols: ['TLSv1.2'],
             },
@@ -299,7 +299,7 @@ describe('TestSiteWithEcsBackendAndEfsConstruct', () => {
 describe('TestSiteWithEcsBackendAndEfsConstruct', () => {
   test('provisions load listener as expected', () => {
     template.hasResourceProperties('AWS::ElasticLoadBalancingV2::Listener', {
-      Port: 80,
+      Port: 443,
       Protocol: 'HTTPS',
     })
   })
