@@ -135,6 +135,7 @@ export class LambdaManager {
       lambdaFunction.addEventSource(
         new eventSources.SqsEventSource(lambdaFunction.deadLetterQueue, {
           reportBatchItemFailures: true,
+          batchSize: props.dlq.retryBatchSize ?? 1,
         })
       )
     }
@@ -284,6 +285,7 @@ export class LambdaManager {
       lambdaFunction.addEventSource(
         new eventSources.SqsEventSource(lambdaFunction.deadLetterQueue, {
           reportBatchItemFailures: true,
+          batchSize: props.dlq.retryBatchSize ?? 1,
         })
       )
     }
