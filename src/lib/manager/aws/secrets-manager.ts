@@ -2,6 +2,7 @@ import { SecretsManager as SM } from '@aws-sdk/client-secrets-manager'
 import * as cdk from 'aws-cdk-lib'
 import * as secretsManager from 'aws-cdk-lib/aws-secretsmanager'
 import * as common from '../../common'
+import * as utils from '../../utils'
 
 /**
  * @stability experimental
@@ -79,5 +80,23 @@ export class SecretsManager {
       `${id}`,
       cdk.Fn.importValue(`${stackName}-${scope.props.stage}-${exportName}`)
     )
+  }
+
+  /**
+   * @summary Method to create a secret
+   * @param {string} id scoped id of the resource
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {secretsManager.SecretProps} props the secret properties
+   */
+  public createSecret(id: string, scope: common.CommonConstruct, props: secretsManager.SecretProps) {
+    const secret = new secretsManager.Secret(scope, `${id}`, {
+      ...props,
+      secretName: `${props.secretName}-${scope.props.stage}`,
+    })
+
+    utils.createCfnOutput(`${id}-secretName`, scope, secret.secretName)
+    utils.createCfnOutput(`${id}-secretArn`, scope, secret.secretArn)
+
+    return secret
   }
 }
