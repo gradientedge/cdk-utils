@@ -159,9 +159,10 @@ export class SiteWithEcsBackend extends CommonConstruct {
    */
   protected resolveSiteDomainNames() {
     /* the internal domain name used by ELB */
-    this.siteInternalDomainName = this.isProductionStage()
-      ? `${this.props.siteSubDomain}-internal.${this.fullyQualifiedDomainName}`
-      : `${this.props.siteSubDomain}-internal-${this.props.stage}.${this.fullyQualifiedDomainName}`
+    this.siteInternalDomainName =
+      this.isProductionStage() || this.props.skipStageForARecords
+        ? `${this.props.siteSubDomain}-internal.${this.fullyQualifiedDomainName}`
+        : `${this.props.siteSubDomain}-internal-${this.props.stage}.${this.fullyQualifiedDomainName}`
 
     /* the external domain name exposed to CloudFront */
     this.siteExternalDomainName =
