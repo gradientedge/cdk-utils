@@ -360,11 +360,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
 
       /* add EFS permissions to ECS Role */
       this.siteEcsRole.addToPolicy(
-        new iam.PolicyStatement({
-          effect: iam.Effect.ALLOW,
-          actions: ['elasticfilesystem:*'],
-          resources: [this.siteFileSystem.fileSystemArn],
-        })
+        new iam.PolicyStatement(this.iamManager.statementForWriteEfs([this.siteFileSystem.fileSystemArn]))
       )
 
       /* add the efs volume to ecs task definition */
