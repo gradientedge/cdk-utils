@@ -363,7 +363,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
         new iam.PolicyStatement({
           effect: iam.Effect.ALLOW,
           actions: ['elasticfilesystem:*'],
-          resources: ['*'],
+          resources: [this.siteFileSystem.fileSystemArn],
         })
       )
 

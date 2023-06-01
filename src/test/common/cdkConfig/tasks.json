@@ -4,6 +4,7 @@
     "memoryLimitMiB": 4096,
     "desiredCount": 1,
     "listenerPort": 443,
+    "loadBalancerName": "site-load-balancer",
     "taskImageOptions": {
       "containerPort": 3000
     },
