@@ -209,6 +209,19 @@ export class IamManager {
   }
 
   /**
+   * @summary Method to create iam statement to access efs
+   * @param {common.CommonConstruct} scope scope in which this resource is defined
+   * @param {string[]} resourceArns list of ARNs to allow access to
+   */
+  public statementForWriteEfs(resourceArns?: string[]) {
+    return new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: ['elasticfilesystem:*'],
+      resources: resourceArns ?? ['*'],
+    })
+  }
+
+  /**
    * @summary Method to create iam policy to invalidate cloudfront cache
    * @param {string[]} resourceArns list of ARNs to allow access to
    */

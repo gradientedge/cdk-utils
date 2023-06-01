@@ -261,7 +261,9 @@ export class SiteWithEcsBackend extends CommonConstruct {
       enableECSManagedTags: true,
       serviceName: `${this.id}-${this.props.stage}`,
       cpu: this.props.siteTask.cpu,
-      loadBalancerName: `${this.id}-${this.props.stage}`,
+      loadBalancerName: this.props.siteTask.loadBalancerName
+        ? `${this.props.siteTask.loadBalancerName}-${this.props.stage}`
+        : `${this.id}-${this.props.stage}`,
       certificate: this.siteRegionalCertificate,
       domainName: this.siteInternalDomainName,
       domainZone: this.siteHostedZone,
@@ -355,6 +357,11 @@ export class SiteWithEcsBackend extends CommonConstruct {
       /* allow access to/from EFS from Fargate ECS service */
       this.siteFileSystem.connections.allowDefaultPortFrom(this.siteEcsService.connections)
       this.siteFileSystem.connections.allowDefaultPortTo(this.siteEcsService.connections)
+
+      /* add EFS permissions to ECS Role */
+      this.siteEcsRole.addToPolicy(
+        new iam.PolicyStatement(this.iamManager.statementForWriteEfs([this.siteFileSystem.fileSystemArn]))
+      )
 
       /* add the efs volume to ecs task definition */
       this.siteEcsTaskDefinition.addVolume({

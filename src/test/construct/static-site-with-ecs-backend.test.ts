@@ -275,7 +275,7 @@ describe('TestSiteWithEcsBackendConstruct', () => {
 describe('TestSiteWithEcsBackendConstruct', () => {
   test('provisions load balancer as expected', () => {
     template.hasResourceProperties('AWS::ElasticLoadBalancingV2::LoadBalancer', {
-      Name: 'test-site-test',
+      Name: 'site-load-balancer-test',
       Scheme: 'internet-facing',
       Type: 'application',
     })
