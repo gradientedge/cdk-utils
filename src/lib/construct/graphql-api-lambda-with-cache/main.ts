@@ -8,7 +8,8 @@ import { GraphQlApiLambdaWithCacheProps } from '../../types'
 import * as utils from '../../utils'
 
 /**
- * @stability stable
+ * @deprecated Use RestApiLambdaWithCache instead. This will be removed in a future release.
+ *
  * @category cdk-utils.graphql-api-lambda-with-cache
  * @subcategory construct
  * @classdesc Provides a construct to create and deploy a Graphql API as Lambda with Caching
