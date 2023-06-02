@@ -9,7 +9,8 @@ import { CommonConstruct } from '../../common'
 import { GraphQlApiLambdaEnvironment, GraphQlApiLambdaProps } from '../../types'
 
 /**
- * @stability stable
+ * @deprecated Use RestApiLambda instead. This will be removed in a future release.
+ *
  * @category cdk-utils.graphql-api-lambda
  * @subcategory construct
  * @classdesc Provides a construct to create and deploy a Graphql API as Lambda

@@ -51,7 +51,7 @@ class TestCommonStack extends common.CommonStack {
         testAttribute: this.node.tryGetContext('testAttribute'),
         timezone: this.node.tryGetContext('timezone'),
         restApiVpc: this.node.tryGetContext('testVpc'),
-        restApiElastiCache: this.node.tryGetContext('testReplicatedElastiCache'),
+        restApiCache: this.node.tryGetContext('testReplicatedElastiCache'),
       },
     }
   }
@@ -86,6 +86,8 @@ class TestRestApiWithCacheApiConstruct extends RestApiLambdaWithCache {
 
     this.initResources()
   }
+
+  protected createRestApiResources(): void {}
 }
 
 const app = new cdk.App({ context: testRestApiLambdaWithCacheProps })
