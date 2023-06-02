@@ -6,6 +6,13 @@
     "timeoutInSecs": 300,
     "excludeLastModifiedTimestamp": true
   },
+  "restApiLambda": {
+    "functionName": "test-restapi-server",
+    "logRetention": 30,
+    "memorySize": 1024,
+    "timeoutInSecs": 300,
+    "excludeLastModifiedTimestamp": true
+  },
   "testApiDestinedLambda": {
     "functionName": "test-api-destined",
     "logRetention": 7,

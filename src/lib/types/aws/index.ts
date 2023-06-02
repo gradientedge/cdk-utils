@@ -270,12 +270,20 @@ export interface ApiDestinedLambdaEnvironment extends LambdaEnvironment {
 }
 
 /**
+ * @deprecated Use RestApiLambdaEnvironment instead. This will be removed in a future release.
  * @category cdk-utils.graphql-api-lambda
  * @subcategory Types
  */
 export interface GraphQlApiLambdaEnvironment extends LambdaEnvironment {}
 
 /**
+ * @category cdk-utils.rest-api-lambda
+ * @subcategory Types
+ */
+export interface RestApiLambdaEnvironment extends LambdaEnvironment {}
+
+/**
+ * @deprecated Use RestApiLambdaProps instead. This will be removed in a future release.
  * @category cdk-utils.graphql-api-lambda
  * @subcategory Properties
  */
@@ -295,12 +303,44 @@ export interface GraphQlApiLambdaProps extends CommonStackProps {
 }
 
 /**
+ * @category cdk-utils.rest-api-lambda
+ * @subcategory Properties
+ */
+export interface RestApiLambdaProps extends CommonStackProps {
+  apiRootPaths?: string[]
+  apiSubDomain: string
+  restApiCertificate: AcmProps
+  restApi: apig.LambdaRestApiProps
+  restApiLambdaLayerSources?: lambda.AssetCode[]
+  restApiHandler: string
+  restApiSource: lambda.AssetCode
+  restApiLambda: LambdaProps
+  useExistingHostedZone: boolean
+  nodeEnv: string
+  logLevel: string
+  timezone: string
+}
+
+/**
+ * @deprecated Use RestApiLambdaWithCacheProps instead. This will be removed in a future release.
  * @category cdk-utils.graphql-api-lambda-with-cache
  * @subcategory Properties
  */
 export interface GraphQlApiLambdaWithCacheProps extends GraphQlApiLambdaProps {
   graphQLVpc: ec2.VpcProps
   graphQLElastiCache: ReplicatedElastiCacheProps
+  securityGroupExportName: string
+  useExistingVpc: boolean
+  vpcName?: string
+}
+
+/**
+ * @category cdk-utils.rest-api-lambda-with-cache
+ * @subcategory Properties
+ */
+export interface RestApiLambdaWithCacheProps extends RestApiLambdaProps {
+  restApiVpc: ec2.VpcProps
+  restApiElastiCache: ReplicatedElastiCacheProps
   securityGroupExportName: string
   useExistingVpc: boolean
   vpcName?: string

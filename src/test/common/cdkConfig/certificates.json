@@ -5,6 +5,12 @@
     "certificateAccount": "123456789",
     "useExistingCertificate": true
   },
+  "restApiCertificate": {
+    "certificateId": "12345a67-8f85-46da-8441-88c998b4bd64",
+    "certificateRegion": "us-east-1",
+    "certificateAccount": "123456789",
+    "useExistingCertificate": true
+  },
   "siteCertificate": {
     "certificateId": "12345a67-8f85-46da-8441-88c998b4bd64",
     "certificateRegion": "us-east-1",
