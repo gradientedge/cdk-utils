@@ -71,6 +71,10 @@ export abstract class RestApiLambdaWithCache extends RestApiLambda {
    * @protected
    */
   protected resolveSecurityGroup() {
+    if (!this.props.restApiCache) {
+      return
+    }
+
     if (this.props.securityGroupExportName) {
       this.restApiSecurityGroup = ec2.SecurityGroup.fromSecurityGroupId(
         this,
@@ -94,6 +98,10 @@ export abstract class RestApiLambdaWithCache extends RestApiLambda {
    * @protected
    */
   protected createElastiCache() {
+    if (!this.props.restApiCache) {
+      return
+    }
+
     this.restApiCache = this.elasticacheManager.createReplicatedElastiCache(
       `${this.id}-elasticache`,
       this,
