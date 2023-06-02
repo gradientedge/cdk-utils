@@ -3,7 +3,6 @@ import { Construct } from 'constructs'
 import * as aws from '../manager/aws'
 import * as types from '../types'
 import * as utils from '../utils'
-import { EfsManager } from '../manager/aws/efs-manager'
 
 /**
  * @stability stable
@@ -132,4 +131,16 @@ export class CommonConstruct extends Construct {
    * This is determined by the stage property injected via cdk context
    */
   public isProductionStage = () => utils.isPrdStage(this.props.stage)
+}
+
+export const applyMixins = (derivedCtor: any, constructors: any[]) => {
+  constructors.forEach(baseCtor => {
+    Object.getOwnPropertyNames(baseCtor.prototype).forEach(name => {
+      Object.defineProperty(
+        derivedCtor.prototype,
+        name,
+        Object.getOwnPropertyDescriptor(baseCtor.prototype, name) || Object.create(null)
+      )
+    })
+  })
 }
