@@ -118,6 +118,42 @@ export class IamManager {
   }
 
   /**
+   * @summary Method to create iam statement to access app config
+   * @param {string[]} resourceArns list of ARNs to allow access to
+   */
+  public statementForAppConfigExecution(resourceArns?: string[]) {
+    return new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: ['appconfig:GetLatestConfiguration', 'appconfig:StartConfigurationSession'],
+      resources: resourceArns ?? ['*'],
+    })
+  }
+
+  /**
+   * @summary Method to create iam statement to put xray telemetry
+   * @param {string[]} resourceArns list of ARNs to allow access to
+   */
+  public statementForPutXrayTelemetry(resourceArns?: string[]) {
+    return new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: ['xray:PutTraceSegments', 'xray:PutTelemetryRecords'],
+      resources: resourceArns ?? ['*'],
+    })
+  }
+
+  /**
+   * @summary Method to create iam statement to decrypt kms
+   * @param {string[]} resourceArns list of ARNs to allow access to
+   */
+  public statementForDecryptKms(resourceArns?: string[]) {
+    return new iam.PolicyStatement({
+      effect: iam.Effect.ALLOW,
+      actions: ['kms:Decrypt'],
+      resources: resourceArns ?? ['*'],
+    })
+  }
+
+  /**
    * @summary Method to create iam statement to list s3 buckets
    * @param {common.CommonConstruct} scope scope in which this resource is defined
    * @param {s3.IBucket} bucket
