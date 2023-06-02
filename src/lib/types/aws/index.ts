@@ -340,7 +340,7 @@ export interface GraphQlApiLambdaWithCacheProps extends GraphQlApiLambdaProps {
  */
 export interface RestApiLambdaWithCacheProps extends RestApiLambdaProps {
   restApiVpc: ec2.VpcProps
-  restApiElastiCache: ReplicatedElastiCacheProps
+  restApiCache: ReplicatedElastiCacheProps
   securityGroupExportName: string
   useExistingVpc: boolean
   vpcName?: string

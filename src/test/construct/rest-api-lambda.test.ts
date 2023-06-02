@@ -81,6 +81,8 @@ class TestRestApiConstruct extends RestApiLambda {
 
     this.initResources()
   }
+
+  protected createRestApiResources(): void {}
 }
 
 const app = new cdk.App({ context: testRestApiLambdaProps })

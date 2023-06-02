@@ -29,7 +29,7 @@ import * as utils from '../../utils'
  * }
  * @mixin
  */
-export class RestApiLambdaWithCache extends RestApiLambda {
+export abstract class RestApiLambdaWithCache extends RestApiLambda {
   /* restApiLambdaWithCache props */
   props: RestApiLambdaWithCacheProps
   id: string
@@ -40,7 +40,7 @@ export class RestApiLambdaWithCache extends RestApiLambda {
   restApiSecurityGroup: ec2.ISecurityGroup
   restApiSecurityGroupExportName: string
 
-  constructor(parent: Construct, id: string, props: RestApiLambdaWithCacheProps) {
+  protected constructor(parent: Construct, id: string, props: RestApiLambdaWithCacheProps) {
     super(parent, id, props)
 
     this.props = props
@@ -97,10 +97,22 @@ export class RestApiLambdaWithCache extends RestApiLambda {
     this.restApiCache = this.elasticacheManager.createReplicatedElastiCache(
       `${this.id}-elasticache`,
       this,
-      this.props.restApiElastiCache,
+      this.props.restApiCache,
       this.restApivpc.privateSubnets.map(subnet => subnet.subnetId),
       [this.restApiSecurityGroup.securityGroupId]
     )
+
+    this.ssmManager.writeStringToParameters(`${this.id}-elasticache-endpoint-address`, this, {
+      parameterName: `${this.id}-elasticache-endpoint-address`,
+      description: `Elasticache address to use by applications`,
+      stringValue: this.restApiCache.attrConfigurationEndPointAddress,
+    })
+
+    this.ssmManager.writeStringToParameters(`${this.id}-elasticache-endpoint-port`, this, {
+      parameterName: `${this.id}-elasticache-endpoint-port`,
+      description: `Elasticache port to use by applications`,
+      stringValue: this.restApiCache.attrConfigurationEndPointPort,
+    })
   }
 
   /**

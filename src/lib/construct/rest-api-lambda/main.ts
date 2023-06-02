@@ -9,8 +9,6 @@ import { CommonConstruct } from '../../common'
 import { RestApiLambdaEnvironment, RestApiLambdaProps } from '../../types'
 
 /**
- * @deprecated Use RestApiLambda instead. This will be removed in a future release.
- *
  * @category cdk-utils.rest-api-lambda
  * @subcategory construct
  * @classdesc Provides a construct to create and deploy a RestApi as Lambda
@@ -31,7 +29,7 @@ import { RestApiLambdaEnvironment, RestApiLambdaProps } from '../../types'
  * }
  * @mixin
  */
-export class RestApiLambda extends CommonConstruct {
+export abstract class RestApiLambda extends CommonConstruct {
   /* restApiLambda props */
   props: RestApiLambdaProps
   id: string
@@ -49,7 +47,7 @@ export class RestApiLambda extends CommonConstruct {
   restApiDomain: apig.DomainName
   restApiBasePathMappings: apig.BasePathMapping[] = []
 
-  constructor(parent: Construct, id: string, props: RestApiLambdaProps) {
+  protected constructor(parent: Construct, id: string, props: RestApiLambdaProps) {
     super(parent, id, props)
 
     this.props = props
@@ -70,9 +68,11 @@ export class RestApiLambda extends CommonConstruct {
     this.createLambdaLayers()
     this.createLambdaFunction()
     this.createRestApi()
+    this.createRestApiResources()
     this.createApiDomain()
     this.createApiBasePathMapping()
     this.createApiRouteAssets()
+    this.createRestApiDeployment()
   }
 
   /**
@@ -201,8 +201,10 @@ export class RestApiLambda extends CommonConstruct {
     )
   }
 
+  protected abstract createRestApiResources(): void
+
   /**
-   * @summary Method to create custom restApiLambda domain for RestApi API
+   * @summary Method to create custom restApiLambda domain for RestApi
    * @protected
    */
   protected createApiDomain() {
@@ -217,7 +219,7 @@ export class RestApiLambda extends CommonConstruct {
   }
 
   /**
-   * @summary Method to create base path mappings for RestApi API
+   * @summary Method to create base path mappings for RestApi
    * @protected
    */
   protected createApiBasePathMapping() {
@@ -245,7 +247,7 @@ export class RestApiLambda extends CommonConstruct {
   }
 
   /**
-   * @summary Method to create route53 records for RestApi API
+   * @summary Method to create route53 records for RestApi
    * @protected
    */
   protected createApiRouteAssets() {
@@ -257,5 +259,13 @@ export class RestApiLambda extends CommonConstruct {
       this.restApiHostedZone,
       this.props.skipStageForARecords
     )
+  }
+
+  /**
+   * @summary Method to deploy the changes to the RestApi
+   * @protected
+   */
+  protected createRestApiDeployment() {
+    this.apiManager.createApiDeployment(`${this.id}-deployment`, this, this.restApi)
   }
 }
