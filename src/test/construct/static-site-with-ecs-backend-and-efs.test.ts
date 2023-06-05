@@ -250,9 +250,7 @@ describe('TestSiteWithEcsBackendAndEfsConstruct', () => {
               OriginProtocolPolicy: 'https-only',
               OriginSSLProtocols: ['TLSv1.2'],
             },
-            DomainName: {
-              'Fn::GetAtt': ['testsitestacktestsiteecsserviceLB9E1F62B3', 'DNSName'],
-            },
+            DomainName: 'site-internal-test.test.gradientedge.io',
             Id: 'testsitestacktestsitedistributionOrigin14E765772',
           },
         ],
