@@ -144,6 +144,8 @@ export class LambdaManager {
       props.lambdaAliases.forEach(alias => {
         const aliasId = alias.id ?? `${id}-${alias.aliasName}`
         const functionAlias = this.createLambdaFunctionAlias(`${aliasId}`, scope, alias, lambdaFunction.currentVersion)
+        utils.createCfnOutput(`${id}-${alias.aliasName}AliasArn`, scope, functionAlias.functionArn)
+        utils.createCfnOutput(`${id}-${alias.aliasName}AliasName`, scope, functionAlias.aliasName)
 
         if (alias.provisionedConcurrency) {
           const functionAutoScaling = functionAlias.addAutoScaling(alias.provisionedConcurrency)
