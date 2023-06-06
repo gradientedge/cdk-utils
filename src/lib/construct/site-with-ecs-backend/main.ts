@@ -401,7 +401,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
   }
 
   protected createSiteOrigin() {
-    this.siteOrigin = new origins.HttpOrigin(this.siteEcsLoadBalancer.loadBalancerDnsName, {
+    this.siteOrigin = new origins.HttpOrigin(this.siteInternalDomainName, {
       httpPort: this.props.siteTask.listenerPort,
       protocolPolicy: cloudfront.OriginProtocolPolicy.HTTPS_ONLY,
     })
