@@ -18,7 +18,7 @@ import { EvidentlyExperimentProps, EvidentlySegmentProps } from '../../types'
  *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
  *     super(parent, id, props)
  *     this.props = props
- *     this.eventManager.createProject('MyNewProhect', this, props)
+ *     this.evidentlyManager.createProject('MyNewProhect', this, props)
  *   }
  * }
  *
