@@ -2,7 +2,7 @@ import * as evidently from 'aws-cdk-lib/aws-evidently'
 import * as common from '../../common'
 import * as types from '../../types/aws'
 import * as utils from '../../utils'
-import { EvidentlyExperimentProps, EvidentlySegmentProps } from '../../types/aws'
+import { EvidentlyExperimentProps, EvidentlySegmentProps } from '../../types'
 
 /**
  * @stability stable
