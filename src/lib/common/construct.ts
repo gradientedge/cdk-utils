@@ -37,6 +37,7 @@ export class CommonConstruct extends Construct {
   elasticacheManager: aws.ElastiCacheManager
   eventManager: aws.EventManager
   eventTargetManager: aws.EventTargetManager
+  evidentlyManager: aws.EvidentlyManager
   iamManager: aws.IamManager
   kmsManager: aws.KmsManager
   lambdaManager: aws.LambdaManager
@@ -71,6 +72,7 @@ export class CommonConstruct extends Construct {
     this.elasticacheManager = new aws.ElastiCacheManager()
     this.eventManager = new aws.EventManager()
     this.eventTargetManager = new aws.EventTargetManager()
+    this.evidentlyManager = new aws.EvidentlyManager()
     this.iamManager = new aws.IamManager()
     this.kmsManager = new aws.KmsManager()
     this.lambdaManager = new aws.LambdaManager()

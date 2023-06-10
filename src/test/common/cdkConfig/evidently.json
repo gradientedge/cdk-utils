@@ -1,0 +1,109 @@
+{
+  "testEvidentlyProject": {
+    "name": "test-project",
+    "description": "Test project",
+    "dataDelivery": {
+      "logGroup": "test-logs"
+    }
+  },
+  "testEvidentlyFeature": {
+    "name": "isSomethingEnabled",
+    "description": "Indicator for isSomethingEnabled as a flag",
+    "variations": [
+      {
+        "variationName": "v1",
+        "booleanValue": false
+      },
+      {
+        "variationName": "v2",
+        "booleanValue": true
+      }
+    ],
+    "defaultVariation": "v1",
+    "evaluationStrategy": "ALL_RULES"
+  },
+  "testEvidentlyLaunch": {
+    "name": "test-launch",
+    "description": "Test launch",
+    "groups": [
+      {
+        "groupName": "g1",
+        "feature": "isSomethingEnabled",
+        "variation": "v1"
+      },
+      {
+        "groupName": "g2",
+        "feature": "isSomethingEnabled",
+        "variation": "v2"
+      }
+    ],
+    "scheduledSplitsConfig": [
+      {
+        "groupWeights": [
+          {
+            "groupName": "g1",
+            "splitWeight": 50000
+          },
+          {
+            "groupName": "g2",
+            "splitWeight": 50000
+          }
+        ],
+        "startTime": "2025-11-25T23:59:59Z"
+      }
+    ],
+    "executionStatus": {
+      "status": "START"
+    }
+  },
+  "testEvidentlyExperiment": {
+    "name": "test-experiment",
+    "description": "Test experiment",
+    "metricGoals": [
+      {
+        "desiredChange": "INCREASE",
+        "entityIdKey": "dummy",
+        "metricName": "test-metric",
+        "valueKey": "testKey"
+      }
+    ],
+    "treatments": [
+      {
+        "feature": "isSomethingEnabled",
+        "treatmentName": "t1",
+        "variation": "v1"
+      },
+      {
+        "feature": "isSomethingEnabled",
+        "treatmentName": "t2",
+        "variation": "v1"
+      },
+      {
+        "feature": "isSomethingEnabled",
+        "treatmentName": "t3",
+        "variation": "v2"
+      }
+    ],
+    "onlineAbConfig": {
+      "controlTreatmentName": "test-control-1",
+      "treatmentWeights": [
+        {
+          "splitWeight": 25000,
+          "treatment": "t1"
+        },
+        {
+          "splitWeight": 25000,
+          "treatment": "t2"
+        },
+        {
+          "splitWeight": 50000,
+          "treatment": "t3"
+        }
+      ]
+    }
+  },
+  "testEvidentlySegment": {
+    "name": "test-segment",
+    "description": "Test segment"
+  }
+}

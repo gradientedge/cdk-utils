@@ -30,6 +30,8 @@ import * as wafv2 from 'aws-cdk-lib/aws-wafv2'
 import * as types from '../index'
 import * as appAutoscaling from 'aws-cdk-lib/aws-applicationautoscaling'
 import * as pipes from 'aws-cdk-lib/aws-pipes'
+import * as evidently from 'aws-cdk-lib/aws-evidently'
+import { CfnExperimentProps, CfnFeatureProps, CfnSegmentProps } from 'aws-cdk-lib/aws-evidently/lib/evidently.generated'
 
 /**
  * @category cdk-utils.app-config-manager
@@ -790,6 +792,36 @@ export interface EventRuleProps extends events.RuleProps {
  * @subcategory Properties
  */
 export interface EventBusProps extends events.EventBusProps {}
+
+/**
+ * @category cdk-utils.evidently-manager
+ * @subcategory Properties
+ */
+export interface EvidentlyProjectProps extends evidently.CfnProjectProps {}
+
+/**
+ * @category cdk-utils.evidently-manager
+ * @subcategory Properties
+ */
+export interface EvidentlyFeatureProps extends evidently.CfnFeatureProps {}
+
+/**
+ * @category cdk-utils.evidently-manager
+ * @subcategory Properties
+ */
+export interface EvidentlyLaunchProps extends evidently.CfnLaunchProps {}
+
+/**
+ * @category cdk-utils.evidently-manager
+ * @subcategory Properties
+ */
+export interface EvidentlyExperimentProps extends evidently.CfnExperimentProps {}
+
+/**
+ * @category cdk-utils.evidently-manager
+ * @subcategory Properties
+ */
+export interface EvidentlySegmentProps extends evidently.CfnSegmentProps {}
 
 /**
  * @category cdk-utils.common-stack
