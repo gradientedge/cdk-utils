@@ -31,7 +31,6 @@ import * as types from '../index'
 import * as appAutoscaling from 'aws-cdk-lib/aws-applicationautoscaling'
 import * as pipes from 'aws-cdk-lib/aws-pipes'
 import * as evidently from 'aws-cdk-lib/aws-evidently'
-import { CfnExperimentProps, CfnFeatureProps, CfnSegmentProps } from 'aws-cdk-lib/aws-evidently/lib/evidently.generated'
 
 /**
  * @category cdk-utils.app-config-manager
@@ -767,7 +766,7 @@ export interface SfnStartExecutionProps extends tasks.StepFunctionsStartExecutio
 }
 
 /**
-   }
+ }
  * @category cdk-utils.event-manager
  * @subcategory Properties
  */
@@ -911,6 +910,15 @@ export interface Route53Props extends route53.HostedZoneProps {
  * @subcategory Properties
  */
 export interface LifecycleRule extends s3.LifecycleRule {
+  expirationInDays?: number
+  noncurrentVersionExpirationInDays?: number
+}
+
+/**
+ * @category cdk-utils.s3-manager
+ * @subcategory Properties
+ */
+export interface BucketDeploymentProps extends s3deploy.BucketDeploymentProps {
   expirationInDays?: number
   noncurrentVersionExpirationInDays?: number
 }
