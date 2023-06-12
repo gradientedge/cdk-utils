@@ -42,7 +42,7 @@ export class StaticAssetDeployment extends CommonConstruct {
    * @summary Initialise and provision resources
    * @protected
    */
-  initResources() {
+  public initResources() {
     this.createAssetBucket()
     this.deployStaticAssets()
   }
