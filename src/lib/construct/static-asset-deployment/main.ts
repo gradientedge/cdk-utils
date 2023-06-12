@@ -34,7 +34,6 @@ export class StaticAssetDeployment extends CommonConstruct {
 
   constructor(parent: Construct, id: string, props: StaticAssetDeploymentProps) {
     super(parent, id, props)
-
     this.props = props
     this.id = id
   }
@@ -43,7 +42,7 @@ export class StaticAssetDeployment extends CommonConstruct {
    * @summary Initialise and provision resources
    * @protected
    */
-  protected initResources() {
+  initResources() {
     this.createAssetBucket()
     this.deployStaticAssets()
   }

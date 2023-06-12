@@ -54,9 +54,7 @@ class TestStaticAssetDeployment extends StaticAssetDeployment {
   constructor(parent: Construct, id: string, props: TestStackProps) {
     super(parent, id, props)
     this.props = props
-
     this.id = 'test-static-asset-deployment'
-
     this.initResources()
   }
 }
