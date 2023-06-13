@@ -39,7 +39,7 @@ export class LambdaWithIamAccess extends CommonConstruct {
   lambdaUserAccessKey: iam.CfnAccessKey
   lambdaUserAccessSecret: secretsManager.Secret
 
-  protected constructor(parent: Construct, id: string, props: LambdaWithIamAccessProps) {
+  constructor(parent: Construct, id: string, props: LambdaWithIamAccessProps) {
     super(parent, id, props)
 
     this.props = props
