@@ -35,6 +35,23 @@
       }
     ]
   },
+  "testIamLambda": {
+    "functionName": "test-iam-lambda",
+    "logRetention": 7,
+    "memorySize": 1024,
+    "timeoutInSecs": 60,
+    "excludeLastModifiedTimestamp": true,
+    "tags": [
+      {
+        "key": "testTagName1",
+        "value": "testTagValue1"
+      },
+      {
+        "key": "testTagName2",
+        "value": "testTagValue2"
+      }
+    ]
+  },
   "testLambdaWithConcurrency": {
     "functionName": "test-lambda-concurrency",
     "logRetention": 7,
