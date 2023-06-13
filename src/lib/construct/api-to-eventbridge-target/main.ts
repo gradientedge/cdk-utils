@@ -79,6 +79,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
     this.createApiToEventBridgeTargetIntegrationResponse()
     this.createApiToEventBridgeTargetIntegrationErrorResponse()
     this.createApiToEventBridgeTargetIntegration()
+    this.createApiToEventBridgeTargetRestApiLogGroup()
     this.createApiToEventBridgeTargetRestApi()
     this.createApiToEventBridgeTargetResource()
     this.createApiToEventBridgeTargetResponseModel()
@@ -360,6 +361,17 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
     }
   }
 
+  protected createApiToEventBridgeTargetRestApiLogGroup() {
+    this.apiToEventBridgeTargetRestApi.accessLogGroup = this.logManager.createLogGroup(
+      `${this.id}-rest-api-access-log`,
+      this,
+      {
+        logGroupName: `/custom/api/${this.id}-rest-api-access`,
+        removalPolicy: cdk.RemovalPolicy.DESTROY,
+      }
+    )
+  }
+
   /**
    * @summary Method to create rest restApi for Api
    * @protected
@@ -373,11 +385,6 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
       )
       return
     }
-
-    const accessLogGroup = this.logManager.createLogGroup(`${this.id}-rest-api-access-log`, this, {
-      logGroupName: `/custom/api/${this.id}-rest-api-access`,
-      removalPolicy: cdk.RemovalPolicy.DESTROY,
-    })
 
     this.apiToEventBridgeTargetRestApi.api = new apig.RestApi(this, `${this.id}-rest-api`, {
       ...{
@@ -397,7 +404,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
           loggingLevel: apig.MethodLoggingLevel.INFO,
           metricsEnabled: true,
           stageName: this.props.stage,
-          accessLogDestination: new apig.LogGroupLogDestination(accessLogGroup),
+          accessLogDestination: new apig.LogGroupLogDestination(this.apiToEventBridgeTargetRestApi.accessLogGroup),
           accessLogFormat: apig.AccessLogFormat.jsonWithStandardFields(),
         },
         endpointConfiguration: {

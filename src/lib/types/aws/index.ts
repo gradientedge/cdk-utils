@@ -366,6 +366,7 @@ export interface ApiToEventBridgeTargetEventType {
  * @subcategory Types
  */
 export interface ApiToEventBridgeTargetRestApiType {
+  accessLogGroup: logs.LogGroup
   api: apig.IRestApi
   authoriser?: apig.IAuthorizer
   certificate: acm.ICertificate

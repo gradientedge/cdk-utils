@@ -1,6 +1,7 @@
 import * as apig from 'aws-cdk-lib/aws-apigateway'
 import * as acm from 'aws-cdk-lib/aws-certificatemanager'
 import * as iam from 'aws-cdk-lib/aws-iam'
+import * as logs from 'aws-cdk-lib/aws-logs'
 import * as route53 from 'aws-cdk-lib/aws-route53'
 import * as sns from 'aws-cdk-lib/aws-sns'
 import * as types from '../types/aws'
@@ -12,6 +13,7 @@ import * as types from '../types/aws'
  * @classdesc Provides a construct to contain api resources for ApiToEventBridgeTargetWithSns
  */
 export class ApiToEventbridgeTargetRestApi implements types.ApiToEventBridgeTargetRestApiType {
+  accessLogGroup: logs.LogGroup
   api: apig.RestApi
   certificate: acm.ICertificate
   domain: apig.DomainName
