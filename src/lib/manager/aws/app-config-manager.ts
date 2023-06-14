@@ -105,7 +105,7 @@ export class AppConfigManager {
 
     const environment = new appconfig.CfnEnvironment(scope, `${id}`, {
       applicationId: applicationId,
-      name: scope.props.stage,
+      name: props.environment.name ?? scope.props.stage,
       description: props.environment.description,
       monitors: props.environment.monitors,
       tags: props.environment.tags,

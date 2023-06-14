@@ -119,7 +119,7 @@ describe('TestAppConfigConstruct', () => {
 
   test('provisions new environment as expected', () => {
     template.hasResourceProperties('AWS::AppConfig::Environment', {
-      Name: 'test',
+      Name: 'test-env',
       Description: 'test-env',
     })
   })
