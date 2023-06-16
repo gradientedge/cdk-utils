@@ -141,6 +141,7 @@ export class AppConfigManager {
       description: props.configurationProfile.description,
       retrievalRoleArn: props.configurationProfile.retrievalRoleArn,
       tags: props.configurationProfile.tags,
+      type: props.configurationProfile.type,
       validators: props.configurationProfile.validators,
     })
 
