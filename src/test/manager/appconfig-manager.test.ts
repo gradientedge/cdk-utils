@@ -3,6 +3,7 @@ import { Template } from 'aws-cdk-lib/assertions'
 import { Construct } from 'constructs'
 import * as common from '../../lib/common'
 import * as types from '../../lib/types'
+import { Architecture } from '../../lib/manager'
 
 interface TestStackProps extends types.CommonStackProps {
   app: any
@@ -65,7 +66,7 @@ class TestCommonConstruct extends common.CommonConstruct {
       application.logicalId,
       this.props.app
     )
-    this.appConfigManager.getArnForAppConfigExtension(this)
+    this.appConfigManager.getArnForAppConfigExtension(this, Architecture.ARM_64)
   }
 }
 
