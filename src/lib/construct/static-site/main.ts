@@ -5,7 +5,7 @@ import * as route53 from 'aws-cdk-lib/aws-route53'
 import * as s3 from 'aws-cdk-lib/aws-s3'
 import { Construct } from 'constructs'
 import { CommonConstruct } from '../../common'
-import { StaticSiteProps } from '../../types'
+import { StaticSiteProps } from './types'
 
 /**
  * @stability stable

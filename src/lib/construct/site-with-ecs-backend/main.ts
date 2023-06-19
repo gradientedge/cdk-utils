@@ -13,7 +13,7 @@ import * as s3 from 'aws-cdk-lib/aws-s3'
 import * as efs from 'aws-cdk-lib/aws-efs'
 import { Construct } from 'constructs'
 import { CommonConstruct } from '../../common'
-import { SiteWithEcsBackendProps } from '../../types'
+import { SiteWithEcsBackendProps } from './types'
 
 /**
  * @stability stable

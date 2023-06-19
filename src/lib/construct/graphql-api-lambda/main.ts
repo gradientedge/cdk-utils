@@ -6,7 +6,7 @@ import * as route53 from 'aws-cdk-lib/aws-route53'
 import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager'
 import { Construct } from 'constructs'
 import { CommonConstruct } from '../../common'
-import { GraphQlApiLambdaEnvironment, GraphQlApiLambdaProps } from '../../types'
+import { GraphQlApiLambdaEnvironment, GraphQlApiLambdaProps } from './types'
 
 /**
  * @deprecated Use RestApiLambda instead. This will be removed in a future release.

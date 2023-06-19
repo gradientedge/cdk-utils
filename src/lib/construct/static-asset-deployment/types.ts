@@ -1,4 +1,5 @@
-import { BucketDeploymentProps, CommonStackProps, S3BucketProps } from '../../types'
+import { BucketDeploymentProps, S3BucketProps } from '../../services'
+import { CommonStackProps } from '../../common'
 
 export interface AssetExport {
   key: string

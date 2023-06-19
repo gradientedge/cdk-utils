@@ -4,7 +4,7 @@ import * as elasticache from 'aws-cdk-lib/aws-elasticache'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import { Construct } from 'constructs'
 import { RestApiLambda } from '..'
-import { RestApiLambdaWithCacheProps } from '../../types'
+import { RestApiLambdaWithCacheProps } from './types'
 import * as utils from '../../utils'
 
 /**

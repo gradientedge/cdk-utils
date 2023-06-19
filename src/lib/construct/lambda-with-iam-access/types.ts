@@ -1,6 +1,7 @@
-import { CommonStackProps, LambdaEnvironment, LambdaProps } from '../../types'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import { SecretProps } from 'aws-cdk-lib/aws-secretsmanager'
+import { LambdaEnvironment, LambdaProps } from '../../services'
+import { CommonStackProps } from '../../common'
 
 export interface LambdaWithIamAccessProps extends CommonStackProps {
   lambda: LambdaProps

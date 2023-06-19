@@ -1,8 +1,8 @@
 import * as cdk from 'aws-cdk-lib'
 import { Construct } from 'constructs'
-import * as aws from '../manager/aws'
-import * as types from '../types'
+import * as aws from '../services/aws'
 import * as utils from '../utils'
+import { CommonStackProps } from './types'
 
 /**
  * @stability stable
@@ -21,7 +21,7 @@ import * as utils from '../utils'
  * };
  */
 export class CommonConstruct extends Construct {
-  props: types.CommonStackProps
+  props: CommonStackProps
   acmManager: aws.AcmManager
   apiManager: aws.ApiManager
   appConfigManager: aws.AppConfigManager
@@ -54,7 +54,7 @@ export class CommonConstruct extends Construct {
 
   fullyQualifiedDomainName: string
 
-  constructor(parent: Construct, id: string, props: types.CommonStackProps) {
+  constructor(parent: Construct, id: string, props: CommonStackProps) {
     super(parent, id)
     this.props = props
     this.acmManager = new aws.AcmManager()

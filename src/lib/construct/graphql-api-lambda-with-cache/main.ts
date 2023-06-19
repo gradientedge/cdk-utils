@@ -4,7 +4,7 @@ import * as elasticache from 'aws-cdk-lib/aws-elasticache'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import { Construct } from 'constructs'
 import { GraphQLApiLambda } from '..'
-import { GraphQlApiLambdaWithCacheProps } from '../../types'
+import { GraphQlApiLambdaWithCacheProps } from './types'
 import * as utils from '../../utils'
 
 /**

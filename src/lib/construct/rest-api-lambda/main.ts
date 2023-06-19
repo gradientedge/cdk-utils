@@ -6,7 +6,7 @@ import * as route53 from 'aws-cdk-lib/aws-route53'
 import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager'
 import { Construct } from 'constructs'
 import { CommonConstruct } from '../../common'
-import { RestApiLambdaEnvironment, RestApiLambdaProps } from '../../types'
+import { RestApiLambdaEnvironment, RestApiLambdaProps } from './types'
 
 /**
  * @category cdk-utils.rest-api-lambda

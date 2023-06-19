@@ -1,10 +1,9 @@
 import * as cdk from 'aws-cdk-lib'
 import { Template } from 'aws-cdk-lib/assertions'
 import { Construct } from 'constructs'
-import * as common from '../../lib/common'
-import * as types from '../../lib/types'
+import { CommonConstruct, CommonStack, CommonStackProps } from '../../lib'
 
-interface TestStackProps extends types.CommonStackProps {
+interface TestStackProps extends CommonStackProps {
   testBucket: any
   testLogBucket: any
 }
@@ -24,7 +23,7 @@ const testStackProps = {
   excludeDomainNameForBuckets: true,
 }
 
-class TestCommonStack extends common.CommonStack {
+class TestCommonStack extends CommonStack {
   declare props: TestStackProps
 
   constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
@@ -44,7 +43,7 @@ class TestCommonStack extends common.CommonStack {
   }
 }
 
-class TestCommonConstruct extends common.CommonConstruct {
+class TestCommonConstruct extends CommonConstruct {
   declare props: TestStackProps
 
   constructor(parent: Construct, name: string, props: TestStackProps) {

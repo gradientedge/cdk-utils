@@ -5,30 +5,30 @@ import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager'
 import { Construct } from 'constructs'
 import { CommonConstruct } from '../../common'
-import * as helper from '../../helper'
-import * as types from '../../types/aws'
+import { ApiToLambdaTargetRestApi } from './api'
+import { ApiToLambdaTargetProps, ApiToLambdaTargetRestApiType } from './types'
 
 /**
  * @mixin
  */
 export class ApiToLambdaTarget extends CommonConstruct {
-  props: types.ApiToLambdaTargetProps
+  props: ApiToLambdaTargetProps
   id: string
 
   /* application related resources */
   applicationSecrets: secretsmanager.ISecret[]
 
   /* rest restApi related resources */
-  apiToLambdaTargetRestApi: types.ApiToLambdaTargetRestApiType
+  apiToLambdaTargetRestApi: ApiToLambdaTargetRestApiType
   apiResource: string
 
-  constructor(parent: Construct, id: string, props: types.ApiToLambdaTargetProps) {
+  constructor(parent: Construct, id: string, props: ApiToLambdaTargetProps) {
     super(parent, id, props)
 
     this.props = props
     this.id = id
 
-    this.apiToLambdaTargetRestApi = new helper.ApiToLambdaTargetRestApi()
+    this.apiToLambdaTargetRestApi = new ApiToLambdaTargetRestApi()
   }
 
   protected initResources() {

@@ -3,10 +3,9 @@ import { Template } from 'aws-cdk-lib/assertions'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import { Construct } from 'constructs'
-import * as common from '../../lib/common'
-import * as types from '../../lib/types'
+import { CommonConstruct, CommonStack, CommonStackProps } from '../../lib'
 
-interface TestStackProps extends types.CommonStackProps {
+interface TestStackProps extends CommonStackProps {
   testLambda: any
   testLambdaWithDlq: any
   testLambdaEdge: any
@@ -29,7 +28,7 @@ const testStackProps = {
   stageContextPath: 'src/test/common/cdkEnv',
 }
 
-class TestCommonStack extends common.CommonStack {
+class TestCommonStack extends CommonStack {
   declare props: TestStackProps
 
   constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
@@ -53,7 +52,7 @@ class TestCommonStack extends common.CommonStack {
   }
 }
 
-class TestInvalidCommonStack extends common.CommonStack {
+class TestInvalidCommonStack extends CommonStack {
   declare props: TestStackProps
 
   constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
@@ -63,7 +62,7 @@ class TestInvalidCommonStack extends common.CommonStack {
   }
 }
 
-class TestCommonConstruct extends common.CommonConstruct {
+class TestCommonConstruct extends CommonConstruct {
   declare props: TestStackProps
 
   constructor(parent: Construct, name: string, props: TestStackProps) {

@@ -3,11 +3,9 @@ import { Template } from 'aws-cdk-lib/assertions'
 import * as apig from 'aws-cdk-lib/aws-apigateway'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import { Construct } from 'constructs'
-import * as common from '../../lib/common'
-import { GraphQLApiLambdaWithCache } from '../../lib/construct'
-import * as types from '../../lib/types'
+import { CommonStack, GraphQLApiLambdaWithCache, GraphQlApiLambdaWithCacheProps } from '../../lib'
 
-interface testGraphqlWithCacheProps extends types.GraphQlApiLambdaWithCacheProps {
+interface testGraphqlWithCacheProps extends GraphQlApiLambdaWithCacheProps {
   testAttribute?: string
 }
 
@@ -29,7 +27,7 @@ const testGraphqlWithCacheProps = {
   stageContextPath: 'src/test/common/cdkEnv',
 }
 
-class TestCommonStack extends common.CommonStack {
+class TestCommonStack extends CommonStack {
   declare props: testGraphqlWithCacheProps
 
   constructor(parent: cdk.App, name: string, props: cdk.StackProps) {

@@ -1,5 +1,5 @@
 export * from './src/lib/common'
 export * from './src/lib/construct'
-export * from './src/lib/manager'
+export * from './src/lib/services'
 export * from './src/lib/types'
 export * from './src/lib/utils'

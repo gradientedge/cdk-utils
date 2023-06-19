@@ -2,11 +2,9 @@ import * as cdk from 'aws-cdk-lib'
 import { Template } from 'aws-cdk-lib/assertions'
 import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment'
 import { Construct } from 'constructs'
-import * as common from '../../lib/common'
-import { SiteWithEcsBackend } from '../../lib/construct'
-import * as types from '../../lib/types'
+import { CommonStack, SiteWithEcsBackend, SiteWithEcsBackendProps } from '../../lib'
 
-interface TestStackProps extends types.SiteWithEcsBackendProps {
+interface TestStackProps extends SiteWithEcsBackendProps {
   testAttribute?: string
 }
 
@@ -37,7 +35,7 @@ const testStackProps = {
   stageContextPath: 'src/test/common/cdkEnv',
 }
 
-class TestCommonStack extends common.CommonStack {
+class TestCommonStack extends CommonStack {
   declare props: TestStackProps
 
   constructor(parent: cdk.App, name: string, props: cdk.StackProps) {

@@ -1,10 +1,9 @@
 import * as cdk from 'aws-cdk-lib'
 import { Template } from 'aws-cdk-lib/assertions'
 import { Construct } from 'constructs'
-import * as common from '../../lib/common'
-import { LambdaWithIamAccess, LambdaWithIamAccessProps } from '../../lib/construct'
 import { SecretProps } from 'aws-cdk-lib/aws-secretsmanager'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
+import { CommonStack, LambdaWithIamAccess, LambdaWithIamAccessProps } from '../../lib'
 
 interface TestStackProps extends LambdaWithIamAccessProps {
   lambda: any
@@ -25,7 +24,7 @@ const testStackProps = {
   skipStageForARecords: true,
 }
 
-class TestCommonStack extends common.CommonStack {
+class TestCommonStack extends CommonStack {
   declare props: TestStackProps
 
   constructor(parent: cdk.App, name: string, props: cdk.StackProps) {

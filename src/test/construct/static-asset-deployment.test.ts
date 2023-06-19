@@ -2,8 +2,7 @@ import * as cdk from 'aws-cdk-lib'
 import { Template } from 'aws-cdk-lib/assertions'
 import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment'
 import { Construct } from 'constructs'
-import * as common from '../../lib/common'
-import { StaticAssetDeployment, StaticAssetDeploymentProps } from '../../lib/construct'
+import { CommonStack, StaticAssetDeployment, StaticAssetDeploymentProps } from '../../lib'
 
 interface TestStackProps extends StaticAssetDeploymentProps {
   staticAssetDeployment: any
@@ -25,7 +24,7 @@ const testStackProps = {
   skipStageForARecords: true,
 }
 
-class TestCommonStack extends common.CommonStack {
+class TestCommonStack extends CommonStack {
   declare props: TestStackProps
 
   constructor(parent: cdk.App, name: string, props: cdk.StackProps) {

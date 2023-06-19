@@ -6,8 +6,13 @@ import * as iam from 'aws-cdk-lib/aws-iam'
 import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager'
 import { Construct } from 'constructs'
 import { CommonConstruct } from '../../common'
-import * as helper from '../../helper'
-import * as types from '../../types/aws'
+import {
+  ApiToEventBridgeTargetEventType,
+  ApiToEventBridgeTargetProps,
+  ApiToEventBridgeTargetRestApiType,
+} from './types'
+import { ApiToEventbridgeTargetEvent } from './event'
+import { ApiToEventbridgeTargetRestApi } from './api'
 
 /**
  * @stability stable
@@ -32,27 +37,27 @@ import * as types from '../../types/aws'
  * @mixin
  */
 export class ApiToEventBridgeTarget extends CommonConstruct {
-  props: types.ApiToEventBridgeTargetProps
+  props: ApiToEventBridgeTargetProps
   id: string
 
   /* application related resources */
   applicationSecrets: secretsmanager.ISecret[]
 
   /* event related resources */
-  apiEvent: types.ApiToEventBridgeTargetEventType
+  apiEvent: ApiToEventBridgeTargetEventType
 
   /* rest restApi related resources */
-  apiToEventBridgeTargetRestApi: types.ApiToEventBridgeTargetRestApiType
+  apiToEventBridgeTargetRestApi: ApiToEventBridgeTargetRestApiType
   apiResource: string
 
-  constructor(parent: Construct, id: string, props: types.ApiToEventBridgeTargetProps) {
+  constructor(parent: Construct, id: string, props: ApiToEventBridgeTargetProps) {
     super(parent, id, props)
 
     this.props = props
     this.id = id
 
-    this.apiEvent = new helper.ApiToEventbridgeTargetEvent()
-    this.apiToEventBridgeTargetRestApi = new helper.ApiToEventbridgeTargetRestApi()
+    this.apiEvent = new ApiToEventbridgeTargetEvent()
+    this.apiToEventBridgeTargetRestApi = new ApiToEventbridgeTargetRestApi()
     this.apiResource = 'notify'
   }
 

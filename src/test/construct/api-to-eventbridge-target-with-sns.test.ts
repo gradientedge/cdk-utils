@@ -2,11 +2,9 @@ import * as cdk from 'aws-cdk-lib'
 import { Template } from 'aws-cdk-lib/assertions'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import { Construct } from 'constructs'
-import * as common from '../../lib/common'
-import { ApiToEventBridgeTargetWithSns } from '../../lib/construct'
-import * as types from '../../lib/types'
+import { ApiToEventBridgeTargetProps, ApiToEventBridgeTargetWithSns, CommonStack } from '../../lib'
 
-interface TestStackProps extends types.ApiToEventBridgeTargetProps {}
+interface TestStackProps extends ApiToEventBridgeTargetProps {}
 
 const testStackProps = {
   env: {
@@ -29,7 +27,7 @@ const testStackProps = {
   stageContextPath: 'src/test/common/cdkEnv',
 }
 
-class TestCommonStack extends common.CommonStack {
+class TestCommonStack extends CommonStack {
   declare props: TestStackProps
 
   constructor(parent: cdk.App, name: string, props: cdk.StackProps) {

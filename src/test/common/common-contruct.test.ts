@@ -3,9 +3,9 @@ import { CustomResource } from 'aws-cdk-lib'
 import { Template } from 'aws-cdk-lib/assertions'
 import { Construct } from 'constructs'
 import * as common from '../../lib/common'
-import * as types from '../../lib/types'
+import { CommonStackProps } from '../../lib'
 
-interface TestStackProps extends types.CommonStackProps {
+interface TestStackProps extends CommonStackProps {
   testAttribute?: string
 }
 

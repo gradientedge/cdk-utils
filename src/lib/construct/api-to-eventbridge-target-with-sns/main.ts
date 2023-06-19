@@ -8,9 +8,15 @@ import * as destinations from 'aws-cdk-lib/aws-lambda-destinations'
 import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager'
 import { Construct } from 'constructs'
 import { CommonConstruct } from '../../common'
-import * as helper from '../../helper'
-import * as types from '../../types'
 import { ApiDestinedLambda } from './api-destined-lambda'
+import {
+  ApiToEventbridgeTargetEvent,
+  ApiToEventBridgeTargetEventType,
+  ApiToEventBridgeTargetProps,
+  ApiToEventbridgeTargetRestApi,
+  ApiToEventBridgeTargetRestApiType,
+} from '../api-to-eventbridge-target'
+import { ApiDestinedLambdaType } from './types'
 
 /**
  * @deprecated Use ApiToEventBridgeTarget instead. This will be removed in a future release.
@@ -37,31 +43,31 @@ import { ApiDestinedLambda } from './api-destined-lambda'
  * @mixin
  */
 export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
-  props: types.ApiToEventBridgeTargetProps
+  props: ApiToEventBridgeTargetProps
   id: string
 
   /* application related resources */
   applicationSecrets: secretsmanager.ISecret[]
 
   /* destined lambda related resources */
-  apiDestinedLambda: types.ApiDestinedLambdaType
+  apiDestinedLambda: ApiDestinedLambdaType
 
   /* event related resources */
-  apiEvent: types.ApiToEventBridgeTargetEventType
+  apiEvent: ApiToEventBridgeTargetEventType
 
   /* rest restApi related resources */
-  apiDestinedRestApi: types.ApiToEventBridgeTargetRestApiType
+  apiDestinedRestApi: ApiToEventBridgeTargetRestApiType
   apiResource: string
 
-  constructor(parent: Construct, id: string, props: types.ApiToEventBridgeTargetProps) {
+  constructor(parent: Construct, id: string, props: ApiToEventBridgeTargetProps) {
     super(parent, id, props)
 
     this.props = props
     this.id = id
 
     this.apiDestinedLambda = new ApiDestinedLambda()
-    this.apiEvent = new helper.ApiToEventbridgeTargetEvent()
-    this.apiDestinedRestApi = new helper.ApiToEventbridgeTargetRestApi()
+    this.apiEvent = new ApiToEventbridgeTargetEvent()
+    this.apiDestinedRestApi = new ApiToEventbridgeTargetRestApi()
     this.apiResource = 'notify'
   }
 

@@ -3,11 +3,9 @@ import { Template } from 'aws-cdk-lib/assertions'
 import * as apig from 'aws-cdk-lib/aws-apigateway'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import { Construct } from 'constructs'
-import * as common from '../../lib/common'
-import { RestApiLambdaWithCache } from '../../lib/construct'
-import * as types from '../../lib/types'
+import { CommonStack, RestApiLambdaWithCache, RestApiLambdaWithCacheProps } from '../../lib'
 
-interface RestRestApiLambdaWithCacheProps extends types.RestApiLambdaWithCacheProps {
+interface RestRestApiLambdaWithCacheProps extends RestApiLambdaWithCacheProps {
   testAttribute?: string
 }
 
@@ -29,7 +27,7 @@ const testRestApiLambdaWithCacheProps = {
   stageContextPath: 'src/test/common/cdkEnv',
 }
 
-class TestCommonStack extends common.CommonStack {
+class TestCommonStack extends CommonStack {
   declare props: RestRestApiLambdaWithCacheProps
 
   constructor(parent: cdk.App, name: string, props: cdk.StackProps) {

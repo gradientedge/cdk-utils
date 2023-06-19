@@ -1,6 +1,6 @@
 import * as cdk from 'aws-cdk-lib'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
-import { CommonStackProps } from '../types'
+import { CommonStackProps } from './types'
 import { isDevStage } from '../utils'
 import { CommonConstruct } from './construct'
 
