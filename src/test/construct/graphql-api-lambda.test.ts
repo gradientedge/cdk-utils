@@ -11,18 +11,18 @@ interface testGraphqlProps extends GraphQlApiLambdaProps {
 }
 
 const testGraphqlProps = {
-  name: 'test-graphql-stack',
-  domainName: 'gradientedge.io',
-  region: 'eu-west-1',
-  stage: 'test',
-  stackName: 'test',
-  apiSubDomain: 'api',
   apiRootPaths: ['graphql'],
+  apiSubDomain: 'api',
+  domainName: 'gradientedge.io',
   extraContexts: [
     'src/test/common/cdkConfig/dummy.json',
     'src/test/common/cdkConfig/certificates.json',
     'src/test/common/cdkConfig/lambdas.json',
   ],
+  name: 'test-graphql-stack',
+  region: 'eu-west-1',
+  stackName: 'test',
+  stage: 'test',
   stageContextPath: 'src/test/common/cdkEnv',
 }
 
@@ -62,8 +62,10 @@ class TestGraphQLApiConstruct extends GraphQLApiLambda {
     this.id = 'test-graphql'
     this.props.graphQLApiSource = new lambda.AssetCode('src/test/common/nodejs/lib')
     this.props.graphqlRestApi = {
+      defaultCorsPreflightOptions: {
+        allowOrigins: apig.Cors.ALL_ORIGINS,
+      },
       deploy: true,
-      restApiName: 'test-lambda-rest-api',
       deployOptions: {
         description: `${this.id} - ${this.props.stage} stage`,
         stageName: this.props.stage,
@@ -72,10 +74,8 @@ class TestGraphQLApiConstruct extends GraphQLApiLambda {
         types: [apig.EndpointType.REGIONAL],
       },
       handler: this.graphQLApiLambdaFunction,
-      defaultCorsPreflightOptions: {
-        allowOrigins: apig.Cors.ALL_ORIGINS,
-      },
       proxy: true,
+      restApiName: 'test-lambda-rest-api',
     }
 
     this.initResources()
@@ -180,8 +180,8 @@ describe('TestGraphQLApiLambdaConstruct', () => {
             ResponseParameters: {
               'method.response.header.Access-Control-Allow-Headers':
                 "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
-              'method.response.header.Access-Control-Allow-Origin': "'*'",
               'method.response.header.Access-Control-Allow-Methods': "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'",
+              'method.response.header.Access-Control-Allow-Origin': "'*'",
             },
             StatusCode: '204',
           },
@@ -195,8 +195,8 @@ describe('TestGraphQLApiLambdaConstruct', () => {
         {
           ResponseParameters: {
             'method.response.header.Access-Control-Allow-Headers': true,
-            'method.response.header.Access-Control-Allow-Origin': true,
             'method.response.header.Access-Control-Allow-Methods': true,
+            'method.response.header.Access-Control-Allow-Origin': true,
           },
           StatusCode: '204',
         },
@@ -210,9 +210,9 @@ describe('TestGraphQLApiLambdaConstruct', () => {
     template.hasResourceProperties('AWS::Lambda::Function', {
       Environment: {
         Variables: {
-          REGION: 'eu-west-1',
-          NODE_ENV: 'development',
           LOG_LEVEL: 'debug',
+          NODE_ENV: 'development',
+          REGION: 'eu-west-1',
           TZ: 'UTC',
         },
       },

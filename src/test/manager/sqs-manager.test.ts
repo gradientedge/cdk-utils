@@ -4,25 +4,25 @@ import { Construct } from 'constructs'
 import { CommonConstruct, CommonStack, CommonStackProps } from '../../lib'
 
 interface TestStackProps extends CommonStackProps {
-  testSqs: any
   testLambdaWithDlq: any
+  testSqs: any
 }
 
 const testStackProps = {
+  domainName: 'gradientedge.io',
   env: {
     account: '123456789',
     region: 'eu-west-1',
   },
-  name: 'test-common-stack',
-  domainName: 'gradientedge.io',
-  region: 'eu-west-1',
-  stackName: 'test',
-  stage: 'test',
   extraContexts: [
     'src/test/common/cdkConfig/lambdas.json',
     'src/test/common/cdkConfig/rules.json',
     'src/test/common/cdkConfig/sqs.json',
   ],
+  name: 'test-common-stack',
+  region: 'eu-west-1',
+  stackName: 'test',
+  stage: 'test',
   stageContextPath: 'src/test/common/cdkEnv',
 }
 
@@ -39,8 +39,8 @@ class TestCommonStack extends CommonStack {
     return {
       ...super.determineConstructProps(props),
       ...{
-        testSqs: this.node.tryGetContext('testSqs'),
         testLambdaWithDlq: this.node.tryGetContext('testLambdaWithDlq'),
+        testSqs: this.node.tryGetContext('testSqs'),
       },
     }
   }
@@ -112,28 +112,28 @@ describe('TestSqsConstruct', () => {
 describe('TestSqsConstruct', () => {
   test('provisions new queue as expected', () => {
     template.hasResourceProperties('AWS::SQS::Queue', {
+      MessageRetentionPeriod: 604800,
       QueueName: 'test-sqs',
       ReceiveMessageWaitTimeSeconds: 20,
       VisibilityTimeout: 300,
-      MessageRetentionPeriod: 604800,
     })
   })
 
   test('provisions new redrive queue as expected', () => {
     template.hasResourceProperties('AWS::SQS::Queue', {
+      MessageRetentionPeriod: 604800,
       QueueName: 'test-lambda-with-error-handling-redriveq-test',
       ReceiveMessageWaitTimeSeconds: 20,
       VisibilityTimeout: 300,
-      MessageRetentionPeriod: 604800,
     })
   })
 
   test('provisions new dead letter queue as expected', () => {
     template.hasResourceProperties('AWS::SQS::Queue', {
+      MessageRetentionPeriod: 604800,
       QueueName: 'test-lambda-with-error-handling-dlq-test',
       ReceiveMessageWaitTimeSeconds: 20,
       VisibilityTimeout: 300,
-      MessageRetentionPeriod: 604800,
     })
   })
 })

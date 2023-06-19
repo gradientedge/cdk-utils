@@ -9,13 +9,8 @@ interface TestStackProps extends StaticSiteProps {
 }
 
 const testStackProps = {
-  name: 'test-static-site-stack',
   domainName: 'gradientedge.io',
-  region: 'eu-west-1',
-  stage: 'test',
-  stackName: 'test',
-  siteSubDomain: 'site',
-  siteCreateAltARecord: true,
+  excludeDomainNameForBuckets: true,
   extraContexts: [
     'src/test/common/cdkConfig/dummy.json',
     'src/test/common/cdkConfig/buckets.json',
@@ -23,9 +18,14 @@ const testStackProps = {
     'src/test/common/cdkConfig/distributions.json',
     'src/test/common/cdkConfig/function.json',
   ],
-  stageContextPath: 'src/test/common/cdkEnv',
+  name: 'test-static-site-stack',
+  region: 'eu-west-1',
+  siteCreateAltARecord: true,
+  siteSubDomain: 'site',
   skipStageForARecords: true,
-  excludeDomainNameForBuckets: true,
+  stackName: 'test',
+  stage: 'test',
+  stageContextPath: 'src/test/common/cdkEnv',
 }
 
 class TestCommonStack extends CommonStack {
@@ -41,17 +41,17 @@ class TestCommonStack extends CommonStack {
     return {
       ...super.determineConstructProps(props),
       ...{
-        siteCertificate: this.node.tryGetContext('siteCertificate'),
-        siteBucket: this.node.tryGetContext('siteBucket'),
-        siteLogBucket: this.node.tryGetContext('siteLogBucket'),
-        siteDistribution: this.node.tryGetContext('siteDistribution'),
-        siteSource: s3deploy.Source.asset('src/test/common/nodejs/lib'),
-        siteRecordName: this.node.tryGetContext('siteSubDomain'),
-        siteSubDomain: this.node.tryGetContext('siteSubDomain'),
-        siteCreateAltARecord: this.node.tryGetContext('siteCreateAltARecord'),
         siteAliases: [`${this.node.tryGetContext('siteSubDomain')}.${this.fullyQualifiedDomain()}`],
-        testAttribute: this.node.tryGetContext('testAttribute'),
+        siteBucket: this.node.tryGetContext('siteBucket'),
+        siteCertificate: this.node.tryGetContext('siteCertificate'),
         siteCloudfrontFunctionProps: this.node.tryGetContext('testStaticSite'),
+        siteCreateAltARecord: this.node.tryGetContext('siteCreateAltARecord'),
+        siteDistribution: this.node.tryGetContext('siteDistribution'),
+        siteLogBucket: this.node.tryGetContext('siteLogBucket'),
+        siteRecordName: this.node.tryGetContext('siteSubDomain'),
+        siteSource: s3deploy.Source.asset('src/test/common/nodejs/lib'),
+        siteSubDomain: this.node.tryGetContext('siteSubDomain'),
+        testAttribute: this.node.tryGetContext('testAttribute'),
       },
     }
   }
@@ -168,6 +168,7 @@ describe('TestStaticSiteConstruct', () => {
         Comment: 'test-static-site-distribution - test stage',
         DefaultCacheBehavior: {
           CachePolicyId: '658327ea-f89d-4fab-a63d-7e88639e58f6',
+          Compress: true,
           FunctionAssociations: [
             {
               EventType: 'viewer-request',
@@ -176,7 +177,6 @@ describe('TestStaticSiteConstruct', () => {
               },
             },
           ],
-          Compress: true,
           TargetOriginId: 'teststaticsitestackteststaticsitedistributionOrigin17FDFDB75',
           ViewerProtocolPolicy: 'redirect-to-https',
         },
@@ -246,10 +246,10 @@ describe('TestStaticSiteConstruct', () => {
 describe('TestStaticSiteConstruct', () => {
   test('provisions cloudfront function as expected', () => {
     template.hasResourceProperties('AWS::CloudFront::Function', {
-      Name: 'test-static-function-test',
       FunctionConfig: {
         Comment: 'test comment',
       },
+      Name: 'test-static-function-test',
     })
   })
 })

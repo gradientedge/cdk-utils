@@ -7,9 +7,6 @@ import { LambdaRestApiProps } from './types'
 import { CommonConstruct } from '../../../common'
 
 /**
- * @stability stable
- * @category cdk-utils.api-manager
- * @subcategory Construct
  * @classdesc Provides operations on AWS API Gateway.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
@@ -24,15 +21,14 @@ import { CommonConstruct } from '../../../common'
  *     this.apiManager.createLambdaRestApi('MyCertificate', this, props, lambdaFunction)
  *   }
  * }
- *
  * @see [CDK API Gateway Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_apigateway-readme.html}
  */
 export class ApiManager {
   /**
    * @summary Method to create a Rest API with Lambda backend/target
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {AcmProps} props lambda rest restApi props
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props lambda rest restApi props
    * @param lambdaFunction
    */
   public createLambdaRestApi(
@@ -44,41 +40,41 @@ export class ApiManager {
     if (!props) throw `Api props undefined for ${id}`
     const api = new apig.LambdaRestApi(scope, `${id}`, {
       binaryMediaTypes: props.binaryMediaTypes,
-      minCompressionSize: props.minCompressionSize,
+      cloudWatchRole: props.cloudWatchRole || false,
+      defaultCorsPreflightOptions: props.defaultCorsPreflightOptions,
       defaultMethodOptions: props.defaultMethodOptions,
       deploy: props.deploy || true,
       deployOptions: {
-        stageName: scope.props.stage,
         accessLogDestination: props.deployOptions?.accessLogDestination,
         accessLogFormat: props.deployOptions?.accessLogFormat,
-        tracingEnabled: props.deployOptions?.tracingEnabled,
         cacheClusterEnabled: props.deployOptions?.cacheClusterEnabled,
         cacheClusterSize: props.deployOptions?.cacheClusterSize,
+        cachingEnabled: props.deployOptions?.cachingEnabled,
         clientCertificateId: props.deployOptions?.clientCertificateId,
+        dataTraceEnabled: props.deployOptions?.dataTraceEnabled,
         description: `${id} - ${scope.props.stage} stage`,
         documentationVersion: props.deployOptions?.documentationVersion,
-        variables: props.deployOptions?.variables,
-        methodOptions: props.deployOptions?.methodOptions,
         loggingLevel: props.deployOptions?.loggingLevel,
-        dataTraceEnabled: props.deployOptions?.dataTraceEnabled,
-        cachingEnabled: props.deployOptions?.cachingEnabled,
+        methodOptions: props.deployOptions?.methodOptions,
         metricsEnabled: props.deployOptions?.metricsEnabled,
+        stageName: scope.props.stage,
+        tracingEnabled: props.deployOptions?.tracingEnabled,
+        variables: props.deployOptions?.variables,
       },
-      retainDeployments: props.retainDeployments,
-      parameters: props.parameters,
-      policy: props.policy,
-      failOnWarnings: props.failOnWarnings || false,
       domainName: props.domainName,
-      cloudWatchRole: props.cloudWatchRole || false,
-      endpointTypes: props.endpointTypes,
       endpointConfiguration: {
         types: props.endpointConfiguration?.types || [apig.EndpointType.REGIONAL],
         vpcEndpoints: props.endpointConfiguration?.vpcEndpoints,
       },
-      restApiName: `${props.restApiName}-${scope.props.stage}`,
+      endpointTypes: props.endpointTypes,
+      failOnWarnings: props.failOnWarnings || false,
       handler: lambdaFunction,
-      defaultCorsPreflightOptions: props.defaultCorsPreflightOptions,
+      minCompressionSize: props.minCompressionSize,
+      parameters: props.parameters,
+      policy: props.policy,
       proxy: props.proxy ?? true,
+      restApiName: `${props.restApiName}-${scope.props.stage}`,
+      retainDeployments: props.retainDeployments,
     })
 
     if (props.tags && props.tags.length > 0) {
@@ -95,15 +91,15 @@ export class ApiManager {
 
   /**
    * @summary Method to create custom restApi domain
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
    * @param domainName the domain name to use
    * @param certificate the certificate used for custom restApi domain
    */
   public createApiDomain(id: string, scope: CommonConstruct, domainName: string, certificate: acm.ICertificate) {
     const apiDomain = new apig.DomainName(scope, `${id}`, {
-      domainName: domainName,
       certificate: certificate,
+      domainName: domainName,
       endpointType: scope.isProductionStage() ? apig.EndpointType.EDGE : apig.EndpointType.REGIONAL,
       securityPolicy: apig.SecurityPolicy.TLS_1_2,
     })
@@ -115,18 +111,18 @@ export class ApiManager {
 
   /**
    * @summary Method to create an API gateway resource
-   * @param {string} id
-   * @param {CommonConstruct} scope
-   * @param {apig.IResource} parent
-   * @param {string} path
-   * @param {apig.Integration} integration
-   * @param {boolean} addProxy
-   * @param {apig.IAuthorizer} authorizer
-   * @param {string[]?} allowedOrigins
-   * @param {string[]?} allowedMethods
-   * @param {string[]?} allowedHeaders
-   * @param {{}?} methodRequestParameters
-   * @param {apig.Integration} proxyIntegration
+   * @param id
+   * @param scope
+   * @param parent
+   * @param path
+   * @param integration
+   * @param addProxy
+   * @param authorizer
+   * @param allowedOrigins
+   * @param allowedMethods
+   * @param allowedHeaders
+   * @param methodRequestParameters
+   * @param proxyIntegration
    */
   public createApiResource(
     id: string,
@@ -139,16 +135,16 @@ export class ApiManager {
     allowedOrigins?: string[],
     allowedMethods?: string[],
     allowedHeaders?: string[],
-    methodRequestParameters?: {},
+    methodRequestParameters?: any,
     proxyIntegration?: apig.Integration
   ) {
     const methods = allowedMethods ?? apig.Cors.ALL_METHODS
     const resource = parent.addResource(path, {
       defaultCorsPreflightOptions: {
-        allowOrigins: allowedOrigins ?? apig.Cors.ALL_ORIGINS,
-        allowMethods: [...methods, 'OPTIONS'],
-        allowHeaders: allowedHeaders ?? apig.Cors.DEFAULT_HEADERS,
         allowCredentials: true,
+        allowHeaders: allowedHeaders ?? apig.Cors.DEFAULT_HEADERS,
+        allowMethods: [...methods, 'OPTIONS'],
+        allowOrigins: allowedOrigins ?? apig.Cors.ALL_ORIGINS,
       },
     })
     methods.forEach(method =>
@@ -162,10 +158,10 @@ export class ApiManager {
     if (addProxy) {
       const resourceProxy = resource.addResource(`{${path}+}`, {
         defaultCorsPreflightOptions: {
-          allowOrigins: allowedOrigins ?? apig.Cors.ALL_ORIGINS,
-          allowMethods: [...methods, 'OPTIONS'],
-          allowHeaders: allowedHeaders ?? apig.Cors.DEFAULT_HEADERS,
           allowCredentials: true,
+          allowHeaders: allowedHeaders ?? apig.Cors.DEFAULT_HEADERS,
+          allowMethods: [...methods, 'OPTIONS'],
+          allowOrigins: allowedOrigins ?? apig.Cors.ALL_ORIGINS,
         },
       })
       methods.forEach(method =>
@@ -182,9 +178,9 @@ export class ApiManager {
 
   /**
    * @summary Method to create an api deployment
-   * @param {string} id
-   * @param {CommonConstruct} scope
-   * @param {apig.IRestApi} restApi
+   * @param id
+   * @param scope
+   * @param restApi
    */
   public createApiDeployment(id: string, scope: CommonConstruct, restApi: apig.IRestApi) {
     new apig.Deployment(scope, `${id}`, {

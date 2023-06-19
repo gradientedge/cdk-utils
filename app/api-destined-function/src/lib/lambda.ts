@@ -4,19 +4,19 @@ export const processEvent = (event: any) => {
   if (!event) throw new Error('Invalid Event')
 
   return {
-    statusCode: 200,
-    id: uuidv4(),
-    message: 'Webhook call successful',
     body: {
       event: event,
     },
-    origin: event.headers?.origin,
-    source: 'custom:api-destined-lambda',
-    sourceId: process.env.SOURCE_ID,
     httpMethod: event.httpMethod,
+    id: uuidv4(),
+    message: 'Webhook call successful',
+    origin: event.headers?.origin,
     path: event.path,
     referer: event.headers?.referer,
     resource: event.resource,
+    source: 'custom:api-destined-lambda',
+    sourceId: process.env.SOURCE_ID,
+    statusCode: 200,
     success: true,
   }
 }

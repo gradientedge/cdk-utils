@@ -6,9 +6,6 @@ import { AcmProps } from './types'
 import { CommonConstruct } from '../../../common'
 
 /**
- * @stability stable
- * @category cdk-utils.acm-manager
- * @subcategory Construct
  * @classdesc Provides operations on AWS Certificates.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
@@ -22,18 +19,16 @@ import { CommonConstruct } from '../../../common'
  *     this.acmManager.createCertificate('MyCertificate', this)
  *   }
  * }
- *
  * @see [CDK Certificate Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_certificatemanager-readme.html}
  */
 export class AcmManager {
   /**
    * @summary Method to create/import a certificate
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {AcmProps} props certificate props
-   * @param {route53.HostedZone?} hostedZone optional hosted zone to perform DNS validation
-   * @returns {acm.ICertificate}
-   *
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props certificate props
+   * @param hostedZone optional hosted zone to perform DNS validation
+   * @returns the resolved certificate
    * @mermaid
    *   graph LR;
    *     A((Start)) --> B{Valid Properties?};

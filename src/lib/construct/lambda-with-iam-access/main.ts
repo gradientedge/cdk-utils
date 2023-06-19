@@ -6,10 +6,7 @@ import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as secretsManager from 'aws-cdk-lib/aws-secretsmanager'
 
 /**
- * @category cdk-utils.lambda-with-iam-access
- * @subcategory construct
  * @classdesc Provides a construct to create a lambda function with IAM access
- *
  * @example
  * import { LambdaWithIamAccess, LambdaWithIamAccessProps } '@gradientedge/cdk-utils'
  * import { Construct } from 'constructs'
@@ -22,7 +19,6 @@ import * as secretsManager from 'aws-cdk-lib/aws-secretsmanager'
  *     this.initResources()
  *   }
  * }
- * @mixin
  */
 export class LambdaWithIamAccess extends CommonConstruct {
   /* LambdaWithIamAccess props */
@@ -48,7 +44,6 @@ export class LambdaWithIamAccess extends CommonConstruct {
 
   /**
    * @summary Initialise and provision resources
-   * @protected
    */
   public initResources() {
     this.createLambdaPolicy()
@@ -62,7 +57,6 @@ export class LambdaWithIamAccess extends CommonConstruct {
 
   /**
    * @summary Method to create iam policy for Lambda function
-   * @protected
    */
   protected createLambdaPolicy() {
     this.lambdaPolicy = new iam.PolicyDocument({
@@ -72,7 +66,6 @@ export class LambdaWithIamAccess extends CommonConstruct {
 
   /**
    * @summary Method to create iam role for Lambda function
-   * @protected
    */
   protected createLambdaRole() {
     this.lambdaRole = this.iamManager.createRoleForLambda(`${this.id}-lambda-role`, this, this.lambdaPolicy)
@@ -80,19 +73,17 @@ export class LambdaWithIamAccess extends CommonConstruct {
 
   /**
    * @summary Method to create environment variables for Lambda function
-   * @protected
    */
   protected createLambdaEnvironment() {
     this.lambdaEnvironment = {
-      NODE_ENV: this.props.nodeEnv,
       LOG_LEVEL: this.props.logLevel,
+      NODE_ENV: this.props.nodeEnv,
       TZ: this.props.timezone,
     }
   }
 
   /**
    * @summary Method to create layers for Lambda function
-   * @protected
    */
   protected createLambdaLayers() {
     const layers: lambda.LayerVersion[] = []
@@ -108,7 +99,6 @@ export class LambdaWithIamAccess extends CommonConstruct {
 
   /**
    * @summary Method to create lambda function
-   * @protected
    */
   protected createLambdaFunction() {
     this.lambdaFunction = this.lambdaManager.createLambdaFunction(
@@ -125,7 +115,6 @@ export class LambdaWithIamAccess extends CommonConstruct {
 
   /**
    * @summary Method to create iam user for the lambda function
-   * @protected
    */
   protected createIamUserForLambdaFunction() {
     this.lambdaIamUser = new iam.User(this, `${this.id}-lambda-user`, {
@@ -136,8 +125,8 @@ export class LambdaWithIamAccess extends CommonConstruct {
       policyName: `${this.id}-policy-${this.props.stage}`,
       statements: [
         new iam.PolicyStatement({
-          resources: [this.lambdaFunction.functionArn],
           actions: ['lambda:InvokeFunction'],
+          resources: [this.lambdaFunction.functionArn],
         }),
       ],
       users: [this.lambdaIamUser],
@@ -150,7 +139,6 @@ export class LambdaWithIamAccess extends CommonConstruct {
 
   /**
    * @summary Method to create iam secret for the lambda function
-   * @protected
    */
   protected createIamSecretForLambdaFunction() {
     this.lambdaUserAccessSecret = new secretsManager.Secret(

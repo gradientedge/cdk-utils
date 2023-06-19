@@ -5,11 +5,7 @@ import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment'
 import { StaticAssetDeploymentProps } from './types'
 
 /**
- * @stability stable
- * @category cdk-utils.static-asset-deployment
- * @subcategory construct
  * @classdesc Provides a construct to create and deploy static assets into S3 bucket
- *
  * @example
  * import { StaticAssetDeployment, StaticAssetDeploymentProps } '@gradientedge/cdk-utils'
  * import { Construct } from 'constructs'
@@ -22,7 +18,6 @@ import { StaticAssetDeploymentProps } from './types'
  *     this.initResources()
  *   }
  * }
- * @mixin
  */
 export class StaticAssetDeployment extends CommonConstruct {
   /* construct properties */
@@ -40,7 +35,6 @@ export class StaticAssetDeployment extends CommonConstruct {
 
   /**
    * @summary Initialise and provision resources
-   * @protected
    */
   public initResources() {
     this.createAssetBucket()
@@ -49,7 +43,6 @@ export class StaticAssetDeployment extends CommonConstruct {
 
   /**
    * @summary Create the static asset bucket
-   * @protected
    */
   protected createAssetBucket() {
     this.staticAssetBucket = this.s3Manager.createS3Bucket(`${this.id}-sa-bucket`, this, this.props.staticAssetBucket)
@@ -57,7 +50,6 @@ export class StaticAssetDeployment extends CommonConstruct {
 
   /**
    * @summary Deploy the static assests into the static asset bucket
-   * @protected
    */
   protected deployStaticAssets() {
     new s3deploy.BucketDeployment(this, `${this.id}-static-deployment`, {

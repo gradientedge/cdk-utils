@@ -11,20 +11,20 @@ interface TestStackProps extends CommonStackProps {
 }
 
 const testStackProps = {
+  domainName: 'gradientedge.io',
   env: {
     account: '123456789',
     region: 'eu-west-1',
   },
-  name: 'test-common-stack',
-  domainName: 'gradientedge.io',
-  region: 'eu-west-1',
-  stackName: 'test',
-  stage: 'test',
   extraContexts: [
     'src/test/common/cdkConfig/buckets.json',
     'src/test/common/cdkConfig/logs.json',
     'src/test/common/cdkConfig/trails.json',
   ],
+  name: 'test-common-stack',
+  region: 'eu-west-1',
+  stackName: 'test',
+  stage: 'test',
   stageContextPath: 'src/test/common/cdkEnv',
 }
 
@@ -133,9 +133,9 @@ describe('TestCloudTrailConstruct', () => {
 describe('TestCloudTrailConstruct', () => {
   test('provisions new trail as expected', () => {
     template.hasResourceProperties('AWS::CloudTrail::Trail', {
-      IsLogging: true,
       EnableLogFileValidation: false,
       IncludeGlobalServiceEvents: false,
+      IsLogging: true,
       IsMultiRegionTrail: false,
       S3KeyPrefix: 'logs-test-trail',
       TrailName: 'test-trail-test',

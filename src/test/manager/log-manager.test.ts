@@ -4,22 +4,22 @@ import { Construct } from 'constructs'
 import { CommonConstruct, CommonStack, CommonStackProps } from '../../lib'
 
 interface TestStackProps extends CommonStackProps {
-  testLogGroup: any
   testAnotherLogGroup: any
+  testLogGroup: any
   testMetricFilter: any
 }
 
 const testStackProps = {
+  domainName: 'gradientedge.io',
   env: {
     account: '123456789',
     region: 'eu-west-1',
   },
+  extraContexts: ['src/test/common/cdkConfig/logs.json'],
   name: 'test-common-stack',
-  domainName: 'gradientedge.io',
   region: 'eu-west-1',
   stackName: 'test',
   stage: 'test',
-  extraContexts: ['src/test/common/cdkConfig/logs.json'],
   stageContextPath: 'src/test/common/cdkEnv',
 }
 
@@ -36,8 +36,8 @@ class TestCommonStack extends CommonStack {
     return {
       ...super.determineConstructProps(props),
       ...{
-        testLogGroup: this.node.tryGetContext('testLogGroup'),
         testAnotherLogGroup: this.node.tryGetContext('testAnotherLogGroup'),
+        testLogGroup: this.node.tryGetContext('testLogGroup'),
         testMetricFilter: this.node.tryGetContext('testMetricFilter'),
       },
     }
@@ -57,8 +57,8 @@ class TestInvalidCommonStack extends CommonStack {
     return {
       ...super.determineConstructProps(props),
       ...{
-        testLogGroup: this.node.tryGetContext('testLogGroup'),
         testAnotherLogGroup: this.node.tryGetContext('testAnotherLogGroup'),
+        testLogGroup: this.node.tryGetContext('testLogGroup'),
       },
     }
   }

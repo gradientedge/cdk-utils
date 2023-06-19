@@ -7,9 +7,6 @@ import * as sns from 'aws-cdk-lib/aws-sns'
 import { ApiToEventBridgeTargetRestApiType } from './types'
 
 /**
- * @stability stable
- * @category cdk-utils.api-to-eventbridge-target
- * @subcategory member
  * @classdesc Provides a construct to contain api resources for ApiToEventBridgeTargetWithSns
  */
 export class ApiToEventbridgeTargetRestApi implements ApiToEventBridgeTargetRestApiType {

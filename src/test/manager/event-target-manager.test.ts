@@ -8,16 +8,16 @@ interface TestStackProps extends CommonStackProps {
 }
 
 const testStackProps = {
+  domainName: 'gradientedge.io',
   env: {
     account: '123456789',
     region: 'eu-west-1',
   },
+  extraContexts: ['src/test/common/cdkConfig/logs.json'],
   name: 'test-common-stack',
-  domainName: 'gradientedge.io',
   region: 'eu-west-1',
   stackName: 'test',
   stage: 'test',
-  extraContexts: ['src/test/common/cdkConfig/logs.json'],
   stageContextPath: 'src/test/common/cdkEnv',
 }
 

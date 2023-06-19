@@ -8,11 +8,7 @@ const appRoot = require('app-root-path')
 const fs = require('fs')
 
 /**
- * @stability stable
- * @category cdk-utils.common-stack
- * @subcategory Construct
  * @classdesc Common stack to use as a base for all higher level constructs.
- *
  * @example
  * import { CommonStack } from '@gradientedge/cdk-utils'
  *
@@ -46,22 +42,22 @@ export class CommonStack extends cdk.Stack {
 
   /**
    * @summary Method to determine the core CDK construct properties injected via context cdk.json
-   * @param {cdk.StackProps} props The stack properties
-   * @return The stack properties
+   * @param props The stack properties
+   * @returns The stack properties
    */
   protected determineConstructProps(props: cdk.StackProps) {
     return {
-      stackName: props.stackName,
-      name: props.stackName || 'cdk-utils',
-      region: this.node.tryGetContext('region'),
-      stage: this.node.tryGetContext('stage'),
       domainName: this.node.tryGetContext('domainName'),
-      subDomain: this.node.tryGetContext('subDomain'),
-      extraContexts: this.node.tryGetContext('extraContexts'),
-      skipStageForARecords: this.node.tryGetContext('skipStageForARecords'),
-      logRetention: this.node.tryGetContext('logRetention'),
       excludeDomainNameForBuckets: this.node.tryGetContext('excludeDomainNameForBuckets'),
+      extraContexts: this.node.tryGetContext('extraContexts'),
+      logRetention: this.node.tryGetContext('logRetention'),
+      name: props.stackName || 'cdk-utils',
       nodejsRuntime: this.node.tryGetContext('nodejsRuntime') ?? CommonStack.NODEJS_RUNTIME,
+      region: this.node.tryGetContext('region'),
+      skipStageForARecords: this.node.tryGetContext('skipStageForARecords'),
+      stackName: props.stackName,
+      stage: this.node.tryGetContext('stage'),
+      subDomain: this.node.tryGetContext('subDomain'),
     }
   }
 

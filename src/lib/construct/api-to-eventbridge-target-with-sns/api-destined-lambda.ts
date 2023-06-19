@@ -4,9 +4,6 @@ import * as destinations from 'aws-cdk-lib/aws-lambda-destinations'
 import { ApiDestinedLambdaEnvironment, ApiDestinedLambdaType } from './types'
 
 /**
- * @stability stable
- * @category cdk-utils.api-to-eventbridge-target
- * @subcategory member
  * @classdesc Provides a construct to contain lambda resources for ApiToEventBridgeTargetWithSns
  */
 export class ApiDestinedLambda implements ApiDestinedLambdaType {

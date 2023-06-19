@@ -9,38 +9,34 @@ import { Construct } from 'constructs'
 import { CommonConstruct, CommonStack, CommonStackProps, TableProps } from '../../lib'
 
 interface TestStackProps extends CommonStackProps {
+  testAnotherLogGroup: any
   testLambda: any
-  testSubmitStepSuccess: any
-  testSubmitStepFailure: any
-  testSubmitStepValidateSomething: any
+  testSecondSubmitWorkflow: any
+  testSfnExecution: any
+  testSqs: any
+  testSubmitStepApi: any
   testSubmitStepCreateSomething: any
   testSubmitStepCreateSomethingElse: any
-  testSubmitStepCreateSomethingParallel: any
   testSubmitStepCreateSomethingNew: any
+  testSubmitStepCreateSomethingParallel: any
+  testSubmitStepDeleteItem: any
+  testSubmitStepFailure: any
   testSubmitStepGetItem: any
   testSubmitStepPutItem: any
-  testSubmitStepDeleteItem: any
   testSubmitStepSendMessage: any
-  testSubmitStepApi: any
+  testSubmitStepSuccess: any
+  testSubmitStepValidateSomething: any
   testSubmitStepWait: any
   testSubmitWorkflow: any
-  testAnotherLogGroup: any
   testTable: TableProps
-  testSqs: any
-  testSfnExecution: any
-  testSecondSubmitWorkflow: any
 }
 
 const testStackProps = {
+  domainName: 'gradientedge.io',
   env: {
     account: '123456789',
     region: 'eu-west-1',
   },
-  name: 'test-common-stack',
-  domainName: 'gradientedge.io',
-  region: 'eu-west-1',
-  stackName: 'test',
-  stage: 'test',
   extraContexts: [
     'src/test/common/cdkConfig/dynamodb.json',
     'src/test/common/cdkConfig/lambdas.json',
@@ -48,6 +44,10 @@ const testStackProps = {
     'src/test/common/cdkConfig/sqs.json',
     'src/test/common/cdkConfig/stepFunctions.json',
   ],
+  name: 'test-common-stack',
+  region: 'eu-west-1',
+  stackName: 'test',
+  stage: 'test',
   stageContextPath: 'src/test/common/cdkEnv',
 }
 
@@ -64,26 +64,26 @@ class TestCommonStack extends CommonStack {
     return {
       ...super.determineConstructProps(props),
       ...{
+        testAnotherLogGroup: this.node.tryGetContext('testAnotherLogGroup'),
         testLambda: this.node.tryGetContext('testLambda'),
-        testSubmitStepSuccess: this.node.tryGetContext('testSubmitStepSuccess'),
-        testSubmitStepFailure: this.node.tryGetContext('testSubmitStepFailure'),
-        testSubmitStepValidateSomething: this.node.tryGetContext('testSubmitStepValidateSomething'),
+        testSecondSubmitWorkflow: this.node.tryGetContext('testSecondSubmitWorkflow'),
+        testSfnExecution: this.node.tryGetContext('testSfnExecution'),
+        testSqs: this.node.tryGetContext('testSqs'),
+        testSubmitStepApi: this.node.tryGetContext('testSubmitStepApi'),
         testSubmitStepCreateSomething: this.node.tryGetContext('testSubmitStepCreateSomething'),
         testSubmitStepCreateSomethingElse: this.node.tryGetContext('testSubmitStepCreateSomethingElse'),
-        testSubmitStepCreateSomethingParallel: this.node.tryGetContext('testSubmitStepCreateSomethingParallel'),
         testSubmitStepCreateSomethingNew: this.node.tryGetContext('testSubmitStepCreateSomethingNew'),
+        testSubmitStepCreateSomethingParallel: this.node.tryGetContext('testSubmitStepCreateSomethingParallel'),
+        testSubmitStepDeleteItem: this.node.tryGetContext('testSubmitStepDeleteItem'),
+        testSubmitStepFailure: this.node.tryGetContext('testSubmitStepFailure'),
         testSubmitStepGetItem: this.node.tryGetContext('testSubmitStepGetItem'),
         testSubmitStepPutItem: this.node.tryGetContext('testSubmitStepPutItem'),
-        testSubmitStepDeleteItem: this.node.tryGetContext('testSubmitStepDeleteItem'),
         testSubmitStepSendMessage: this.node.tryGetContext('testSubmitStepSendMessage'),
-        testSubmitStepApi: this.node.tryGetContext('testSubmitStepApi'),
+        testSubmitStepSuccess: this.node.tryGetContext('testSubmitStepSuccess'),
+        testSubmitStepValidateSomething: this.node.tryGetContext('testSubmitStepValidateSomething'),
         testSubmitStepWait: this.node.tryGetContext('testSubmitStepWait'),
-        testAnotherLogGroup: this.node.tryGetContext('testAnotherLogGroup'),
         testSubmitWorkflow: this.node.tryGetContext('testSubmitWorkflow'),
         testTable: this.node.tryGetContext('testTable'),
-        testSqs: this.node.tryGetContext('testSqs'),
-        testSfnExecution: this.node.tryGetContext('testSfnExecution'),
-        testSecondSubmitWorkflow: this.node.tryGetContext('testSecondSubmitWorkflow'),
       },
     }
   }
@@ -102,8 +102,8 @@ class TestInvalidCommonStack extends CommonStack {
     return {
       ...super.determineConstructProps(props),
       ...{
-        testLambda: this.node.tryGetContext('testLambda'),
         testAnotherLogGroup: this.node.tryGetContext('testAnotherLogGroup'),
+        testLambda: this.node.tryGetContext('testLambda'),
         testSqs: this.node.tryGetContext('testSqs'),
         testSubmitStepSendMessage: this.node.tryGetContext('testSubmitStepSendMessage'),
       },
@@ -139,8 +139,10 @@ class TestCommonConstruct extends CommonConstruct {
       'test-api',
       this,
       {
+        defaultCorsPreflightOptions: {
+          allowOrigins: apig.Cors.ALL_ORIGINS,
+        },
         deploy: true,
-        restApiName: 'test-lambda-rest-api',
         deployOptions: {
           description: `test - ${this.props.stage} stage`,
           stageName: this.props.stage,
@@ -149,10 +151,8 @@ class TestCommonConstruct extends CommonConstruct {
           types: [apig.EndpointType.REGIONAL],
         },
         handler: testLambda,
-        defaultCorsPreflightOptions: {
-          allowOrigins: apig.Cors.ALL_ORIGINS,
-        },
         proxy: false,
+        restApiName: 'test-lambda-rest-api',
       },
       testLambda
     )
@@ -317,9 +317,6 @@ describe('TestSfnConstruct', () => {
 describe('TestSfnConstruct', () => {
   test('provisions new state machine as expected', () => {
     template.hasResourceProperties('AWS::StepFunctions::StateMachine', {
-      RoleArn: {
-        'Fn::GetAtt': ['testcommonstacktestparallelstepRole68F267C5', 'Arn'],
-      },
       DefinitionString: {
         'Fn::Join': [
           '',
@@ -401,6 +398,9 @@ describe('TestSfnConstruct', () => {
         IncludeExecutionData: true,
         Level: 'ALL',
       },
+      RoleArn: {
+        'Fn::GetAtt': ['testcommonstacktestparallelstepRole68F267C5', 'Arn'],
+      },
       StateMachineName: 'test-workflow-test',
       StateMachineType: 'STANDARD',
     })
@@ -410,9 +410,6 @@ describe('TestSfnConstruct', () => {
 describe('TestSfnConstruct', () => {
   test('provisions new state machine with sfn execution as expected', () => {
     template.hasResourceProperties('AWS::StepFunctions::StateMachine', {
-      RoleArn: {
-        'Fn::GetAtt': ['testcommonstacktestsecondsfnRole66E6DE7B', 'Arn'],
-      },
       DefinitionString: {
         'Fn::Join': [
           '',
@@ -441,6 +438,9 @@ describe('TestSfnConstruct', () => {
         ],
         IncludeExecutionData: true,
         Level: 'ALL',
+      },
+      RoleArn: {
+        'Fn::GetAtt': ['testcommonstacktestsecondsfnRole66E6DE7B', 'Arn'],
       },
       StateMachineName: 'test-second-workflow-test',
       StateMachineType: 'STANDARD',

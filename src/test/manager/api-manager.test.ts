@@ -11,16 +11,16 @@ interface TestStackProps extends CommonStackProps {
 }
 
 const testStackProps = {
+  domainName: 'gradientedge.io',
   env: {
     account: '123456789',
     region: 'eu-west-1',
   },
+  extraContexts: ['src/test/common/cdkConfig/lambdas.json'],
   name: 'test-common-stack',
-  domainName: 'gradientedge.io',
   region: 'eu-west-1',
   stackName: 'test',
   stage: 'test',
-  extraContexts: ['src/test/common/cdkConfig/lambdas.json'],
   stageContextPath: 'src/test/common/cdkEnv',
 }
 
@@ -70,8 +70,10 @@ class TestCommonConstruct extends CommonConstruct {
       'test-api',
       this,
       {
+        defaultCorsPreflightOptions: {
+          allowOrigins: apig.Cors.ALL_ORIGINS,
+        },
         deploy: true,
-        restApiName: 'test-lambda-rest-api',
         deployOptions: {
           description: `test - ${this.props.stage} stage`,
           stageName: this.props.stage,
@@ -80,10 +82,8 @@ class TestCommonConstruct extends CommonConstruct {
           types: [apig.EndpointType.REGIONAL],
         },
         handler: testLambdaFunction,
-        defaultCorsPreflightOptions: {
-          allowOrigins: apig.Cors.ALL_ORIGINS,
-        },
         proxy: false,
+        restApiName: 'test-lambda-rest-api',
       },
       testLambdaFunction
     )

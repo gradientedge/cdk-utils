@@ -7,24 +7,24 @@ import { CommonConstruct, CommonStack, CommonStackProps } from '../../lib'
 
 interface TestStackProps extends CommonStackProps {
   testLambda: any
-  testLambdaWithDlq: any
+  testLambdaAlias: any
   testLambdaEdge: any
   testLambdaPython: any
-  testLambdaAlias: any
   testLambdaWithConcurrency: any
+  testLambdaWithDlq: any
 }
 
 const testStackProps = {
+  domainName: 'gradientedge.io',
   env: {
     account: '123456789',
     region: 'us-east-1',
   },
+  extraContexts: ['src/test/common/cdkConfig/lambdas.json'],
   name: 'test-common-stack',
-  domainName: 'gradientedge.io',
   region: 'us-east-1',
   stackName: 'test',
   stage: 'test',
-  extraContexts: ['src/test/common/cdkConfig/lambdas.json'],
   stageContextPath: 'src/test/common/cdkEnv',
 }
 
@@ -42,11 +42,11 @@ class TestCommonStack extends CommonStack {
       ...super.determineConstructProps(props),
       ...{
         testLambda: this.node.tryGetContext('testLambda'),
-        testLambdaWithDlq: this.node.tryGetContext('testLambdaWithDlq'),
+        testLambdaAlias: this.node.tryGetContext('testLambdaAlias'),
         testLambdaEdge: this.node.tryGetContext('testLambdaEdge'),
         testLambdaPython: this.node.tryGetContext('testLambdaPython'),
-        testLambdaAlias: this.node.tryGetContext('testLambdaAlias'),
         testLambdaWithConcurrency: this.node.tryGetContext('testLambdaWithConcurrency'),
+        testLambdaWithDlq: this.node.tryGetContext('testLambdaWithDlq'),
       },
     }
   }
@@ -192,7 +192,6 @@ describe('TestLambdaConstruct', () => {
       Handler: 'index.lambda_handler',
       MemorySize: 1024,
       Runtime: 'nodejs18.x',
-      Timeout: 60,
       Tags: [
         {
           Key: 'testTagName1',
@@ -203,6 +202,7 @@ describe('TestLambdaConstruct', () => {
           Value: 'testTagValue2',
         },
       ],
+      Timeout: 60,
     })
   })
 
@@ -218,8 +218,8 @@ describe('TestLambdaConstruct', () => {
 
   test('provisions new lambda alias as expected', () => {
     template.hasResourceProperties('AWS::Lambda::Alias', {
-      ProvisionedConcurrencyConfig: { ProvisionedConcurrentExecutions: 1 },
       Name: 'test-alias',
+      ProvisionedConcurrencyConfig: { ProvisionedConcurrentExecutions: 1 },
     })
   })
 })
@@ -242,8 +242,8 @@ describe('TestLambdaConstruct', () => {
 
   test('provisions new lambda alias as expected', () => {
     template.hasResourceProperties('AWS::Lambda::Alias', {
-      ProvisionedConcurrencyConfig: { ProvisionedConcurrentExecutions: 2 },
       Name: 'test-concurrent-alias',
+      ProvisionedConcurrencyConfig: { ProvisionedConcurrentExecutions: 2 },
     })
   })
 })
@@ -251,19 +251,19 @@ describe('TestLambdaConstruct', () => {
 describe('TestLambdaConstruct', () => {
   test('provisions new redrive queue as expected', () => {
     template.hasResourceProperties('AWS::SQS::Queue', {
+      MessageRetentionPeriod: 604800,
       QueueName: 'test-lambda-with-error-handling-redriveq-test',
       ReceiveMessageWaitTimeSeconds: 20,
       VisibilityTimeout: 300,
-      MessageRetentionPeriod: 604800,
     })
   })
 
   test('provisions new dead letter queue as expected', () => {
     template.hasResourceProperties('AWS::SQS::Queue', {
+      MessageRetentionPeriod: 604800,
       QueueName: 'test-lambda-with-error-handling-dlq-test',
       ReceiveMessageWaitTimeSeconds: 20,
       VisibilityTimeout: 300,
-      MessageRetentionPeriod: 604800,
     })
   })
 })

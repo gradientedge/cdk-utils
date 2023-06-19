@@ -11,9 +11,6 @@ import { CommonConstruct } from '../../../common'
 import { EventBusProps, EventRuleProps, RuleProps, SqsToSfnPipeProps } from './types'
 
 /**
- * @stability stable
- * @category cdk-utils.event-manager
- * @subcategory Construct
  * @classdesc Provides operations on AWS EventBridge.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
@@ -27,15 +24,14 @@ import { EventBusProps, EventRuleProps, RuleProps, SqsToSfnPipeProps } from './t
  *     this.eventManager.createLambdaRule('MyLambdaRule', this, lambdaFunction)
  *   }
  * }
- *
  * @see [CDK EventBridge Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_events-readme.html}
  */
 export class EventManager {
   /**
    * Method to create an event bus
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {EventBusProps} props event bus properties
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props event bus properties
    */
   public createEventBus(id: string, scope: CommonConstruct, props: EventBusProps) {
     if (!props) throw `EventBus props undefined for ${id}`
@@ -52,11 +48,11 @@ export class EventManager {
 
   /**
    * Method to create an event rule
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {EventRuleProps} props event rule properties
-   * @param {events.IEventBus?} eventBus optional custom event bus
-   * @param {events.IRuleTarget[]?} targets optional event targets
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props event rule properties
+   * @param eventBus optional custom event bus
+   * @param targets optional event targets
    */
   public createRule(
     id: string,
@@ -68,11 +64,11 @@ export class EventManager {
     if (!props) throw `EventRule props undefined for ${id}`
 
     const rule = new events.Rule(scope, `${id}`, {
-      eventBus: eventBus,
       description: props.description,
-      ruleName: `${props.ruleName}-${scope.props.stage}`,
-      eventPattern: props.eventPattern,
       enabled: props.enabled,
+      eventBus: eventBus,
+      eventPattern: props.eventPattern,
+      ruleName: `${props.ruleName}-${scope.props.stage}`,
       schedule: props.schedule,
     })
 
@@ -96,13 +92,13 @@ export class EventManager {
 
   /**
    * @summary Method to create an eventbridge rule with lambda target
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {RuleProps} props
-   * @param {lambda.Function} lambdaFunction
-   * @param {string} eventBusName
-   * @param {any} eventPattern
-   * @param {string} scheduleExpression
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props
+   * @param lambdaFunction
+   * @param eventBusName
+   * @param eventPattern
+   * @param scheduleExpression
    */
   public createLambdaRule(
     id: string,
@@ -119,8 +115,8 @@ export class EventManager {
       description: 'Rule to send notification to lambda function target',
       eventBusName: eventBusName,
       eventPattern: eventPattern,
-      scheduleExpression: scheduleExpression,
       name: `${props.name}-${scope.props.stage}`,
+      scheduleExpression: scheduleExpression,
       state: props.state,
       targets: [
         {
@@ -146,14 +142,14 @@ export class EventManager {
 
   /**
    * @summary Method to create an eventbridge rule with fargate task target
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {EventRuleProps} props
-   * @param {ecs.ICluster} cluster
-   * @param {ecs.ITaskDefinition} task
-   * @param {string[]} subnetIds
-   * @param {iam.Role | iam.CfnRole} role
-   * @param {any} eventPattern
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props
+   * @param cluster
+   * @param task
+   * @param subnetIds
+   * @param role
+   * @param eventPattern
    */
   public createFargateTaskRule(
     id: string,
@@ -175,7 +171,6 @@ export class EventManager {
       targets: [
         {
           arn: cluster.clusterArn,
-          id: `${id}-${scope.props.stage}`,
           ecsParameters: {
             launchType: 'FARGATE',
             networkConfiguration: {
@@ -184,6 +179,7 @@ export class EventManager {
             taskCount: 1,
             taskDefinitionArn: task.taskDefinitionArn,
           },
+          id: `${id}-${scope.props.stage}`,
           roleArn: role instanceof iam.Role ? role.roleArn : role.attrArn,
         },
       ],
@@ -197,8 +193,8 @@ export class EventManager {
 
   /**
    * @summary Method to create an eventbridge pipe with sqs queue as source and step function as target
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
    * @param props the props for the pipe
    * @param sourceQueue the source sqs queue
    * @param targetStepFunction the target step function
@@ -219,8 +215,11 @@ export class EventManager {
 
     const pipe = new pipes.CfnPipe(scope, `${id}`, {
       ...props,
-      name: `${props.name}-${scope.props.stage}`,
       description: props.description,
+      enrichment: props.enrichment,
+      enrichmentParameters: props.enrichmentParameters,
+      name: `${props.name}-${scope.props.stage}`,
+      roleArn: pipeRole.roleArn,
       source: sourceQueue.queueArn,
       sourceParameters: {
         filterCriteria: props.pipeFilterPattern
@@ -244,9 +243,6 @@ export class EventManager {
           invocationType: props.sfnInvocationType ?? 'FIRE_AND_FORGET',
         },
       },
-      enrichment: props.enrichment,
-      enrichmentParameters: props.enrichmentParameters,
-      roleArn: pipeRole.roleArn,
     })
 
     utils.createCfnOutput(`${id}-pipeArn`, scope, pipe.attrArn)

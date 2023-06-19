@@ -10,13 +10,9 @@ import { GraphQlApiLambdaEnvironment, GraphQlApiLambdaProps } from './types'
 
 /**
  * @deprecated Use RestApiLambda instead. This will be removed in a future release.
- *
- * @category cdk-utils.graphql-api-lambda
- * @subcategory construct
  * @classdesc Provides a construct to create and deploy a Graphql API as Lambda
  *
  * <b>Architecture</b><br/> ![Architecture](./GraphQLApiLambda.jpg)
- *
  * @example
  * import { GraphQLApiLambda, GraphQlApiLambdaProps } '@gradientedge/cdk-utils'
  * import { Construct } from 'constructs'
@@ -29,7 +25,6 @@ import { GraphQlApiLambdaEnvironment, GraphQlApiLambdaProps } from './types'
  *     this.initResources()
  *   }
  * }
- * @mixin
  */
 export class GraphQLApiLambda extends CommonConstruct {
   /* graphql restApi props */
@@ -58,7 +53,6 @@ export class GraphQLApiLambda extends CommonConstruct {
 
   /**
    * @summary Initialise and provision resources
-   * @protected
    */
   protected initResources() {
     this.resolveSecrets()
@@ -78,7 +72,6 @@ export class GraphQLApiLambda extends CommonConstruct {
   /**
    * @summary Method to resolve secrets from SecretsManager
    * - To be implemented in the overriding method in the implementation class
-   * @protected
    */
   protected resolveSecrets() {
     this.applicationSecrets = []
@@ -86,7 +79,6 @@ export class GraphQLApiLambda extends CommonConstruct {
 
   /**
    * @summary Method to resolve a hosted zone based on domain attributes
-   * @protected
    */
   protected resolveHostedZone() {
     this.graphQLApiHostedZone = this.route53Manager.withHostedZoneFromFullyQualifiedDomainName(
@@ -98,7 +90,6 @@ export class GraphQLApiLambda extends CommonConstruct {
 
   /**
    * @summary Method to resolve a certificate based on attributes
-   * @protected
    */
   protected resolveCertificate() {
     if (
@@ -123,7 +114,6 @@ export class GraphQLApiLambda extends CommonConstruct {
 
   /**
    * @summary Method to create iam policy for GraphQL Lambda function
-   * @protected
    */
   protected createLambdaPolicy() {
     this.graphQLApiLambdaPolicy = new iam.PolicyDocument({
@@ -133,7 +123,6 @@ export class GraphQLApiLambda extends CommonConstruct {
 
   /**
    * @summary Method to create iam role for GraphQL Lambda function
-   * @protected
    */
   protected createLambdaRole() {
     this.graphQLApiLambdaRole = this.iamManager.createRoleForLambda(
@@ -145,19 +134,17 @@ export class GraphQLApiLambda extends CommonConstruct {
 
   /**
    * @summary Method to create environment variables for GraphQL Lambda function
-   * @protected
    */
   protected createLambdaEnvironment() {
     this.graphQLApiLambdaEnvironment = {
-      NODE_ENV: this.props.nodeEnv,
       LOG_LEVEL: this.props.logLevel,
+      NODE_ENV: this.props.nodeEnv,
       TZ: this.props.timezone,
     }
   }
 
   /**
    * @summary Method to create layers for GraphQL Lambda function
-   * @protected
    */
   protected createLambdaLayers() {
     const layers: lambda.LayerVersion[] = []
@@ -173,7 +160,6 @@ export class GraphQLApiLambda extends CommonConstruct {
 
   /**
    * @summary Method to create lambda function for GraphQL
-   * @protected
    */
   protected createLambdaFunction() {
     this.graphQLApiLambdaFunction = this.lambdaManager.createLambdaFunction(
@@ -190,7 +176,6 @@ export class GraphQLApiLambda extends CommonConstruct {
 
   /**
    * @summary Method to create rest restApi for GraphQL
-   * @protected
    */
   protected createRestApi() {
     this.graphQLApi = this.apiManager.createLambdaRestApi(
@@ -203,7 +188,6 @@ export class GraphQLApiLambda extends CommonConstruct {
 
   /**
    * @summary Method to create custom restApi domain for GraphQL API
-   * @protected
    */
   protected createApiDomain() {
     this.graphQLApiDomain = this.apiManager.createApiDomain(
@@ -218,7 +202,6 @@ export class GraphQLApiLambda extends CommonConstruct {
 
   /**
    * @summary Method to create base path mappings for GraphQL API
-   * @protected
    */
   protected createApiBasePathMapping() {
     const apiRootPaths = this.props.apiRootPaths
@@ -246,7 +229,6 @@ export class GraphQLApiLambda extends CommonConstruct {
 
   /**
    * @summary Method to create route53 records for GraphQL API
-   * @protected
    */
   protected createApiRouteAssets() {
     this.route53Manager.createApiGatewayARecord(

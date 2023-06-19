@@ -10,13 +10,9 @@ interface RestRestApiLambdaWithCacheProps extends RestApiLambdaWithCacheProps {
 }
 
 const testRestApiLambdaWithCacheProps = {
-  name: 'test-restapi-stack',
-  domainName: 'gradientedge.io',
-  region: 'eu-west-1',
-  stage: 'test',
-  stackName: 'test',
-  apiSubDomain: 'api',
   apiRootPaths: ['restapi'],
+  apiSubDomain: 'api',
+  domainName: 'gradientedge.io',
   extraContexts: [
     'src/test/common/cdkConfig/dummy.json',
     'src/test/common/cdkConfig/certificates.json',
@@ -24,6 +20,10 @@ const testRestApiLambdaWithCacheProps = {
     'src/test/common/cdkConfig/vpc.json',
     'src/test/common/cdkConfig/elasticache.json',
   ],
+  name: 'test-restapi-stack',
+  region: 'eu-west-1',
+  stackName: 'test',
+  stage: 'test',
   stageContextPath: 'src/test/common/cdkEnv',
 }
 
@@ -42,14 +42,14 @@ class TestCommonStack extends CommonStack {
       ...{
         apiRootPaths: this.node.tryGetContext('apiRootPaths'),
         apiSubDomain: this.node.tryGetContext('apiSubDomain'),
-        restApiCertificate: this.node.tryGetContext('restApiCertificate'),
-        restApiLambda: this.node.tryGetContext('restApiLambda'),
         logLevel: this.node.tryGetContext('logLevel'),
         nodeEnv: this.node.tryGetContext('nodeEnv'),
+        restApiCache: this.node.tryGetContext('testReplicatedElastiCache'),
+        restApiCertificate: this.node.tryGetContext('restApiCertificate'),
+        restApiLambda: this.node.tryGetContext('restApiLambda'),
+        restApiVpc: this.node.tryGetContext('testVpc'),
         testAttribute: this.node.tryGetContext('testAttribute'),
         timezone: this.node.tryGetContext('timezone'),
-        restApiVpc: this.node.tryGetContext('testVpc'),
-        restApiCache: this.node.tryGetContext('testReplicatedElastiCache'),
       },
     }
   }
@@ -65,8 +65,10 @@ class TestRestApiWithCacheApiConstruct extends RestApiLambdaWithCache {
     this.id = 'test-restapi'
     this.props.restApiSource = new lambda.AssetCode('src/test/common/nodejs/lib')
     this.props.restApi = {
+      defaultCorsPreflightOptions: {
+        allowOrigins: apig.Cors.ALL_ORIGINS,
+      },
       deploy: true,
-      restApiName: 'test-lambda-rest-api',
       deployOptions: {
         description: `${this.id} - ${this.props.stage} stage`,
         stageName: this.props.stage,
@@ -75,10 +77,8 @@ class TestRestApiWithCacheApiConstruct extends RestApiLambdaWithCache {
         types: [apig.EndpointType.REGIONAL],
       },
       handler: this.restApiLambdaFunction,
-      defaultCorsPreflightOptions: {
-        allowOrigins: apig.Cors.ALL_ORIGINS,
-      },
       proxy: true,
+      restApiName: 'test-lambda-rest-api',
     }
     this.props.securityGroupExportName = `${this.id}-${this.props.stage}-VpcDefaultSecurityGroup`
 
@@ -191,8 +191,8 @@ describe('TestRestApiWithCacheLambdaConstruct', () => {
             ResponseParameters: {
               'method.response.header.Access-Control-Allow-Headers':
                 "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
-              'method.response.header.Access-Control-Allow-Origin': "'*'",
               'method.response.header.Access-Control-Allow-Methods': "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'",
+              'method.response.header.Access-Control-Allow-Origin': "'*'",
             },
             StatusCode: '204',
           },
@@ -206,8 +206,8 @@ describe('TestRestApiWithCacheLambdaConstruct', () => {
         {
           ResponseParameters: {
             'method.response.header.Access-Control-Allow-Headers': true,
-            'method.response.header.Access-Control-Allow-Origin': true,
             'method.response.header.Access-Control-Allow-Methods': true,
+            'method.response.header.Access-Control-Allow-Origin': true,
           },
           StatusCode: '204',
         },
@@ -221,9 +221,9 @@ describe('TestRestApiWithCacheLambdaConstruct', () => {
     template.hasResourceProperties('AWS::Lambda::Function', {
       Environment: {
         Variables: {
-          REGION: 'eu-west-1',
-          NODE_ENV: 'development',
           LOG_LEVEL: 'debug',
+          NODE_ENV: 'development',
+          REGION: 'eu-west-1',
           TZ: 'UTC',
         },
       },

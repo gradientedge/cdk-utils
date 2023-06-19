@@ -16,11 +16,7 @@ import { CommonConstruct } from '../../common'
 import { SiteWithEcsBackendProps } from './types'
 
 /**
- * @stability stable
- * @category cdk-utils.site-with-ecs-backend
- * @subcategory construct
  * @classdesc Provides a construct to create and deploy a site hosted with an clustered ECS/ELB backend
- *
  * @example
  * import { SiteWithEcsBackend, SiteWithEcsBackendProps } '@gradientedge/cdk-utils'
  * import { Construct } from 'constructs'
@@ -33,7 +29,6 @@ import { SiteWithEcsBackendProps } from './types'
  *     this.initResources()
  *   }
  * }
- * @mixin
  */
 export class SiteWithEcsBackend extends CommonConstruct {
   /* site properties */
@@ -77,7 +72,6 @@ export class SiteWithEcsBackend extends CommonConstruct {
 
   /**
    * @summary Initialise and provision resources
-   * @protected
    */
   protected initResources() {
     this.resolveHostedZone()
@@ -104,7 +98,6 @@ export class SiteWithEcsBackend extends CommonConstruct {
 
   /**
    * @summary Method to resolve a hosted zone based on domain attributes
-   * @protected
    */
   protected resolveHostedZone() {
     this.siteHostedZone = this.route53Manager.withHostedZoneFromFullyQualifiedDomainName(
@@ -116,7 +109,6 @@ export class SiteWithEcsBackend extends CommonConstruct {
 
   /**
    * @summary Method to resolve a certificate based on attributes
-   * @protected
    */
   protected resolveCertificate() {
     /* determine site certificate */
@@ -149,13 +141,11 @@ export class SiteWithEcsBackend extends CommonConstruct {
   /**
    * @summary Method to resolve secrets from SecretsManager
    * - To be implemented in the overriding method in the implementation class
-   * @protected
    */
   protected resolveSiteSecrets() {}
 
   /**
    * @summary Method to resolve site domain names
-   * @protected
    */
   protected resolveSiteDomainNames() {
     /* the internal domain name used by ELB */
@@ -175,15 +165,17 @@ export class SiteWithEcsBackend extends CommonConstruct {
 
   /**
    * Create VPC
-   * @protected
    */
   protected createVpc() {
-    this.siteVpc = this.vpcManager.createCommonVpc(this, this.props.siteVpc, this.props.siteVpc.vpcName)
+    if (this.props.useExistingVpc) {
+      this.siteVpc = this.vpcManager.retrieveCommonVpc(`${this.id}`, this, this.props.siteVpc.vpcName)
+    } else {
+      this.siteVpc = this.vpcManager.createCommonVpc(this, this.props.siteVpc, this.props.siteVpc.vpcName)
+    }
   }
 
   /**
    * @summary Method to create iam policy for ECS Task
-   * @protected
    */
   protected createEcsPolicy() {
     this.siteEcsPolicy = new iam.PolicyDocument({
@@ -193,7 +185,6 @@ export class SiteWithEcsBackend extends CommonConstruct {
 
   /**
    * @summary Method to create iam role for ECS Task
-   * @protected
    */
   protected createEcsRole() {
     this.siteEcsRole = this.iamManager.createRoleForEcsExecution(`${this.id}-ecs-role`, this, this.siteEcsPolicy)
@@ -201,19 +192,17 @@ export class SiteWithEcsBackend extends CommonConstruct {
 
   /**
    * @summary Method to create environment variables used by ECS task
-   * @protected
    */
   protected createEcsEnvironment() {
     this.siteEcsEnvironment = {
-      NODE_ENV: this.props.nodeEnv,
       LOG_LEVEL: this.props.logLevel,
+      NODE_ENV: this.props.nodeEnv,
       TZ: this.props.timezone,
     }
   }
 
   /**
    * Method to create an ECS cluster
-   * @protected
    */
   protected createEcsCluster() {
     this.siteEcsCluster = this.ecsManager.createEcsCluster(
@@ -226,7 +215,6 @@ export class SiteWithEcsBackend extends CommonConstruct {
 
   /**
    * Method to create log group used by ECS task
-   * @protected
    */
   protected createEcsLogGroup() {
     this.siteEcsLogGroup = this.logManager.createLogGroup(`${this.id}-ecs-log-group`, this, this.props.siteLog)
@@ -234,7 +222,6 @@ export class SiteWithEcsBackend extends CommonConstruct {
 
   /**
    * Method to create docker build arguments for ECS Image step
-   * @protected
    */
   protected createEcsBuildArgs() {
     this.siteEcsBuildArgs = {}
@@ -242,7 +229,6 @@ export class SiteWithEcsBackend extends CommonConstruct {
 
   /**
    * Method to create container image for ECS task
-   * @protected
    */
   protected createEcsContainerImage() {
     this.siteEcsContainerImage = ecs.ContainerImage.fromAsset(this.props.siteEcsContainerImagePath, {
@@ -252,57 +238,56 @@ export class SiteWithEcsBackend extends CommonConstruct {
 
   /**
    * Method to create Application Loadbalanced ECS Fargate Service
-   * @protected
    */
   protected createEcsService() {
     const fargateService = new ecsPatterns.ApplicationLoadBalancedFargateService(this, `${this.id}-ecs-service`, {
+      assignPublicIp: true,
+      certificate: this.siteRegionalCertificate,
       cluster: this.siteEcsCluster,
-      desiredCount: this.props.siteTask.desiredCount,
-      enableECSManagedTags: true,
-      serviceName: `${this.id}-${this.props.stage}`,
       cpu: this.props.siteTask.cpu,
+      desiredCount: this.props.siteTask.desiredCount,
+      domainName: this.siteInternalDomainName,
+      domainZone: this.siteHostedZone,
+      enableECSManagedTags: true,
+      healthCheckGracePeriod: cdk.Duration.seconds(60),
+      listenerPort: this.props.siteTask.listenerPort,
       loadBalancerName: this.props.siteTask.loadBalancerName
         ? `${this.props.siteTask.loadBalancerName}-${this.props.stage}`
         : `${this.id}-${this.props.stage}`,
-      certificate: this.siteRegionalCertificate,
-      domainName: this.siteInternalDomainName,
-      domainZone: this.siteHostedZone,
-      listenerPort: this.props.siteTask.listenerPort,
-      memoryLimitMiB: this.props.siteTask.memoryLimitMiB,
-      healthCheckGracePeriod: cdk.Duration.seconds(60),
-      assignPublicIp: true,
-      minHealthyPercent: this.props.siteTask.minHealthyPercent,
       maxHealthyPercent: this.props.siteTask.maxHealthyPercent,
+      memoryLimitMiB: this.props.siteTask.memoryLimitMiB,
+      minHealthyPercent: this.props.siteTask.minHealthyPercent,
+      serviceName: `${this.id}-${this.props.stage}`,
       taskDefinition: this.props.siteTask.taskDefinition,
       taskImageOptions: {
+        containerPort: this.props.siteTask.taskImageOptions?.containerPort,
         enableLogging: true,
+        environment: this.siteEcsEnvironment,
+        executionRole: this.siteEcsRole,
+        image: this.siteEcsContainerImage,
         logDriver: ecs.LogDriver.awsLogs({
           logGroup: this.siteEcsLogGroup,
-          streamPrefix: `${this.id}-${this.props.stage}/ecs`,
-          multilinePattern: this.props.siteTask.logging?.multilinePattern,
           logRetention: this.props.siteTask.logging?.logRetention,
+          multilinePattern: this.props.siteTask.logging?.multilinePattern,
+          streamPrefix: `${this.id}-${this.props.stage}/ecs`,
         }),
-        image: this.siteEcsContainerImage,
-        executionRole: this.siteEcsRole,
-        taskRole: this.siteEcsRole,
-        containerPort: this.props.siteTask.taskImageOptions?.containerPort,
-        environment: this.siteEcsEnvironment,
         secrets: this.siteSecrets,
+        taskRole: this.siteEcsRole,
       },
     })
 
     if (this.props.siteHealthCheck) {
       fargateService.targetGroup.configureHealthCheck({
         enabled: this.props.siteHealthCheck.enabled ?? true,
-        path: this.props.siteHealthCheck.path ?? '/',
-        port: this.props.siteHealthCheck.port,
-        interval: cdk.Duration.seconds(this.props.siteHealthCheck.intervalInSecs),
-        timeout: cdk.Duration.seconds(this.props.siteHealthCheck.timeoutInSecs),
-        healthyThresholdCount: this.props.siteHealthCheck.healthyThresholdCount,
-        unhealthyThresholdCount: this.props.siteHealthCheck.unhealthyThresholdCount,
         healthyGrpcCodes: this.props.siteHealthCheck.healthyGrpcCodes,
         healthyHttpCodes: this.props.siteHealthCheck.healthyHttpCodes,
+        healthyThresholdCount: this.props.siteHealthCheck.healthyThresholdCount,
+        interval: cdk.Duration.seconds(this.props.siteHealthCheck.intervalInSecs),
+        path: this.props.siteHealthCheck.path ?? '/',
+        port: this.props.siteHealthCheck.port,
         protocol: this.props.siteHealthCheck.protocol,
+        timeout: cdk.Duration.seconds(this.props.siteHealthCheck.timeoutInSecs),
+        unhealthyThresholdCount: this.props.siteHealthCheck.unhealthyThresholdCount,
       })
     }
 
@@ -316,8 +301,8 @@ export class SiteWithEcsBackend extends CommonConstruct {
 
     if (this.props.siteTask.siteScaling) {
       const scalableTaskCount = this.siteEcsService.autoScaleTaskCount({
-        minCapacity: this.props.siteTask.siteScaling.minCapacity,
         maxCapacity: this.props.siteTask.siteScaling.maxCapacity ?? 4,
+        minCapacity: this.props.siteTask.siteScaling.minCapacity,
       })
 
       if (this.props.siteTask.siteScaling.scaleOnCpuUtilization) {
@@ -365,14 +350,14 @@ export class SiteWithEcsBackend extends CommonConstruct {
 
       /* add the efs volume to ecs task definition */
       this.siteEcsTaskDefinition.addVolume({
-        name: `${this.id}-fs`,
         efsVolumeConfiguration: {
+          authorizationConfig: this.props.siteFileSystem.authorizationConfig,
           fileSystemId: this.siteFileSystem.fileSystemId,
           rootDirectory: this.props.siteFileSystem.rootDirectory,
           transitEncryption: this.props.siteFileSystem.transitEncryption,
           transitEncryptionPort: this.props.siteFileSystem.transitEncryptionPort,
-          authorizationConfig: this.props.siteFileSystem.authorizationConfig,
         },
+        name: `${this.id}-fs`,
       })
 
       if (this.props.siteTask.mountPoints && this.props.siteTask.mountPoints.length > 0) {
@@ -394,7 +379,6 @@ export class SiteWithEcsBackend extends CommonConstruct {
 
   /**
    * Method to create log bucket for site distribution
-   * @protected
    */
   protected createSiteLogBucket() {
     this.siteLogBucket = this.s3Manager.createS3Bucket(`${this.id}-site-logs`, this, this.props.siteLogBucket)
@@ -409,7 +393,6 @@ export class SiteWithEcsBackend extends CommonConstruct {
 
   /**
    * @summary Method to create a site cloudfront function
-   * @protected
    */
   protected createSiteCloudfrontFunction() {
     if (this.props.siteCloudfrontFunctionProps) {
@@ -423,14 +406,13 @@ export class SiteWithEcsBackend extends CommonConstruct {
 
   /**
    * @summary Method to create a site cloudfront function associations
-   * @protected
    */
   protected resolveSiteFunctionAssociations() {
     if (this.props.siteCloudfrontFunctionProps) {
       this.siteFunctionAssociations = [
         {
-          function: this.siteCloudfrontFunction,
           eventType: cloudfront.FunctionEventType.VIEWER_REQUEST,
+          function: this.siteCloudfrontFunction,
         },
       ]
     }
@@ -438,7 +420,6 @@ export class SiteWithEcsBackend extends CommonConstruct {
 
   /**
    * Method to create Site distribution
-   * @protected
    */
   protected createDistribution() {
     this.siteDistribution = this.cloudFrontManager.createDistributionWithHttpOrigin(
@@ -455,7 +436,6 @@ export class SiteWithEcsBackend extends CommonConstruct {
 
   /**
    * Method to create Route53 records for distribution
-   * @protected
    */
   protected createNetworkMappings() {
     this.route53Manager.createCloudFrontTargetARecord(
@@ -470,7 +450,6 @@ export class SiteWithEcsBackend extends CommonConstruct {
 
   /**
    * Method to invalidation the cloudfront distribution cache after a deployment
-   * @protected
    */
   protected invalidateDistributionCache() {
     if (this.props.siteCacheInvalidationDockerFilePath) {

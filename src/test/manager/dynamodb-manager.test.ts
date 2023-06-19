@@ -8,16 +8,16 @@ interface TestStackProps extends CommonStackProps {
 }
 
 const testStackProps = {
+  domainName: 'gradientedge.io',
   env: {
     account: '123456789',
     region: 'eu-west-1',
   },
+  extraContexts: ['src/test/common/cdkConfig/dynamodb.json'],
   name: 'test-common-stack',
-  domainName: 'gradientedge.io',
   region: 'eu-west-1',
   stackName: 'test',
   stage: 'test',
-  extraContexts: ['src/test/common/cdkConfig/dynamodb.json'],
   stageContextPath: 'src/test/common/cdkEnv',
 }
 
@@ -95,16 +95,16 @@ describe('TestDynamodbConstruct', () => {
 describe('TestDynamodbConstruct', () => {
   test('provisions new table as expected', () => {
     template.hasResourceProperties('AWS::DynamoDB::Table', {
-      KeySchema: [
-        {
-          AttributeName: 'id',
-          KeyType: 'HASH',
-        },
-      ],
       AttributeDefinitions: [
         {
           AttributeName: 'id',
           AttributeType: 'S',
+        },
+      ],
+      KeySchema: [
+        {
+          AttributeName: 'id',
+          KeyType: 'HASH',
         },
       ],
       ProvisionedThroughput: {

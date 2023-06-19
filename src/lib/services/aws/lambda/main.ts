@@ -12,9 +12,6 @@ import { CloudFrontManager } from '../cloudfront'
 import { SsmManager } from '../systems-manager'
 
 /**
- * @stability stable
- * @category cdk-utils.lambda-manager
- * @subcategory Construct
  * @classdesc Provides operations on AWS Lambda.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
@@ -28,20 +25,19 @@ import { SsmManager } from '../systems-manager'
  *     this.lambdaManager.createLambdaFunction('MyFunction', this, role, layers, code)
  *   }
  * }
- *
  * @see [CDK Lambda Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_lambda-readme.html}
  */
 export class LambdaManager {
   /**
    * @summary Method to create a lambda layer (nodejs)
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {lambda.AssetCode} code
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param code
    */
   public createLambdaLayer(id: string, scope: CommonConstruct, code: lambda.AssetCode) {
     const lambdaLayer = new lambda.LayerVersion(scope, `${id}`, {
-      compatibleRuntimes: [scope.props.nodejsRuntime ?? CommonStack.NODEJS_RUNTIME],
       code: code,
+      compatibleRuntimes: [scope.props.nodejsRuntime ?? CommonStack.NODEJS_RUNTIME],
       description: `${id}`,
       layerVersionName: `${id}-${scope.props.stage}`,
     })
@@ -53,19 +49,19 @@ export class LambdaManager {
 
   /**
    * @summary Method to create a lambda function (nodejs)
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {LambdaProps} props
-   * @param {iam.Role | iam.CfnRole} role
-   * @param {lambda.ILayerVersion[]} layers
-   * @param {lambda.AssetCode} code
-   * @param {string?} handler
-   * @param {Map<string, string>?} environment
-   * @param {ec2.IVpc?} vpc
-   * @param {ec2.ISecurityGroup[]?} securityGroups
-   * @param {efs.IAccessPoint?} accessPoint
-   * @param {string?} mountPath
-   * @param {ec2.SubnetSelection?} vpcSubnets
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props
+   * @param role
+   * @param layers
+   * @param code
+   * @param handler
+   * @param environment
+   * @param vpc
+   * @param securityGroups
+   * @param accessPoint
+   * @param mountPath
+   * @param vpcSubnets
    */
   public createLambdaFunction(
     id: string,
@@ -96,15 +92,10 @@ export class LambdaManager {
       ...props,
       ...{
         allowPublicSubnet: !!vpc,
-        functionName: functionName,
-        handler: handler || 'index.lambda_handler',
-        runtime: props.runtime ?? scope.props.nodejsRuntime ?? CommonStack.NODEJS_RUNTIME,
+        architecture: props.architecture ?? lambda.Architecture.ARM_64,
         code: code,
         deadLetterQueue: deadLetterQueue,
-        architecture: props.architecture ?? lambda.Architecture.ARM_64,
         environment: {
-          REGION: scope.props.region,
-          STAGE: scope.props.stage,
           LAST_MODIFIED_TS: props.excludeLastModifiedTimestamp
             ? ''
             : scope.ssmManager.readStringParameter(
@@ -112,30 +103,35 @@ export class LambdaManager {
                 scope,
                 `${SsmManager.SECRETS_MODIFIED_TIMESTAMP_PARAM}-${scope.props.stage}`
               ),
+          REGION: scope.props.region,
+          STAGE: scope.props.stage,
           ...environment,
         },
         filesystem: accessPoint
           ? lambda.FileSystem.fromEfsAccessPoint(accessPoint, mountPath || '/mnt/msg')
           : undefined,
+        functionName: functionName,
+        handler: handler || 'index.lambda_handler',
+        insightsVersion: props.insightsVersion,
         layers: layers,
         logRetention: scope.props.logRetention ?? props.logRetention,
         reservedConcurrentExecutions:
           props.reservedConcurrentExecutions ?? scope.props.defaultReservedLambdaConcurrentExecutions,
         role: role instanceof iam.Role ? role : undefined,
+        runtime: props.runtime ?? scope.props.nodejsRuntime ?? CommonStack.NODEJS_RUNTIME,
         securityGroups: securityGroups,
         timeout: props.timeoutInSecs ? cdk.Duration.seconds(props.timeoutInSecs) : cdk.Duration.minutes(15),
-        vpc: vpc,
-        vpcSubnets: vpcSubnets,
         tracing: scope.props.defaultTracing ?? props.tracing,
-        insightsVersion: props.insightsVersion,
+        vpc,
+        vpcSubnets,
       },
     })
 
     if (lambdaFunction.deadLetterQueue && props.dlq?.retriesEnabled) {
       lambdaFunction.addEventSource(
         new eventSources.SqsEventSource(lambdaFunction.deadLetterQueue, {
-          reportBatchItemFailures: true,
           batchSize: props.dlq.retryBatchSize ?? 1,
+          reportBatchItemFailures: true,
         })
       )
     }
@@ -170,18 +166,17 @@ export class LambdaManager {
 
   /**
    * @summary Method to provision a Lambda@Edge function
-   *
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {LambdaEdgeProps} props lambda@edge properties
-   * @param {lambda.ILayerVersion[]} layers
-   * @param {lambda.AssetCode} code
-   * @param {iam.Role} role
-   * @param {Map<string, string>?} environment
-   * @param {ec2.IVpc?} vpc
-   * @param {ec2.ISecurityGroup[]?} securityGroups
-   * @param {efs.IAccessPoint?} accessPoint
-   * @param {string?} mountPath
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props lambda@edge properties
+   * @param layers
+   * @param code
+   * @param role
+   * @param environment
+   * @param vpc
+   * @param securityGroups
+   * @param accessPoint
+   * @param mountPath
    */
   public createEdgeFunction(
     id: string,
@@ -213,17 +208,17 @@ export class LambdaManager {
 
   /**
    * @summary Method to create a lambda function (nodejs) with docker image
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {LambdaProps} props
-   * @param {iam.Role | iam.CfnRole} role
-   * @param {lambda.DockerImageCode} code
-   * @param {Map<string, string>?} environment
-   * @param {ec2.IVpc?} vpc
-   * @param {ec2.ISecurityGroup[]?} securityGroups
-   * @param {efs.IAccessPoint?} accessPoint
-   * @param {string?} mountPath
-   * @param {ec2.SubnetSelection?} vpcSubnets
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props
+   * @param role
+   * @param code
+   * @param environment
+   * @param vpc
+   * @param securityGroups
+   * @param accessPoint
+   * @param mountPath
+   * @param vpcSubnets
    */
   public createLambdaDockerFunction(
     id: string,
@@ -252,14 +247,10 @@ export class LambdaManager {
       ...props,
       ...{
         allowPublicSubnet: !!vpc,
-        functionName: functionName,
-        runtime: props.runtime ?? scope.props.nodejsRuntime ?? CommonStack.NODEJS_RUNTIME,
+        architecture: props.architecture ?? lambda.Architecture.ARM_64,
         code: code,
         deadLetterQueue: deadLetterQueue,
-        architecture: props.architecture ?? lambda.Architecture.ARM_64,
         environment: {
-          REGION: scope.props.region,
-          STAGE: scope.props.stage,
           LAST_MODIFIED_TS: props.excludeLastModifiedTimestamp
             ? ''
             : scope.ssmManager.readStringParameter(
@@ -267,28 +258,32 @@ export class LambdaManager {
                 scope,
                 `${SsmManager.SECRETS_MODIFIED_TIMESTAMP_PARAM}-${scope.props.stage}`
               ),
+          REGION: scope.props.region,
+          STAGE: scope.props.stage,
           ...environment,
         },
         filesystem: accessPoint
           ? lambda.FileSystem.fromEfsAccessPoint(accessPoint, mountPath || '/mnt/msg')
           : undefined,
+        functionName: functionName,
+        insightsVersion: props.insightsVersion,
         logRetention: scope.props.logRetention ?? props.logRetention,
         reservedConcurrentExecutions: props.reservedConcurrentExecutions,
         role: role instanceof iam.Role ? role : undefined,
+        runtime: props.runtime ?? scope.props.nodejsRuntime ?? CommonStack.NODEJS_RUNTIME,
         securityGroups: securityGroups,
         timeout: props.timeoutInSecs ? cdk.Duration.seconds(props.timeoutInSecs) : cdk.Duration.minutes(1),
-        vpc: vpc,
-        vpcSubnets: vpcSubnets,
         tracing: props.tracing,
-        insightsVersion: props.insightsVersion,
+        vpc,
+        vpcSubnets,
       },
     })
 
     if (lambdaFunction.deadLetterQueue && props.dlq?.retriesEnabled) {
       lambdaFunction.addEventSource(
         new eventSources.SqsEventSource(lambdaFunction.deadLetterQueue, {
-          reportBatchItemFailures: true,
           batchSize: props.dlq.retryBatchSize ?? 1,
+          reportBatchItemFailures: true,
         })
       )
     }
@@ -301,10 +296,10 @@ export class LambdaManager {
 
   /**
    * @summary Method to create a lambda function Alias
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {LambdaAliasProps} props
-   * @param {IVersion} lambdaVersion
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props
+   * @param lambdaVersion
    */
   public createLambdaFunctionAlias(
     id: string,
@@ -317,15 +312,15 @@ export class LambdaManager {
     const lambdaFunctionAlias = new lambda.Alias(scope, `${id}`, {
       ...props,
       ...{
-        aliasName: props.aliasName,
-        version: lambdaVersion,
         additionalVersions: props.additionalVersions,
+        aliasName: props.aliasName,
         description: props.description,
         maxEventAge: props.maxEventAge,
         onFailure: props.onFailure,
         onSuccess: props.onSuccess,
         provisionedConcurrentExecutions: props.provisionedConcurrentExecutions,
         retryAttempts: props.retryAttempts,
+        version: lambdaVersion,
       },
     })
 

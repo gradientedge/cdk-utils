@@ -8,16 +8,16 @@ interface TestStackProps extends CommonStackProps {
 }
 
 const testStackProps = {
+  domainName: 'gradientedge.io',
   env: {
     account: '123456789',
     region: 'eu-west-1',
   },
+  extraContexts: ['src/test/common/cdkConfig/kms.json'],
   name: 'test-common-stack',
-  domainName: 'gradientedge.io',
   region: 'eu-west-1',
   stackName: 'test',
   stage: 'test',
-  extraContexts: ['src/test/common/cdkConfig/kms.json'],
   stageContextPath: 'src/test/common/cdkEnv',
 }
 
@@ -95,6 +95,7 @@ describe('TestKmsConstruct', () => {
 describe('TestKmsConstruct', () => {
   test('provisions new certificate as expected', () => {
     template.hasResourceProperties('AWS::KMS::Key', {
+      EnableKeyRotation: true,
       KeyPolicy: {
         Statement: [
           {
@@ -119,7 +120,6 @@ describe('TestKmsConstruct', () => {
         ],
         Version: '2012-10-17',
       },
-      EnableKeyRotation: true,
     })
   })
 })

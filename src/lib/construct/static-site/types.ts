@@ -3,25 +3,23 @@ import { AcmProps, CloudfrontFunctionProps, DistributionProps, S3BucketProps } f
 import { ISource } from 'aws-cdk-lib/aws-s3-deployment'
 
 /**
- * @category cdk-utils.static-site
- * @subcategory Properties
  */
 export interface StaticSiteProps extends CommonStackProps {
-  siteCacheInvalidationDockerFilePath?: string
-  siteCreateAltARecord: boolean
-  siteCertificate: AcmProps
-  siteBucket: S3BucketProps
-  siteLogBucket: S3BucketProps
-  siteDistribution?: DistributionProps
-  siteCloudfrontFunctionProps?: CloudfrontFunctionProps
-  siteFunctionFilePath?: string
-  siteSource: ISource
-  siteHostedZoneDomainName?: string
-  siteRecordName?: string
-  siteSubDomain?: string
-  siteAliases?: string[]
-  useExistingHostedZone: boolean
-  nodeEnv: string
   logLevel: string
+  nodeEnv: string
+  siteAliases?: string[]
+  siteBucket: S3BucketProps
+  siteCacheInvalidationDockerFilePath?: string
+  siteCertificate: AcmProps
+  siteCloudfrontFunctionProps?: CloudfrontFunctionProps
+  siteCreateAltARecord: boolean
+  siteDistribution?: DistributionProps
+  siteFunctionFilePath?: string
+  siteHostedZoneDomainName?: string
+  siteLogBucket: S3BucketProps
+  siteRecordName?: string
+  siteSource: ISource
+  siteSubDomain?: string
   timezone: string
+  useExistingHostedZone: boolean
 }

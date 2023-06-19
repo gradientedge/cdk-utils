@@ -6,22 +6,22 @@ import { Construct } from 'constructs'
 import { CommonConstruct, CommonStack, CommonStackProps } from '../../lib'
 
 interface TestStackProps extends CommonStackProps {
+  testAnotherService: any
   testLambda: any
   testService: any
-  testAnotherService: any
 }
 
 const testStackProps = {
+  domainName: 'gradientedge.io',
   env: {
     account: '123456789',
     region: 'eu-west-1',
   },
+  extraContexts: ['src/test/common/cdkConfig/lambdas.json', 'src/test/common/cdkConfig/services.json'],
   name: 'test-common-stack',
-  domainName: 'gradientedge.io',
   region: 'eu-west-1',
   stackName: 'test',
   stage: 'test',
-  extraContexts: ['src/test/common/cdkConfig/lambdas.json', 'src/test/common/cdkConfig/services.json'],
   stageContextPath: 'src/test/common/cdkEnv',
 }
 
@@ -38,9 +38,9 @@ class TestCommonStack extends CommonStack {
     return {
       ...super.determineConstructProps(props),
       ...{
+        testAnotherService: this.node.tryGetContext('testAnotherService'),
         testLambda: this.node.tryGetContext('testLambda'),
         testService: this.node.tryGetContext('testService'),
-        testAnotherService: this.node.tryGetContext('testAnotherService'),
       },
     }
   }
@@ -140,14 +140,14 @@ describe('TestSnsConstruct', () => {
   test('provisions new topic as expected', () => {
     template.hasResourceProperties('AWS::SNS::Topic', {
       DisplayName: 'test-service-test',
-      TopicName: 'test-service-test',
       FifoTopic: false,
+      TopicName: 'test-service-test',
     })
 
     template.hasResourceProperties('AWS::SNS::Topic', {
       DisplayName: 'test-another-service-test',
-      TopicName: 'test-another-service-test.fifo',
       FifoTopic: true,
+      TopicName: 'test-another-service-test.fifo',
     })
   })
 })

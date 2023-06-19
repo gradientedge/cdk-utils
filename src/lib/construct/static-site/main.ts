@@ -8,11 +8,7 @@ import { CommonConstruct } from '../../common'
 import { StaticSiteProps } from './types'
 
 /**
- * @stability stable
- * @category cdk-utils.static-site
- * @subcategory construct
  * @classdesc Provides a construct to create and deploy a s3 hosted static site
- *
  * @example
  * import { StaticSite, StaticSiteProps } '@gradientedge/cdk-utils'
  * import { Construct } from 'constructs'
@@ -25,7 +21,6 @@ import { StaticSiteProps } from './types'
  *     this.initResources()
  *   }
  * }
- * @mixin
  */
 export class StaticSite extends CommonConstruct {
   /* static site properties */
@@ -53,7 +48,6 @@ export class StaticSite extends CommonConstruct {
 
   /**
    * @summary Initialise and provision resources
-   * @protected
    */
   protected initResources() {
     this.resolveHostedZone()
@@ -72,7 +66,6 @@ export class StaticSite extends CommonConstruct {
 
   /**
    * @summary Method to resolve a hosted zone based on domain attributes
-   * @protected
    */
   protected resolveHostedZone() {
     this.siteHostedZone = this.route53Manager.withHostedZoneFromFullyQualifiedDomainName(
@@ -84,7 +77,6 @@ export class StaticSite extends CommonConstruct {
 
   /**
    * @summary Method to resolve a certificate based on attributes
-   * @protected
    */
   protected resolveCertificate() {
     if (
@@ -108,7 +100,6 @@ export class StaticSite extends CommonConstruct {
 
   /**
    * @summary Method to create a site log bucket
-   * @protected
    */
   protected createSiteLogBucket() {
     this.siteLogBucket = this.s3Manager.createS3Bucket(`${this.id}-site-logs`, this, this.props.siteLogBucket)
@@ -116,7 +107,6 @@ export class StaticSite extends CommonConstruct {
 
   /**
    * @summary Method to create a site bucket
-   * @protected
    */
   protected createSiteBucket() {
     this.siteBucket = this.s3Manager.createS3Bucket(`${this.id}-site`, this, this.props.siteBucket)
@@ -128,7 +118,6 @@ export class StaticSite extends CommonConstruct {
 
   /**
    * @summary Method to create a site cloudfront function
-   * @protected
    */
   protected createSiteCloudfrontFunction() {
     if (this.props.siteCloudfrontFunctionProps) {
@@ -142,14 +131,13 @@ export class StaticSite extends CommonConstruct {
 
   /**
    * @summary Method to create a site cloudfront function associations
-   * @protected
    */
   protected resolveSiteFunctionAssociations() {
     if (this.props.siteCloudfrontFunctionProps) {
       this.siteFunctionAssociations = [
         {
-          function: this.siteCloudfrontFunction,
           eventType: cloudfront.FunctionEventType.VIEWER_REQUEST,
+          function: this.siteCloudfrontFunction,
         },
       ]
     }
@@ -157,13 +145,11 @@ export class StaticSite extends CommonConstruct {
 
   /**
    * @summary Method to create a site origin access identity
-   * @protected
    */
   protected createSiteOriginAccessIdentity() {}
 
   /**
    * @summary Method to create a site cloudfront distribution
-   * @protected
    */
   protected createSiteDistribution() {
     if (!this.props.siteDistribution) throw 'SiteDistribution props undefined'
@@ -184,7 +170,6 @@ export class StaticSite extends CommonConstruct {
 
   /**
    * @summary Method to create route53 records for static site
-   * @protected
    */
   protected createSiteRouteAssets() {
     this.siteARecord = this.route53Manager.createCloudFrontTargetARecord(
@@ -199,7 +184,6 @@ export class StaticSite extends CommonConstruct {
 
   /**
    * @summary Method to deploy the static assets into s3 bucket for static site
-   * @protected
    */
   protected deploySite() {
     this.s3Manager.doBucketDeployment(
@@ -215,7 +199,6 @@ export class StaticSite extends CommonConstruct {
 
   /**
    * Method to invalidation the cloudfront distribution cache after a deployment
-   * @protected
    */
   protected invalidateDistributionCache() {
     if (this.props.siteCacheInvalidationDockerFilePath) {

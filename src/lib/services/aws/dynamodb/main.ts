@@ -5,9 +5,6 @@ import { CommonConstruct } from '../../../common'
 import { TableProps } from './types'
 
 /**
- * @stability stable
- * @category cdk-utils.dynamodb-manager
- * @subcategory Construct
  * @classdesc Provides operations on AWS DynamoDB.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
@@ -21,37 +18,36 @@ import { TableProps } from './types'
  *     this.dynamodbManager.createTable('MyTable', this, tableProps)
  *   }
  * }
- *
  * @see [CDK Certificate Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_dynamodb-readme.html}
  */
 export class DynamodbManager {
   /**
    * @summary Method to create a table
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {TableProps} props table props
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props table props
    */
   public createTable(id: string, scope: CommonConstruct, props: TableProps) {
     if (!props) throw `Table props undefined for ${id}`
 
     const table = new dynamodb.Table(scope, `${id}`, {
-      tableName: `${props.tableName}-${scope.props.stage}`,
-      partitionKey: props.partitionKey,
-      sortKey: props.sortKey,
-      kinesisStream: props.kinesisStream,
-      readCapacity: props.readCapacity,
-      writeCapacity: props.writeCapacity,
       billingMode: props.billingMode,
-      pointInTimeRecovery: props.pointInTimeRecovery,
+      contributorInsightsEnabled: props.contributorInsightsEnabled,
       encryption: props.encryption,
       encryptionKey: props.encryptionKey,
-      timeToLiveAttribute: props.timeToLiveAttribute,
-      stream: props.stream,
+      kinesisStream: props.kinesisStream,
+      partitionKey: props.partitionKey,
+      pointInTimeRecovery: props.pointInTimeRecovery,
+      readCapacity: props.readCapacity,
       removalPolicy: props.removalPolicy,
       replicationRegions: props.replicationRegions,
       replicationTimeout: props.replicationTimeout,
+      sortKey: props.sortKey,
+      stream: props.stream,
+      tableName: `${props.tableName}-${scope.props.stage}`,
+      timeToLiveAttribute: props.timeToLiveAttribute,
       waitForReplicationToFinish: props.waitForReplicationToFinish,
-      contributorInsightsEnabled: props.contributorInsightsEnabled,
+      writeCapacity: props.writeCapacity,
     })
 
     if (props.tags && props.tags.length > 0) {

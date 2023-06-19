@@ -4,28 +4,27 @@ import { Construct } from 'constructs'
 import { CommonConstruct, CommonStack, CommonStackProps } from '../../lib'
 
 interface TestStackProps extends CommonStackProps {
-  testVpc: any
   testElastiCache: any
   testReplicatedElastiCache: any
+  testVpc: any
 }
 
 const testStackProps = {
+  domainName: 'gradientedge.io',
   env: {
     account: '123456789',
     region: 'eu-west-1',
   },
+  extraContexts: ['src/test/common/cdkConfig/vpc.json', 'src/test/common/cdkConfig/elasticache.json'],
   name: 'test-common-stack',
-  domainName: 'gradientedge.io',
   region: 'eu-west-1',
   stackName: 'test',
   stage: 'test',
-  extraContexts: ['src/test/common/cdkConfig/vpc.json', 'src/test/common/cdkConfig/elasticache.json'],
   stageContextPath: 'src/test/common/cdkEnv',
 }
 
 class TestCommonStack extends CommonStack {
   declare props: TestStackProps
-
   constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
     super(parent, name, props)
 
@@ -36,9 +35,9 @@ class TestCommonStack extends CommonStack {
     return {
       ...super.determineConstructProps(props),
       ...{
-        testVpc: this.node.tryGetContext('testVpc'),
         testElastiCache: this.node.tryGetContext('testElastiCache'),
         testReplicatedElastiCache: this.node.tryGetContext('testReplicatedElastiCache'),
+        testVpc: this.node.tryGetContext('testVpc'),
       },
     }
   }
@@ -128,8 +127,8 @@ describe('TestElastiCacheConstruct', () => {
 describe('TestElastiCacheConstruct', () => {
   test('provisions new replicated elastiCache as expected', () => {
     template.hasResourceProperties('AWS::ElastiCache::ReplicationGroup', {
-      ReplicationGroupId: 'test-replicated-elasticache-test',
       Engine: 'redis',
+      ReplicationGroupId: 'test-replicated-elasticache-test',
     })
   })
 })

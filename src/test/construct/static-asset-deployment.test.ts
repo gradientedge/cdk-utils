@@ -5,23 +5,23 @@ import { Construct } from 'constructs'
 import { CommonStack, StaticAssetDeployment, StaticAssetDeploymentProps } from '../../lib'
 
 interface TestStackProps extends StaticAssetDeploymentProps {
+  staticAssetBucket: any
   staticAssetDeployment: any
   staticAssetSources: any
-  staticAssetBucket: any
   staticAssetsForExport: any
 }
 
 const testStackProps = {
-  name: 'test-static-asset-deployment-stack',
   domainName: 'gradientedge.io',
-  region: 'eu-west-1',
-  stage: 'test',
-  stackName: 'test',
-  siteSubDomain: 'site',
-  siteCreateAltARecord: true,
   extraContexts: ['src/test/common/cdkConfig/buckets.json'],
-  stageContextPath: 'src/test/common/cdkEnv',
+  name: 'test-static-asset-deployment-stack',
+  region: 'eu-west-1',
+  siteCreateAltARecord: true,
+  siteSubDomain: 'site',
   skipStageForARecords: true,
+  stackName: 'test',
+  stage: 'test',
+  stageContextPath: 'src/test/common/cdkEnv',
 }
 
 class TestCommonStack extends CommonStack {
@@ -36,12 +36,12 @@ class TestCommonStack extends CommonStack {
   protected determineConstructProps(props: cdk.StackProps) {
     return {
       ...super.determineConstructProps(props),
+      staticAssetBucket: this.node.tryGetContext('siteBucket'),
       staticAssetDeployment: {
         prune: true,
         retainOnDelete: false,
       },
       staticAssetSources: [s3deploy.Source.asset('src/test/common/resources/')],
-      staticAssetBucket: this.node.tryGetContext('siteBucket'),
       staticAssetsForExport: [{ key: 'myCSV', value: 'test.csv' }],
     }
   }

@@ -8,13 +8,9 @@ import { RestApiLambdaWithCacheProps } from './types'
 import * as utils from '../../utils'
 
 /**
- * @stability stable
- * @category cdk-utils.rest-api-lambda-with-cache
- * @subcategory construct
  * @classdesc Provides a construct to create and deploy a RestApi API as Lambda with Caching
  *
  * <b>Architecture</b><br/> ![Architecture](./RestApiLambda.jpg)
- *
  * @example
  * import { RestApiLambdaWithCacheProps } '@gradientedge/cdk-utils'
  * import { Construct } from 'constructs'
@@ -27,7 +23,6 @@ import * as utils from '../../utils'
  *     this.initResources()
  *   }
  * }
- * @mixin
  */
 export abstract class RestApiLambdaWithCache extends RestApiLambda {
   /* restApiLambdaWithCache props */
@@ -56,7 +51,6 @@ export abstract class RestApiLambdaWithCache extends RestApiLambda {
 
   /**
    * Create VPC
-   * @protected
    */
   protected resolveVpc() {
     if (this.props.useExistingVpc) {
@@ -68,7 +62,6 @@ export abstract class RestApiLambdaWithCache extends RestApiLambda {
 
   /**
    * Resolve Security Group
-   * @protected
    */
   protected resolveSecurityGroup() {
     if (!this.props.restApiCache) {
@@ -95,7 +88,6 @@ export abstract class RestApiLambdaWithCache extends RestApiLambda {
 
   /**
    * Create ElastiCache
-   * @protected
    */
   protected createElastiCache() {
     if (!this.props.restApiCache) {
@@ -111,21 +103,20 @@ export abstract class RestApiLambdaWithCache extends RestApiLambda {
     )
 
     this.ssmManager.writeStringToParameters(`${this.id}-elasticache-endpoint-address`, this, {
-      parameterName: `${this.id}-elasticache-endpoint-address`,
       description: `Elasticache address to use by applications`,
+      parameterName: `${this.id}-elasticache-endpoint-address`,
       stringValue: this.restApiCache.attrConfigurationEndPointAddress,
     })
 
     this.ssmManager.writeStringToParameters(`${this.id}-elasticache-endpoint-port`, this, {
-      parameterName: `${this.id}-elasticache-endpoint-port`,
       description: `Elasticache port to use by applications`,
+      parameterName: `${this.id}-elasticache-endpoint-port`,
       stringValue: this.restApiCache.attrConfigurationEndPointPort,
     })
   }
 
   /**
    * Create Lambda Role
-   * @protected
    */
   protected createLambdaRole() {
     super.createLambdaRole()
@@ -137,19 +128,17 @@ export abstract class RestApiLambdaWithCache extends RestApiLambda {
 
   /**
    * @summary Method to create environment variables for RestApi Lambda function
-   * @protected
    */
   protected createLambdaEnvironment() {
     this.restApiLambdaEnvironment = {
-      NODE_ENV: this.props.nodeEnv,
       LOG_LEVEL: this.props.logLevel,
+      NODE_ENV: this.props.nodeEnv,
       TZ: this.props.timezone,
     }
   }
 
   /**
    * @summary Method to create lambda function for RestApi API
-   * @protected
    */
   protected createLambdaFunction() {
     this.restApiLambdaFunction = this.lambdaManager.createLambdaFunction(

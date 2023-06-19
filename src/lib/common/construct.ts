@@ -5,11 +5,8 @@ import * as utils from '../utils'
 import { CommonStackProps } from './types'
 
 /**
- * @stability stable
- * @category cdk-utils.common-construct
  * @subcategory Construct
  * @classdesc Common construct to use as a base for all higher level constructs.
- *
  * @example
  * import { CommonConstruct } from '@gradientedge/cdk-utils';
  *
@@ -92,10 +89,10 @@ export class CommonConstruct extends Construct {
 
   /**
    * @summary Helper method to add CloudFormation outputs from the construct
-   * @param {string} id scoped id of the resource
-   * @param {string} value the value of the exported output
-   * @param {string?} description optional description for the output
-   * @param {boolean} overrideId Flag which indicates whether to override the default logical id of the output
+   * @param id scoped id of the resource
+   * @param value the value of the exported output
+   * @param description optional description for the output
+   * @param overrideId Flag which indicates whether to override the default logical id of the output
    */
   protected addCfnOutput(id: string, value: string, description?: string, overrideId = true): cdk.CfnOutput {
     return utils.createCfnOutput(id, this, value, description, overrideId)

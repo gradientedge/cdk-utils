@@ -7,28 +7,24 @@ import { Construct } from 'constructs'
 import { CommonConstruct, CommonStack, CommonStackProps } from '../../lib'
 
 interface TestStackProps extends CommonStackProps {
-  testVpc: any
-  testCluster: any
-  testLogGroup: any
-  testTask: any
-  testLambda: any
-  testFargateRule: any
-  testLambdaRule: any
   testBucket: any
+  testCluster: any
+  testFargateRule: any
+  testLambda: any
+  testLambdaRule: any
+  testLogGroup: any
   testSqs: any
   testSqsRule: any
+  testTask: any
+  testVpc: any
 }
 
 const testStackProps = {
+  domainName: 'gradientedge.io',
   env: {
     account: '123456789',
     region: 'eu-west-1',
   },
-  name: 'test-common-stack',
-  domainName: 'gradientedge.io',
-  region: 'eu-west-1',
-  stackName: 'test',
-  stage: 'test',
   extraContexts: [
     'src/test/common/cdkConfig/buckets.json',
     'src/test/common/cdkConfig/ecs.json',
@@ -38,6 +34,10 @@ const testStackProps = {
     'src/test/common/cdkConfig/vpc.json',
     'src/test/common/cdkConfig/sqs.json',
   ],
+  name: 'test-common-stack',
+  region: 'eu-west-1',
+  stackName: 'test',
+  stage: 'test',
   stageContextPath: 'src/test/common/cdkEnv',
 }
 
@@ -54,16 +54,16 @@ class TestCommonStack extends CommonStack {
     return {
       ...super.determineConstructProps(props),
       ...{
-        testVpc: this.node.tryGetContext('testVpc'),
-        testCluster: this.node.tryGetContext('testCluster'),
-        testLogGroup: this.node.tryGetContext('testLogGroup'),
-        testTask: this.node.tryGetContext('testTask'),
-        testLambda: this.node.tryGetContext('testLambda'),
-        testFargateRule: this.node.tryGetContext('testLambda'),
-        testLambdaRule: this.node.tryGetContext('testLambda'),
         testBucket: this.node.tryGetContext('siteBucket'),
+        testCluster: this.node.tryGetContext('testCluster'),
+        testFargateRule: this.node.tryGetContext('testLambda'),
+        testLambda: this.node.tryGetContext('testLambda'),
+        testLambdaRule: this.node.tryGetContext('testLambda'),
+        testLogGroup: this.node.tryGetContext('testLogGroup'),
         testSqs: this.node.tryGetContext('testSqs'),
         testSqsRule: this.node.tryGetContext('testSqsRule'),
+        testTask: this.node.tryGetContext('testTask'),
+        testVpc: this.node.tryGetContext('testVpc'),
       },
     }
   }

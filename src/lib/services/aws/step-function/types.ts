@@ -20,40 +20,30 @@ import {
 } from 'aws-cdk-lib/aws-stepfunctions-tasks'
 
 /**
- * @category cdk-utils.step-functions-manager
- * @subcategory Properties
  */
 export interface SfnSucceedProps extends SucceedProps {
   name: string
 }
 
 /**
- * @category cdk-utils.step-functions-manager
- * @subcategory Properties
  */
 export interface SfnRetryProps extends RetryProps {
   intervalInSecs: number
 }
 
 /**
- * @category cdk-utils.step-functions-manager
- * @subcategory Properties
  */
 export interface SfnFailProps extends FailProps {
   name: string
 }
 
 /**
- * @category cdk-utils.step-functions-manager
- * @subcategory Properties
  */
 export interface SfnPassProps extends PassProps {
   name: string
 }
 
 /**
- * @category cdk-utils.step-functions-manager
- * @subcategory Properties
  */
 export interface SfnDynamoGetItemProps extends DynamoGetItemProps {
   name: string
@@ -61,8 +51,6 @@ export interface SfnDynamoGetItemProps extends DynamoGetItemProps {
 }
 
 /**
- * @category cdk-utils.step-functions-manager
- * @subcategory Properties
  */
 export interface SfnDynamoPutItemProps extends DynamoPutItemProps {
   name: string
@@ -70,8 +58,6 @@ export interface SfnDynamoPutItemProps extends DynamoPutItemProps {
 }
 
 /**
- * @category cdk-utils.step-functions-manager
- * @subcategory Properties
  */
 export interface SfnDynamoDeleteItemProps extends DynamoDeleteItemProps {
   name: string
@@ -79,8 +65,6 @@ export interface SfnDynamoDeleteItemProps extends DynamoDeleteItemProps {
 }
 
 /**
- * @category cdk-utils.step-functions-manager
- * @subcategory Properties
  */
 export interface SfnSqsSendMessageProps extends SqsSendMessageProps {
   name: string
@@ -88,8 +72,6 @@ export interface SfnSqsSendMessageProps extends SqsSendMessageProps {
 }
 
 /**
- * @category cdk-utils.step-functions-manager
- * @subcategory Properties
  */
 export interface SfnParallelProps extends ParallelProps {
   name: string
@@ -97,16 +79,12 @@ export interface SfnParallelProps extends ParallelProps {
 }
 
 /**
- * @category cdk-utils.step-functions-manager
- * @subcategory Properties
  */
 export interface SfnChoiceProps extends ChoiceProps {
   name: string
 }
 
 /**
- * @category cdk-utils.step-functions-manager
- * @subcategory Properties
  */
 export interface SfnWaitProps extends WaitProps {
   name: string
@@ -114,8 +92,6 @@ export interface SfnWaitProps extends WaitProps {
 }
 
 /**
- * @category cdk-utils.step-functions-manager
- * @subcategory Properties
  */
 export interface SfnLambdaInvokeProps extends LambdaInvokeProps {
   name: string
@@ -123,8 +99,6 @@ export interface SfnLambdaInvokeProps extends LambdaInvokeProps {
 }
 
 /**
- * @category cdk-utils.step-functions-manager
- * @subcategory Properties
  */
 export interface SfnCallApiGatewayRestApiEndpointProps extends CallApiGatewayRestApiEndpointProps {
   name: string
@@ -132,20 +106,14 @@ export interface SfnCallApiGatewayRestApiEndpointProps extends CallApiGatewayRes
 }
 
 /**
- * @category cdk-utils.step-functions-manager
- * @subcategory Properties
  */
 export interface SfnStateMachineProps extends StateMachineProps {}
 
 /**
- * @category cdk-utils.sfn-manager
- * @subcategory Properties
  */
 export interface SfnMapProps extends MapProps {}
 
 /**
- * @category cdk-utils.sfn-manager
- * @subcategory Properties
  */
 export interface SfnStartExecutionProps extends StepFunctionsStartExecutionProps {
   retries?: SfnRetryProps[]

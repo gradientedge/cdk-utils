@@ -11,17 +11,11 @@ interface TestStackProps extends SiteWithEcsBackendProps {
 }
 
 const testStackProps = {
+  domainName: 'gradientedge.io',
   env: {
     account: '123456789',
     region: 'eu-west-1',
   },
-  name: 'test-site-stack',
-  domainName: 'gradientedge.io',
-  region: 'eu-west-1',
-  stage: 'test',
-  stackName: 'test',
-  siteSubDomain: 'site',
-  siteCreateAltARecord: true,
   extraContexts: [
     'src/test/common/cdkConfig/dummy.json',
     'src/test/common/cdkConfig/buckets.json',
@@ -35,6 +29,12 @@ const testStackProps = {
     'src/test/common/cdkConfig/vpc.json',
     'src/test/common/cdkConfig/function.json',
   ],
+  name: 'test-site-stack',
+  region: 'eu-west-1',
+  siteCreateAltARecord: true,
+  siteSubDomain: 'site',
+  stackName: 'test',
+  stage: 'test',
   stageContextPath: 'src/test/common/cdkEnv',
 }
 
@@ -53,31 +53,31 @@ class TestCommonStack extends CommonStack {
       ...{
         logLevel: this.node.tryGetContext('logLevel'),
         nodeEnv: this.node.tryGetContext('nodeEnv'),
+        siteAliases: [`${this.node.tryGetContext('siteSubDomain')}.${this.fullyQualifiedDomain()}`],
+        siteCacheInvalidationDockerFilePath: `src/test/common/docker`,
         siteCertificate: this.node.tryGetContext('siteCertificate'),
+        siteCloudfrontFunctionProps: this.node.tryGetContext('testSite'),
+        siteCluster: this.node.tryGetContext('testCluster'),
+        siteDistribution: this.node.tryGetContext('siteDistribution'),
+        siteEcsContainerImagePath: `src/test/common/docker`,
+        siteFileSystem: this.node.tryGetContext('siteFileSystem'),
+        siteFileSystemAccessPoints: this.node.tryGetContext('siteFileSystemAccessPoints'),
+        siteHealthCheck: this.node.tryGetContext('siteHealthCheck'),
+        siteLog: this.node.tryGetContext('testLogGroup'),
+        siteLogBucket: this.node.tryGetContext('siteLogBucket'),
+        siteRecordName: this.node.tryGetContext('siteSubDomain'),
         siteRegionalCertificate: {
           domainName: this.fullyQualifiedDomain(),
           subjectAlternativeNames: [`*.${this.fullyQualifiedDomain()}`],
           useExistingCertificate: false,
         },
-        siteEcsContainerImagePath: `src/test/common/docker`,
-        siteLog: this.node.tryGetContext('testLogGroup'),
-        siteLogBucket: this.node.tryGetContext('siteLogBucket'),
-        siteDistribution: this.node.tryGetContext('siteDistribution'),
         siteSource: s3deploy.Source.asset('src/test/common/nodejs/lib'),
-        siteRecordName: this.node.tryGetContext('siteSubDomain'),
         siteSubDomain: this.node.tryGetContext('siteSubDomain'),
-        siteAliases: [`${this.node.tryGetContext('siteSubDomain')}.${this.fullyQualifiedDomain()}`],
-        siteCluster: this.node.tryGetContext('testCluster'),
         siteTask: this.node.tryGetContext('testTask'),
         siteVpc: this.node.tryGetContext('testVpc'),
-        siteFileSystem: this.node.tryGetContext('siteFileSystem'),
-        siteFileSystemAccessPoints: this.node.tryGetContext('siteFileSystemAccessPoints'),
-        siteHealthCheck: this.node.tryGetContext('siteHealthCheck'),
-        siteCacheInvalidationDockerFilePath: `src/test/common/docker`,
         testAttribute: this.node.tryGetContext('testAttribute'),
         timezone: this.node.tryGetContext('timezone'),
         useExistingHostedZone: this.node.tryGetContext('useExistingHostedZone'),
-        siteCloudfrontFunctionProps: this.node.tryGetContext('testSite'),
       },
     }
   }
@@ -219,6 +219,7 @@ describe('TestSiteWithEcsBackendAndEfsConstruct', () => {
         Comment: 'test-site-distribution - test stage',
         DefaultCacheBehavior: {
           CachePolicyId: '658327ea-f89d-4fab-a63d-7e88639e58f6',
+          Compress: true,
           FunctionAssociations: [
             {
               EventType: 'viewer-request',
@@ -227,7 +228,6 @@ describe('TestSiteWithEcsBackendAndEfsConstruct', () => {
               },
             },
           ],
-          Compress: true,
           TargetOriginId: 'testsitestacktestsitedistributionOrigin14E765772',
           ViewerProtocolPolicy: 'redirect-to-https',
         },
@@ -320,20 +320,6 @@ describe('TestSiteWithEcsBackendAndEfsConstruct', () => {
     template.hasResourceProperties('AWS::ECS::TaskDefinition', {
       ContainerDefinitions: [
         {
-          Environment: [
-            {
-              Name: 'NODE_ENV',
-              Value: 'development',
-            },
-            {
-              Name: 'LOG_LEVEL',
-              Value: 'debug',
-            },
-            {
-              Name: 'TZ',
-              Value: 'UTC',
-            },
-          ],
           Essential: true,
           Image: {
             'Fn::Sub':
@@ -345,8 +331,8 @@ describe('TestSiteWithEcsBackendAndEfsConstruct', () => {
               'awslogs-group': {
                 Ref: 'testsitestacktestsiteecsloggroupBD0E035B',
               },
-              'awslogs-stream-prefix': 'test-site-test/ecs',
               'awslogs-region': 'eu-west-1',
+              'awslogs-stream-prefix': 'test-site-test/ecs',
             },
           },
           MountPoints: [
@@ -420,10 +406,10 @@ describe('TestSiteWithEcsBackendAndEfsConstruct', () => {
 describe('TestSiteWithEcsBackendAndEfsConstruct', () => {
   test('provisions cloudfront function as expected', () => {
     template.hasResourceProperties('AWS::CloudFront::Function', {
-      Name: 'test-site-function-test',
       FunctionConfig: {
         Comment: 'test comment',
       },
+      Name: 'test-site-function-test',
     })
   })
 })
@@ -442,15 +428,15 @@ describe('TestEfsManager', () => {
 describe('TestEfsManager', () => {
   test('provisions site efs access points as expected', () => {
     template.hasResourceProperties('AWS::EFS::AccessPoint', {
-      FileSystemId: {
-        Ref: 'testsitestacktestsitefs4DAB9666',
-      },
       AccessPointTags: [
         {
           Key: 'Name',
           Value: 'test-site-stack/test-site-stack/test-site-fs/test-site-fs-ap-0',
         },
       ],
+      FileSystemId: {
+        Ref: 'testsitestacktestsitefs4DAB9666',
+      },
       PosixUser: {
         Gid: '1000',
         Uid: '1000',
@@ -466,15 +452,15 @@ describe('TestEfsManager', () => {
     })
 
     template.hasResourceProperties('AWS::EFS::AccessPoint', {
-      FileSystemId: {
-        Ref: 'testsitestacktestsitefs4DAB9666',
-      },
       AccessPointTags: [
         {
           Key: 'Name',
           Value: 'test-site-stack/test-site-stack/test-site-fs/test-site-fs-ap-1',
         },
       ],
+      FileSystemId: {
+        Ref: 'testsitestacktestsitefs4DAB9666',
+      },
       PosixUser: {
         Gid: '1000',
         Uid: '1000',

@@ -5,16 +5,12 @@ import { ApplicationLoadBalancedFargateServiceProps } from 'aws-cdk-lib/aws-ecs-
 import * as elb from 'aws-cdk-lib/aws-elasticloadbalancingv2'
 
 /**
- * @category cdk-utils.ecs-manager
- * @subcategory Properties
  */
 export interface EcsClusterProps extends ClusterProps {
   tags?: TagProps[]
 }
 
 /**
- * @category cdk-utils.ecs-manager
- * @subcategory Properties
  */
 export interface EcsTaskProps extends TaskDefinitionProps {
   logging?: AwsLogDriverProps
@@ -22,8 +18,8 @@ export interface EcsTaskProps extends TaskDefinitionProps {
 }
 
 export interface EcsScalingProps {
-  minCapacity?: number
   maxCapacity?: number
+  minCapacity?: number
   scaleOnCpuUtilization?: number
   scaleOnMemoryUtilization?: number
   scaleOnRequestsPerTarget?: number
@@ -31,8 +27,6 @@ export interface EcsScalingProps {
 }
 
 /**
- * @category cdk-utils.site-with-ecs-backend
- * @subcategory Properties
  */
 export interface HealthCheck extends elb.HealthCheck {
   intervalInSecs: number
@@ -40,8 +34,6 @@ export interface HealthCheck extends elb.HealthCheck {
 }
 
 /**
- * @category cdk-utils.ecs-manager
- * @subcategory Properties
  */
 export interface EcsApplicationLoadBalancedFargateServiceProps extends ApplicationLoadBalancedFargateServiceProps {
   healthCheck?: HealthCheck

@@ -9,16 +9,16 @@ interface TestStackProps extends CommonStackProps {
 }
 
 const testStackProps = {
+  domainName: 'gradientedge.io',
   env: {
     account: '123456789',
     region: 'eu-west-1',
   },
+  extraContexts: ['src/test/common/cdkConfig/waf.json'],
   name: 'test-common-stack',
-  domainName: 'gradientedge.io',
   region: 'eu-west-1',
   stackName: 'test',
   stage: 'test',
-  extraContexts: ['src/test/common/cdkConfig/waf.json'],
   stageContextPath: 'src/test/common/cdkEnv',
 }
 
@@ -103,10 +103,10 @@ describe('TestWafConstruct', () => {
   test('provisions new ip set as expected', () => {
     template.hasResourceProperties('AWS::WAFv2::IPSet', {
       Addresses: ['0.0.0.0/32'],
-      IPAddressVersion: 'IPV4',
-      Scope: 'REGIONAL',
       Description: 'IP Set for test-ip-set - test stage',
+      IPAddressVersion: 'IPV4',
       Name: 'test-ipset-test',
+      Scope: 'REGIONAL',
     })
   })
 })
@@ -118,20 +118,20 @@ describe('TestWafConstruct', () => {
         Allow: {},
         Block: {},
       },
-      Scope: 'CLOUDFRONT',
-      VisibilityConfig: {
-        CloudWatchMetricsEnabled: true,
-        MetricName: 'test-metric',
-        SampledRequestsEnabled: false,
-      },
       Description: 'Web Acl for test-web-acl - test stage',
       Name: 'test-webacl-test',
+      Scope: 'CLOUDFRONT',
       Tags: [
         {
           Key: 'service',
           Value: 'test',
         },
       ],
+      VisibilityConfig: {
+        CloudWatchMetricsEnabled: true,
+        MetricName: 'test-metric',
+        SampledRequestsEnabled: false,
+      },
     })
   })
 })

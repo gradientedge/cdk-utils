@@ -9,9 +9,6 @@ import { CommonConstruct } from '../../../common'
 import { EcsApplicationLoadBalancedFargateServiceProps, EcsClusterProps, EcsTaskProps } from './types'
 
 /**
- * @stability stable
- * @category cdk-utils.ecs-manager
- * @subcategory Construct
  * @classdesc Provides operations on AWS Elastic Container Service.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
@@ -25,28 +22,27 @@ import { EcsApplicationLoadBalancedFargateServiceProps, EcsClusterProps, EcsTask
  *     this.ecsManager.createEcsCluster('MyCluster', this, vpc)
  *   }
  * }
- *
  * @see [CDK ECS Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_ecs-readme.html}
  */
 export class EcsManager {
   /**
    * @summary Method to create an ecs cluster
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {EcsClusterProps} props
-   * @param {ec2.IVpc} vpc
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props
+   * @param vpc
    */
   public createEcsCluster(id: string, scope: CommonConstruct, props: EcsClusterProps, vpc: ec2.IVpc) {
     if (!props) throw `Ecs Cluster props undefined for ${id}`
 
     const ecsCluster = new ecs.Cluster(scope, `${id}`, {
-      clusterName: `${props.clusterName}-${scope.props.stage}`,
-      vpc: vpc,
-      defaultCloudMapNamespace: props.defaultCloudMapNamespace,
       capacity: props.capacity,
-      enableFargateCapacityProviders: props.enableFargateCapacityProviders,
+      clusterName: `${props.clusterName}-${scope.props.stage}`,
       containerInsights: props.containerInsights,
+      defaultCloudMapNamespace: props.defaultCloudMapNamespace,
+      enableFargateCapacityProviders: props.enableFargateCapacityProviders,
       executeCommandConfiguration: props.executeCommandConfiguration,
+      vpc: vpc,
     })
 
     if (props.tags && props.tags.length > 0) {
@@ -63,16 +59,16 @@ export class EcsManager {
 
   /**
    * @summary Method to create an ecs fargate task
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {EcsTaskProps} props
-   * @param {ecs.ICluster} cluster
-   * @param {iam.Role} role
-   * @param {logs.ILogGroup} logGroup
-   * @param {ecs.ContainerImage} containerImage
-   * @param {Map<string, string>} environment
-   * @param {Map<string, string>} secrets
-   * @param {string[]} command
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props
+   * @param cluster
+   * @param role
+   * @param logGroup
+   * @param containerImage
+   * @param environment
+   * @param secrets
+   * @param command
    */
   public createEcsFargateTask(
     id: string,
@@ -94,36 +90,36 @@ export class EcsManager {
       ephemeralStorageGiB: props.ephemeralStorageGiB,
       executionRole: role,
       family: `${props.family}-${scope.props.stage}`,
-      ipcMode: props.ipcMode,
       inferenceAccelerators: props.inferenceAccelerators,
+      ipcMode: props.ipcMode,
       memoryMiB: props.memoryMiB,
       networkMode: ecs.NetworkMode.AWS_VPC,
       pidMode: props.pidMode,
       placementConstraints: props.placementConstraints,
       proxyConfiguration: props.proxyConfiguration,
       runtimePlatform: {
-        operatingSystemFamily: props.runtimePlatform?.operatingSystemFamily ?? ecs.OperatingSystemFamily.LINUX,
         cpuArchitecture: props.runtimePlatform?.cpuArchitecture ?? ecs.CpuArchitecture.X86_64,
+        operatingSystemFamily: props.runtimePlatform?.operatingSystemFamily ?? ecs.OperatingSystemFamily.LINUX,
       },
       taskRole: role,
       volumes: props.volumes,
     })
 
     ecsTask.addContainer('EcsContainer', {
+      command: command,
       cpu: props.cpu ? parseInt(props.cpu) : undefined,
       disableNetworking: false,
       environment: environment,
       image: containerImage,
       logging: ecs.LogDriver.awsLogs({
         logGroup: logGroup,
-        streamPrefix: `${id}`,
-        multilinePattern: props.logging?.multilinePattern,
         logRetention: props.logging?.logRetention,
+        multilinePattern: props.logging?.multilinePattern,
+        streamPrefix: `${id}`,
       }),
       memoryLimitMiB: props.memoryMiB ? parseInt(props.memoryMiB) : undefined,
       privileged: false,
       secrets: secrets,
-      command: command,
     })
 
     if (props.tags && props.tags.length > 0) {
@@ -139,11 +135,11 @@ export class EcsManager {
 
   /**
    * @summary Method to create an application loadbalanced ecs fargate task
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {EcsApplicationLoadBalancedFargateServiceProps} props
-   * @param {ecs.ICluster} cluster
-   * @param {logs.ILogGroup} logGroup
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props
+   * @param cluster
+   * @param logGroup
    */
   public createLoadBalancedFargateService(
     id: string,
@@ -169,26 +165,26 @@ export class EcsManager {
       loadBalancerName: `${id}-${scope.props.stage}`,
       memoryLimitMiB: props.memoryLimitMiB,
       runtimePlatform: {
-        operatingSystemFamily: props.runtimePlatform?.operatingSystemFamily ?? ecs.OperatingSystemFamily.LINUX,
         cpuArchitecture: props.runtimePlatform?.cpuArchitecture ?? ecs.CpuArchitecture.X86_64,
+        operatingSystemFamily: props.runtimePlatform?.operatingSystemFamily ?? ecs.OperatingSystemFamily.LINUX,
       },
       serviceName: `${id}-${scope.props.stage}`,
       taskImageOptions: {
+        containerPort: props.taskImageOptions?.containerPort,
         enableLogging: props.taskImageOptions?.enableLogging ?? true,
+        environment: props.taskImageOptions?.environment,
+        executionRole: props.taskImageOptions?.executionRole,
+        image: props.taskImageOptions.image,
         logDriver:
           props.taskImageOptions?.logDriver ??
           ecs.LogDriver.awsLogs({
             logGroup: logGroup,
-            streamPrefix: `${id}-${scope.props.stage}/ecs`,
-            multilinePattern: props.logging?.multilinePattern,
             logRetention: props.logging?.logRetention,
+            multilinePattern: props.logging?.multilinePattern,
+            streamPrefix: `${id}-${scope.props.stage}/ecs`,
           }),
-        image: props.taskImageOptions.image,
-        executionRole: props.taskImageOptions?.executionRole,
-        taskRole: props.taskImageOptions?.taskRole,
-        containerPort: props.taskImageOptions?.containerPort,
-        environment: props.taskImageOptions?.environment,
         secrets: props.taskImageOptions?.secrets,
+        taskRole: props.taskImageOptions?.taskRole,
       },
     })
 

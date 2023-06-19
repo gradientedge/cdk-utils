@@ -3,8 +3,6 @@ import * as s3 from 'aws-cdk-lib/aws-s3'
 import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment'
 
 /**
- * @category cdk-utils.s3-manager
- * @subcategory Properties
  */
 export interface LifecycleRule extends s3.LifecycleRule {
   expirationInDays?: number
@@ -12,8 +10,6 @@ export interface LifecycleRule extends s3.LifecycleRule {
 }
 
 /**
- * @category cdk-utils.s3-manager
- * @subcategory Properties
  */
 export interface BucketDeploymentProps extends s3deploy.BucketDeploymentProps {
   expirationInDays?: number
@@ -21,14 +17,12 @@ export interface BucketDeploymentProps extends s3deploy.BucketDeploymentProps {
 }
 
 /**
- * @category cdk-utils.s3-manager
- * @subcategory Properties
  */
 export interface S3BucketProps extends s3.BucketProps {
-  enableEventBridge?: boolean
-  lifecycleRules?: LifecycleRule[]
   bucketName: string
-  logBucketName?: string
+  enableEventBridge?: boolean
   existingBucket?: boolean
+  lifecycleRules?: LifecycleRule[]
+  logBucketName?: string
   tags?: TagProps[]
 }

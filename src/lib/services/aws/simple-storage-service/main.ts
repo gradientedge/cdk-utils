@@ -8,9 +8,6 @@ import { LifecycleRule, S3BucketProps } from './types'
 import { CommonConstruct } from '../../../common'
 
 /**
- * @stability stable
- * @category cdk-utils.s3-manager
- * @subcategory Construct
  * @classdesc Provides operations on AWS S3.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
@@ -24,14 +21,12 @@ import { CommonConstruct } from '../../../common'
  *     this.s3Manager.createS3Bucket('MyBucket', this)
  *   }
  * }
- *
  * @see [CDK S3 Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_s3-readme.html}
  */
 export class S3Manager {
   /**
    * @summary Method to determine S3 Bucket lifecycle properties
-   * @param {S3BucketProps} props bucket properties
-   * @private
+   * @param props bucket properties
    */
   protected determineBucketLifecycleRules(props: S3BucketProps) {
     if (!props.lifecycleRules) return undefined
@@ -39,19 +34,19 @@ export class S3Manager {
     const bucketLifecycleRules: LifecycleRule[] = []
     props.lifecycleRules.forEach(lifecycleRule => {
       bucketLifecycleRules.push({
-        id: lifecycleRule.id,
-        enabled: lifecycleRule.enabled,
         abortIncompleteMultipartUploadAfter: lifecycleRule.abortIncompleteMultipartUploadAfter,
-        expirationDate: lifecycleRule.expirationDate,
+        enabled: lifecycleRule.enabled,
         expiration: lifecycleRule.expirationInDays ? cdk.Duration.days(lifecycleRule.expirationInDays) : undefined,
+        expirationDate: lifecycleRule.expirationDate,
+        expiredObjectDeleteMarker: lifecycleRule.expiredObjectDeleteMarker,
+        id: lifecycleRule.id,
         noncurrentVersionExpiration: lifecycleRule.noncurrentVersionExpirationInDays
           ? cdk.Duration.days(lifecycleRule.noncurrentVersionExpirationInDays)
           : undefined,
         noncurrentVersionTransitions: lifecycleRule.noncurrentVersionTransitions,
-        transitions: lifecycleRule.transitions,
         prefix: lifecycleRule.prefix,
         tagFilters: lifecycleRule.tagFilters,
-        expiredObjectDeleteMarker: lifecycleRule.expiredObjectDeleteMarker,
+        transitions: lifecycleRule.transitions,
       })
     })
 
@@ -60,9 +55,8 @@ export class S3Manager {
 
   /**
    * @summary Method to determine the bucket name using account and region
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {string} bucketName the bucket name
-   * @protected
+   * @param scope scope in which this resource is defined
+   * @param bucketName the bucket name
    */
   protected static determineBucketNameByAccountAndRegion(scope: CommonConstruct, bucketName: string) {
     return `${bucketName}-${cdk.Stack.of(scope).account}-${scope.props.region}-${scope.props.stage}`
@@ -70,9 +64,8 @@ export class S3Manager {
 
   /**
    * @summary Method to determine the bucket name using domain name
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {string} bucketName the bucket name
-   * @protected
+   * @param scope scope in which this resource is defined
+   * @param bucketName the bucket name
    */
   protected static determineBucketNameByDomainName(scope: CommonConstruct, bucketName: string) {
     return scope.isProductionStage()
@@ -82,9 +75,8 @@ export class S3Manager {
 
   /**
    * @summary Method to determine the bucket name
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {string} bucketName the bucket name
-   * @private
+   * @param scope scope in which this resource is defined
+   * @param bucketName the bucket name
    */
   public static determineBucketName(scope: CommonConstruct, bucketName: string) {
     return scope.props.excludeDomainNameForBuckets
@@ -94,9 +86,9 @@ export class S3Manager {
 
   /**
    * @summary Method to create a s3 bucket
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {S3BucketProps} props bucket properties
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props bucket properties
    */
   public createS3Bucket(id: string, scope: CommonConstruct, props: S3BucketProps) {
     if (!props) throw `S3 props undefined for ${id}`
@@ -129,10 +121,10 @@ export class S3Manager {
         removalPolicy: props.removalPolicy || cdk.RemovalPolicy.RETAIN,
         serverAccessLogsBucket: logBucket,
         serverAccessLogsPrefix: props.serverAccessLogsPrefix,
-        websiteIndexDocument: props.websiteIndexDocument,
-        websiteErrorDocument: props.websiteErrorDocument,
-        websiteRoutingRules: props.websiteRoutingRules,
         versioned: props.versioned,
+        websiteErrorDocument: props.websiteErrorDocument,
+        websiteIndexDocument: props.websiteIndexDocument,
+        websiteRoutingRules: props.websiteRoutingRules,
       })
 
       const cfnBucket = bucket.node.defaultChild as s3.CfnBucket
@@ -157,9 +149,9 @@ export class S3Manager {
 
   /**
    * @summary Method to create an iam bucket policy for cloudtrail
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {s3.IBucket} bucket
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param bucket
    */
   public createBucketPolicyForCloudTrail(id: string, scope: CommonConstruct, bucket: s3.IBucket) {
     const bucketPolicyDocument = new iam.PolicyDocument({
@@ -189,13 +181,13 @@ export class S3Manager {
 
   /**
    * @summary Method to create a s3 bucket deployment
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {s3.IBucket} siteBucket
-   * @param {cloudfront.IDistribution} distribution
-   * @param {s3deploy.ISource[]} sources
-   * @param {string} prefix
-   * @param {boolean} prune
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param siteBucket
+   * @param distribution
+   * @param sources
+   * @param prefix
+   * @param prune
    */
   public doBucketDeployment(
     id: string,
@@ -220,10 +212,10 @@ export class S3Manager {
 
   /**
    *
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {s3.IBucket} bucket bucket to create the folders in
-   * @param {string[]} folders list of folder names to be created in the bucket
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param bucket bucket to create the folders in
+   * @param folders list of folder names to be created in the bucket
    */
   public createBucketFolders(id: string, scope: CommonConstruct, bucket: s3.IBucket, folders: string[]) {
     if (!folders || folders.length == 0) {
@@ -234,8 +226,8 @@ export class S3Manager {
       new s3deploy.BucketDeployment(scope, `${id}-${folder}`, {
         destinationBucket: bucket,
         destinationKeyPrefix: folder,
-        sources: [s3deploy.Source.data('README.md', `This is the ${folder} folder for ${id}`)],
         prune: false,
+        sources: [s3deploy.Source.data('README.md', `This is the ${folder} folder for ${id}`)],
       })
     })
   }

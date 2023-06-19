@@ -8,30 +8,26 @@ import { CommonConstruct, CommonStack, CommonStackProps } from '../../lib'
 import * as sfn from 'aws-cdk-lib/aws-stepfunctions'
 
 interface TestStackProps extends CommonStackProps {
-  testVpc: any
   testCluster: any
-  testLogGroup: any
-  testTask: any
-  testLambda: any
   testFargateRule: any
+  testLambda: any
   testLambdaRule: any
+  testLogGroup: any
   testSqs: any
+  testSqsToSfnPipe: any
   testSubmitStepCreateSomething: any
   testSubmitStepSuccess: any
   testSubmitWorkflow: any
-  testSqsToSfnPipe: any
+  testTask: any
+  testVpc: any
 }
 
 const testStackProps = {
+  domainName: 'gradientedge.io',
   env: {
     account: '123456789',
     region: 'eu-west-1',
   },
-  name: 'test-common-stack',
-  domainName: 'gradientedge.io',
-  region: 'eu-west-1',
-  stackName: 'test',
-  stage: 'test',
   extraContexts: [
     'src/test/common/cdkConfig/ecs.json',
     'src/test/common/cdkConfig/lambdas.json',
@@ -42,6 +38,10 @@ const testStackProps = {
     'src/test/common/cdkConfig/stepFunctions.json',
     'src/test/common/cdkConfig/vpc.json',
   ],
+  name: 'test-common-stack',
+  region: 'eu-west-1',
+  stackName: 'test',
+  stage: 'test',
   stageContextPath: 'src/test/common/cdkEnv',
 }
 
@@ -58,18 +58,18 @@ class TestCommonStack extends CommonStack {
     return {
       ...super.determineConstructProps(props),
       ...{
-        testVpc: this.node.tryGetContext('testVpc'),
         testCluster: this.node.tryGetContext('testCluster'),
-        testLogGroup: this.node.tryGetContext('testLogGroup'),
-        testTask: this.node.tryGetContext('testTask'),
-        testLambda: this.node.tryGetContext('testLambda'),
         testFargateRule: this.node.tryGetContext('testLambda'),
+        testLambda: this.node.tryGetContext('testLambda'),
         testLambdaRule: this.node.tryGetContext('testLambda'),
+        testLogGroup: this.node.tryGetContext('testLogGroup'),
         testSqs: this.node.tryGetContext('testSqs'),
+        testSqsToSfnPipe: this.node.tryGetContext('testSqsToSfnPipe'),
         testSubmitStepCreateSomething: this.node.tryGetContext('testSubmitStepCreateSomething'),
         testSubmitStepSuccess: this.node.tryGetContext('testSubmitStepSuccess'),
         testSubmitWorkflow: this.node.tryGetContext('testSubmitWorkflow'),
-        testSqsToSfnPipe: this.node.tryGetContext('testSqsToSfnPipe'),
+        testTask: this.node.tryGetContext('testTask'),
+        testVpc: this.node.tryGetContext('testVpc'),
       },
     }
   }
@@ -88,16 +88,16 @@ class TestInvalidCommonStack extends CommonStack {
     return {
       ...super.determineConstructProps(props),
       ...{
-        testVpc: this.node.tryGetContext('testVpc'),
         testCluster: this.node.tryGetContext('testCluster'),
-        testLogGroup: this.node.tryGetContext('testLogGroup'),
-        testTask: this.node.tryGetContext('testTask'),
         testLambda: this.node.tryGetContext('testLambda'),
+        testLogGroup: this.node.tryGetContext('testLogGroup'),
         testSqs: this.node.tryGetContext('testSqs'),
+        testSqsToSfnPipe: this.node.tryGetContext('testSqsToSfnPipe'),
         testSubmitStepCreateSomething: this.node.tryGetContext('testSubmitStepCreateSomething'),
         testSubmitStepSuccess: this.node.tryGetContext('testSubmitStepSuccess'),
         testSubmitWorkflow: this.node.tryGetContext('testSubmitWorkflow'),
-        testSqsToSfnPipe: this.node.tryGetContext('testSqsToSfnPipe'),
+        testTask: this.node.tryGetContext('testTask'),
+        testVpc: this.node.tryGetContext('testVpc'),
       },
     }
   }
@@ -263,16 +263,13 @@ describe('TestEventConstruct', () => {
 describe('TestEventConstruct', () => {
   test('provisions new eventbridge pipe as expected', () => {
     template.hasResourceProperties('AWS::Pipes::Pipe', {
+      Name: 'test-sqs-to-sfn-pipe-test',
       RoleArn: {
         'Fn::GetAtt': ['testcommonstacktestsqstosfnpiperole2EFA5C05', 'Arn'],
       },
       Source: {
         'Fn::GetAtt': ['testcommonstacktestsqs99C34404', 'Arn'],
       },
-      Target: {
-        Ref: 'testcommonstacktestparallelstep535C7CF2',
-      },
-      Name: 'test-sqs-to-sfn-pipe-test',
       SourceParameters: {
         FilterCriteria: {
           Filters: [
@@ -284,6 +281,9 @@ describe('TestEventConstruct', () => {
         SqsQueueParameters: {
           BatchSize: 10,
         },
+      },
+      Target: {
+        Ref: 'testcommonstacktestparallelstep535C7CF2',
       },
       TargetParameters: {
         InputTemplate: '<$.body>',

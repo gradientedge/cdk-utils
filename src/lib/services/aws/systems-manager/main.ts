@@ -5,9 +5,6 @@ import { CommonConstruct } from '../../../common'
 import { SSMParameterReaderProps } from './types'
 
 /**
- * @stability stable
- * @category cdk-utils.ssm-manager
- * @subcategory Construct
  * @classdesc Provides operations on AWS Systems Manager.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
@@ -21,7 +18,6 @@ import { SSMParameterReaderProps } from './types'
  *     this.acmManager.writeStringToParameters('MyParameter', this, ...props)
  *   }
  * }
- *
  * @see [CDK Systems Manager Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_ssm-readme.html}
  */
 export class SsmManager {
@@ -29,16 +25,16 @@ export class SsmManager {
 
   /**
    * Method to write a string parameter to the parameters store
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {ssm.StringParameterProps} props parameter props
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props parameter props
    */
   public writeStringToParameters(id: string, scope: CommonConstruct, props: ssm.StringParameterProps) {
     if (!props) throw `Parameter props undefined for ${id}`
 
     const parameter = new ssm.StringParameter(scope, `${id}`, {
-      parameterName: `${props.parameterName}-${scope.props.stage}`,
       description: `${props.description} - ${scope.props.stage} stage`,
+      parameterName: `${props.parameterName}-${scope.props.stage}`,
       stringValue: props.stringValue,
     })
 
@@ -50,9 +46,9 @@ export class SsmManager {
 
   /**
    * Method to read a string parameter from the parameters store
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {string} parameterName parameter name to lookup
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param parameterName parameter name to lookup
    */
   public readStringParameter(id: string, scope: CommonConstruct, parameterName: string) {
     if (!parameterName || parameterName == '') throw 'Invalid parameter name'
@@ -62,10 +58,10 @@ export class SsmManager {
 
   /**
    * Method to read a string parameter from the parameters store in a given region
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {string} parameterName parameter name to lookup
-   * @param {string} region region name to lookup parameter
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param parameterName parameter name to lookup
+   * @param region region name to lookup parameter
    */
   public readStringParameterFromRegion(id: string, scope: CommonConstruct, parameterName: string, region: string) {
     if (!parameterName || parameterName == '') throw `Invalid parameter name for ${id}`
@@ -79,8 +75,6 @@ export class SsmManager {
 }
 
 /**
- * @category cdk-utils.ssm-manager
- * @subcategory Construct
  * @classdesc Provides utilities to read same/cross region SSM parameters
  */
 export class SSMParameterReader extends cr.AwsCustomResource {
@@ -88,13 +82,13 @@ export class SSMParameterReader extends cr.AwsCustomResource {
     const { parameterName, region } = props
 
     const ssmAwsSdkCall: cr.AwsSdkCall = {
-      service: 'SSM',
       action: 'getParameter',
       parameters: {
         Name: `${parameterName}-${scope.props.stage}`,
       },
-      region,
       physicalResourceId: cr.PhysicalResourceId.of(Date.now().toString()),
+      region,
+      service: 'SSM',
     }
 
     super(scope, name, {

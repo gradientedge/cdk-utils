@@ -4,12 +4,10 @@ import { ReplicatedElastiCacheProps } from '../../services'
 
 /**
  * @deprecated Use RestApiLambdaWithCacheProps instead. This will be removed in a future release.
- * @category cdk-utils.graphql-api-lambda-with-cache
- * @subcategory Properties
  */
 export interface GraphQlApiLambdaWithCacheProps extends GraphQlApiLambdaProps {
-  graphQLVpc: VpcProps
   graphQLElastiCache: ReplicatedElastiCacheProps
+  graphQLVpc: VpcProps
   securityGroupExportName: string
   useExistingVpc: boolean
   vpcName?: string

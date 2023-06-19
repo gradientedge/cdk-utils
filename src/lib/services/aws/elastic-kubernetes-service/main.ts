@@ -6,9 +6,6 @@ import { CommonConstruct } from '../../../common'
 import { EksClusterProps } from './types'
 
 /**
- * @stability stable
- * @category cdk-utils.eks-manager
- * @subcategory Construct
  * @classdesc Provides operations on AWS Elastic Kubernetes Service.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
@@ -22,17 +19,16 @@ import { EksClusterProps } from './types'
  *     this.eksManager.createEksDeployment('MyEksDeployment', this, image, vpc)
  *   }
  * }
- *
  * @see [CDK EKS Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_eks-readme.html}
  */
 export class EksManager {
   /**
    * @summary Method to create an eks deployment
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {EksClusterProps} props
-   * @param {ecr.DockerImageAsset} image
-   * @param {ec2.IVpc} vpc
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props
+   * @param image
+   * @param vpc
    */
   public createEksDeployment(
     id: string,
@@ -56,8 +52,8 @@ export class EksManager {
           spec: {
             containers: [
               {
-                name: `${id}`.toLowerCase(),
                 image: image.imageUri,
+                name: `${id}`.toLowerCase(),
                 ports: [{ containerPort: props.appContainerPort }],
               },
             ],
@@ -71,16 +67,16 @@ export class EksManager {
       kind: 'Service',
       metadata: { name: `${id}`.toLowerCase() },
       spec: {
-        type: 'LoadBalancer',
         ports: [
           {
             name: 'http-port',
-            protocol: 'TCP',
             port: 80,
+            protocol: 'TCP',
             targetPort: props.appContainerPort,
           },
         ],
         selector: appLabel,
+        type: 'LoadBalancer',
       },
     }
 

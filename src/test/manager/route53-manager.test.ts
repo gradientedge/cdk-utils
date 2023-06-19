@@ -5,30 +5,30 @@ import { Construct } from 'constructs'
 import { CommonConstruct, CommonStack, CommonStackProps } from '../../lib'
 
 interface TestStackProps extends CommonStackProps {
-  testHostedZone: any
-  testNewHostedZone: any
-  testNewCertificate: any
   testBucket: any
-  testLogBucket: any
   testDistribution: any
+  testHostedZone: any
+  testLogBucket: any
+  testNewCertificate: any
+  testNewHostedZone: any
 }
 
 const testStackProps = {
+  domainName: 'gradientedge.io',
   env: {
     account: '123456789',
     region: 'eu-west-1',
   },
-  name: 'test-common-stack',
-  domainName: 'gradientedge.io',
-  region: 'eu-west-1',
-  stackName: 'test',
-  stage: 'test',
   extraContexts: [
     'src/test/common/cdkConfig/buckets.json',
     'src/test/common/cdkConfig/certificates.json',
     'src/test/common/cdkConfig/distributions.json',
     'src/test/common/cdkConfig/routes.json',
   ],
+  name: 'test-common-stack',
+  region: 'eu-west-1',
+  stackName: 'test',
+  stage: 'test',
   stageContextPath: 'src/test/common/cdkEnv',
 }
 
@@ -45,12 +45,12 @@ class TestCommonStack extends CommonStack {
     return {
       ...super.determineConstructProps(props),
       ...{
-        testHostedZone: this.node.tryGetContext('testHostedZone'),
-        testNewHostedZone: this.node.tryGetContext('testNewHostedZone'),
-        testNewCertificate: this.node.tryGetContext('testNewCertificate'),
         testBucket: this.node.tryGetContext('siteBucket'),
-        testLogBucket: this.node.tryGetContext('siteLogBucket'),
         testDistribution: this.node.tryGetContext('siteDistribution'),
+        testHostedZone: this.node.tryGetContext('testHostedZone'),
+        testLogBucket: this.node.tryGetContext('siteLogBucket'),
+        testNewCertificate: this.node.tryGetContext('testNewCertificate'),
+        testNewHostedZone: this.node.tryGetContext('testNewHostedZone'),
       },
     }
   }
@@ -74,8 +74,8 @@ class TestCommonConstruct extends CommonConstruct {
       testHostedZone
     )
     const testDomain = new apig.DomainName(this, 'test-domain', {
-      domainName: this.fullyQualifiedDomainName,
       certificate: testCertificate,
+      domainName: this.fullyQualifiedDomainName,
     })
     const siteBucket = this.s3Manager.createS3Bucket('test-bucket', this, this.props.testBucket)
     const siteLogBucket = this.s3Manager.createS3Bucket('test-log-bucket', this, this.props.testLogBucket)

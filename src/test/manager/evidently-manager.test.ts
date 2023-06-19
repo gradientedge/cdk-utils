@@ -21,16 +21,16 @@ interface TestStackProps extends CommonStackProps {
 }
 
 const testStackProps = {
+  domainName: 'gradientedge.io',
   env: {
     account: '123456789',
     region: 'eu-west-1',
   },
+  extraContexts: ['src/test/common/cdkConfig/evidently.json'],
   name: 'test-common-stack',
-  domainName: 'gradientedge.io',
   region: 'eu-west-1',
   stackName: 'test',
   stage: 'test',
-  extraContexts: ['src/test/common/cdkConfig/evidently.json'],
   stageContextPath: 'src/test/common/cdkEnv',
 }
 
@@ -47,10 +47,10 @@ class TestCommonStack extends CommonStack {
     return {
       ...super.determineConstructProps(props),
       ...{
-        testEvidentlyProject: this.node.tryGetContext('testEvidentlyProject'),
+        testEvidentlyExperiment: this.node.tryGetContext('testEvidentlyExperiment'),
         testEvidentlyFeature: this.node.tryGetContext('testEvidentlyFeature'),
         testEvidentlyLaunch: this.node.tryGetContext('testEvidentlyLaunch'),
-        testEvidentlyExperiment: this.node.tryGetContext('testEvidentlyExperiment'),
+        testEvidentlyProject: this.node.tryGetContext('testEvidentlyProject'),
         testEvidentlySegment: this.node.tryGetContext('testEvidentlySegment'),
       },
     }
@@ -120,11 +120,11 @@ describe('TestEvidentlyConstruct', () => {
 describe('TestEvidentlyConstruct', () => {
   test('provisions new proejct as expected', () => {
     template.hasResourceProperties('AWS::Evidently::Project', {
-      Name: 'test-project-test',
       DataDelivery: {
         LogGroup: 'test-logs',
       },
       Description: 'Test project test',
+      Name: 'test-project-test',
     })
   })
 })
@@ -132,6 +132,9 @@ describe('TestEvidentlyConstruct', () => {
 describe('TestEvidentlyConstruct', () => {
   test('provisions new proejct as expected', () => {
     template.hasResourceProperties('AWS::Evidently::Feature', {
+      DefaultVariation: 'v1',
+      Description: 'Indicator for isSomethingEnabled as a flag',
+      EvaluationStrategy: 'ALL_RULES',
       Name: 'isSomethingEnabled',
       Project: {
         'Fn::GetAtt': ['testcommonstacktestProjectB14CB69E', 'Arn'],
@@ -146,9 +149,6 @@ describe('TestEvidentlyConstruct', () => {
           VariationName: 'v2',
         },
       ],
-      DefaultVariation: 'v1',
-      Description: 'Indicator for isSomethingEnabled as a flag',
-      EvaluationStrategy: 'ALL_RULES',
     })
   })
 })
@@ -156,6 +156,10 @@ describe('TestEvidentlyConstruct', () => {
 describe('TestEvidentlyConstruct', () => {
   test('provisions new proejct as expected', () => {
     template.hasResourceProperties('AWS::Evidently::Launch', {
+      Description: 'Test launch test',
+      ExecutionStatus: {
+        Status: 'START',
+      },
       Groups: [
         {
           Feature: 'isSomethingEnabled',
@@ -187,10 +191,6 @@ describe('TestEvidentlyConstruct', () => {
           StartTime: '2025-11-25T23:59:59Z',
         },
       ],
-      Description: 'Test launch test',
-      ExecutionStatus: {
-        Status: 'START',
-      },
     })
   })
 })
@@ -198,6 +198,7 @@ describe('TestEvidentlyConstruct', () => {
 describe('TestEvidentlyConstruct', () => {
   test('provisions new proejct as expected', () => {
     template.hasResourceProperties('AWS::Evidently::Experiment', {
+      Description: 'Test experiment test',
       MetricGoals: [
         {
           DesiredChange: 'INCREASE',
@@ -244,7 +245,6 @@ describe('TestEvidentlyConstruct', () => {
           Variation: 'v2',
         },
       ],
-      Description: 'Test experiment test',
     })
   })
 })
@@ -252,8 +252,8 @@ describe('TestEvidentlyConstruct', () => {
 describe('TestEvidentlyConstruct', () => {
   test('provisions new proejct as expected', () => {
     template.hasResourceProperties('AWS::Evidently::Segment', {
-      Name: 'test-segment-test',
       Description: 'Test segment test',
+      Name: 'test-segment-test',
     })
   })
 })

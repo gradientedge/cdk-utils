@@ -9,7 +9,6 @@ import { ApiToLambdaTargetRestApi } from './api'
 import { ApiToLambdaTargetProps, ApiToLambdaTargetRestApiType } from './types'
 
 /**
- * @mixin
  */
 export class ApiToLambdaTarget extends CommonConstruct {
   props: ApiToLambdaTargetProps
@@ -57,7 +56,6 @@ export class ApiToLambdaTarget extends CommonConstruct {
   /**
    * @summary Method to resolve secrets from SecretsManager
    * - To be implemented in the overriding method in the implementation class
-   * @protected
    */
   protected resolveSecrets() {
     this.applicationSecrets = []
@@ -65,7 +63,6 @@ export class ApiToLambdaTarget extends CommonConstruct {
 
   /**
    * @summary Method to resolve a hosted zone based on domain attributes
-   * @protected
    */
   protected resolveHostedZone() {
     this.apiToLambdaTargetRestApi.hostedZone = this.route53Manager.withHostedZoneFromFullyQualifiedDomainName(
@@ -77,7 +74,6 @@ export class ApiToLambdaTarget extends CommonConstruct {
 
   /**
    * @summary Method to resolve a certificate based on attributes
-   * @protected
    */
   protected resolveCertificate() {
     if (this.props.api.useExisting) return
@@ -103,18 +99,17 @@ export class ApiToLambdaTarget extends CommonConstruct {
 
   /**
    * @summary Method to create api integration method response
-   * @protected
    */
   protected createApiToLambdaTargetMethodResponse() {
     if (!this.props.api.withResource) return
     this.apiToLambdaTargetRestApi.methodResponse = {
       ...{
-        statusCode: '200',
         responseParameters: {
-          'method.response.header.Content-Type': true,
-          'method.response.header.Access-Control-Allow-Origin': true,
           'method.response.header.Access-Control-Allow-Credentials': true,
+          'method.response.header.Access-Control-Allow-Origin': true,
+          'method.response.header.Content-Type': true,
         },
+        statusCode: '200',
       },
       ...this.props.api.methodResponse,
     }
@@ -122,18 +117,17 @@ export class ApiToLambdaTarget extends CommonConstruct {
 
   /**
    * @summary Method to create api integration method error response
-   * @protected
    */
   protected createApiToLambdaTargetMethodErrorResponse() {
     if (!this.props.api.withResource) return
     this.apiToLambdaTargetRestApi.methodErrorResponse = {
       ...{
-        statusCode: '400',
         responseParameters: {
-          'method.response.header.Content-Type': true,
-          'method.response.header.Access-Control-Allow-Origin': true,
           'method.response.header.Access-Control-Allow-Credentials': true,
+          'method.response.header.Access-Control-Allow-Origin': true,
+          'method.response.header.Content-Type': true,
         },
+        statusCode: '400',
       },
       ...this.props.api.methodErrorResponse,
     }
@@ -149,7 +143,6 @@ export class ApiToLambdaTarget extends CommonConstruct {
 
   /**
    * @summary Method to create rest restApi for Api
-   * @protected
    */
   protected createApiToLambdaTargetRestApi() {
     if (this.props.api.useExisting && this.props.api.importedRestApiRef) {
@@ -194,7 +187,6 @@ export class ApiToLambdaTarget extends CommonConstruct {
 
   /**
    * @summary Method to create api integration resource
-   * @protected
    */
   protected createApiToLambdaTargetResource() {
     if (!this.props.api.withResource) return
@@ -202,9 +194,9 @@ export class ApiToLambdaTarget extends CommonConstruct {
     let rootResource
     if (this.props.api.withResource && this.props.api.importedRestApiRootResourceRef) {
       rootResource = apig.Resource.fromResourceAttributes(this, `${this.id}-root-resource`, {
+        path: '/',
         resourceId: cdk.Fn.importValue(this.props.api.importedRestApiRootResourceRef),
         restApi: this.apiToLambdaTargetRestApi.api,
-        path: '/',
       })
     } else {
       rootResource = this.apiToLambdaTargetRestApi.api.root
@@ -224,7 +216,6 @@ export class ApiToLambdaTarget extends CommonConstruct {
 
   /**
    * @summary Method to create a role for api integration
-   * @protected
    */
   protected createApiToLambdaTargetRole() {
     if (!this.apiToLambdaTargetRestApi.policy) throw 'Policy undefined'
@@ -237,7 +228,6 @@ export class ApiToLambdaTarget extends CommonConstruct {
 
   /**
    * @summary Method to create api integration resource method
-   * @protected
    */
   protected createApiToLambdaTargetIntegration() {
     this.apiToLambdaTargetRestApi.integration = new apig.LambdaIntegration(this.apiToLambdaTargetRestApi.lambda, {
@@ -248,7 +238,6 @@ export class ApiToLambdaTarget extends CommonConstruct {
 
   /**
    * @summary Method to create api integration resource method
-   * @protected
    */
   protected createApiToLambdaTargetResourceMethod() {
     if (!this.props.api.withResource) return
@@ -267,7 +256,6 @@ export class ApiToLambdaTarget extends CommonConstruct {
 
   /**
    * @summary Method to create custom restApi domain for Api
-   * @protected
    */
   protected createApiDomain() {
     if (this.props.api.useExisting) return
@@ -283,7 +271,6 @@ export class ApiToLambdaTarget extends CommonConstruct {
 
   /**
    * @summary Method to create base path mappings for Api
-   * @protected
    */
   protected createApiBasePathMapping() {
     if (this.props.api.useExisting) return
@@ -297,7 +284,6 @@ export class ApiToLambdaTarget extends CommonConstruct {
 
   /**
    * @summary Method to create route53 records for Api
-   * @protected
    */
   protected createApiRouteAssets() {
     if (this.props.api.useExisting) return

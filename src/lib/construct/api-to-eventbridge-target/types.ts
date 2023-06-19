@@ -23,8 +23,6 @@ import { AcmProps, EventRuleProps, LambdaProps, LogProps } from '../../services'
 import { AssetCode } from 'aws-cdk-lib/aws-lambda'
 
 /**
- * @category cdk-utils.api-to-eventbridge-target
- * @subcategory Types
  */
 export interface ApiToEventBridgeTargetEventType {
   eventBus: IEventBus
@@ -37,8 +35,6 @@ export interface ApiToEventBridgeTargetEventType {
 }
 
 /**
- * @category cdk-utils.api-to-eventbridge-target
- * @subcategory Types
  */
 export interface ApiToEventBridgeTargetRestApiType {
   accessLogGroup: LogGroup
@@ -56,67 +52,59 @@ export interface ApiToEventBridgeTargetRestApiType {
   method: Method
   methodErrorResponse: MethodResponse
   methodResponse: MethodResponse
+  policy?: PolicyDocument
   resource: Resource
   responseModel: Model
-  topic?: ITopic
   role?: Role
-  policy?: PolicyDocument
+  topic?: ITopic
 }
 
 /**
- * @category cdk-utils.api-to-eventbridge-target
- * @subcategory Properties
  */
 export interface ApiToEventBridgeTargetRestApiProps {
   certificate: AcmProps
-  integrationResponse?: IntegrationResponse
-  integrationErrorResponse?: IntegrationResponse
-  methodResponse?: MethodResponse
-  methodErrorResponse?: MethodResponse
-  integrationOptions?: IntegrationOptions
-  resource: string
   errorResponseModel?: ModelOptions
-  responseModel?: ModelOptions
-  restApi?: RestApiProps
   importedRestApiRef?: string
   importedRestApiRootResourceRef?: string
+  integrationErrorResponse?: IntegrationResponse
+  integrationOptions?: IntegrationOptions
+  integrationResponse?: IntegrationResponse
+  methodErrorResponse?: MethodResponse
+  methodResponse?: MethodResponse
+  resource: string
+  responseModel?: ModelOptions
+  restApi?: RestApiProps
   useExisting: boolean
   withResource?: boolean
 }
 
 /**
- * @category cdk-utils.api-to-eventbridge-target
- * @subcategory Properties
  */
 interface ApiToEventBridgeTargetLambdaProps {
-  handler?: string
   function: LambdaProps
-  source?: AssetCode
+  handler?: string
   layerSource?: AssetCode
+  source?: AssetCode
 }
 
 /**
- * @category cdk-utils.api-to-eventbridge-target
- * @subcategory Properties
  */
 interface ApiToEventBridgeTargetEventProps {
   eventBusName?: string
   logGroup?: LogProps
-  logGroupSuccess?: LogProps
   logGroupFailure?: LogProps
+  logGroupSuccess?: LogProps
   rule: EventRuleProps
-  ruleSuccess: EventRuleProps
   ruleFailure: EventRuleProps
+  ruleSuccess: EventRuleProps
 }
 
 /**
- * @category cdk-utils.api-to-eventbridge-target
- * @subcategory Properties
  */
 export interface ApiToEventBridgeTargetProps extends CommonStackProps {
+  api: ApiToEventBridgeTargetRestApiProps
   apiRootPaths?: string[]
   apiSubDomain: string
-  api: ApiToEventBridgeTargetRestApiProps
   event: ApiToEventBridgeTargetEventProps
   lambda?: ApiToEventBridgeTargetLambdaProps
   logLevel: string

@@ -8,16 +8,16 @@ interface TestStackProps extends CommonStackProps {
 }
 
 const testStackProps = {
+  domainName: 'gradientedge.io',
   env: {
     account: '123456789',
     region: 'eu-west-1',
   },
+  extraContexts: ['src/test/common/cdkConfig/configs.json'],
   name: 'test-common-stack',
-  domainName: 'gradientedge.io',
   region: 'eu-west-1',
   stackName: 'test',
   stage: 'test',
-  extraContexts: ['src/test/common/cdkConfig/configs.json'],
   stageContextPath: 'src/test/common/cdkEnv',
 }
 
@@ -111,22 +111,22 @@ describe('TestAppConfigConstruct', () => {
 describe('TestAppConfigConstruct', () => {
   test('provisions new application as expected', () => {
     template.hasResourceProperties('AWS::AppConfig::Application', {
-      Name: 'test-application-test',
       Description: 'test-application desc',
+      Name: 'test-application-test',
     })
   })
 
   test('provisions new environment as expected', () => {
     template.hasResourceProperties('AWS::AppConfig::Environment', {
-      Name: 'test-env',
       Description: 'test-env',
+      Name: 'test-env',
     })
   })
 
   test('provisions new profile as expected', () => {
     template.hasResourceProperties('AWS::AppConfig::ConfigurationProfile', {
-      Name: 'test-profile-test',
       Description: 'test-profile',
+      Name: 'test-profile-test',
     })
   })
 })

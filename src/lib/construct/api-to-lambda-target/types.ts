@@ -19,8 +19,6 @@ import { ITopic } from 'aws-cdk-lib/aws-sns'
 import { PolicyDocument, Role } from 'aws-cdk-lib/aws-iam'
 
 /**
- * @category cdk-utils.api-to-lambda-target
- * @subcategory Types
  */
 export interface ApiToLambdaTargetRestApiType {
   api: IRestApi
@@ -39,37 +37,33 @@ export interface ApiToLambdaTargetRestApiType {
   method: Method
   methodErrorResponse: MethodResponse
   methodResponse: MethodResponse
+  policy?: PolicyDocument
   resource: Resource
   responseModel: Model
-  topic?: ITopic
   role?: Role
-  policy?: PolicyDocument
+  topic?: ITopic
 }
 
 /**
- * @category cdk-utils.api-to-lambda-target
- * @subcategory Properties
  */
 export interface ApiToLambdaTargetRestApiProps {
-  resource: string
   certificate: AcmProps
-  restApi: LambdaRestApiProps
   importedRestApiRef?: string
   importedRestApiRootResourceRef?: string
-  useExisting: boolean
-  withResource?: boolean
   methodErrorResponse: MethodResponse
   methodResponse: MethodResponse
+  resource: string
+  restApi: LambdaRestApiProps
+  useExisting: boolean
+  withResource?: boolean
 }
 
 /**
- * @category cdk-utils.api-to-lambda-target
- * @subcategory Properties
  */
 export interface ApiToLambdaTargetProps extends CommonStackProps {
+  api: ApiToLambdaTargetRestApiProps
   apiRootPaths?: string[]
   apiSubDomain: string
-  api: ApiToLambdaTargetRestApiProps
   lambdaFunctionName: string
   logLevel: string
   nodeEnv: string

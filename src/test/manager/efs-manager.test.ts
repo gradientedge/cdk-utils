@@ -4,22 +4,22 @@ import { Construct } from 'constructs'
 import { CommonConstruct, CommonStack, CommonStackProps } from '../../lib'
 
 interface TestStackProps extends CommonStackProps {
-  testVpc: any
   testFileSystem: any
   testFileSystemAccessPoints: any[]
+  testVpc: any
 }
 
 const testStackProps = {
+  domainName: 'gradientedge.io',
   env: {
     account: '123456789',
     region: 'eu-west-1',
   },
+  extraContexts: ['src/test/common/cdkConfig/fileSystems.json', 'src/test/common/cdkConfig/vpc.json'],
   name: 'test-common-stack',
-  domainName: 'gradientedge.io',
   region: 'eu-west-1',
   stackName: 'test',
   stage: 'test',
-  extraContexts: ['src/test/common/cdkConfig/fileSystems.json', 'src/test/common/cdkConfig/vpc.json'],
   stageContextPath: 'src/test/common/cdkEnv',
 }
 
@@ -36,9 +36,9 @@ class TestCommonStack extends CommonStack {
     return {
       ...super.determineConstructProps(props),
       ...{
-        testVpc: this.node.tryGetContext('testVpc'),
         testFileSystem: this.node.tryGetContext('testFileSystem'),
         testFileSystemAccessPoints: this.node.tryGetContext('testFileSystemAccessPoints'),
+        testVpc: this.node.tryGetContext('testVpc'),
       },
     }
   }
@@ -138,15 +138,15 @@ describe('TestEfsManager', () => {
 describe('TestEfsManager', () => {
   test('provisions efs access point as expected', () => {
     template.hasResourceProperties('AWS::EFS::AccessPoint', {
-      FileSystemId: {
-        Ref: 'testcommonstacktestfilesystemDD85B225',
-      },
       AccessPointTags: [
         {
           Key: 'Name',
           Value: 'test-common-stack/test-common-stack/test-file-system/test-file-system-ap-0',
         },
       ],
+      FileSystemId: {
+        Ref: 'testcommonstacktestfilesystemDD85B225',
+      },
       PosixUser: {
         Gid: '1000',
         Uid: '1000',

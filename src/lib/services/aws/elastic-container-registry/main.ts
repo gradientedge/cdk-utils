@@ -3,9 +3,6 @@ import * as utils from '../../../utils'
 import { CommonConstruct } from '../../../common'
 
 /**
- * @stability stable
- * @category cdk-utils.ecr-manager
- * @subcategory Construct
  * @classdesc Provides operations on AWS Elastic Container Registry.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
@@ -19,15 +16,14 @@ import { CommonConstruct } from '../../../common'
  *     this.ecrManager.createDockerImage('MyImage', this, dockerfilePath)
  *   }
  * }
- *
  * @see [CDK ECR Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_ecr-readme.html}
  */
 export class EcrManager {
   /**
    * @summary Method to create a docker image in ecr
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {string} dockerfilePath
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param dockerfilePath
    */
   public createDockerImage(id: string, scope: CommonConstruct, dockerfilePath: string) {
     const asset = new ecr.DockerImageAsset(scope, `${id}`, {

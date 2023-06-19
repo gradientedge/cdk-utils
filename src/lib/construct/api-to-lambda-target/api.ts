@@ -7,9 +7,6 @@ import * as sns from 'aws-cdk-lib/aws-sns'
 import { ApiToLambdaTargetRestApiType } from './types'
 
 /**
- * @stability stable
- * @category cdk-utils.api-to-lambda-target
- * @subcategory member
  * @classdesc Provides a construct to contain api resources for ApiToLambdaTarget
  */
 export class ApiToLambdaTargetRestApi implements ApiToLambdaTargetRestApiType {

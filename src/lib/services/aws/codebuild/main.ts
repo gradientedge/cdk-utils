@@ -3,9 +3,6 @@ import * as codebuild from 'aws-cdk-lib/aws-codebuild'
 import { CommonConstruct } from '../../../common'
 
 /**
- * @stability stable
- * @category cdk-utils.codebuild-manager
- * @subcategory Construct
  * @classdesc Provides operations on AWS Code Build.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
@@ -19,7 +16,6 @@ import { CommonConstruct } from '../../../common'
  *     this.codeBuildManager.createImageForCloudfrontInvalidation('MyInvalidation', this, './docker ')
  *   }
  * }
- *
  * @see [CDK Codebuild Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_codebuild-readme.html}
  */
 export class CodeBuildManager {
@@ -50,9 +46,7 @@ export class CodeBuildManager {
   ) {
     const invalidationPaths = paths ?? '/*'
     return new codebuild.Project(scope, `${id}-install-deps-project`, {
-      role: scope.iamManager.roleForCloudfrontInvalidation(id, scope),
       buildSpec: codebuild.BuildSpec.fromObject({
-        version: '0.1',
         phases: {
           build: {
             commands: [
@@ -60,6 +54,7 @@ export class CodeBuildManager {
             ],
           },
         },
+        version: '0.1',
       }),
       environment: {
         buildImage: codebuild.LinuxBuildImage.fromDockerRegistry(
@@ -70,12 +65,13 @@ export class CodeBuildManager {
       },
       logging: {
         cloudWatch: {
+          enabled: true,
           logGroup: scope.logManager.createLogGroup(`${id}-project-log-group`, scope, {
             logGroupName: `${id}-cloudfront-invalidation`,
           }),
-          enabled: true,
         },
       },
+      role: scope.iamManager.roleForCloudfrontInvalidation(id, scope),
       timeout: cdk.Duration.minutes(5),
     })
   }

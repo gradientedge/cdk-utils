@@ -14,17 +14,17 @@ describe('TestApiDestinedFunction', () => {
   test('processes valid event as expected', () => {
     expect(response).toEqual(
       expect.objectContaining({
-        statusCode: 200,
-        message: 'Webhook call successful',
         body: {
           event: validEvent,
         },
-        origin: 'https://example.gradientedge.io',
-        source: 'custom:api-destined-lambda',
         httpMethod: 'POST',
+        message: 'Webhook call successful',
+        origin: 'https://example.gradientedge.io',
         path: '/notification',
         referer: 'https://example.gradientedge.io/',
         resource: '/',
+        source: 'custom:api-destined-lambda',
+        statusCode: 200,
         success: true,
       })
     )

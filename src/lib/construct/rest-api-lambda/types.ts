@@ -3,26 +3,22 @@ import { CommonStackProps } from '../../common'
 import { AssetCode } from 'aws-cdk-lib/aws-lambda'
 
 /**
- * @category cdk-utils.rest-api-lambda
- * @subcategory Types
  */
 export interface RestApiLambdaEnvironment extends LambdaEnvironment {}
 
 /**
- * @category cdk-utils.rest-api-lambda
- * @subcategory Properties
  */
 export interface RestApiLambdaProps extends CommonStackProps {
   apiRootPaths?: string[]
   apiSubDomain: string
-  restApiCertificate: AcmProps
-  restApi: LambdaRestApiProps
-  restApiLambdaLayerSources?: AssetCode[]
-  restApiHandler: string
-  restApiSource: AssetCode
-  restApiLambda: LambdaProps
-  useExistingHostedZone: boolean
-  nodeEnv: string
   logLevel: string
+  nodeEnv: string
+  restApi: LambdaRestApiProps
+  restApiCertificate: AcmProps
+  restApiHandler: string
+  restApiLambda: LambdaProps
+  restApiLambdaLayerSources?: AssetCode[]
+  restApiSource: AssetCode
   timezone: string
+  useExistingHostedZone: boolean
 }

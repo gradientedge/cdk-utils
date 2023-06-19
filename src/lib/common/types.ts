@@ -3,8 +3,6 @@ import { Runtime, Tracing } from 'aws-cdk-lib/aws-lambda'
 import { RetentionDays } from 'aws-cdk-lib/aws-logs'
 
 /**
- * @category cdk-utils.common-stack
- * @subcategory Properties
  */
 export interface CommonStackProps extends cdk.StackProps {
   name: string

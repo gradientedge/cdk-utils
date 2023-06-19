@@ -14,9 +14,6 @@ import { CloudfrontFunctionProps, CloudFrontProps, DistributionProps } from './t
 import { LambdaEdgeProps } from '../lambda'
 
 /**
- * @stability stable
- * @category cdk-utils.cloudfront-manager
- * @subcategory Construct
  * @classdesc Provides operations on AWS CloudFront.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
@@ -37,7 +34,6 @@ import { LambdaEdgeProps } from '../lambda'
  *     )
  *   }
  * }
- *
  * @see [CDK CloudFront Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_cloudfront-readme.html}
  */
 export class CloudFrontManager {
@@ -52,14 +48,14 @@ export class CloudFrontManager {
 
   /**
    * @summary Method to create a cloudfront distribution
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {CloudFrontProps} props distribution properties
-   * @param {s3.IBucket?} siteBucket
-   * @param {s3.IBucket?} logBucket
-   * @param {cloudfront.OriginAccessIdentity?} oai
-   * @param {acm.ICertificate?} certificate
-   * @param {string[]?} aliases
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props distribution properties
+   * @param siteBucket
+   * @param logBucket
+   * @param oai
+   * @param certificate
+   * @param aliases
    */
   public createCloudFrontDistribution(
     id: string,
@@ -78,8 +74,8 @@ export class CloudFrontManager {
     const distribution = new cloudfront.CloudFrontWebDistribution(scope, `${id}`, {
       comment: `${id} - ${scope.props.stage} stage`,
       defaultRootObject: props.defaultRootObject,
-      enabled: props.enabled ?? true,
       enableIpV6: props.enableIpV6,
+      enabled: props.enabled ?? true,
       errorConfigurations: props.errorConfigurations,
       geoRestriction: props.geoRestriction,
       httpVersion: props.httpVersion ?? cloudfront.HttpVersion.HTTP2,
@@ -89,11 +85,11 @@ export class CloudFrontManager {
       },
       originConfigs: [
         {
-          s3OriginSource: {
-            s3BucketSource: siteBucket,
-            originAccessIdentity: oai,
-          },
           behaviors: [{ isDefaultBehavior: true }],
+          s3OriginSource: {
+            originAccessIdentity: oai,
+            s3BucketSource: siteBucket,
+          },
         },
       ],
       priceClass: props.priceClass ?? cloudfront.PriceClass.PRICE_CLASS_ALL,
@@ -119,16 +115,16 @@ export class CloudFrontManager {
 
   /**
    * Method to create a CloudFront distribution with S3 Origin
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {DistributionProps} props distribution properties
-   * @param {origins.S3Origin} origin
-   * @param {s3.IBucket} siteBucket
-   * @param {s3.IBucket?} logBucket
-   * @param {cloudfront.OriginAccessIdentity?} oai
-   * @param {acm.ICertificate?} certificate
-   * @param {string[]?} aliases
-   * @param {cloudfront.FunctionAssociation?} defaultFunctionAssociations
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props distribution properties
+   * @param origin
+   * @param siteBucket
+   * @param logBucket
+   * @param oai
+   * @param certificate
+   * @param aliases
+   * @param defaultFunctionAssociations
    */
   public createDistributionWithS3Origin(
     id: string,
@@ -143,28 +139,28 @@ export class CloudFrontManager {
     defaultFunctionAssociations?: cloudfront.FunctionAssociation[]
   ) {
     const distribution = new cloudfront.Distribution(scope, `${id}`, {
+      additionalBehaviors: props.additionalBehaviors,
       certificate: certificate,
       comment: `${id} - ${scope.props.stage} stage`,
       defaultBehavior: {
         cachePolicy: props.defaultBehavior ? props.defaultBehavior.cachePolicy : undefined,
+        edgeLambdas: props.defaultBehavior ? props.defaultBehavior.edgeLambdas : undefined,
+        functionAssociations: defaultFunctionAssociations ?? undefined,
         origin: origin,
         originRequestPolicy: props.defaultBehavior ? props.defaultBehavior.originRequestPolicy : undefined,
-        functionAssociations: defaultFunctionAssociations ?? undefined,
         viewerProtocolPolicy: props.defaultBehavior ? props.defaultBehavior.viewerProtocolPolicy : undefined,
-        edgeLambdas: props.defaultBehavior ? props.defaultBehavior.edgeLambdas : undefined,
       },
-      additionalBehaviors: props.additionalBehaviors,
       defaultRootObject: props.defaultRootObject,
       domainNames: aliases,
-      enabled: props.enabled ?? true,
       enableIpv6: props.enableIpv6,
       enableLogging: props.enableLogging ?? true,
+      enabled: props.enabled ?? true,
       errorResponses: props.errorResponses,
       geoRestriction: props.geoRestriction,
       httpVersion: props.httpVersion ?? cloudfront.HttpVersion.HTTP2,
       logBucket: logBucket,
-      logIncludesCookies: props.logIncludesCookies ?? true,
       logFilePrefix: props.logFilePrefix ?? `edge/`,
+      logIncludesCookies: props.logIncludesCookies ?? true,
       minimumProtocolVersion: props.minimumProtocolVersion ?? cloudfront.SecurityPolicyProtocol.TLS_V1_2_2021,
       priceClass: props.priceClass ?? cloudfront.PriceClass.PRICE_CLASS_ALL,
       webAclId: props.webAclId,
@@ -184,15 +180,15 @@ export class CloudFrontManager {
 
   /**
    * Method to create a CloudFront distribution with HTTP Origin
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {DistributionProps} props distribution properties
-   * @param {origins.S3Origin} origin
-   * @param {string[]} domainNames
-   * @param {s3.IBucket?} logBucket
-   * @param {acm.ICertificate?} certificate
-   * @param {cloudfront.FunctionAssociation?} defaultFunctionAssociations
-   * @param {cloudfront.IResponseHeadersPolicy?} responseHeadersPolicy
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props distribution properties
+   * @param origin
+   * @param domainNames
+   * @param logBucket
+   * @param certificate
+   * @param defaultFunctionAssociations
+   * @param responseHeadersPolicy
    */
   public createDistributionWithHttpOrigin(
     id: string,
@@ -206,29 +202,29 @@ export class CloudFrontManager {
     responseHeadersPolicy?: cloudfront.IResponseHeadersPolicy
   ) {
     const distribution = new cloudfront.Distribution(scope, `${id}`, {
+      additionalBehaviors: props.additionalBehaviors,
       certificate: certificate,
       comment: `${id} - ${scope.props.stage} stage`,
       defaultBehavior: {
         cachePolicy: props.defaultBehavior ? props.defaultBehavior.cachePolicy : undefined,
+        edgeLambdas: props.defaultBehavior ? props.defaultBehavior.edgeLambdas : undefined,
+        functionAssociations: defaultFunctionAssociations ?? undefined,
         origin: origin,
         originRequestPolicy: props.defaultBehavior ? props.defaultBehavior.originRequestPolicy : undefined,
-        functionAssociations: defaultFunctionAssociations ?? undefined,
-        viewerProtocolPolicy: props.defaultBehavior ? props.defaultBehavior.viewerProtocolPolicy : undefined,
         responseHeadersPolicy: responseHeadersPolicy ?? undefined,
-        edgeLambdas: props.defaultBehavior ? props.defaultBehavior.edgeLambdas : undefined,
+        viewerProtocolPolicy: props.defaultBehavior ? props.defaultBehavior.viewerProtocolPolicy : undefined,
       },
-      additionalBehaviors: props.additionalBehaviors,
       defaultRootObject: props.defaultRootObject,
       domainNames: domainNames,
-      enabled: props.enabled ?? true,
       enableIpv6: props.enableIpv6,
       enableLogging: props.enableLogging ?? true,
+      enabled: props.enabled ?? true,
       errorResponses: props.errorResponses,
       geoRestriction: props.geoRestriction,
       httpVersion: props.httpVersion ?? cloudfront.HttpVersion.HTTP2,
       logBucket: logBucket,
-      logIncludesCookies: props.logIncludesCookies ?? true,
       logFilePrefix: props.logFilePrefix ?? `edge/`,
+      logIncludesCookies: props.logIncludesCookies ?? true,
       minimumProtocolVersion: props.minimumProtocolVersion ?? cloudfront.SecurityPolicyProtocol.TLS_V1_2_2021,
       priceClass: props.priceClass ?? cloudfront.PriceClass.PRICE_CLASS_ALL,
       webAclId: props.webAclId,
@@ -248,18 +244,17 @@ export class CloudFrontManager {
 
   /**
    * @summary Method to provision a Lambda@Edge function
-   *
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {LambdaEdgeProps} props lambda@edge properties
-   * @param {lambda.ILayerVersion[]} layers
-   * @param {lambda.AssetCode} code
-   * @param {iam.Role} role
-   * @param {Map<string, string>} environment
-   * @param {ec2.IVpc} vpc
-   * @param {ec2.ISecurityGroup[]} securityGroups
-   * @param {efs.IAccessPoint} accessPoint
-   * @param {string} mountPath
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props lambda@edge properties
+   * @param layers
+   * @param code
+   * @param role
+   * @param environment
+   * @param vpc
+   * @param securityGroups
+   * @param accessPoint
+   * @param mountPath
    */
   public createEdgeFunction(
     id: string,
@@ -327,7 +322,6 @@ export class CloudFrontManager {
   ) {
     new cr.AwsCustomResource(scope, `${id}-trigger-codebuild-${new Date().getTime()}`, {
       onCreate: {
-        service: 'CodeBuild',
         action: 'startBuild',
         parameters: {
           projectName: scope.codeBuildManager.createProjectForCloudfrontInvalidation(
@@ -339,6 +333,7 @@ export class CloudFrontManager {
           ).projectName,
         },
         physicalResourceId: cr.PhysicalResourceId.fromResponse('build.id'),
+        service: 'CodeBuild',
       },
       policy: cr.AwsCustomResourcePolicy.fromSdkCalls({ resources: cr.AwsCustomResourcePolicy.ANY_RESOURCE }),
     })
@@ -346,10 +341,9 @@ export class CloudFrontManager {
 
   /**
    * @summary Method to provision a Cloudfront function
-   *
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {CloudfrontFunctionProps} props
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props
    */
   public createCloudfrontFunction(id: string, scope: CommonConstruct, props: CloudfrontFunctionProps) {
     const cloudfrontFunction = new cloudfront.Function(scope, `${id}`, {

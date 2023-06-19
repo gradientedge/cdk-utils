@@ -5,9 +5,6 @@ import * as logs from 'aws-cdk-lib/aws-logs'
 import { CommonConstruct } from '../../../common'
 
 /**
- * @stability stable
- * @category cdk-utils.event-taeget-manager
- * @subcategory Construct
  * @classdesc Provides operations on AWS EventBridge Targets.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
@@ -21,17 +18,16 @@ import { CommonConstruct } from '../../../common'
  *     this.eventTargetManager.createCloudWatchLogGroupNoPolicy('MyLogGrouptarget', this, myLogGroup)
  *   }
  * }
- *
  * @see [CDK EventBridge Target Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_events_targets-readme.html}
  */
 export class EventTargetManager {
   /**
    * @summary Method to create a cloud watch log group target without a policy.
    * - This method is created as a workaround for cdk issue - https://github.com/aws/aws-cdk/issues/17002
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {logs.ILogGroup} logGroup the log group
-   * @param {LogGroupNoPolicyProps} props the log group target properties
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param logGroup the log group
+   * @param props the log group target properties
    */
   public createCloudWatchLogGroupNoPolicy(
     id: string,
@@ -51,7 +47,6 @@ export interface LogGroupNoPolicyProps extends targets.TargetBaseProps {
    * The event to send to the CloudWatch LogGroup
    *
    * This will be the event logged into the CloudWatch LogGroup
-   *
    * @default - the entire EventBridge event
    */
   readonly event?: events.RuleTargetInput
@@ -65,6 +60,8 @@ export class CloudWatchLogGroupNoPolicy implements events.IRuleTarget {
 
   /**
    * Returns a RuleTarget that can be used to log an event into a CloudWatch LogGroup
+   * @param _rule
+   * @param _id
    */
   public bind(_rule: events.IRule, _id?: string): events.RuleTargetConfig {
     const logGroupStack = cdk.Stack.of(this.logGroup)
@@ -72,10 +69,10 @@ export class CloudWatchLogGroupNoPolicy implements events.IRuleTarget {
     return {
       ...targets.bindBaseTargetConfig(this.props),
       arn: logGroupStack.formatArn({
-        service: 'logs',
-        resource: 'log-group',
         arnFormat: cdk.ArnFormat.COLON_RESOURCE_NAME,
+        resource: 'log-group',
         resourceName: this.logGroup.logGroupName,
+        service: 'logs',
       }),
       input: this.props.event,
       targetResource: this.logGroup,

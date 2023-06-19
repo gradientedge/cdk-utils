@@ -7,8 +7,8 @@ export interface AssetExport {
 }
 
 export interface StaticAssetDeploymentProps extends CommonStackProps {
+  staticAssetBucket: S3BucketProps
   staticAssetDeployment: BucketDeploymentProps
   staticAssetSources: any[]
-  staticAssetBucket: S3BucketProps
   staticAssetsForExport?: AssetExport[]
 }

@@ -4,31 +4,25 @@ import { EdgeFunctionProps } from 'aws-cdk-lib/aws-cloudfront/lib/experimental'
 import { QueueProps } from '../simple-queue-service'
 
 /**
- * @category cdk-utils.lambda-manager
- * @subcategory Properties
  */
 export interface ProvisionedConcurrencyProps {
-  minCapacity: number
   maxCapacity: number
+  minCapacity: number
   utilizationTarget: number
 }
 
 /**
- * @category cdk-utils.lambda-manager
- * @subcategory Properties
  */
 export interface LambdaProps extends FunctionProps {
   dlq?: QueueProps
-  redriveq?: QueueProps
-  timeoutInSecs?: number
   excludeLastModifiedTimestamp?: boolean
-  tags?: TagProps[]
   lambdaAliases?: LambdaAliasProps[]
+  redriveq?: QueueProps
+  tags?: TagProps[]
+  timeoutInSecs?: number
 }
 
 /**
- * @category cdk-utils.lambda-manager
- * @subcategory Properties
  */
 export interface LambdaAliasProps extends AliasProps {
   id?: string
@@ -36,21 +30,17 @@ export interface LambdaAliasProps extends AliasProps {
 }
 
 /**
- * @category cdk-utils.lambda-manager
- * @subcategory Properties
  */
 export interface LambdaEdgeProps extends EdgeFunctionProps {
-  timeoutInSecs?: number
   tags?: TagProps[]
+  timeoutInSecs?: number
 }
 
 /**
- * @category cdk-utils.lambda-manager
- * @subcategory Types
  */
 export interface LambdaEnvironment {
-  NODE_ENV: string
   LOG_LEVEL: string
+  NODE_ENV: string
   REGION?: string
   STAGE?: string
   TZ: string

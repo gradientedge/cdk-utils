@@ -10,17 +10,13 @@ interface TestStackProps extends ApiToLambdaTargetProps {
 }
 
 const testStackProps = {
+  apiRootPaths: ['create-order'],
+  apiSubDomain: 'api',
+  domainName: 'gradientedge.io',
   env: {
     account: '123456789',
     region: 'eu-west-1',
   },
-  name: 'test-api-to-eb-stack',
-  domainName: 'gradientedge.io',
-  region: 'eu-west-1',
-  stage: 'test',
-  stackName: 'test',
-  apiSubDomain: 'api',
-  apiRootPaths: ['create-order'],
   extraContexts: [
     'src/test/common/cdkConfig/apiConfigs.json',
     'src/test/common/cdkConfig/dummy.json',
@@ -28,6 +24,10 @@ const testStackProps = {
     'src/test/common/cdkConfig/lambdas.json',
     'src/test/common/cdkConfig/rules.json',
   ],
+  name: 'test-api-to-eb-stack',
+  region: 'eu-west-1',
+  stackName: 'test',
+  stage: 'test',
   stageContextPath: 'src/test/common/cdkEnv',
 }
 
@@ -44,21 +44,21 @@ class TestCommonStack extends CommonStack {
     return {
       ...super.determineConstructProps(props),
       ...{
-        apiRootPaths: this.node.tryGetContext('apiRootPaths'),
-        apiSubDomain: this.node.tryGetContext('apiSubDomain'),
         api: {
           certificate: this.node.tryGetContext('siteCertificate'),
-          restApi: this.node.tryGetContext('testRestApi'),
-          withResource: true,
-          useExisting: false,
           resource: 'my-resource',
+          restApi: this.node.tryGetContext('testRestApi'),
+          useExisting: false,
+          withResource: true,
         },
+        apiRootPaths: this.node.tryGetContext('apiRootPaths'),
+        apiSubDomain: this.node.tryGetContext('apiSubDomain'),
         lambdaFunctionName: `test-lambda-test`,
-        testLambda: this.node.tryGetContext('testLambda'),
-        useExistingHostedZone: this.node.tryGetContext('useExistingHostedZone'),
         logLevel: this.node.tryGetContext('logLevel'),
         nodeEnv: this.node.tryGetContext('nodeEnv'),
+        testLambda: this.node.tryGetContext('testLambda'),
         timezone: this.node.tryGetContext('timezone'),
+        useExistingHostedZone: this.node.tryGetContext('useExistingHostedZone'),
       },
     }
   }
@@ -179,8 +179,8 @@ describe('TestApiToLambdaTargetConstruct', () => {
 describe('TestApiToLambdaTargetConstruct', () => {
   test('provisions api gateway methods as expected', () => {
     template.hasResourceProperties('AWS::ApiGateway::Method', {
-      HttpMethod: 'POST',
       AuthorizationType: 'NONE',
+      HttpMethod: 'POST',
       Integration: {
         IntegrationHttpMethod: 'POST',
         Type: 'AWS_PROXY',
@@ -188,17 +188,17 @@ describe('TestApiToLambdaTargetConstruct', () => {
       MethodResponses: [
         {
           ResponseParameters: {
-            'method.response.header.Content-Type': true,
-            'method.response.header.Access-Control-Allow-Origin': true,
             'method.response.header.Access-Control-Allow-Credentials': true,
+            'method.response.header.Access-Control-Allow-Origin': true,
+            'method.response.header.Content-Type': true,
           },
           StatusCode: '200',
         },
         {
           ResponseParameters: {
-            'method.response.header.Content-Type': true,
-            'method.response.header.Access-Control-Allow-Origin': true,
             'method.response.header.Access-Control-Allow-Credentials': true,
+            'method.response.header.Access-Control-Allow-Origin': true,
+            'method.response.header.Content-Type': true,
           },
           StatusCode: '400',
         },

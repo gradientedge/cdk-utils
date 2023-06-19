@@ -9,13 +9,9 @@ import * as utils from '../../utils'
 
 /**
  * @deprecated Use RestApiLambdaWithCache instead. This will be removed in a future release.
- *
- * @category cdk-utils.graphql-api-lambda-with-cache
- * @subcategory construct
  * @classdesc Provides a construct to create and deploy a Graphql API as Lambda with Caching
  *
  * <b>Architecture</b><br/> ![Architecture](./GraphQLApiLambda.jpg)
- *
  * @example
  * import { GraphQlApiLambdaWithCacheProps } '@gradientedge/cdk-utils'
  * import { Construct } from 'constructs'
@@ -28,7 +24,6 @@ import * as utils from '../../utils'
  *     this.initResources()
  *   }
  * }
- * @mixin
  */
 export class GraphQLApiLambdaWithCache extends GraphQLApiLambda {
   /* graphql restApi props */
@@ -57,7 +52,6 @@ export class GraphQLApiLambdaWithCache extends GraphQLApiLambda {
 
   /**
    * Create VPC
-   * @protected
    */
   protected setVpc() {
     if (this.props.useExistingVpc) {
@@ -69,7 +63,6 @@ export class GraphQLApiLambdaWithCache extends GraphQLApiLambda {
 
   /**
    * Resolve Security Group
-   * @protected
    */
   protected setSecurityGroup() {
     if (this.props.securityGroupExportName) {
@@ -92,7 +85,6 @@ export class GraphQLApiLambdaWithCache extends GraphQLApiLambda {
 
   /**
    * Create ElastiCache
-   * @protected
    */
   protected createElastiCache() {
     this.graphQLElastiCache = this.elasticacheManager.createReplicatedElastiCache(
@@ -106,7 +98,6 @@ export class GraphQLApiLambdaWithCache extends GraphQLApiLambda {
 
   /**
    * Create Lambda Role
-   * @protected
    */
   protected createLambdaRole() {
     super.createLambdaRole()
@@ -118,19 +109,17 @@ export class GraphQLApiLambdaWithCache extends GraphQLApiLambda {
 
   /**
    * @summary Method to create environment variables for GraphQL Lambda function
-   * @protected
    */
   protected createLambdaEnvironment() {
     this.graphQLApiLambdaEnvironment = {
-      NODE_ENV: this.props.nodeEnv,
       LOG_LEVEL: this.props.logLevel,
+      NODE_ENV: this.props.nodeEnv,
       TZ: this.props.timezone,
     }
   }
 
   /**
    * @summary Method to create lambda function for GraphQL API
-   * @protected
    */
   protected createLambdaFunction() {
     this.graphQLApiLambdaFunction = this.lambdaManager.createLambdaFunction(

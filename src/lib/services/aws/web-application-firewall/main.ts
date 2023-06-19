@@ -4,9 +4,6 @@ import { CommonConstruct } from '../../../common'
 import { WafIPSetProps, WafWebACLProps } from './types'
 
 /**
- * @stability stable
- * @category cdk-utils.waf-manager
- * @subcategory Construct
  * @classdesc Provides operations on AWS WAF.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
@@ -20,24 +17,23 @@ import { WafIPSetProps, WafWebACLProps } from './types'
  *     this.wafManager.createWebAcl('MyWebAcl', this)
  *   }
  * }
- *
  * @see [CDK WAF Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_waf-readme.html}
  */
 export class WafManager {
   /**
    * @summary Method to create an ip set
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {WafIPSetProps} props
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props
    */
   public createIpSet(id: string, scope: CommonConstruct, props: WafIPSetProps) {
     if (!props) throw `WAF Ip Set props undefined for ${id}`
 
     const ipSet = new wafv2.CfnIPSet(scope, `${id}`, {
-      name: scope.isProductionStage() ? props.name : `${props.name}-${scope.props.stage}`,
-      description: `IP Set for ${id} - ${scope.props.stage} stage`,
       addresses: props.addresses,
+      description: `IP Set for ${id} - ${scope.props.stage} stage`,
       ipAddressVersion: props.ipAddressVersion,
+      name: scope.isProductionStage() ? props.name : `${props.name}-${scope.props.stage}`,
       scope: props.scope,
     })
 
@@ -49,21 +45,21 @@ export class WafManager {
 
   /**
    * @summary Method to create a web acl
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {WafWebACLProps} props
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props
    */
   public createWebAcl(id: string, scope: CommonConstruct, props: WafWebACLProps) {
     if (!props) throw `WAF WebACL props undefined for ${id}`
 
     const webAcl = new wafv2.CfnWebACL(scope, `${id}`, {
-      name: scope.isProductionStage() ? props.name : `${props.name}-${scope.props.stage}`,
-      description: `Web Acl for ${id} - ${scope.props.stage} stage`,
       defaultAction: props.defaultAction,
-      scope: props.scope,
-      visibilityConfig: props.visibilityConfig,
+      description: `Web Acl for ${id} - ${scope.props.stage} stage`,
+      name: scope.isProductionStage() ? props.name : `${props.name}-${scope.props.stage}`,
       rules: props.rules,
+      scope: props.scope,
       tags: [{ key: 'service', value: scope.props.name }],
+      visibilityConfig: props.visibilityConfig,
     })
 
     utils.createCfnOutput(`${id}-webAclId`, scope, webAcl.attrId)

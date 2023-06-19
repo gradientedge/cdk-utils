@@ -10,18 +10,18 @@ interface TestRestApiLambdaProps extends RestApiLambdaProps {
 }
 
 const testRestApiLambdaProps = {
-  name: 'test-restapi-stack',
-  domainName: 'gradientedge.io',
-  region: 'eu-west-1',
-  stage: 'test',
-  stackName: 'test',
-  apiSubDomain: 'api',
   apiRootPaths: ['restapi'],
+  apiSubDomain: 'api',
+  domainName: 'gradientedge.io',
   extraContexts: [
     'src/test/common/cdkConfig/dummy.json',
     'src/test/common/cdkConfig/certificates.json',
     'src/test/common/cdkConfig/lambdas.json',
   ],
+  name: 'test-restapi-stack',
+  region: 'eu-west-1',
+  stackName: 'test',
+  stage: 'test',
   stageContextPath: 'src/test/common/cdkEnv',
 }
 
@@ -40,10 +40,10 @@ class TestCommonStack extends CommonStack {
       ...{
         apiRootPaths: this.node.tryGetContext('apiRootPaths'),
         apiSubDomain: this.node.tryGetContext('apiSubDomain'),
-        restApiCertificate: this.node.tryGetContext('restApiCertificate'),
-        restApiLambda: this.node.tryGetContext('restApiLambda'),
         logLevel: this.node.tryGetContext('logLevel'),
         nodeEnv: this.node.tryGetContext('nodeEnv'),
+        restApiCertificate: this.node.tryGetContext('restApiCertificate'),
+        restApiLambda: this.node.tryGetContext('restApiLambda'),
         testAttribute: this.node.tryGetContext('testAttribute'),
         timezone: this.node.tryGetContext('timezone'),
       },
@@ -61,8 +61,10 @@ class TestRestApiConstruct extends RestApiLambda {
     this.id = 'test-restapi'
     this.props.restApiSource = new lambda.AssetCode('src/test/common/nodejs/lib')
     this.props.restApi = {
+      defaultCorsPreflightOptions: {
+        allowOrigins: apig.Cors.ALL_ORIGINS,
+      },
       deploy: true,
-      restApiName: 'test-lambda-rest-api',
       deployOptions: {
         description: `${this.id} - ${this.props.stage} stage`,
         stageName: this.props.stage,
@@ -71,10 +73,8 @@ class TestRestApiConstruct extends RestApiLambda {
         types: [apig.EndpointType.REGIONAL],
       },
       handler: this.restApiLambdaFunction,
-      defaultCorsPreflightOptions: {
-        allowOrigins: apig.Cors.ALL_ORIGINS,
-      },
       proxy: true,
+      restApiName: 'test-lambda-rest-api',
     }
 
     this.initResources()
@@ -181,8 +181,8 @@ describe('TestRestApiLambdaConstruct', () => {
             ResponseParameters: {
               'method.response.header.Access-Control-Allow-Headers':
                 "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
-              'method.response.header.Access-Control-Allow-Origin': "'*'",
               'method.response.header.Access-Control-Allow-Methods': "'OPTIONS,GET,PUT,POST,DELETE,PATCH,HEAD'",
+              'method.response.header.Access-Control-Allow-Origin': "'*'",
             },
             StatusCode: '204',
           },
@@ -196,8 +196,8 @@ describe('TestRestApiLambdaConstruct', () => {
         {
           ResponseParameters: {
             'method.response.header.Access-Control-Allow-Headers': true,
-            'method.response.header.Access-Control-Allow-Origin': true,
             'method.response.header.Access-Control-Allow-Methods': true,
+            'method.response.header.Access-Control-Allow-Origin': true,
           },
           StatusCode: '204',
         },
@@ -211,9 +211,9 @@ describe('TestRestApiLambdaConstruct', () => {
     template.hasResourceProperties('AWS::Lambda::Function', {
       Environment: {
         Variables: {
-          REGION: 'eu-west-1',
-          NODE_ENV: 'development',
           LOG_LEVEL: 'debug',
+          NODE_ENV: 'development',
+          REGION: 'eu-west-1',
           TZ: 'UTC',
         },
       },

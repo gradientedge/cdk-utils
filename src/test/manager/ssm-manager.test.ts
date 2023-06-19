@@ -6,16 +6,16 @@ import { CommonConstruct, CommonStack, CommonStackProps } from '../../lib'
 interface TestStackProps extends CommonStackProps {}
 
 const testStackProps = {
+  domainName: 'gradientedge.io',
   env: {
     account: '123456789',
     region: 'eu-west-1',
   },
+  extraContexts: [],
   name: 'test-common-stack',
-  domainName: 'gradientedge.io',
   region: 'eu-west-1',
   stackName: 'test',
   stage: 'test',
-  extraContexts: [],
   stageContextPath: 'src/test/common/cdkEnv',
 }
 
@@ -37,8 +37,8 @@ class TestCommonConstruct extends CommonConstruct {
   constructor(parent: Construct, name: string, props: TestStackProps) {
     super(parent, name, props)
     this.ssmManager.writeStringToParameters('test-param-write', this, {
-      parameterName: 'test-param',
       description: `test param description`,
+      parameterName: 'test-param',
       stringValue: 'Hello World!',
     })
     this.paramValue = this.ssmManager.readStringParameter('test-param-read', this, 'test-param-test')
@@ -72,10 +72,10 @@ describe('TestSsmConstruct', () => {
 describe('TestSsmConstruct', () => {
   test('provisions new ip set as expected', () => {
     template.hasResourceProperties('AWS::SSM::Parameter', {
-      Type: 'String',
-      Value: 'Hello World!',
       Description: 'test param description - test stage',
       Name: 'test-param-test',
+      Type: 'String',
+      Value: 'Hello World!',
     })
   })
 })

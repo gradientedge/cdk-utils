@@ -4,27 +4,26 @@ import { Construct } from 'constructs'
 import { CommonConstruct, CommonStack, CommonStackProps } from '../../lib'
 
 interface TestStackProps extends CommonStackProps {
-  testVpc: any
   testEks: any
+  testVpc: any
 }
 
 const testStackProps = {
+  domainName: 'gradientedge.io',
   env: {
     account: '123456789',
     region: 'eu-west-1',
   },
+  extraContexts: ['src/test/common/cdkConfig/eks.json', 'src/test/common/cdkConfig/vpc.json'],
   name: 'test-common-stack',
-  domainName: 'gradientedge.io',
   region: 'eu-west-1',
   stackName: 'test',
   stage: 'test',
-  extraContexts: ['src/test/common/cdkConfig/eks.json', 'src/test/common/cdkConfig/vpc.json'],
   stageContextPath: 'src/test/common/cdkEnv',
 }
 
 class TestCommonStack extends CommonStack {
   declare props: TestStackProps
-
   constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
     super(parent, name, props)
 
@@ -35,8 +34,8 @@ class TestCommonStack extends CommonStack {
     return {
       ...super.determineConstructProps(props),
       ...{
-        testVpc: this.node.tryGetContext('testVpc'),
         testEks: this.node.tryGetContext('testEks'),
+        testVpc: this.node.tryGetContext('testVpc'),
       },
     }
   }

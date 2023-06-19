@@ -3,9 +3,6 @@ import * as logs from 'aws-cdk-lib/aws-logs'
 import { ApiToEventBridgeTargetEventType } from './types'
 
 /**
- * @stability stable
- * @category cdk-utils.api-to-eventbridge-target
- * @subcategory member
  * @classdesc Provides a construct to contain event resources for ApiToEventBridgeTargetWithSns
  */
 export class ApiToEventbridgeTargetEvent implements ApiToEventBridgeTargetEventType {

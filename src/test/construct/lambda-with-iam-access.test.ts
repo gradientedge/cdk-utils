@@ -12,16 +12,16 @@ interface TestStackProps extends LambdaWithIamAccessProps {
 }
 
 const testStackProps = {
-  name: 'test-lambda-with-iam-access-stack',
   domainName: 'gradientedge.io',
-  region: 'eu-west-1',
-  stage: 'test',
-  stackName: 'test',
-  siteSubDomain: 'site',
-  siteCreateAltARecord: true,
   extraContexts: ['src/test/common/cdkConfig/lambdas.json'],
-  stageContextPath: 'src/test/common/cdkEnv',
+  name: 'test-lambda-with-iam-access-stack',
+  region: 'eu-west-1',
+  siteCreateAltARecord: true,
+  siteSubDomain: 'site',
   skipStageForARecords: true,
+  stackName: 'test',
+  stage: 'test',
+  stageContextPath: 'src/test/common/cdkEnv',
 }
 
 class TestCommonStack extends CommonStack {
@@ -91,26 +91,26 @@ describe('TestLambdaWithIamAccess', () => {
 describe('TestLambdaWithIamAccess', () => {
   test('provisions lambda function as expected', () => {
     template.hasResourceProperties('AWS::Lambda::Function', {
+      Architectures: ['arm64'],
       Code: {
         S3Bucket: {
           'Fn::Sub': 'cdk-hnb659fds-assets-${AWS::AccountId}-${AWS::Region}',
         },
         S3Key: 'd5523e3b961cf2272cb4c94da89e310809981614bd36996014e2f23058109580.zip',
       },
-      Role: {
-        'Fn::GetAtt': ['testlambdawithiamaccessstacktestlambdawithiamlambdarole5E03F475', 'Arn'],
-      },
-      Architectures: ['arm64'],
       Environment: {
         Variables: {
+          LAST_MODIFIED_TS: '',
           REGION: 'eu-west-1',
           STAGE: 'test',
-          LAST_MODIFIED_TS: '',
         },
       },
       FunctionName: 'test-iam-lambda-test',
       Handler: 'index.handler',
       MemorySize: 1024,
+      Role: {
+        'Fn::GetAtt': ['testlambdawithiamaccessstacktestlambdawithiamlambdarole5E03F475', 'Arn'],
+      },
       Runtime: 'nodejs18.x',
       Tags: [
         {

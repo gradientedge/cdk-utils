@@ -5,41 +5,41 @@ import { Construct } from 'constructs'
 import { CommonConstruct, CommonStack, CommonStackProps } from '../../lib'
 
 interface TestStackProps extends CommonStackProps {
-  testLogGroup: any
-  testMetric: any
   testAlarm: any
-  testAnotherAlarm: any
   testAlarmStatusWidget: any
-  testGraphWidget: any
-  testLogQueryWidget: any
-  testSingleValueWidget: any
-  testTextWidget: any
-  testWidget: any
-  testCloudfrontDistributionWidget: any
+  testAnotherAlarm: any
   testApiGatewayWidget: any
-  testLambdaWidget: any
+  testCacheWidget: any
+  testCloudfrontDistributionWidget: any
+  testCustomWidget: any
+  testDashboard: any
   testEcsClusterWidget: any
   testEcsServiceWidget: any
   testElbWidget: any
-  testCacheWidget: any
-  testStateWidget: any
   testEventWidget: any
-  testCustomWidget: any
+  testGraphWidget: any
+  testLambdaWidget: any
+  testLogGroup: any
+  testLogQueryWidget: any
+  testMetric: any
+  testSingleValueWidget: any
+  testStateWidget: any
+  testTextWidget: any
+  testWidget: any
   testWidgets: any
-  testDashboard: any
 }
 
 const testStackProps = {
+  domainName: 'gradientedge.io',
   env: {
     account: '123456789',
     region: 'eu-west-1',
   },
+  extraContexts: ['src/test/common/cdkConfig/dashboard.json', 'src/test/common/cdkConfig/logs.json'],
   name: 'test-common-stack',
-  domainName: 'gradientedge.io',
   region: 'eu-west-1',
   stackName: 'test',
   stage: 'test',
-  extraContexts: ['src/test/common/cdkConfig/dashboard.json', 'src/test/common/cdkConfig/logs.json'],
   stageContextPath: 'src/test/common/cdkEnv',
 }
 
@@ -56,28 +56,28 @@ class TestCommonStack extends CommonStack {
     return {
       ...super.determineConstructProps(props),
       ...{
-        testLogGroup: this.node.tryGetContext('testLogGroup'),
-        testMetric: this.node.tryGetContext('testMetric'),
         testAlarm: this.node.tryGetContext('testAlarm'),
-        testAnotherAlarm: this.node.tryGetContext('testAnotherAlarm'),
         testAlarmStatusWidget: this.node.tryGetContext('testAlarmStatusWidget'),
-        testGraphWidget: this.node.tryGetContext('testGraphWidget'),
-        testLogQueryWidget: this.node.tryGetContext('testLogQueryWidget'),
-        testSingleValueWidget: this.node.tryGetContext('testSingleValueWidget'),
-        testTextWidget: this.node.tryGetContext('testTextWidget'),
-        testWidget: this.node.tryGetContext('testWidget'),
-        testCloudfrontDistributionWidget: this.node.tryGetContext('testCloudfrontDistributionWidget'),
+        testAnotherAlarm: this.node.tryGetContext('testAnotherAlarm'),
         testApiGatewayWidget: this.node.tryGetContext('testApiGatewayWidget'),
-        testLambdaWidget: this.node.tryGetContext('testLambdaWidget'),
+        testCacheWidget: this.node.tryGetContext('testCacheWidget'),
+        testCloudfrontDistributionWidget: this.node.tryGetContext('testCloudfrontDistributionWidget'),
+        testCustomWidget: this.node.tryGetContext('testCustomWidget'),
+        testDashboard: this.node.tryGetContext('testDashboard'),
         testEcsClusterWidget: this.node.tryGetContext('testEcsClusterWidget'),
         testEcsServiceWidget: this.node.tryGetContext('testEcsServiceWidget'),
         testElbWidget: this.node.tryGetContext('testElbWidget'),
-        testCacheWidget: this.node.tryGetContext('testCacheWidget'),
-        testStateWidget: this.node.tryGetContext('testStateWidget'),
         testEventWidget: this.node.tryGetContext('testEventWidget'),
-        testCustomWidget: this.node.tryGetContext('testCustomWidget'),
+        testGraphWidget: this.node.tryGetContext('testGraphWidget'),
+        testLambdaWidget: this.node.tryGetContext('testLambdaWidget'),
+        testLogGroup: this.node.tryGetContext('testLogGroup'),
+        testLogQueryWidget: this.node.tryGetContext('testLogQueryWidget'),
+        testMetric: this.node.tryGetContext('testMetric'),
+        testSingleValueWidget: this.node.tryGetContext('testSingleValueWidget'),
+        testStateWidget: this.node.tryGetContext('testStateWidget'),
+        testTextWidget: this.node.tryGetContext('testTextWidget'),
+        testWidget: this.node.tryGetContext('testWidget'),
         testWidgets: this.node.tryGetContext('testWidgets'),
-        testDashboard: this.node.tryGetContext('testDashboard'),
       },
     }
   }
@@ -96,26 +96,26 @@ class TestInvalidCommonStack extends CommonStack {
     return {
       ...super.determineConstructProps(props),
       ...{
-        testLogGroup: this.node.tryGetContext('testLogGroup'),
-        testMetric: this.node.tryGetContext('testMetric'),
         testAlarm: this.node.tryGetContext('testAlarm'),
-        testAnotherAlarm: this.node.tryGetContext('testAnotherAlarm'),
         testAlarmStatusWidget: this.node.tryGetContext('testAlarmStatusWidget'),
-        testGraphWidget: this.node.tryGetContext('testGraphWidget'),
-        testLogQueryWidget: this.node.tryGetContext('testLogQueryWidget'),
-        testSingleValueWidget: this.node.tryGetContext('testSingleValueWidget'),
-        testTextWidget: this.node.tryGetContext('testTextWidget'),
-        testWidget: this.node.tryGetContext('testWidget'),
-        testCloudfrontDistributionWidget: this.node.tryGetContext('testCloudfrontDistributionWidget'),
+        testAnotherAlarm: this.node.tryGetContext('testAnotherAlarm'),
         testApiGatewayWidget: this.node.tryGetContext('testApiGatewayWidget'),
-        testLambdaWidget: this.node.tryGetContext('testLambdaWidget'),
+        testCacheWidget: this.node.tryGetContext('testCacheWidget'),
+        testCloudfrontDistributionWidget: this.node.tryGetContext('testCloudfrontDistributionWidget'),
+        testCustomWidget: this.node.tryGetContext('testCustomWidget'),
         testEcsClusterWidget: this.node.tryGetContext('testEcsClusterWidget'),
         testEcsServiceWidget: this.node.tryGetContext('testEcsServiceWidget'),
         testElbWidget: this.node.tryGetContext('testElbWidget'),
-        testCacheWidget: this.node.tryGetContext('testCacheWidget'),
-        testStateWidget: this.node.tryGetContext('testStateWidget'),
         testEventWidget: this.node.tryGetContext('testEventWidget'),
-        testCustomWidget: this.node.tryGetContext('testCustomWidget'),
+        testGraphWidget: this.node.tryGetContext('testGraphWidget'),
+        testLambdaWidget: this.node.tryGetContext('testLambdaWidget'),
+        testLogGroup: this.node.tryGetContext('testLogGroup'),
+        testLogQueryWidget: this.node.tryGetContext('testLogQueryWidget'),
+        testMetric: this.node.tryGetContext('testMetric'),
+        testSingleValueWidget: this.node.tryGetContext('testSingleValueWidget'),
+        testStateWidget: this.node.tryGetContext('testStateWidget'),
+        testTextWidget: this.node.tryGetContext('testTextWidget'),
+        testWidget: this.node.tryGetContext('testWidget'),
         testWidgets: this.node.tryGetContext('testWidgets'),
       },
     }
@@ -275,11 +275,11 @@ describe('TestCloudWatchConstruct', () => {
 describe('TestCloudWatchConstruct', () => {
   test('provisions new alarm as expected', () => {
     template.hasResourceProperties('AWS::CloudWatch::Alarm', {
-      ComparisonOperator: 'GreaterThanOrEqualToThreshold',
-      EvaluationPeriods: 1,
       AlarmDescription: 'Error in execution',
       AlarmName: 'test-alarm',
+      ComparisonOperator: 'GreaterThanOrEqualToThreshold',
       DatapointsToAlarm: 1,
+      EvaluationPeriods: 1,
       Metrics: [
         {
           Expression: 'SUM(METRICS())',
@@ -321,11 +321,11 @@ describe('TestCloudWatchConstruct', () => {
     })
 
     template.hasResourceProperties('AWS::CloudWatch::Alarm', {
-      ComparisonOperator: 'GreaterThanOrEqualToThreshold',
-      EvaluationPeriods: 1,
       AlarmDescription: 'Error in execution',
       AlarmName: 'test-another-alarm',
+      ComparisonOperator: 'GreaterThanOrEqualToThreshold',
       DatapointsToAlarm: 1,
+      EvaluationPeriods: 1,
       MetricName: 'ConcurrentExecutions',
       Namespace: 'AWS/Lambda',
       Period: 300,

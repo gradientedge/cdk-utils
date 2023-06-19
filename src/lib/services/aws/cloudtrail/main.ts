@@ -6,9 +6,6 @@ import { CommonConstruct } from '../../../common'
 import { CloudTrailProps } from './types'
 
 /**
- * @stability stable
- * @category cdk-utils.cloudtrail-manager
- * @subcategory Construct
  * @classdesc Provides operations on AWS CloudTrail.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
@@ -29,19 +26,18 @@ import { CloudTrailProps } from './types'
  *     )
  *   }
  * }
- *
  * @see [CDK CloudTrail Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_cloudtrail-readme.html}
  */
 export class CloudTrailManager {
   /**
    * @summary Method to create a cloud trail
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {CloudTrailProps} props
-   * @param {logs.CfnLogGroup} logGroup
-   * @param {s3.IBucket} dataBucket
-   * @param {s3.IBucket} logBucket
-   * @param {s3.CfnBucketPolicy} logBucketPolicy
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props
+   * @param logGroup
+   * @param dataBucket
+   * @param logBucket
+   * @param logBucketPolicy
    */
   public createCloudTrail(
     id: string,
@@ -88,6 +84,6 @@ export class CloudTrailManager {
     utils.createCfnOutput(`${id}-trailName`, scope, cloudTrail.trailName)
     utils.createCfnOutput(`${id}-trailArn`, scope, cloudTrail.attrArn)
 
-    return { cloudTrailRole: role, cloudTrail }
+    return { cloudTrail, cloudTrailRole: role }
   }
 }

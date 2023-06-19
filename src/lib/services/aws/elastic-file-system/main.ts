@@ -6,20 +6,17 @@ import { CommonConstruct } from '../../../common'
 import { EfsAccessPointOptions, EfsFileSystemProps } from './types'
 
 export const DEFAULT_CREATE_ACL = {
-  ownerUid: '1000',
   ownerGid: '1000',
+  ownerUid: '1000',
   permissions: '755',
 }
 
 export const DEFAULT_POSIX_USER = {
-  uid: '1000',
   gid: '1000',
+  uid: '1000',
 }
 
 /**
- * @stability stable
- * @category cdk-utils.efs-manager
- * @subcategory Construct
  * @classdesc Provides operations on AWS Elastic File System.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
@@ -33,19 +30,18 @@ export const DEFAULT_POSIX_USER = {
  *     this.efsManager.createFileSystem('MyFileSystem', this, fileSystemProps, vpc)
  *   }
  * }
- *
  * @see [CDK EFS Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_efs-readme.html}
  */
 export class EfsManager {
   /**
    * @summary Method to create an efs file system
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {EfsFileSystemProps} props the file system props
-   * @param {ec2.IVpc} vpc the vpc to use for the file system
-   * @param {EfsAccessPointOptions[]} accessPointOptions optional access point configuration options for the file system
-   * @param {ec2.ISecurityGroup} securityGroup optional security groups to configure for the file system
-   * @param {ec2.SubnetSelection} vpcSubnets optional subnets to configure for the file system
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props the file system props
+   * @param vpc the vpc to use for the file system
+   * @param accessPointOptions optional access point configuration options for the file system
+   * @param securityGroup optional security groups to configure for the file system
+   * @param vpcSubnets optional subnets to configure for the file system
    */
   public createFileSystem(
     id: string,
@@ -61,14 +57,14 @@ export class EfsManager {
     const fileSystemId = props.provisionNewOnDeployment ? `${id}-${new Date().getMilliseconds()}` : `${id}`
     const fileSystem = new efs.FileSystem(scope, `${fileSystemId}`, {
       ...props,
-      vpc,
-      securityGroup,
-      vpcSubnets,
       fileSystemName: props.fileSystemName ? `${props.fileSystemName}-${scope.props.stage}` : undefined,
       lifecyclePolicy: props.lifecyclePolicy ?? efs.LifecyclePolicy.AFTER_7_DAYS,
-      performanceMode: props.performanceMode ?? efs.PerformanceMode.GENERAL_PURPOSE,
       outOfInfrequentAccessPolicy: props.outOfInfrequentAccessPolicy ?? efs.OutOfInfrequentAccessPolicy.AFTER_1_ACCESS,
+      performanceMode: props.performanceMode ?? efs.PerformanceMode.GENERAL_PURPOSE,
       removalPolicy: props.removalPolicy ?? cdk.RemovalPolicy.DESTROY,
+      securityGroup,
+      vpc,
+      vpcSubnets,
     })
 
     utils.createCfnOutput(`${id}-fileSystemArn`, scope, fileSystem.fileSystemArn)
@@ -79,8 +75,8 @@ export class EfsManager {
       for (const [index, accessPointOption] of accessPointOptions.entries()) {
         if (!accessPointOption.path) throw `Undefined access point path for option: [${accessPointOption}], id: [${id}]`
         const accessPoint = fileSystem.addAccessPoint(`${id}-ap-${index}`, {
-          path: accessPointOption.path,
           createAcl: accessPointOption.createAcl ?? DEFAULT_CREATE_ACL,
+          path: accessPointOption.path,
           posixUser: accessPointOption.posixUser ?? DEFAULT_POSIX_USER,
         })
 

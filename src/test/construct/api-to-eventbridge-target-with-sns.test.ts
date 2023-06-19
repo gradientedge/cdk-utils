@@ -7,23 +7,23 @@ import { ApiToEventBridgeTargetProps, ApiToEventBridgeTargetWithSns, CommonStack
 interface TestStackProps extends ApiToEventBridgeTargetProps {}
 
 const testStackProps = {
+  apiRootPaths: [''],
+  apiSubDomain: 'api',
+  domainName: 'gradientedge.io',
   env: {
     account: '123456789',
     region: 'eu-west-1',
   },
-  name: 'test-api-to-eb-stack',
-  domainName: 'gradientedge.io',
-  region: 'eu-west-1',
-  stage: 'test',
-  stackName: 'test',
-  apiSubDomain: 'api',
-  apiRootPaths: [''],
   extraContexts: [
     'src/test/common/cdkConfig/dummy.json',
     'src/test/common/cdkConfig/certificates.json',
     'src/test/common/cdkConfig/lambdas.json',
     'src/test/common/cdkConfig/rules.json',
   ],
+  name: 'test-api-to-eb-stack',
+  region: 'eu-west-1',
+  stackName: 'test',
+  stage: 'test',
   stageContextPath: 'src/test/common/cdkEnv',
 }
 
@@ -40,27 +40,27 @@ class TestCommonStack extends CommonStack {
     return {
       ...super.determineConstructProps(props),
       ...{
-        apiRootPaths: this.node.tryGetContext('apiRootPaths'),
-        apiSubDomain: this.node.tryGetContext('apiSubDomain'),
         api: {
           certificate: this.node.tryGetContext('siteCertificate'),
           resource: 'notify',
-          withResource: true,
           useExisting: false,
+          withResource: true,
+        },
+        apiRootPaths: this.node.tryGetContext('apiRootPaths'),
+        apiSubDomain: this.node.tryGetContext('apiSubDomain'),
+        event: {
+          eventBusName: 'test',
+          ruleFailure: this.node.tryGetContext('testAnotherLambdaRule'),
+          ruleSuccess: this.node.tryGetContext('testLambdaRule'),
         },
         lambda: {
           function: this.node.tryGetContext('testApiDestinedLambda'),
           source: new lambda.AssetCode('./app/api-destined-function/src/lib'),
         },
-        event: {
-          eventBusName: 'test',
-          ruleSuccess: this.node.tryGetContext('testLambdaRule'),
-          ruleFailure: this.node.tryGetContext('testAnotherLambdaRule'),
-        },
-        useExistingHostedZone: this.node.tryGetContext('useExistingHostedZone'),
         logLevel: this.node.tryGetContext('logLevel'),
         nodeEnv: this.node.tryGetContext('nodeEnv'),
         timezone: this.node.tryGetContext('timezone'),
+        useExistingHostedZone: this.node.tryGetContext('useExistingHostedZone'),
       },
     }
   }
@@ -179,16 +179,16 @@ describe('TestApiToEventBridgeTargetWithSnsConstruct', () => {
 describe('TestApiToEventBridgeTargetWithSnsConstruct', () => {
   test('provisions api gateway methods as expected', () => {
     template.hasResourceProperties('AWS::ApiGateway::Method', {
-      HttpMethod: 'OPTIONS',
       AuthorizationType: 'NONE',
+      HttpMethod: 'OPTIONS',
       Integration: {
         IntegrationResponses: [
           {
             ResponseParameters: {
               'method.response.header.Access-Control-Allow-Headers':
                 "'Content-Type,X-Amz-Date,Authorization,X-Api-Key,X-Amz-Security-Token,X-Amz-User-Agent'",
-              'method.response.header.Access-Control-Allow-Origin': "'*'",
               'method.response.header.Access-Control-Allow-Methods': "'POST'",
+              'method.response.header.Access-Control-Allow-Origin': "'*'",
             },
             StatusCode: '204',
           },
@@ -202,8 +202,8 @@ describe('TestApiToEventBridgeTargetWithSnsConstruct', () => {
         {
           ResponseParameters: {
             'method.response.header.Access-Control-Allow-Headers': true,
-            'method.response.header.Access-Control-Allow-Origin': true,
             'method.response.header.Access-Control-Allow-Methods': true,
+            'method.response.header.Access-Control-Allow-Origin': true,
           },
           StatusCode: '204',
         },
@@ -217,11 +217,11 @@ describe('TestApiToEventBridgeTargetWithSnsConstruct', () => {
     template.hasResourceProperties('AWS::Lambda::Function', {
       Environment: {
         Variables: {
-          REGION: 'eu-west-1',
-          NODE_ENV: 'development',
           LOG_LEVEL: 'debug',
-          TZ: 'UTC',
+          NODE_ENV: 'development',
+          REGION: 'eu-west-1',
           SOURCE_ID: 'test',
+          TZ: 'UTC',
         },
       },
       FunctionName: 'test-api-destined-test',

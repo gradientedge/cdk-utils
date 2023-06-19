@@ -6,9 +6,6 @@ import { QueueProps } from './types'
 import { LambdaProps } from '../lambda'
 
 /**
- * @stability stable
- * @category cdk-utils.sqs-manager
- * @subcategory Construct
  * @classdesc Provides operations on AWS Simple Queue Service.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
@@ -22,35 +19,27 @@ import { LambdaProps } from '../lambda'
  *     this.sqsManager.createQueue('MySqs', this, {...})
  *   }
  * }
- *
  * @see [CDK Simple Queue Service Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_sqs-readme.html}
  */
 export class SqsManager {
   /**
    * @summary Method to create a lambda queue service
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {QueueProps} props
-   * @param {sqs.IQueue} deadLetterQueue
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props
+   * @param deadLetterQueue
    */
   public createQueue(id: string, scope: CommonConstruct, props: QueueProps, deadLetterQueue?: sqs.IQueue) {
     if (!props) throw `Queue props undefined for ${id}`
 
     const queue = new sqs.Queue(scope, id, {
-      queueName: props.queueName,
-      visibilityTimeout: props.visibilityTimeoutInSecs
-        ? cdk.Duration.seconds(props.visibilityTimeoutInSecs)
-        : props.visibilityTimeout,
-      receiveMessageWaitTime: props.receiveMessageWaitTimeInSecs
-        ? cdk.Duration.seconds(props.receiveMessageWaitTimeInSecs)
-        : props.receiveMessageWaitTime,
       contentBasedDeduplication: props.contentBasedDeduplication,
       dataKeyReuse: props.dataKeyReuseInSecs ? cdk.Duration.seconds(props.dataKeyReuseInSecs) : props.dataKeyReuse,
       deadLetterQueue: !deadLetterQueue
         ? undefined
         : {
-            queue: deadLetterQueue,
             maxReceiveCount: props.maxReceiveCount ?? 5,
+            queue: deadLetterQueue,
           },
       deduplicationScope: props.deduplicationScope,
       deliveryDelay: props.deliveryDelayInSecs ? cdk.Duration.seconds(props.deliveryDelayInSecs) : undefined,
@@ -59,8 +48,15 @@ export class SqsManager {
       fifo: props.fifo,
       fifoThroughputLimit: props.fifoThroughputLimit,
       maxMessageSizeBytes: props.maxMessageSizeBytes,
+      queueName: props.queueName,
+      receiveMessageWaitTime: props.receiveMessageWaitTimeInSecs
+        ? cdk.Duration.seconds(props.receiveMessageWaitTimeInSecs)
+        : props.receiveMessageWaitTime,
       removalPolicy: props.removalPolicy ?? cdk.RemovalPolicy.DESTROY,
       retentionPeriod: props.retentionInDays ? cdk.Duration.days(props.retentionInDays) : cdk.Duration.days(7),
+      visibilityTimeout: props.visibilityTimeoutInSecs
+        ? cdk.Duration.seconds(props.visibilityTimeoutInSecs)
+        : props.visibilityTimeout,
     })
 
     if (props.tags && props.tags.length > 0) {
@@ -78,9 +74,9 @@ export class SqsManager {
 
   /**
    * @summary Method to create a redrive queue for a lambda function
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {LambdaProps} props the lambda properties
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props the lambda properties
    */
   public createRedriveQueueForLambda(id: string, scope: CommonConstruct, props: LambdaProps) {
     return this.createQueue(`${id}`, scope, {
@@ -93,10 +89,10 @@ export class SqsManager {
 
   /**
    * @summary Method to create a dead letter queue for a lambda function
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {LambdaProps} props the lambda properties
-   * @param {sqs.IQueue} deadLetterQueue
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props the lambda properties
+   * @param deadLetterQueue
    */
   public createDeadLetterQueueForLambda(
     id: string,

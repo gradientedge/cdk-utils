@@ -3,8 +3,6 @@ import * as logs from 'aws-cdk-lib/aws-logs'
 import { TagProps } from '../../../types'
 
 /**
- * @category cdk-utils.cloudwatch-manager
- * @subcategory Properties
  */
 export interface AlarmProps extends watch.AlarmProps {
   expression?: string
@@ -13,108 +11,88 @@ export interface AlarmProps extends watch.AlarmProps {
 }
 
 /**
- * @category cdk-utils.cloudwatch-manager
- * @subcategory Properties
  */
 export interface DashboardProps extends watch.DashboardProps {}
 
 /**
- * @category cdk-utils.cloudwatch-manager
- * @subcategory Properties
  */
 export interface MetricProps extends watch.MetricProps {
-  stageSuffix: boolean
-  periodInSecs?: number
-  functionName?: string
-  dbClusterIdentifier?: string
-  distributionId?: string
-  loadBalancer?: string
-  serviceName?: string
-  clusterName?: string
   apiName?: string
   cacheClusterId?: string
-  stateMachineArn?: string
+  clusterName?: string
+  dbClusterIdentifier?: string
+  distributionId?: string
   eventBusName?: string
+  functionName?: string
+  loadBalancer?: string
+  periodInSecs?: number
   ruleName?: string
   service?: string
+  serviceName?: string
+  stageSuffix: boolean
+  stateMachineArn?: string
 }
 
 /**
- * @category cdk-utils.cloudwatch-manager
- * @subcategory Properties
  */
 export interface TextWidgetProps extends watch.TextWidgetProps {
-  type: string
   positionX: number
   positionY: number
+  type: string
 }
 
 /**
- * @category cdk-utils.cloudwatch-manager
- * @subcategory Properties
  */
 export interface NumericWidgetProps extends watch.SingleValueWidgetProps {
-  type: string
+  metricProps: watch.MetricProps[]
   positionX: number
   positionY: number
-  metricProps: watch.MetricProps[]
+  type: string
 }
 
 /**
- * @category cdk-utils.cloudwatch-manager
- * @subcategory Properties
  */
 export interface GuageWidgetProps extends watch.GaugeWidgetProps {
-  type: string
+  metricProps: watch.MetricProps[]
   positionX: number
   positionY: number
-  metricProps: watch.MetricProps[]
+  type: string
 }
 
 /**
- * @category cdk-utils.cloudwatch-manager
- * @subcategory Properties
  */
 export interface GraphWidgetProps extends watch.GraphWidgetProps {
-  type: string
+  metricProps: MetricProps[]
   positionX: number
   positionY: number
-  metricProps: MetricProps[]
+  type: string
 }
 
 /**
- * @category cdk-utils.cloudwatch-manager
- * @subcategory Properties
  */
 export interface AlarmStatusWidgetProps extends watch.AlarmStatusWidgetProps {
-  type: string
+  alarmProps: watch.AlarmProps[]
   positionX: number
   positionY: number
-  alarmProps: watch.AlarmProps[]
+  type: string
 }
 
 /**
- * @category cdk-utils.cloudwatch-manager
- * @subcategory Properties
  */
 export interface LogQueryWidgetProps extends watch.LogQueryWidgetProps {
-  type: string
   positionX: number
   positionY: number
+  type: string
 }
 
 /**
- * @category cdk-utils.cloudwatch-manager
- * @subcategory Properties
  */
 export interface MetricFilterProps extends logs.MetricFilterProps {
-  periodInSecs: number
   options: watch.MetricOptions
+  periodInSecs: number
 }
 
 /**
- * @category cdk-utils.cloudwatch-manager
- * @subcategory Properties
  */
 export interface LogProps extends logs.LogGroupProps {
   tags?: TagProps[]

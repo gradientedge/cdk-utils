@@ -9,24 +9,20 @@ import { CommonConstruct, CommonStack, CommonStackProps } from '../../lib'
 
 interface TestStackProps extends CommonStackProps {
   testBucket: any
-  testLogBucket: any
   testCertificate: any
   testDistribution: any
-  testLambdaEdge: any
   testEdgeDistribution: any
   testFunction: any
+  testLambdaEdge: any
+  testLogBucket: any
 }
 
 const testStackProps = {
+  domainName: 'gradientedge.io',
   env: {
     account: '123456789',
     region: 'us-east-1',
   },
-  name: 'test-common-stack',
-  domainName: 'gradientedge.io',
-  region: 'us-east-1',
-  stackName: 'test',
-  stage: 'test',
   extraContexts: [
     'src/test/common/cdkConfig/buckets.json',
     'src/test/common/cdkConfig/certificates.json',
@@ -34,6 +30,10 @@ const testStackProps = {
     'src/test/common/cdkConfig/lambdas.json',
     'src/test/common/cdkConfig/function.json',
   ],
+  name: 'test-common-stack',
+  region: 'us-east-1',
+  stackName: 'test',
+  stage: 'test',
   stageContextPath: 'src/test/common/cdkEnv',
 }
 
@@ -51,12 +51,12 @@ class TestCommonStack extends CommonStack {
       ...super.determineConstructProps(props),
       ...{
         testBucket: this.node.tryGetContext('siteBucket'),
-        testLogBucket: this.node.tryGetContext('siteLogBucket'),
         testCertificate: this.node.tryGetContext('siteCertificate'),
         testDistribution: this.node.tryGetContext('siteDistribution'),
-        testLambdaEdge: this.node.tryGetContext('testLambdaEdge'),
         testEdgeDistribution: this.node.tryGetContext('testEdgeDistribution'),
         testFunction: this.node.tryGetContext('siteFunction'),
+        testLambdaEdge: this.node.tryGetContext('testLambdaEdge'),
+        testLogBucket: this.node.tryGetContext('siteLogBucket'),
       },
     }
   }
@@ -76,11 +76,11 @@ class TestInvalidCommonStack extends CommonStack {
       ...super.determineConstructProps(props),
       ...{
         testBucket: this.node.tryGetContext('siteBucket'),
-        testLogBucket: this.node.tryGetContext('siteLogBucket'),
         testCertificate: this.node.tryGetContext('siteCertificate'),
-        testLambdaEdge: this.node.tryGetContext('testLambdaEdge'),
         testEdgeDistribution: this.node.tryGetContext('testEdgeDistribution'),
         testFunction: this.node.tryGetContext('siteFunction'),
+        testLambdaEdge: this.node.tryGetContext('testLambdaEdge'),
+        testLogBucket: this.node.tryGetContext('siteLogBucket'),
       },
     }
   }
@@ -108,8 +108,8 @@ class TestCommonConstruct extends CommonConstruct {
     )
     const defaultFunctionAssociations = [
       {
-        function: cloudfrontFunction,
         eventType: cloudfront.FunctionEventType.VIEWER_RESPONSE,
+        function: cloudfrontFunction,
       },
     ]
     this.cloudFrontManager.createCloudFrontDistribution(
@@ -150,8 +150,8 @@ class TestCommonConstruct extends CommonConstruct {
     distribution.addBehavior('product/*', siteOrigin, {
       edgeLambdas: [
         {
-          functionVersion: edgeFunction.currentVersion,
           eventType: cloudfront.LambdaEdgeEventType.ORIGIN_REQUEST,
+          functionVersion: edgeFunction.currentVersion,
         },
       ],
     })
@@ -382,10 +382,10 @@ describe('TestCloudFrontConstruct', () => {
 describe('TestCloudFrontConstruct', () => {
   test('provisions cloudfront function as expected', () => {
     template.hasResourceProperties('AWS::CloudFront::Function', {
-      Name: 'test-function-test',
       FunctionConfig: {
         Comment: 'test comment',
       },
+      Name: 'test-function-test',
     })
   })
 })

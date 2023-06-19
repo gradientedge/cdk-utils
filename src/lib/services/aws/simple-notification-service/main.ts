@@ -6,9 +6,6 @@ import { CommonConstruct } from '../../../common'
 import { SubscriptionProps } from './types'
 
 /**
- * @stability stable
- * @category cdk-utils.sns-manager
- * @subcategory Construct
  * @classdesc Provides operations on AWS Simple Notification Service.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
@@ -22,16 +19,15 @@ import { SubscriptionProps } from './types'
  *     this.snsManager.createEmailNotificationService('MySns', 'eu-west-1', ["test@example.com"])
  *   }
  * }
- *
  * @see [CDK Simple Notification Service Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_sns-readme.html}
  */
 export class SnsManager {
   /**
    * @summary Method to create an email notification service
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {SubscriptionProps} props
-   * @param {string[]} emails
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props
+   * @param emails
    */
   public createEmailNotificationService(
     id: string,
@@ -43,8 +39,8 @@ export class SnsManager {
 
     const topic = new sns.Topic(scope, id, {
       displayName: `${props.topicName}-${scope.props.stage}`,
-      topicName: `${props.topicName}-${scope.props.stage}`,
       fifo: props.fifo,
+      topicName: `${props.topicName}-${scope.props.stage}`,
     })
 
     if (emails && emails.length > 0) {
@@ -59,10 +55,10 @@ export class SnsManager {
 
   /**
    * @summary Method to create a lambda notification service
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {SubscriptionProps} props
-   * @param {lambda.IFunction} lambdaFunction
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props
+   * @param lambdaFunction
    */
   public createLambdaNotificationService(
     id: string,
@@ -74,8 +70,8 @@ export class SnsManager {
 
     const topic = new sns.Topic(scope, id, {
       displayName: `${props.topicName}-${scope.props.stage}`,
-      topicName: `${props.topicName}-${scope.props.stage}`,
       fifo: props.fifo,
+      topicName: `${props.topicName}-${scope.props.stage}`,
     })
 
     topic.addSubscription(new subs.LambdaSubscription(lambdaFunction))

@@ -6,27 +6,27 @@ import { Construct } from 'constructs'
 import { CommonConstruct, CommonStack, CommonStackProps } from '../../lib'
 
 interface TestStackProps extends CommonStackProps {
-  testVpc: any
   testCluster: any
   testLogGroup: any
   testTask: any
+  testVpc: any
 }
 
 const testStackProps = {
+  domainName: 'gradientedge.io',
   env: {
     account: '123456789',
     region: 'eu-west-1',
   },
-  name: 'test-common-stack',
-  domainName: 'gradientedge.io',
-  region: 'eu-west-1',
-  stackName: 'test',
-  stage: 'test',
   extraContexts: [
     'src/test/common/cdkConfig/ecs.json',
     'src/test/common/cdkConfig/logs.json',
     'src/test/common/cdkConfig/vpc.json',
   ],
+  name: 'test-common-stack',
+  region: 'eu-west-1',
+  stackName: 'test',
+  stage: 'test',
   stageContextPath: 'src/test/common/cdkEnv',
 }
 
@@ -43,10 +43,10 @@ class TestCommonStack extends CommonStack {
     return {
       ...super.determineConstructProps(props),
       ...{
-        testVpc: this.node.tryGetContext('testVpc'),
         testCluster: this.node.tryGetContext('testCluster'),
         testLogGroup: this.node.tryGetContext('testLogGroup'),
         testTask: this.node.tryGetContext('testTask'),
+        testVpc: this.node.tryGetContext('testVpc'),
       },
     }
   }
@@ -65,9 +65,9 @@ class TestInvalidCommonStack extends CommonStack {
     return {
       ...super.determineConstructProps(props),
       ...{
-        testVpc: this.node.tryGetContext('testVpc'),
         testCluster: this.node.tryGetContext('testCluster'),
         testLogGroup: this.node.tryGetContext('testLogGroup'),
+        testVpc: this.node.tryGetContext('testVpc'),
       },
     }
   }
@@ -132,23 +132,23 @@ describe('TestEcsConstruct', () => {
 
   test('provisions new task definition as expected', () => {
     template.hasResourceProperties('AWS::ECS::TaskDefinition', {
-      Cpu: '256',
-      Family: 'test-task-test',
-      Memory: '512',
-      NetworkMode: 'awsvpc',
-      RequiresCompatibilities: ['FARGATE'],
       ContainerDefinitions: [
         {
           LogConfiguration: {
             LogDriver: 'awslogs',
             Options: {
+              'awslogs-multiline-pattern': '^(DEBUG|ERROR|INFO|LOG|WARN)',
               'awslogs-region': 'eu-west-1',
               'awslogs-stream-prefix': 'test-task',
-              'awslogs-multiline-pattern': '^(DEBUG|ERROR|INFO|LOG|WARN)',
             },
           },
         },
       ],
+      Cpu: '256',
+      Family: 'test-task-test',
+      Memory: '512',
+      NetworkMode: 'awsvpc',
+      RequiresCompatibilities: ['FARGATE'],
     })
   })
 })

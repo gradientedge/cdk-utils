@@ -14,29 +14,28 @@ import {
 import { VpcProps } from 'aws-cdk-lib/aws-ec2'
 
 /**
- * @category cdk-utils.site-with-ecs-backend
- * @subcategory Properties
  */
 export interface SiteWithEcsBackendProps extends CommonStackProps {
+  logLevel: string
+  nodeEnv: string
   siteCacheInvalidationDockerFilePath?: string
-  siteHealthCheck: HealthCheck
   siteCertificate: AcmProps
-  siteRegionalCertificate: AcmProps
+  siteCloudfrontFunctionProps?: CloudfrontFunctionProps
   siteCluster: EcsClusterProps
   siteDistribution: DistributionProps
-  siteCloudfrontFunctionProps?: CloudfrontFunctionProps
-  siteFunctionFilePath?: string
   siteEcsContainerImagePath: string
+  siteFileSystem?: EfsFileSystemProps
+  siteFileSystemAccessPoints?: EfsAccessPointOptions[]
+  siteFunctionFilePath?: string
+  siteHealthCheck: HealthCheck
   siteLog: LogProps
   siteLogBucket: S3BucketProps
   siteRecordName?: string
+  siteRegionalCertificate: AcmProps
   siteSubDomain: string
   siteTask: EcsApplicationLoadBalancedFargateServiceProps
   siteVpc: VpcProps
-  siteFileSystem?: EfsFileSystemProps
-  siteFileSystemAccessPoints?: EfsAccessPointOptions[]
-  useExistingHostedZone: boolean
-  nodeEnv: string
-  logLevel: string
   timezone: string
+  useExistingHostedZone: boolean
+  useExistingVpc: boolean
 }

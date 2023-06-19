@@ -7,8 +7,6 @@ import { ArnsByRegionForArm64, ArnsByRegionForX86_64 } from './constants'
 import { CommonConstruct } from '../../../common'
 
 /**
- * @category cdk-utils.app-config-manager
- * @subcategory Construct
  * @classdesc Provides operations on AWS AppConfig.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
@@ -22,14 +20,13 @@ import { CommonConstruct } from '../../../common'
  *     this.appConfigManager.createApplication('MyApplication', this)
  *   }
  * }
- *
  * @see [CDK AppConfig Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_appconfig-readme.html}
  */
 export class AppConfigManager {
   /**
    * Method to get static ARNs for AppConfig extensions
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {Architecture} type type of the architecture
+   * @param scope scope in which this resource is defined
+   * @param type type of the architecture
    */
   public getArnForAppConfigExtension(scope: CommonConstruct, type: Architecture) {
     switch (type) {
@@ -44,17 +41,17 @@ export class AppConfigManager {
 
   /**
    * @summary Method to create an AppConfig Application
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {AppConfigProps} props
-   * @returns {appconfig.CfnApplication}
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props
+   * @returns the appconfig application
    */
   public createApplication(id: string, scope: CommonConstruct, props: AppConfigProps): appconfig.CfnApplication {
     if (!props) throw `AppConfig props undefined for ${id}`
 
     const application = new appconfig.CfnApplication(scope, `${id}`, {
-      name: `${props.application.name}-${scope.props.stage}`,
       description: props.application.description,
+      name: `${props.application.name}-${scope.props.stage}`,
       tags: props.application.tags,
     })
 
@@ -66,11 +63,11 @@ export class AppConfigManager {
 
   /**
    * @summary Method to create an AppConfig Environment for a given application
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {string} applicationId id of the application
-   * @param {AppConfigProps} props
-   * @returns {appconfig.CfnEnvironment}
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param applicationId id of the application
+   * @param props
+   * @returns the appconfig environment
    */
   public createEnvironment(
     id: string,
@@ -82,9 +79,9 @@ export class AppConfigManager {
 
     const environment = new appconfig.CfnEnvironment(scope, `${id}`, {
       applicationId: applicationId,
-      name: props.environment.name ?? scope.props.stage,
       description: props.environment.description,
       monitors: props.environment.monitors,
+      name: props.environment.name ?? scope.props.stage,
       tags: props.environment.tags,
     })
 
@@ -97,11 +94,11 @@ export class AppConfigManager {
   /**
    * @summary Method to create an AppConfig Configuration Profile for a given application
    * - <p>&#9888; The <b>locationUri</b> is defaulted to <i>hosted</i> if undefined</p>
-   * @param {string} id scoped id of the resource
-   * @param {CommonConstruct} scope scope in which this resource is defined
-   * @param {string} applicationId id of the application
-   * @param {AppConfigProps} props
-   * @returns {appconfig.CfnConfigurationProfile}
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param applicationId id of the application
+   * @param props
+   * @returns the appconfig configuration profile
    */
   public createConfigurationProfile(
     id: string,
@@ -113,9 +110,9 @@ export class AppConfigManager {
 
     const profile = new appconfig.CfnConfigurationProfile(scope, `${id}`, {
       applicationId: applicationId,
+      description: props.configurationProfile.description,
       locationUri: props.configurationProfile.locationUri || 'hosted',
       name: `${props.configurationProfile.name}-${scope.props.stage}`,
-      description: props.configurationProfile.description,
       retrievalRoleArn: props.configurationProfile.retrievalRoleArn,
       tags: props.configurationProfile.tags,
       type: props.configurationProfile.type,
