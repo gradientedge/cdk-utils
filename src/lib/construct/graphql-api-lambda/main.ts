@@ -36,7 +36,7 @@ export class GraphQLApiLambda extends CommonConstruct {
   graphQLApiLambdaPolicy: iam.PolicyDocument
   graphQLApiLambdaRole: iam.Role
   graphQLApiLambdaEnvironment: GraphQlApiLambdaEnvironment
-  graphQLApiLambdaLayers: lambda.LayerVersion[] = []
+  graphQLApiLambdaLayers: lambda.ILayerVersion[] = []
   graphQLApiLambdaFunction: lambda.Function
   graphQLApi: apig.RestApi
   graphQLApiHostedZone: route53.IHostedZone

@@ -35,7 +35,7 @@ export abstract class RestApiLambda extends CommonConstruct {
   restApiLambdaPolicy: iam.PolicyDocument
   restApiLambdaRole: iam.Role
   restApiLambdaEnvironment: RestApiLambdaEnvironment
-  restApiLambdaLayers: lambda.LayerVersion[] = []
+  restApiLambdaLayers: lambda.ILayerVersion[] = []
   restApiLambdaFunction: lambda.Function
   restApi: apig.RestApi
   restApiHostedZone: route53.IHostedZone
