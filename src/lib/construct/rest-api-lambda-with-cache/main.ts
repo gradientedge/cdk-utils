@@ -64,10 +64,6 @@ export abstract class RestApiLambdaWithCache extends RestApiLambda {
    * Resolve Security Group
    */
   protected resolveSecurityGroup() {
-    if (!this.props.restApiCache) {
-      return
-    }
-
     if (this.props.securityGroupExportName) {
       this.restApiSecurityGroup = ec2.SecurityGroup.fromSecurityGroupId(
         this,
