@@ -111,7 +111,11 @@ export class SiteWithEcsBackend extends CommonConstruct {
    * @summary Method to resolve a certificate based on attributes
    */
   protected resolveCertificate() {
-    /* determine site certificate */
+    this.resolveGlobalCertificate()
+    this.resolveRegionalCertificate()
+  }
+
+  protected resolveGlobalCertificate() {
     if (
       this.props.siteCertificate.useExistingCertificate &&
       this.props.siteCertificate.certificateSsmName &&
@@ -129,7 +133,21 @@ export class SiteWithEcsBackend extends CommonConstruct {
       this,
       this.props.siteCertificate
     )
+  }
 
+  protected resolveRegionalCertificate() {
+    if (
+      this.props.siteRegionalCertificate.useExistingCertificate &&
+      this.props.siteRegionalCertificate.certificateSsmName &&
+      this.props.siteRegionalCertificate.certificateRegion
+    ) {
+      this.props.siteRegionalCertificate.certificateArn = this.ssmManager.readStringParameterFromRegion(
+        `${this.id}-regional-certificate-parameter`,
+        this,
+        this.props.siteRegionalCertificate.certificateSsmName,
+        this.props.siteRegionalCertificate.certificateRegion
+      )
+    }
     this.siteRegionalCertificate = this.acmManager.resolveCertificate(
       `${this.id}-regional-certificate`,
       this,
