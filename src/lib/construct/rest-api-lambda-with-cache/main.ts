@@ -54,7 +54,7 @@ export abstract class RestApiLambdaWithCache extends RestApiLambda {
    */
   protected resolveVpc() {
     if (this.props.useExistingVpc) {
-      this.restApivpc = this.vpcManager.retrieveCommonVpc(`${this.id}`, this, this.props.vpcName)
+      this.restApivpc = this.vpcManager.retrieveCommonVpc(`${this.id}-vpc`, this, this.props.vpcName)
     } else {
       this.restApivpc = this.vpcManager.createCommonVpc(this, this.props.restApiVpc, this.props.restApiVpc.vpcName)
     }
@@ -67,7 +67,7 @@ export abstract class RestApiLambdaWithCache extends RestApiLambda {
     if (this.props.securityGroupExportName) {
       this.restApiSecurityGroup = ec2.SecurityGroup.fromSecurityGroupId(
         this,
-        `${this.id}`,
+        `${this.id}-security-group`,
         cdk.Fn.importValue(this.props.securityGroupExportName)
       )
     } else {
