@@ -448,7 +448,8 @@ export class SiteWithEcsBackend extends CommonConstruct {
       this.siteDomainNames,
       this.siteLogBucket,
       this.siteCertificate,
-      this.siteFunctionAssociations
+      this.siteFunctionAssociations,
+      this.props.siteDistribution.defaultBehavior.responseHeadersPolicy
     )
   }
 
