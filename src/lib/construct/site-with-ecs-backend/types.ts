@@ -12,6 +12,13 @@ import {
   S3BucketProps,
 } from '../../services'
 import { VpcProps } from 'aws-cdk-lib/aws-ec2'
+import {
+  OriginRequestPolicyProps,
+  ResponseHeadersStrictTransportSecurity,
+  ResponseSecurityHeadersBehavior,
+  ResponseHeadersPolicyProps,
+} from 'aws-cdk-lib/aws-cloudfront'
+import { SiteResponseHeaderPolicyType } from './constants'
 
 /**
  */
@@ -30,6 +37,8 @@ export interface SiteWithEcsBackendProps extends CommonStackProps {
   siteHealthCheck: HealthCheck
   siteLog: LogProps
   siteLogBucket: S3BucketProps
+  siteOriginRequestPolicy: OriginRequestPolicyProps
+  siteOriginResponseHeadersPolicy: SiteResponseHeadersPolicyProps
   siteRecordName?: string
   siteRegionalCertificate: AcmProps
   siteSubDomain: string
@@ -38,4 +47,17 @@ export interface SiteWithEcsBackendProps extends CommonStackProps {
   timezone: string
   useExistingHostedZone: boolean
   useExistingVpc: boolean
+}
+
+export interface SiteResponseHeadersStrictTransportSecurity extends ResponseHeadersStrictTransportSecurity {
+  accessControlMaxAgeInSeconds: number
+}
+
+export interface SiteSecurityHeadersBehavior extends ResponseSecurityHeadersBehavior {
+  strictTransportSecurity: SiteResponseHeadersStrictTransportSecurity
+}
+
+export interface SiteResponseHeadersPolicyProps extends ResponseHeadersPolicyProps {
+  securityHeadersBehavior: SiteSecurityHeadersBehavior
+  type: SiteResponseHeaderPolicyType
 }
