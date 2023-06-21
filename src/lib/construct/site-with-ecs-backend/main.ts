@@ -1,3 +1,4 @@
+import * as _ from 'lodash'
 import * as cdk from 'aws-cdk-lib'
 import * as certificateManager from 'aws-cdk-lib/aws-certificatemanager'
 import * as cloudfront from 'aws-cdk-lib/aws-cloudfront'
@@ -13,7 +14,7 @@ import * as s3 from 'aws-cdk-lib/aws-s3'
 import * as efs from 'aws-cdk-lib/aws-efs'
 import { Construct } from 'constructs'
 import { CommonConstruct } from '../../common'
-import { SiteWithEcsBackendProps } from './types'
+import { SiteWithEcsBackendProps, SiteResponseHeadersPolicyProps } from './types'
 
 /**
  * @classdesc Provides a construct to create and deploy a site hosted with an clustered ECS/ELB backend
@@ -62,6 +63,8 @@ export class SiteWithEcsBackend extends CommonConstruct {
   siteDomainNames: string[]
   siteCloudfrontFunction: cloudfront.Function
   siteFunctionAssociations: cloudfront.FunctionAssociation[]
+  siteOriginRequestPolicy: cloudfront.OriginRequestPolicy
+  siteOriginResponseHeadersPolicy?: cloudfront.ResponseHeadersPolicy
 
   constructor(parent: Construct, id: string, props: SiteWithEcsBackendProps) {
     super(parent, id, props)
@@ -88,6 +91,8 @@ export class SiteWithEcsBackend extends CommonConstruct {
     this.createEcsBuildArgs()
     this.createEcsContainerImage()
     this.createEcsService()
+    this.createSiteOriginRequestPolicy()
+    this.createSiteOriginResponseHeadersPolicy()
     this.createSiteOrigin()
     this.createSiteCloudfrontFunction()
     this.resolveSiteFunctionAssociations()
@@ -402,9 +407,50 @@ export class SiteWithEcsBackend extends CommonConstruct {
     this.siteLogBucket = this.s3Manager.createS3Bucket(`${this.id}-site-logs`, this, this.props.siteLogBucket)
   }
 
+  protected createSiteOriginRequestPolicy() {
+    if (!this.props.siteOriginRequestPolicy) return
+    this.siteOriginRequestPolicy = new cloudfront.OriginRequestPolicy(this, `${this.id}-sorp`, {
+      comment: `Request Policy for ${this.id}-distribution - ${this.props.stage} stage`,
+      cookieBehavior: this.props.siteOriginRequestPolicy.cookieBehavior,
+      headerBehavior: this.props.siteOriginRequestPolicy.headerBehavior,
+      originRequestPolicyName: `${this.id}-origin-request`,
+      queryStringBehavior: this.props.siteOriginRequestPolicy.queryStringBehavior,
+    })
+
+    _.assign(this.props.siteDistribution.defaultBehavior, {
+      originRequestPolicy: this.siteOriginRequestPolicy,
+    })
+  }
+
+  protected createResponseHeaderPolicy(props: SiteResponseHeadersPolicyProps) {
+    if (!props) return undefined
+    return new cloudfront.ResponseHeadersPolicy(this, `${this.id}-${props.type}-srhp`, {
+      ...props,
+      comment: `Response Header Policy for ${props.type} for ${this.id}-distribution - ${this.props.stage} stage`,
+      responseHeadersPolicyName: `${this.id}-${props.type}-response`,
+      securityHeadersBehavior: {
+        strictTransportSecurity: {
+          ...props.securityHeadersBehavior?.strictTransportSecurity,
+          accessControlMaxAge: cdk.Duration.seconds(
+            props.securityHeadersBehavior?.strictTransportSecurity?.accessControlMaxAgeInSeconds
+          ),
+        },
+      },
+    })
+  }
+
+  protected createSiteOriginResponseHeadersPolicy() {
+    if (!this.props.siteOriginResponseHeadersPolicy) return
+    this.siteOriginResponseHeadersPolicy = this.createResponseHeaderPolicy(this.props.siteOriginResponseHeadersPolicy)
+    _.assign(this.props.siteDistribution.defaultBehavior, {
+      responseHeadersPolicy: this.siteOriginResponseHeadersPolicy,
+    })
+  }
+
   protected createSiteOrigin() {
     this.siteOrigin = new origins.HttpOrigin(this.siteInternalDomainName, {
       httpPort: this.props.siteTask.listenerPort,
+      originId: `${this.id}-server`,
       protocolPolicy: cloudfront.OriginProtocolPolicy.HTTPS_ONLY,
     })
   }
