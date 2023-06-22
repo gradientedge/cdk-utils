@@ -1,4 +1,5 @@
 import { GetSecretValueCommand, SecretsManagerClient } from '@aws-sdk/client-secrets-manager'
+import * as cdk from 'aws-cdk-lib'
 import * as secretsManager from 'aws-cdk-lib/aws-secretsmanager'
 import * as utils from '../../../utils'
 import { CommonConstruct } from '../../../common'
@@ -36,6 +37,21 @@ export class SecretsManager {
     utils.createCfnOutput(`${id}-secretArn`, scope, secret.secretArn)
 
     return secret
+  }
+
+  /**
+   * @summary Method to retrieve a secret from secrets manager with a cloudformation export
+   * @param id
+   * @param scope
+   * @param stackName
+   * @param exportName
+   */
+  public retrieveSecretFromSecretsManager(id: string, scope: CommonConstruct, stackName: string, exportName: string) {
+    return secretsManager.Secret.fromSecretNameV2(
+      scope,
+      `${id}`,
+      cdk.Fn.importValue(`${stackName}-${scope.props.stage}-${exportName}`)
+    )
   }
 
   /**
