@@ -1,6 +1,8 @@
 import * as cdk from 'aws-cdk-lib'
 import * as _ from 'lodash'
 import { CommonConstruct } from '../../common'
+import { fromEnv, fromIni } from '@aws-sdk/credential-providers'
+import { AwsCredentialIdentityProvider } from '@aws-sdk/types'
 
 /**
  * @summary Helper method to add CloudFormation outputs from the construct
@@ -28,4 +30,9 @@ export function createCfnOutput(
     output.overrideLogicalId(camelName)
   }
   return output
+}
+
+export function determineCredentials(): AwsCredentialIdentityProvider {
+  if (process.env.AWS_PROFILE) return fromIni()
+  return fromEnv()
 }

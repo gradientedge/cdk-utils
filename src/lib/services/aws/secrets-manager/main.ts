@@ -1,5 +1,4 @@
-import { SecretsManager as SM } from '@aws-sdk/client-secrets-manager'
-import * as cdk from 'aws-cdk-lib'
+import { GetSecretValueCommand, SecretsManagerClient } from '@aws-sdk/client-secrets-manager'
 import * as secretsManager from 'aws-cdk-lib/aws-secretsmanager'
 import * as utils from '../../../utils'
 import { CommonConstruct } from '../../../common'
@@ -22,40 +21,6 @@ import { CommonConstruct } from '../../../common'
  */
 export class SecretsManager {
   /**
-   *
-   * @param region
-   */
-  public getAwsSecretsManager(region: string) {
-    return new SM({ region: region })
-  }
-
-  /**
-   * @summary Method to load a secret from secrets manager
-   * @param secretName
-   * @param region
-   */
-  public async loadSecret(secretName: string, region: string) {
-    const secretsManager = this.getAwsSecretsManager(region)
-    const secret: any = await Promise.all([secretsManager.getSecretValue({ SecretId: secretName })])
-    return secret ? JSON.parse(secret[0].SecretString) : {}
-  }
-
-  /**
-   * @summary Method to retrieve a secret from secrets manager with a cloudformation export
-   * @param id
-   * @param scope
-   * @param stackName
-   * @param exportName
-   */
-  public retrieveSecretFromSecretsManager(id: string, scope: CommonConstruct, stackName: string, exportName: string) {
-    return secretsManager.Secret.fromSecretNameV2(
-      scope,
-      `${id}`,
-      cdk.Fn.importValue(`${stackName}-${scope.props.stage}-${exportName}`)
-    )
-  }
-
-  /**
    * @summary Method to create a secret
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
@@ -71,5 +36,26 @@ export class SecretsManager {
     utils.createCfnOutput(`${id}-secretArn`, scope, secret.secretArn)
 
     return secret
+  }
+
+  /**
+   * @summary Method to resolve secret value from a secret using AWS SDK
+   * @param scope scope in which this resource is defined
+   * @param secretId the secret name/ARN
+   * @param secretKey the secret key to resolve the value for
+   */
+  public async resolveSecretValue(scope: CommonConstruct, secretId: string, secretKey: string) {
+    const client = new SecretsManagerClient({
+      credentials: utils.determineCredentials(),
+      region: scope.props.region,
+    })
+    const command = new GetSecretValueCommand({
+      SecretId: secretId,
+    })
+    const response = await client.send(command)
+    if (!response.SecretString) throw `Unable to resolve secret for ${secretId}`
+    const secretString = JSON.parse(response.SecretString)
+
+    return secretString[secretKey]
   }
 }
