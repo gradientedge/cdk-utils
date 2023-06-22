@@ -56,14 +56,14 @@ export class SecretsManager {
 
   /**
    * @summary Method to resolve secret value from a secret using AWS SDK
-   * @param scope scope in which this resource is defined
+   * @param region the region in which the secret is defined
    * @param secretId the secret name/ARN
    * @param secretKey the secret key to resolve the value for
    */
-  public async resolveSecretValue(scope: CommonConstruct, secretId: string, secretKey: string) {
+  public async resolveSecretValue(region: string, secretId: string, secretKey: string) {
     const client = new SecretsManagerClient({
       credentials: utils.determineCredentials(),
-      region: scope.props.region,
+      region: region,
     })
     const command = new GetSecretValueCommand({
       SecretId: secretId,
