@@ -62,7 +62,7 @@ pnpm add @gradientedge/cdk-utils
 [aws-cdk]: https://docs.aws.amazon.com/cdk/latest/guide/home.html
 [aws-cli-badge]: https://img.shields.io/badge/aws--cli-2.3.4-777BB4?logo=amazon-aws
 [aws-cli-url]: https://aws.amazon.com/cli/
-[builds]: https://img.shields.io/github/workflow/status/gradientedge/cdk-utils/CI-Pipeline/main
+[builds]: https://img.shields.io/github/actions/workflow/status/gradientedge/cdk-utils/ci.yml?branch=main
 [builds-url]: https://github.com/gradientedge/cdk-utils/actions
 [cdk-badge]: https://img.shields.io/github/package-json/dependency-version/gradientedge/cdk-utils/aws-cdk-lib
 [cdk-url]: https://aws.amazon.com/cdk/
