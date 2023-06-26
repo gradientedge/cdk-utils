@@ -539,6 +539,32 @@ export class IamManager {
   }
 
   /**
+   * @summary Method to create iam statement for appconfig secrets manager integration
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param policy
+   * @param servicePrinicpal
+   */
+  public createRoleForAppConfigSecrets(
+    id: string,
+    scope: CommonConstruct,
+    policy: iam.PolicyDocument,
+    servicePrinicpal?: iam.ServicePrincipal
+  ) {
+    const role = new iam.Role(scope, `${id}`, {
+      assumedBy: servicePrinicpal ?? new iam.ServicePrincipal('appconfig.amazonaws.com'),
+      description: `Role for ${id} AppConfig Secrets`,
+      inlinePolicies: { policy },
+      roleName: `${id}-${scope.props.stage}`,
+    })
+
+    utils.createCfnOutput(`${id}Arn`, scope, role.roleArn)
+    utils.createCfnOutput(`${id}Name`, scope, role.roleName)
+
+    return role
+  }
+
+  /**
    * @summary Method to create iam statement for step function execution
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined

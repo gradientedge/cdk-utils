@@ -112,6 +112,11 @@ class TestCommonConstruct extends CommonConstruct {
     this.iamManager.statementForDecryptKms()
     this.iamManager.createRoleForCloudTrail('test-role-trail', this, testLogGroup)
     this.iamManager.createRoleForEcsEvent('test-role-ecs-event', this, testCluster, testTask)
+    this.iamManager.createRoleForAppConfigSecrets(
+      'test-role-appconfig-secrets',
+      this,
+      new iam.PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this)] })
+    )
     this.iamManager.createRoleForLambda(
       'test-role-lambda',
       this,
@@ -134,7 +139,7 @@ const template = Template.fromStack(commonStack)
 describe('TestIamConstruct', () => {
   test('synthesises as expected', () => {
     /* test if number of resources are correctly synthesised */
-    template.resourceCountIs('AWS::IAM::Role', 5)
+    template.resourceCountIs('AWS::IAM::Role', 6)
   })
 })
 
