@@ -27,6 +27,7 @@ import {
   SfnSucceedProps,
   SfnWaitProps,
 } from './types'
+import { DefinitionBody } from 'aws-cdk-lib/aws-stepfunctions'
 
 const DEFAULT_RETRY_CONFIG = [
   {
@@ -510,7 +511,7 @@ export class SfnManager {
   ) {
     if (!props) throw `State Machine props undefined for ${id}`
     const stateMachine = new sfn.StateMachine(scope, `${id}`, {
-      definition,
+      definitionBody: DefinitionBody.fromChainable(definition),
       logs: {
         destination: logGroup,
         includeExecutionData: props.logs?.includeExecutionData ?? true,

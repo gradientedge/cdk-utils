@@ -22,7 +22,7 @@ importers:
       better-docs: ^2.7.2
       codecov: ^3.8.3
       commitizen: ^4.3.0
-      constructs: ^10.2.60
+      constructs: ^10.2.61
       docdash: ^2.0.1
       dotenv: ^16.3.1
       eslint: ^8.43.0
@@ -62,8 +62,8 @@ importers:
       '@types/node': 20.3.2
       '@types/uuid': 9.0.2
       app-root-path: 3.1.0
-      aws-cdk-lib: 2.85.0_constructs@10.2.60
-      constructs: 10.2.60
+      aws-cdk-lib: 2.85.0_constructs@10.2.61
+      constructs: 10.2.61
       lodash: 4.17.21
       moment: 2.29.4
       nconf: 0.12.0
@@ -2794,7 +2794,7 @@ packages:
     engines: {node: '>= 0.4'}
     dev: true
 
-  /aws-cdk-lib/2.85.0_constructs@10.2.60:
+  /aws-cdk-lib/2.85.0_constructs@10.2.61:
     resolution: {integrity: sha512-u+ypK8XEMRH3tGRMSmcbPYxLet7xBdGIztUkMcPtlNJGhS/vxqh12yYkem3g3zzmHwdX8OPLSnlZ2sIuiIqp/g==}
     engines: {node: '>= 14.15.0'}
     peerDependencies:
@@ -2805,7 +2805,7 @@ packages:
       '@aws-cdk/asset-node-proxy-agent-v5': 2.0.153
       '@balena/dockerignore': 1.0.2
       case: 1.6.3
-      constructs: 10.2.60
+      constructs: 10.2.61
       fs-extra: 11.1.1
       ignore: 5.2.4
       jsonschema: 1.4.1
@@ -3413,8 +3413,8 @@ packages:
       babylon: 6.18.0
     dev: true
 
-  /constructs/10.2.60:
-    resolution: {integrity: sha512-rO9EHXhUZpA1Gz5wk5ewCVaol6anSilDzS7uv4Fmgx+tKTcxchAl10z8ObjZMjcQYNw+5FBVIzSagSKJanbHdQ==}
+  /constructs/10.2.61:
+    resolution: {integrity: sha512-8l099E1XPLN6VgUitXP6wPHLl25vc8RgxePhbCY/iRF9RGErSy6JHnI3AJU8XJ3KMaUZqhq+q9q3o+KoKM1eVw==}
     engines: {node: '>= 16.14.0'}
     dev: false
 

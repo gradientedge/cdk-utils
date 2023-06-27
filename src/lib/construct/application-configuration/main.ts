@@ -94,6 +94,4 @@ export class ApplicationConfiguration extends CommonConstruct {
       APP_CONFIG_ENVIRONMENT_ID: cdk.Fn.ref(this.appConfigEnvironment.logicalId),
     }
   }
-
-  protected aaa(): void {}
 }
