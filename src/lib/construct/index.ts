@@ -1,6 +1,7 @@
 export * from './api-to-eventbridge-target'
 export * from './api-to-eventbridge-target-with-sns'
 export * from './api-to-lambda-target'
+export * from './application-configuration'
 export * from './graphql-api-lambda'
 export * from './graphql-api-lambda-with-cache'
 export * from './lambda-with-iam-access'
