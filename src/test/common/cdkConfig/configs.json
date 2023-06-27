@@ -13,6 +13,12 @@
     "configurationProfile": {
       "name": "test-profile",
       "description": "test-profile"
+    },
+    "deploymentStrategy": {
+      "name": "test-deployment-strategy",
+      "deploymentDurationInMinutes": 0,
+      "growthFactor": 100,
+      "replicateTo": "NONE"
     }
   }
 }
