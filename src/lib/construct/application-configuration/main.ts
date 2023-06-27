@@ -5,7 +5,7 @@ import { ApplicationConfigurationProps } from './types'
 import { CommonConstruct } from '../../common'
 
 export class ApplicationConfiguration extends CommonConstruct {
-  declare props: ApplicationConfigurationProps
+  props: ApplicationConfigurationProps
   id: string
   appConfigApplication: appconfig.CfnApplication
   appConfigEnvironment: appconfig.CfnEnvironment
