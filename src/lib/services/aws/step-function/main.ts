@@ -377,14 +377,17 @@ export class SfnManager {
    * @param scope scope in which this resource is defined
    * @param props
    * @param lambdaFunction
+   * @param skipExecution
    */
   public createLambdaStep(
     id: string,
     scope: CommonConstruct,
     props: SfnLambdaInvokeProps,
-    lambdaFunction: lambda.IFunction
+    lambdaFunction: lambda.IFunction,
+    skipExecution?: boolean
   ) {
     if (!props) throw `Step props undefined for ${id}`
+    if (skipExecution) return this.createPassStep(id, scope, { name: props.name, comment: props.comment })
     const step = new tasks.LambdaInvoke(scope, `${props.name}`, {
       ...props,
       ...{
