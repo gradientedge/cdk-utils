@@ -377,9 +377,46 @@ export class SfnManager {
    * @param scope scope in which this resource is defined
    * @param props
    * @param lambdaFunction
-   * @param skipExecution
    */
   public createLambdaStep(
+    id: string,
+    scope: CommonConstruct,
+    props: SfnLambdaInvokeProps,
+    lambdaFunction: lambda.IFunction
+  ) {
+    if (!props) throw `Step props undefined for ${id}`
+    const step = new tasks.LambdaInvoke(scope, `${props.name}`, {
+      ...props,
+      ...{
+        comment: `Lambda step for ${props.name} - ${scope.props.stage} stage`,
+        lambdaFunction,
+      },
+    })
+
+    let retries = props.retries
+    if (!retries || retries.length === 0) {
+      retries = DEFAULT_RETRY_CONFIG
+    }
+
+    retries.forEach(retry =>
+      step.addRetry({
+        ...retry,
+        ...{ interval: retry.intervalInSecs ? cdk.Duration.seconds(retry.intervalInSecs) : retry.interval },
+      })
+    )
+
+    return step
+  }
+
+  /**
+   * @summary Method to create a lambda invoke step
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props
+   * @param lambdaFunction
+   * @param skipExecution
+   */
+  public createSkippableLambdaStep(
     id: string,
     scope: CommonConstruct,
     props: SfnLambdaInvokeProps,
