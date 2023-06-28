@@ -23,6 +23,18 @@
       }
     ]
   },
+  "testSubmitStepSkippableLambda": {
+    "name": "step:Create Skippable Lambda",
+    "outputPath": "$.Payload",
+    "retries": [
+      {
+        "errors": ["Lambda.TooManyRequestsException"],
+        "intervalInSecs": 10,
+        "maxAttempts": 6,
+        "backoffRate": 2
+      }
+    ]
+  },
   "testSubmitStepGetItem": {
     "name": "step:Get Item from dynamodb",
     "outputPath": "$.Payload"

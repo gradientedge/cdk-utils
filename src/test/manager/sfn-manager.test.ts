@@ -16,6 +16,7 @@ interface TestStackProps extends CommonStackProps {
   testSqs: any
   testSubmitStepApi: any
   testSubmitStepCreateSomething: any
+  testSubmitStepSkippableLambda: any
   testSubmitStepCreateSomethingElse: any
   testSubmitStepCreateSomethingNew: any
   testSubmitStepCreateSomethingParallel: any
@@ -79,6 +80,7 @@ class TestCommonStack extends CommonStack {
         testSubmitStepGetItem: this.node.tryGetContext('testSubmitStepGetItem'),
         testSubmitStepPutItem: this.node.tryGetContext('testSubmitStepPutItem'),
         testSubmitStepSendMessage: this.node.tryGetContext('testSubmitStepSendMessage'),
+        testSubmitStepSkippableLambda: this.node.tryGetContext('testSubmitStepSkippableLambda'),
         testSubmitStepSuccess: this.node.tryGetContext('testSubmitStepSuccess'),
         testSubmitStepValidateSomething: this.node.tryGetContext('testSubmitStepValidateSomething'),
         testSubmitStepWait: this.node.tryGetContext('testSubmitStepWait'),
@@ -180,6 +182,13 @@ class TestCommonConstruct extends CommonConstruct {
       this.props.testSubmitStepCreateSomething,
       testLambda
     )
+    const testSkippableLambda = this.sfnManager.createSkippableLambdaStep(
+      'test-choice-step-3',
+      this,
+      this.props.testSubmitStepSkippableLambda,
+      testLambda,
+      true
+    )
 
     const testTable = this.dynamodbManager.createTable('test-table', this, this.props.testTable)
     const testSubmitStepGetItem = this.sfnManager.createDynamoDbGetItemStep(
@@ -233,6 +242,7 @@ class TestCommonConstruct extends CommonConstruct {
     )
     const testSubmitStepApi = this.sfnManager.createApiStep('test-api', this, this.props.testSubmitStepApi, api)
     const testWorkflowIntegration = sfn.Chain.start(testSubmitStepCreateSomething)
+      .next(testSkippableLambda)
       .next(
         testSubmitStepValidateSomething
           .when(sfn.Condition.isNull('$.detail.id'), testSubmitStepFailure)
@@ -317,11 +327,14 @@ describe('TestSfnConstruct', () => {
 describe('TestSfnConstruct', () => {
   test('provisions new state machine as expected', () => {
     template.hasResourceProperties('AWS::StepFunctions::StateMachine', {
+      RoleArn: {
+        'Fn::GetAtt': ['testcommonstacktestparallelstepRole68F267C5', 'Arn'],
+      },
       DefinitionString: {
         'Fn::Join': [
           '',
           [
-            '{"StartAt":"step:Create Something","States":{"step:Create Something":{"Next":"step:Something Validated?","Retry":[{"ErrorEquals":["Lambda.ServiceException","Lambda.AWSLambdaException","Lambda.SdkClientException"],"IntervalSeconds":2,"MaxAttempts":6,"BackoffRate":2},{"ErrorEquals":["Lambda.TooManyRequestsException"],"IntervalSeconds":10,"MaxAttempts":6,"BackoffRate":2}],"Type":"Task","Comment":"Lambda step for step:Create Something - test stage","OutputPath":"$.Payload","Resource":"arn:',
+            '{"StartAt":"step:Create Something","States":{"step:Create Something":{"Next":"step:Create Skippable Lambda","Retry":[{"ErrorEquals":["Lambda.ServiceException","Lambda.AWSLambdaException","Lambda.SdkClientException"],"IntervalSeconds":2,"MaxAttempts":6,"BackoffRate":2},{"ErrorEquals":["Lambda.TooManyRequestsException"],"IntervalSeconds":10,"MaxAttempts":6,"BackoffRate":2}],"Type":"Task","Comment":"Lambda step for step:Create Something - test stage","OutputPath":"$.Payload","Resource":"arn:',
             {
               Ref: 'AWS::Partition',
             },
@@ -329,7 +342,7 @@ describe('TestSfnConstruct', () => {
             {
               'Fn::GetAtt': ['testcommonstacktestlambda5B168AC2', 'Arn'],
             },
-            '","Payload.$":"$"}},"step:Something Validated?":{"Type":"Choice","Comment":"Choice step for step:Something Validated? - test stage","Choices":[{"Variable":"$.detail.id","IsNull":true,"Next":"workflow:Failed"}],"Default":"step:Create Something Else"},"step:Create Something Else":{"Next":"step:Wait","Retry":[{"ErrorEquals":["Lambda.ServiceException","Lambda.AWSLambdaException","Lambda.SdkClientException"],"IntervalSeconds":2,"MaxAttempts":6,"BackoffRate":2},{"ErrorEquals":["States.ALL"],"IntervalSeconds":30,"MaxAttempts":6,"BackoffRate":2}],"Type":"Task","Comment":"Lambda step for step:Create Something Else - test stage","Resource":"arn:',
+            '","Payload.$":"$"}},"step:Create Skippable Lambda":{"Type":"Pass","Comment":"Pass step for step:Create Skippable Lambda - test stage","Next":"step:Something Validated?"},"step:Something Validated?":{"Type":"Choice","Comment":"Choice step for step:Something Validated? - test stage","Choices":[{"Variable":"$.detail.id","IsNull":true,"Next":"workflow:Failed"}],"Default":"step:Create Something Else"},"step:Create Something Else":{"Next":"step:Wait","Retry":[{"ErrorEquals":["Lambda.ServiceException","Lambda.AWSLambdaException","Lambda.SdkClientException"],"IntervalSeconds":2,"MaxAttempts":6,"BackoffRate":2},{"ErrorEquals":["States.ALL"],"IntervalSeconds":30,"MaxAttempts":6,"BackoffRate":2}],"Type":"Task","Comment":"Lambda step for step:Create Something Else - test stage","Resource":"arn:',
             {
               Ref: 'AWS::Partition',
             },
@@ -397,9 +410,6 @@ describe('TestSfnConstruct', () => {
         ],
         IncludeExecutionData: true,
         Level: 'ALL',
-      },
-      RoleArn: {
-        'Fn::GetAtt': ['testcommonstacktestparallelstepRole68F267C5', 'Arn'],
       },
       StateMachineName: 'test-workflow-test',
       StateMachineType: 'STANDARD',
