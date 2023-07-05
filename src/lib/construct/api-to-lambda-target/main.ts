@@ -31,14 +31,9 @@ export class ApiToLambdaTarget extends CommonConstruct {
   }
 
   protected initResources() {
-    /* application related resources */
     this.resolveSecrets()
-
-    /* core resources */
     this.resolveHostedZone()
     this.resolveCertificate()
-
-    /* restApi related resources */
     this.createApiToLambdaTargetMethodResponse()
     this.createApiToLambdaTargetMethodErrorResponse()
     this.resolveApiToLambdaTargetFunction()

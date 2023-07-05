@@ -1,6 +1,9 @@
 # Jest
 coverage
 
+# IntelliJ
+.idea
+
 # Node
 **/build/**
 package-lock.json

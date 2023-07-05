@@ -6,6 +6,7 @@ import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as logs from 'aws-cdk-lib/aws-logs'
 import * as sqs from 'aws-cdk-lib/aws-sqs'
 import * as sfn from 'aws-cdk-lib/aws-stepfunctions'
+import { DefinitionBody } from 'aws-cdk-lib/aws-stepfunctions'
 import * as tasks from 'aws-cdk-lib/aws-stepfunctions-tasks'
 import * as utils from '../../../utils'
 import { v4 as uuidv4 } from 'uuid'
@@ -27,7 +28,6 @@ import {
   SfnSucceedProps,
   SfnWaitProps,
 } from './types'
-import { DefinitionBody } from 'aws-cdk-lib/aws-stepfunctions'
 
 const DEFAULT_RETRY_CONFIG = [
   {
@@ -111,26 +111,12 @@ export class SfnManager {
    */
   public createParallelStep(id: string, scope: CommonConstruct, props: SfnParallelProps) {
     if (!props) throw `Step props undefined for ${id}`
-    const step = new sfn.Parallel(scope, `${props.name}`, {
+    return new sfn.Parallel(scope, `${props.name}`, {
       ...props,
       ...{
         comment: `Parallel step for ${props.name} - ${scope.props.stage} stage`,
       },
     })
-
-    let retries = props.retries
-    if (!retries || retries.length === 0) {
-      retries = DEFAULT_RETRY_CONFIG
-    }
-
-    retries.forEach(retry =>
-      step.addRetry({
-        ...retry,
-        ...{ interval: retry.intervalInSecs ? cdk.Duration.seconds(retry.intervalInSecs) : retry.interval },
-      })
-    )
-
-    return step
   }
 
   /**
