@@ -56,7 +56,10 @@ export interface LogGroupNoPolicyProps extends targets.TargetBaseProps {
  * Use an AWS CloudWatch LogGroup as an event rule target, but don't apply a policy.
  */
 export class CloudWatchLogGroupNoPolicy implements events.IRuleTarget {
-  constructor(private readonly logGroup: logs.ILogGroup, private readonly props: LogGroupNoPolicyProps = {}) {}
+  constructor(
+    private readonly logGroup: logs.ILogGroup,
+    private readonly props: LogGroupNoPolicyProps = {}
+  ) {}
 
   /**
    * Returns a RuleTarget that can be used to log an event into a CloudWatch LogGroup
