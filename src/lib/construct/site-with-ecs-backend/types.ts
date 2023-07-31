@@ -38,7 +38,7 @@ export interface SiteWithEcsBackendProps extends CommonStackProps {
   siteHealthCheck: HealthCheck
   siteLog: LogProps
   siteLogBucket: S3BucketProps
-  siteCachePolicy: SiteCachePolicyProps
+  siteCachePolicy?: SiteCachePolicyProps
   siteOriginRequestPolicy: OriginRequestPolicyProps
   siteOriginResponseHeadersPolicy: SiteResponseHeadersPolicyProps
   siteRecordName?: string
