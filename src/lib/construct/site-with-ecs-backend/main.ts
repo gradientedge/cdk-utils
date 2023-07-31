@@ -65,6 +65,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
   siteFunctionAssociations: cloudfront.FunctionAssociation[]
   siteOriginRequestPolicy: cloudfront.OriginRequestPolicy
   siteOriginResponseHeadersPolicy?: cloudfront.ResponseHeadersPolicy
+  siteCachePolicy: cloudfront.CachePolicy
 
   constructor(parent: Construct, id: string, props: SiteWithEcsBackendProps) {
     super(parent, id, props)
@@ -91,6 +92,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
     this.createEcsBuildArgs()
     this.createEcsContainerImage()
     this.createEcsService()
+    this.createSiteCacheConfigPolicy()
     this.createSiteOriginRequestPolicy()
     this.createSiteOriginResponseHeadersPolicy()
     this.createSiteOrigin()
@@ -406,6 +408,25 @@ export class SiteWithEcsBackend extends CommonConstruct {
    */
   protected createSiteLogBucket() {
     this.siteLogBucket = this.s3Manager.createS3Bucket(`${this.id}-site-logs`, this, this.props.siteLogBucket)
+  }
+
+  protected createSiteCacheConfigPolicy() {
+    if (!this.props.siteCachePolicy) return
+    this.siteCachePolicy = new cloudfront.CachePolicy(this, `${this.id}-site-cache-policy`, {
+      cachePolicyName: `${this.id}-site-cache-policy`,
+      comment: `Policy for ${this.id}-distribution - ${this.props.stage} stage`,
+      defaultTtl: cdk.Duration.seconds(this.props.siteCachePolicy.defaultTtlInSeconds),
+      minTtl: cdk.Duration.seconds(this.props.siteCachePolicy.minTtlInSeconds),
+      maxTtl: cdk.Duration.seconds(this.props.siteCachePolicy.maxTtlInSeconds),
+      enableAcceptEncodingGzip: this.props.siteCachePolicy.enableAcceptEncodingGzip,
+      queryStringBehavior: this.props.siteCachePolicy.queryStringBehavior,
+      headerBehavior: this.props.siteCachePolicy.headerBehavior,
+      cookieBehavior: this.props.siteCachePolicy.cookieBehavior,
+    })
+
+    _.assign(this.props.siteDistribution.defaultBehavior, {
+      cachePolicy: this.siteCachePolicy,
+    })
   }
 
   protected createSiteOriginRequestPolicy() {

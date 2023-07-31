@@ -17,6 +17,7 @@ import {
   ResponseHeadersStrictTransportSecurity,
   ResponseSecurityHeadersBehavior,
   ResponseHeadersPolicyProps,
+  CachePolicyProps,
 } from 'aws-cdk-lib/aws-cloudfront'
 import { SiteResponseHeaderPolicyType } from './constants'
 
@@ -37,6 +38,7 @@ export interface SiteWithEcsBackendProps extends CommonStackProps {
   siteHealthCheck: HealthCheck
   siteLog: LogProps
   siteLogBucket: S3BucketProps
+  siteCachePolicy?: SiteCachePolicyProps
   siteOriginRequestPolicy: OriginRequestPolicyProps
   siteOriginResponseHeadersPolicy: SiteResponseHeadersPolicyProps
   siteRecordName?: string
@@ -60,4 +62,10 @@ export interface SiteSecurityHeadersBehavior extends ResponseSecurityHeadersBeha
 export interface SiteResponseHeadersPolicyProps extends ResponseHeadersPolicyProps {
   securityHeadersBehavior: SiteSecurityHeadersBehavior
   type: SiteResponseHeaderPolicyType
+}
+
+export interface SiteCachePolicyProps extends CachePolicyProps {
+  defaultTtlInSeconds: number
+  minTtlInSeconds: number
+  maxTtlInSeconds: number
 }
