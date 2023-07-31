@@ -133,6 +133,7 @@ describe('TestSiteWithEcsBackendConstruct', () => {
     template.resourceCountIs('AWS::CloudFront::Distribution', 1)
     template.resourceCountIs('AWS::Lambda::Function', 2)
     template.resourceCountIs('AWS::CloudFront::Function', 1)
+    template.resourceCountIs('AWS::CloudFront::CachePolicy', 1)
   })
 })
 
@@ -205,7 +206,9 @@ describe('TestSiteWithEcsBackendConstruct', () => {
         Aliases: ['site-test.test.gradientedge.io'],
         Comment: 'test-site-distribution - test stage',
         DefaultCacheBehavior: {
-          CachePolicyId: '658327ea-f89d-4fab-a63d-7e88639e58f6',
+          CachePolicyId: {
+            Ref: 'testsitestacktestsitesitecachepolicy3FFA1F0E',
+          },
           Compress: true,
           FunctionAssociations: [
             {
@@ -341,6 +344,20 @@ describe('TestSiteWithEcsBackendConstruct', () => {
         Comment: 'test comment',
       },
       Name: 'test-site-function-test',
+    })
+  })
+})
+
+describe('TestSiteWithEcsBackendConstruct', () => {
+  test('provisions cloudfront cache policy as expected', () => {
+    template.hasResourceProperties('AWS::CloudFront::CachePolicy', {
+      CachePolicyConfig: {
+        Comment: 'Policy for test-site-distribution - test stage',
+        DefaultTTL: 600,
+        MaxTTL: 2592000,
+        MinTTL: 60,
+        Name: 'test-site-site-cache-policy',
+      },
     })
   })
 })

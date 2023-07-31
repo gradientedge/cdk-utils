@@ -425,7 +425,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
     })
 
     _.assign(this.props.siteDistribution.defaultBehavior, {
-      siteCacheConfig: this.siteCachePolicy,
+      cachePolicy: this.siteCachePolicy,
     })
   }
 
