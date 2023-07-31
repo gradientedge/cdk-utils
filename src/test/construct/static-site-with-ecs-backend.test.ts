@@ -52,6 +52,7 @@ class TestCommonStack extends CommonStack {
         nodeEnv: this.node.tryGetContext('nodeEnv'),
         siteAliases: [`${this.node.tryGetContext('siteSubDomain')}.${this.fullyQualifiedDomain()}`],
         siteCacheInvalidationDockerFilePath: `src/test/common/docker`,
+        siteCachePolicy: this.node.tryGetContext('siteCachePolicy'),
         siteCertificate: this.node.tryGetContext('siteCertificate'),
         siteCloudfrontFunctionProps: this.node.tryGetContext('testSite'),
         siteCluster: this.node.tryGetContext('testCluster'),

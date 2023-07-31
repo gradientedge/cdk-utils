@@ -39,5 +39,17 @@
         "responsePagePath": "/server/pages/index.html"
       }
     ]
+  },
+  "siteCachePolicy": {
+    "defaultTtlInSeconds": 600,
+    "minTtlInSeconds": 60,
+    "maxTtlInSeconds": 2592000,
+    "enableAcceptEncodingGzip": true,
+    "queryStringBehavior": { "behavior": "none" },
+    "headerBehavior": {
+      "behavior": "whitelist",
+      "headers": ["Host"]
+    },
+    "cookieBehavior": { "behavior": "none" }
   }
 }

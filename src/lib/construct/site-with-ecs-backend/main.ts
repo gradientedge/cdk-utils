@@ -92,6 +92,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
     this.createEcsBuildArgs()
     this.createEcsContainerImage()
     this.createEcsService()
+    this.createSiteCacheConfigPolicy()
     this.createSiteOriginRequestPolicy()
     this.createSiteOriginResponseHeadersPolicy()
     this.createSiteOrigin()
