@@ -327,14 +327,11 @@ describe('TestSfnConstruct', () => {
 describe('TestSfnConstruct', () => {
   test('provisions new state machine as expected', () => {
     template.hasResourceProperties('AWS::StepFunctions::StateMachine', {
-      RoleArn: {
-        'Fn::GetAtt': ['testcommonstacktestparallelstepRole68F267C5', 'Arn'],
-      },
       DefinitionString: {
         'Fn::Join': [
           '',
           [
-            '{"StartAt":"step:Create Something","States":{"step:Create Something":{"Next":"step:Create Skippable Lambda","Retry":[{"ErrorEquals":["Lambda.ServiceException","Lambda.AWSLambdaException","Lambda.SdkClientException"],"IntervalSeconds":2,"MaxAttempts":6,"BackoffRate":2},{"ErrorEquals":["Lambda.TooManyRequestsException"],"IntervalSeconds":10,"MaxAttempts":6,"BackoffRate":2}],"Type":"Task","Comment":"Lambda step for step:Create Something - test stage","OutputPath":"$.Payload","Resource":"arn:',
+            '{"StartAt":"step:Create Something","States":{"step:Create Something":{"Next":"step:Create Skippable Lambda","Retry":[{"ErrorEquals":["Lambda.ClientExecutionTimeoutException","Lambda.ServiceException","Lambda.AWSLambdaException","Lambda.SdkClientException"],"IntervalSeconds":2,"MaxAttempts":6,"BackoffRate":2},{"ErrorEquals":["Lambda.TooManyRequestsException"],"IntervalSeconds":10,"MaxAttempts":6,"BackoffRate":2}],"Type":"Task","Comment":"Lambda step for step:Create Something - test stage","OutputPath":"$.Payload","Resource":"arn:',
             {
               Ref: 'AWS::Partition',
             },
@@ -342,7 +339,7 @@ describe('TestSfnConstruct', () => {
             {
               'Fn::GetAtt': ['testcommonstacktestlambda5B168AC2', 'Arn'],
             },
-            '","Payload.$":"$"}},"step:Create Skippable Lambda":{"Type":"Pass","Comment":"Pass step for step:Create Skippable Lambda - test stage","Next":"step:Something Validated?"},"step:Something Validated?":{"Type":"Choice","Comment":"Choice step for step:Something Validated? - test stage","Choices":[{"Variable":"$.detail.id","IsNull":true,"Next":"workflow:Failed"}],"Default":"step:Create Something Else"},"step:Create Something Else":{"Next":"step:Wait","Retry":[{"ErrorEquals":["Lambda.ServiceException","Lambda.AWSLambdaException","Lambda.SdkClientException"],"IntervalSeconds":2,"MaxAttempts":6,"BackoffRate":2},{"ErrorEquals":["States.ALL"],"IntervalSeconds":30,"MaxAttempts":6,"BackoffRate":2}],"Type":"Task","Comment":"Lambda step for step:Create Something Else - test stage","Resource":"arn:',
+            '","Payload.$":"$"}},"step:Create Skippable Lambda":{"Type":"Pass","Comment":"Pass step for step:Create Skippable Lambda - test stage","Next":"step:Something Validated?"},"step:Something Validated?":{"Type":"Choice","Comment":"Choice step for step:Something Validated? - test stage","Choices":[{"Variable":"$.detail.id","IsNull":true,"Next":"workflow:Failed"}],"Default":"step:Create Something Else"},"step:Create Something Else":{"Next":"step:Wait","Retry":[{"ErrorEquals":["Lambda.ClientExecutionTimeoutException","Lambda.ServiceException","Lambda.AWSLambdaException","Lambda.SdkClientException"],"IntervalSeconds":2,"MaxAttempts":6,"BackoffRate":2},{"ErrorEquals":["States.ALL"],"IntervalSeconds":30,"MaxAttempts":6,"BackoffRate":2}],"Type":"Task","Comment":"Lambda step for step:Create Something Else - test stage","Resource":"arn:',
             {
               Ref: 'AWS::Partition',
             },
@@ -410,6 +407,9 @@ describe('TestSfnConstruct', () => {
         ],
         IncludeExecutionData: true,
         Level: 'ALL',
+      },
+      RoleArn: {
+        'Fn::GetAtt': ['testcommonstacktestparallelstepRole68F267C5', 'Arn'],
       },
       StateMachineName: 'test-workflow-test',
       StateMachineType: 'STANDARD',
