@@ -29,7 +29,7 @@ export class LambdaWithIamAccess extends CommonConstruct {
   lambdaPolicy: iam.PolicyDocument
   lambdaRole: iam.Role
   lambdaEnvironment: LambdaWithIamAccessEnvironment
-  lambdaLayers: lambda.LayerVersion[]
+  lambdaLayers: lambda.ILayerVersion[]
   lambdaFunction: lambda.Function
   lambdaIamUser: iam.User
   lambdaUserAccessKey: iam.CfnAccessKey
