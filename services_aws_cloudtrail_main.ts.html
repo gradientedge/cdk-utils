@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>services/aws/cloudtrail/main.ts - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="main.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <script src="scripts/commonNav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">services/aws/cloudtrail/main.ts</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import * as cloudtrail from 'aws-cdk-lib/aws-cloudtrail'
+import * as logs from 'aws-cdk-lib/aws-logs'
+import * as s3 from 'aws-cdk-lib/aws-s3'
+import * as utils from '../../../utils'
+import { CommonConstruct } from '../../../common'
+import { CloudTrailProps } from './types'
+
+/**
+ * @classdesc Provides operations on AWS CloudTrail.
+ * - A new instance of this class is injected into {@link CommonConstruct} constructor.
+ * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
+ * @example
+ * import { CommonConstruct } from '@gradientedge/cdk-utils'
+ *
+ * class CustomConstruct extends CommonConstruct {
+ *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
+ *     super(parent, id, props)
+ *     this.props = props
+ *     this.cloudTrailManager.createCloudTrail(
+ *       'MyTrail',
+ *       this,
+ *       logGroup,
+ *       dataBucket,
+ *       logBucket,
+ *       logBucketPolicy
+ *     )
+ *   }
+ * }
+ * @see [CDK CloudTrail Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_cloudtrail-readme.html}
+ */
+export class CloudTrailManager {
+  /**
+   * @summary Method to create a cloud trail
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props
+   * @param logGroup
+   * @param dataBucket
+   * @param logBucket
+   * @param logBucketPolicy
+   */
+  public createCloudTrail(
+    id: string,
+    scope: CommonConstruct,
+    props: CloudTrailProps,
+    logGroup: logs.CfnLogGroup,
+    dataBucket: s3.IBucket,
+    logBucket: s3.IBucket,
+    logBucketPolicy: s3.CfnBucketPolicy
+  ) {
+    if (!props) throw `CloudTrail props undefined for ${id}`
+
+    const role = scope.iamManager.createRoleForCloudTrail(`${id}Role`, scope, logGroup)
+
+    const cloudTrail = new cloudtrail.CfnTrail(scope, `${id}`, {
+      cloudWatchLogsLogGroupArn: logGroup.attrArn,
+      cloudWatchLogsRoleArn: role.attrArn,
+      enableLogFileValidation: props.enableLogFileValidation,
+      eventSelectors: [
+        {
+          dataResources: [
+            {
+              type: 'AWS::S3::Object',
+              values: [dataBucket.arnForObjects('')],
+            },
+          ],
+          includeManagementEvents: false,
+          readWriteType: 'WriteOnly',
+        },
+      ],
+      includeGlobalServiceEvents: props.includeGlobalServiceEvents,
+      isLogging: props.isLogging,
+      isMultiRegionTrail: props.isMultiRegionTrail,
+      s3BucketName: logBucket.bucketName,
+      s3KeyPrefix: `logs-${props.trailName}`,
+      tags: [{ key: 'service', value: scope.props.name }],
+      trailName: `${props.trailName}-${scope.props.stage}`,
+    })
+
+    cloudTrail.addDependency(logBucketPolicy)
+    cloudTrail.addDependency(logGroup)
+    cloudTrail.addDependency(role)
+
+    utils.createCfnOutput(`${id}-trailName`, scope, cloudTrail.trailName)
+    utils.createCfnOutput(`${id}-trailArn`, scope, cloudTrail.attrArn)
+
+    return { cloudTrail, cloudTrailRole: role }
+  }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+    
+</div>
+
+<br class="clear">
+
+<footer>
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>

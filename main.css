@@ -1,0 +1,73 @@
+body {
+    font-family: Avenir, sans-serif;
+    color: #1a1f36;
+    background-color: #1a1f36;
+}
+
+nav {
+    float: left;
+    display: block;
+    width: 450px;
+    background: #1a1f36;
+    overflow: auto;
+    position: fixed;
+    height: 100%;
+}
+
+#main {
+    float: right;
+    width: calc(100% - 440px);
+    background-color: #fff;
+}
+
+h4.name {
+    background-color: #1a1f36;
+}
+
+nav > h2 > a {
+    color: #f7fafc !important;
+}
+
+nav h3 {
+    color: #f7fafc;
+}
+
+nav > ul > li > a {
+    color: #cdd3da;
+}
+
+nav a:hover, nav a:active, nav a:focus {
+    color: #a3acb9;
+}
+
+nav #nav-search {
+    background-color: #4f566b;
+    border: #1a1f36;
+    border-radius: 10px;
+    color: #f7fafc;
+}
+
+thead {
+    height: 20px;
+    line-height: 20px;
+}
+
+.prettyprint code {
+    background-color: #1a1f36;
+}
+
+nav > ul > li > a {
+    color: #a3acb9;
+}
+
+.class-description img {
+    box-shadow: 0px 1px 12px rgba(0, 0, 0, 0.5);
+    width: 75%;
+}
+
+.usertext h1,
+.usertext h2,
+.usertext h3,
+.usertext h3 {
+    font-family: Avenir Next, Avenir, sans-serif;
+}

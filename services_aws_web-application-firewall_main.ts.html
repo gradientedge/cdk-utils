@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>services/aws/web-application-firewall/main.ts - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="main.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <script src="scripts/commonNav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">services/aws/web-application-firewall/main.ts</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import * as wafv2 from 'aws-cdk-lib/aws-wafv2'
+import * as utils from '../../../utils'
+import { CommonConstruct } from '../../../common'
+import { WafIPSetProps, WafWebACLProps } from './types'
+
+/**
+ * @classdesc Provides operations on AWS WAF.
+ * - A new instance of this class is injected into {@link CommonConstruct} constructor.
+ * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
+ * @example
+ * import { CommonConstruct } from '@gradientedge/cdk-utils'
+ *
+ * class CustomConstruct extends CommonConstruct {
+ *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
+ *     super(parent, id, props)
+ *     this.props = props
+ *     this.wafManager.createWebAcl('MyWebAcl', this)
+ *   }
+ * }
+ * @see [CDK WAF Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_waf-readme.html}
+ */
+export class WafManager {
+  /**
+   * @summary Method to create an ip set
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props
+   */
+  public createIpSet(id: string, scope: CommonConstruct, props: WafIPSetProps) {
+    if (!props) throw `WAF Ip Set props undefined for ${id}`
+
+    const ipSet = new wafv2.CfnIPSet(scope, `${id}`, {
+      addresses: props.addresses,
+      description: `IP Set for ${id} - ${scope.props.stage} stage`,
+      ipAddressVersion: props.ipAddressVersion,
+      name: scope.isProductionStage() ? props.name : `${props.name}-${scope.props.stage}`,
+      scope: props.scope,
+    })
+
+    utils.createCfnOutput(`${id}-ipSetId`, scope, ipSet.attrId)
+    utils.createCfnOutput(`${id}-ipSetArn`, scope, ipSet.attrArn)
+
+    return ipSet
+  }
+
+  /**
+   * @summary Method to create a web acl
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props
+   */
+  public createWebAcl(id: string, scope: CommonConstruct, props: WafWebACLProps) {
+    if (!props) throw `WAF WebACL props undefined for ${id}`
+
+    const webAcl = new wafv2.CfnWebACL(scope, `${id}`, {
+      defaultAction: props.defaultAction,
+      description: `Web Acl for ${id} - ${scope.props.stage} stage`,
+      name: scope.isProductionStage() ? props.name : `${props.name}-${scope.props.stage}`,
+      rules: props.rules,
+      scope: props.scope,
+      tags: [{ key: 'service', value: scope.props.name }],
+      visibilityConfig: props.visibilityConfig,
+    })
+
+    utils.createCfnOutput(`${id}-webAclId`, scope, webAcl.attrId)
+    utils.createCfnOutput(`${id}-webAclArn`, scope, webAcl.attrArn)
+
+    return webAcl
+  }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+    
+</div>
+
+<br class="clear">
+
+<footer>
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>

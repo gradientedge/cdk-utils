@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>common/construct.ts - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="main.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <script src="scripts/commonNav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">common/construct.ts</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import * as cdk from 'aws-cdk-lib'
+import { Construct } from 'constructs'
+import * as aws from '../services/aws'
+import * as utils from '../utils'
+import { CommonStackProps } from './types'
+
+/**
+ * @subcategory Construct
+ * @classdesc Common construct to use as a base for all higher level constructs.
+ * @example
+ * import { CommonConstruct } from '@gradientedge/cdk-utils';
+ *
+ * class CustomConstruct extends CommonConstruct {
+ *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
+ *     super(parent, id, props);
+ *     this.props = props;
+ *   };
+ * };
+ */
+export class CommonConstruct extends Construct {
+  props: CommonStackProps
+  acmManager: aws.AcmManager
+  apiManager: aws.ApiManager
+  appConfigManager: aws.AppConfigManager
+  codeBuildManager: aws.CodeBuildManager
+  cloudFrontManager: aws.CloudFrontManager
+  cloudTrailManager: aws.CloudTrailManager
+  cloudWatchManager: aws.CloudWatchManager
+  dynamodbManager: aws.DynamodbManager
+  ecrManager: aws.EcrManager
+  ecsManager: aws.EcsManager
+  efsManager: aws.EfsManager
+  eksManager: aws.EksManager
+  elasticacheManager: aws.ElastiCacheManager
+  eventManager: aws.EventManager
+  eventTargetManager: aws.EventTargetManager
+  evidentlyManager: aws.EvidentlyManager
+  iamManager: aws.IamManager
+  kmsManager: aws.KmsManager
+  lambdaManager: aws.LambdaManager
+  logManager: aws.LogManager
+  route53Manager: aws.Route53Manager
+  s3Manager: aws.S3Manager
+  secretsManager: aws.SecretsManager
+  sfnManager: aws.SfnManager
+  snsManager: aws.SnsManager
+  sqsManager: aws.SqsManager
+  ssmManager: aws.SsmManager
+  vpcManager: aws.VpcManager
+  wafManager: aws.WafManager
+
+  fullyQualifiedDomainName: string
+
+  constructor(parent: Construct, id: string, props: CommonStackProps) {
+    super(parent, id)
+    this.props = props
+    this.acmManager = new aws.AcmManager()
+    this.apiManager = new aws.ApiManager()
+    this.appConfigManager = new aws.AppConfigManager()
+    this.codeBuildManager = new aws.CodeBuildManager()
+    this.cloudFrontManager = new aws.CloudFrontManager()
+    this.cloudTrailManager = new aws.CloudTrailManager()
+    this.cloudWatchManager = new aws.CloudWatchManager()
+    this.dynamodbManager = new aws.DynamodbManager()
+    this.ecrManager = new aws.EcrManager()
+    this.ecsManager = new aws.EcsManager()
+    this.efsManager = new aws.EfsManager()
+    this.eksManager = new aws.EksManager()
+    this.elasticacheManager = new aws.ElastiCacheManager()
+    this.eventManager = new aws.EventManager()
+    this.eventTargetManager = new aws.EventTargetManager()
+    this.evidentlyManager = new aws.EvidentlyManager()
+    this.iamManager = new aws.IamManager()
+    this.kmsManager = new aws.KmsManager()
+    this.lambdaManager = new aws.LambdaManager()
+    this.logManager = new aws.LogManager()
+    this.route53Manager = new aws.Route53Manager()
+    this.s3Manager = new aws.S3Manager()
+    this.secretsManager = new aws.SecretsManager()
+    this.sfnManager = new aws.SfnManager()
+    this.snsManager = new aws.SnsManager()
+    this.sqsManager = new aws.SqsManager()
+    this.ssmManager = new aws.SsmManager()
+    this.vpcManager = new aws.VpcManager()
+    this.wafManager = new aws.WafManager()
+
+    this.determineFullyQualifiedDomain()
+  }
+
+  /**
+   * @summary Helper method to add CloudFormation outputs from the construct
+   * @param id scoped id of the resource
+   * @param value the value of the exported output
+   * @param description optional description for the output
+   * @param overrideId Flag which indicates whether to override the default logical id of the output
+   */
+  protected addCfnOutput(id: string, value: string, description?: string, overrideId = true): cdk.CfnOutput {
+    return utils.createCfnOutput(id, this, value, description, overrideId)
+  }
+
+  /**
+   * @summary Determine the fully qualified domain name based on domainName &amp; subDomain
+   */
+  protected determineFullyQualifiedDomain() {
+    this.fullyQualifiedDomainName = this.props.subDomain
+      ? `${this.props.subDomain}.${this.props.domainName}`
+      : this.props.domainName
+  }
+
+  /**
+   * @summary Utility method to determine if the initialisation is in development (dev) stage
+   * This is determined by the stage property injected via cdk context
+   */
+  public isDevelopmentStage = () => utils.isDevStage(this.props.stage)
+
+  /**
+   * @summary Utility method to determine if the initialisation is in test (tst) stage
+   * This is determined by the stage property injected via cdk context
+   */
+  public isTestStage = () => utils.isTestStage(this.props.stage)
+
+  /**
+   * @summary Utility method to determine if the initialisation is in uat (uat) stage
+   * This is determined by the stage property injected via cdk context
+   */
+  public isUatStage = () => utils.isUatStage(this.props.stage)
+
+  /**
+   * @summary Utility method to determine if the initialisation is in production (prd) stage
+   * This is determined by the stage property injected via cdk context
+   */
+  public isProductionStage = () => utils.isPrdStage(this.props.stage)
+}
+
+export const applyMixins = (derivedCtor: any, constructors: any[]) => {
+  constructors.forEach(baseCtor => {
+    Object.getOwnPropertyNames(baseCtor.prototype).forEach(name => {
+      Object.defineProperty(
+        derivedCtor.prototype,
+        name,
+        Object.getOwnPropertyDescriptor(baseCtor.prototype, name) || Object.create(null)
+      )
+    })
+  })
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+    
+</div>
+
+<br class="clear">
+
+<footer>
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>

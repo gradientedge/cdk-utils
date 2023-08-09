@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>services/aws/evidently/main.ts - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="main.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <script src="scripts/commonNav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">services/aws/evidently/main.ts</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import * as evidently from 'aws-cdk-lib/aws-evidently'
+import * as utils from '../../../utils'
+import { CommonConstruct } from '../../../common'
+import {
+  EvidentlyExperimentProps,
+  EvidentlyFeatureProps,
+  EvidentlyLaunchProps,
+  EvidentlyProjectProps,
+  EvidentlySegmentProps,
+} from './types'
+
+/**
+ * @classdesc Provides operations on AWS Evidently.
+ * - A new instance of this class is injected into {@link CommonConstruct} constructor.
+ * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
+ * @example
+ * import { CommonConstruct } from '@gradientedge/cdk-utils'
+ *
+ * class CustomConstruct extends CommonConstruct {
+ *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
+ *     super(parent, id, props)
+ *     this.props = props
+ *     this.evidentlyManager.createProject('MyNewProhect', this, props)
+ *   }
+ * }
+ * @see [CDK Evidently Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_evidently-readme.html}
+ */
+export class EvidentlyManager {
+  /**
+   * @summary Method to create a project
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props the project properties
+   */
+  public createProject(id: string, scope: CommonConstruct, props: EvidentlyProjectProps) {
+    const project = new evidently.CfnProject(scope, `${id}`, {
+      ...props,
+      description: `${props.description} ${scope.props.stage}`,
+      name: `${props.name}-${scope.props.stage}`,
+    })
+    utils.createCfnOutput(`${id}-projectArn`, scope, project.attrArn)
+    utils.createCfnOutput(`${id}-projectName`, scope, project.name)
+    return project
+  }
+
+  /**
+   * @summary Method to create a feature
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props the feature properties
+   */
+  public createFeature(id: string, scope: CommonConstruct, props: EvidentlyFeatureProps) {
+    const feature = new evidently.CfnFeature(scope, `${id}`, props)
+    utils.createCfnOutput(`${id}-featureArn`, scope, feature.attrArn)
+    utils.createCfnOutput(`${id}-featureName`, scope, feature.name)
+    return feature
+  }
+
+  /**
+   * @summary Method to create a launch
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props the launch properties
+   */
+  public createLaunch(id: string, scope: CommonConstruct, props: EvidentlyLaunchProps) {
+    const launch = new evidently.CfnLaunch(scope, `${id}`, {
+      ...props,
+      description: `${props.description} ${scope.props.stage}`,
+      name: `${props.name}-${scope.props.stage}`,
+    })
+    utils.createCfnOutput(`${id}-launchArn`, scope, launch.attrArn)
+    utils.createCfnOutput(`${id}-launchName`, scope, launch.name)
+    return launch
+  }
+
+  /**
+   * @summary Method to create an experiment
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props the experiment properties
+   */
+  public createExperiment(id: string, scope: CommonConstruct, props: EvidentlyExperimentProps) {
+    const experiment = new evidently.CfnExperiment(scope, `${id}`, {
+      ...props,
+      description: `${props.description} ${scope.props.stage}`,
+      name: `${props.name}-${scope.props.stage}`,
+    })
+    utils.createCfnOutput(`${id}-experimentArn`, scope, experiment.attrArn)
+    utils.createCfnOutput(`${id}-experimentName`, scope, experiment.name)
+    return experiment
+  }
+
+  /**
+   * @summary Method to create a segment
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props the segment properties
+   */
+  public createSegment(id: string, scope: CommonConstruct, props: EvidentlySegmentProps) {
+    const segment = new evidently.CfnSegment(scope, `${id}`, {
+      ...props,
+      description: `${props.description} ${scope.props.stage}`,
+      name: `${props.name}-${scope.props.stage}`,
+    })
+    utils.createCfnOutput(`${id}-segmentArn`, scope, segment.attrArn)
+    utils.createCfnOutput(`${id}-segmentName`, scope, segment.name)
+    return segment
+  }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+    
+</div>
+
+<br class="clear">
+
+<footer>
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>

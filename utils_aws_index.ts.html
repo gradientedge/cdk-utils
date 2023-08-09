@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>utils/aws/index.ts - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="main.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <script src="scripts/commonNav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">utils/aws/index.ts</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import * as cdk from 'aws-cdk-lib'
+import * as _ from 'lodash'
+import { CommonConstruct } from '../../common'
+import { fromEnv, fromIni } from '@aws-sdk/credential-providers'
+import { AwsCredentialIdentityProvider } from '@aws-sdk/types'
+
+/**
+ * @summary Helper method to add CloudFormation outputs from the construct
+ * @param id scoped id of the resource
+ * @param scope scope in which this resource is defined
+ * @param value the value of the exported output
+ * @param description optional description for the output
+ * @param overrideId Flag which indicates whether to override the default logical id of the output
+ * @returns The CloudFormation output
+ */
+export function createCfnOutput(
+  id: string,
+  scope: CommonConstruct,
+  value?: string,
+  description?: string,
+  overrideId = true
+): cdk.CfnOutput {
+  const camelName = _.camelCase(id)
+  const output = new cdk.CfnOutput(scope, id, {
+    description,
+    exportName: `${scope.props.stackName}-${camelName}`,
+    value: value ?? '',
+  })
+  if (overrideId) {
+    output.overrideLogicalId(camelName)
+  }
+  return output
+}
+
+export function determineCredentials(): AwsCredentialIdentityProvider {
+  if (process.env.AWS_PROFILE) return fromIni()
+  return fromEnv()
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+    
+</div>
+
+<br class="clear">
+
+<footer>
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>

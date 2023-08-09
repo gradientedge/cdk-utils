@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>Tutorial: Development - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="main.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <script src="scripts/commonNav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">Tutorial: Development</h1>
+    
+
+    <section>
+
+<header>
+    
+
+    <h2>Development</h2>
+</header>
+
+<article>
+    <h2>Table of Contents</h2>
+<ul>
+<li><a href="#requirements">Requirements</a></li>
+<li><a href="#development-instructions">Setting up Development Environment</a></li>
+</ul>
+<h2>Requirements</h2>
+<h3>Mandatory</h3>
+<ul>
+<li><a href="https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html">AWS CLI</a></li>
+<li><a href="https://nodejs.org/">Node</a></li>
+<li><a href="https://www.npmjs.com">Npm</a></li>
+<li><a href="https://yarnpkg.com">Yarn</a></li>
+</ul>
+<h3>Optional</h3>
+<ul>
+<li><a href="https://github.com/jorgebastida/awslogs">AWS Logs</a></li>
+<li><a href="https://github.com/joeyespo/grip">Grip</a></li>
+<li><a href="https://www.jetbrains.com/idea">JetBrains IntelliJ Idea</a>
+<ul>
+<li><a href="https://plugins.jetbrains.com/plugin/11349-aws-toolkit">AWS Toolkit</a></li>
+<li><a href="https://plugins.jetbrains.com/plugin/7371-aws-cloudformation">AWS CloudFormation</a></li>
+</ul>
+</li>
+<li><a href="https://github.com/nektos/act">Act</a></li>
+</ul>
+<h3>Docker system Requirements</h3>
+<table>
+<thead>
+<tr>
+<th>Resource</th>
+<th>Value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPUs</td>
+<td><em>1 (more performant if &gt;2 available)</em></td>
+</tr>
+<tr>
+<td>Memory</td>
+<td><em>5 GB</em></td>
+</tr>
+<tr>
+<td>Swap</td>
+<td><em>1 GB</em></td>
+</tr>
+<tr>
+<td>Disk</td>
+<td><em>10 GB</em></td>
+</tr>
+</tbody>
+</table>
+<h2>Development Instructions</h2>
+<h3>Install the packages</h3>
+<h4><img src="https://img.shields.io/badge/command--line-4D4D4D?logo=windows-terminal&amp;style=for-the-badge" alt="cmd"></h4>
+<p>With <strong>npm</strong>:</p>
+<pre class="prettyprint source lang-shell"><code>npm install
+</code></pre>
+<p>With <strong>yarn</strong>:</p>
+<pre class="prettyprint source lang-shell"><code>yarn install
+</code></pre>
+<h3>Build the packages</h3>
+<h4><img src="https://img.shields.io/badge/command--line-4D4D4D?logo=windows-terminal&amp;style=for-the-badge" alt="cmd"></h4>
+<p>With <strong>npm</strong>:</p>
+<pre class="prettyprint source lang-shell"><code>npm run build
+</code></pre>
+<p>With <strong>yarn</strong>:</p>
+<pre class="prettyprint source lang-shell"><code>yarn build
+</code></pre>
+<h3>Test the packages</h3>
+<h4><img src="https://img.shields.io/badge/command--line-4D4D4D?logo=windows-terminal&amp;style=for-the-badge" alt="cmd"></h4>
+<p>With <strong>npm</strong>:</p>
+<pre class="prettyprint source lang-shell"><code>npm run validate
+</code></pre>
+<p>With <strong>yarn</strong>:</p>
+<pre class="prettyprint source lang-shell"><code>yarn validate
+</code></pre>
+<!-- references -->
+</article>
+
+</section>
+
+
+    
+</div>
+
+<br class="clear">
+
+<footer>
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>
