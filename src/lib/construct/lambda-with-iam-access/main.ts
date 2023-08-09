@@ -4,6 +4,7 @@ import { LambdaWithIamAccessEnvironment, LambdaWithIamAccessProps } from './type
 import * as iam from 'aws-cdk-lib/aws-iam'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as secretsManager from 'aws-cdk-lib/aws-secretsmanager'
+import * as ec2 from 'aws-cdk-lib/aws-ec2'
 
 /**
  * @classdesc Provides a construct to create a lambda function with IAM access
@@ -34,6 +35,8 @@ export class LambdaWithIamAccess extends CommonConstruct {
   lambdaIamUser: iam.User
   lambdaUserAccessKey: iam.CfnAccessKey
   lambdaUserAccessSecret: secretsManager.Secret
+  lambdaVpc: ec2.IVpc
+  lambdaSecurityGroup: ec2.ISecurityGroup
 
   constructor(parent: Construct, id: string, props: LambdaWithIamAccessProps) {
     super(parent, id, props)
@@ -109,7 +112,12 @@ export class LambdaWithIamAccess extends CommonConstruct {
       this.lambdaLayers,
       this.props.lambdaSource,
       this.props.lambdaHandler || 'index.handler',
-      this.lambdaEnvironment
+      this.lambdaEnvironment,
+      this.lambdaVpc,
+      [this.lambdaSecurityGroup],
+      undefined,
+      undefined,
+      this.lambdaVpc
     )
   }
 
