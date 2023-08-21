@@ -50,6 +50,7 @@
       "behavior": "whitelist",
       "headers": ["Host"]
     },
-    "cookieBehavior": { "behavior": "none" }
+    "cookieBehavior": { "behavior": "none" },
+    "cachePolicyName": "site-cache-policy"
   }
 }

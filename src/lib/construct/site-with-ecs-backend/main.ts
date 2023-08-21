@@ -14,7 +14,7 @@ import * as s3 from 'aws-cdk-lib/aws-s3'
 import * as efs from 'aws-cdk-lib/aws-efs'
 import { Construct } from 'constructs'
 import { CommonConstruct } from '../../common'
-import { SiteWithEcsBackendProps, SiteResponseHeadersPolicyProps } from './types'
+import { SiteWithEcsBackendProps, SiteResponseHeadersPolicyProps, SiteCachePolicyProps } from './types'
 
 /**
  * @classdesc Provides a construct to create and deploy a site hosted with an clustered ECS/ELB backend
@@ -92,7 +92,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
     this.createEcsBuildArgs()
     this.createEcsContainerImage()
     this.createEcsService()
-    this.createSiteCacheConfigPolicy()
+    this.createSiteOriginCachePolicy()
     this.createSiteOriginRequestPolicy()
     this.createSiteOriginResponseHeadersPolicy()
     this.createSiteOrigin()
@@ -410,20 +410,23 @@ export class SiteWithEcsBackend extends CommonConstruct {
     this.siteLogBucket = this.s3Manager.createS3Bucket(`${this.id}-site-logs`, this, this.props.siteLogBucket)
   }
 
-  protected createSiteCacheConfigPolicy() {
-    if (!this.props.siteCachePolicy) return
-    this.siteCachePolicy = new cloudfront.CachePolicy(this, `${this.id}-site-cache-policy`, {
-      cachePolicyName: `${this.id}-site-cache-policy`,
+  protected createSiteCachePolicy(id: string, siteCachePolicy: SiteCachePolicyProps) {
+    return new cloudfront.CachePolicy(this, `${id}`, {
+      cachePolicyName: `${this.id}-${siteCachePolicy.cachePolicyName}`,
       comment: `Policy for ${this.id}-distribution - ${this.props.stage} stage`,
-      defaultTtl: cdk.Duration.seconds(this.props.siteCachePolicy.defaultTtlInSeconds),
-      minTtl: cdk.Duration.seconds(this.props.siteCachePolicy.minTtlInSeconds),
-      maxTtl: cdk.Duration.seconds(this.props.siteCachePolicy.maxTtlInSeconds),
-      enableAcceptEncodingGzip: this.props.siteCachePolicy.enableAcceptEncodingGzip,
-      queryStringBehavior: this.props.siteCachePolicy.queryStringBehavior,
-      headerBehavior: this.props.siteCachePolicy.headerBehavior,
-      cookieBehavior: this.props.siteCachePolicy.cookieBehavior,
+      defaultTtl: cdk.Duration.seconds(siteCachePolicy.defaultTtlInSeconds),
+      minTtl: cdk.Duration.seconds(siteCachePolicy.minTtlInSeconds),
+      maxTtl: cdk.Duration.seconds(siteCachePolicy.maxTtlInSeconds),
+      enableAcceptEncodingGzip: siteCachePolicy.enableAcceptEncodingGzip,
+      queryStringBehavior: siteCachePolicy.queryStringBehavior,
+      headerBehavior: siteCachePolicy.headerBehavior,
+      cookieBehavior: siteCachePolicy.cookieBehavior,
     })
+  }
 
+  protected createSiteOriginCachePolicy() {
+    if (!this.props.siteCachePolicy) return
+    this.siteCachePolicy = this.createSiteCachePolicy(`${this.id}-site-cache-policy`, this.props.siteCachePolicy)
     _.assign(this.props.siteDistribution.defaultBehavior, {
       cachePolicy: this.siteCachePolicy,
     })
@@ -451,6 +454,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
       comment: `Response Header Policy for ${props.type} for ${this.id}-distribution - ${this.props.stage} stage`,
       responseHeadersPolicyName: `${this.id}-${props.type}-response`,
       securityHeadersBehavior: {
+        ...props.securityHeadersBehavior,
         strictTransportSecurity: {
           ...props.securityHeadersBehavior?.strictTransportSecurity,
           accessControlMaxAge: cdk.Duration.seconds(
