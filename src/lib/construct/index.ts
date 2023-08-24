@@ -1,3 +1,4 @@
+export * from './api-to-any-target'
 export * from './api-to-eventbridge-target'
 export * from './api-to-eventbridge-target-with-sns'
 export * from './api-to-lambda-target'

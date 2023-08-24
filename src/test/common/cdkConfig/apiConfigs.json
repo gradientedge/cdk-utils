@@ -6,5 +6,15 @@
       "tracingEnabled": true
     },
     "proxy": false
+  },
+  "testRestApiSample": {
+    "deployOptions": {
+      "dataTraceEnabled": true,
+      "tracingEnabled": true,
+      "loggingLevel": "INFO"
+    },
+    "cloudWatchRole": true,
+    "proxy": false,
+    "restApiName": "service"
   }
 }
