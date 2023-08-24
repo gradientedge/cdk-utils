@@ -185,7 +185,7 @@ export class ApiManager {
     allowedOrigins?: string[],
     allowedMethods?: string[],
     allowedHeaders?: string[],
-    methodRequestParameters?: any,
+    methodRequestParameters?: { [param: string]: boolean },
     proxyIntegration?: apig.Integration
   ) {
     const methods = allowedMethods ?? apig.Cors.ALL_METHODS
