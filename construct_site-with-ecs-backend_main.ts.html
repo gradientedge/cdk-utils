@@ -468,6 +468,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
       minTtl: cdk.Duration.seconds(siteCachePolicy.minTtlInSeconds),
       maxTtl: cdk.Duration.seconds(siteCachePolicy.maxTtlInSeconds),
       enableAcceptEncodingGzip: siteCachePolicy.enableAcceptEncodingGzip,
+      enableAcceptEncodingBrotli: siteCachePolicy.enableAcceptEncodingBrotli,
       queryStringBehavior: siteCachePolicy.queryStringBehavior,
       headerBehavior: siteCachePolicy.headerBehavior,
       cookieBehavior: siteCachePolicy.cookieBehavior,
