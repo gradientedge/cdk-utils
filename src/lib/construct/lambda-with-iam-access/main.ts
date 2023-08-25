@@ -1,10 +1,11 @@
-import { CommonConstruct } from '../../common'
-import { Construct } from 'constructs'
-import { LambdaWithIamAccessEnvironment, LambdaWithIamAccessProps } from './types'
+import * as ec2 from 'aws-cdk-lib/aws-ec2'
+import * as efs from 'aws-cdk-lib/aws-efs'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as secretsManager from 'aws-cdk-lib/aws-secretsmanager'
-import * as ec2 from 'aws-cdk-lib/aws-ec2'
+import { Construct } from 'constructs'
+import { CommonConstruct } from '../../common'
+import { LambdaWithIamAccessEnvironment, LambdaWithIamAccessProps } from './types'
 
 /**
  * @classdesc Provides a construct to create a lambda function with IAM access
@@ -36,7 +37,10 @@ export class LambdaWithIamAccess extends CommonConstruct {
   lambdaUserAccessKey: iam.CfnAccessKey
   lambdaUserAccessSecret: secretsManager.Secret
   lambdaVpc: ec2.IVpc
-  lambdaSecurityGroup: ec2.ISecurityGroup
+  lambdaSecurityGroups: ec2.ISecurityGroup[]
+  lambdaAccessPoint: efs.IAccessPoint
+  lambdaMountPath: string
+  lambdaVpcSubnets: ec2.SubnetSelection
 
   constructor(parent: Construct, id: string, props: LambdaWithIamAccessProps) {
     super(parent, id, props)
@@ -49,6 +53,11 @@ export class LambdaWithIamAccess extends CommonConstruct {
    * @summary Initialise and provision resources
    */
   public initResources() {
+    this.resolveVpc()
+    this.resolveSecurityGroups()
+    this.resolveAccessPoint()
+    this.resolveMountPath()
+    this.resolveVpcSubnets()
     this.createLambdaPolicy()
     this.createLambdaRole()
     this.createLambdaEnvironment()
@@ -57,6 +66,16 @@ export class LambdaWithIamAccess extends CommonConstruct {
     this.createIamUserForLambdaFunction()
     this.createIamSecretForLambdaFunction()
   }
+
+  protected resolveVpc() {}
+
+  protected resolveSecurityGroups() {}
+
+  protected resolveAccessPoint() {}
+
+  protected resolveMountPath() {}
+
+  protected resolveVpcSubnets() {}
 
   /**
    * @summary Method to create iam policy for Lambda function
@@ -114,10 +133,10 @@ export class LambdaWithIamAccess extends CommonConstruct {
       this.props.lambdaHandler || 'index.handler',
       this.lambdaEnvironment,
       this.lambdaVpc,
-      [this.lambdaSecurityGroup],
-      undefined,
-      undefined,
-      this.lambdaVpc
+      this.lambdaSecurityGroups,
+      this.lambdaAccessPoint,
+      this.lambdaMountPath,
+      this.lambdaVpcSubnets
     )
   }
 
