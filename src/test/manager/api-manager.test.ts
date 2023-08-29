@@ -167,7 +167,7 @@ describe('TestApiConstruct', () => {
 describe('TestApiConstruct', () => {
   test('provisions new rest api deployment as expected', () => {
     template.hasResourceProperties('AWS::ApiGateway::Deployment', {
-      Description: 'Automatically created by the RestApi construct',
+      Description: 'test-api - test stage',
     })
   })
 })
