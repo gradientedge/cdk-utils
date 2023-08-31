@@ -1,18 +1,22 @@
 import {
-  CfnApplicationProps,
-  CfnConfigurationProfileProps,
-  CfnDeploymentProps,
-  CfnDeploymentStrategyProps,
-  CfnEnvironmentProps,
-} from 'aws-cdk-lib/aws-appconfig'
+  ApplicationProps,
+  DeploymentStrategyProps,
+  EnvironmentProps,
+  ExtensionProps,
+  HostedConfigurationProps,
+  SourcedConfigurationProps,
+} from '@aws-cdk/aws-appconfig-alpha'
+import { CfnConfigurationProfileProps, CfnDeploymentProps } from 'aws-cdk-lib/aws-appconfig'
 
 /**
  */
 export interface AppConfigProps {
-  application: CfnApplicationProps
-  configurationProfile: CfnConfigurationProfileProps
-  deployment: CfnDeploymentProps
-  deploymentStrategy: CfnDeploymentStrategyProps
-  environment: CfnEnvironmentProps
   id: string
+  application: ApplicationProps
+  deployment: CfnDeploymentProps
+  deploymentStrategy: DeploymentStrategyProps
+  environment: EnvironmentProps
+  extension: ExtensionProps
+  hostedConfiguration: HostedConfigurationProps
+  sourcedConfiguration: SourcedConfigurationProps
 }

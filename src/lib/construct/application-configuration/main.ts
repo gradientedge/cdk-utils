@@ -1,17 +1,23 @@
+import {
+  Application,
+  DeploymentStrategy,
+  Environment,
+  HostedConfiguration,
+  SourcedConfiguration,
+} from '@aws-cdk/aws-appconfig-alpha'
+import { CfnDeployment } from 'aws-cdk-lib/aws-appconfig'
 import { Construct } from 'constructs'
-import * as cdk from 'aws-cdk-lib'
-import * as appconfig from 'aws-cdk-lib/aws-appconfig'
-import { ApplicationConfigurationProps } from './types'
 import { CommonConstruct } from '../../common'
+import { ApplicationConfigurationProps } from './types'
 
 export class ApplicationConfiguration extends CommonConstruct {
   props: ApplicationConfigurationProps
   id: string
-  appConfigApplication: appconfig.CfnApplication
-  appConfigEnvironment: appconfig.CfnEnvironment
-  appConfigProfile: appconfig.CfnConfigurationProfile
-  appConfigVersion: appconfig.CfnHostedConfigurationVersion
-  appConfigDeploymentStrategy: appconfig.CfnDeploymentStrategy
+  appConfigApplication: Application
+  appConfigEnvironment: Environment
+  appConfigConfiguration: HostedConfiguration | SourcedConfiguration
+  appConfigDeploymentStrategy: DeploymentStrategy
+  appConfigDeployment: CfnDeployment
 
   constructor(parent: Construct, id: string, props: ApplicationConfigurationProps) {
     super(parent, id, props)
@@ -27,8 +33,7 @@ export class ApplicationConfiguration extends CommonConstruct {
   protected createConfiguration() {
     this.createAppConfigApplication()
     this.createAppConfigEnvironment()
-    this.createAppConfigProfile()
-    this.createAppConfigVersion()
+    this.createAppConfigConfiguration()
     this.createAppConfigDeploymentStrategy()
     this.createAppConfigDeployment()
   }
@@ -45,53 +50,59 @@ export class ApplicationConfiguration extends CommonConstruct {
     this.appConfigEnvironment = this.appConfigManager.createEnvironment(
       `${this.id}-ac-environment`,
       this,
-      cdk.Fn.ref(this.appConfigApplication.logicalId),
+      this.appConfigApplication.applicationId,
       this.props.appConfig
     )
   }
 
-  protected createAppConfigProfile() {
-    this.appConfigProfile = this.appConfigManager.createConfigurationProfile(
-      `${this.id}-ac-profile`,
-      this,
-      cdk.Fn.ref(this.appConfigApplication.logicalId),
-      this.props.appConfig
-    )
-  }
+  protected createAppConfigConfiguration() {
+    if (this.props.appConfig.hostedConfiguration) {
+      this.appConfigConfiguration = this.appConfigManager.createHostedConfiguration(
+        `${this.id}-ac-profile`,
+        this,
+        this.appConfigApplication.applicationId,
+        this.props.appConfig
+      )
+      return
+    }
 
-  protected createAppConfigVersion() {
-    this.appConfigVersion = new appconfig.CfnHostedConfigurationVersion(this, `${this.id}-ac-configuration`, {
-      applicationId: cdk.Fn.ref(this.appConfigApplication.logicalId),
-      configurationProfileId: cdk.Fn.ref(this.appConfigProfile.logicalId),
-      content: JSON.stringify(this.props.appConfigContent),
-      contentType: 'application/json',
-    })
+    if (this.props.appConfig.sourcedConfiguration) {
+      this.appConfigConfiguration = this.appConfigManager.createSourcedConfiguration(
+        `${this.id}-ac-profile`,
+        this,
+        this.appConfigApplication.applicationId,
+        this.props.appConfig
+      )
+      return
+    }
   }
 
   protected createAppConfigDeploymentStrategy() {
-    this.appConfigDeploymentStrategy = new appconfig.CfnDeploymentStrategy(this, `${this.id}-ac-deployment-strategy`, {
-      deploymentDurationInMinutes: this.props.appConfig.deploymentStrategy.deploymentDurationInMinutes,
-      growthFactor: this.props.appConfig.deploymentStrategy.growthFactor,
-      name: this.props.appConfig.deploymentStrategy.name,
-      replicateTo: this.props.appConfig.deploymentStrategy.replicateTo,
-    })
+    this.appConfigDeploymentStrategy = this.appConfigManager.createDeploymentStrategy(
+      `${this.id}-ac-deployment-strategy`,
+      this,
+      this.props.appConfig
+    )
   }
 
   protected createAppConfigDeployment() {
-    new appconfig.CfnDeployment(this, `${this.id}-app-config-deployment`, {
-      applicationId: cdk.Fn.ref(this.appConfigApplication.logicalId),
-      configurationProfileId: cdk.Fn.ref(this.appConfigProfile.logicalId),
-      configurationVersion: cdk.Fn.ref(this.appConfigVersion.logicalId),
-      deploymentStrategyId: cdk.Fn.ref(this.appConfigDeploymentStrategy.logicalId),
-      environmentId: cdk.Fn.ref(this.appConfigEnvironment.logicalId),
-    })
+    if (!this.appConfigConfiguration.versionNumber) return
+    this.appConfigDeployment = this.appConfigManager.createDeployment(
+      `${this.id}-ac-deployment`,
+      this,
+      this.appConfigApplication.applicationId,
+      this.appConfigConfiguration.configurationProfileId,
+      this.appConfigConfiguration.versionNumber,
+      this.appConfigDeploymentStrategy.deploymentStrategyId,
+      this.appConfigEnvironment.environmentId
+    )
   }
 
   public resolveEnvironmentVariables(): any {
     return {
-      APP_CONFIG_APPLICATION_ID: cdk.Fn.ref(this.appConfigApplication.logicalId),
-      APP_CONFIG_CONFIGURATION_PROFILE_ID: cdk.Fn.ref(this.appConfigProfile.logicalId),
-      APP_CONFIG_ENVIRONMENT_ID: cdk.Fn.ref(this.appConfigEnvironment.logicalId),
+      APP_CONFIG_APPLICATION_ID: this.appConfigApplication.applicationId,
+      APP_CONFIG_CONFIGURATION_PROFILE_ID: this.appConfigConfiguration.configurationProfileId,
+      APP_CONFIG_ENVIRONMENT_ID: this.appConfigEnvironment.environmentId,
     }
   }
 }

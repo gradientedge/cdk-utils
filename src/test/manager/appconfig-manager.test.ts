@@ -1,6 +1,8 @@
+import { ConfigurationContent } from '@aws-cdk/aws-appconfig-alpha'
 import * as cdk from 'aws-cdk-lib'
 import { Template } from 'aws-cdk-lib/assertions'
 import { Construct } from 'constructs'
+import _ from 'lodash'
 import { Architecture, CommonConstruct, CommonStack, CommonStackProps } from '../../lib'
 
 interface TestStackProps extends CommonStackProps {
@@ -35,7 +37,6 @@ class TestCommonStack extends CommonStack {
       ...super.determineConstructProps(props),
       ...{
         app: this.node.tryGetContext('app'),
-        appConfigurationProfile: this.node.tryGetContext('appConfigurationProfile'),
       },
     }
   }
@@ -57,11 +58,14 @@ class TestCommonConstruct extends CommonConstruct {
   constructor(parent: Construct, name: string, props: TestStackProps) {
     super(parent, name, props)
     const application = this.appConfigManager.createApplication('test-application', this, this.props.app)
-    this.appConfigManager.createEnvironment('test-environment', this, application.logicalId, this.props.app)
-    this.appConfigManager.createConfigurationProfile(
+    this.appConfigManager.createEnvironment('test-environment', this, application.applicationId, this.props.app)
+    this.props.app.hostedConfiguration = _.assign(this.props.app.hostedConfiguration, {
+      content: ConfigurationContent.fromInlineJson(JSON.stringify({ test: 'value' })),
+    })
+    this.appConfigManager.createHostedConfiguration(
       'test-configuration-profile',
       this,
-      application.logicalId,
+      application.applicationId,
       this.props.app
     )
     this.appConfigManager.getArnForAppConfigExtension(this, Architecture.ARM_64)
@@ -84,7 +88,7 @@ describe('TestAppConfigConstruct', () => {
     /* test if the created stack have the right properties injected */
     expect(commonStack.props.app.application.name).toEqual('test-application')
     expect(commonStack.props.app.environment.name).toEqual('test-env')
-    expect(commonStack.props.app.configurationProfile.name).toEqual('test-profile')
+    expect(commonStack.props.app.hostedConfiguration.name).toEqual('test-profile')
   })
 })
 

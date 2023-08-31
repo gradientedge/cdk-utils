@@ -1,6 +1,8 @@
+import { ConfigurationContent, RolloutStrategy } from '@aws-cdk/aws-appconfig-alpha'
 import * as cdk from 'aws-cdk-lib'
 import { Template } from 'aws-cdk-lib/assertions'
 import { Construct } from 'constructs'
+import _ from 'lodash'
 import { ApplicationConfiguration, ApplicationConfigurationProps, CommonStack } from '../../lib'
 
 interface TestRestApiLambdaProps extends ApplicationConfigurationProps {}
@@ -27,10 +29,7 @@ class TestCommonStack extends CommonStack {
   protected determineConstructProps(props: cdk.StackProps) {
     return {
       ...super.determineConstructProps(props),
-      ...{
-        appConfig: this.node.tryGetContext('app'),
-        appConfigContent: { test: 'value' },
-      },
+      appConfig: this.node.tryGetContext('app'),
     }
   }
 }
@@ -41,6 +40,12 @@ class TestApplicationConfiguration extends ApplicationConfiguration {
     this.props = props
 
     this.id = 'test-application-configuration'
+    this.props.appConfig.hostedConfiguration = _.assign(this.props.appConfig.hostedConfiguration, {
+      content: ConfigurationContent.fromInlineJson(JSON.stringify({ test: 'value' })),
+    })
+    this.props.appConfig.deploymentStrategy = _.assign(this.props.appConfig.deploymentStrategy, {
+      rolloutStrategy: RolloutStrategy.ALL_AT_ONCE,
+    })
     this.initResources()
   }
 }
@@ -64,7 +69,7 @@ describe('TestApplicationConfiguration', () => {
     template.resourceCountIs('AWS::AppConfig::ConfigurationProfile', 1)
     template.resourceCountIs('AWS::AppConfig::Environment', 1)
     template.resourceCountIs('AWS::AppConfig::HostedConfigurationVersion', 1)
-    template.resourceCountIs('AWS::AppConfig::DeploymentStrategy', 1)
+    template.resourceCountIs('AWS::AppConfig::DeploymentStrategy', 2)
     template.resourceCountIs('AWS::AppConfig::Deployment', 1)
   })
 })
@@ -111,10 +116,10 @@ describe('TestApplicationConfiguration', () => {
   test('provisions new configuration version as expected', () => {
     template.hasResourceProperties('AWS::AppConfig::HostedConfigurationVersion', {
       ApplicationId: {
-        Ref: 'testapplicationconfigurationstacktestapplicationconfigurationacapplicationF6612284',
+        Ref: 'testapplicationconfigurationstacktestapplicationconfigurationacapplication9CC07873',
       },
       ConfigurationProfileId: {
-        Ref: 'testapplicationconfigurationstacktestapplicationconfigurationacprofile78B7B3D5',
+        Ref: 'testapplicationconfigurationstacktestapplicationconfigurationacprofileConfigurationProfile979AD587',
       },
       Content: '{"test":"value"}',
       ContentType: 'application/json',
@@ -127,7 +132,7 @@ describe('TestApplicationConfiguration', () => {
     template.hasResourceProperties('AWS::AppConfig::DeploymentStrategy', {
       DeploymentDurationInMinutes: 0,
       GrowthFactor: 100,
-      Name: 'test-deployment-strategy',
+      Name: 'test-deployment-strategy-test',
       ReplicateTo: 'NONE',
     })
   })
@@ -137,19 +142,19 @@ describe('TestApplicationConfiguration', () => {
   test('provisions new deployment as expected', () => {
     template.hasResourceProperties('AWS::AppConfig::Deployment', {
       ApplicationId: {
-        Ref: 'testapplicationconfigurationstacktestapplicationconfigurationacapplicationF6612284',
+        Ref: 'testapplicationconfigurationstacktestapplicationconfigurationacapplication9CC07873',
       },
       ConfigurationProfileId: {
-        Ref: 'testapplicationconfigurationstacktestapplicationconfigurationacprofile78B7B3D5',
+        Ref: 'testapplicationconfigurationstacktestapplicationconfigurationacprofileConfigurationProfile979AD587',
       },
       ConfigurationVersion: {
-        Ref: 'testapplicationconfigurationstacktestapplicationconfigurationacconfiguration4AEFF082',
+        Ref: 'testapplicationconfigurationstacktestapplicationconfigurationacprofile55397099',
       },
       DeploymentStrategyId: {
-        Ref: 'testapplicationconfigurationstacktestapplicationconfigurationacdeploymentstrategy33B0D1FB',
+        Ref: 'testapplicationconfigurationstacktestapplicationconfigurationacdeploymentstrategyD00939D0',
       },
       EnvironmentId: {
-        Ref: 'testapplicationconfigurationstacktestapplicationconfigurationacenvironment582C21A3',
+        Ref: 'testapplicationconfigurationstacktestapplicationconfigurationacenvironmentC2A38D11',
       },
     })
   })
