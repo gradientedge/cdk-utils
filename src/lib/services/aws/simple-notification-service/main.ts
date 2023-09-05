@@ -1,8 +1,8 @@
-import * as lambda from 'aws-cdk-lib/aws-lambda'
-import * as sns from 'aws-cdk-lib/aws-sns'
-import * as subs from 'aws-cdk-lib/aws-sns-subscriptions'
-import * as utils from '../../../utils'
+import { IFunction } from 'aws-cdk-lib/aws-lambda'
+import { Topic } from 'aws-cdk-lib/aws-sns'
+import { EmailSubscription, LambdaSubscription } from 'aws-cdk-lib/aws-sns-subscriptions'
 import { CommonConstruct } from '../../../common'
+import { createCfnOutput } from '../../../utils'
 import { SubscriptionProps } from './types'
 
 /**
@@ -37,18 +37,18 @@ export class SnsManager {
   ) {
     if (!props) throw `Subscription props undefined for ${id}`
 
-    const topic = new sns.Topic(scope, id, {
+    const topic = new Topic(scope, id, {
       displayName: `${props.topicName}-${scope.props.stage}`,
       fifo: props.fifo,
       topicName: `${props.topicName}-${scope.props.stage}`,
     })
 
     if (emails && emails.length > 0) {
-      emails.forEach((email: string) => topic.addSubscription(new subs.EmailSubscription(email)))
+      emails.forEach((email: string) => topic.addSubscription(new EmailSubscription(email)))
     }
 
-    utils.createCfnOutput(`${id}-subscriptionArn`, scope, topic.topicArn)
-    utils.createCfnOutput(`${id}-subscriptionName`, scope, topic.topicName)
+    createCfnOutput(`${id}-subscriptionArn`, scope, topic.topicArn)
+    createCfnOutput(`${id}-subscriptionName`, scope, topic.topicName)
 
     return topic
   }
@@ -64,20 +64,20 @@ export class SnsManager {
     id: string,
     scope: CommonConstruct,
     props: SubscriptionProps,
-    lambdaFunction: lambda.IFunction
+    lambdaFunction: IFunction
   ) {
     if (!props) throw `Subscription props undefined for ${id}`
 
-    const topic = new sns.Topic(scope, id, {
+    const topic = new Topic(scope, id, {
       displayName: `${props.topicName}-${scope.props.stage}`,
       fifo: props.fifo,
       topicName: `${props.topicName}-${scope.props.stage}`,
     })
 
-    topic.addSubscription(new subs.LambdaSubscription(lambdaFunction))
+    topic.addSubscription(new LambdaSubscription(lambdaFunction))
 
-    utils.createCfnOutput(`${id}-subscriptionArn`, scope, topic.topicArn)
-    utils.createCfnOutput(`${id}-subscriptionName`, scope, topic.topicName)
+    createCfnOutput(`${id}-subscriptionArn`, scope, topic.topicArn)
+    createCfnOutput(`${id}-subscriptionName`, scope, topic.topicName)
 
     return topic
   }

@@ -1,8 +1,8 @@
+import { LambdaRestApiProps as LambdaRestApigProps } from 'aws-cdk-lib/aws-apigateway'
 import { TagProps } from '../../../types'
-import * as apig from 'aws-cdk-lib/aws-apigateway'
 
 /**
  */
-export interface LambdaRestApiProps extends apig.LambdaRestApiProps {
+export interface LambdaRestApiProps extends LambdaRestApigProps {
   tags?: TagProps[]
 }

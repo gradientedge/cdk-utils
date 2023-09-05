@@ -1,31 +1,40 @@
-import * as apig from 'aws-cdk-lib/aws-apigateway'
-import * as acm from 'aws-cdk-lib/aws-certificatemanager'
-import * as iam from 'aws-cdk-lib/aws-iam'
-import * as logs from 'aws-cdk-lib/aws-logs'
-import * as route53 from 'aws-cdk-lib/aws-route53'
-import * as sns from 'aws-cdk-lib/aws-sns'
+import {
+  DomainName,
+  Integration,
+  IntegrationResponse,
+  Method,
+  MethodResponse,
+  Model,
+  Resource,
+  RestApi,
+} from 'aws-cdk-lib/aws-apigateway'
+import { ICertificate } from 'aws-cdk-lib/aws-certificatemanager'
+import { Role } from 'aws-cdk-lib/aws-iam'
+import { LogGroup } from 'aws-cdk-lib/aws-logs'
+import { IHostedZone } from 'aws-cdk-lib/aws-route53'
+import { Topic } from 'aws-cdk-lib/aws-sns'
 import { ApiToEventBridgeTargetRestApiType } from './types'
 
 /**
  * @classdesc Provides a construct to contain api resources for ApiToEventBridgeTargetWithSns
  */
 export class ApiToEventbridgeTargetRestApi implements ApiToEventBridgeTargetRestApiType {
-  accessLogGroup: logs.LogGroup
-  api: apig.RestApi
-  certificate: acm.ICertificate
-  domain: apig.DomainName
-  errorResponseModel: apig.Model
-  hostedZone: route53.IHostedZone
-  integration: apig.Integration
-  integrationErrorResponse: apig.IntegrationResponse
+  accessLogGroup: LogGroup
+  api: RestApi
+  certificate: ICertificate
+  domain: DomainName
+  errorResponseModel: Model
+  hostedZone: IHostedZone
+  integration: Integration
+  integrationErrorResponse: IntegrationResponse
   integrationRequestParameters: { [p: string]: string }
   integrationRequestTemplates: { [p: string]: string }
-  integrationResponse: apig.IntegrationResponse
-  method: apig.Method
-  methodErrorResponse: apig.MethodResponse
-  methodResponse: apig.MethodResponse
-  resource: apig.Resource
-  responseModel: apig.Model
-  topic: sns.Topic
-  role: iam.Role
+  integrationResponse: IntegrationResponse
+  method: Method
+  methodErrorResponse: MethodResponse
+  methodResponse: MethodResponse
+  resource: Resource
+  responseModel: Model
+  topic: Topic
+  role: Role
 }

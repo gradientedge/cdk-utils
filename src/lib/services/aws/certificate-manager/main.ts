@@ -1,9 +1,9 @@
-import * as cdk from 'aws-cdk-lib'
-import * as acm from 'aws-cdk-lib/aws-certificatemanager'
-import * as route53 from 'aws-cdk-lib/aws-route53'
-import * as utils from '../../../utils'
-import { AcmProps } from './types'
+import { Stack } from 'aws-cdk-lib'
+import { Certificate, CertificateValidation, ICertificate } from 'aws-cdk-lib/aws-certificatemanager'
+import { IHostedZone } from 'aws-cdk-lib/aws-route53'
 import { CommonConstruct } from '../../../common'
+import { createCfnOutput } from '../../../utils'
+import { AcmProps } from './types'
 
 /**
  * @classdesc Provides operations on AWS Certificates.
@@ -13,7 +13,7 @@ import { CommonConstruct } from '../../../common'
  * import { CommonConstruct } from '@gradientedge/cdk-utils'
  *
  * class CustomConstruct extends CommonConstruct {
- *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
+ *   constructor(parent: Construct, id: string, props: common.CommonStackProps) {
  *     super(parent, id, props)
  *     this.props = props
  *     this.acmManager.createCertificate('MyCertificate', this)
@@ -44,8 +44,8 @@ export class AcmManager {
     id: string,
     scope: CommonConstruct,
     props: AcmProps,
-    hostedZone?: route53.IHostedZone
-  ): acm.ICertificate {
+    hostedZone?: IHostedZone
+  ): ICertificate {
     if (!props) throw `Certificate props undefined for ${id}`
 
     let certificate
@@ -53,20 +53,20 @@ export class AcmManager {
     if (props.useExistingCertificate) {
       let certificateArn = props.certificateArn
       if (!certificateArn) {
-        const certificateAccount = props.certificateAccount ? props.certificateAccount : cdk.Stack.of(scope).account
-        const certificateRegion = props.certificateRegion ? props.certificateRegion : cdk.Stack.of(scope).region
+        const certificateAccount = props.certificateAccount ? props.certificateAccount : Stack.of(scope).account
+        const certificateRegion = props.certificateRegion ? props.certificateRegion : Stack.of(scope).region
         certificateArn = `arn:aws:acm:${certificateRegion}:${certificateAccount}:certificate/${props.certificateId}`
       }
-      certificate = acm.Certificate.fromCertificateArn(scope, `${id}`, certificateArn)
+      certificate = Certificate.fromCertificateArn(scope, `${id}`, certificateArn)
     } else {
-      certificate = new acm.Certificate(scope, `${id}`, {
+      certificate = new Certificate(scope, `${id}`, {
         domainName: props.domainName,
         subjectAlternativeNames: props.subjectAlternativeNames,
-        validation: acm.CertificateValidation.fromDns(hostedZone),
+        validation: CertificateValidation.fromDns(hostedZone),
       })
     }
 
-    utils.createCfnOutput(`${id}-certificateArn`, scope, certificate.certificateArn)
+    createCfnOutput(`${id}-certificateArn`, scope, certificate.certificateArn)
 
     return certificate
   }

@@ -1,6 +1,6 @@
-import * as ecr from 'aws-cdk-lib/aws-ecr-assets'
-import * as utils from '../../../utils'
+import { DockerImageAsset } from 'aws-cdk-lib/aws-ecr-assets'
 import { CommonConstruct } from '../../../common'
+import { createCfnOutput } from '../../../utils'
 
 /**
  * @classdesc Provides operations on AWS Elastic Container Registry.
@@ -26,11 +26,11 @@ export class EcrManager {
    * @param dockerfilePath
    */
   public createDockerImage(id: string, scope: CommonConstruct, dockerfilePath: string) {
-    const asset = new ecr.DockerImageAsset(scope, `${id}`, {
+    const asset = new DockerImageAsset(scope, `${id}`, {
       directory: dockerfilePath,
     })
 
-    utils.createCfnOutput(`${id}-dockerImageArn`, scope, asset.imageUri)
+    createCfnOutput(`${id}-dockerImageArn`, scope, asset.imageUri)
 
     return asset
   }

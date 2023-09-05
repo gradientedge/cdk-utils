@@ -1,8 +1,8 @@
-import * as acm from 'aws-cdk-lib/aws-certificatemanager'
+import { CertificateProps } from 'aws-cdk-lib/aws-certificatemanager'
 
 /**
  */
-export interface AcmProps extends acm.CertificateProps {
+export interface AcmProps extends CertificateProps {
   certificateAccount?: string
   certificateArn?: string
   certificateId?: string

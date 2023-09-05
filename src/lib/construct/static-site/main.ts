@@ -1,8 +1,14 @@
-import * as certificateManager from 'aws-cdk-lib/aws-certificatemanager'
-import * as cloudfront from 'aws-cdk-lib/aws-cloudfront'
-import * as origins from 'aws-cdk-lib/aws-cloudfront-origins'
-import * as route53 from 'aws-cdk-lib/aws-route53'
-import * as s3 from 'aws-cdk-lib/aws-s3'
+import { ICertificate } from 'aws-cdk-lib/aws-certificatemanager'
+import {
+  FunctionAssociation,
+  FunctionEventType,
+  IDistribution,
+  IFunction,
+  OriginAccessIdentity,
+} from 'aws-cdk-lib/aws-cloudfront'
+import { S3Origin } from 'aws-cdk-lib/aws-cloudfront-origins'
+import { ARecord, IHostedZone } from 'aws-cdk-lib/aws-route53'
+import { IBucket } from 'aws-cdk-lib/aws-s3'
 import { Construct } from 'constructs'
 import { CommonConstruct } from '../../common'
 import { StaticSiteProps } from './types'
@@ -28,16 +34,16 @@ export class StaticSite extends CommonConstruct {
   id: string
 
   /* static site resources */
-  siteHostedZone: route53.IHostedZone
-  siteCertificate: certificateManager.ICertificate
-  siteARecord: route53.ARecord
-  siteBucket: s3.IBucket
-  siteOrigin: origins.S3Origin
-  siteDistribution: cloudfront.IDistribution
-  siteLogBucket: s3.IBucket
-  siteOriginAccessIdentity: cloudfront.OriginAccessIdentity
-  siteCloudfrontFunction: cloudfront.Function
-  siteFunctionAssociations: cloudfront.FunctionAssociation[]
+  siteHostedZone: IHostedZone
+  siteCertificate: ICertificate
+  siteARecord: ARecord
+  siteBucket: IBucket
+  siteOrigin: S3Origin
+  siteDistribution: IDistribution
+  siteLogBucket: IBucket
+  siteOriginAccessIdentity: OriginAccessIdentity
+  siteCloudfrontFunction: IFunction
+  siteFunctionAssociations: FunctionAssociation[]
 
   constructor(parent: Construct, id: string, props: StaticSiteProps) {
     super(parent, id, props)
@@ -113,7 +119,7 @@ export class StaticSite extends CommonConstruct {
   }
 
   protected createSiteOrigin() {
-    this.siteOrigin = new origins.S3Origin(this.siteBucket)
+    this.siteOrigin = new S3Origin(this.siteBucket)
   }
 
   /**
@@ -136,7 +142,7 @@ export class StaticSite extends CommonConstruct {
     if (this.props.siteCloudfrontFunctionProps) {
       this.siteFunctionAssociations = [
         {
-          eventType: cloudfront.FunctionEventType.VIEWER_REQUEST,
+          eventType: FunctionEventType.VIEWER_REQUEST,
           function: this.siteCloudfrontFunction,
         },
       ]

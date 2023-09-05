@@ -1,8 +1,8 @@
-import * as ec2 from 'aws-cdk-lib/aws-ec2'
-import * as efs from 'aws-cdk-lib/aws-efs'
-import * as iam from 'aws-cdk-lib/aws-iam'
-import * as lambda from 'aws-cdk-lib/aws-lambda'
-import * as secretsManager from 'aws-cdk-lib/aws-secretsmanager'
+import { ISecurityGroup, IVpc, SubnetSelection } from 'aws-cdk-lib/aws-ec2'
+import { IAccessPoint } from 'aws-cdk-lib/aws-efs'
+import { CfnAccessKey, Policy, PolicyDocument, PolicyStatement, Role, User } from 'aws-cdk-lib/aws-iam'
+import { AssetCode, IFunction, ILayerVersion, LayerVersion } from 'aws-cdk-lib/aws-lambda'
+import { CfnSecret, Secret } from 'aws-cdk-lib/aws-secretsmanager'
 import { Construct } from 'constructs'
 import { CommonConstruct } from '../../common'
 import { LambdaWithIamAccessEnvironment, LambdaWithIamAccessProps } from './types'
@@ -28,19 +28,19 @@ export class LambdaWithIamAccess extends CommonConstruct {
   id: string
 
   /* LambdaWithIamAccess resources */
-  lambdaPolicy: iam.PolicyDocument
-  lambdaRole: iam.Role
+  lambdaPolicy: PolicyDocument
+  lambdaRole: Role
   lambdaEnvironment: LambdaWithIamAccessEnvironment
-  lambdaLayers: lambda.ILayerVersion[]
-  lambdaFunction: lambda.Function
-  lambdaIamUser: iam.User
-  lambdaUserAccessKey: iam.CfnAccessKey
-  lambdaUserAccessSecret: secretsManager.Secret
-  lambdaVpc: ec2.IVpc
-  lambdaSecurityGroups: ec2.ISecurityGroup[]
-  lambdaAccessPoint: efs.IAccessPoint
+  lambdaLayers: ILayerVersion[]
+  lambdaFunction: IFunction
+  lambdaIamUser: User
+  lambdaUserAccessKey: CfnAccessKey
+  lambdaUserAccessSecret: Secret
+  lambdaVpc: IVpc
+  lambdaSecurityGroups: ISecurityGroup[]
+  lambdaAccessPoint: IAccessPoint
   lambdaMountPath: string
-  lambdaVpcSubnets: ec2.SubnetSelection
+  lambdaVpcSubnets: SubnetSelection
 
   constructor(parent: Construct, id: string, props: LambdaWithIamAccessProps) {
     super(parent, id, props)
@@ -81,7 +81,7 @@ export class LambdaWithIamAccess extends CommonConstruct {
    * @summary Method to create iam policy for Lambda function
    */
   protected createLambdaPolicy() {
-    this.lambdaPolicy = new iam.PolicyDocument({
+    this.lambdaPolicy = new PolicyDocument({
       statements: [this.iamManager.statementForCreateAnyLogStream()],
     })
   }
@@ -108,11 +108,11 @@ export class LambdaWithIamAccess extends CommonConstruct {
    * @summary Method to create layers for Lambda function
    */
   protected createLambdaLayers() {
-    const layers: lambda.LayerVersion[] = []
+    const layers: LayerVersion[] = []
 
     if (!this.props.lambdaLayerSources) return
 
-    this.props.lambdaLayerSources.forEach((source: lambda.AssetCode, index: number) => {
+    this.props.lambdaLayerSources.forEach((source: AssetCode, index: number) => {
       layers.push(this.lambdaManager.createLambdaLayer(`${this.id}-layer-${index}`, this, source))
     })
 
@@ -144,14 +144,14 @@ export class LambdaWithIamAccess extends CommonConstruct {
    * @summary Method to create iam user for the lambda function
    */
   protected createIamUserForLambdaFunction() {
-    this.lambdaIamUser = new iam.User(this, `${this.id}-lambda-user`, {
+    this.lambdaIamUser = new User(this, `${this.id}-lambda-user`, {
       userName: `${this.id}-user-${this.props.stage}`,
     })
 
-    new iam.Policy(this, `${this.id}-lambda-user-policy`, {
+    new Policy(this, `${this.id}-lambda-user-policy`, {
       policyName: `${this.id}-policy-${this.props.stage}`,
       statements: [
-        new iam.PolicyStatement({
+        new PolicyStatement({
           actions: ['lambda:InvokeFunction'],
           resources: [this.lambdaFunction.functionArn],
         }),
@@ -159,7 +159,7 @@ export class LambdaWithIamAccess extends CommonConstruct {
       users: [this.lambdaIamUser],
     })
 
-    this.lambdaUserAccessKey = new iam.CfnAccessKey(this, `${this.id}-access-key-${this.props.stage}`, {
+    this.lambdaUserAccessKey = new CfnAccessKey(this, `${this.id}-access-key-${this.props.stage}`, {
       userName: this.lambdaIamUser.userName,
     })
   }
@@ -168,13 +168,13 @@ export class LambdaWithIamAccess extends CommonConstruct {
    * @summary Method to create iam secret for the lambda function
    */
   protected createIamSecretForLambdaFunction() {
-    this.lambdaUserAccessSecret = new secretsManager.Secret(
+    this.lambdaUserAccessSecret = new Secret(
       this,
       `${this.id}-lambda-user-secret-${this.props.stage}`,
       this.props.lambdaSecret
     )
 
-    const cfnSecret = this.lambdaUserAccessSecret.node.defaultChild as secretsManager.CfnSecret
+    const cfnSecret = this.lambdaUserAccessSecret.node.defaultChild as CfnSecret
     cfnSecret.generateSecretString = undefined
     cfnSecret.secretString = `{ "ACCESS_KEY_ID": "${this.lambdaUserAccessKey.ref}", "ACCESS_KEY_SECRET": "${this.lambdaUserAccessKey.attrSecretAccessKey}" }`
   }

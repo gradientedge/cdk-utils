@@ -1,13 +1,13 @@
-import * as apig from 'aws-cdk-lib/aws-apigateway'
-import * as cloudfront from 'aws-cdk-lib/aws-cloudfront'
-import * as route53 from 'aws-cdk-lib/aws-route53'
-import * as route53Targets from 'aws-cdk-lib/aws-route53-targets'
-import * as utils from '../../../utils'
+import { DomainName } from 'aws-cdk-lib/aws-apigateway'
+import { IDistribution } from 'aws-cdk-lib/aws-cloudfront'
+import { ARecord, HostedZone, IHostedZone, RecordTarget } from 'aws-cdk-lib/aws-route53'
+import { ApiGatewayDomain, CloudFrontTarget } from 'aws-cdk-lib/aws-route53-targets'
 import { CommonConstruct } from '../../../common'
+import { createCfnOutput } from '../../../utils'
 import { Route53Props } from './types'
 
 /**
- * @classdesc Provides operations on AWS Route53.
+ * @classdesc Provides operations on AWS
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
  * @example
@@ -30,23 +30,23 @@ export class Route53Manager {
    * @param props
    */
   public createHostedZone(id: string, scope: CommonConstruct, props: Route53Props) {
-    let hostedZone: route53.IHostedZone
+    let hostedZone: IHostedZone
 
     if (!props) throw `Route53 props undefined for ${id}`
 
     if (props.useExistingHostedZone) {
-      hostedZone = route53.HostedZone.fromLookup(scope, `${id}`, {
+      hostedZone = HostedZone.fromLookup(scope, `${id}`, {
         domainName: scope.props.domainName,
       })
     } else {
-      hostedZone = new route53.HostedZone(scope, `${id}`, {
+      hostedZone = new HostedZone(scope, `${id}`, {
         comment: `Hosted zone for ${scope.props.domainName}`,
         zoneName: scope.props.domainName,
       })
     }
 
-    utils.createCfnOutput(`${id}-hostedZoneId`, scope, hostedZone.hostedZoneId)
-    utils.createCfnOutput(`${id}-hostedZoneArn`, scope, hostedZone.hostedZoneArn)
+    createCfnOutput(`${id}-hostedZoneId`, scope, hostedZone.hostedZoneId)
+    createCfnOutput(`${id}-hostedZoneArn`, scope, hostedZone.hostedZoneArn)
 
     return hostedZone
   }
@@ -62,21 +62,21 @@ export class Route53Manager {
     scope: CommonConstruct,
     useExistingHostedZone: boolean
   ) {
-    let hostedZone: route53.IHostedZone
+    let hostedZone: IHostedZone
 
     if (useExistingHostedZone) {
-      hostedZone = route53.HostedZone.fromLookup(scope, `${id}`, {
+      hostedZone = HostedZone.fromLookup(scope, `${id}`, {
         domainName: scope.fullyQualifiedDomainName,
       })
     } else {
-      hostedZone = new route53.HostedZone(scope, `${id}`, {
+      hostedZone = new HostedZone(scope, `${id}`, {
         comment: `Hosted zone for ${scope.fullyQualifiedDomainName}`,
         zoneName: scope.fullyQualifiedDomainName,
       })
     }
 
-    utils.createCfnOutput(`${id}-hostedZoneId`, scope, hostedZone.hostedZoneId)
-    utils.createCfnOutput(`${id}-hostedZoneArn`, scope, hostedZone.hostedZoneArn)
+    createCfnOutput(`${id}-hostedZoneId`, scope, hostedZone.hostedZoneId)
+    createCfnOutput(`${id}-hostedZoneArn`, scope, hostedZone.hostedZoneArn)
 
     return hostedZone
   }
@@ -93,24 +93,24 @@ export class Route53Manager {
   public createCloudFrontTargetARecord(
     id: string,
     scope: CommonConstruct,
-    distribution?: cloudfront.IDistribution,
-    hostedZone?: route53.IHostedZone,
+    distribution?: IDistribution,
+    hostedZone?: IHostedZone,
     recordName?: string,
     skipStageFromRecord?: boolean
   ) {
     if (!distribution) throw `Distribution undefined for ${id}`
     if (!hostedZone) throw `HostedZone undefined for ${id}`
 
-    const aRecord = new route53.ARecord(scope, `${id}`, {
+    const aRecord = new ARecord(scope, `${id}`, {
       recordName:
         (recordName && scope.isProductionStage()) || skipStageFromRecord
           ? `${recordName}`
           : `${recordName}-${scope.props.stage}`,
-      target: route53.RecordTarget.fromAlias(new route53Targets.CloudFrontTarget(distribution)),
+      target: RecordTarget.fromAlias(new CloudFrontTarget(distribution)),
       zone: hostedZone,
     })
 
-    utils.createCfnOutput(`${id}-aRecordDomainName`, scope, aRecord.domainName)
+    createCfnOutput(`${id}-aRecordDomainName`, scope, aRecord.domainName)
 
     return aRecord
   }
@@ -126,20 +126,20 @@ export class Route53Manager {
   public createCloudFrontTargetARecordV2(
     id: string,
     scope: CommonConstruct,
-    distribution?: cloudfront.IDistribution,
-    hostedZone?: route53.IHostedZone,
+    distribution?: IDistribution,
+    hostedZone?: IHostedZone,
     recordName?: string
   ) {
     if (!distribution) throw `Distribution undefined for ${id}`
     if (!hostedZone) throw `HostedZone undefined for ${id}`
 
-    const aRecord = new route53.ARecord(scope, `${id}`, {
+    const aRecord = new ARecord(scope, `${id}`, {
       recordName: recordName,
-      target: route53.RecordTarget.fromAlias(new route53Targets.CloudFrontTarget(distribution)),
+      target: RecordTarget.fromAlias(new CloudFrontTarget(distribution)),
       zone: hostedZone,
     })
 
-    utils.createCfnOutput(`${id}-aRecordDomainName`, scope, aRecord.domainName)
+    createCfnOutput(`${id}-aRecordDomainName`, scope, aRecord.domainName)
 
     return aRecord
   }
@@ -157,8 +157,8 @@ export class Route53Manager {
     id: string,
     scope: CommonConstruct,
     recordName: string,
-    apiDomain: apig.DomainName,
-    hostedZone: route53.IHostedZone,
+    apiDomain: DomainName,
+    hostedZone: IHostedZone,
     skipStageFromRecord?: boolean
   ) {
     let apiRecordName = ''
@@ -166,13 +166,13 @@ export class Route53Manager {
       apiRecordName =
         scope.isProductionStage() || skipStageFromRecord ? `${recordName}` : `${recordName}-${scope.props.stage}`
 
-    const apiARecord = new route53.ARecord(scope, `${id}`, {
+    const apiARecord = new ARecord(scope, `${id}`, {
       recordName: apiRecordName,
-      target: route53.RecordTarget.fromAlias(new route53Targets.ApiGatewayDomain(apiDomain)),
+      target: RecordTarget.fromAlias(new ApiGatewayDomain(apiDomain)),
       zone: hostedZone,
     })
 
-    utils.createCfnOutput(`${id}-a-record-domain-name`, scope, apiARecord.domainName)
+    createCfnOutput(`${id}-a-record-domain-name`, scope, apiARecord.domainName)
 
     return apiARecord
   }

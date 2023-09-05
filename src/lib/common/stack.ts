@@ -1,11 +1,11 @@
-import * as cdk from 'aws-cdk-lib'
-import * as lambda from 'aws-cdk-lib/aws-lambda'
-import { CommonStackProps } from './types'
+import { App, Stack, StackProps } from 'aws-cdk-lib'
+import { Runtime } from 'aws-cdk-lib/aws-lambda'
+import fs from 'fs'
 import { isDevStage } from '../utils'
 import { CommonConstruct } from './construct'
+import { CommonStackProps } from './types'
 
-const appRoot = require('app-root-path')
-const fs = require('fs')
+import appRoot from 'app-root-path'
 
 /**
  * @classdesc Common stack to use as a base for all higher level constructs.
@@ -13,19 +13,19 @@ const fs = require('fs')
  * import { CommonStack } from '@gradientedge/cdk-utils'
  *
  * class CustomStack extends CommonStack {
- *   constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
+ *   constructor(parent: App, name: string, props: StackProps) {
  *     super(parent, name, props)
  *     // provision resources
  *   }
  * }
  */
-export class CommonStack extends cdk.Stack {
-  public static NODEJS_RUNTIME = lambda.Runtime.NODEJS_18_X
+export class CommonStack extends Stack {
+  public static NODEJS_RUNTIME = Runtime.NODEJS_18_X
 
   construct: CommonConstruct
   props: CommonStackProps
 
-  constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
+  constructor(parent: App, name: string, props: StackProps) {
     super(parent, name, props)
 
     /* determine extra cdk contexts */
@@ -41,11 +41,11 @@ export class CommonStack extends cdk.Stack {
   }
 
   /**
-   * @summary Method to determine the core CDK construct properties injected via context cdk.json
+   * @summary Method to determine the core CDK construct properties injected via context json
    * @param props The stack properties
    * @returns The stack properties
    */
-  protected determineConstructProps(props: cdk.StackProps) {
+  protected determineConstructProps(props: StackProps) {
     return {
       domainName: this.node.tryGetContext('domainName'),
       excludeDomainNameForBuckets: this.node.tryGetContext('excludeDomainNameForBuckets'),
@@ -62,7 +62,7 @@ export class CommonStack extends cdk.Stack {
   }
 
   /**
-   * @summary Method to determine extra cdk contexts apart from the main cdk.json
+   * @summary Method to determine extra cdk contexts apart from the main json
    * - Sets the properties from the extra contexts into cdk node context
    * - Primary use is to have layered config in separate files to enable easier maintenance and readability
    */
@@ -71,14 +71,14 @@ export class CommonStack extends cdk.Stack {
     const debug = this.node.tryGetContext('debug')
 
     if (!extraContexts) {
-      if (debug) console.debug(`No additional contexts provided. Using default context properties from cdk.json`)
+      if (debug) console.debug(`No additional contexts provided. Using default context properties from json`)
       return
     }
 
     extraContexts.forEach((context: string) => {
       const extraContextPath = `${appRoot.path}/${context}`
 
-      /* scenario where extra context is configured in cdk.json but absent in file system */
+      /* scenario where extra context is configured in json but absent in file system */
       if (!fs.existsSync(extraContextPath)) throw `Extra context properties unavailable in path:${extraContextPath}`
 
       /* read the extra properties */
@@ -86,7 +86,7 @@ export class CommonStack extends cdk.Stack {
       if (debug) console.debug(`Adding additional contexts provided in ${extraContextPath}`)
 
       /* parse as JSON properties */
-      const extraContextProps = JSON.parse(extraContextPropsBuffer)
+      const extraContextProps = JSON.parse(extraContextPropsBuffer.toString('utf-8'))
 
       /* set each of the property into the cdk node context */
       Object.keys(extraContextProps).forEach((propKey: any) => {
@@ -96,7 +96,7 @@ export class CommonStack extends cdk.Stack {
   }
 
   /**
-   * @summary Method to determine extra cdk stage contexts apart from the main cdk.json
+   * @summary Method to determine extra cdk stage contexts apart from the main json
    * - Sets the properties from the extra stage contexts into cdk node context
    * - Primary use is to have layered config for each environment which is injected into the context
    */
@@ -122,7 +122,7 @@ export class CommonStack extends cdk.Stack {
     if (debug) console.debug(`Adding additional stage contexts provided in ${stageContextFilePath}`)
 
     /* parse as JSON properties */
-    const stageContextProps = JSON.parse(stageContextPropsBuffer)
+    const stageContextProps = JSON.parse(stageContextPropsBuffer.toString('utf-8'))
 
     /* set each of the property into the cdk node context */
     Object.keys(stageContextProps).forEach((propKey: any) => {

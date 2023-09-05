@@ -1,8 +1,8 @@
-import * as cloudtrail from 'aws-cdk-lib/aws-cloudtrail'
-import * as logs from 'aws-cdk-lib/aws-logs'
-import * as s3 from 'aws-cdk-lib/aws-s3'
-import * as utils from '../../../utils'
+import { CfnTrail } from 'aws-cdk-lib/aws-cloudtrail'
+import { CfnLogGroup } from 'aws-cdk-lib/aws-logs'
+import { CfnBucketPolicy, IBucket } from 'aws-cdk-lib/aws-s3'
 import { CommonConstruct } from '../../../common'
+import { createCfnOutput } from '../../../utils'
 import { CloudTrailProps } from './types'
 
 /**
@@ -43,16 +43,16 @@ export class CloudTrailManager {
     id: string,
     scope: CommonConstruct,
     props: CloudTrailProps,
-    logGroup: logs.CfnLogGroup,
-    dataBucket: s3.IBucket,
-    logBucket: s3.IBucket,
-    logBucketPolicy: s3.CfnBucketPolicy
+    logGroup: CfnLogGroup,
+    dataBucket: IBucket,
+    logBucket: IBucket,
+    logBucketPolicy: CfnBucketPolicy
   ) {
     if (!props) throw `CloudTrail props undefined for ${id}`
 
     const role = scope.iamManager.createRoleForCloudTrail(`${id}Role`, scope, logGroup)
 
-    const cloudTrail = new cloudtrail.CfnTrail(scope, `${id}`, {
+    const cloudTrail = new CfnTrail(scope, `${id}`, {
       cloudWatchLogsLogGroupArn: logGroup.attrArn,
       cloudWatchLogsRoleArn: role.attrArn,
       enableLogFileValidation: props.enableLogFileValidation,
@@ -81,8 +81,8 @@ export class CloudTrailManager {
     cloudTrail.addDependency(logGroup)
     cloudTrail.addDependency(role)
 
-    utils.createCfnOutput(`${id}-trailName`, scope, cloudTrail.trailName)
-    utils.createCfnOutput(`${id}-trailArn`, scope, cloudTrail.attrArn)
+    createCfnOutput(`${id}-trailName`, scope, cloudTrail.trailName)
+    createCfnOutput(`${id}-trailArn`, scope, cloudTrail.attrArn)
 
     return { cloudTrail, cloudTrailRole: role }
   }

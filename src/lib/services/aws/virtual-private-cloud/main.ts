@@ -1,7 +1,7 @@
-import * as cdk from 'aws-cdk-lib'
-import * as ec2 from 'aws-cdk-lib/aws-ec2'
-import * as utils from '../../../utils'
+import { Tags } from 'aws-cdk-lib'
+import { Vpc, VpcProps } from 'aws-cdk-lib/aws-ec2'
 import { CommonConstruct } from '../../../common'
+import { createCfnOutput } from '../../../utils'
 
 /**
  */
@@ -21,7 +21,7 @@ const CommonVpcIdentifier = 'CommonVpc'
  *     this.vpcManager.createVpc('MyVPC', this)
  *   }
  * }
- * @see [CDK VPC Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.@aws-cdk_aws-ec2.Vpc.html}
+ * @see [CDK VPC Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.@aws-cdk_aws-Vpc.html}
  */
 export class VpcManager {
   /**
@@ -30,28 +30,28 @@ export class VpcManager {
    * @param scope scope in which this resource is defined
    * @param props
    */
-  public createVpc(id: string, scope: CommonConstruct, props: ec2.VpcProps) {
+  public createVpc(id: string, scope: CommonConstruct, props: VpcProps) {
     if (!props) throw `Vpc props undefined for ${id}`
-    const vpc = new ec2.Vpc(scope, `${id}`, {
+    const vpc = new Vpc(scope, `${id}`, {
       ipAddresses: props.ipAddresses,
       maxAzs: props.maxAzs,
     })
 
-    utils.createCfnOutput(`${id}Id`, scope, vpc.vpcId)
-    utils.createCfnOutput(`${id}PublicSubnetIds`, scope, vpc.publicSubnets.map(subnet => subnet.subnetId).toString())
-    utils.createCfnOutput(`${id}PrivateSubnetIds`, scope, vpc.privateSubnets.map(subnet => subnet.subnetId).toString())
-    utils.createCfnOutput(
+    createCfnOutput(`${id}Id`, scope, vpc.vpcId)
+    createCfnOutput(`${id}PublicSubnetIds`, scope, vpc.publicSubnets.map(subnet => subnet.subnetId).toString())
+    createCfnOutput(`${id}PrivateSubnetIds`, scope, vpc.privateSubnets.map(subnet => subnet.subnetId).toString())
+    createCfnOutput(
       `${id}PublicSubnetRouteTableIds`,
       scope,
       vpc.publicSubnets.map(subnet => subnet.routeTable.routeTableId).toString()
     )
-    utils.createCfnOutput(
+    createCfnOutput(
       `${id}PrivateSubnetRouteTableIds`,
       scope,
       vpc.privateSubnets.map(subnet => subnet.routeTable.routeTableId).toString()
     )
-    utils.createCfnOutput(`${id}AvailabilityZones`, scope, vpc.availabilityZones.toString())
-    utils.createCfnOutput(`${id}DefaultSecurityGroup`, scope, vpc.vpcDefaultSecurityGroup.toString())
+    createCfnOutput(`${id}AvailabilityZones`, scope, vpc.availabilityZones.toString())
+    createCfnOutput(`${id}DefaultSecurityGroup`, scope, vpc.vpcDefaultSecurityGroup.toString())
 
     return vpc
   }
@@ -62,9 +62,9 @@ export class VpcManager {
    * @param props
    * @param vpcIdentifier optional identifier for VPC
    */
-  public createCommonVpc(scope: CommonConstruct, props: ec2.VpcProps, vpcIdentifier?: string) {
+  public createCommonVpc(scope: CommonConstruct, props: VpcProps, vpcIdentifier?: string) {
     const vpc = this.createVpc(CommonVpcIdentifier, scope, props)
-    cdk.Tags.of(vpc).add('Name', vpcIdentifier ?? CommonVpcIdentifier)
+    Tags.of(vpc).add('Name', vpcIdentifier ?? CommonVpcIdentifier)
 
     return vpc
   }
@@ -76,6 +76,6 @@ export class VpcManager {
    * @param vpcIdentifier optional identifier for VPC
    */
   public retrieveCommonVpc(id: string, scope: CommonConstruct, vpcIdentifier?: string) {
-    return ec2.Vpc.fromLookup(scope, `${id}`, { vpcName: vpcIdentifier ?? CommonVpcIdentifier })
+    return Vpc.fromLookup(scope, `${id}`, { vpcName: vpcIdentifier ?? CommonVpcIdentifier })
   }
 }
