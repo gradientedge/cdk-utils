@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>services/aws/lambda/main.ts - Documentation</title>
+    <title>services/lambda/main.ts - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -38,7 +38,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">services/aws/lambda/main.ts</h1>
+    <h1 class="page-title">services/lambda/main.ts</h1>
     
 
     
@@ -65,8 +65,8 @@ import {
   LayerVersion,
 } from 'aws-cdk-lib/aws-lambda'
 import { SqsEventSource } from 'aws-cdk-lib/aws-lambda-event-sources'
-import { CommonConstruct, CommonStack } from '../../../common'
-import { createCfnOutput } from '../../../utils'
+import { CommonConstruct, CommonStack } from '../../common'
+import { createCfnOutput } from '../../utils'
 import { CloudFrontManager } from '../cloudfront'
 import { SsmManager } from '../systems-manager'
 import { LambdaAliasProps, LambdaEdgeProps, LambdaProps } from './types'

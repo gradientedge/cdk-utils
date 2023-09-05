@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>services/aws/key-management-service/main.ts - Documentation</title>
+    <title>services/elastic-container-registry/main.ts - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -38,7 +38,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">services/aws/key-management-service/main.ts</h1>
+    <h1 class="page-title">services/elastic-container-registry/main.ts</h1>
     
 
     
@@ -48,13 +48,12 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { Key } from 'aws-cdk-lib/aws-kms'
-import { CommonConstruct } from '../../../common'
-import { createCfnOutput } from '../../../utils'
-import { KmsKeyProps } from './types'
+            <pre class="prettyprint source linenums"><code>import { DockerImageAsset } from 'aws-cdk-lib/aws-ecr-assets'
+import { CommonConstruct } from '../../common'
+import { createCfnOutput } from '../../utils'
 
 /**
- * @classdesc Provides operations on AWS KMS.
+ * @classdesc Provides operations on AWS Elastic Container Registry.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
  * @example
@@ -64,38 +63,26 @@ import { KmsKeyProps } from './types'
  *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
  *     super(parent, id, props)
  *     this.props = props
- *     this.kms.createKey('MyKey', this)
+ *     this.ecrManager.createDockerImage('MyImage', this, dockerfilePath)
  *   }
  * }
- * @see [CDK KMS Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_kms-readme.html}
+ * @see [CDK ECR Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_ecr-readme.html}
  */
-export class KmsManager {
+export class EcrManager {
   /**
-   * @summary Method to create a KMS key
+   * @summary Method to create a docker image in ecr
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props KMS key props
+   * @param dockerfilePath
    */
-  public createKey(id: string, scope: CommonConstruct, props: KmsKeyProps) {
-    if (!props) throw `KMS Key props undefined for ${id}`
-
-    const key = new Key(scope, `${id}`, {
-      admins: props.admins,
-      alias: `${props.alias}-${scope.props.stage}`,
-      description: props.description,
-      enableKeyRotation: props.enableKeyRotation,
-      enabled: props.enabled,
-      keySpec: props.keySpec,
-      keyUsage: props.keyUsage,
-      pendingWindow: props.pendingWindow,
-      policy: props.policy,
-      removalPolicy: props.removalPolicy,
+  public createDockerImage(id: string, scope: CommonConstruct, dockerfilePath: string) {
+    const asset = new DockerImageAsset(scope, `${id}`, {
+      directory: dockerfilePath,
     })
 
-    createCfnOutput(`${id}-keyId`, scope, key.keyId)
-    createCfnOutput(`${id}-keyArn`, scope, key.keyArn)
+    createCfnOutput(`${id}-dockerImageArn`, scope, asset.imageUri)
 
-    return key
+    return asset
   }
 }
 </code></pre>

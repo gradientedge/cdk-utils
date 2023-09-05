@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>services/aws/simple-storage-service/main.ts - Documentation</title>
+    <title>services/simple-storage-service/main.ts - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -38,7 +38,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">services/aws/simple-storage-service/main.ts</h1>
+    <h1 class="page-title">services/simple-storage-service/main.ts</h1>
     
 
     
@@ -53,8 +53,8 @@ import { IDistribution } from 'aws-cdk-lib/aws-cloudfront'
 import { Effect, PolicyDocument, PolicyStatement, ServicePrincipal } from 'aws-cdk-lib/aws-iam'
 import { BlockPublicAccess, Bucket, BucketEncryption, CfnBucket, CfnBucketPolicy, IBucket } from 'aws-cdk-lib/aws-s3'
 import { BucketDeployment, ISource, ServerSideEncryption, Source } from 'aws-cdk-lib/aws-s3-deployment'
-import { CommonConstruct } from '../../../common'
-import { createCfnOutput } from '../../../utils'
+import { CommonConstruct } from '../../common'
+import { createCfnOutput } from '../../utils'
 import { LifecycleRule, S3BucketProps } from './types'
 
 /**

@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>services/aws/eventbridge/main.ts - Documentation</title>
+    <title>services/eventbridge/main.ts - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -38,7 +38,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">services/aws/eventbridge/main.ts</h1>
+    <h1 class="page-title">services/eventbridge/main.ts</h1>
     
 
     
@@ -56,8 +56,8 @@ import { CfnPermission, IFunction } from 'aws-cdk-lib/aws-lambda'
 import { CfnPipe } from 'aws-cdk-lib/aws-pipes'
 import { IQueue } from 'aws-cdk-lib/aws-sqs'
 import { IStateMachine } from 'aws-cdk-lib/aws-stepfunctions'
-import { CommonConstruct } from '../../../common'
-import { createCfnOutput } from '../../../utils'
+import { CommonConstruct } from '../../common'
+import { createCfnOutput } from '../../utils'
 import { EventBusProps, EventRuleProps, RuleProps, SqsToSfnPipeProps } from './types'
 
 /**

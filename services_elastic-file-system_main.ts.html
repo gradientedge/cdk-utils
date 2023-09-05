@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>services/aws/elastic-file-system/main.ts - Documentation</title>
+    <title>services/elastic-file-system/main.ts - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -38,7 +38,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">services/aws/elastic-file-system/main.ts</h1>
+    <h1 class="page-title">services/elastic-file-system/main.ts</h1>
     
 
     
@@ -51,8 +51,8 @@
             <pre class="prettyprint source linenums"><code>import { RemovalPolicy } from 'aws-cdk-lib'
 import { ISecurityGroup, IVpc, SubnetSelection } from 'aws-cdk-lib/aws-ec2'
 import { FileSystem, LifecyclePolicy, OutOfInfrequentAccessPolicy, PerformanceMode } from 'aws-cdk-lib/aws-efs'
-import { CommonConstruct } from '../../../common'
-import { createCfnOutput } from '../../../utils'
+import { CommonConstruct } from '../../common'
+import { createCfnOutput } from '../../utils'
 import { EfsAccessPointOptions, EfsFileSystemProps } from './types'
 
 export const DEFAULT_CREATE_ACL = {

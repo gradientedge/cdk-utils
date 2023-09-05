@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>services/aws/simple-queue-service/main.ts - Documentation</title>
+    <title>services/simple-queue-service/main.ts - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -38,7 +38,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">services/aws/simple-queue-service/main.ts</h1>
+    <h1 class="page-title">services/simple-queue-service/main.ts</h1>
     
 
     
@@ -50,8 +50,8 @@
         <article>
             <pre class="prettyprint source linenums"><code>import { Duration, RemovalPolicy, Tags } from 'aws-cdk-lib'
 import { IQueue, Queue } from 'aws-cdk-lib/aws-sqs'
-import { CommonConstruct } from '../../../common'
-import { createCfnOutput } from '../../../utils'
+import { CommonConstruct } from '../../common'
+import { createCfnOutput } from '../../utils'
 import { LambdaProps } from '../lambda'
 import { QueueProps } from './types'
 

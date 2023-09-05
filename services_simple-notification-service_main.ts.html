@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>services/aws/simple-notification-service/main.ts - Documentation</title>
+    <title>services/simple-notification-service/main.ts - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -38,7 +38,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">services/aws/simple-notification-service/main.ts</h1>
+    <h1 class="page-title">services/simple-notification-service/main.ts</h1>
     
 
     
@@ -51,8 +51,8 @@
             <pre class="prettyprint source linenums"><code>import { IFunction } from 'aws-cdk-lib/aws-lambda'
 import { Topic } from 'aws-cdk-lib/aws-sns'
 import { EmailSubscription, LambdaSubscription } from 'aws-cdk-lib/aws-sns-subscriptions'
-import { CommonConstruct } from '../../../common'
-import { createCfnOutput } from '../../../utils'
+import { CommonConstruct } from '../../common'
+import { createCfnOutput } from '../../utils'
 import { SubscriptionProps } from './types'
 
 /**

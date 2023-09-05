@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>services/aws/certificate-manager/main.ts - Documentation</title>
+    <title>services/certificate-manager/main.ts - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -38,7 +38,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">services/aws/certificate-manager/main.ts</h1>
+    <h1 class="page-title">services/certificate-manager/main.ts</h1>
     
 
     
@@ -51,8 +51,8 @@
             <pre class="prettyprint source linenums"><code>import { Stack } from 'aws-cdk-lib'
 import { Certificate, CertificateValidation, ICertificate } from 'aws-cdk-lib/aws-certificatemanager'
 import { IHostedZone } from 'aws-cdk-lib/aws-route53'
-import { CommonConstruct } from '../../../common'
-import { createCfnOutput } from '../../../utils'
+import { CommonConstruct } from '../../common'
+import { createCfnOutput } from '../../utils'
 import { AcmProps } from './types'
 
 /**
