@@ -48,10 +48,15 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import * as ssm from 'aws-cdk-lib/aws-ssm'
-import * as cr from 'aws-cdk-lib/custom-resources'
-import * as utils from '../../../utils'
+            <pre class="prettyprint source linenums"><code>import { StringParameter, StringParameterProps } from 'aws-cdk-lib/aws-ssm'
+import {
+  AwsCustomResource,
+  AwsCustomResourcePolicy,
+  AwsSdkCall,
+  PhysicalResourceId,
+} from 'aws-cdk-lib/custom-resources'
 import { CommonConstruct } from '../../../common'
+import { createCfnOutput } from '../../../utils'
 import { SSMParameterReaderProps } from './types'
 
 /**
@@ -79,17 +84,17 @@ export class SsmManager {
    * @param scope scope in which this resource is defined
    * @param props parameter props
    */
-  public writeStringToParameters(id: string, scope: CommonConstruct, props: ssm.StringParameterProps) {
+  public writeStringToParameters(id: string, scope: CommonConstruct, props: StringParameterProps) {
     if (!props) throw `Parameter props undefined for ${id}`
 
-    const parameter = new ssm.StringParameter(scope, `${id}`, {
+    const parameter = new StringParameter(scope, `${id}`, {
       description: `${props.description} - ${scope.props.stage} stage`,
       parameterName: `${props.parameterName}-${scope.props.stage}`,
       stringValue: props.stringValue,
     })
 
-    utils.createCfnOutput(`${id}-parameterArn`, scope, parameter.parameterArn)
-    utils.createCfnOutput(`${id}-parameterName`, scope, parameter.parameterName)
+    createCfnOutput(`${id}-parameterArn`, scope, parameter.parameterArn)
+    createCfnOutput(`${id}-parameterName`, scope, parameter.parameterName)
 
     return parameter
   }
@@ -103,7 +108,7 @@ export class SsmManager {
   public readStringParameter(id: string, scope: CommonConstruct, parameterName: string) {
     if (!parameterName || parameterName == '') throw 'Invalid parameter name'
 
-    return ssm.StringParameter.valueFromLookup(scope, parameterName)
+    return StringParameter.valueFromLookup(scope, parameterName)
   }
 
   /**
@@ -127,23 +132,23 @@ export class SsmManager {
 /**
  * @classdesc Provides utilities to read same/cross region SSM parameters
  */
-export class SSMParameterReader extends cr.AwsCustomResource {
+export class SSMParameterReader extends AwsCustomResource {
   constructor(scope: CommonConstruct, name: string, props: SSMParameterReaderProps) {
     const { parameterName, region } = props
 
-    const ssmAwsSdkCall: cr.AwsSdkCall = {
+    const ssmAwsSdkCall: AwsSdkCall = {
       action: 'getParameter',
       parameters: {
         Name: `${parameterName}-${scope.props.stage}`,
       },
-      physicalResourceId: cr.PhysicalResourceId.of(Date.now().toString()),
+      physicalResourceId: PhysicalResourceId.of(Date.now().toString()),
       region,
       service: 'SSM',
     }
 
     super(scope, name, {
       onUpdate: ssmAwsSdkCall,
-      policy: cr.AwsCustomResourcePolicy.fromSdkCalls({ resources: cr.AwsCustomResourcePolicy.ANY_RESOURCE }),
+      policy: AwsCustomResourcePolicy.fromSdkCalls({ resources: AwsCustomResourcePolicy.ANY_RESOURCE }),
     })
   }
 

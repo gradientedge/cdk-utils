@@ -56,7 +56,7 @@
         
         </h2>
         
-            <div class="class-description usertext"><p>Provides operations on AWS IAM.</p>
+            <div class="class-description usertext"><p>Provides operations on AWS</p>
 <ul>
 <li>A new instance of this class is injected into <a href="CommonConstruct.html">CommonConstruct</a> constructor.</li>
 <li>If a custom construct extends <a href="CommonConstruct.html">CommonConstruct</a>, an instance is available within the context.</li>
@@ -148,7 +148,7 @@
     <pre class="prettyprint"><code>import { CommonConstruct } from '@gradientedge/cdk-utils'
 
 class CustomConstruct extends CommonConstruct {
-  constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
+  constructor(parent: Construct, id: string, props: common.CommonStackProps) {
     super(parent, id, props)
     this.props = props
     this.iamManager.createRoleForEcsEvent('MyEcsRole', this, cluster, task)
@@ -404,7 +404,7 @@ class CustomConstruct extends CommonConstruct {
 
     
 
-    <h4 class="name" id="createRoleForAppConfigSecrets"><span class="type-signature"></span>createRoleForAppConfigSecrets<span class="signature">(id, scope, policy, servicePrinicpal)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="createRoleForAppConfigSecrets"><span class="type-signature"></span>createRoleForAppConfigSecrets<span class="signature">(id, scope, policy, servicePrincipal)</span><span class="type-signature"></span></h4>
 
     
     <p class="summary usertext"><p>Method to create iam statement for appconfig secrets manager integration</p></p>
@@ -548,7 +548,7 @@ class CustomConstruct extends CommonConstruct {
 
         <tr>
             
-                <td class="name"><code>servicePrinicpal</code></td>
+                <td class="name"><code>servicePrincipal</code></td>
             
 
             <td class="type">
@@ -1108,7 +1108,7 @@ class CustomConstruct extends CommonConstruct {
 
     
 
-    <h4 class="name" id="createRoleForLambda"><span class="type-signature"></span>createRoleForLambda<span class="signature">(id, scope, policy, servicePrinicpal)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="createRoleForLambda"><span class="type-signature"></span>createRoleForLambda<span class="signature">(id, scope, policy, servicePrincipal)</span><span class="type-signature"></span></h4>
 
     
     <p class="summary usertext"><p>Method to create iam statement for lambda execution</p></p>
@@ -1252,7 +1252,7 @@ class CustomConstruct extends CommonConstruct {
 
         <tr>
             
-                <td class="name"><code>servicePrinicpal</code></td>
+                <td class="name"><code>servicePrincipal</code></td>
             
 
             <td class="type">
@@ -1478,7 +1478,7 @@ class CustomConstruct extends CommonConstruct {
 
     
 
-    <h4 class="name" id="createRoleForStepFunction"><span class="type-signature"></span>createRoleForStepFunction<span class="signature">(id, scope, policy, servicePrinicpal)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="createRoleForStepFunction"><span class="type-signature"></span>createRoleForStepFunction<span class="signature">(id, scope, policy, servicePrincipal)</span><span class="type-signature"></span></h4>
 
     
     <p class="summary usertext"><p>Method to create iam statement for step function execution</p></p>
@@ -1622,7 +1622,7 @@ class CustomConstruct extends CommonConstruct {
 
         <tr>
             
-                <td class="name"><code>servicePrinicpal</code></td>
+                <td class="name"><code>servicePrincipal</code></td>
             
 
             <td class="type">
@@ -5193,7 +5193,7 @@ class CustomConstruct extends CommonConstruct {
     <h4 class="name" id="statementForStartExecution"><span class="type-signature"></span>statementForStartExecution<span class="signature">(resourceArns)</span><span class="type-signature"></span></h4>
 
     
-    <p class="summary usertext"><p>Method to create iam statement to start stepfunction execution</p></p>
+    <p class="summary usertext"><p>Method to create iam statement to start step function execution</p></p>
     
 
 

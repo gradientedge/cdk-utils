@@ -48,11 +48,17 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import * as cdk from 'aws-cdk-lib'
-import * as apig from 'aws-cdk-lib/aws-apigateway'
-import * as iam from 'aws-cdk-lib/aws-iam'
-import * as lambda from 'aws-cdk-lib/aws-lambda'
-import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager'
+            <pre class="prettyprint source linenums"><code>import { Fn, RemovalPolicy } from 'aws-cdk-lib'
+import {
+  BasePathMapping,
+  LambdaIntegration,
+  LogGroupLogDestination,
+  Resource,
+  RestApi,
+} from 'aws-cdk-lib/aws-apigateway'
+import { PolicyDocument, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam'
+import { Function } from 'aws-cdk-lib/aws-lambda'
+import { ISecret } from 'aws-cdk-lib/aws-secretsmanager'
 import { Construct } from 'constructs'
 import { CommonConstruct } from '../../common'
 import { ApiToLambdaTargetRestApi } from './api'
@@ -65,7 +71,7 @@ export class ApiToLambdaTarget extends CommonConstruct {
   id: string
 
   /* application related resources */
-  applicationSecrets: secretsmanager.ISecret[]
+  applicationSecrets: ISecret[]
 
   /* rest restApi related resources */
   apiToLambdaTargetRestApi: ApiToLambdaTargetRestApiType
@@ -179,7 +185,7 @@ export class ApiToLambdaTarget extends CommonConstruct {
   }
 
   protected resolveApiToLambdaTargetFunction() {
-    this.apiToLambdaTargetRestApi.lambda = lambda.Function.fromFunctionName(
+    this.apiToLambdaTargetRestApi.lambda = Function.fromFunctionName(
       this,
       `${this.id}-lambda`,
       this.props.lambdaFunctionName
@@ -191,17 +197,17 @@ export class ApiToLambdaTarget extends CommonConstruct {
    */
   protected createApiToLambdaTargetRestApi() {
     if (this.props.api.useExisting &amp;&amp; this.props.api.importedRestApiRef) {
-      this.apiToLambdaTargetRestApi.api = apig.RestApi.fromRestApiId(
+      this.apiToLambdaTargetRestApi.api = RestApi.fromRestApiId(
         this,
         `${this.id}-rest-api`,
-        cdk.Fn.importValue(this.props.api.importedRestApiRef)
+        Fn.importValue(this.props.api.importedRestApiRef)
       )
       return
     }
 
     const accessLogGroup = this.logManager.createLogGroup(`${this.id}-rest-api-access-log`, this, {
       logGroupName: `/custom/api/${this.id}-rest-api-access`,
-      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      removalPolicy: RemovalPolicy.DESTROY,
     })
 
     this.props.api.restApi = {
@@ -214,7 +220,7 @@ export class ApiToLambdaTarget extends CommonConstruct {
           ],
         },
         deployOptions: {
-          accessLogDestination: new apig.LogGroupLogDestination(accessLogGroup),
+          accessLogDestination: new LogGroupLogDestination(accessLogGroup),
         },
       },
     }
@@ -238,9 +244,9 @@ export class ApiToLambdaTarget extends CommonConstruct {
 
     let rootResource
     if (this.props.api.withResource &amp;&amp; this.props.api.importedRestApiRootResourceRef) {
-      rootResource = apig.Resource.fromResourceAttributes(this, `${this.id}-root-resource`, {
+      rootResource = Resource.fromResourceAttributes(this, `${this.id}-root-resource`, {
         path: '/',
-        resourceId: cdk.Fn.importValue(this.props.api.importedRestApiRootResourceRef),
+        resourceId: Fn.importValue(this.props.api.importedRestApiRootResourceRef),
         restApi: this.apiToLambdaTargetRestApi.api,
       })
     } else {
@@ -251,7 +257,7 @@ export class ApiToLambdaTarget extends CommonConstruct {
   }
 
   protected createApiToLambdaTargetPolicy() {
-    this.apiToLambdaTargetRestApi.policy = new iam.PolicyDocument({
+    this.apiToLambdaTargetRestApi.policy = new PolicyDocument({
       statements: [
         this.iamManager.statementForPutEvents(),
         this.iamManager.statementForInvokeLambda([this.apiToLambdaTargetRestApi.lambda.functionArn]),
@@ -265,8 +271,8 @@ export class ApiToLambdaTarget extends CommonConstruct {
   protected createApiToLambdaTargetRole() {
     if (!this.apiToLambdaTargetRestApi.policy) throw 'Policy undefined'
 
-    this.apiToLambdaTargetRestApi.role = new iam.Role(this, `${this.id}-rest-api-role`, {
-      assumedBy: new iam.ServicePrincipal('apigateway.amazonaws.com'),
+    this.apiToLambdaTargetRestApi.role = new Role(this, `${this.id}-rest-api-role`, {
+      assumedBy: new ServicePrincipal('apigateway.amazonaws.com'),
       inlinePolicies: { policy: this.apiToLambdaTargetRestApi.policy },
     })
   }
@@ -275,7 +281,7 @@ export class ApiToLambdaTarget extends CommonConstruct {
    * @summary Method to create api integration resource method
    */
   protected createApiToLambdaTargetIntegration() {
-    this.apiToLambdaTargetRestApi.integration = new apig.LambdaIntegration(this.apiToLambdaTargetRestApi.lambda, {
+    this.apiToLambdaTargetRestApi.integration = new LambdaIntegration(this.apiToLambdaTargetRestApi.lambda, {
       allowTestInvoke: true,
       credentialsRole: this.apiToLambdaTargetRestApi.role,
     })
@@ -319,7 +325,7 @@ export class ApiToLambdaTarget extends CommonConstruct {
    */
   protected createApiBasePathMapping() {
     if (this.props.api.useExisting) return
-    new apig.BasePathMapping(this, `${this.id}-base-bath-mapping`, {
+    new BasePathMapping(this, `${this.id}-base-bath-mapping`, {
       basePath: '',
       domainName: this.apiToLambdaTargetRestApi.domain,
       restApi: this.apiToLambdaTargetRestApi.api,

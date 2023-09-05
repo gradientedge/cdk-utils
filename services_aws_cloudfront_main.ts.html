@@ -48,30 +48,44 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import * as cdk from 'aws-cdk-lib'
-import * as acm from 'aws-cdk-lib/aws-certificatemanager'
-import * as cloudfront from 'aws-cdk-lib/aws-cloudfront'
-import * as origins from 'aws-cdk-lib/aws-cloudfront-origins'
-import * as ec2 from 'aws-cdk-lib/aws-ec2'
-import * as efs from 'aws-cdk-lib/aws-efs'
-import * as iam from 'aws-cdk-lib/aws-iam'
-import * as lambda from 'aws-cdk-lib/aws-lambda'
-import * as s3 from 'aws-cdk-lib/aws-s3'
-import * as cr from 'aws-cdk-lib/custom-resources'
+            <pre class="prettyprint source linenums"><code>import { Duration, Tags } from 'aws-cdk-lib'
+import { ICertificate } from 'aws-cdk-lib/aws-certificatemanager'
+import * as cf from 'aws-cdk-lib/aws-cloudfront'
+import {
+  CloudFrontWebDistribution,
+  Distribution,
+  Function,
+  FunctionAssociation,
+  FunctionCode,
+  HttpVersion,
+  IResponseHeadersPolicy,
+  OriginAccessIdentity,
+  PriceClass,
+  SSLMethod,
+  SecurityPolicyProtocol,
+  ViewerCertificate,
+} from 'aws-cdk-lib/aws-cloudfront'
+import { HttpOrigin, S3Origin } from 'aws-cdk-lib/aws-cloudfront-origins'
+import { ISecurityGroup, IVpc } from 'aws-cdk-lib/aws-ec2'
+import { IAccessPoint } from 'aws-cdk-lib/aws-efs'
+import { Role } from 'aws-cdk-lib/aws-iam'
+import { AssetCode, FileSystem, ILayerVersion } from 'aws-cdk-lib/aws-lambda'
+import { IBucket } from 'aws-cdk-lib/aws-s3'
+import { AwsCustomResource, AwsCustomResourcePolicy, PhysicalResourceId } from 'aws-cdk-lib/custom-resources'
 import { CommonConstruct, CommonStack } from '../../../common'
-import * as utils from '../../../utils'
-import { CloudfrontFunctionProps, CloudFrontProps, DistributionProps } from './types'
+import { createCfnOutput } from '../../../utils'
 import { LambdaEdgeProps } from '../lambda'
+import { CloudFrontProps, CloudfrontFunctionProps, DistributionProps } from './types'
 
 /**
- * @classdesc Provides operations on AWS CloudFront.
+ * @classdesc Provides operations on AWS
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
  * @example
  * import { CommonConstruct } from '@gradientedge/cdk-utils'
  *
  * class CustomConstruct extends CommonConstruct {
- *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
+ *   constructor(parent: Construct, id: string, props: common.CommonStackProps) {
  *     super(parent, id, props)
  *     this.props = props
  *     this.cloudFrontManager.createCloudFrontDistribution(
@@ -87,8 +101,8 @@ import { LambdaEdgeProps } from '../lambda'
  * @see [CDK CloudFront Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_cloudfront-readme.html}
  */
 export class CloudFrontManager {
-  public createOriginAccessIdentity(id: string, scope: CommonConstruct, accessBucket?: s3.IBucket) {
-    const oai = new cloudfront.OriginAccessIdentity(scope, `${id}`, {
+  public createOriginAccessIdentity(id: string, scope: CommonConstruct, accessBucket?: IBucket) {
+    const oai = new OriginAccessIdentity(scope, `${id}`, {
       comment: `${id} - ${scope.props.stage} stage`,
     })
     if (accessBucket) accessBucket.grantRead(oai)
@@ -111,24 +125,24 @@ export class CloudFrontManager {
     id: string,
     scope: CommonConstruct,
     props: CloudFrontProps,
-    siteBucket?: s3.IBucket,
-    logBucket?: s3.IBucket,
-    oai?: cloudfront.OriginAccessIdentity,
-    certificate?: acm.ICertificate,
+    siteBucket?: IBucket,
+    logBucket?: IBucket,
+    oai?: OriginAccessIdentity,
+    certificate?: ICertificate,
     aliases?: string[]
   ) {
     if (!siteBucket) throw `SiteBucket not defined for ${id}`
     if (!certificate) throw `Certificate not defined for ${id}`
     if (!props) throw `CloudFront props undefined for ${id}`
 
-    const distribution = new cloudfront.CloudFrontWebDistribution(scope, `${id}`, {
+    const distribution = new CloudFrontWebDistribution(scope, `${id}`, {
       comment: `${id} - ${scope.props.stage} stage`,
       defaultRootObject: props.defaultRootObject,
       enableIpV6: props.enableIpV6,
       enabled: props.enabled ?? true,
       errorConfigurations: props.errorConfigurations,
       geoRestriction: props.geoRestriction,
-      httpVersion: props.httpVersion ?? cloudfront.HttpVersion.HTTP2,
+      httpVersion: props.httpVersion ?? HttpVersion.HTTP2,
       loggingConfig: {
         bucket: logBucket,
         prefix: 'cloudfront/',
@@ -142,23 +156,23 @@ export class CloudFrontManager {
           },
         },
       ],
-      priceClass: props.priceClass ?? cloudfront.PriceClass.PRICE_CLASS_ALL,
-      viewerCertificate: cloudfront.ViewerCertificate.fromAcmCertificate(certificate, {
+      priceClass: props.priceClass ?? PriceClass.PRICE_CLASS_ALL,
+      viewerCertificate: ViewerCertificate.fromAcmCertificate(certificate, {
         aliases: aliases,
-        securityPolicy: cloudfront.SecurityPolicyProtocol.TLS_V1_1_2016,
-        sslMethod: cloudfront.SSLMethod.SNI,
+        securityPolicy: SecurityPolicyProtocol.TLS_V1_1_2016,
+        sslMethod: SSLMethod.SNI,
       }),
       webACLId: props.webACLId,
     })
 
     if (props.tags &amp;&amp; props.tags.length > 0) {
       props.tags.forEach(tag => {
-        cdk.Tags.of(distribution).add(tag.key, tag.value)
+        Tags.of(distribution).add(tag.key, tag.value)
       })
     }
 
-    utils.createCfnOutput(`${id}-distributionId`, scope, distribution.distributionId)
-    utils.createCfnOutput(`${id}-distributionDomainName`, scope, distribution.distributionDomainName)
+    createCfnOutput(`${id}-distributionId`, scope, distribution.distributionId)
+    createCfnOutput(`${id}-distributionDomainName`, scope, distribution.distributionDomainName)
 
     return distribution
   }
@@ -180,15 +194,15 @@ export class CloudFrontManager {
     id: string,
     scope: CommonConstruct,
     props: DistributionProps,
-    origin: origins.S3Origin,
-    siteBucket: s3.IBucket,
-    logBucket?: s3.IBucket,
-    oai?: cloudfront.OriginAccessIdentity,
-    certificate?: acm.ICertificate,
+    origin: S3Origin,
+    siteBucket: IBucket,
+    logBucket?: IBucket,
+    oai?: OriginAccessIdentity,
+    certificate?: ICertificate,
     aliases?: string[],
-    defaultFunctionAssociations?: cloudfront.FunctionAssociation[]
+    defaultFunctionAssociations?: FunctionAssociation[]
   ) {
-    const distribution = new cloudfront.Distribution(scope, `${id}`, {
+    const distribution = new Distribution(scope, `${id}`, {
       additionalBehaviors: props.additionalBehaviors,
       certificate: certificate,
       comment: `${id} - ${scope.props.stage} stage`,
@@ -207,23 +221,23 @@ export class CloudFrontManager {
       enabled: props.enabled ?? true,
       errorResponses: props.errorResponses,
       geoRestriction: props.geoRestriction,
-      httpVersion: props.httpVersion ?? cloudfront.HttpVersion.HTTP2,
+      httpVersion: props.httpVersion ?? HttpVersion.HTTP2,
       logBucket: logBucket,
       logFilePrefix: props.logFilePrefix ?? `edge/`,
       logIncludesCookies: props.logIncludesCookies ?? true,
-      minimumProtocolVersion: props.minimumProtocolVersion ?? cloudfront.SecurityPolicyProtocol.TLS_V1_2_2021,
-      priceClass: props.priceClass ?? cloudfront.PriceClass.PRICE_CLASS_ALL,
+      minimumProtocolVersion: props.minimumProtocolVersion ?? SecurityPolicyProtocol.TLS_V1_2_2021,
+      priceClass: props.priceClass ?? PriceClass.PRICE_CLASS_ALL,
       webAclId: props.webAclId,
     })
 
     if (props.tags &amp;&amp; props.tags.length > 0) {
       props.tags.forEach(tag => {
-        cdk.Tags.of(distribution).add(tag.key, tag.value)
+        Tags.of(distribution).add(tag.key, tag.value)
       })
     }
 
-    utils.createCfnOutput(`${id}-distributionId`, scope, distribution.distributionId)
-    utils.createCfnOutput(`${id}-distributionDomainName`, scope, distribution.distributionDomainName)
+    createCfnOutput(`${id}-distributionId`, scope, distribution.distributionId)
+    createCfnOutput(`${id}-distributionDomainName`, scope, distribution.distributionDomainName)
 
     return distribution
   }
@@ -244,14 +258,14 @@ export class CloudFrontManager {
     id: string,
     scope: CommonConstruct,
     props: DistributionProps,
-    origin: origins.HttpOrigin,
+    origin: HttpOrigin,
     domainNames: string[],
-    logBucket?: s3.IBucket,
-    certificate?: acm.ICertificate,
-    defaultFunctionAssociations?: cloudfront.FunctionAssociation[],
-    responseHeadersPolicy?: cloudfront.IResponseHeadersPolicy
+    logBucket?: IBucket,
+    certificate?: ICertificate,
+    defaultFunctionAssociations?: FunctionAssociation[],
+    responseHeadersPolicy?: IResponseHeadersPolicy
   ) {
-    const distribution = new cloudfront.Distribution(scope, `${id}`, {
+    const distribution = new Distribution(scope, `${id}`, {
       additionalBehaviors: props.additionalBehaviors,
       certificate: certificate,
       comment: `${id} - ${scope.props.stage} stage`,
@@ -271,23 +285,23 @@ export class CloudFrontManager {
       enabled: props.enabled ?? true,
       errorResponses: props.errorResponses,
       geoRestriction: props.geoRestriction,
-      httpVersion: props.httpVersion ?? cloudfront.HttpVersion.HTTP2,
+      httpVersion: props.httpVersion ?? HttpVersion.HTTP2,
       logBucket: logBucket,
       logFilePrefix: props.logFilePrefix ?? `edge/`,
       logIncludesCookies: props.logIncludesCookies ?? true,
-      minimumProtocolVersion: props.minimumProtocolVersion ?? cloudfront.SecurityPolicyProtocol.TLS_V1_2_2021,
-      priceClass: props.priceClass ?? cloudfront.PriceClass.PRICE_CLASS_ALL,
+      minimumProtocolVersion: props.minimumProtocolVersion ?? SecurityPolicyProtocol.TLS_V1_2_2021,
+      priceClass: props.priceClass ?? PriceClass.PRICE_CLASS_ALL,
       webAclId: props.webAclId,
     })
 
     if (props.tags &amp;&amp; props.tags.length > 0) {
       props.tags.forEach(tag => {
-        cdk.Tags.of(distribution).add(tag.key, tag.value)
+        Tags.of(distribution).add(tag.key, tag.value)
       })
     }
 
-    utils.createCfnOutput(`${id}-distributionId`, scope, distribution.distributionId)
-    utils.createCfnOutput(`${id}-distributionDomainName`, scope, distribution.distributionDomainName)
+    createCfnOutput(`${id}-distributionId`, scope, distribution.distributionId)
+    createCfnOutput(`${id}-distributionDomainName`, scope, distribution.distributionDomainName)
 
     return distribution
   }
@@ -310,24 +324,24 @@ export class CloudFrontManager {
     id: string,
     scope: CommonConstruct,
     props: LambdaEdgeProps,
-    layers: lambda.ILayerVersion[],
-    code: lambda.AssetCode,
-    role: iam.Role,
+    layers: ILayerVersion[],
+    code: AssetCode,
+    role: Role,
     environment?: any,
-    vpc?: ec2.IVpc,
-    securityGroups?: ec2.ISecurityGroup[],
-    accessPoint?: efs.IAccessPoint,
+    vpc?: IVpc,
+    securityGroups?: ISecurityGroup[],
+    accessPoint?: IAccessPoint,
     mountPath?: string
   ) {
     if (!props) throw `EdgeFunction props undefined for ${id}`
 
-    const edgeFunction = new cloudfront.experimental.EdgeFunction(scope, `${id}`, {
+    const edgeFunction = new cf.experimental.EdgeFunction(scope, `${id}`, {
       code: code,
       description: props.description,
       environment: {
         ...environment,
       },
-      filesystem: accessPoint ? lambda.FileSystem.fromEfsAccessPoint(accessPoint, mountPath ?? '/mnt/msg') : undefined,
+      filesystem: accessPoint ? FileSystem.fromEfsAccessPoint(accessPoint, mountPath ?? '/mnt/msg') : undefined,
       functionName: `${props.functionName}-${scope.props.stage}`,
       handler: props.handler ?? 'index.handler',
       layers: layers,
@@ -338,19 +352,19 @@ export class CloudFrontManager {
       runtime: props.runtime ?? scope.props.nodejsRuntime ?? CommonStack.NODEJS_RUNTIME,
       securityGroups: securityGroups,
       stackId: `${id}-stack-id-${scope.props.stage}`,
-      timeout: props.timeoutInSecs ? cdk.Duration.seconds(props.timeoutInSecs) : cdk.Duration.minutes(1),
+      timeout: props.timeoutInSecs ? Duration.seconds(props.timeoutInSecs) : Duration.minutes(1),
       vpc: vpc,
     })
 
     if (props.tags &amp;&amp; props.tags.length > 0) {
       props.tags.forEach(tag => {
-        cdk.Tags.of(edgeFunction).add(tag.key, tag.value)
+        Tags.of(edgeFunction).add(tag.key, tag.value)
       })
     }
 
-    utils.createCfnOutput(`${id}-edgeArn`, scope, edgeFunction.edgeArn)
-    utils.createCfnOutput(`${id}-edgeFunctionArn`, scope, edgeFunction.functionArn)
-    utils.createCfnOutput(`${id}-edgeFunctionName`, scope, edgeFunction.functionName)
+    createCfnOutput(`${id}-edgeArn`, scope, edgeFunction.edgeArn)
+    createCfnOutput(`${id}-edgeFunctionArn`, scope, edgeFunction.functionArn)
+    createCfnOutput(`${id}-edgeFunctionName`, scope, edgeFunction.functionName)
 
     return edgeFunction
   }
@@ -370,7 +384,7 @@ export class CloudFrontManager {
     distributionId: string,
     paths?: string
   ) {
-    new cr.AwsCustomResource(scope, `${id}-trigger-codebuild-${new Date().getTime()}`, {
+    new AwsCustomResource(scope, `${id}-trigger-codebuild-${new Date().getTime()}`, {
       onCreate: {
         action: 'startBuild',
         parameters: {
@@ -382,10 +396,10 @@ export class CloudFrontManager {
             paths
           ).projectName,
         },
-        physicalResourceId: cr.PhysicalResourceId.fromResponse('build.id'),
+        physicalResourceId: PhysicalResourceId.fromResponse('build.id'),
         service: 'CodeBuild',
       },
-      policy: cr.AwsCustomResourcePolicy.fromSdkCalls({ resources: cr.AwsCustomResourcePolicy.ANY_RESOURCE }),
+      policy: AwsCustomResourcePolicy.fromSdkCalls({ resources: AwsCustomResourcePolicy.ANY_RESOURCE }),
     })
   }
 
@@ -396,16 +410,16 @@ export class CloudFrontManager {
    * @param props
    */
   public createCloudfrontFunction(id: string, scope: CommonConstruct, props: CloudfrontFunctionProps) {
-    const cloudfrontFunction = new cloudfront.Function(scope, `${id}`, {
-      code: cloudfront.FunctionCode.fromFile({
+    const cloudfrontFunction = new Function(scope, `${id}`, {
+      code: FunctionCode.fromFile({
         filePath: props.functionFilePath,
       }),
       comment: props.comment,
       functionName: `${props.functionName}-${scope.props.stage}`,
     })
 
-    utils.createCfnOutput(`${id}-functionArn`, scope, cloudfrontFunction.functionArn)
-    utils.createCfnOutput(`${id}-functionName`, scope, cloudfrontFunction.functionName)
+    createCfnOutput(`${id}-functionArn`, scope, cloudfrontFunction.functionArn)
+    createCfnOutput(`${id}-functionName`, scope, cloudfrontFunction.functionName)
 
     return cloudfrontFunction
   }

@@ -48,14 +48,14 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import * as cdk from 'aws-cdk-lib'
-import * as ec2 from 'aws-cdk-lib/aws-ec2'
-import * as elasticache from 'aws-cdk-lib/aws-elasticache'
-import * as iam from 'aws-cdk-lib/aws-iam'
+            <pre class="prettyprint source linenums"><code>import { Fn } from 'aws-cdk-lib'
+import { ISecurityGroup, IVpc, Peer, Port, SecurityGroup } from 'aws-cdk-lib/aws-ec2'
+import { CfnReplicationGroup } from 'aws-cdk-lib/aws-elasticache'
+import { ManagedPolicy } from 'aws-cdk-lib/aws-iam'
 import { Construct } from 'constructs'
 import { RestApiLambda } from '..'
+import { createCfnOutput } from '../../utils'
 import { RestApiLambdaWithCacheProps } from './types'
-import * as utils from '../../utils'
 
 /**
  * @classdesc Provides a construct to create and deploy a RestApi API as Lambda with Caching
@@ -80,9 +80,9 @@ export abstract class RestApiLambdaWithCache extends RestApiLambda {
   id: string
 
   /* restApiLambda resources */
-  restApivpc: ec2.IVpc
-  restApiCache: elasticache.CfnReplicationGroup
-  restApiSecurityGroup: ec2.ISecurityGroup
+  restApivpc: IVpc
+  restApiCache: CfnReplicationGroup
+  restApiSecurityGroup: ISecurityGroup
   restApiSecurityGroupExportName: string
 
   protected constructor(parent: Construct, id: string, props: RestApiLambdaWithCacheProps) {
@@ -115,20 +115,20 @@ export abstract class RestApiLambdaWithCache extends RestApiLambda {
    */
   protected resolveSecurityGroup() {
     if (this.props.securityGroupExportName) {
-      this.restApiSecurityGroup = ec2.SecurityGroup.fromSecurityGroupId(
+      this.restApiSecurityGroup = SecurityGroup.fromSecurityGroupId(
         this,
         `${this.id}-security-group`,
-        cdk.Fn.importValue(this.props.securityGroupExportName)
+        Fn.importValue(this.props.securityGroupExportName)
       )
     } else {
-      this.restApiSecurityGroup = new ec2.SecurityGroup(this, `${this.id}-security-group-${this.props.stage}`, {
+      this.restApiSecurityGroup = new SecurityGroup(this, `${this.id}-security-group-${this.props.stage}`, {
         securityGroupName: `${this.id}-security-group-${this.props.stage}`,
         vpc: this.restApivpc,
       })
 
-      this.restApiSecurityGroup.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.allTraffic(), 'All Traffic')
+      this.restApiSecurityGroup.addIngressRule(Peer.anyIpv4(), Port.allTraffic(), 'All Traffic')
 
-      utils.createCfnOutput(`${this.id}-security-group-id`, this, this.restApiSecurityGroup.securityGroupId)
+      createCfnOutput(`${this.id}-security-group-id`, this, this.restApiSecurityGroup.securityGroupId)
     }
   }
 
@@ -168,7 +168,7 @@ export abstract class RestApiLambdaWithCache extends RestApiLambda {
     super.createLambdaRole()
 
     this.restApiLambdaRole.addManagedPolicy(
-      iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaVPCAccessExecutionRole')
+      ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaVPCAccessExecutionRole')
     )
   }
 

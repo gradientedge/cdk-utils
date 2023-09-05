@@ -148,7 +148,7 @@
     <pre class="prettyprint"><code>import { CommonConstruct } from '@gradientedge/cdk-utils'
 
 class CustomConstruct extends CommonConstruct {
-  constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
+  constructor(parent: Construct, id: string, props: common.CommonStackProps) {
     super(parent, id, props)
     this.props = props
     this.ecsManager.createEcsCluster('MyCluster', this, vpc)
@@ -682,7 +682,7 @@ class CustomConstruct extends CommonConstruct {
     <h4 class="name" id="createLoadBalancedFargateService"><span class="type-signature"></span>createLoadBalancedFargateService<span class="signature">(id, scope, props, cluster, logGroup)</span><span class="type-signature"></span></h4>
 
     
-    <p class="summary usertext"><p>Method to create an application loadbalanced ecs fargate task</p></p>
+    <p class="summary usertext"><p>Method to create an application load balanced ecs fargate task</p></p>
     
 
 

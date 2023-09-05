@@ -48,14 +48,24 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import * as cdk from 'aws-cdk-lib'
-import * as ec2 from 'aws-cdk-lib/aws-ec2'
-import * as ecs from 'aws-cdk-lib/aws-ecs'
-import * as ecsPatterns from 'aws-cdk-lib/aws-ecs-patterns'
-import * as iam from 'aws-cdk-lib/aws-iam'
-import * as logs from 'aws-cdk-lib/aws-logs'
-import * as utils from '../../../utils'
+            <pre class="prettyprint source linenums"><code>import { Duration, Tags } from 'aws-cdk-lib'
+import { IVpc } from 'aws-cdk-lib/aws-ec2'
+import {
+  Cluster,
+  Compatibility,
+  ContainerImage,
+  CpuArchitecture,
+  ICluster,
+  LogDriver,
+  NetworkMode,
+  OperatingSystemFamily,
+  TaskDefinition,
+} from 'aws-cdk-lib/aws-ecs'
+import { ApplicationLoadBalancedFargateService } from 'aws-cdk-lib/aws-ecs-patterns'
+import { Role } from 'aws-cdk-lib/aws-iam'
+import { ILogGroup } from 'aws-cdk-lib/aws-logs'
 import { CommonConstruct } from '../../../common'
+import { createCfnOutput } from '../../../utils'
 import { EcsApplicationLoadBalancedFargateServiceProps, EcsClusterProps, EcsTaskProps } from './types'
 
 /**
@@ -66,7 +76,7 @@ import { EcsApplicationLoadBalancedFargateServiceProps, EcsClusterProps, EcsTask
  * import { CommonConstruct } from '@gradientedge/cdk-utils'
  *
  * class CustomConstruct extends CommonConstruct {
- *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
+ *   constructor(parent: Construct, id: string, props: common.CommonStackProps) {
  *     super(parent, id, props)
  *     this.props = props
  *     this.ecsManager.createEcsCluster('MyCluster', this, vpc)
@@ -82,10 +92,10 @@ export class EcsManager {
    * @param props
    * @param vpc
    */
-  public createEcsCluster(id: string, scope: CommonConstruct, props: EcsClusterProps, vpc: ec2.IVpc) {
+  public createEcsCluster(id: string, scope: CommonConstruct, props: EcsClusterProps, vpc: IVpc) {
     if (!props) throw `Ecs Cluster props undefined for ${id}`
 
-    const ecsCluster = new ecs.Cluster(scope, `${id}`, {
+    const ecsCluster = new Cluster(scope, `${id}`, {
       capacity: props.capacity,
       clusterName: `${props.clusterName}-${scope.props.stage}`,
       containerInsights: props.containerInsights,
@@ -97,12 +107,12 @@ export class EcsManager {
 
     if (props.tags &amp;&amp; props.tags.length > 0) {
       props.tags.forEach(tag => {
-        cdk.Tags.of(ecsCluster).add(tag.key, tag.value)
+        Tags.of(ecsCluster).add(tag.key, tag.value)
       })
     }
 
-    utils.createCfnOutput(`${id}-clusterArn`, scope, ecsCluster.clusterArn)
-    utils.createCfnOutput(`${id}-clusterName`, scope, ecsCluster.clusterName)
+    createCfnOutput(`${id}-clusterArn`, scope, ecsCluster.clusterArn)
+    createCfnOutput(`${id}-clusterName`, scope, ecsCluster.clusterName)
 
     return ecsCluster
   }
@@ -124,18 +134,18 @@ export class EcsManager {
     id: string,
     scope: CommonConstruct,
     props: EcsTaskProps,
-    cluster: ecs.ICluster,
-    role: iam.Role,
-    logGroup: logs.ILogGroup,
-    containerImage: ecs.ContainerImage,
+    cluster: ICluster,
+    role: Role,
+    logGroup: ILogGroup,
+    containerImage: ContainerImage,
     environment?: any,
     secrets?: any,
     command?: string[]
   ) {
     if (!props) throw `EcsTask props undefined for ${id}`
 
-    const ecsTask = new ecs.TaskDefinition(scope, `${id}`, {
-      compatibility: ecs.Compatibility.FARGATE,
+    const ecsTask = new TaskDefinition(scope, `${id}`, {
+      compatibility: Compatibility.FARGATE,
       cpu: props.cpu,
       ephemeralStorageGiB: props.ephemeralStorageGiB,
       executionRole: role,
@@ -143,13 +153,13 @@ export class EcsManager {
       inferenceAccelerators: props.inferenceAccelerators,
       ipcMode: props.ipcMode,
       memoryMiB: props.memoryMiB,
-      networkMode: ecs.NetworkMode.AWS_VPC,
+      networkMode: NetworkMode.AWS_VPC,
       pidMode: props.pidMode,
       placementConstraints: props.placementConstraints,
       proxyConfiguration: props.proxyConfiguration,
       runtimePlatform: {
-        cpuArchitecture: props.runtimePlatform?.cpuArchitecture ?? ecs.CpuArchitecture.X86_64,
-        operatingSystemFamily: props.runtimePlatform?.operatingSystemFamily ?? ecs.OperatingSystemFamily.LINUX,
+        cpuArchitecture: props.runtimePlatform?.cpuArchitecture ?? CpuArchitecture.X86_64,
+        operatingSystemFamily: props.runtimePlatform?.operatingSystemFamily ?? OperatingSystemFamily.LINUX,
       },
       taskRole: role,
       volumes: props.volumes,
@@ -161,7 +171,7 @@ export class EcsManager {
       disableNetworking: false,
       environment: environment,
       image: containerImage,
-      logging: ecs.LogDriver.awsLogs({
+      logging: LogDriver.awsLogs({
         logGroup: logGroup,
         logRetention: props.logging?.logRetention,
         multilinePattern: props.logging?.multilinePattern,
@@ -174,17 +184,17 @@ export class EcsManager {
 
     if (props.tags &amp;&amp; props.tags.length > 0) {
       props.tags.forEach(tag => {
-        cdk.Tags.of(ecsTask).add(tag.key, tag.value)
+        Tags.of(ecsTask).add(tag.key, tag.value)
       })
     }
 
-    utils.createCfnOutput(`${id}-taskArn`, scope, ecsTask.taskDefinitionArn)
+    createCfnOutput(`${id}-taskArn`, scope, ecsTask.taskDefinitionArn)
 
     return ecsTask
   }
 
   /**
-   * @summary Method to create an application loadbalanced ecs fargate task
+   * @summary Method to create an application load balanced ecs fargate task
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props
@@ -195,13 +205,14 @@ export class EcsManager {
     id: string,
     scope: CommonConstruct,
     props: EcsApplicationLoadBalancedFargateServiceProps,
-    cluster: ecs.ICluster,
-    logGroup: logs.ILogGroup
+    cluster: ICluster,
+    logGroup: ILogGroup
   ) {
-    if (!props) throw `EcsLoadbalanced Fargate Serivice props undefined for ${id}`
-    if (!props.taskImageOptions) throw `TaskImageOptions for EcsLoadbalanced Fargate Serivice props undefined for ${id}`
+    if (!props) throw `Ecs Load balanced Fargate Service props undefined for ${id}`
+    if (!props.taskImageOptions)
+      throw `TaskImageOptions for Ecs Load balanced Fargate Service props undefined for ${id}`
 
-    const fargateService = new ecsPatterns.ApplicationLoadBalancedFargateService(scope, `${id}-ecs-service`, {
+    const fargateService = new ApplicationLoadBalancedFargateService(scope, `${id}-ecs-service`, {
       assignPublicIp: props.assignPublicIp ?? true,
       certificate: props.certificate,
       cluster: cluster,
@@ -210,13 +221,13 @@ export class EcsManager {
       domainName: props.domainName,
       domainZone: props.domainZone,
       enableECSManagedTags: true,
-      healthCheckGracePeriod: props.healthCheckGracePeriod ?? cdk.Duration.seconds(60),
+      healthCheckGracePeriod: props.healthCheckGracePeriod ?? Duration.seconds(60),
       listenerPort: props.listenerPort,
       loadBalancerName: `${id}-${scope.props.stage}`,
       memoryLimitMiB: props.memoryLimitMiB,
       runtimePlatform: {
-        cpuArchitecture: props.runtimePlatform?.cpuArchitecture ?? ecs.CpuArchitecture.X86_64,
-        operatingSystemFamily: props.runtimePlatform?.operatingSystemFamily ?? ecs.OperatingSystemFamily.LINUX,
+        cpuArchitecture: props.runtimePlatform?.cpuArchitecture ?? CpuArchitecture.X86_64,
+        operatingSystemFamily: props.runtimePlatform?.operatingSystemFamily ?? OperatingSystemFamily.LINUX,
       },
       serviceName: `${id}-${scope.props.stage}`,
       taskImageOptions: {
@@ -227,7 +238,7 @@ export class EcsManager {
         image: props.taskImageOptions.image,
         logDriver:
           props.taskImageOptions?.logDriver ??
-          ecs.LogDriver.awsLogs({
+          LogDriver.awsLogs({
             logGroup: logGroup,
             logRetention: props.logging?.logRetention,
             multilinePattern: props.logging?.multilinePattern,
@@ -244,11 +255,11 @@ export class EcsManager {
         healthyGrpcCodes: props.healthCheck.healthyGrpcCodes,
         healthyHttpCodes: props.healthCheck.healthyHttpCodes,
         healthyThresholdCount: props.healthCheck.healthyThresholdCount,
-        interval: props.healthCheck.interval ?? cdk.Duration.seconds(props.healthCheck.intervalInSecs),
+        interval: props.healthCheck.interval ?? Duration.seconds(props.healthCheck.intervalInSecs),
         path: props.healthCheck.path ?? '/',
         port: props.healthCheck.port,
         protocol: props.healthCheck.protocol,
-        timeout: props.healthCheck.timeout ?? cdk.Duration.seconds(props.healthCheck.timeoutInSecs),
+        timeout: props.healthCheck.timeout ?? Duration.seconds(props.healthCheck.timeoutInSecs),
         unhealthyThresholdCount: props.healthCheck.unhealthyThresholdCount,
       })
     }

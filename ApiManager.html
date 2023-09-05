@@ -148,7 +148,7 @@
     <pre class="prettyprint"><code>import { CommonConstruct } from '@gradientedge/cdk-utils'
 
 class CustomConstruct extends CommonConstruct {
-  constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
+  constructor(parent: Construct, id: string, props: common.CommonStackProps) {
     super(parent, id, props)
     this.props = props
     const lambdaFunction = this.lambdaManager.createLambdaFunction('MyFunction', this, role, layers, code)

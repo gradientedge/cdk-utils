@@ -48,23 +48,43 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import * as _ from 'lodash'
-import * as cdk from 'aws-cdk-lib'
-import * as certificateManager from 'aws-cdk-lib/aws-certificatemanager'
-import * as cloudfront from 'aws-cdk-lib/aws-cloudfront'
-import * as origins from 'aws-cdk-lib/aws-cloudfront-origins'
-import * as ec2 from 'aws-cdk-lib/aws-ec2'
-import * as ecs from 'aws-cdk-lib/aws-ecs'
-import * as ecsPatterns from 'aws-cdk-lib/aws-ecs-patterns'
-import * as elb from 'aws-cdk-lib/aws-elasticloadbalancingv2'
-import * as iam from 'aws-cdk-lib/aws-iam'
-import * as logs from 'aws-cdk-lib/aws-logs'
-import * as route53 from 'aws-cdk-lib/aws-route53'
-import * as s3 from 'aws-cdk-lib/aws-s3'
-import * as efs from 'aws-cdk-lib/aws-efs'
+            <pre class="prettyprint source linenums"><code>import { Duration } from 'aws-cdk-lib'
+import { ICertificate } from 'aws-cdk-lib/aws-certificatemanager'
+import {
+  CachePolicy,
+  Distribution,
+  FunctionAssociation,
+  FunctionEventType,
+  IFunction,
+  OriginProtocolPolicy,
+  OriginRequestPolicy,
+  ResponseHeadersPolicy,
+} from 'aws-cdk-lib/aws-cloudfront'
+import { HttpOrigin } from 'aws-cdk-lib/aws-cloudfront-origins'
+import { IVpc } from 'aws-cdk-lib/aws-ec2'
+import {
+  AssetImage,
+  Cluster,
+  ContainerImage,
+  FargateService,
+  FargateTaskDefinition,
+  LogDriver,
+} from 'aws-cdk-lib/aws-ecs'
+import { ApplicationLoadBalancedFargateService } from 'aws-cdk-lib/aws-ecs-patterns'
+import { FileSystem } from 'aws-cdk-lib/aws-efs'
+import {
+  ApplicationListener,
+  ApplicationLoadBalancer,
+  ApplicationTargetGroup,
+} from 'aws-cdk-lib/aws-elasticloadbalancingv2'
+import { PolicyDocument, PolicyStatement, Role } from 'aws-cdk-lib/aws-iam'
+import { LogGroup } from 'aws-cdk-lib/aws-logs'
+import { IHostedZone } from 'aws-cdk-lib/aws-route53'
+import { IBucket } from 'aws-cdk-lib/aws-s3'
 import { Construct } from 'constructs'
+import _ from 'lodash'
 import { CommonConstruct } from '../../common'
-import { SiteWithEcsBackendProps, SiteResponseHeadersPolicyProps, SiteCachePolicyProps } from './types'
+import { SiteCachePolicyProps, SiteResponseHeadersPolicyProps, SiteWithEcsBackendProps } from './types'
 
 /**
  * @classdesc Provides a construct to create and deploy a site hosted with an clustered ECS/ELB backend
@@ -87,35 +107,35 @@ export class SiteWithEcsBackend extends CommonConstruct {
   id: string
 
   /* site resources */
-  siteHostedZone: route53.IHostedZone
-  siteCertificate: certificateManager.ICertificate
-  siteRegionalCertificate: certificateManager.ICertificate
-  siteEcsPolicy: iam.PolicyDocument
-  siteEcsRole: iam.Role
+  siteHostedZone: IHostedZone
+  siteCertificate: ICertificate
+  siteRegionalCertificate: ICertificate
+  siteEcsPolicy: PolicyDocument
+  siteEcsRole: Role
   siteEcsEnvironment: { [key: string]: string }
-  siteVpc: ec2.IVpc
+  siteVpc: IVpc
   siteSecrets: any
-  siteEcsCluster: ecs.Cluster
-  siteEcsLogGroup: logs.LogGroup
+  siteEcsCluster: Cluster
+  siteEcsLogGroup: LogGroup
   siteEcsBuildArgs: any = {}
-  siteEcsContainerImage: ecs.AssetImage
-  siteEcsService: ecs.FargateService
-  siteEcsTaskDefinition: ecs.FargateTaskDefinition
-  siteEcsListener: elb.ApplicationListener
-  siteEcsLoadBalancer: elb.ApplicationLoadBalancer
-  siteEcsTargetGroup: elb.ApplicationTargetGroup
-  siteFileSystem: efs.FileSystem
-  siteLogBucket: s3.IBucket
-  siteOrigin: origins.HttpOrigin
-  siteDistribution: cloudfront.Distribution
+  siteEcsContainerImage: AssetImage
+  siteEcsService: FargateService
+  siteEcsTaskDefinition: FargateTaskDefinition
+  siteEcsListener: ApplicationListener
+  siteEcsLoadBalancer: ApplicationLoadBalancer
+  siteEcsTargetGroup: ApplicationTargetGroup
+  siteFileSystem: FileSystem
+  siteLogBucket: IBucket
+  siteOrigin: HttpOrigin
+  siteDistribution: Distribution
   siteInternalDomainName: string
   siteExternalDomainName: string
   siteDomainNames: string[]
-  siteCloudfrontFunction: cloudfront.Function
-  siteFunctionAssociations: cloudfront.FunctionAssociation[]
-  siteOriginRequestPolicy: cloudfront.OriginRequestPolicy
-  siteOriginResponseHeadersPolicy?: cloudfront.ResponseHeadersPolicy
-  siteCachePolicy: cloudfront.CachePolicy
+  siteCloudfrontFunction: IFunction
+  siteFunctionAssociations: FunctionAssociation[]
+  siteOriginRequestPolicy: OriginRequestPolicy
+  siteOriginResponseHeadersPolicy?: ResponseHeadersPolicy
+  siteCachePolicy: CachePolicy
 
   constructor(parent: Construct, id: string, props: SiteWithEcsBackendProps) {
     super(parent, id, props)
@@ -253,7 +273,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
    * @summary Method to create iam policy for ECS Task
    */
   protected createEcsPolicy() {
-    this.siteEcsPolicy = new iam.PolicyDocument({
+    this.siteEcsPolicy = new PolicyDocument({
       statements: [this.iamManager.statementForCreateAnyLogStream()],
     })
   }
@@ -306,16 +326,16 @@ export class SiteWithEcsBackend extends CommonConstruct {
    * Method to create container image for ECS task
    */
   protected createEcsContainerImage() {
-    this.siteEcsContainerImage = ecs.ContainerImage.fromAsset(this.props.siteEcsContainerImagePath, {
+    this.siteEcsContainerImage = ContainerImage.fromAsset(this.props.siteEcsContainerImagePath, {
       buildArgs: this.siteEcsBuildArgs,
     })
   }
 
   /**
-   * Method to create Application Loadbalanced ECS Fargate Service
+   * Method to create Application Load balanced ECS Fargate Service
    */
   protected createEcsService() {
-    const fargateService = new ecsPatterns.ApplicationLoadBalancedFargateService(this, `${this.id}-ecs-service`, {
+    const fargateService = new ApplicationLoadBalancedFargateService(this, `${this.id}-ecs-service`, {
       assignPublicIp: true,
       certificate: this.siteRegionalCertificate,
       cluster: this.siteEcsCluster,
@@ -324,7 +344,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
       domainName: this.siteInternalDomainName,
       domainZone: this.siteHostedZone,
       enableECSManagedTags: true,
-      healthCheckGracePeriod: cdk.Duration.seconds(60),
+      healthCheckGracePeriod: Duration.seconds(60),
       listenerPort: this.props.siteTask.listenerPort,
       loadBalancerName: this.props.siteTask.loadBalancerName
         ? `${this.props.siteTask.loadBalancerName}-${this.props.stage}`
@@ -340,7 +360,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
         environment: this.siteEcsEnvironment,
         executionRole: this.siteEcsRole,
         image: this.siteEcsContainerImage,
-        logDriver: ecs.LogDriver.awsLogs({
+        logDriver: LogDriver.awsLogs({
           logGroup: this.siteEcsLogGroup,
           logRetention: this.props.siteTask.logging?.logRetention,
           multilinePattern: this.props.siteTask.logging?.multilinePattern,
@@ -357,11 +377,11 @@ export class SiteWithEcsBackend extends CommonConstruct {
         healthyGrpcCodes: this.props.siteHealthCheck.healthyGrpcCodes,
         healthyHttpCodes: this.props.siteHealthCheck.healthyHttpCodes,
         healthyThresholdCount: this.props.siteHealthCheck.healthyThresholdCount,
-        interval: cdk.Duration.seconds(this.props.siteHealthCheck.intervalInSecs),
+        interval: Duration.seconds(this.props.siteHealthCheck.intervalInSecs),
         path: this.props.siteHealthCheck.path ?? '/',
         port: this.props.siteHealthCheck.port,
         protocol: this.props.siteHealthCheck.protocol,
-        timeout: cdk.Duration.seconds(this.props.siteHealthCheck.timeoutInSecs),
+        timeout: Duration.seconds(this.props.siteHealthCheck.timeoutInSecs),
         unhealthyThresholdCount: this.props.siteHealthCheck.unhealthyThresholdCount,
       })
     }
@@ -420,7 +440,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
 
       /* add EFS permissions to ECS Role */
       this.siteEcsRole.addToPolicy(
-        new iam.PolicyStatement(this.iamManager.statementForWriteEfs([this.siteFileSystem.fileSystemArn]))
+        new PolicyStatement(this.iamManager.statementForWriteEfs([this.siteFileSystem.fileSystemArn]))
       )
 
       /* add the efs volume to ecs task definition */
@@ -461,17 +481,16 @@ export class SiteWithEcsBackend extends CommonConstruct {
   }
 
   protected createSiteCachePolicy(id: string, siteCachePolicy: SiteCachePolicyProps) {
-    return new cloudfront.CachePolicy(this, `${id}`, {
+    return new CachePolicy(this, `${id}`, {
       cachePolicyName: `${this.id}-${siteCachePolicy.cachePolicyName}`,
       comment: `Policy for ${this.id}-distribution - ${this.props.stage} stage`,
-      defaultTtl: cdk.Duration.seconds(siteCachePolicy.defaultTtlInSeconds),
-      minTtl: cdk.Duration.seconds(siteCachePolicy.minTtlInSeconds),
-      maxTtl: cdk.Duration.seconds(siteCachePolicy.maxTtlInSeconds),
-      enableAcceptEncodingGzip: siteCachePolicy.enableAcceptEncodingGzip,
-      enableAcceptEncodingBrotli: siteCachePolicy.enableAcceptEncodingBrotli,
-      queryStringBehavior: siteCachePolicy.queryStringBehavior,
-      headerBehavior: siteCachePolicy.headerBehavior,
       cookieBehavior: siteCachePolicy.cookieBehavior,
+      enableAcceptEncodingBrotli: siteCachePolicy.enableAcceptEncodingBrotli,
+      enableAcceptEncodingGzip: siteCachePolicy.enableAcceptEncodingGzip,
+      headerBehavior: siteCachePolicy.headerBehavior,
+      maxTtl: Duration.seconds(siteCachePolicy.maxTtlInSeconds),
+      minTtl: Duration.seconds(siteCachePolicy.minTtlInSeconds),
+      queryStringBehavior: siteCachePolicy.queryStringBehavior,
     })
   }
 
@@ -485,7 +504,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
 
   protected createSiteOriginRequestPolicy() {
     if (!this.props.siteOriginRequestPolicy) return
-    this.siteOriginRequestPolicy = new cloudfront.OriginRequestPolicy(this, `${this.id}-sorp`, {
+    this.siteOriginRequestPolicy = new OriginRequestPolicy(this, `${this.id}-sorp`, {
       comment: `Request Policy for ${this.id}-distribution - ${this.props.stage} stage`,
       cookieBehavior: this.props.siteOriginRequestPolicy.cookieBehavior,
       headerBehavior: this.props.siteOriginRequestPolicy.headerBehavior,
@@ -500,7 +519,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
 
   protected createResponseHeaderPolicy(props: SiteResponseHeadersPolicyProps) {
     if (!props) return undefined
-    return new cloudfront.ResponseHeadersPolicy(this, `${this.id}-${props.type}-srhp`, {
+    return new ResponseHeadersPolicy(this, `${this.id}-${props.type}-srhp`, {
       ...props,
       comment: `Response Header Policy for ${props.type} for ${this.id}-distribution - ${this.props.stage} stage`,
       responseHeadersPolicyName: `${this.id}-${props.type}-response`,
@@ -508,7 +527,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
         ...props.securityHeadersBehavior,
         strictTransportSecurity: {
           ...props.securityHeadersBehavior?.strictTransportSecurity,
-          accessControlMaxAge: cdk.Duration.seconds(
+          accessControlMaxAge: Duration.seconds(
             props.securityHeadersBehavior?.strictTransportSecurity?.accessControlMaxAgeInSeconds
           ),
         },
@@ -525,10 +544,10 @@ export class SiteWithEcsBackend extends CommonConstruct {
   }
 
   protected createSiteOrigin() {
-    this.siteOrigin = new origins.HttpOrigin(this.siteInternalDomainName, {
+    this.siteOrigin = new HttpOrigin(this.siteInternalDomainName, {
       httpPort: this.props.siteTask.listenerPort,
       originId: `${this.id}-server`,
-      protocolPolicy: cloudfront.OriginProtocolPolicy.HTTPS_ONLY,
+      protocolPolicy: OriginProtocolPolicy.HTTPS_ONLY,
     })
   }
 
@@ -552,7 +571,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
     if (this.props.siteCloudfrontFunctionProps) {
       this.siteFunctionAssociations = [
         {
-          eventType: cloudfront.FunctionEventType.VIEWER_REQUEST,
+          eventType: FunctionEventType.VIEWER_REQUEST,
           function: this.siteCloudfrontFunction,
         },
       ]

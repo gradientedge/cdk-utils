@@ -48,11 +48,11 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import * as ec2 from 'aws-cdk-lib/aws-ec2'
-import * as efs from 'aws-cdk-lib/aws-efs'
-import * as cdk from 'aws-cdk-lib'
-import * as utils from '../../../utils'
+            <pre class="prettyprint source linenums"><code>import { RemovalPolicy } from 'aws-cdk-lib'
+import { ISecurityGroup, IVpc, SubnetSelection } from 'aws-cdk-lib/aws-ec2'
+import { FileSystem, LifecyclePolicy, OutOfInfrequentAccessPolicy, PerformanceMode } from 'aws-cdk-lib/aws-efs'
 import { CommonConstruct } from '../../../common'
+import { createCfnOutput } from '../../../utils'
 import { EfsAccessPointOptions, EfsFileSystemProps } from './types'
 
 export const DEFAULT_CREATE_ACL = {
@@ -97,28 +97,28 @@ export class EfsManager {
     id: string,
     scope: CommonConstruct,
     props: EfsFileSystemProps,
-    vpc: ec2.IVpc,
+    vpc: IVpc,
     accessPointOptions?: EfsAccessPointOptions[],
-    securityGroup?: ec2.ISecurityGroup,
-    vpcSubnets?: ec2.SubnetSelection
+    securityGroup?: ISecurityGroup,
+    vpcSubnets?: SubnetSelection
   ) {
     if (!props) throw `EFS props undefined for ${id}`
 
     const fileSystemId = props.provisionNewOnDeployment ? `${id}-${new Date().getMilliseconds()}` : `${id}`
-    const fileSystem = new efs.FileSystem(scope, `${fileSystemId}`, {
+    const fileSystem = new FileSystem(scope, `${fileSystemId}`, {
       ...props,
       fileSystemName: props.fileSystemName ? `${props.fileSystemName}-${scope.props.stage}` : undefined,
-      lifecyclePolicy: props.lifecyclePolicy ?? efs.LifecyclePolicy.AFTER_7_DAYS,
-      outOfInfrequentAccessPolicy: props.outOfInfrequentAccessPolicy ?? efs.OutOfInfrequentAccessPolicy.AFTER_1_ACCESS,
-      performanceMode: props.performanceMode ?? efs.PerformanceMode.GENERAL_PURPOSE,
-      removalPolicy: props.removalPolicy ?? cdk.RemovalPolicy.DESTROY,
+      lifecyclePolicy: props.lifecyclePolicy ?? LifecyclePolicy.AFTER_7_DAYS,
+      outOfInfrequentAccessPolicy: props.outOfInfrequentAccessPolicy ?? OutOfInfrequentAccessPolicy.AFTER_1_ACCESS,
+      performanceMode: props.performanceMode ?? PerformanceMode.GENERAL_PURPOSE,
+      removalPolicy: props.removalPolicy ?? RemovalPolicy.DESTROY,
       securityGroup,
       vpc,
       vpcSubnets,
     })
 
-    utils.createCfnOutput(`${id}-fileSystemArn`, scope, fileSystem.fileSystemArn)
-    utils.createCfnOutput(`${id}-fileSystemId`, scope, fileSystem.fileSystemId)
+    createCfnOutput(`${id}-fileSystemArn`, scope, fileSystem.fileSystemArn)
+    createCfnOutput(`${id}-fileSystemId`, scope, fileSystem.fileSystemId)
 
     /* provision access points if specified */
     if (accessPointOptions &amp;&amp; accessPointOptions.length > 0) {
@@ -130,8 +130,8 @@ export class EfsManager {
           posixUser: accessPointOption.posixUser ?? DEFAULT_POSIX_USER,
         })
 
-        utils.createCfnOutput(`${id}-accessPointArn-${index}`, scope, accessPoint.accessPointArn)
-        utils.createCfnOutput(`${id}-accessPointId-${index}`, scope, accessPoint.accessPointId)
+        createCfnOutput(`${id}-accessPointArn-${index}`, scope, accessPoint.accessPointArn)
+        createCfnOutput(`${id}-accessPointId-${index}`, scope, accessPoint.accessPointId)
       }
     }
 

@@ -48,10 +48,40 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import * as cdk from 'aws-cdk-lib'
+            <pre class="prettyprint source linenums"><code>import { CfnOutput } from 'aws-cdk-lib'
 import { Construct } from 'constructs'
-import * as aws from '../services/aws'
-import * as utils from '../utils'
+import {
+  AcmManager,
+  ApiManager,
+  AppConfigManager,
+  CloudFrontManager,
+  CloudTrailManager,
+  CloudWatchManager,
+  CodeBuildManager,
+  DynamodbManager,
+  EcrManager,
+  EcsManager,
+  EfsManager,
+  EksManager,
+  ElastiCacheManager,
+  EventManager,
+  EventTargetManager,
+  EvidentlyManager,
+  IamManager,
+  KmsManager,
+  LambdaManager,
+  LogManager,
+  Route53Manager,
+  S3Manager,
+  SecretsManager,
+  SfnManager,
+  SnsManager,
+  SqsManager,
+  SsmManager,
+  VpcManager,
+  WafManager,
+} from '../services'
+import { createCfnOutput, isDevStage, isPrdStage, isTestStage, isUatStage } from '../utils'
 import { CommonStackProps } from './types'
 
 /**
@@ -69,70 +99,70 @@ import { CommonStackProps } from './types'
  */
 export class CommonConstruct extends Construct {
   props: CommonStackProps
-  acmManager: aws.AcmManager
-  apiManager: aws.ApiManager
-  appConfigManager: aws.AppConfigManager
-  codeBuildManager: aws.CodeBuildManager
-  cloudFrontManager: aws.CloudFrontManager
-  cloudTrailManager: aws.CloudTrailManager
-  cloudWatchManager: aws.CloudWatchManager
-  dynamodbManager: aws.DynamodbManager
-  ecrManager: aws.EcrManager
-  ecsManager: aws.EcsManager
-  efsManager: aws.EfsManager
-  eksManager: aws.EksManager
-  elasticacheManager: aws.ElastiCacheManager
-  eventManager: aws.EventManager
-  eventTargetManager: aws.EventTargetManager
-  evidentlyManager: aws.EvidentlyManager
-  iamManager: aws.IamManager
-  kmsManager: aws.KmsManager
-  lambdaManager: aws.LambdaManager
-  logManager: aws.LogManager
-  route53Manager: aws.Route53Manager
-  s3Manager: aws.S3Manager
-  secretsManager: aws.SecretsManager
-  sfnManager: aws.SfnManager
-  snsManager: aws.SnsManager
-  sqsManager: aws.SqsManager
-  ssmManager: aws.SsmManager
-  vpcManager: aws.VpcManager
-  wafManager: aws.WafManager
+  acmManager: AcmManager
+  apiManager: ApiManager
+  appConfigManager: AppConfigManager
+  codeBuildManager: CodeBuildManager
+  cloudFrontManager: CloudFrontManager
+  cloudTrailManager: CloudTrailManager
+  cloudWatchManager: CloudWatchManager
+  dynamodbManager: DynamodbManager
+  ecrManager: EcrManager
+  ecsManager: EcsManager
+  efsManager: EfsManager
+  eksManager: EksManager
+  elasticacheManager: ElastiCacheManager
+  eventManager: EventManager
+  eventTargetManager: EventTargetManager
+  evidentlyManager: EvidentlyManager
+  iamManager: IamManager
+  kmsManager: KmsManager
+  lambdaManager: LambdaManager
+  logManager: LogManager
+  route53Manager: Route53Manager
+  s3Manager: S3Manager
+  secretsManager: SecretsManager
+  sfnManager: SfnManager
+  snsManager: SnsManager
+  sqsManager: SqsManager
+  ssmManager: SsmManager
+  vpcManager: VpcManager
+  wafManager: WafManager
 
   fullyQualifiedDomainName: string
 
   constructor(parent: Construct, id: string, props: CommonStackProps) {
     super(parent, id)
     this.props = props
-    this.acmManager = new aws.AcmManager()
-    this.apiManager = new aws.ApiManager()
-    this.appConfigManager = new aws.AppConfigManager()
-    this.codeBuildManager = new aws.CodeBuildManager()
-    this.cloudFrontManager = new aws.CloudFrontManager()
-    this.cloudTrailManager = new aws.CloudTrailManager()
-    this.cloudWatchManager = new aws.CloudWatchManager()
-    this.dynamodbManager = new aws.DynamodbManager()
-    this.ecrManager = new aws.EcrManager()
-    this.ecsManager = new aws.EcsManager()
-    this.efsManager = new aws.EfsManager()
-    this.eksManager = new aws.EksManager()
-    this.elasticacheManager = new aws.ElastiCacheManager()
-    this.eventManager = new aws.EventManager()
-    this.eventTargetManager = new aws.EventTargetManager()
-    this.evidentlyManager = new aws.EvidentlyManager()
-    this.iamManager = new aws.IamManager()
-    this.kmsManager = new aws.KmsManager()
-    this.lambdaManager = new aws.LambdaManager()
-    this.logManager = new aws.LogManager()
-    this.route53Manager = new aws.Route53Manager()
-    this.s3Manager = new aws.S3Manager()
-    this.secretsManager = new aws.SecretsManager()
-    this.sfnManager = new aws.SfnManager()
-    this.snsManager = new aws.SnsManager()
-    this.sqsManager = new aws.SqsManager()
-    this.ssmManager = new aws.SsmManager()
-    this.vpcManager = new aws.VpcManager()
-    this.wafManager = new aws.WafManager()
+    this.acmManager = new AcmManager()
+    this.apiManager = new ApiManager()
+    this.appConfigManager = new AppConfigManager()
+    this.codeBuildManager = new CodeBuildManager()
+    this.cloudFrontManager = new CloudFrontManager()
+    this.cloudTrailManager = new CloudTrailManager()
+    this.cloudWatchManager = new CloudWatchManager()
+    this.dynamodbManager = new DynamodbManager()
+    this.ecrManager = new EcrManager()
+    this.ecsManager = new EcsManager()
+    this.efsManager = new EfsManager()
+    this.eksManager = new EksManager()
+    this.elasticacheManager = new ElastiCacheManager()
+    this.eventManager = new EventManager()
+    this.eventTargetManager = new EventTargetManager()
+    this.evidentlyManager = new EvidentlyManager()
+    this.iamManager = new IamManager()
+    this.kmsManager = new KmsManager()
+    this.lambdaManager = new LambdaManager()
+    this.logManager = new LogManager()
+    this.route53Manager = new Route53Manager()
+    this.s3Manager = new S3Manager()
+    this.secretsManager = new SecretsManager()
+    this.sfnManager = new SfnManager()
+    this.snsManager = new SnsManager()
+    this.sqsManager = new SqsManager()
+    this.ssmManager = new SsmManager()
+    this.vpcManager = new VpcManager()
+    this.wafManager = new WafManager()
 
     this.determineFullyQualifiedDomain()
   }
@@ -144,8 +174,8 @@ export class CommonConstruct extends Construct {
    * @param description optional description for the output
    * @param overrideId Flag which indicates whether to override the default logical id of the output
    */
-  protected addCfnOutput(id: string, value: string, description?: string, overrideId = true): cdk.CfnOutput {
-    return utils.createCfnOutput(id, this, value, description, overrideId)
+  protected addCfnOutput(id: string, value: string, description?: string, overrideId = true): CfnOutput {
+    return createCfnOutput(id, this, value, description, overrideId)
   }
 
   /**
@@ -161,25 +191,25 @@ export class CommonConstruct extends Construct {
    * @summary Utility method to determine if the initialisation is in development (dev) stage
    * This is determined by the stage property injected via cdk context
    */
-  public isDevelopmentStage = () => utils.isDevStage(this.props.stage)
+  public isDevelopmentStage = () => isDevStage(this.props.stage)
 
   /**
    * @summary Utility method to determine if the initialisation is in test (tst) stage
    * This is determined by the stage property injected via cdk context
    */
-  public isTestStage = () => utils.isTestStage(this.props.stage)
+  public isTestStage = () => isTestStage(this.props.stage)
 
   /**
    * @summary Utility method to determine if the initialisation is in uat (uat) stage
    * This is determined by the stage property injected via cdk context
    */
-  public isUatStage = () => utils.isUatStage(this.props.stage)
+  public isUatStage = () => isUatStage(this.props.stage)
 
   /**
    * @summary Utility method to determine if the initialisation is in production (prd) stage
    * This is determined by the stage property injected via cdk context
    */
-  public isProductionStage = () => utils.isPrdStage(this.props.stage)
+  public isProductionStage = () => isPrdStage(this.props.stage)
 }
 
 export const applyMixins = (derivedCtor: any, constructors: any[]) => {

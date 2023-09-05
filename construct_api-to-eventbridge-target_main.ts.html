@@ -48,21 +48,36 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import * as cdk from 'aws-cdk-lib'
-import * as apig from 'aws-cdk-lib/aws-apigateway'
-import * as events from 'aws-cdk-lib/aws-events'
-import * as eventstargets from 'aws-cdk-lib/aws-events-targets'
-import * as iam from 'aws-cdk-lib/aws-iam'
-import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager'
+            <pre class="prettyprint source linenums"><code>import { Fn, RemovalPolicy } from 'aws-cdk-lib'
+import {
+  AccessLogFormat,
+  BasePathMapping,
+  Cors,
+  EndpointType,
+  Integration,
+  IntegrationType,
+  JsonSchemaType,
+  JsonSchemaVersion,
+  LogGroupLogDestination,
+  MethodLoggingLevel,
+  Model,
+  PassthroughBehavior,
+  Resource,
+  RestApi,
+} from 'aws-cdk-lib/aws-apigateway'
+import { EventBus } from 'aws-cdk-lib/aws-events'
+import { CloudWatchLogGroup } from 'aws-cdk-lib/aws-events-targets'
+import { PolicyDocument, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam'
+import { ISecret } from 'aws-cdk-lib/aws-secretsmanager'
 import { Construct } from 'constructs'
 import { CommonConstruct } from '../../common'
+import { ApiToEventbridgeTargetRestApi } from './api'
+import { ApiToEventbridgeTargetEvent } from './event'
 import {
   ApiToEventBridgeTargetEventType,
   ApiToEventBridgeTargetProps,
   ApiToEventBridgeTargetRestApiType,
 } from './types'
-import { ApiToEventbridgeTargetEvent } from './event'
-import { ApiToEventbridgeTargetRestApi } from './api'
 
 /**
  * @classdesc Provides a construct to create and deploy API Gateway invocations to EventBridge
@@ -86,7 +101,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
   id: string
 
   /* application related resources */
-  applicationSecrets: secretsmanager.ISecret[]
+  applicationSecrets: ISecret[]
 
   /* event related resources */
   apiEvent: ApiToEventBridgeTargetEventType
@@ -187,11 +202,11 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
   }
 
   /**
-   * @summary Method to create or use an existing eventbus for api payload deliveries
+   * @summary Method to create or use an existing event bus for api payload deliveries
    */
   protected createApiToEventBridgeTargetEventBus() {
     if (this.props.api.useExisting) {
-      this.apiEvent.eventBus = events.EventBus.fromEventBusName(
+      this.apiEvent.eventBus = EventBus.fromEventBusName(
         this,
         `${this.id}-event-bus`,
         `${this.props.event.eventBusName}-${this.props.stage}`
@@ -235,12 +250,12 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
       this,
       this.props.event.rule,
       this.apiEvent.eventBus,
-      [new eventstargets.CloudWatchLogGroup(this.apiEvent.logGroup)]
+      [new CloudWatchLogGroup(this.apiEvent.logGroup)]
     )
   }
 
   protected createApiToEventBridgeTargetPolicy() {
-    this.apiToEventBridgeTargetRestApi.policy = new iam.PolicyDocument({
+    this.apiToEventBridgeTargetRestApi.policy = new PolicyDocument({
       statements: [this.iamManager.statementForPutEvents()],
     })
   }
@@ -251,8 +266,8 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
   protected createApiToEventBridgeTargetRole() {
     if (!this.apiToEventBridgeTargetRestApi.policy) throw 'Policy undefined'
 
-    this.apiToEventBridgeTargetRestApi.role = new iam.Role(this, `${this.id}-rest-api-role`, {
-      assumedBy: new iam.ServicePrincipal('apigateway.amazonaws.com'),
+    this.apiToEventBridgeTargetRestApi.role = new Role(this, `${this.id}-rest-api-role`, {
+      assumedBy: new ServicePrincipal('apigateway.amazonaws.com'),
       inlinePolicies: { policy: this.apiToEventBridgeTargetRestApi.policy },
     })
   }
@@ -274,7 +289,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
     if (!this.props.api.withResource) return
     this.apiToEventBridgeTargetRestApi.integrationRequestTemplates = {
       'application/json': [
-        '#set($context.requestOverride.header.X-Amz-Target = "AWSEvents.PutEvents")',
+        '#set($context.requestOverride.header.X-Amz-Target = "AWSPutEvents")',
         '#set($context.requestOverride.header.Content-Type = "application/x-amz-json-1.1")',
         `{
           "Entries": [
@@ -335,7 +350,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
    */
   protected createApiToEventBridgeTargetIntegration() {
     if (!this.props.api.withResource) return
-    this.apiToEventBridgeTargetRestApi.integration = new apig.Integration({
+    this.apiToEventBridgeTargetRestApi.integration = new Integration({
       integrationHttpMethod: 'POST',
       options: {
         ...{
@@ -344,13 +359,13 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
             this.apiToEventBridgeTargetRestApi.integrationResponse,
             this.apiToEventBridgeTargetRestApi.integrationErrorResponse,
           ],
-          passthroughBehavior: apig.PassthroughBehavior.NEVER,
+          passthroughBehavior: PassthroughBehavior.NEVER,
           requestParameters: this.apiToEventBridgeTargetRestApi.integrationRequestParameters,
           requestTemplates: this.apiToEventBridgeTargetRestApi.integrationRequestTemplates,
         },
         ...this.props.api.integrationOptions,
       },
-      type: apig.IntegrationType.AWS,
+      type: IntegrationType.AWS,
       uri: `arn:aws:apigateway:${this.props.region}:events:path//`,
     })
   }
@@ -403,7 +418,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
       this,
       {
         logGroupName: `/custom/api/${this.id}-rest-api-access`,
-        removalPolicy: cdk.RemovalPolicy.DESTROY,
+        removalPolicy: RemovalPolicy.DESTROY,
       }
     )
   }
@@ -413,21 +428,21 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
    */
   protected createApiToEventBridgeTargetRestApi() {
     if (this.props.api.useExisting &amp;&amp; this.props.api.importedRestApiRef) {
-      this.apiToEventBridgeTargetRestApi.api = apig.RestApi.fromRestApiId(
+      this.apiToEventBridgeTargetRestApi.api = RestApi.fromRestApiId(
         this,
         `${this.id}-rest-api`,
-        cdk.Fn.importValue(this.props.api.importedRestApiRef)
+        Fn.importValue(this.props.api.importedRestApiRef)
       )
       return
     }
 
-    this.apiToEventBridgeTargetRestApi.api = new apig.RestApi(this, `${this.id}-rest-api`, {
+    this.apiToEventBridgeTargetRestApi.api = new RestApi(this, `${this.id}-rest-api`, {
       ...{
         cloudWatchRole: this.props.api.restApi?.cloudWatchRole ?? true,
         defaultCorsPreflightOptions: {
-          allowHeaders: apig.Cors.DEFAULT_HEADERS,
+          allowHeaders: Cors.DEFAULT_HEADERS,
           allowMethods: ['POST'],
-          allowOrigins: apig.Cors.ALL_ORIGINS,
+          allowOrigins: Cors.ALL_ORIGINS,
         },
         defaultIntegration: this.apiToEventBridgeTargetRestApi.integration,
         defaultMethodOptions: {
@@ -438,17 +453,17 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
         },
         deploy: this.props.api.restApi?.deploy ?? true,
         deployOptions: {
-          accessLogDestination: new apig.LogGroupLogDestination(this.apiToEventBridgeTargetRestApi.accessLogGroup),
-          accessLogFormat: apig.AccessLogFormat.jsonWithStandardFields(),
+          accessLogDestination: new LogGroupLogDestination(this.apiToEventBridgeTargetRestApi.accessLogGroup),
+          accessLogFormat: AccessLogFormat.jsonWithStandardFields(),
           dataTraceEnabled: this.props.api.restApi?.deployOptions?.dataTraceEnabled,
           description: `${this.id} - ${this.props.stage} stage`,
-          loggingLevel: apig.MethodLoggingLevel.INFO,
+          loggingLevel: MethodLoggingLevel.INFO,
           metricsEnabled: true,
           stageName: this.props.stage,
           tracingEnabled: this.props.api.restApi?.deployOptions?.tracingEnabled,
         },
         endpointConfiguration: {
-          types: [apig.EndpointType.REGIONAL],
+          types: [EndpointType.REGIONAL],
         },
         restApiName: `${this.id}-rest-api-${this.props.stage}`,
       },
@@ -463,16 +478,16 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
    */
   protected createApiToEventBridgeTargetResponseModel() {
     if (!this.props.api.withResource) return
-    this.apiToEventBridgeTargetRestApi.responseModel = new apig.Model(this, `${this.id}-response-model`, {
+    this.apiToEventBridgeTargetRestApi.responseModel = new Model(this, `${this.id}-response-model`, {
       restApi: this.apiToEventBridgeTargetRestApi.api,
       ...{
         contentType: 'application/json',
         modelName: 'ResponseModel',
         schema: {
-          properties: { message: { type: apig.JsonSchemaType.STRING } },
-          schema: apig.JsonSchemaVersion.DRAFT4,
+          properties: { message: { type: JsonSchemaType.STRING } },
+          schema: JsonSchemaVersion.DRAFT4,
           title: 'pollResponse',
-          type: apig.JsonSchemaType.OBJECT,
+          type: JsonSchemaType.OBJECT,
         },
       },
       ...this.props.api.responseModel,
@@ -484,19 +499,19 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
    */
   protected createApiToEventBridgeTargetErrorResponseModel() {
     if (!this.props.api.withResource) return
-    this.apiToEventBridgeTargetRestApi.errorResponseModel = new apig.Model(this, `${this.id}-error-response-model`, {
+    this.apiToEventBridgeTargetRestApi.errorResponseModel = new Model(this, `${this.id}-error-response-model`, {
       restApi: this.apiToEventBridgeTargetRestApi.api,
       ...{
         contentType: 'application/json',
         modelName: 'ErrorResponseModel',
         schema: {
           properties: {
-            message: { type: apig.JsonSchemaType.STRING },
-            state: { type: apig.JsonSchemaType.STRING },
+            message: { type: JsonSchemaType.STRING },
+            state: { type: JsonSchemaType.STRING },
           },
-          schema: apig.JsonSchemaVersion.DRAFT4,
+          schema: JsonSchemaVersion.DRAFT4,
           title: 'errorResponse',
-          type: apig.JsonSchemaType.OBJECT,
+          type: JsonSchemaType.OBJECT,
         },
       },
       ...this.props.api.errorResponseModel,
@@ -511,9 +526,9 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
 
     let rootResource
     if (this.props.api.withResource &amp;&amp; this.props.api.importedRestApiRootResourceRef) {
-      rootResource = apig.Resource.fromResourceAttributes(this, `${this.id}-root-resource`, {
+      rootResource = Resource.fromResourceAttributes(this, `${this.id}-root-resource`, {
         path: '/',
-        resourceId: cdk.Fn.importValue(this.props.api.importedRestApiRootResourceRef),
+        resourceId: Fn.importValue(this.props.api.importedRestApiRootResourceRef),
         restApi: this.apiToEventBridgeTargetRestApi.api,
       })
     } else {
@@ -561,7 +576,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
    */
   protected createApiBasePathMapping() {
     if (this.props.api.useExisting) return
-    new apig.BasePathMapping(this, `${this.id}-base-bath-mapping`, {
+    new BasePathMapping(this, `${this.id}-base-bath-mapping`, {
       basePath: '',
       domainName: this.apiToEventBridgeTargetRestApi.domain,
       restApi: this.apiToEventBridgeTargetRestApi.api,
