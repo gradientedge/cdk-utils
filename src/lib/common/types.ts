@@ -1,10 +1,10 @@
-import * as cdk from 'aws-cdk-lib'
+import { StackProps } from 'aws-cdk-lib'
 import { Runtime, Tracing } from 'aws-cdk-lib/aws-lambda'
 import { RetentionDays } from 'aws-cdk-lib/aws-logs'
 
 /**
  */
-export interface CommonStackProps extends cdk.StackProps {
+export interface CommonStackProps extends StackProps {
   name: string
   region: string
   stage: string

@@ -1,20 +1,20 @@
-import * as cdk from 'aws-cdk-lib'
-import * as appconfig from 'aws-cdk-lib/aws-appconfig'
-import * as utils from '../../../utils'
-import { Architecture } from '../constants'
-import { AppConfigProps } from './types'
-import { ArnsByRegionForArm64, ArnsByRegionForX86_64 } from './constants'
+import { Fn } from 'aws-cdk-lib'
+import { CfnApplication, CfnConfigurationProfile, CfnEnvironment } from 'aws-cdk-lib/aws-appconfig'
 import { CommonConstruct } from '../../../common'
+import { createCfnOutput } from '../../../utils'
+import { Architecture } from '../constants'
+import { ArnsByRegionForArm64, ArnsByRegionForX86_64 } from './constants'
+import { AppConfigProps } from './types'
 
 /**
- * @classdesc Provides operations on AWS AppConfig.
+ * @classdesc Provides operations on AWS
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
  * @example
  * import { CommonConstruct } from '@gradientedge/cdk-utils'
  *
  * class CustomConstruct extends CommonConstruct {
- *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
+ *   constructor(parent: Construct, id: string, props: common.CommonStackProps) {
  *     super(parent, id, props)
  *     this.props = props
  *     this.appConfigManager.createApplication('MyApplication', this)
@@ -46,17 +46,17 @@ export class AppConfigManager {
    * @param props
    * @returns the appconfig application
    */
-  public createApplication(id: string, scope: CommonConstruct, props: AppConfigProps): appconfig.CfnApplication {
+  public createApplication(id: string, scope: CommonConstruct, props: AppConfigProps): CfnApplication {
     if (!props) throw `AppConfig props undefined for ${id}`
 
-    const application = new appconfig.CfnApplication(scope, `${id}`, {
+    const application = new CfnApplication(scope, `${id}`, {
       description: props.application.description,
       name: `${props.application.name}-${scope.props.stage}`,
       tags: props.application.tags,
     })
 
-    utils.createCfnOutput(`${id}-ApplicationId`, scope, cdk.Fn.ref(application.logicalId))
-    utils.createCfnOutput(`${id}-ApplicationName`, scope, application.name)
+    createCfnOutput(`${id}-ApplicationId`, scope, Fn.ref(application.logicalId))
+    createCfnOutput(`${id}-ApplicationName`, scope, application.name)
 
     return application
   }
@@ -74,10 +74,10 @@ export class AppConfigManager {
     scope: CommonConstruct,
     applicationId: string,
     props: AppConfigProps
-  ): appconfig.CfnEnvironment {
+  ): CfnEnvironment {
     if (!props) throw `AppConfig props undefined for ${id}`
 
-    const environment = new appconfig.CfnEnvironment(scope, `${id}`, {
+    const environment = new CfnEnvironment(scope, `${id}`, {
       applicationId: applicationId,
       description: props.environment.description,
       monitors: props.environment.monitors,
@@ -85,8 +85,8 @@ export class AppConfigManager {
       tags: props.environment.tags,
     })
 
-    utils.createCfnOutput(`${id}-configurationEnvironmentId`, scope, cdk.Fn.ref(environment.logicalId))
-    utils.createCfnOutput(`${id}-configurationEnvironmentName`, scope, environment.name)
+    createCfnOutput(`${id}-configurationEnvironmentId`, scope, Fn.ref(environment.logicalId))
+    createCfnOutput(`${id}-configurationEnvironmentName`, scope, environment.name)
 
     return environment
   }
@@ -105,10 +105,10 @@ export class AppConfigManager {
     scope: CommonConstruct,
     applicationId: string,
     props: AppConfigProps
-  ): appconfig.CfnConfigurationProfile {
+  ): CfnConfigurationProfile {
     if (!props) throw `AppConfig props undefined for ${id}`
 
-    const profile = new appconfig.CfnConfigurationProfile(scope, `${id}`, {
+    const profile = new CfnConfigurationProfile(scope, `${id}`, {
       applicationId: applicationId,
       description: props.configurationProfile.description,
       locationUri: props.configurationProfile.locationUri || 'hosted',
@@ -119,8 +119,8 @@ export class AppConfigManager {
       validators: props.configurationProfile.validators,
     })
 
-    utils.createCfnOutput(`${id}-configurationProfileId`, scope, cdk.Fn.ref(profile.logicalId))
-    utils.createCfnOutput(`${id}-configurationProfileName`, scope, profile.name)
+    createCfnOutput(`${id}-configurationProfileId`, scope, Fn.ref(profile.logicalId))
+    createCfnOutput(`${id}-configurationProfileName`, scope, profile.name)
 
     return profile
   }

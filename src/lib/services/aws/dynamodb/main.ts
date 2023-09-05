@@ -1,11 +1,11 @@
-import * as dynamodb from 'aws-cdk-lib/aws-dynamodb'
-import * as utils from '../../../utils'
-import * as cdk from 'aws-cdk-lib'
+import { Tags } from 'aws-cdk-lib'
+import { Table } from 'aws-cdk-lib/aws-dynamodb'
 import { CommonConstruct } from '../../../common'
+import { createCfnOutput } from '../../../utils'
 import { TableProps } from './types'
 
 /**
- * @classdesc Provides operations on AWS DynamoDB.
+ * @classdesc Provides operations on AWS DynamoDB
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
  * @example
@@ -30,7 +30,7 @@ export class DynamodbManager {
   public createTable(id: string, scope: CommonConstruct, props: TableProps) {
     if (!props) throw `Table props undefined for ${id}`
 
-    const table = new dynamodb.Table(scope, `${id}`, {
+    const table = new Table(scope, `${id}`, {
       billingMode: props.billingMode,
       contributorInsightsEnabled: props.contributorInsightsEnabled,
       encryption: props.encryption,
@@ -52,12 +52,12 @@ export class DynamodbManager {
 
     if (props.tags && props.tags.length > 0) {
       props.tags.forEach(tag => {
-        cdk.Tags.of(table).add(tag.key, tag.value)
+        Tags.of(table).add(tag.key, tag.value)
       })
     }
 
-    utils.createCfnOutput(`${id}-tableName`, scope, table.tableName)
-    utils.createCfnOutput(`${id}-tableArn`, scope, table.tableArn)
+    createCfnOutput(`${id}-tableName`, scope, table.tableName)
+    createCfnOutput(`${id}-tableArn`, scope, table.tableArn)
 
     return table
   }

@@ -1,8 +1,8 @@
-import { TagProps } from '../../../types'
-import { AwsLogDriverProps, ClusterProps, MountPoint, TaskDefinitionProps } from 'aws-cdk-lib/aws-ecs'
 import { ScalingSchedule } from 'aws-cdk-lib/aws-applicationautoscaling'
+import { AwsLogDriverProps, ClusterProps, MountPoint, TaskDefinitionProps } from 'aws-cdk-lib/aws-ecs'
 import { ApplicationLoadBalancedFargateServiceProps } from 'aws-cdk-lib/aws-ecs-patterns'
-import * as elb from 'aws-cdk-lib/aws-elasticloadbalancingv2'
+import { HealthCheck as ElbHealthCheck } from 'aws-cdk-lib/aws-elasticloadbalancingv2'
+import { TagProps } from '../../../types'
 
 /**
  */
@@ -28,7 +28,7 @@ export interface EcsScalingProps {
 
 /**
  */
-export interface HealthCheck extends elb.HealthCheck {
+export interface HealthCheck extends ElbHealthCheck {
   intervalInSecs: number
   timeoutInSecs: number
 }

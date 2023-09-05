@@ -1,8 +1,8 @@
-import * as ec2 from 'aws-cdk-lib/aws-ec2'
-import * as ecr from 'aws-cdk-lib/aws-ecr-assets'
-import * as eks from 'aws-cdk-lib/aws-eks'
-import * as utils from '../../../utils'
+import { IVpc, InstanceClass, InstanceSize, InstanceType } from 'aws-cdk-lib/aws-ec2'
+import { DockerImageAsset } from 'aws-cdk-lib/aws-ecr-assets'
+import { Cluster, KubernetesVersion } from 'aws-cdk-lib/aws-eks'
 import { CommonConstruct } from '../../../common'
+import { createCfnOutput } from '../../../utils'
 import { EksClusterProps } from './types'
 
 /**
@@ -34,8 +34,8 @@ export class EksManager {
     id: string,
     scope: CommonConstruct,
     props: EksClusterProps,
-    image: ecr.DockerImageAsset,
-    vpc: ec2.IVpc
+    image: DockerImageAsset,
+    vpc: IVpc
   ) {
     if (!props) throw `EksCluster props undefined for ${id}`
 
@@ -80,18 +80,18 @@ export class EksManager {
       },
     }
 
-    const cluster = new eks.Cluster(scope, `${id}Cluster`, {
+    const cluster = new Cluster(scope, `${id}Cluster`, {
       clusterName: `${id.toLowerCase()}-${scope.props.stage}`,
       defaultCapacity: props.appCapacity,
-      defaultCapacityInstance: ec2.InstanceType.of(ec2.InstanceClass.T3, ec2.InstanceSize.LARGE),
-      version: eks.KubernetesVersion.V1_18,
+      defaultCapacityInstance: InstanceType.of(InstanceClass.T3, InstanceSize.LARGE),
+      version: KubernetesVersion.V1_27,
       vpc,
     })
 
     cluster.addManifest(`${id}Pod`, service, deployment)
 
-    utils.createCfnOutput(`${id}-clusterArn`, scope, cluster.clusterArn)
-    utils.createCfnOutput(`${id}-clusterEndpoint`, scope, cluster.clusterEndpoint)
+    createCfnOutput(`${id}-clusterArn`, scope, cluster.clusterArn)
+    createCfnOutput(`${id}-clusterEndpoint`, scope, cluster.clusterEndpoint)
 
     return cluster
   }

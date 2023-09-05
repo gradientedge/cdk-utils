@@ -1,10 +1,21 @@
-import * as apig from 'aws-cdk-lib/aws-apigateway'
-import * as acm from 'aws-cdk-lib/aws-certificatemanager'
-import * as lambda from 'aws-cdk-lib/aws-lambda'
-import * as utils from '../../../utils'
-import * as cdk from 'aws-cdk-lib'
-import { LambdaRestApiProps } from './types'
+import { Tags } from 'aws-cdk-lib'
+import {
+  Cors,
+  Deployment,
+  DomainName,
+  EndpointType,
+  IAuthorizer,
+  IResource,
+  IRestApi,
+  Integration,
+  LambdaRestApi,
+  SecurityPolicy,
+} from 'aws-cdk-lib/aws-apigateway'
+import { ICertificate } from 'aws-cdk-lib/aws-certificatemanager'
+import { IFunction } from 'aws-cdk-lib/aws-lambda'
 import { CommonConstruct } from '../../../common'
+import { createCfnOutput } from '../../../utils'
+import { LambdaRestApiProps } from './types'
 
 /**
  * @classdesc Provides operations on AWS API Gateway.
@@ -14,7 +25,7 @@ import { CommonConstruct } from '../../../common'
  * import { CommonConstruct } from '@gradientedge/cdk-utils'
  *
  * class CustomConstruct extends CommonConstruct {
- *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
+ *   constructor(parent: Construct, id: string, props: common.CommonStackProps) {
  *     super(parent, id, props)
  *     this.props = props
  *     const lambdaFunction = this.lambdaManager.createLambdaFunction('MyFunction', this, role, layers, code)
@@ -31,14 +42,9 @@ export class ApiManager {
    * @param props lambda rest restApi props
    * @param lambdaFunction
    */
-  public createLambdaRestApi(
-    id: string,
-    scope: CommonConstruct,
-    props: LambdaRestApiProps,
-    lambdaFunction: lambda.IFunction
-  ) {
+  public createLambdaRestApi(id: string, scope: CommonConstruct, props: LambdaRestApiProps, lambdaFunction: IFunction) {
     if (!props) throw `Api props undefined for ${id}`
-    const api = new apig.LambdaRestApi(scope, `${id}`, {
+    const api = new LambdaRestApi(scope, `${id}`, {
       binaryMediaTypes: props.binaryMediaTypes,
       cloudWatchRole: props.cloudWatchRole || false,
       defaultCorsPreflightOptions: props.defaultCorsPreflightOptions,
@@ -63,7 +69,7 @@ export class ApiManager {
       },
       domainName: props.domainName,
       endpointConfiguration: {
-        types: props.endpointConfiguration?.types || [apig.EndpointType.REGIONAL],
+        types: props.endpointConfiguration?.types || [EndpointType.REGIONAL],
         vpcEndpoints: props.endpointConfiguration?.vpcEndpoints,
       },
       endpointTypes: props.endpointTypes,
@@ -79,12 +85,12 @@ export class ApiManager {
 
     if (props.tags && props.tags.length > 0) {
       props.tags.forEach(tag => {
-        cdk.Tags.of(api).add(tag.key, tag.value)
+        Tags.of(api).add(tag.key, tag.value)
       })
     }
 
-    utils.createCfnOutput(`${id}-restApiId`, scope, api.restApiId)
-    utils.createCfnOutput(`${id}-restApiName`, scope, api.restApiName)
+    createCfnOutput(`${id}-restApiId`, scope, api.restApiId)
+    createCfnOutput(`${id}-restApiName`, scope, api.restApiName)
 
     return api
   }
@@ -96,15 +102,15 @@ export class ApiManager {
    * @param domainName the domain name to use
    * @param certificate the certificate used for custom restApi domain
    */
-  public createApiDomain(id: string, scope: CommonConstruct, domainName: string, certificate: acm.ICertificate) {
-    const apiDomain = new apig.DomainName(scope, `${id}`, {
+  public createApiDomain(id: string, scope: CommonConstruct, domainName: string, certificate: ICertificate) {
+    const apiDomain = new DomainName(scope, `${id}`, {
       certificate: certificate,
       domainName: domainName,
-      endpointType: scope.isProductionStage() ? apig.EndpointType.EDGE : apig.EndpointType.REGIONAL,
-      securityPolicy: apig.SecurityPolicy.TLS_1_2,
+      endpointType: scope.isProductionStage() ? EndpointType.EDGE : EndpointType.REGIONAL,
+      securityPolicy: SecurityPolicy.TLS_1_2,
     })
 
-    utils.createCfnOutput(`${id}-customDomainName`, scope, apiDomain.domainName)
+    createCfnOutput(`${id}-customDomainName`, scope, apiDomain.domainName)
 
     return apiDomain
   }
@@ -127,24 +133,24 @@ export class ApiManager {
   public createApiResource(
     id: string,
     scope: CommonConstruct,
-    parent: apig.IResource,
+    parent: IResource,
     path: string,
-    integration: apig.Integration,
+    integration: Integration,
     addProxy: boolean,
-    authorizer?: apig.IAuthorizer,
+    authorizer?: IAuthorizer,
     allowedOrigins?: string[],
     allowedMethods?: string[],
     allowedHeaders?: string[],
     methodRequestParameters?: { [param: string]: boolean },
-    proxyIntegration?: apig.Integration
+    proxyIntegration?: Integration
   ) {
-    const methods = allowedMethods ?? apig.Cors.ALL_METHODS
+    const methods = allowedMethods ?? Cors.ALL_METHODS
     const resource = parent.addResource(path, {
       defaultCorsPreflightOptions: {
         allowCredentials: true,
-        allowHeaders: allowedHeaders ?? apig.Cors.DEFAULT_HEADERS,
+        allowHeaders: allowedHeaders ?? Cors.DEFAULT_HEADERS,
         allowMethods: [...methods, 'OPTIONS'],
-        allowOrigins: allowedOrigins ?? apig.Cors.ALL_ORIGINS,
+        allowOrigins: allowedOrigins ?? Cors.ALL_ORIGINS,
       },
     })
     methods.forEach(method =>
@@ -153,15 +159,15 @@ export class ApiManager {
         requestParameters: methodRequestParameters,
       })
     )
-    utils.createCfnOutput(`${id}-${path}ResourceId`, scope, resource.resourceId)
+    createCfnOutput(`${id}-${path}ResourceId`, scope, resource.resourceId)
 
     if (addProxy) {
       const resourceProxy = resource.addResource(`{${path}+}`, {
         defaultCorsPreflightOptions: {
           allowCredentials: true,
-          allowHeaders: allowedHeaders ?? apig.Cors.DEFAULT_HEADERS,
+          allowHeaders: allowedHeaders ?? Cors.DEFAULT_HEADERS,
           allowMethods: [...methods, 'OPTIONS'],
-          allowOrigins: allowedOrigins ?? apig.Cors.ALL_ORIGINS,
+          allowOrigins: allowedOrigins ?? Cors.ALL_ORIGINS,
         },
       })
       methods.forEach(method =>
@@ -170,7 +176,7 @@ export class ApiManager {
           requestParameters: methodRequestParameters,
         })
       )
-      utils.createCfnOutput(`${id}-${path}ProxyResourceId`, scope, resourceProxy.resourceId)
+      createCfnOutput(`${id}-${path}ProxyResourceId`, scope, resourceProxy.resourceId)
     }
 
     return resource
@@ -182,8 +188,8 @@ export class ApiManager {
    * @param scope
    * @param restApi
    */
-  public createApiDeployment(id: string, scope: CommonConstruct, restApi: apig.IRestApi) {
-    new apig.Deployment(scope, `${id}`, {
+  public createApiDeployment(id: string, scope: CommonConstruct, restApi: IRestApi) {
+    new Deployment(scope, `${id}`, {
       api: restApi,
       retainDeployments: false,
     })

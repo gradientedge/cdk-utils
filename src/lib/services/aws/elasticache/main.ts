@@ -1,7 +1,7 @@
-import * as elasticache from 'aws-cdk-lib/aws-elasticache'
-import * as utils from '../../../utils'
-import * as cdk from 'aws-cdk-lib'
+import { Tags } from 'aws-cdk-lib'
+import { CfnCacheCluster, CfnReplicationGroup, CfnSubnetGroup } from 'aws-cdk-lib/aws-elasticache'
 import { CommonConstruct } from '../../../common'
+import { createCfnOutput } from '../../../utils'
 import { ElastiCacheProps, ReplicatedElastiCacheProps } from './types'
 
 /**
@@ -28,7 +28,7 @@ export class ElastiCacheManager {
    * @param subnetIds
    */
   public createElastiCacheSubnetGroup(id: string, scope: CommonConstruct, subnetIds: string[]) {
-    return new elasticache.CfnSubnetGroup(scope, `${id}`, {
+    return new CfnSubnetGroup(scope, `${id}`, {
       cacheSubnetGroupName: `${id}-subnet-group-${scope.props.stage}`,
       description: `${id}-subnet-group-${scope.props.stage}`,
       subnetIds: subnetIds,
@@ -56,7 +56,7 @@ export class ElastiCacheManager {
 
     const subnetGroup = this.createElastiCacheSubnetGroup(`${id}-subnetGroup`, scope, subnetIds)
 
-    const elasticacheCluster = new elasticache.CfnCacheCluster(scope, `${id}`, {
+    const elasticacheCluster = new CfnCacheCluster(scope, `${id}`, {
       autoMinorVersionUpgrade: props.autoMinorVersionUpgrade,
       azMode: props.azMode,
       cacheNodeType: props.cacheNodeType,
@@ -82,13 +82,13 @@ export class ElastiCacheManager {
 
     if (props.tags && props.tags.length > 0) {
       props.tags.forEach(tag => {
-        cdk.Tags.of(elasticacheCluster).add(tag.key, tag.value)
+        Tags.of(elasticacheCluster).add(tag.key, tag.value)
       })
     }
 
-    utils.createCfnOutput(`${id}-clusterName`, scope, elasticacheCluster.clusterName)
-    utils.createCfnOutput(`${id}-redisEndpointPort`, scope, elasticacheCluster.attrRedisEndpointPort)
-    utils.createCfnOutput(`${id}-redisEndpointAddress`, scope, elasticacheCluster.attrRedisEndpointAddress)
+    createCfnOutput(`${id}-clusterName`, scope, elasticacheCluster.clusterName)
+    createCfnOutput(`${id}-redisEndpointPort`, scope, elasticacheCluster.attrRedisEndpointPort)
+    createCfnOutput(`${id}-redisEndpointAddress`, scope, elasticacheCluster.attrRedisEndpointAddress)
 
     return elasticacheCluster
   }
@@ -112,7 +112,7 @@ export class ElastiCacheManager {
 
     const subnetGroup = this.createElastiCacheSubnetGroup(`${id}-subnetGroup`, scope, subnetIds)
 
-    const elasticacheCluster = new elasticache.CfnReplicationGroup(scope, `${id}`, {
+    const elasticacheCluster = new CfnReplicationGroup(scope, `${id}`, {
       autoMinorVersionUpgrade: props.autoMinorVersionUpgrade,
       automaticFailoverEnabled: props.automaticFailoverEnabled,
       cacheNodeType: props.cacheNodeType,

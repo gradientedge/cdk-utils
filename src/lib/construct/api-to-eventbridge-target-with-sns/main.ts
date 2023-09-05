@@ -1,21 +1,36 @@
-import * as cdk from 'aws-cdk-lib'
-import * as apig from 'aws-cdk-lib/aws-apigateway'
-import * as events from 'aws-cdk-lib/aws-events'
-import * as eventstargets from 'aws-cdk-lib/aws-events-targets'
-import * as iam from 'aws-cdk-lib/aws-iam'
-import * as lambda from 'aws-cdk-lib/aws-lambda'
-import * as destinations from 'aws-cdk-lib/aws-lambda-destinations'
-import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager'
+import { Fn, RemovalPolicy } from 'aws-cdk-lib'
+import {
+  AccessLogFormat,
+  BasePathMapping,
+  Cors,
+  EndpointType,
+  Integration,
+  IntegrationType,
+  JsonSchemaType,
+  JsonSchemaVersion,
+  LogGroupLogDestination,
+  MethodLoggingLevel,
+  Model,
+  PassthroughBehavior,
+  Resource,
+  RestApi,
+} from 'aws-cdk-lib/aws-apigateway'
+import { EventBus } from 'aws-cdk-lib/aws-events'
+import { CloudWatchLogGroup } from 'aws-cdk-lib/aws-events-targets'
+import { PolicyDocument, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam'
+import { LayerVersion } from 'aws-cdk-lib/aws-lambda'
+import { EventBridgeDestination } from 'aws-cdk-lib/aws-lambda-destinations'
+import { ISecret } from 'aws-cdk-lib/aws-secretsmanager'
 import { Construct } from 'constructs'
 import { CommonConstruct } from '../../common'
-import { ApiDestinedLambda } from './api-destined-lambda'
 import {
-  ApiToEventbridgeTargetEvent,
   ApiToEventBridgeTargetEventType,
   ApiToEventBridgeTargetProps,
-  ApiToEventbridgeTargetRestApi,
   ApiToEventBridgeTargetRestApiType,
+  ApiToEventbridgeTargetEvent,
+  ApiToEventbridgeTargetRestApi,
 } from '../api-to-eventbridge-target'
+import { ApiDestinedLambda } from './api-destined-lambda'
 import { ApiDestinedLambdaType } from './types'
 
 /**
@@ -41,7 +56,7 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
   id: string
 
   /* application related resources */
-  applicationSecrets: secretsmanager.ISecret[]
+  applicationSecrets: ISecret[]
 
   /* destined lambda related resources */
   apiDestinedLambda: ApiDestinedLambdaType
@@ -159,7 +174,7 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
    */
   protected createApiDestinedLambdaPolicy() {
     if (this.props.api.useExisting) return
-    this.apiDestinedLambda.policy = new iam.PolicyDocument({
+    this.apiDestinedLambda.policy = new PolicyDocument({
       statements: [this.iamManager.statementForPutEvents([this.apiEvent.eventBus.eventBusArn])],
     })
   }
@@ -194,7 +209,7 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
    */
   protected createApiDestinedLambdaLayers() {
     if (this.props.api.useExisting) return
-    const layers: lambda.LayerVersion[] = []
+    const layers: LayerVersion[] = []
     if (this.props.lambda && this.props.lambda.layerSource) {
       layers.push(
         this.lambdaManager.createLambdaLayer(`${this.id}-lambda-destined-layer`, this, this.props.lambda.layerSource)
@@ -209,8 +224,8 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
    */
   protected createApiDestinedLambdaDestinations() {
     if (this.props.api.useExisting) return
-    this.apiDestinedLambda.destinationSuccess = new destinations.EventBridgeDestination(this.apiEvent.eventBus)
-    this.apiDestinedLambda.destinationFailure = new destinations.EventBridgeDestination(this.apiEvent.eventBus)
+    this.apiDestinedLambda.destinationSuccess = new EventBridgeDestination(this.apiEvent.eventBus)
+    this.apiDestinedLambda.destinationFailure = new EventBridgeDestination(this.apiEvent.eventBus)
   }
 
   /**
@@ -239,11 +254,11 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
   }
 
   /**
-   * @summary Method to create or use an existing eventbus for api destined payload deliveries
+   * @summary Method to create or use an existing event bus for api destined payload deliveries
    */
   protected createApiDestinedEventBus() {
     if (this.props.api.useExisting) {
-      this.apiEvent.eventBus = events.EventBus.fromEventBusName(
+      this.apiEvent.eventBus = EventBus.fromEventBusName(
         this,
         `${this.id}-destined-event-bus`,
         `${this.props.event.eventBusName}-${this.props.stage}`
@@ -295,7 +310,7 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
       this,
       this.props.event.ruleSuccess,
       this.apiEvent.eventBus,
-      [new eventstargets.CloudWatchLogGroup(this.apiEvent.logGroupSuccess)]
+      [new CloudWatchLogGroup(this.apiEvent.logGroupSuccess)]
     )
   }
 
@@ -335,7 +350,7 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
       this,
       this.props.event.ruleFailure,
       this.apiEvent.eventBus,
-      [new eventstargets.CloudWatchLogGroup(this.apiEvent.logGroupFailure)]
+      [new CloudWatchLogGroup(this.apiEvent.logGroupFailure)]
     )
   }
 
@@ -343,8 +358,8 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
    * @summary Method to create a role for sns topic
    */
   protected createApiDestinedTopicRole() {
-    this.apiDestinedRestApi.role = new iam.Role(this, `${this.id}-sns-rest-api-role`, {
-      assumedBy: new iam.ServicePrincipal('apigateway.amazonaws.com'),
+    this.apiDestinedRestApi.role = new Role(this, `${this.id}-sns-rest-api-role`, {
+      assumedBy: new ServicePrincipal('apigateway.amazonaws.com'),
     })
   }
 
@@ -438,7 +453,7 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
    */
   protected createApiDestinedIntegration() {
     if (!this.props.api.withResource) return
-    this.apiDestinedRestApi.integration = new apig.Integration({
+    this.apiDestinedRestApi.integration = new Integration({
       integrationHttpMethod: 'POST',
       options: {
         ...{
@@ -447,13 +462,13 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
             this.apiDestinedRestApi.integrationResponse,
             this.apiDestinedRestApi.integrationErrorResponse,
           ],
-          passthroughBehavior: apig.PassthroughBehavior.NEVER,
+          passthroughBehavior: PassthroughBehavior.NEVER,
           requestParameters: this.apiDestinedRestApi.integrationRequestParameters,
           requestTemplates: this.apiDestinedRestApi.integrationRequestTemplates,
         },
         ...this.props.api.integrationOptions,
       },
-      type: apig.IntegrationType.AWS,
+      type: IntegrationType.AWS,
       uri: `arn:aws:apigateway:${this.props.region}:sns:path//`,
     })
   }
@@ -505,41 +520,41 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
    */
   protected createApiDestinedRestApi() {
     if (this.props.api.useExisting && this.props.api.importedRestApiRef) {
-      this.apiDestinedRestApi.api = apig.RestApi.fromRestApiId(
+      this.apiDestinedRestApi.api = RestApi.fromRestApiId(
         this,
         `${this.id}-sns-rest-api`,
-        cdk.Fn.importValue(this.props.api.importedRestApiRef)
+        Fn.importValue(this.props.api.importedRestApiRef)
       )
       return
     }
 
     const accessLogGroup = this.logManager.createLogGroup(`${this.id}-sns-rest-api-access-log`, this, {
       logGroupName: `/custom/api/${this.id}-destined-rest-api-access`,
-      removalPolicy: cdk.RemovalPolicy.DESTROY,
+      removalPolicy: RemovalPolicy.DESTROY,
     })
 
-    this.apiDestinedRestApi.api = new apig.RestApi(this, `${this.id}-sns-rest-api`, {
+    this.apiDestinedRestApi.api = new RestApi(this, `${this.id}-sns-rest-api`, {
       ...{
         defaultCorsPreflightOptions: {
-          allowHeaders: apig.Cors.DEFAULT_HEADERS,
+          allowHeaders: Cors.DEFAULT_HEADERS,
           allowMethods: ['POST'],
-          allowOrigins: apig.Cors.ALL_ORIGINS,
+          allowOrigins: Cors.ALL_ORIGINS,
         },
         defaultIntegration: this.apiDestinedRestApi.integration,
         defaultMethodOptions: {
           methodResponses: [this.apiDestinedRestApi.methodResponse, this.apiDestinedRestApi.methodErrorResponse],
         },
         deployOptions: {
-          accessLogDestination: new apig.LogGroupLogDestination(accessLogGroup),
-          accessLogFormat: apig.AccessLogFormat.jsonWithStandardFields(),
+          accessLogDestination: new LogGroupLogDestination(accessLogGroup),
+          accessLogFormat: AccessLogFormat.jsonWithStandardFields(),
           dataTraceEnabled: true,
           description: `${this.id} - ${this.props.stage} stage`,
-          loggingLevel: apig.MethodLoggingLevel.INFO,
+          loggingLevel: MethodLoggingLevel.INFO,
           metricsEnabled: true,
           stageName: this.props.stage,
         },
         endpointConfiguration: {
-          types: [apig.EndpointType.REGIONAL],
+          types: [EndpointType.REGIONAL],
         },
         restApiName: `${this.id}-destined-rest-api-${this.props.stage}`,
       },
@@ -554,16 +569,16 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
    */
   protected createApiDestinedResponseModel() {
     if (!this.props.api.withResource) return
-    this.apiDestinedRestApi.responseModel = new apig.Model(this, `${this.id}-response-model`, {
+    this.apiDestinedRestApi.responseModel = new Model(this, `${this.id}-response-model`, {
       restApi: this.apiDestinedRestApi.api,
       ...{
         contentType: 'application/json',
         modelName: 'ResponseModel',
         schema: {
-          properties: { message: { type: apig.JsonSchemaType.STRING } },
-          schema: apig.JsonSchemaVersion.DRAFT4,
+          properties: { message: { type: JsonSchemaType.STRING } },
+          schema: JsonSchemaVersion.DRAFT4,
           title: 'pollResponse',
-          type: apig.JsonSchemaType.OBJECT,
+          type: JsonSchemaType.OBJECT,
         },
       },
       ...this.props.api.responseModel,
@@ -575,19 +590,19 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
    */
   protected createApiDestinedErrorResponseModel() {
     if (!this.props.api.withResource) return
-    this.apiDestinedRestApi.errorResponseModel = new apig.Model(this, `${this.id}-error-response-model`, {
+    this.apiDestinedRestApi.errorResponseModel = new Model(this, `${this.id}-error-response-model`, {
       restApi: this.apiDestinedRestApi.api,
       ...{
         contentType: 'application/json',
         modelName: 'ErrorResponseModel',
         schema: {
           properties: {
-            message: { type: apig.JsonSchemaType.STRING },
-            state: { type: apig.JsonSchemaType.STRING },
+            message: { type: JsonSchemaType.STRING },
+            state: { type: JsonSchemaType.STRING },
           },
-          schema: apig.JsonSchemaVersion.DRAFT4,
+          schema: JsonSchemaVersion.DRAFT4,
           title: 'errorResponse',
-          type: apig.JsonSchemaType.OBJECT,
+          type: JsonSchemaType.OBJECT,
         },
       },
       ...this.props.api.errorResponseModel,
@@ -602,9 +617,9 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
 
     let rootResource
     if (this.props.api.withResource && this.props.api.importedRestApiRootResourceRef) {
-      rootResource = apig.Resource.fromResourceAttributes(this, `${this.id}-root-resource`, {
+      rootResource = Resource.fromResourceAttributes(this, `${this.id}-root-resource`, {
         path: '/',
-        resourceId: cdk.Fn.importValue(this.props.api.importedRestApiRootResourceRef),
+        resourceId: Fn.importValue(this.props.api.importedRestApiRootResourceRef),
         restApi: this.apiDestinedRestApi.api,
       })
     } else {
@@ -649,7 +664,7 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
    */
   protected createApiBasePathMapping() {
     if (this.props.api.useExisting) return
-    new apig.BasePathMapping(this, `${this.id}-base-bath-mapping`, {
+    new BasePathMapping(this, `${this.id}-base-bath-mapping`, {
       basePath: '',
       domainName: this.apiDestinedRestApi.domain,
       restApi: this.apiDestinedRestApi.api,

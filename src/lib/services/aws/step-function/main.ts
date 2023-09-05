@@ -1,16 +1,38 @@
-import * as cdk from 'aws-cdk-lib'
-import * as apig from 'aws-cdk-lib/aws-apigateway'
-import * as dynamodb from 'aws-cdk-lib/aws-dynamodb'
-import * as iam from 'aws-cdk-lib/aws-iam'
-import * as lambda from 'aws-cdk-lib/aws-lambda'
-import * as logs from 'aws-cdk-lib/aws-logs'
-import * as sqs from 'aws-cdk-lib/aws-sqs'
-import * as sfn from 'aws-cdk-lib/aws-stepfunctions'
-import { DefinitionBody } from 'aws-cdk-lib/aws-stepfunctions'
-import * as tasks from 'aws-cdk-lib/aws-stepfunctions-tasks'
-import * as utils from '../../../utils'
+import { Duration } from 'aws-cdk-lib'
+import { IRestApi } from 'aws-cdk-lib/aws-apigateway'
+import { ITable } from 'aws-cdk-lib/aws-dynamodb'
+import { IRole } from 'aws-cdk-lib/aws-iam'
+import { IFunction } from 'aws-cdk-lib/aws-lambda'
+import { ILogGroup } from 'aws-cdk-lib/aws-logs'
+import { IQueue } from 'aws-cdk-lib/aws-sqs'
+import {
+  Choice,
+  DefinitionBody,
+  Fail,
+  IChainable,
+  IStateMachine,
+  LogLevel,
+  Map,
+  Parallel,
+  Pass,
+  StateMachine,
+  Succeed,
+  Wait,
+  WaitTime,
+} from 'aws-cdk-lib/aws-stepfunctions'
+import {
+  CallApiGatewayRestApiEndpoint,
+  DynamoAttributeValue,
+  DynamoDeleteItem,
+  DynamoGetItem,
+  DynamoPutItem,
+  LambdaInvoke,
+  SqsSendMessage,
+  StepFunctionsStartExecution,
+} from 'aws-cdk-lib/aws-stepfunctions-tasks'
 import { v4 as uuidv4 } from 'uuid'
 import { CommonConstruct } from '../../../common'
+import { createCfnOutput } from '../../../utils'
 import {
   SfnCallApiGatewayRestApiEndpointProps,
   SfnChoiceProps,
@@ -46,7 +68,7 @@ const DEFAULT_RETRY_CONFIG = [
  * import { CommonConstruct } from '@gradientedge/cdk-utils'
  *
  * class CustomConstruct extends CommonConstruct {
- *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
+ *   constructor(parent: Construct, id: string, props: common.CommonStackProps) {
  *     super(parent, id, props)
  *     this.props = props
  *     this.sfnManager.createSuccessStep('MyStep', this, myStepProps)
@@ -63,7 +85,7 @@ export class SfnManager {
    */
   public createSuccessStep(id: string, scope: CommonConstruct, props: SfnSucceedProps) {
     if (!props) throw `Step props undefined for ${id}`
-    return new sfn.Succeed(scope, `${props.name}`, {
+    return new Succeed(scope, `${props.name}`, {
       ...props,
       ...{
         comment: `Succeed step for ${props.name} - ${scope.props.stage} stage`,
@@ -79,7 +101,7 @@ export class SfnManager {
    */
   public createFailStep(id: string, scope: CommonConstruct, props: SfnFailProps) {
     if (!props) throw `Step props undefined for ${id}`
-    return new sfn.Fail(scope, `${props.name}`, {
+    return new Fail(scope, `${props.name}`, {
       ...props,
       ...{
         comment: `Fail step for ${props.name} - ${scope.props.stage} stage`,
@@ -95,7 +117,7 @@ export class SfnManager {
    */
   public createPassStep(id: string, scope: CommonConstruct, props: SfnPassProps) {
     if (!props) throw `Step props undefined for ${id}`
-    return new sfn.Pass(scope, `${props.name}`, {
+    return new Pass(scope, `${props.name}`, {
       ...props,
       ...{
         comment: `Pass step for ${props.name} - ${scope.props.stage} stage`,
@@ -111,7 +133,7 @@ export class SfnManager {
    */
   public createParallelStep(id: string, scope: CommonConstruct, props: SfnParallelProps) {
     if (!props) throw `Step props undefined for ${id}`
-    return new sfn.Parallel(scope, `${props.name}`, {
+    return new Parallel(scope, `${props.name}`, {
       ...props,
       ...{
         comment: `Parallel step for ${props.name} - ${scope.props.stage} stage`,
@@ -127,7 +149,7 @@ export class SfnManager {
    */
   public createChoiceStep(id: string, scope: CommonConstruct, props: SfnChoiceProps) {
     if (!props) throw `Step props undefined for ${id}`
-    return new sfn.Choice(scope, `${props.name}`, {
+    return new Choice(scope, `${props.name}`, {
       ...props,
       ...{
         comment: `Choice step for ${props.name} - ${scope.props.stage} stage`,
@@ -142,11 +164,11 @@ export class SfnManager {
    * @param props
    */
   public createWaitStep(id: string, scope: CommonConstruct, props: SfnWaitProps) {
-    return new sfn.Wait(scope, `${props.name}`, {
+    return new Wait(scope, `${props.name}`, {
       ...props,
       ...{
         comment: `Choice step for ${props.name} - ${scope.props.stage} stage`,
-        time: sfn.WaitTime.duration(cdk.Duration.seconds(props.delayInSeconds)),
+        time: WaitTime.duration(Duration.seconds(props.delayInSeconds)),
       },
     })
   }
@@ -163,11 +185,11 @@ export class SfnManager {
     id: string,
     scope: CommonConstruct,
     props: SfnDynamoGetItemProps,
-    table: dynamodb.ITable,
-    tableKey: { [key: string]: tasks.DynamoAttributeValue }
+    table: ITable,
+    tableKey: { [key: string]: DynamoAttributeValue }
   ) {
     if (!props) throw `Step props undefined for ${id}`
-    const step = new tasks.DynamoGetItem(scope, `${props.name}`, {
+    const step = new DynamoGetItem(scope, `${props.name}`, {
       ...props,
       ...{
         comment: `DynamoDB GetItem step for ${props.name} - ${scope.props.stage} stage`,
@@ -195,7 +217,7 @@ export class SfnManager {
     retries.forEach(retry =>
       step.addRetry({
         ...retry,
-        ...{ interval: retry.intervalInSecs ? cdk.Duration.seconds(retry.intervalInSecs) : retry.interval },
+        ...{ interval: retry.intervalInSecs ? Duration.seconds(retry.intervalInSecs) : retry.interval },
       })
     )
 
@@ -214,11 +236,11 @@ export class SfnManager {
     id: string,
     scope: CommonConstruct,
     props: SfnDynamoPutItemProps,
-    table: dynamodb.ITable,
-    tableItem: { [key: string]: tasks.DynamoAttributeValue }
+    table: ITable,
+    tableItem: { [key: string]: DynamoAttributeValue }
   ) {
     if (!props) throw `Step props undefined for ${id}`
-    const step = new tasks.DynamoPutItem(scope, `${props.name}`, {
+    const step = new DynamoPutItem(scope, `${props.name}`, {
       ...props,
       ...{
         comment: `DynamoDB PutItem step for ${props.name} - ${scope.props.stage} stage`,
@@ -248,7 +270,7 @@ export class SfnManager {
     retries.forEach(retry =>
       step.addRetry({
         ...retry,
-        ...{ interval: retry.intervalInSecs ? cdk.Duration.seconds(retry.intervalInSecs) : retry.interval },
+        ...{ interval: retry.intervalInSecs ? Duration.seconds(retry.intervalInSecs) : retry.interval },
       })
     )
 
@@ -267,11 +289,11 @@ export class SfnManager {
     id: string,
     scope: CommonConstruct,
     props: SfnDynamoDeleteItemProps,
-    table: dynamodb.ITable,
-    tableKey: { [key: string]: tasks.DynamoAttributeValue }
+    table: ITable,
+    tableKey: { [key: string]: DynamoAttributeValue }
   ) {
     if (!props) throw `Step props undefined for ${id}`
-    const step = new tasks.DynamoDeleteItem(scope, `${props.name}`, {
+    const step = new DynamoDeleteItem(scope, `${props.name}`, {
       ...props,
       ...{
         comment: `DynamoDB DeleteItem step for ${props.name} - ${scope.props.stage} stage`,
@@ -301,7 +323,7 @@ export class SfnManager {
     retries.forEach(retry =>
       step.addRetry({
         ...retry,
-        ...{ interval: retry.intervalInSecs ? cdk.Duration.seconds(retry.intervalInSecs) : retry.interval },
+        ...{ interval: retry.intervalInSecs ? Duration.seconds(retry.intervalInSecs) : retry.interval },
       })
     )
 
@@ -315,15 +337,10 @@ export class SfnManager {
    * @param props
    * @param queue The queue to send the message to
    */
-  public createSendSqsMessageStep(
-    id: string,
-    scope: CommonConstruct,
-    props: SfnSqsSendMessageProps,
-    queue: sqs.IQueue
-  ) {
+  public createSendSqsMessageStep(id: string, scope: CommonConstruct, props: SfnSqsSendMessageProps, queue: IQueue) {
     if (!props) throw `Step props undefined for ${id}`
     if (!props.messageBody) throw 'Message body undefined'
-    const step = new tasks.SqsSendMessage(scope, `${props.name}`, {
+    const step = new SqsSendMessage(scope, `${props.name}`, {
       ...props,
       ...{
         comment: `DynamoDB PutItem step for ${props.name} - ${scope.props.stage} stage`,
@@ -350,7 +367,7 @@ export class SfnManager {
     retries.forEach(retry =>
       step.addRetry({
         ...retry,
-        ...{ interval: retry.intervalInSecs ? cdk.Duration.seconds(retry.intervalInSecs) : retry.interval },
+        ...{ interval: retry.intervalInSecs ? Duration.seconds(retry.intervalInSecs) : retry.interval },
       })
     )
 
@@ -364,14 +381,9 @@ export class SfnManager {
    * @param props
    * @param lambdaFunction
    */
-  public createLambdaStep(
-    id: string,
-    scope: CommonConstruct,
-    props: SfnLambdaInvokeProps,
-    lambdaFunction: lambda.IFunction
-  ) {
+  public createLambdaStep(id: string, scope: CommonConstruct, props: SfnLambdaInvokeProps, lambdaFunction: IFunction) {
     if (!props) throw `Step props undefined for ${id}`
-    const step = new tasks.LambdaInvoke(scope, `${props.name}`, {
+    const step = new LambdaInvoke(scope, `${props.name}`, {
       ...props,
       ...{
         comment: `Lambda step for ${props.name} - ${scope.props.stage} stage`,
@@ -387,7 +399,7 @@ export class SfnManager {
     retries.forEach(retry =>
       step.addRetry({
         ...retry,
-        ...{ interval: retry.intervalInSecs ? cdk.Duration.seconds(retry.intervalInSecs) : retry.interval },
+        ...{ interval: retry.intervalInSecs ? Duration.seconds(retry.intervalInSecs) : retry.interval },
       })
     )
 
@@ -406,12 +418,12 @@ export class SfnManager {
     id: string,
     scope: CommonConstruct,
     props: SfnLambdaInvokeProps,
-    lambdaFunction: lambda.IFunction,
+    lambdaFunction: IFunction,
     skipExecution?: boolean
   ) {
     if (!props) throw `Step props undefined for ${id}`
-    if (skipExecution) return this.createPassStep(id, scope, { name: props.name, comment: props.comment })
-    const step = new tasks.LambdaInvoke(scope, `${props.name}`, {
+    if (skipExecution) return this.createPassStep(id, scope, { comment: props.comment, name: props.name })
+    const step = new LambdaInvoke(scope, `${props.name}`, {
       ...props,
       ...{
         comment: `Lambda step for ${props.name} - ${scope.props.stage} stage`,
@@ -427,7 +439,7 @@ export class SfnManager {
     retries.forEach(retry =>
       step.addRetry({
         ...retry,
-        ...{ interval: retry.intervalInSecs ? cdk.Duration.seconds(retry.intervalInSecs) : retry.interval },
+        ...{ interval: retry.intervalInSecs ? Duration.seconds(retry.intervalInSecs) : retry.interval },
       })
     )
 
@@ -445,10 +457,10 @@ export class SfnManager {
     id: string,
     scope: CommonConstruct,
     props: SfnCallApiGatewayRestApiEndpointProps,
-    api: apig.IRestApi
+    api: IRestApi
   ) {
     if (!props) throw `Step props undefined for ${id}`
-    const step = new tasks.CallApiGatewayRestApiEndpoint(scope, `${props.name}`, {
+    const step = new CallApiGatewayRestApiEndpoint(scope, `${props.name}`, {
       ...props,
       ...{
         api,
@@ -465,7 +477,7 @@ export class SfnManager {
     retries.forEach(retry =>
       step.addRetry({
         ...retry,
-        ...{ interval: retry.intervalInSecs ? cdk.Duration.seconds(retry.intervalInSecs) : retry.interval },
+        ...{ interval: retry.intervalInSecs ? Duration.seconds(retry.intervalInSecs) : retry.interval },
       })
     )
 
@@ -483,9 +495,9 @@ export class SfnManager {
     id: string,
     scope: CommonConstruct,
     props: SfnStartExecutionProps,
-    stateMachine: sfn.IStateMachine
+    stateMachine: IStateMachine
   ) {
-    const step = new tasks.StepFunctionsStartExecution(scope, `${id}`, {
+    const step = new StepFunctionsStartExecution(scope, `${id}`, {
       ...props,
       associateWithParent: props.associateWithParent ?? true,
       inputPath: props.inputPath,
@@ -501,7 +513,7 @@ export class SfnManager {
     retries.forEach(retry =>
       step.addRetry({
         ...retry,
-        ...{ interval: retry.intervalInSecs ? cdk.Duration.seconds(retry.intervalInSecs) : retry.interval },
+        ...{ interval: retry.intervalInSecs ? Duration.seconds(retry.intervalInSecs) : retry.interval },
       })
     )
 
@@ -515,7 +527,7 @@ export class SfnManager {
    * @param props props for the map state
    */
   public createMapState(id: string, scope: CommonConstruct, props: SfnMapProps) {
-    return new sfn.Map(scope, `${id}`, props)
+    return new Map(scope, `${id}`, props)
   }
 
   /**
@@ -531,17 +543,17 @@ export class SfnManager {
     id: string,
     scope: CommonConstruct,
     props: SfnStateMachineProps,
-    definition: sfn.IChainable,
-    logGroup: logs.ILogGroup,
-    role?: iam.IRole
+    definition: IChainable,
+    logGroup: ILogGroup,
+    role?: IRole
   ) {
     if (!props) throw `State Machine props undefined for ${id}`
-    const stateMachine = new sfn.StateMachine(scope, `${id}`, {
+    const stateMachine = new StateMachine(scope, `${id}`, {
       definitionBody: DefinitionBody.fromChainable(definition),
       logs: {
         destination: logGroup,
         includeExecutionData: props.logs?.includeExecutionData ?? true,
-        level: props.logs?.level ?? sfn.LogLevel.ALL,
+        level: props.logs?.level ?? LogLevel.ALL,
       },
       role,
       stateMachineName: `${props.stateMachineName}-${scope.props.stage}`,
@@ -550,8 +562,8 @@ export class SfnManager {
       tracingEnabled: props.tracingEnabled,
     })
 
-    utils.createCfnOutput(`${id}-stateMachineName`, scope, stateMachine.stateMachineName)
-    utils.createCfnOutput(`${id}-stateMachineArn`, scope, stateMachine.stateMachineArn)
+    createCfnOutput(`${id}-stateMachineName`, scope, stateMachine.stateMachineName)
+    createCfnOutput(`${id}-stateMachineArn`, scope, stateMachine.stateMachineArn)
 
     return stateMachine
   }

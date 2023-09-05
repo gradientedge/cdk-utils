@@ -1,6 +1,6 @@
-import * as kms from 'aws-cdk-lib/aws-kms'
-import * as utils from '../../../utils'
+import { Key } from 'aws-cdk-lib/aws-kms'
 import { CommonConstruct } from '../../../common'
+import { createCfnOutput } from '../../../utils'
 import { KmsKeyProps } from './types'
 
 /**
@@ -29,7 +29,7 @@ export class KmsManager {
   public createKey(id: string, scope: CommonConstruct, props: KmsKeyProps) {
     if (!props) throw `KMS Key props undefined for ${id}`
 
-    const key = new kms.Key(scope, `${id}`, {
+    const key = new Key(scope, `${id}`, {
       admins: props.admins,
       alias: `${props.alias}-${scope.props.stage}`,
       description: props.description,
@@ -42,8 +42,8 @@ export class KmsManager {
       removalPolicy: props.removalPolicy,
     })
 
-    utils.createCfnOutput(`${id}-keyId`, scope, key.keyId)
-    utils.createCfnOutput(`${id}-keyArn`, scope, key.keyArn)
+    createCfnOutput(`${id}-keyId`, scope, key.keyId)
+    createCfnOutput(`${id}-keyArn`, scope, key.keyArn)
 
     return key
   }

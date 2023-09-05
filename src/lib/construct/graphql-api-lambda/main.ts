@@ -1,9 +1,9 @@
-import * as apig from 'aws-cdk-lib/aws-apigateway'
-import * as acm from 'aws-cdk-lib/aws-certificatemanager'
-import * as iam from 'aws-cdk-lib/aws-iam'
-import * as lambda from 'aws-cdk-lib/aws-lambda'
-import * as route53 from 'aws-cdk-lib/aws-route53'
-import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager'
+import { BasePathMapping, DomainName, RestApi } from 'aws-cdk-lib/aws-apigateway'
+import { ICertificate } from 'aws-cdk-lib/aws-certificatemanager'
+import { PolicyDocument, Role } from 'aws-cdk-lib/aws-iam'
+import { AssetCode, IFunction, ILayerVersion, LayerVersion } from 'aws-cdk-lib/aws-lambda'
+import { IHostedZone } from 'aws-cdk-lib/aws-route53'
+import { ISecret } from 'aws-cdk-lib/aws-secretsmanager'
 import { Construct } from 'constructs'
 import { CommonConstruct } from '../../common'
 import { GraphQlApiLambdaEnvironment, GraphQlApiLambdaProps } from './types'
@@ -12,7 +12,7 @@ import { GraphQlApiLambdaEnvironment, GraphQlApiLambdaProps } from './types'
  * @deprecated Use RestApiLambda instead. This will be removed in a future release.
  * @classdesc Provides a construct to create and deploy a Graphql API as Lambda
  *
- * <b>Architecture</b><br/> ![Architecture](./GraphQLApiLambda.jpg)
+ * <b>Architecture</b><br/> ![Architecture](./GraphQLApi.jpg)
  * @example
  * import { GraphQLApiLambda, GraphQlApiLambdaProps } '@gradientedge/cdk-utils'
  * import { Construct } from 'constructs'
@@ -32,17 +32,17 @@ export class GraphQLApiLambda extends CommonConstruct {
   id: string
 
   /* graphql restApi resources */
-  applicationSecrets: secretsmanager.ISecret[]
-  graphQLApiLambdaPolicy: iam.PolicyDocument
-  graphQLApiLambdaRole: iam.Role
+  applicationSecrets: ISecret[]
+  graphQLApiLambdaPolicy: PolicyDocument
+  graphQLApiLambdaRole: Role
   graphQLApiLambdaEnvironment: GraphQlApiLambdaEnvironment
-  graphQLApiLambdaLayers: lambda.ILayerVersion[] = []
-  graphQLApiLambdaFunction: lambda.Function
-  graphQLApi: apig.RestApi
-  graphQLApiHostedZone: route53.IHostedZone
-  graphQLApiCertificate: acm.ICertificate
-  graphQLApiDomain: apig.DomainName
-  graphQLApiBasePathMappings: apig.BasePathMapping[] = []
+  graphQLApiLambdaLayers: ILayerVersion[] = []
+  graphQLApiLambdaFunction: IFunction
+  graphQLApi: RestApi
+  graphQLApiHostedZone: IHostedZone
+  graphQLApiCertificate: ICertificate
+  graphQLApiDomain: DomainName
+  graphQLApiBasePathMappings: BasePathMapping[] = []
 
   constructor(parent: Construct, id: string, props: GraphQlApiLambdaProps) {
     super(parent, id, props)
@@ -116,7 +116,7 @@ export class GraphQLApiLambda extends CommonConstruct {
    * @summary Method to create iam policy for GraphQL Lambda function
    */
   protected createLambdaPolicy() {
-    this.graphQLApiLambdaPolicy = new iam.PolicyDocument({
+    this.graphQLApiLambdaPolicy = new PolicyDocument({
       statements: [this.iamManager.statementForCreateAnyLogStream()],
     })
   }
@@ -147,11 +147,11 @@ export class GraphQLApiLambda extends CommonConstruct {
    * @summary Method to create layers for GraphQL Lambda function
    */
   protected createLambdaLayers() {
-    const layers: lambda.LayerVersion[] = []
+    const layers: LayerVersion[] = []
 
     if (!this.props.graphqlApiLambdaLayerSources) return
 
-    this.props.graphqlApiLambdaLayerSources.forEach((source: lambda.AssetCode, index: number) => {
+    this.props.graphqlApiLambdaLayerSources.forEach((source: AssetCode, index: number) => {
       layers.push(this.lambdaManager.createLambdaLayer(`${this.id}-layer-${index}`, this, source))
     })
 
@@ -208,7 +208,7 @@ export class GraphQLApiLambda extends CommonConstruct {
     if (apiRootPaths && apiRootPaths.length > 0) {
       apiRootPaths.forEach((apiRootPath: string) => {
         this.graphQLApiBasePathMappings.push(
-          new apig.BasePathMapping(this, `${this.id}-base-bath-mapping-${apiRootPath}`, {
+          new BasePathMapping(this, `${this.id}-base-bath-mapping-${apiRootPath}`, {
             basePath: apiRootPath,
             domainName: this.graphQLApiDomain,
             restApi: this.graphQLApi,
@@ -220,7 +220,7 @@ export class GraphQLApiLambda extends CommonConstruct {
     }
 
     // add default mapping if apiRootPaths not set
-    new apig.BasePathMapping(this, `${this.id}-base-bath-mapping`, {
+    new BasePathMapping(this, `${this.id}-base-bath-mapping`, {
       domainName: this.graphQLApiDomain,
       restApi: this.graphQLApi,
       stage: this.graphQLApi.deploymentStage,

@@ -1,8 +1,8 @@
 import { GetSecretValueCommand, SecretsManagerClient } from '@aws-sdk/client-secrets-manager'
-import * as cdk from 'aws-cdk-lib'
-import * as secretsManager from 'aws-cdk-lib/aws-secretsmanager'
-import * as utils from '../../../utils'
+import { Fn } from 'aws-cdk-lib'
+import { Secret, SecretProps } from 'aws-cdk-lib/aws-secretsmanager'
 import { CommonConstruct } from '../../../common'
+import { createCfnOutput, determineCredentials } from '../../../utils'
 
 /**
  * @classdesc Provides operations on AWS Secrets Manager.
@@ -12,10 +12,10 @@ import { CommonConstruct } from '../../../common'
  * import { CommonConstruct } from '@gradientedge/cdk-utils'
  *
  * class CustomConstruct extends CommonConstruct {
- *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
+ *   constructor(parent: Construct, id: string, props: common.CommonStackProps) {
  *     super(parent, id, props)
  *     this.props = props
- *     this.secretsManager.loadSecret('MySecretName', 'eu-west-1')
+ *     this.loadSecret('MySecretName', 'eu-west-1')
  *   }
  * }
  * @see [CDK Secrets Manager Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_secretsmanager-readme.html}
@@ -27,14 +27,14 @@ export class SecretsManager {
    * @param scope scope in which this resource is defined
    * @param props the secret properties
    */
-  public createSecret(id: string, scope: CommonConstruct, props: secretsManager.SecretProps) {
-    const secret = new secretsManager.Secret(scope, `${id}`, {
+  public createSecret(id: string, scope: CommonConstruct, props: SecretProps) {
+    const secret = new Secret(scope, `${id}`, {
       ...props,
       secretName: `${props.secretName}-${scope.props.stage}`,
     })
 
-    utils.createCfnOutput(`${id}-secretName`, scope, secret.secretName)
-    utils.createCfnOutput(`${id}-secretArn`, scope, secret.secretArn)
+    createCfnOutput(`${id}-secretName`, scope, secret.secretName)
+    createCfnOutput(`${id}-secretArn`, scope, secret.secretArn)
 
     return secret
   }
@@ -47,11 +47,7 @@ export class SecretsManager {
    * @param exportName
    */
   public retrieveSecretFromSecretsManager(id: string, scope: CommonConstruct, stackName: string, exportName: string) {
-    return secretsManager.Secret.fromSecretNameV2(
-      scope,
-      `${id}`,
-      cdk.Fn.importValue(`${stackName}-${scope.props.stage}-${exportName}`)
-    )
+    return Secret.fromSecretNameV2(scope, `${id}`, Fn.importValue(`${stackName}-${scope.props.stage}-${exportName}`))
   }
 
   /**
@@ -62,7 +58,7 @@ export class SecretsManager {
    */
   public async resolveSecretValue(region: string, secretId: string, secretKey: string) {
     const client = new SecretsManagerClient({
-      credentials: utils.determineCredentials(),
+      credentials: determineCredentials(),
       region: region,
     })
     const command = new GetSecretValueCommand({

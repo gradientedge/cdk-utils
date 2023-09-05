@@ -1,6 +1,6 @@
-import * as wafv2 from 'aws-cdk-lib/aws-wafv2'
-import * as utils from '../../../utils'
+import { CfnIPSet, CfnWebACL } from 'aws-cdk-lib/aws-wafv2'
 import { CommonConstruct } from '../../../common'
+import { createCfnOutput } from '../../../utils'
 import { WafIPSetProps, WafWebACLProps } from './types'
 
 /**
@@ -29,7 +29,7 @@ export class WafManager {
   public createIpSet(id: string, scope: CommonConstruct, props: WafIPSetProps) {
     if (!props) throw `WAF Ip Set props undefined for ${id}`
 
-    const ipSet = new wafv2.CfnIPSet(scope, `${id}`, {
+    const ipSet = new CfnIPSet(scope, `${id}`, {
       addresses: props.addresses,
       description: `IP Set for ${id} - ${scope.props.stage} stage`,
       ipAddressVersion: props.ipAddressVersion,
@@ -37,8 +37,8 @@ export class WafManager {
       scope: props.scope,
     })
 
-    utils.createCfnOutput(`${id}-ipSetId`, scope, ipSet.attrId)
-    utils.createCfnOutput(`${id}-ipSetArn`, scope, ipSet.attrArn)
+    createCfnOutput(`${id}-ipSetId`, scope, ipSet.attrId)
+    createCfnOutput(`${id}-ipSetArn`, scope, ipSet.attrArn)
 
     return ipSet
   }
@@ -52,7 +52,7 @@ export class WafManager {
   public createWebAcl(id: string, scope: CommonConstruct, props: WafWebACLProps) {
     if (!props) throw `WAF WebACL props undefined for ${id}`
 
-    const webAcl = new wafv2.CfnWebACL(scope, `${id}`, {
+    const webAcl = new CfnWebACL(scope, `${id}`, {
       defaultAction: props.defaultAction,
       description: `Web Acl for ${id} - ${scope.props.stage} stage`,
       name: scope.isProductionStage() ? props.name : `${props.name}-${scope.props.stage}`,
@@ -62,8 +62,8 @@ export class WafManager {
       visibilityConfig: props.visibilityConfig,
     })
 
-    utils.createCfnOutput(`${id}-webAclId`, scope, webAcl.attrId)
-    utils.createCfnOutput(`${id}-webAclArn`, scope, webAcl.attrArn)
+    createCfnOutput(`${id}-webAclId`, scope, webAcl.attrId)
+    createCfnOutput(`${id}-webAclArn`, scope, webAcl.attrArn)
 
     return webAcl
   }

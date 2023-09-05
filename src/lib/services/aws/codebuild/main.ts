@@ -1,5 +1,5 @@
-import * as cdk from 'aws-cdk-lib'
-import * as codebuild from 'aws-cdk-lib/aws-codebuild'
+import { Duration } from 'aws-cdk-lib'
+import { BuildSpec, ComputeType, LinuxBuildImage, Project } from 'aws-cdk-lib/aws-codebuild'
 import { CommonConstruct } from '../../../common'
 
 /**
@@ -45,8 +45,8 @@ export class CodeBuildManager {
     paths?: string
   ) {
     const invalidationPaths = paths ?? '/*'
-    return new codebuild.Project(scope, `${id}-install-deps-project`, {
-      buildSpec: codebuild.BuildSpec.fromObject({
+    return new Project(scope, `${id}-install-deps-project`, {
+      buildSpec: BuildSpec.fromObject({
         phases: {
           build: {
             commands: [
@@ -57,10 +57,10 @@ export class CodeBuildManager {
         version: '0.1',
       }),
       environment: {
-        buildImage: codebuild.LinuxBuildImage.fromDockerRegistry(
+        buildImage: LinuxBuildImage.fromDockerRegistry(
           this.createImageForCloudfrontInvalidation(id, scope, dockerFilepath).imageUri
         ),
-        computeType: codebuild.ComputeType.SMALL,
+        computeType: ComputeType.SMALL,
         privileged: true,
       },
       logging: {
@@ -72,7 +72,7 @@ export class CodeBuildManager {
         },
       },
       role: scope.iamManager.roleForCloudfrontInvalidation(id, scope),
-      timeout: cdk.Duration.minutes(5),
+      timeout: Duration.minutes(5),
     })
   }
 }

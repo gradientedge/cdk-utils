@@ -1,11 +1,11 @@
-import * as cdk from 'aws-cdk-lib'
-import * as ec2 from 'aws-cdk-lib/aws-ec2'
-import * as elasticache from 'aws-cdk-lib/aws-elasticache'
-import * as iam from 'aws-cdk-lib/aws-iam'
+import { Fn } from 'aws-cdk-lib'
+import { ISecurityGroup, IVpc, Peer, Port, SecurityGroup } from 'aws-cdk-lib/aws-ec2'
+import { CfnReplicationGroup } from 'aws-cdk-lib/aws-elasticache'
+import { ManagedPolicy } from 'aws-cdk-lib/aws-iam'
 import { Construct } from 'constructs'
 import { GraphQLApiLambda } from '..'
-import { GraphQlApiLambdaWithCacheProps } from './types'
 import * as utils from '../../utils'
+import { GraphQlApiLambdaWithCacheProps } from './types'
 
 /**
  * @deprecated Use RestApiLambdaWithCache instead. This will be removed in a future release.
@@ -31,9 +31,9 @@ export class GraphQLApiLambdaWithCache extends GraphQLApiLambda {
   id: string
 
   /* graphql restApi resources */
-  graphQLVpc: ec2.IVpc
-  graphQLElastiCache: elasticache.CfnReplicationGroup
-  graphQLSecurityGroup: ec2.ISecurityGroup
+  graphQLVpc: IVpc
+  graphQLElastiCache: CfnReplicationGroup
+  graphQLSecurityGroup: ISecurityGroup
   securityGroupExportName: string
 
   constructor(parent: Construct, id: string, props: GraphQlApiLambdaWithCacheProps) {
@@ -66,18 +66,18 @@ export class GraphQLApiLambdaWithCache extends GraphQLApiLambda {
    */
   protected setSecurityGroup() {
     if (this.props.securityGroupExportName) {
-      this.graphQLSecurityGroup = ec2.SecurityGroup.fromSecurityGroupId(
+      this.graphQLSecurityGroup = SecurityGroup.fromSecurityGroupId(
         this,
         `${this.id}`,
-        cdk.Fn.importValue(this.props.securityGroupExportName)
+        Fn.importValue(this.props.securityGroupExportName)
       )
     } else {
-      this.graphQLSecurityGroup = new ec2.SecurityGroup(this, `${this.id}-security-group-${this.props.stage}`, {
+      this.graphQLSecurityGroup = new SecurityGroup(this, `${this.id}-security-group-${this.props.stage}`, {
         securityGroupName: `${this.id}-security-group-${this.props.stage}`,
         vpc: this.graphQLVpc,
       })
 
-      this.graphQLSecurityGroup.addIngressRule(ec2.Peer.anyIpv4(), ec2.Port.allTraffic(), 'All Traffic')
+      this.graphQLSecurityGroup.addIngressRule(Peer.anyIpv4(), Port.allTraffic(), 'All Traffic')
 
       utils.createCfnOutput(`${this.id}-security-group-id`, this, this.graphQLSecurityGroup.securityGroupId)
     }
@@ -103,7 +103,7 @@ export class GraphQLApiLambdaWithCache extends GraphQLApiLambda {
     super.createLambdaRole()
 
     this.graphQLApiLambdaRole.addManagedPolicy(
-      iam.ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaVPCAccessExecutionRole')
+      ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaVPCAccessExecutionRole')
     )
   }
 

@@ -1,9 +1,9 @@
-import * as cdk from 'aws-cdk-lib'
-import * as sqs from 'aws-cdk-lib/aws-sqs'
-import * as utils from '../../../utils'
+import { Duration, RemovalPolicy, Tags } from 'aws-cdk-lib'
+import { IQueue, Queue } from 'aws-cdk-lib/aws-sqs'
 import { CommonConstruct } from '../../../common'
-import { QueueProps } from './types'
+import { createCfnOutput } from '../../../utils'
 import { LambdaProps } from '../lambda'
+import { QueueProps } from './types'
 
 /**
  * @classdesc Provides operations on AWS Simple Queue Service.
@@ -13,7 +13,7 @@ import { LambdaProps } from '../lambda'
  * import { CommonConstruct } from '@gradientedge/cdk-utils'
  *
  * class CustomConstruct extends CommonConstruct {
- *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
+ *   constructor(parent: Construct, id: string, props: common.CommonStackProps) {
  *     super(parent, id, props)
  *     this.props = props
  *     this.sqsManager.createQueue('MySqs', this, {...})
@@ -29,12 +29,12 @@ export class SqsManager {
    * @param props
    * @param deadLetterQueue
    */
-  public createQueue(id: string, scope: CommonConstruct, props: QueueProps, deadLetterQueue?: sqs.IQueue) {
+  public createQueue(id: string, scope: CommonConstruct, props: QueueProps, deadLetterQueue?: IQueue) {
     if (!props) throw `Queue props undefined for ${id}`
 
-    const queue = new sqs.Queue(scope, id, {
+    const queue = new Queue(scope, id, {
       contentBasedDeduplication: props.contentBasedDeduplication,
-      dataKeyReuse: props.dataKeyReuseInSecs ? cdk.Duration.seconds(props.dataKeyReuseInSecs) : props.dataKeyReuse,
+      dataKeyReuse: props.dataKeyReuseInSecs ? Duration.seconds(props.dataKeyReuseInSecs) : props.dataKeyReuse,
       deadLetterQueue: !deadLetterQueue
         ? undefined
         : {
@@ -42,7 +42,7 @@ export class SqsManager {
             queue: deadLetterQueue,
           },
       deduplicationScope: props.deduplicationScope,
-      deliveryDelay: props.deliveryDelayInSecs ? cdk.Duration.seconds(props.deliveryDelayInSecs) : undefined,
+      deliveryDelay: props.deliveryDelayInSecs ? Duration.seconds(props.deliveryDelayInSecs) : undefined,
       encryption: props.encryption,
       encryptionMasterKey: props.encryptionMasterKey,
       fifo: props.fifo,
@@ -50,24 +50,24 @@ export class SqsManager {
       maxMessageSizeBytes: props.maxMessageSizeBytes,
       queueName: props.queueName,
       receiveMessageWaitTime: props.receiveMessageWaitTimeInSecs
-        ? cdk.Duration.seconds(props.receiveMessageWaitTimeInSecs)
+        ? Duration.seconds(props.receiveMessageWaitTimeInSecs)
         : props.receiveMessageWaitTime,
-      removalPolicy: props.removalPolicy ?? cdk.RemovalPolicy.DESTROY,
-      retentionPeriod: props.retentionInDays ? cdk.Duration.days(props.retentionInDays) : cdk.Duration.days(7),
+      removalPolicy: props.removalPolicy ?? RemovalPolicy.DESTROY,
+      retentionPeriod: props.retentionInDays ? Duration.days(props.retentionInDays) : Duration.days(7),
       visibilityTimeout: props.visibilityTimeoutInSecs
-        ? cdk.Duration.seconds(props.visibilityTimeoutInSecs)
+        ? Duration.seconds(props.visibilityTimeoutInSecs)
         : props.visibilityTimeout,
     })
 
     if (props.tags && props.tags.length > 0) {
       props.tags.forEach(tag => {
-        cdk.Tags.of(queue).add(tag.key, tag.value)
+        Tags.of(queue).add(tag.key, tag.value)
       })
     }
 
-    utils.createCfnOutput(`${id}-queueArn`, scope, queue.queueArn)
-    utils.createCfnOutput(`${id}-queueName`, scope, queue.queueName)
-    utils.createCfnOutput(`${id}-queueUrl`, scope, queue.queueUrl)
+    createCfnOutput(`${id}-queueArn`, scope, queue.queueArn)
+    createCfnOutput(`${id}-queueName`, scope, queue.queueName)
+    createCfnOutput(`${id}-queueUrl`, scope, queue.queueUrl)
 
     return queue
   }
@@ -98,7 +98,7 @@ export class SqsManager {
     id: string,
     scope: CommonConstruct,
     props: LambdaProps,
-    deadLetterQueue: sqs.IQueue
+    deadLetterQueue: IQueue
   ) {
     let queueProps
     if (props.dlq) {

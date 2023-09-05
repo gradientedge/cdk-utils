@@ -353,7 +353,7 @@ describe('TestSiteWithEcsBackendConstruct', () => {
     template.hasResourceProperties('AWS::CloudFront::CachePolicy', {
       CachePolicyConfig: {
         Comment: 'Policy for test-site-distribution - test stage',
-        DefaultTTL: 600,
+        DefaultTTL: 86400,
         MaxTTL: 2592000,
         MinTTL: 60,
         Name: 'test-site-site-cache-policy',

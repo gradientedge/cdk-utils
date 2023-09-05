@@ -1,13 +1,13 @@
-import * as ecs from 'aws-cdk-lib/aws-ecs'
-import * as events from 'aws-cdk-lib/aws-events'
-import * as iam from 'aws-cdk-lib/aws-iam'
-import * as lambda from 'aws-cdk-lib/aws-lambda'
-import * as utils from '../../../utils'
-import * as cdk from 'aws-cdk-lib'
-import * as pipes from 'aws-cdk-lib/aws-pipes'
-import * as sqs from 'aws-cdk-lib/aws-sqs'
-import * as sfn from 'aws-cdk-lib/aws-stepfunctions'
+import { Tags } from 'aws-cdk-lib'
+import { ICluster, ITaskDefinition } from 'aws-cdk-lib/aws-ecs'
+import { CfnRule, EventBus, IEventBus, IRuleTarget, Rule } from 'aws-cdk-lib/aws-events'
+import { CfnRole, Role } from 'aws-cdk-lib/aws-iam'
+import { CfnPermission, IFunction } from 'aws-cdk-lib/aws-lambda'
+import { CfnPipe } from 'aws-cdk-lib/aws-pipes'
+import { IQueue } from 'aws-cdk-lib/aws-sqs'
+import { IStateMachine } from 'aws-cdk-lib/aws-stepfunctions'
 import { CommonConstruct } from '../../../common'
+import { createCfnOutput } from '../../../utils'
 import { EventBusProps, EventRuleProps, RuleProps, SqsToSfnPipeProps } from './types'
 
 /**
@@ -18,7 +18,7 @@ import { EventBusProps, EventRuleProps, RuleProps, SqsToSfnPipeProps } from './t
  * import { CommonConstruct } from '@gradientedge/cdk-utils'
  *
  * class CustomConstruct extends CommonConstruct {
- *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
+ *   constructor(parent: Construct, id: string, props: common.CommonStackProps) {
  *     super(parent, id, props)
  *     this.props = props
  *     this.eventManager.createLambdaRule('MyLambdaRule', this, lambdaFunction)
@@ -36,12 +36,12 @@ export class EventManager {
   public createEventBus(id: string, scope: CommonConstruct, props: EventBusProps) {
     if (!props) throw `EventBus props undefined for ${id}`
 
-    const eventBus = new events.EventBus(scope, `${id}`, {
+    const eventBus = new EventBus(scope, `${id}`, {
       eventBusName: `${props.eventBusName}-${scope.props.stage}`,
     })
 
-    utils.createCfnOutput(`${id}-eventBusName`, scope, `${props.eventBusName}-${scope.props.stage}`)
-    utils.createCfnOutput(`${id}-eventBusArn`, scope, eventBus.eventBusArn)
+    createCfnOutput(`${id}-eventBusName`, scope, `${props.eventBusName}-${scope.props.stage}`)
+    createCfnOutput(`${id}-eventBusArn`, scope, eventBus.eventBusArn)
 
     return eventBus
   }
@@ -58,12 +58,12 @@ export class EventManager {
     id: string,
     scope: CommonConstruct,
     props: EventRuleProps,
-    eventBus?: events.IEventBus,
-    targets?: events.IRuleTarget[]
+    eventBus?: IEventBus,
+    targets?: IRuleTarget[]
   ) {
     if (!props) throw `EventRule props undefined for ${id}`
 
-    const rule = new events.Rule(scope, `${id}`, {
+    const rule = new Rule(scope, `${id}`, {
       description: props.description,
       enabled: props.enabled,
       eventBus: eventBus,
@@ -80,12 +80,12 @@ export class EventManager {
 
     if (props.tags && props.tags.length > 0) {
       props.tags.forEach(tag => {
-        cdk.Tags.of(rule).add(tag.key, tag.value)
+        Tags.of(rule).add(tag.key, tag.value)
       })
     }
 
-    utils.createCfnOutput(`${id}-ruleArn`, scope, rule.ruleArn)
-    utils.createCfnOutput(`${id}-ruleName`, scope, rule.ruleName)
+    createCfnOutput(`${id}-ruleArn`, scope, rule.ruleArn)
+    createCfnOutput(`${id}-ruleName`, scope, rule.ruleName)
 
     return rule
   }
@@ -104,14 +104,14 @@ export class EventManager {
     id: string,
     scope: CommonConstruct,
     props: RuleProps,
-    lambdaFunction: lambda.Function,
+    lambdaFunction: IFunction,
     eventBusName?: string,
     eventPattern?: any,
     scheduleExpression?: string
   ) {
     if (!props) throw `EventRule props undefined for ${id}`
 
-    const eventRule = new events.CfnRule(scope, `${id}`, {
+    const eventRule = new CfnRule(scope, `${id}`, {
       description: 'Rule to send notification to lambda function target',
       eventBusName: eventBusName,
       eventPattern: eventPattern,
@@ -127,15 +127,15 @@ export class EventManager {
       ],
     })
 
-    new lambda.CfnPermission(scope, `${id}LambdaPermission`, {
+    new CfnPermission(scope, `${id}LambdaPermission`, {
       action: 'lambda:InvokeFunction',
       functionName: lambdaFunction.functionName,
-      principal: 'events.amazonaws.com',
+      principal: 'amazonaws.com',
       sourceArn: eventRule.attrArn,
     })
 
-    utils.createCfnOutput(`${id}-ruleArn`, scope, eventRule.attrArn)
-    utils.createCfnOutput(`${id}-ruleName`, scope, eventRule.name)
+    createCfnOutput(`${id}-ruleArn`, scope, eventRule.attrArn)
+    createCfnOutput(`${id}-ruleName`, scope, eventRule.name)
 
     return eventRule
   }
@@ -155,15 +155,15 @@ export class EventManager {
     id: string,
     scope: CommonConstruct,
     props: RuleProps,
-    cluster: ecs.ICluster,
-    task: ecs.ITaskDefinition,
+    cluster: ICluster,
+    task: ITaskDefinition,
     subnetIds: string[],
-    role: iam.Role | iam.CfnRole,
+    role: Role | CfnRole,
     eventPattern?: any
   ) {
     if (!props) throw `EventRule props undefined for ${id}`
 
-    const eventRule = new events.CfnRule(scope, `${id}`, {
+    const eventRule = new CfnRule(scope, `${id}`, {
       description: 'Rule to send notification on new objects in data bucket to ecs task target',
       eventPattern: eventPattern,
       name: `${props.name}-${scope.props.stage}`,
@@ -180,13 +180,13 @@ export class EventManager {
             taskDefinitionArn: task.taskDefinitionArn,
           },
           id: `${id}-${scope.props.stage}`,
-          roleArn: role instanceof iam.Role ? role.roleArn : role.attrArn,
+          roleArn: role instanceof Role ? role.roleArn : role.attrArn,
         },
       ],
     })
 
-    utils.createCfnOutput(`${id}-ruleArn`, scope, eventRule.attrArn)
-    utils.createCfnOutput(`${id}-ruleName`, scope, eventRule.name)
+    createCfnOutput(`${id}-ruleArn`, scope, eventRule.attrArn)
+    createCfnOutput(`${id}-ruleName`, scope, eventRule.name)
 
     return eventRule
   }
@@ -203,8 +203,8 @@ export class EventManager {
     id: string,
     scope: CommonConstruct,
     props: SqsToSfnPipeProps,
-    sourceQueue: sqs.IQueue,
-    targetStepFunction: sfn.IStateMachine
+    sourceQueue: IQueue,
+    targetStepFunction: IStateMachine
   ) {
     const pipeRole = scope.iamManager.createRoleForSqsToSfnPipe(
       `${id}-role`,
@@ -213,7 +213,7 @@ export class EventManager {
       targetStepFunction.stateMachineArn
     )
 
-    const pipe = new pipes.CfnPipe(scope, `${id}`, {
+    const pipe = new CfnPipe(scope, `${id}`, {
       ...props,
       description: props.description,
       enrichment: props.enrichment,
@@ -245,8 +245,8 @@ export class EventManager {
       },
     })
 
-    utils.createCfnOutput(`${id}-pipeArn`, scope, pipe.attrArn)
-    utils.createCfnOutput(`${id}-pipeName`, scope, pipe.name)
+    createCfnOutput(`${id}-pipeArn`, scope, pipe.attrArn)
+    createCfnOutput(`${id}-pipeName`, scope, pipe.name)
 
     return pipe
   }

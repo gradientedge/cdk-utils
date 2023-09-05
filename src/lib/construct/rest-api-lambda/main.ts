@@ -1,9 +1,9 @@
-import * as apig from 'aws-cdk-lib/aws-apigateway'
-import * as acm from 'aws-cdk-lib/aws-certificatemanager'
-import * as iam from 'aws-cdk-lib/aws-iam'
-import * as lambda from 'aws-cdk-lib/aws-lambda'
-import * as route53 from 'aws-cdk-lib/aws-route53'
-import * as secretsmanager from 'aws-cdk-lib/aws-secretsmanager'
+import { BasePathMapping, DomainName, RestApi } from 'aws-cdk-lib/aws-apigateway'
+import { ICertificate } from 'aws-cdk-lib/aws-certificatemanager'
+import { PolicyDocument, Role } from 'aws-cdk-lib/aws-iam'
+import { AssetCode, IFunction, ILayerVersion, LayerVersion } from 'aws-cdk-lib/aws-lambda'
+import { IHostedZone } from 'aws-cdk-lib/aws-route53'
+import { ISecret } from 'aws-cdk-lib/aws-secretsmanager'
 import { Construct } from 'constructs'
 import { CommonConstruct } from '../../common'
 import { RestApiLambdaEnvironment, RestApiLambdaProps } from './types'
@@ -31,17 +31,17 @@ export abstract class RestApiLambda extends CommonConstruct {
   id: string
 
   /* restApiLambda resources */
-  applicationSecrets: secretsmanager.ISecret[]
-  restApiLambdaPolicy: iam.PolicyDocument
-  restApiLambdaRole: iam.Role
+  applicationSecrets: ISecret[]
+  restApiLambdaPolicy: PolicyDocument
+  restApiLambdaRole: Role
   restApiLambdaEnvironment: RestApiLambdaEnvironment
-  restApiLambdaLayers: lambda.ILayerVersion[] = []
-  restApiLambdaFunction: lambda.Function
-  restApi: apig.RestApi
-  restApiHostedZone: route53.IHostedZone
-  restApiCertificate: acm.ICertificate
-  restApiDomain: apig.DomainName
-  restApiBasePathMappings: apig.BasePathMapping[] = []
+  restApiLambdaLayers: ILayerVersion[] = []
+  restApiLambdaFunction: IFunction
+  restApi: RestApi
+  restApiHostedZone: IHostedZone
+  restApiCertificate: ICertificate
+  restApiDomain: DomainName
+  restApiBasePathMappings: BasePathMapping[] = []
 
   protected constructor(parent: Construct, id: string, props: RestApiLambdaProps) {
     super(parent, id, props)
@@ -117,7 +117,7 @@ export abstract class RestApiLambda extends CommonConstruct {
    * @summary Method to create iam policy for RestApi Lambda function
    */
   protected createLambdaPolicy() {
-    this.restApiLambdaPolicy = new iam.PolicyDocument({
+    this.restApiLambdaPolicy = new PolicyDocument({
       statements: [this.iamManager.statementForCreateAnyLogStream()],
     })
   }
@@ -148,11 +148,11 @@ export abstract class RestApiLambda extends CommonConstruct {
    * @summary Method to create layers for RestApi Lambda function
    */
   protected createLambdaLayers() {
-    const layers: lambda.LayerVersion[] = []
+    const layers: LayerVersion[] = []
 
     if (!this.props.restApiLambdaLayerSources) return
 
-    this.props.restApiLambdaLayerSources.forEach((source: lambda.AssetCode, index: number) => {
+    this.props.restApiLambdaLayerSources.forEach((source: AssetCode, index: number) => {
       layers.push(this.lambdaManager.createLambdaLayer(`${this.id}-layer-${index}`, this, source))
     })
 
@@ -211,7 +211,7 @@ export abstract class RestApiLambda extends CommonConstruct {
     if (apiRootPaths && apiRootPaths.length > 0) {
       apiRootPaths.forEach((apiRootPath: string) => {
         this.restApiBasePathMappings.push(
-          new apig.BasePathMapping(this, `${this.id}-base-bath-mapping-${apiRootPath}`, {
+          new BasePathMapping(this, `${this.id}-base-bath-mapping-${apiRootPath}`, {
             basePath: apiRootPath,
             domainName: this.restApiDomain,
             restApi: this.restApi,
@@ -223,7 +223,7 @@ export abstract class RestApiLambda extends CommonConstruct {
     }
 
     // add default mapping if apiRootPaths not set
-    new apig.BasePathMapping(this, `${this.id}-base-bath-mapping`, {
+    new BasePathMapping(this, `${this.id}-base-bath-mapping`, {
       domainName: this.restApiDomain,
       restApi: this.restApi,
       stage: this.restApi.deploymentStage,

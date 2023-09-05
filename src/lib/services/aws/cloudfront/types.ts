@@ -1,6 +1,9 @@
+import {
+  DistributionProps as CfDistributionProps,
+  CloudFrontWebDistributionProps,
+  FunctionProps,
+} from 'aws-cdk-lib/aws-cloudfront'
 import { TagProps } from '../../../types'
-import * as cf from 'aws-cdk-lib/aws-cloudfront'
-import { CloudFrontWebDistributionProps, FunctionProps } from 'aws-cdk-lib/aws-cloudfront'
 
 /**
  */
@@ -10,7 +13,7 @@ export interface CloudFrontProps extends CloudFrontWebDistributionProps {
 
 /**
  */
-export interface DistributionProps extends cf.DistributionProps {
+export interface DistributionProps extends CfDistributionProps {
   tags?: TagProps[]
 }
 

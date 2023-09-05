@@ -1,7 +1,7 @@
-import { CommonConstruct } from '../../common'
+import { IBucket } from 'aws-cdk-lib/aws-s3'
+import { BucketDeployment } from 'aws-cdk-lib/aws-s3-deployment'
 import { Construct } from 'constructs'
-import * as s3 from 'aws-cdk-lib/aws-s3'
-import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment'
+import { CommonConstruct } from '../../common'
 import { StaticAssetDeploymentProps } from './types'
 
 /**
@@ -25,7 +25,7 @@ export class StaticAssetDeployment extends CommonConstruct {
   id: string
 
   /* construct resources */
-  staticAssetBucket: s3.IBucket
+  staticAssetBucket: IBucket
 
   constructor(parent: Construct, id: string, props: StaticAssetDeploymentProps) {
     super(parent, id, props)
@@ -49,10 +49,10 @@ export class StaticAssetDeployment extends CommonConstruct {
   }
 
   /**
-   * @summary Deploy the static assests into the static asset bucket
+   * @summary Deploy the static assets into the static asset bucket
    */
   protected deployStaticAssets() {
-    new s3deploy.BucketDeployment(this, `${this.id}-static-deployment`, {
+    new BucketDeployment(this, `${this.id}-static-deployment`, {
       ...this.props.staticAssetDeployment,
       destinationBucket: this.staticAssetBucket,
       sources: this.props.staticAssetSources,

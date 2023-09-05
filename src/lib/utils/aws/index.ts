@@ -1,8 +1,8 @@
-import * as cdk from 'aws-cdk-lib'
-import * as _ from 'lodash'
-import { CommonConstruct } from '../../common'
 import { fromEnv, fromIni } from '@aws-sdk/credential-providers'
 import { AwsCredentialIdentityProvider } from '@aws-sdk/types'
+import { CfnOutput } from 'aws-cdk-lib'
+import _ from 'lodash'
+import { CommonConstruct } from '../../common'
 
 /**
  * @summary Helper method to add CloudFormation outputs from the construct
@@ -19,9 +19,9 @@ export function createCfnOutput(
   value?: string,
   description?: string,
   overrideId = true
-): cdk.CfnOutput {
+): CfnOutput {
   const camelName = _.camelCase(id)
-  const output = new cdk.CfnOutput(scope, id, {
+  const output = new CfnOutput(scope, id, {
     description,
     exportName: `${scope.props.stackName}-${camelName}`,
     value: value ?? '',
@@ -32,6 +32,9 @@ export function createCfnOutput(
   return output
 }
 
+/**
+ *
+ */
 export function determineCredentials(): AwsCredentialIdentityProvider {
   if (process.env.AWS_PROFILE) return fromIni()
   return fromEnv()
