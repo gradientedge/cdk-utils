@@ -3,7 +3,7 @@ import { Template } from 'aws-cdk-lib/assertions'
 import * as apig from 'aws-cdk-lib/aws-apigateway'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import { Construct } from 'constructs'
-import { CommonStack } from '../../lib/common'
+import { CommonStack } from '../../lib'
 import { GraphQLApiLambda, GraphQlApiLambdaProps } from '../../lib'
 
 interface testGraphqlProps extends GraphQlApiLambdaProps {

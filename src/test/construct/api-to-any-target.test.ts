@@ -1,10 +1,7 @@
 import * as cdk from 'aws-cdk-lib'
 import { Template } from 'aws-cdk-lib/assertions'
-import * as iam from 'aws-cdk-lib/aws-iam'
-import * as lambda from 'aws-cdk-lib/aws-lambda'
 import { Construct } from 'constructs'
 import { ApiToAnyTarget, ApiToAnyTargetProps, CommonStack } from '../../lib'
-import { Cors, LambdaIntegration } from 'aws-cdk-lib/aws-apigateway'
 
 interface TestStackProps extends ApiToAnyTargetProps {
   testLambda: any

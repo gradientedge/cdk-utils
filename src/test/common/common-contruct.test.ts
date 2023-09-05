@@ -2,7 +2,7 @@ import * as cdk from 'aws-cdk-lib'
 import { CustomResource } from 'aws-cdk-lib'
 import { Template } from 'aws-cdk-lib/assertions'
 import { Construct } from 'constructs'
-import * as common from '../../lib/common'
+import * as common from '../../lib'
 import { CommonStackProps } from '../../lib'
 
 interface TestStackProps extends CommonStackProps {

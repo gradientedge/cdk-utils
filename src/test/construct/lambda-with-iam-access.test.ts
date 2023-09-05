@@ -1,8 +1,8 @@
 import * as cdk from 'aws-cdk-lib'
 import { Template } from 'aws-cdk-lib/assertions'
-import { Construct } from 'constructs'
-import { SecretProps } from 'aws-cdk-lib/aws-secretsmanager'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
+import { SecretProps } from 'aws-cdk-lib/aws-secretsmanager'
+import { Construct } from 'constructs'
 import { CommonStack, LambdaWithIamAccess, LambdaWithIamAccessProps } from '../../lib'
 
 interface TestStackProps extends LambdaWithIamAccessProps {
