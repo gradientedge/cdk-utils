@@ -41,7 +41,7 @@ export class CommonStack extends Stack {
   }
 
   /**
-   * @summary Method to determine the core CDK construct properties injected via context json
+   * @summary Method to determine the core CDK construct properties injected via context cdk.json
    * @param props The stack properties
    * @returns The stack properties
    */
@@ -62,7 +62,7 @@ export class CommonStack extends Stack {
   }
 
   /**
-   * @summary Method to determine extra cdk contexts apart from the main json
+   * @summary Method to determine extra cdk contexts apart from the main cdk.json
    * - Sets the properties from the extra contexts into cdk node context
    * - Primary use is to have layered config in separate files to enable easier maintenance and readability
    */
@@ -71,14 +71,14 @@ export class CommonStack extends Stack {
     const debug = this.node.tryGetContext('debug')
 
     if (!extraContexts) {
-      if (debug) console.debug(`No additional contexts provided. Using default context properties from json`)
+      if (debug) console.debug(`No additional contexts provided. Using default context properties from cdk.json`)
       return
     }
 
     extraContexts.forEach((context: string) => {
       const extraContextPath = `${appRoot.path}/${context}`
 
-      /* scenario where extra context is configured in json but absent in file system */
+      /* scenario where extra context is configured in cdk.json but absent in file system */
       if (!fs.existsSync(extraContextPath)) throw `Extra context properties unavailable in path:${extraContextPath}`
 
       /* read the extra properties */
@@ -96,7 +96,7 @@ export class CommonStack extends Stack {
   }
 
   /**
-   * @summary Method to determine extra cdk stage contexts apart from the main json
+   * @summary Method to determine extra cdk stage contexts apart from the main cdk.json
    * - Sets the properties from the extra stage contexts into cdk node context
    * - Primary use is to have layered config for each environment which is injected into the context
    */

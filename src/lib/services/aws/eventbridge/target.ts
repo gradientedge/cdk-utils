@@ -5,7 +5,7 @@ import { ILogGroup } from 'aws-cdk-lib/aws-logs'
 import { CommonConstruct } from '../../../common'
 
 /**
- * @classdesc Provides operations on AWS EventBridge
+ * @classdesc Provides operations on AWS EventBridge Targets
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
  * @example

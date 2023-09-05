@@ -7,7 +7,7 @@ import { createCfnOutput } from '../../../utils'
 import { Route53Props } from './types'
 
 /**
- * @classdesc Provides operations on AWS
+ * @classdesc Provides operations on AWS Route53
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
  * @example

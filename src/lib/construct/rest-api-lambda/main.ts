@@ -11,7 +11,7 @@ import { RestApiLambdaEnvironment, RestApiLambdaProps } from './types'
 /**
  * @classdesc Provides a construct to create and deploy a RestApi as Lambda
  *
- * <b>Architecture</b><br/> ![Architecture](./RestApijpg)
+ * <b>Architecture</b><br/> ![Architecture](./RestApiLambda.jpg)
  * @example
  * import { RestApiLambda, RestApiLambdaProps } '@gradientedge/cdk-utils'
  * import { Construct } from 'constructs'
