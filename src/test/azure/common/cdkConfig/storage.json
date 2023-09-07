@@ -1,0 +1,14 @@
+{
+  "testStorageAccount": {
+    "name": "test-storage-account"
+  },
+  "testStorageContainer": {
+    "name": "test-storage-container",
+    "storageAccountName": "test-storage-account"
+  },
+  "testStorageBlob": {
+    "name": "test-storage-blob",
+    "storageAccountName": "test-storage-account",
+    "storageContainerName": "test-storage-container"
+  }
+}

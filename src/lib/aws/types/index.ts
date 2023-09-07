@@ -1,1 +1,6 @@
-export * from './aws'
+/**
+ */
+export interface TagProps {
+  key: string
+  value: string
+}

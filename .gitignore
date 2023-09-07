@@ -165,6 +165,7 @@ typedocs/
 
 # Misc
 !.eslintrc.js
+!setup.js
 .DS_Store
 dist/
 .secrets
@@ -175,3 +176,6 @@ junit.xml
 
 # layers
 **/layers
+
+# cdktf
+cdktf.out/

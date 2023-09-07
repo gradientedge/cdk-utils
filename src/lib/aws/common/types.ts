@@ -1,18 +1,12 @@
 import { StackProps } from 'aws-cdk-lib'
 import { Runtime, Tracing } from 'aws-cdk-lib/aws-lambda'
 import { RetentionDays } from 'aws-cdk-lib/aws-logs'
+import { BaseProps } from '../../common'
 
 /**
  */
-export interface CommonStackProps extends StackProps {
-  name: string
+export interface CommonStackProps extends BaseProps, StackProps {
   region: string
-  stage: string
-  domainName: string
-  subDomain?: string
-  extraContexts?: string[]
-  stageContextPath?: string
-  skipStageForARecords: boolean
   logRetention?: RetentionDays
   defaultReservedLambdaConcurrentExecutions?: number
   defaultTracing?: Tracing

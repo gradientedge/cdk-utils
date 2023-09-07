@@ -1,7 +1,9 @@
 // For a detailed explanation regarding each configuration property, visit:
 // https://jestjs.io/docs/en/configuration.html
 
-module.exports = {
+import type { Config } from 'jest'
+
+const config: Config = {
   automock: false,
   clearMocks: true,
   collectCoverage: true,
@@ -24,7 +26,7 @@ module.exports = {
       },
     ],
   ],
-  setupFilesAfterEnv: ['jest-extended'],
+  setupFilesAfterEnv: ['jest-extended', '<rootDir>/setup.js'],
   testEnvironment: 'node',
   testMatch: ['**/?(*.)+(spec|test).[t]s?(x)'],
   transform: {
@@ -32,3 +34,5 @@ module.exports = {
   },
   verbose: true,
 }
+
+export default config

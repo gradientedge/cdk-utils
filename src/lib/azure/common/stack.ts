@@ -1,32 +1,30 @@
-import { App, Stack, StackProps } from 'aws-cdk-lib'
-import { Runtime } from 'aws-cdk-lib/aws-lambda'
 import fs from 'fs'
-import { CommonConstruct } from './construct'
-import { CommonStackProps } from './types'
+import { CommonAzureConstruct } from './construct'
+import { CommonAzureStackProps } from './types'
 
 import appRoot from 'app-root-path'
+import { App, TerraformStack } from 'cdktf'
 import { isDevStage } from '../../common'
+import { Construct } from 'constructs'
 
 /**
  * @classdesc Common stack to use as a base for all higher level constructs.
  * @example
- * import { CommonStack } from '@gradientedge/cdk-utils'
+ * import { CommonAzureStack } from '@gradientedge/cdk-utils'
  *
- * class CustomStack extends CommonStack {
+ * class CustomStack extends CommonAzureStack {
  *   constructor(parent: App, name: string, props: StackProps) {
  *     super(parent, name, props)
  *     // provision resources
  *   }
  * }
  */
-export class CommonStack extends Stack {
-  public static NODEJS_RUNTIME = Runtime.NODEJS_18_X
+export class CommonAzureStack extends TerraformStack {
+  construct: CommonAzureConstruct
+  props: CommonAzureStackProps
 
-  construct: CommonConstruct
-  props: CommonStackProps
-
-  constructor(parent: App, name: string, props: StackProps) {
-    super(parent, name, props)
+  constructor(parent: Construct, name: string, props: CommonAzureStackProps) {
+    super(parent, name)
 
     /* determine extra cdk contexts */
     this.determineExtraContexts()
@@ -37,32 +35,29 @@ export class CommonStack extends Stack {
     this.props = this.determineConstructProps(props)
 
     /* initialise the construct */
-    this.construct = new CommonConstruct(this, 'cdk-utils', this.props)
+    this.construct = new CommonAzureConstruct(this, 'cdk-utils', this.props)
   }
 
   /**
-   * @summary Method to determine the core CDK construct properties injected via context cdk.json
+   * @summary Method to determine the core CDK construct properties injected via context cdktf.json
    * @param props The stack properties
    * @returns The stack properties
    */
-  protected determineConstructProps(props: StackProps) {
+  protected determineConstructProps(props: CommonAzureStackProps) {
     return {
       domainName: this.node.tryGetContext('domainName'),
-      excludeDomainNameForBuckets: this.node.tryGetContext('excludeDomainNameForBuckets'),
       extraContexts: this.node.tryGetContext('extraContexts'),
-      logRetention: this.node.tryGetContext('logRetention'),
-      name: props.stackName || 'cdk-utils',
-      nodejsRuntime: this.node.tryGetContext('nodejsRuntime') ?? CommonStack.NODEJS_RUNTIME,
-      region: this.node.tryGetContext('region'),
+      features: this.node.tryGetContext('features'),
+      name: this.node.tryGetContext('resourceGroupName'),
+      resourceGroupName: this.node.tryGetContext('resourceGroupName'),
       skipStageForARecords: this.node.tryGetContext('skipStageForARecords'),
-      stackName: props.stackName,
       stage: this.node.tryGetContext('stage'),
       subDomain: this.node.tryGetContext('subDomain'),
     }
   }
 
   /**
-   * @summary Method to determine extra cdk contexts apart from the main cdk.json
+   * @summary Method to determine extra cdk contexts apart from the main cdktf.json
    * - Sets the properties from the extra contexts into cdk node context
    * - Primary use is to have layered config in separate files to enable easier maintenance and readability
    */
@@ -71,7 +66,7 @@ export class CommonStack extends Stack {
     const debug = this.node.tryGetContext('debug')
 
     if (!extraContexts) {
-      if (debug) console.debug(`No additional contexts provided. Using default context properties from cdk.json`)
+      if (debug) console.debug(`No additional contexts provided. Using default context properties from cdktf.json`)
       return
     }
 
@@ -96,7 +91,7 @@ export class CommonStack extends Stack {
   }
 
   /**
-   * @summary Method to determine extra cdk stage contexts apart from the main cdk.json
+   * @summary Method to determine extra cdk stage contexts apart from the main cdktf.json
    * - Sets the properties from the extra stage contexts into cdk node context
    * - Primary use is to have layered config for each environment which is injected into the context
    */
