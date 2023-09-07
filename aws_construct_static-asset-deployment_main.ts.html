@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>aws/construct/static-asset-deployment/main.ts - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="main.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <script src="scripts/commonNav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">aws/construct/static-asset-deployment/main.ts</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { IBucket } from 'aws-cdk-lib/aws-s3'
+import { BucketDeployment } from 'aws-cdk-lib/aws-s3-deployment'
+import { Construct } from 'constructs'
+import { CommonConstruct } from '../../common'
+import { StaticAssetDeploymentProps } from './types'
+
+/**
+ * @classdesc Provides a construct to create and deploy static assets into S3 bucket
+ * @example
+ * import { StaticAssetDeployment, StaticAssetDeploymentProps } '@gradientedge/cdk-utils'
+ * import { Construct } from 'constructs'
+ *
+ * class CustomConstruct extends StaticAssetDeployment {
+ *   constructor(parent: Construct, id: string, props: StaticAssetDeploymentProps) {
+ *     super(parent, id, props)
+ *     this.props = props
+ *     this.id = id
+ *     this.initResources()
+ *   }
+ * }
+ */
+export class StaticAssetDeployment extends CommonConstruct {
+  /* construct properties */
+  props: StaticAssetDeploymentProps
+  id: string
+
+  /* construct resources */
+  staticAssetBucket: IBucket
+
+  constructor(parent: Construct, id: string, props: StaticAssetDeploymentProps) {
+    super(parent, id, props)
+    this.props = props
+    this.id = id
+  }
+
+  /**
+   * @summary Initialise and provision resources
+   */
+  public initResources() {
+    this.createAssetBucket()
+    this.deployStaticAssets()
+  }
+
+  /**
+   * @summary Create the static asset bucket
+   */
+  protected createAssetBucket() {
+    this.staticAssetBucket = this.s3Manager.createS3Bucket(`${this.id}-sa-bucket`, this, this.props.staticAssetBucket)
+  }
+
+  /**
+   * @summary Deploy the static assets into the static asset bucket
+   */
+  protected deployStaticAssets() {
+    new BucketDeployment(this, `${this.id}-static-deployment`, {
+      ...this.props.staticAssetDeployment,
+      destinationBucket: this.staticAssetBucket,
+      sources: this.props.staticAssetSources,
+    })
+
+    const staticAssetsForExport = this.props.staticAssetsForExport
+    if (!staticAssetsForExport) return
+
+    /* optional additional exports needed for asset urls */
+    staticAssetsForExport.forEach(asset => {
+      this.addCfnOutput(asset.key, this.staticAssetBucket.s3UrlForObject(asset.value))
+    })
+  }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+    
+</div>
+
+<br class="clear">
+
+<footer>
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>

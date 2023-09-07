@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>azure/common/stack.ts - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="main.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <script src="scripts/commonNav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">azure/common/stack.ts</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import fs from 'fs'
+import { CommonAzureConstruct } from './construct'
+import { CommonAzureStackProps } from './types'
+
+import appRoot from 'app-root-path'
+import { App, TerraformStack } from 'cdktf'
+import { isDevStage } from '../../common'
+import { Construct } from 'constructs'
+
+/**
+ * @classdesc Common stack to use as a base for all higher level constructs.
+ * @example
+ * import { CommonAzureStack } from '@gradientedge/cdk-utils'
+ *
+ * class CustomStack extends CommonAzureStack {
+ *   constructor(parent: App, name: string, props: StackProps) {
+ *     super(parent, name, props)
+ *     // provision resources
+ *   }
+ * }
+ */
+export class CommonAzureStack extends TerraformStack {
+  construct: CommonAzureConstruct
+  props: CommonAzureStackProps
+
+  constructor(parent: Construct, name: string, props: CommonAzureStackProps) {
+    super(parent, name)
+
+    /* determine extra cdk contexts */
+    this.determineExtraContexts()
+
+    /* determine extra cdk stage contexts */
+    this.determineStageContexts()
+
+    this.props = this.determineConstructProps(props)
+
+    /* initialise the construct */
+    this.construct = new CommonAzureConstruct(this, 'cdk-utils', this.props)
+  }
+
+  /**
+   * @summary Method to determine the core CDK construct properties injected via context cdktf.json
+   * @param props The stack properties
+   * @returns The stack properties
+   */
+  protected determineConstructProps(props: CommonAzureStackProps) {
+    return {
+      domainName: this.node.tryGetContext('domainName'),
+      extraContexts: this.node.tryGetContext('extraContexts'),
+      features: this.node.tryGetContext('features'),
+      name: this.node.tryGetContext('resourceGroupName'),
+      resourceGroupName: this.node.tryGetContext('resourceGroupName'),
+      skipStageForARecords: this.node.tryGetContext('skipStageForARecords'),
+      stage: this.node.tryGetContext('stage'),
+      subDomain: this.node.tryGetContext('subDomain'),
+    }
+  }
+
+  /**
+   * @summary Method to determine extra cdk contexts apart from the main cdktf.json
+   * - Sets the properties from the extra contexts into cdk node context
+   * - Primary use is to have layered config in separate files to enable easier maintenance and readability
+   */
+  protected determineExtraContexts() {
+    const extraContexts = this.node.tryGetContext('extraContexts')
+    const debug = this.node.tryGetContext('debug')
+
+    if (!extraContexts) {
+      if (debug) console.debug(`No additional contexts provided. Using default context properties from cdktf.json`)
+      return
+    }
+
+    extraContexts.forEach((context: string) => {
+      const extraContextPath = `${appRoot.path}/${context}`
+
+      /* scenario where extra context is configured in cdk.json but absent in file system */
+      if (!fs.existsSync(extraContextPath)) throw `Extra context properties unavailable in path:${extraContextPath}`
+
+      /* read the extra properties */
+      const extraContextPropsBuffer = fs.readFileSync(extraContextPath)
+      if (debug) console.debug(`Adding additional contexts provided in ${extraContextPath}`)
+
+      /* parse as JSON properties */
+      const extraContextProps = JSON.parse(extraContextPropsBuffer.toString('utf-8'))
+
+      /* set each of the property into the cdk node context */
+      Object.keys(extraContextProps).forEach((propKey: any) => {
+        this.node.setContext(propKey, extraContextProps[propKey])
+      })
+    })
+  }
+
+  /**
+   * @summary Method to determine extra cdk stage contexts apart from the main cdktf.json
+   * - Sets the properties from the extra stage contexts into cdk node context
+   * - Primary use is to have layered config for each environment which is injected into the context
+   */
+  protected determineStageContexts() {
+    const stage = this.node.tryGetContext('stage')
+    const stageContextPath = this.node.tryGetContext('stageContextPath') || 'cdkEnv'
+    const stageContextFilePath = `${appRoot.path}/${stageContextPath}/${stage}.json`
+    const debug = this.node.tryGetContext('debug')
+
+    if (isDevStage(stage)) {
+      if (debug) console.debug(`Development stage. Using default stage context properties`)
+    }
+
+    /* alert default context usage when extra stage config is missing */
+    if (!fs.existsSync(stageContextFilePath)) {
+      if (debug) console.debug(`Stage specific context properties unavailable in path:${stageContextFilePath}`)
+      if (debug) console.debug(`Using default stage context properties for ${stage} stage`)
+      return
+    }
+
+    /* read the extra properties */
+    const stageContextPropsBuffer = fs.readFileSync(stageContextFilePath)
+    if (debug) console.debug(`Adding additional stage contexts provided in ${stageContextFilePath}`)
+
+    /* parse as JSON properties */
+    const stageContextProps = JSON.parse(stageContextPropsBuffer.toString('utf-8'))
+
+    /* set each of the property into the cdk node context */
+    Object.keys(stageContextProps).forEach((propKey: any) => {
+      /* handle object, array properties */
+      if (typeof stageContextProps[propKey] === 'object' &amp;&amp; !Array.isArray(stageContextProps[propKey])) {
+        this.node.setContext(propKey, {
+          ...this.node.tryGetContext(propKey),
+          ...stageContextProps[propKey],
+        })
+      } else {
+        /* handle all other primitive properties */
+        this.node.setContext(propKey, stageContextProps[propKey])
+      }
+    })
+  }
+
+  /**
+   * @summary Determine the fully qualified domain name based on domainName &amp; subDomain
+   */
+  protected fullyQualifiedDomain() {
+    const domainName = this.node.tryGetContext('domainName')
+    const subDomain = this.node.tryGetContext('subDomain')
+    return subDomain ? `${subDomain}.${domainName}` : domainName
+  }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+    
+</div>
+
+<br class="clear">
+
+<footer>
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>
