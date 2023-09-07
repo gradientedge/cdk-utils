@@ -6,6 +6,7 @@ import { CfnPermission, IFunction } from 'aws-cdk-lib/aws-lambda'
 import { CfnPipe } from 'aws-cdk-lib/aws-pipes'
 import { IQueue } from 'aws-cdk-lib/aws-sqs'
 import { IStateMachine } from 'aws-cdk-lib/aws-stepfunctions'
+import _ from 'lodash'
 import { CommonConstruct } from '../../common'
 import { createCfnOutput } from '../../utils'
 import { EventBusProps, EventRuleProps, RuleProps, SqsToSfnPipeProps } from './types'
@@ -72,14 +73,14 @@ export class EventManager {
       schedule: props.schedule,
     })
 
-    if (targets && targets.length > 0) {
-      targets.forEach(target => {
+    if (targets && !_.isEmpty(targets)) {
+      _.forEach(targets, target => {
         rule.addTarget(target)
       })
     }
 
-    if (props.tags && props.tags.length > 0) {
-      props.tags.forEach(tag => {
+    if (props.tags && !_.isEmpty(props.tags)) {
+      _.forEach(props.tags, tag => {
         Tags.of(rule).add(tag.key, tag.value)
       })
     }

@@ -1,6 +1,7 @@
 import { IBucket } from 'aws-cdk-lib/aws-s3'
 import { BucketDeployment } from 'aws-cdk-lib/aws-s3-deployment'
 import { Construct } from 'constructs'
+import _ from 'lodash'
 import { CommonConstruct } from '../../common'
 import { StaticAssetDeploymentProps } from './types'
 
@@ -62,7 +63,7 @@ export class StaticAssetDeployment extends CommonConstruct {
     if (!staticAssetsForExport) return
 
     /* optional additional exports needed for asset urls */
-    staticAssetsForExport.forEach(asset => {
+    _.forEach(staticAssetsForExport, asset => {
       this.addCfnOutput(asset.key, this.staticAssetBucket.s3UrlForObject(asset.value))
     })
   }

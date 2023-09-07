@@ -30,6 +30,7 @@ import {
   SqsSendMessage,
   StepFunctionsStartExecution,
 } from 'aws-cdk-lib/aws-stepfunctions-tasks'
+import _ from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
 import { CommonConstruct } from '../../common'
 import { createCfnOutput } from '../../utils'
@@ -214,12 +215,12 @@ export class SfnManager {
       retries = DEFAULT_RETRY_CONFIG
     }
 
-    retries.forEach(retry =>
+    _.forEach(retries, retry => {
       step.addRetry({
         ...retry,
         ...{ interval: retry.intervalInSecs ? Duration.seconds(retry.intervalInSecs) : retry.interval },
       })
-    )
+    })
 
     return step
   }
@@ -267,12 +268,12 @@ export class SfnManager {
       retries = DEFAULT_RETRY_CONFIG
     }
 
-    retries.forEach(retry =>
+    _.forEach(retries, retry => {
       step.addRetry({
         ...retry,
         ...{ interval: retry.intervalInSecs ? Duration.seconds(retry.intervalInSecs) : retry.interval },
       })
-    )
+    })
 
     return step
   }
@@ -320,12 +321,12 @@ export class SfnManager {
       retries = DEFAULT_RETRY_CONFIG
     }
 
-    retries.forEach(retry =>
+    _.forEach(retries, retry => {
       step.addRetry({
         ...retry,
         ...{ interval: retry.intervalInSecs ? Duration.seconds(retry.intervalInSecs) : retry.interval },
       })
-    )
+    })
 
     return step
   }
@@ -364,12 +365,12 @@ export class SfnManager {
       retries = DEFAULT_RETRY_CONFIG
     }
 
-    retries.forEach(retry =>
+    _.forEach(retries, retry => {
       step.addRetry({
         ...retry,
         ...{ interval: retry.intervalInSecs ? Duration.seconds(retry.intervalInSecs) : retry.interval },
       })
-    )
+    })
 
     return step
   }
@@ -396,12 +397,12 @@ export class SfnManager {
       retries = DEFAULT_RETRY_CONFIG
     }
 
-    retries.forEach(retry =>
+    _.forEach(retries, retry => {
       step.addRetry({
         ...retry,
         ...{ interval: retry.intervalInSecs ? Duration.seconds(retry.intervalInSecs) : retry.interval },
       })
-    )
+    })
 
     return step
   }
@@ -436,12 +437,12 @@ export class SfnManager {
       retries = DEFAULT_RETRY_CONFIG
     }
 
-    retries.forEach(retry =>
+    _.forEach(retries, retry => {
       step.addRetry({
         ...retry,
         ...{ interval: retry.intervalInSecs ? Duration.seconds(retry.intervalInSecs) : retry.interval },
       })
-    )
+    })
 
     return step
   }
@@ -474,12 +475,12 @@ export class SfnManager {
       retries = DEFAULT_RETRY_CONFIG
     }
 
-    retries.forEach(retry =>
+    _.forEach(retries, retry => {
       step.addRetry({
         ...retry,
         ...{ interval: retry.intervalInSecs ? Duration.seconds(retry.intervalInSecs) : retry.interval },
       })
-    )
+    })
 
     return step
   }
@@ -510,12 +511,12 @@ export class SfnManager {
       retries = DEFAULT_RETRY_CONFIG
     }
 
-    retries.forEach(retry =>
+    _.forEach(retries, retry => {
       step.addRetry({
         ...retry,
         ...{ interval: retry.intervalInSecs ? Duration.seconds(retry.intervalInSecs) : retry.interval },
       })
-    )
+    })
 
     return step
   }

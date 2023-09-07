@@ -1,5 +1,6 @@
 import { Tags } from 'aws-cdk-lib'
 import { Table } from 'aws-cdk-lib/aws-dynamodb'
+import _ from 'lodash'
 import { CommonConstruct } from '../../common'
 import { createCfnOutput } from '../../utils'
 import { TableProps } from './types'
@@ -50,8 +51,8 @@ export class DynamodbManager {
       writeCapacity: props.writeCapacity,
     })
 
-    if (props.tags && props.tags.length > 0) {
-      props.tags.forEach(tag => {
+    if (props.tags && !_.isEmpty(props.tags)) {
+      _.forEach(props.tags, tag => {
         Tags.of(table).add(tag.key, tag.value)
       })
     }

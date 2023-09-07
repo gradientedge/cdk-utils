@@ -1,8 +1,9 @@
 import * as cdk from 'aws-cdk-lib'
 import * as watch from 'aws-cdk-lib/aws-cloudwatch'
 import { IMetric } from 'aws-cdk-lib/aws-cloudwatch'
-import * as utils from '../../utils'
+import _ from 'lodash'
 import { CommonConstruct } from '../../common'
+import * as utils from '../../utils'
 import {
   AlarmProps,
   AlarmStatusWidgetProps,
@@ -56,9 +57,10 @@ export class CloudWatchManager {
     if (!props.metricProps) throw `Could not find metricProps for Alarm props for id:${id}`
 
     const metrics: any = {}
-    this.determineMetrics(scope, props.metricProps).map(
-      (metric: watch.IMetric, index: number) => (metrics[`m${index}`] = metric)
-    )
+    _.map(this.determineMetrics(scope, props.metricProps), (metric: watch.IMetric, index: number) => {
+      metrics[`m${index}`] = metric
+    })
+
     const expression = new watch.MathExpression({
       expression: props.expression,
       period: props.periodInSecs ? cdk.Duration.seconds(props.periodInSecs) : cdk.Duration.minutes(5),
@@ -139,7 +141,9 @@ export class CloudWatchManager {
     if (!props || props.length == 0) throw `Widget props undefined`
 
     const widgets: any = []
-    props.forEach((widgetProps: any) => widgets.push(this.createWidget(widgetProps.id, scope, widgetProps)))
+    _.forEach(props, (widgetProps: any) => {
+      widgets.push(this.createWidget(widgetProps.id, scope, widgetProps))
+    })
 
     return widgets
   }
@@ -188,9 +192,7 @@ export class CloudWatchManager {
     const metricProps: any[] = props.metricProps
     return this.createWidget(id, scope, {
       ...props,
-      ...{
-        metricProps: metricProps.map(metricProp => ({ ...metricProp, ...{ distributionId: distributionId } })),
-      },
+      metricProps: _.map(metricProps, { ..._, distributionId }),
     })
   }
 
@@ -206,9 +208,7 @@ export class CloudWatchManager {
     const metricProps: any[] = props.metricProps
     return this.createWidget(id, scope, {
       ...props,
-      ...{
-        metricProps: metricProps.map(metricProp => ({ ...metricProp, ...{ stateMachineArn: stateMachineArn } })),
-      },
+      metricProps: _.map(metricProps, { ..._, stateMachineArn }),
     })
   }
 
@@ -225,12 +225,7 @@ export class CloudWatchManager {
     const metricProps: any[] = props.metricProps
     return this.createWidget(id, scope, {
       ...props,
-      ...{
-        metricProps: metricProps.map(metricProp => ({
-          ...metricProp,
-          ...{ eventBusName: eventBusName, ruleName: ruleName },
-        })),
-      },
+      metricProps: _.map(metricProps, { ..._, eventBusName, ruleName }),
     })
   }
 
@@ -246,9 +241,7 @@ export class CloudWatchManager {
     const metricProps: any[] = props.metricProps
     return this.createWidget(id, scope, {
       ...props,
-      ...{
-        metricProps: metricProps.map(metricProp => ({ ...metricProp, ...{ apiName: apiName } })),
-      },
+      metricProps: _.map(metricProps, { ..._, apiName }),
     })
   }
 
@@ -264,9 +257,7 @@ export class CloudWatchManager {
     const metricProps: any[] = props.metricProps
     return this.createWidget(id, scope, {
       ...props,
-      ...{
-        metricProps: metricProps.map(metricProp => ({ ...metricProp, ...{ functionName: functionName } })),
-      },
+      metricProps: _.map(metricProps, { ..._, functionName }),
     })
   }
 
@@ -282,9 +273,7 @@ export class CloudWatchManager {
     const metricProps: any[] = props.metricProps
     return this.createWidget(id, scope, {
       ...props,
-      ...{
-        metricProps: metricProps.map(metricProp => ({ ...metricProp, ...{ service: service } })),
-      },
+      metricProps: _.map(metricProps, { ..._, service }),
     })
   }
 
@@ -300,9 +289,7 @@ export class CloudWatchManager {
     const metricProps: any[] = props.metricProps
     return this.createWidget(id, scope, {
       ...props,
-      ...{
-        metricProps: metricProps.map(metricProp => ({ ...metricProp, ...{ clusterName: clusterName } })),
-      },
+      metricProps: _.map(metricProps, { ..._, clusterName }),
     })
   }
 
@@ -325,12 +312,7 @@ export class CloudWatchManager {
     const metricProps: any[] = props.metricProps
     return this.createWidget(id, scope, {
       ...props,
-      ...{
-        metricProps: metricProps.map(metricProp => ({
-          ...metricProp,
-          ...{ clusterName: clusterName, serviceName: serviceName },
-        })),
-      },
+      metricProps: _.map(metricProps, { ..._, clusterName, serviceName }),
     })
   }
 
@@ -346,9 +328,7 @@ export class CloudWatchManager {
     const metricProps: any[] = props.metricProps
     return this.createWidget(id, scope, {
       ...props,
-      ...{
-        metricProps: metricProps.map(metricProp => ({ ...metricProp, ...{ loadBalancer: loadBalancer } })),
-      },
+      metricProps: _.map(metricProps, { ..._, loadBalancer }),
     })
   }
 
@@ -364,9 +344,7 @@ export class CloudWatchManager {
     const metricProps: any[] = props.metricProps
     return this.createWidget(id, scope, {
       ...props,
-      ...{
-        metricProps: metricProps.map(metricProp => ({ ...metricProp, ...{ cacheClusterId: cacheClusterId } })),
-      },
+      metricProps: _.map(metricProps, { ..._, cacheClusterId }),
     })
   }
 
@@ -541,101 +519,77 @@ export class CloudWatchManager {
         if (metricProp.functionName) {
           metricDimensions = {
             ...metricProp.dimensionsMap,
-            ...{
-              FunctionName: `${metricProp.functionName}`,
-            },
+            FunctionName: `${metricProp.functionName}`,
           }
         }
         if (metricProp.serviceName && metricProp.clusterName) {
           metricDimensions = {
             ...metricProp.dimensionsMap,
-            ...{
-              ClusterName: `${metricProp.clusterName}`,
-              ServiceName: `${metricProp.serviceName}`,
-            },
+            ClusterName: `${metricProp.clusterName}`,
+            ServiceName: `${metricProp.serviceName}`,
           }
         }
         if (!metricProp.serviceName && metricProp.clusterName) {
           metricDimensions = {
             ...metricProp.dimensionsMap,
-            ...{
-              ClusterName: `${metricProp.clusterName}`,
-            },
+            ClusterName: `${metricProp.clusterName}`,
           }
         }
         if (metricProp.serviceName && !metricProp.clusterName) {
           metricDimensions = {
             ...metricProp.dimensionsMap,
-            ...{
-              ServiceName: `${metricProp.serviceName}`,
-            },
+            ServiceName: `${metricProp.serviceName}`,
           }
         }
         if (metricProp.loadBalancer) {
           metricDimensions = {
             ...metricProp.dimensionsMap,
-            ...{
-              LoadBalancer: `${metricProp.loadBalancer}`,
-            },
+            LoadBalancer: `${metricProp.loadBalancer}`,
           }
         }
         if (metricProp.service) {
           metricDimensions = {
             ...metricProp.dimensionsMap,
-            ...{
-              service: `${metricProp.service}`,
-            },
+            service: `${metricProp.service}`,
           }
         }
         if (metricProp.distributionId) {
           metricDimensions = {
             ...metricProp.dimensionsMap,
-            ...{
-              DistributionId: `${metricProp.distributionId}`,
-              Region: `Global`,
-            },
+            DistributionId: `${metricProp.distributionId}`,
+            Region: `Global`,
           }
         }
         if (metricProp.apiName) {
           metricDimensions = {
             ...metricProp.dimensionsMap,
-            ...{
-              ApiName: `${metricProp.apiName}`,
-            },
+            ApiName: `${metricProp.apiName}`,
           }
         }
         if (metricProp.cacheClusterId) {
           metricDimensions = {
             ...metricProp.dimensionsMap,
-            ...{
-              CacheClusterId: `${metricProp.cacheClusterId}`,
-            },
+            CacheClusterId: `${metricProp.cacheClusterId}`,
           }
         }
         if (metricProp.dbClusterIdentifier) {
           metricDimensions = {
             ...metricProp.dimensionsMap,
-            ...{
-              DBClusterIdentifier: `${metricProp.dbClusterIdentifier}`,
-            },
+            DBClusterIdentifier: `${metricProp.dbClusterIdentifier}`,
           }
         }
         if (metricProp.stateMachineArn) {
           metricDimensions = {
             ...metricProp.dimensionsMap,
-            ...{
-              StateMachineArn: `${metricProp.stateMachineArn}`,
-            },
+            StateMachineArn: `${metricProp.stateMachineArn}`,
           }
         }
 
         if (metricProp.eventBusName && metricProp.ruleName) {
           metricDimensions = {
             ...metricProp.dimensionsMap,
-            ...{
-              EventBusName: `${metricProp.eventBusName}`,
-              RuleName: `${metricProp.ruleName}`,
-            },
+            EventBusName: `${metricProp.eventBusName}`,
+            RuleName: `${metricProp.ruleName}`,
           }
         }
         const metric = new watch.Metric({
@@ -679,7 +633,7 @@ export class CloudWatchManager {
   private determineAlarms(id: string, scope: CommonConstruct, alarmProps: watch.AlarmProps[]) {
     const alarms: watch.IAlarm[] = []
     if (alarmProps) {
-      alarmProps.forEach((alarmProp: watch.AlarmProps) => {
+      _.forEach(alarmProps, (alarmProp: watch.AlarmProps) => {
         if (!alarmProp.alarmName) throw `Alarm name undefined for ${id}`
         const alarmArn = `arn:aws:cloudwatch:${cdk.Stack.of(scope).region}:${cdk.Stack.of(scope).account}:alarm:${
           alarmProp.alarmName

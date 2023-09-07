@@ -1,7 +1,8 @@
 import * as cdk from 'aws-cdk-lib'
 import * as logs from 'aws-cdk-lib/aws-logs'
-import * as utils from '../../utils'
+import _ from 'lodash'
 import { CommonConstruct } from '../../common'
+import * as utils from '../../utils'
 import { LogProps, MetricFilterProps } from './types'
 
 /**
@@ -66,8 +67,8 @@ export class LogManager {
       retentionInDays: props.retention,
     })
 
-    if (props.tags && props.tags.length > 0) {
-      props.tags.forEach(tag => {
+    if (props.tags && !_.isEmpty(props.tags)) {
+      _.forEach(props.tags, tag => {
         cdk.Tags.of(logGroup).add(tag.key, tag.value)
       })
     }
@@ -93,8 +94,8 @@ export class LogManager {
       retention: props.retention,
     })
 
-    if (props.tags && props.tags.length > 0) {
-      props.tags.forEach(tag => {
+    if (props.tags && !_.isEmpty(props.tags)) {
+      _.forEach(props.tags, tag => {
         cdk.Tags.of(logGroup).add(tag.key, tag.value)
       })
     }

@@ -26,6 +26,7 @@ import { CommonConstruct, CommonStack } from '../../common'
 import { createCfnOutput } from '../../utils'
 import { LambdaEdgeProps } from '../lambda'
 import { CloudFrontProps, CloudfrontFunctionProps, DistributionProps } from './types'
+import _ from 'lodash'
 
 /**
  * @classdesc Provides operations on AWS
@@ -115,8 +116,8 @@ export class CloudFrontManager {
       webACLId: props.webACLId,
     })
 
-    if (props.tags && props.tags.length > 0) {
-      props.tags.forEach(tag => {
+    if (props.tags && !_.isEmpty(props.tags)) {
+      _.forEach(props.tags, tag => {
         Tags.of(distribution).add(tag.key, tag.value)
       })
     }
@@ -180,8 +181,8 @@ export class CloudFrontManager {
       webAclId: props.webAclId,
     })
 
-    if (props.tags && props.tags.length > 0) {
-      props.tags.forEach(tag => {
+    if (props.tags && !_.isEmpty(props.tags)) {
+      _.forEach(props.tags, tag => {
         Tags.of(distribution).add(tag.key, tag.value)
       })
     }
@@ -244,8 +245,8 @@ export class CloudFrontManager {
       webAclId: props.webAclId,
     })
 
-    if (props.tags && props.tags.length > 0) {
-      props.tags.forEach(tag => {
+    if (props.tags && !_.isEmpty(props.tags)) {
+      _.forEach(props.tags, tag => {
         Tags.of(distribution).add(tag.key, tag.value)
       })
     }
@@ -306,7 +307,7 @@ export class CloudFrontManager {
       vpc: vpc,
     })
 
-    if (props.tags && props.tags.length > 0) {
+    if (props.tags && !_.isEmpty(props.tags)) {
       props.tags.forEach(tag => {
         Tags.of(edgeFunction).add(tag.key, tag.value)
       })

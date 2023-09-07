@@ -1,6 +1,7 @@
 import { IFunction } from 'aws-cdk-lib/aws-lambda'
 import { Topic } from 'aws-cdk-lib/aws-sns'
 import { EmailSubscription, LambdaSubscription } from 'aws-cdk-lib/aws-sns-subscriptions'
+import _ from 'lodash'
 import { CommonConstruct } from '../../common'
 import { createCfnOutput } from '../../utils'
 import { SubscriptionProps } from './types'
@@ -43,8 +44,8 @@ export class SnsManager {
       topicName: `${props.topicName}-${scope.props.stage}`,
     })
 
-    if (emails && emails.length > 0) {
-      emails.forEach((email: string) => topic.addSubscription(new EmailSubscription(email)))
+    if (emails && !_.isEmpty(emails)) {
+      _.forEach(emails, (email: string) => topic.addSubscription(new EmailSubscription(email)))
     }
 
     createCfnOutput(`${id}-subscriptionArn`, scope, topic.topicArn)

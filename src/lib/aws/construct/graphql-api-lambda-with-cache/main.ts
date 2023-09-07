@@ -3,6 +3,7 @@ import { ISecurityGroup, IVpc, Peer, Port, SecurityGroup } from 'aws-cdk-lib/aws
 import { CfnReplicationGroup } from 'aws-cdk-lib/aws-elasticache'
 import { ManagedPolicy } from 'aws-cdk-lib/aws-iam'
 import { Construct } from 'constructs'
+import _ from 'lodash'
 import { GraphQLApiLambda } from '..'
 import * as utils from '../../utils'
 import { GraphQlApiLambdaWithCacheProps } from './types'
@@ -91,7 +92,7 @@ export class GraphQLApiLambdaWithCache extends GraphQLApiLambda {
       `${this.id}-elasticache`,
       this,
       this.props.graphQLElastiCache,
-      this.graphQLVpc.privateSubnets.map(subnet => subnet.subnetId),
+      _.map(this.graphQLVpc.privateSubnets, subnet => subnet.subnetId),
       [this.graphQLSecurityGroup.securityGroupId]
     )
   }

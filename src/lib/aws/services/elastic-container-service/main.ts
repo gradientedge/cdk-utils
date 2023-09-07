@@ -14,6 +14,7 @@ import {
 import { ApplicationLoadBalancedFargateService } from 'aws-cdk-lib/aws-ecs-patterns'
 import { Role } from 'aws-cdk-lib/aws-iam'
 import { ILogGroup } from 'aws-cdk-lib/aws-logs'
+import _ from 'lodash'
 import { CommonConstruct } from '../../common'
 import { createCfnOutput } from '../../utils'
 import { EcsApplicationLoadBalancedFargateServiceProps, EcsClusterProps, EcsTaskProps } from './types'
@@ -55,8 +56,8 @@ export class EcsManager {
       vpc: vpc,
     })
 
-    if (props.tags && props.tags.length > 0) {
-      props.tags.forEach(tag => {
+    if (props.tags && !_.isEmpty(props.tags)) {
+      _.forEach(props.tags, tag => {
         Tags.of(ecsCluster).add(tag.key, tag.value)
       })
     }
@@ -132,8 +133,8 @@ export class EcsManager {
       secrets: secrets,
     })
 
-    if (props.tags && props.tags.length > 0) {
-      props.tags.forEach(tag => {
+    if (props.tags && !_.isEmpty(props.tags)) {
+      _.forEach(props.tags, tag => {
         Tags.of(ecsTask).add(tag.key, tag.value)
       })
     }
