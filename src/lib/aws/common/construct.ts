@@ -1,5 +1,6 @@
 import { CfnOutput } from 'aws-cdk-lib'
 import { Construct } from 'constructs'
+import { isDevStage, isPrdStage, isTestStage, isUatStage } from '../../common'
 import {
   AcmManager,
   ApiManager,
@@ -31,7 +32,7 @@ import {
   VpcManager,
   WafManager,
 } from '../services'
-import { createCfnOutput, isDevStage, isPrdStage, isTestStage, isUatStage } from '../utils'
+import { createCfnOutput } from '../utils'
 import { CommonStackProps } from './types'
 
 /**
@@ -160,16 +161,4 @@ export class CommonConstruct extends Construct {
    * This is determined by the stage property injected via cdk context
    */
   public isProductionStage = () => isPrdStage(this.props.stage)
-}
-
-export const applyMixins = (derivedCtor: any, constructors: any[]) => {
-  constructors.forEach(baseCtor => {
-    Object.getOwnPropertyNames(baseCtor.prototype).forEach(name => {
-      Object.defineProperty(
-        derivedCtor.prototype,
-        name,
-        Object.getOwnPropertyDescriptor(baseCtor.prototype, name) || Object.create(null)
-      )
-    })
-  })
 }

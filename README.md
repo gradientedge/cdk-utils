@@ -25,7 +25,7 @@
 
 ## Introduction
 
-Toolkit for working with the [AWS CDK][aws-cdk].
+Toolkit for working with CDK Constructs ([AWS CDK][aws-cdk] & [CDK for Terraform][cdktf]).
 
 For more details, see the full [API documentation](https://gradientedge.github.io/cdk-utils/).
 
@@ -65,6 +65,7 @@ pnpm add @gradientedge/cdk-utils
 [builds]: https://img.shields.io/github/actions/workflow/status/gradientedge/cdk-utils/ci.yml?branch=main
 [builds-url]: https://github.com/gradientedge/cdk-utils/actions
 [cdk-badge]: https://img.shields.io/github/package-json/dependency-version/gradientedge/cdk-utils/aws-cdk-lib
+[cdktf]: https://developer.hashicorp.com/terraform/cdktf
 [cdk-url]: https://aws.amazon.com/cdk/
 [checks]: https://img.shields.io/github/checks-status/gradientedge/cdk-utils/main
 [cmd]: https://img.shields.io/badge/command--line-4D4D4D?logo=windows-terminal&style=for-the-badge
