@@ -290,10 +290,8 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
       this,
       {
         ...this.props.lambda.function,
-        ...{
-          onFailure: this.apiDestinedLambda.destinationFailure,
-          onSuccess: this.apiDestinedLambda.destinationSuccess,
-        },
+        onFailure: this.apiDestinedLambda.destinationFailure,
+        onSuccess: this.apiDestinedLambda.destinationSuccess,
       },
       this.apiDestinedLambda.role,
       this.apiDestinedLambda.layers,
@@ -326,9 +324,7 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
   protected createApiDestinationLogGroupSuccess() {
     if (this.props.api.useExisting) return
     this.apiEvent.logGroupSuccess = this.logManager.createLogGroup(`${this.id}-destination-success-log`, this, {
-      ...{
-        logGroupName: `/${this.id}/events/api-destination-success`,
-      },
+      logGroupName: `/${this.id}/events/api-destination-success`,
       ...this.props.event.logGroupSuccess,
     })
   }
@@ -339,20 +335,18 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
   protected createApiDestinationRuleSuccess() {
     if (this.props.api.useExisting) return
     this.props.event.ruleSuccess = {
-      ...{
-        eventPattern: {
-          detail: {
-            requestContext: {
-              condition: ['Success'],
-            },
-            responsePayload: {
-              source: ['custom:api-destined-lambda'],
-              sourceId: [this.id],
-            },
+      eventPattern: {
+        detail: {
+          requestContext: {
+            condition: ['Success'],
+          },
+          responsePayload: {
+            source: ['custom:api-destined-lambda'],
+            sourceId: [this.id],
           },
         },
-        ruleName: `${this.id}-api-destination-success`,
       },
+      ruleName: `${this.id}-api-destination-success`,
       ...this.props.event.ruleSuccess,
     }
     this.apiEvent.ruleSuccess = this.eventManager.createRule(
@@ -370,9 +364,7 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
   protected createApiDestinationLogGroupFailure() {
     if (this.props.api.useExisting) return
     this.apiEvent.logGroupFailure = this.logManager.createLogGroup(`${this.id}-destination-failure-log`, this, {
-      ...{
-        logGroupName: `/${this.id}/events/api-destination-failure`,
-      },
+      logGroupName: `/${this.id}/events/api-destination-failure`,
       ...this.props.event.logGroupFailure,
     })
   }
@@ -383,16 +375,14 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
   protected createApiDestinationRuleFailure() {
     if (this.props.api.useExisting) return
     this.props.event.ruleFailure = {
-      ...{
-        eventPattern: {
-          detail: {
-            responsePayload: {
-              errorType: ['Error'],
-            },
+      eventPattern: {
+        detail: {
+          responsePayload: {
+            errorType: ['Error'],
           },
         },
-        ruleName: `${this.id}-api-destination-failure`,
       },
+      ruleName: `${this.id}-api-destination-failure`,
       ...this.props.event.ruleFailure,
     }
     this.apiEvent.ruleFailure = this.eventManager.createRule(
@@ -464,12 +454,10 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
   protected createApiDestinedIntegrationResponse() {
     if (!this.props.api.withResource) return
     this.apiDestinedRestApi.integrationResponse = this.props.api.integrationResponse ?? {
-      ...{
-        responseTemplates: {
-          'application/json': JSON.stringify({ message: 'Payload Submitted' }),
-        },
-        statusCode: '200',
+      responseTemplates: {
+        'application/json': JSON.stringify({ message: 'Payload Submitted' }),
       },
+      statusCode: '200',
     }
   }
 
@@ -479,21 +467,19 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
   protected createApiDestinedIntegrationErrorResponse() {
     if (!this.props.api.withResource) return
     this.apiDestinedRestApi.integrationErrorResponse = {
-      ...{
-        responseParameters: {
-          'method.response.header.Access-Control-Allow-Credentials': "'true'",
-          'method.response.header.Access-Control-Allow-Origin': "'*'",
-          'method.response.header.Content-Type': "'application/json'",
-        },
-        responseTemplates: {
-          'application/json': JSON.stringify({
-            message: "$util.escapeJavaScript($input.path('$.errorMessage'))",
-            state: 'error',
-          }),
-        },
-        selectionPattern: '^\\[Error\\].*',
-        statusCode: '400',
+      responseParameters: {
+        'method.response.header.Access-Control-Allow-Credentials': "'true'",
+        'method.response.header.Access-Control-Allow-Origin': "'*'",
+        'method.response.header.Content-Type': "'application/json'",
       },
+      responseTemplates: {
+        'application/json': JSON.stringify({
+          message: "$util.escapeJavaScript($input.path('$.errorMessage'))",
+          state: 'error',
+        }),
+      },
+      selectionPattern: '^\\[Error\\].*',
+      statusCode: '400',
       ...this.props.api.integrationErrorResponse,
     }
   }
@@ -506,16 +492,14 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
     this.apiDestinedRestApi.integration = new Integration({
       integrationHttpMethod: 'POST',
       options: {
-        ...{
-          credentialsRole: this.apiDestinedRestApi.role,
-          integrationResponses: [
-            this.apiDestinedRestApi.integrationResponse,
-            this.apiDestinedRestApi.integrationErrorResponse,
-          ],
-          passthroughBehavior: PassthroughBehavior.NEVER,
-          requestParameters: this.apiDestinedRestApi.integrationRequestParameters,
-          requestTemplates: this.apiDestinedRestApi.integrationRequestTemplates,
-        },
+        credentialsRole: this.apiDestinedRestApi.role,
+        integrationResponses: [
+          this.apiDestinedRestApi.integrationResponse,
+          this.apiDestinedRestApi.integrationErrorResponse,
+        ],
+        passthroughBehavior: PassthroughBehavior.NEVER,
+        requestParameters: this.apiDestinedRestApi.integrationRequestParameters,
+        requestTemplates: this.apiDestinedRestApi.integrationRequestTemplates,
         ...this.props.api.integrationOptions,
       },
       type: IntegrationType.AWS,
@@ -529,17 +513,15 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
   protected createApiDestinedMethodResponse() {
     if (!this.props.api.withResource) return
     this.apiDestinedRestApi.methodResponse = {
-      ...{
-        responseModels: {
-          'application/json': this.apiDestinedRestApi.responseModel,
-        },
-        responseParameters: {
-          'method.response.header.Access-Control-Allow-Credentials': true,
-          'method.response.header.Access-Control-Allow-Origin': true,
-          'method.response.header.Content-Type': true,
-        },
-        statusCode: '200',
+      responseModels: {
+        'application/json': this.apiDestinedRestApi.responseModel,
       },
+      responseParameters: {
+        'method.response.header.Access-Control-Allow-Credentials': true,
+        'method.response.header.Access-Control-Allow-Origin': true,
+        'method.response.header.Content-Type': true,
+      },
+      statusCode: '200',
       ...this.props.api.methodResponse,
     }
   }
@@ -550,17 +532,15 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
   protected createApiDestinedMethodErrorResponse() {
     if (!this.props.api.withResource) return
     this.apiDestinedRestApi.methodErrorResponse = {
-      ...{
-        responseModels: {
-          'application/json': this.apiDestinedRestApi.errorResponseModel,
-        },
-        responseParameters: {
-          'method.response.header.Access-Control-Allow-Credentials': true,
-          'method.response.header.Access-Control-Allow-Origin': true,
-          'method.response.header.Content-Type': true,
-        },
-        statusCode: '400',
+      responseModels: {
+        'application/json': this.apiDestinedRestApi.errorResponseModel,
       },
+      responseParameters: {
+        'method.response.header.Access-Control-Allow-Credentials': true,
+        'method.response.header.Access-Control-Allow-Origin': true,
+        'method.response.header.Content-Type': true,
+      },
+      statusCode: '400',
       ...this.props.api.methodErrorResponse,
     }
   }
@@ -584,30 +564,28 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
     })
 
     this.apiDestinedRestApi.api = new RestApi(this, `${this.id}-sns-rest-api`, {
-      ...{
-        defaultCorsPreflightOptions: {
-          allowHeaders: Cors.DEFAULT_HEADERS,
-          allowMethods: ['POST'],
-          allowOrigins: Cors.ALL_ORIGINS,
-        },
-        defaultIntegration: this.apiDestinedRestApi.integration,
-        defaultMethodOptions: {
-          methodResponses: [this.apiDestinedRestApi.methodResponse, this.apiDestinedRestApi.methodErrorResponse],
-        },
-        deployOptions: {
-          accessLogDestination: new LogGroupLogDestination(accessLogGroup),
-          accessLogFormat: AccessLogFormat.jsonWithStandardFields(),
-          dataTraceEnabled: true,
-          description: `${this.id} - ${this.props.stage} stage`,
-          loggingLevel: MethodLoggingLevel.INFO,
-          metricsEnabled: true,
-          stageName: this.props.stage,
-        },
-        endpointConfiguration: {
-          types: [EndpointType.REGIONAL],
-        },
-        restApiName: `${this.id}-destined-rest-api-${this.props.stage}`,
+      defaultCorsPreflightOptions: {
+        allowHeaders: Cors.DEFAULT_HEADERS,
+        allowMethods: ['POST'],
+        allowOrigins: Cors.ALL_ORIGINS,
       },
+      defaultIntegration: this.apiDestinedRestApi.integration,
+      defaultMethodOptions: {
+        methodResponses: [this.apiDestinedRestApi.methodResponse, this.apiDestinedRestApi.methodErrorResponse],
+      },
+      deployOptions: {
+        accessLogDestination: new LogGroupLogDestination(accessLogGroup),
+        accessLogFormat: AccessLogFormat.jsonWithStandardFields(),
+        dataTraceEnabled: true,
+        description: `${this.id} - ${this.props.stage} stage`,
+        loggingLevel: MethodLoggingLevel.INFO,
+        metricsEnabled: true,
+        stageName: this.props.stage,
+      },
+      endpointConfiguration: {
+        types: [EndpointType.REGIONAL],
+      },
+      restApiName: `${this.id}-destined-rest-api-${this.props.stage}`,
       ...this.props.api,
     })
     this.addCfnOutput(`${this.id}-restApiId`, this.apiDestinedRestApi.api.restApiId)
@@ -620,16 +598,14 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
   protected createApiDestinedResponseModel() {
     if (!this.props.api.withResource) return
     this.apiDestinedRestApi.responseModel = new Model(this, `${this.id}-response-model`, {
+      contentType: 'application/json',
+      modelName: 'ResponseModel',
       restApi: this.apiDestinedRestApi.api,
-      ...{
-        contentType: 'application/json',
-        modelName: 'ResponseModel',
-        schema: {
-          properties: { message: { type: JsonSchemaType.STRING } },
-          schema: JsonSchemaVersion.DRAFT4,
-          title: 'pollResponse',
-          type: JsonSchemaType.OBJECT,
-        },
+      schema: {
+        properties: { message: { type: JsonSchemaType.STRING } },
+        schema: JsonSchemaVersion.DRAFT4,
+        title: 'pollResponse',
+        type: JsonSchemaType.OBJECT,
       },
       ...this.props.api.responseModel,
     })
@@ -641,19 +617,17 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
   protected createApiDestinedErrorResponseModel() {
     if (!this.props.api.withResource) return
     this.apiDestinedRestApi.errorResponseModel = new Model(this, `${this.id}-error-response-model`, {
+      contentType: 'application/json',
+      modelName: 'ErrorResponseModel',
       restApi: this.apiDestinedRestApi.api,
-      ...{
-        contentType: 'application/json',
-        modelName: 'ErrorResponseModel',
-        schema: {
-          properties: {
-            message: { type: JsonSchemaType.STRING },
-            state: { type: JsonSchemaType.STRING },
-          },
-          schema: JsonSchemaVersion.DRAFT4,
-          title: 'errorResponse',
-          type: JsonSchemaType.OBJECT,
+      schema: {
+        properties: {
+          message: { type: JsonSchemaType.STRING },
+          state: { type: JsonSchemaType.STRING },
         },
+        schema: JsonSchemaVersion.DRAFT4,
+        title: 'errorResponse',
+        type: JsonSchemaType.OBJECT,
       },
       ...this.props.api.errorResponseModel,
     })

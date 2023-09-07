@@ -53,9 +53,10 @@ import { CommonAzureConstruct } from './construct'
 import { CommonAzureStackProps } from './types'
 
 import appRoot from 'app-root-path'
-import { App, TerraformStack } from 'cdktf'
-import { isDevStage } from '../../common'
+import { TerraformStack } from 'cdktf'
 import { Construct } from 'constructs'
+import _ from 'lodash'
+import { isDevStage } from '../../common'
 
 /**
  * @classdesc Common stack to use as a base for all higher level constructs.
@@ -120,7 +121,7 @@ export class CommonAzureStack extends TerraformStack {
       return
     }
 
-    extraContexts.forEach((context: string) => {
+    _.forEach(extraContexts, (context: string) => {
       const extraContextPath = `${appRoot.path}/${context}`
 
       /* scenario where extra context is configured in cdk.json but absent in file system */
@@ -134,7 +135,7 @@ export class CommonAzureStack extends TerraformStack {
       const extraContextProps = JSON.parse(extraContextPropsBuffer.toString('utf-8'))
 
       /* set each of the property into the cdk node context */
-      Object.keys(extraContextProps).forEach((propKey: any) => {
+      _.keys(extraContextProps).forEach((propKey: any) => {
         this.node.setContext(propKey, extraContextProps[propKey])
       })
     })
@@ -170,13 +171,10 @@ export class CommonAzureStack extends TerraformStack {
     const stageContextProps = JSON.parse(stageContextPropsBuffer.toString('utf-8'))
 
     /* set each of the property into the cdk node context */
-    Object.keys(stageContextProps).forEach((propKey: any) => {
+    _.keys(stageContextProps).forEach((propKey: any) => {
       /* handle object, array properties */
       if (typeof stageContextProps[propKey] === 'object' &amp;&amp; !Array.isArray(stageContextProps[propKey])) {
-        this.node.setContext(propKey, {
-          ...this.node.tryGetContext(propKey),
-          ...stageContextProps[propKey],
-        })
+        this.node.setContext(propKey, _.merge(this.node.tryGetContext(propKey), stageContextProps[propKey]))
       } else {
         /* handle all other primitive properties */
         this.node.setContext(propKey, stageContextProps[propKey])

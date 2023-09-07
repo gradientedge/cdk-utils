@@ -62,8 +62,8 @@ import {
 import { ISecret } from 'aws-cdk-lib/aws-secretsmanager'
 import { Construct } from 'constructs'
 import { CommonConstruct } from '../../common'
-import { ApiToAnyTargetProps, ApiToAnyTargetRestApiResource, ApiToAnyTargetRestApiType } from './types'
 import { ApiToAnyTargetRestApi } from './target'
+import { ApiToAnyTargetProps, ApiToAnyTargetRestApiResource, ApiToAnyTargetRestApiType } from './types'
 
 /**
  * @classdesc Provides a construct to create and deploy a shallow API Gateway
@@ -177,33 +177,31 @@ export class ApiToAnyTarget extends CommonConstruct {
     }
 
     this.apiToAnyTargetRestApi.api = new RestApi(this, `${this.id}-rest-api`, {
-      ...{
-        cloudWatchRole: this.props.api.restApi?.cloudWatchRole ?? true,
-        defaultCorsPreflightOptions: {
-          allowHeaders: Cors.DEFAULT_HEADERS,
-          allowMethods: Cors.ALL_METHODS,
-          allowOrigins: Cors.ALL_ORIGINS,
-        },
-        defaultIntegration: this.apiToAnyTargetRestApi.integration,
-        defaultMethodOptions: {
-          methodResponses: [this.apiToAnyTargetRestApi.methodResponse, this.apiToAnyTargetRestApi.methodErrorResponse],
-        },
-        deploy: this.props.api.restApi?.deploy ?? true,
-        deployOptions: {
-          accessLogDestination: new LogGroupLogDestination(this.apiToAnyTargetRestApi.accessLogGroup),
-          accessLogFormat: AccessLogFormat.jsonWithStandardFields(),
-          dataTraceEnabled: this.props.api.restApi?.deployOptions?.dataTraceEnabled,
-          description: `${this.id} - ${this.props.stage} stage`,
-          loggingLevel: MethodLoggingLevel.INFO,
-          metricsEnabled: true,
-          stageName: this.props.stage,
-          tracingEnabled: this.props.api.restApi?.deployOptions?.tracingEnabled,
-        },
-        endpointConfiguration: {
-          types: [this.isProductionStage() ? EndpointType.EDGE : EndpointType.REGIONAL],
-        },
-        restApiName: `${this.id}-rest-api-${this.props.stage}`,
+      cloudWatchRole: this.props.api.restApi?.cloudWatchRole ?? true,
+      defaultCorsPreflightOptions: {
+        allowHeaders: Cors.DEFAULT_HEADERS,
+        allowMethods: Cors.ALL_METHODS,
+        allowOrigins: Cors.ALL_ORIGINS,
       },
+      defaultIntegration: this.apiToAnyTargetRestApi.integration,
+      defaultMethodOptions: {
+        methodResponses: [this.apiToAnyTargetRestApi.methodResponse, this.apiToAnyTargetRestApi.methodErrorResponse],
+      },
+      deploy: this.props.api.restApi?.deploy ?? true,
+      deployOptions: {
+        accessLogDestination: new LogGroupLogDestination(this.apiToAnyTargetRestApi.accessLogGroup),
+        accessLogFormat: AccessLogFormat.jsonWithStandardFields(),
+        dataTraceEnabled: this.props.api.restApi?.deployOptions?.dataTraceEnabled,
+        description: `${this.id} - ${this.props.stage} stage`,
+        loggingLevel: MethodLoggingLevel.INFO,
+        metricsEnabled: true,
+        stageName: this.props.stage,
+        tracingEnabled: this.props.api.restApi?.deployOptions?.tracingEnabled,
+      },
+      endpointConfiguration: {
+        types: [this.isProductionStage() ? EndpointType.EDGE : EndpointType.REGIONAL],
+      },
+      restApiName: `${this.id}-rest-api-${this.props.stage}`,
       ...this.props.api.restApi,
     })
     this.addCfnOutput(`${this.id}-restApiId`, this.apiToAnyTargetRestApi.api.restApiId)
