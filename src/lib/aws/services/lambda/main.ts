@@ -15,6 +15,7 @@ import {
   LayerVersion,
 } from 'aws-cdk-lib/aws-lambda'
 import { SqsEventSource } from 'aws-cdk-lib/aws-lambda-event-sources'
+import _ from 'lodash'
 import { CommonConstruct, CommonStack } from '../../common'
 import { createCfnOutput } from '../../utils'
 import { CloudFrontManager } from '../cloudfront'
@@ -144,7 +145,7 @@ export class LambdaManager {
       )
     }
 
-    if (props.lambdaAliases && props.lambdaAliases.length > 0) {
+    if (props.lambdaAliases && !_.isEmpty(props.lambdaAliases)) {
       props.lambdaAliases.forEach(alias => {
         const aliasId = alias.id ?? `${id}-${alias.aliasName}`
         const functionAlias = this.createLambdaFunctionAlias(`${aliasId}`, scope, alias, lambdaFunction.currentVersion)
@@ -160,8 +161,8 @@ export class LambdaManager {
       })
     }
 
-    if (props.tags && props.tags.length > 0) {
-      props.tags.forEach(tag => {
+    if (props.tags && !_.isEmpty(props.tags)) {
+      _.forEach(props.tags, tag => {
         Tags.of(lambdaFunction).add(tag.key, tag.value)
       })
     }

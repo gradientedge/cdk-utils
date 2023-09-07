@@ -1,6 +1,7 @@
 import { RemovalPolicy } from 'aws-cdk-lib'
 import { ISecurityGroup, IVpc, SubnetSelection } from 'aws-cdk-lib/aws-ec2'
 import { FileSystem, LifecyclePolicy, OutOfInfrequentAccessPolicy, PerformanceMode } from 'aws-cdk-lib/aws-efs'
+import _ from 'lodash'
 import { CommonConstruct } from '../../common'
 import { createCfnOutput } from '../../utils'
 import { EfsAccessPointOptions, EfsFileSystemProps } from './types'
@@ -71,7 +72,7 @@ export class EfsManager {
     createCfnOutput(`${id}-fileSystemId`, scope, fileSystem.fileSystemId)
 
     /* provision access points if specified */
-    if (accessPointOptions && accessPointOptions.length > 0) {
+    if (accessPointOptions && !_.isEmpty(accessPointOptions)) {
       for (const [index, accessPointOption] of accessPointOptions.entries()) {
         if (!accessPointOption.path) throw `Undefined access point path for option: [${accessPointOption}], id: [${id}]`
         const accessPoint = fileSystem.addAccessPoint(`${id}-ap-${index}`, {

@@ -3,6 +3,7 @@ import { IDistribution } from 'aws-cdk-lib/aws-cloudfront'
 import { Effect, PolicyDocument, PolicyStatement, ServicePrincipal } from 'aws-cdk-lib/aws-iam'
 import { BlockPublicAccess, Bucket, BucketEncryption, CfnBucket, CfnBucketPolicy, IBucket } from 'aws-cdk-lib/aws-s3'
 import { BucketDeployment, ISource, ServerSideEncryption, Source } from 'aws-cdk-lib/aws-s3-deployment'
+import _ from 'lodash'
 import { CommonConstruct } from '../../common'
 import { createCfnOutput } from '../../utils'
 import { LifecycleRule, S3BucketProps } from './types'
@@ -32,7 +33,7 @@ export class S3Manager {
     if (!props.lifecycleRules) return undefined
 
     const bucketLifecycleRules: LifecycleRule[] = []
-    props.lifecycleRules.forEach(lifecycleRule => {
+    _.forEach(props.lifecycleRules, lifecycleRule => {
       bucketLifecycleRules.push({
         abortIncompleteMultipartUploadAfter: lifecycleRule.abortIncompleteMultipartUploadAfter,
         enabled: lifecycleRule.enabled,
@@ -135,8 +136,8 @@ export class S3Manager {
       }
     }
 
-    if (props.tags && props.tags.length > 0) {
-      props.tags.forEach(tag => {
+    if (props.tags && !_.isEmpty(props.tags)) {
+      _.forEach(props.tags, tag => {
         Tags.of(bucket).add(tag.key, tag.value)
       })
     }
@@ -222,7 +223,7 @@ export class S3Manager {
       throw `Folder unspecified for ${id}`
     }
 
-    folders.forEach(folder => {
+    _.forEach(folders, folder => {
       new BucketDeployment(scope, `${id}-${folder}`, {
         destinationBucket: bucket,
         destinationKeyPrefix: folder,

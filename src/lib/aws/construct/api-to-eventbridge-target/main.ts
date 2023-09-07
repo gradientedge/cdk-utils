@@ -187,12 +187,10 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
   protected createApiToEventBridgeTargetRule() {
     if (this.props.api.useExisting) return
     this.props.event.rule = {
-      ...{
-        eventPattern: {
-          source: ['api-to-eventbridge-target'],
-        },
-        ruleName: `${this.id}-api-to-eventbridge-target`,
+      eventPattern: {
+        source: ['api-to-eventbridge-target'],
       },
+      ruleName: `${this.id}-api-to-eventbridge-target`,
       ...this.props.event.rule,
     }
     this.apiEvent.rule = this.eventManager.createRule(
@@ -261,12 +259,10 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
   protected createApiToEventBridgeTargetIntegrationResponse() {
     if (!this.props.api.withResource) return
     this.apiToEventBridgeTargetRestApi.integrationResponse = this.props.api.integrationResponse ?? {
-      ...{
-        responseTemplates: {
-          'application/json': JSON.stringify({ message: 'Payload Submitted' }),
-        },
-        statusCode: '200',
+      responseTemplates: {
+        'application/json': JSON.stringify({ message: 'Payload Submitted' }),
       },
+      statusCode: '200',
     }
   }
 
@@ -276,21 +272,19 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
   protected createApiToEventBridgeTargetIntegrationErrorResponse() {
     if (!this.props.api.withResource) return
     this.apiToEventBridgeTargetRestApi.integrationErrorResponse = {
-      ...{
-        responseParameters: {
-          'method.response.header.Access-Control-Allow-Credentials': "'true'",
-          'method.response.header.Access-Control-Allow-Origin': "'*'",
-          'method.response.header.Content-Type': "'application/json'",
-        },
-        responseTemplates: {
-          'application/json': JSON.stringify({
-            message: "$util.escapeJavaScript($input.path('$.errorMessage'))",
-            state: 'error',
-          }),
-        },
-        selectionPattern: '^\\[Error\\].*',
-        statusCode: '400',
+      responseParameters: {
+        'method.response.header.Access-Control-Allow-Credentials': "'true'",
+        'method.response.header.Access-Control-Allow-Origin': "'*'",
+        'method.response.header.Content-Type': "'application/json'",
       },
+      responseTemplates: {
+        'application/json': JSON.stringify({
+          message: "$util.escapeJavaScript($input.path('$.errorMessage'))",
+          state: 'error',
+        }),
+      },
+      selectionPattern: '^\\[Error\\].*',
+      statusCode: '400',
       ...this.props.api.integrationErrorResponse,
     }
   }
@@ -303,16 +297,14 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
     this.apiToEventBridgeTargetRestApi.integration = new Integration({
       integrationHttpMethod: 'POST',
       options: {
-        ...{
-          credentialsRole: this.apiToEventBridgeTargetRestApi.role,
-          integrationResponses: [
-            this.apiToEventBridgeTargetRestApi.integrationResponse,
-            this.apiToEventBridgeTargetRestApi.integrationErrorResponse,
-          ],
-          passthroughBehavior: PassthroughBehavior.NEVER,
-          requestParameters: this.apiToEventBridgeTargetRestApi.integrationRequestParameters,
-          requestTemplates: this.apiToEventBridgeTargetRestApi.integrationRequestTemplates,
-        },
+        credentialsRole: this.apiToEventBridgeTargetRestApi.role,
+        integrationResponses: [
+          this.apiToEventBridgeTargetRestApi.integrationResponse,
+          this.apiToEventBridgeTargetRestApi.integrationErrorResponse,
+        ],
+        passthroughBehavior: PassthroughBehavior.NEVER,
+        requestParameters: this.apiToEventBridgeTargetRestApi.integrationRequestParameters,
+        requestTemplates: this.apiToEventBridgeTargetRestApi.integrationRequestTemplates,
         ...this.props.api.integrationOptions,
       },
       type: IntegrationType.AWS,
@@ -326,17 +318,15 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
   protected createApiToEventBridgeTargetMethodResponse() {
     if (!this.props.api.withResource) return
     this.apiToEventBridgeTargetRestApi.methodResponse = {
-      ...{
-        responseModels: {
-          'application/json': this.apiToEventBridgeTargetRestApi.responseModel,
-        },
-        responseParameters: {
-          'method.response.header.Access-Control-Allow-Credentials': true,
-          'method.response.header.Access-Control-Allow-Origin': true,
-          'method.response.header.Content-Type': true,
-        },
-        statusCode: '200',
+      responseModels: {
+        'application/json': this.apiToEventBridgeTargetRestApi.responseModel,
       },
+      responseParameters: {
+        'method.response.header.Access-Control-Allow-Credentials': true,
+        'method.response.header.Access-Control-Allow-Origin': true,
+        'method.response.header.Content-Type': true,
+      },
+      statusCode: '200',
       ...this.props.api.methodResponse,
     }
   }
@@ -347,17 +337,15 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
   protected createApiToEventBridgeTargetMethodErrorResponse() {
     if (!this.props.api.withResource) return
     this.apiToEventBridgeTargetRestApi.methodErrorResponse = {
-      ...{
-        responseModels: {
-          'application/json': this.apiToEventBridgeTargetRestApi.errorResponseModel,
-        },
-        responseParameters: {
-          'method.response.header.Access-Control-Allow-Credentials': true,
-          'method.response.header.Access-Control-Allow-Origin': true,
-          'method.response.header.Content-Type': true,
-        },
-        statusCode: '400',
+      responseModels: {
+        'application/json': this.apiToEventBridgeTargetRestApi.errorResponseModel,
       },
+      responseParameters: {
+        'method.response.header.Access-Control-Allow-Credentials': true,
+        'method.response.header.Access-Control-Allow-Origin': true,
+        'method.response.header.Content-Type': true,
+      },
+      statusCode: '400',
       ...this.props.api.methodErrorResponse,
     }
   }
@@ -387,36 +375,34 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
     }
 
     this.apiToEventBridgeTargetRestApi.api = new RestApi(this, `${this.id}-rest-api`, {
-      ...{
-        cloudWatchRole: this.props.api.restApi?.cloudWatchRole ?? true,
-        defaultCorsPreflightOptions: {
-          allowHeaders: Cors.DEFAULT_HEADERS,
-          allowMethods: ['POST'],
-          allowOrigins: Cors.ALL_ORIGINS,
-        },
-        defaultIntegration: this.apiToEventBridgeTargetRestApi.integration,
-        defaultMethodOptions: {
-          methodResponses: [
-            this.apiToEventBridgeTargetRestApi.methodResponse,
-            this.apiToEventBridgeTargetRestApi.methodErrorResponse,
-          ],
-        },
-        deploy: this.props.api.restApi?.deploy ?? true,
-        deployOptions: {
-          accessLogDestination: new LogGroupLogDestination(this.apiToEventBridgeTargetRestApi.accessLogGroup),
-          accessLogFormat: AccessLogFormat.jsonWithStandardFields(),
-          dataTraceEnabled: this.props.api.restApi?.deployOptions?.dataTraceEnabled,
-          description: `${this.id} - ${this.props.stage} stage`,
-          loggingLevel: MethodLoggingLevel.INFO,
-          metricsEnabled: true,
-          stageName: this.props.stage,
-          tracingEnabled: this.props.api.restApi?.deployOptions?.tracingEnabled,
-        },
-        endpointConfiguration: {
-          types: [EndpointType.REGIONAL],
-        },
-        restApiName: `${this.id}-rest-api-${this.props.stage}`,
+      cloudWatchRole: this.props.api.restApi?.cloudWatchRole ?? true,
+      defaultCorsPreflightOptions: {
+        allowHeaders: Cors.DEFAULT_HEADERS,
+        allowMethods: ['POST'],
+        allowOrigins: Cors.ALL_ORIGINS,
       },
+      defaultIntegration: this.apiToEventBridgeTargetRestApi.integration,
+      defaultMethodOptions: {
+        methodResponses: [
+          this.apiToEventBridgeTargetRestApi.methodResponse,
+          this.apiToEventBridgeTargetRestApi.methodErrorResponse,
+        ],
+      },
+      deploy: this.props.api.restApi?.deploy ?? true,
+      deployOptions: {
+        accessLogDestination: new LogGroupLogDestination(this.apiToEventBridgeTargetRestApi.accessLogGroup),
+        accessLogFormat: AccessLogFormat.jsonWithStandardFields(),
+        dataTraceEnabled: this.props.api.restApi?.deployOptions?.dataTraceEnabled,
+        description: `${this.id} - ${this.props.stage} stage`,
+        loggingLevel: MethodLoggingLevel.INFO,
+        metricsEnabled: true,
+        stageName: this.props.stage,
+        tracingEnabled: this.props.api.restApi?.deployOptions?.tracingEnabled,
+      },
+      endpointConfiguration: {
+        types: [EndpointType.REGIONAL],
+      },
+      restApiName: `${this.id}-rest-api-${this.props.stage}`,
       ...this.props.api.restApi,
     })
     this.addCfnOutput(`${this.id}-restApiId`, this.apiToEventBridgeTargetRestApi.api.restApiId)
@@ -430,15 +416,13 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
     if (!this.props.api.withResource) return
     this.apiToEventBridgeTargetRestApi.responseModel = new Model(this, `${this.id}-response-model`, {
       restApi: this.apiToEventBridgeTargetRestApi.api,
-      ...{
-        contentType: 'application/json',
-        modelName: 'ResponseModel',
-        schema: {
-          properties: { message: { type: JsonSchemaType.STRING } },
-          schema: JsonSchemaVersion.DRAFT4,
-          title: 'pollResponse',
-          type: JsonSchemaType.OBJECT,
-        },
+      contentType: 'application/json',
+      modelName: 'ResponseModel',
+      schema: {
+        properties: { message: { type: JsonSchemaType.STRING } },
+        schema: JsonSchemaVersion.DRAFT4,
+        title: 'pollResponse',
+        type: JsonSchemaType.OBJECT,
       },
       ...this.props.api.responseModel,
     })
@@ -451,18 +435,16 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
     if (!this.props.api.withResource) return
     this.apiToEventBridgeTargetRestApi.errorResponseModel = new Model(this, `${this.id}-error-response-model`, {
       restApi: this.apiToEventBridgeTargetRestApi.api,
-      ...{
-        contentType: 'application/json',
-        modelName: 'ErrorResponseModel',
-        schema: {
-          properties: {
-            message: { type: JsonSchemaType.STRING },
-            state: { type: JsonSchemaType.STRING },
-          },
-          schema: JsonSchemaVersion.DRAFT4,
-          title: 'errorResponse',
-          type: JsonSchemaType.OBJECT,
+      contentType: 'application/json',
+      modelName: 'ErrorResponseModel',
+      schema: {
+        properties: {
+          message: { type: JsonSchemaType.STRING },
+          state: { type: JsonSchemaType.STRING },
         },
+        schema: JsonSchemaVersion.DRAFT4,
+        title: 'errorResponse',
+        type: JsonSchemaType.OBJECT,
       },
       ...this.props.api.errorResponseModel,
     })

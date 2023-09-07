@@ -13,6 +13,7 @@ import {
 } from 'aws-cdk-lib/aws-apigateway'
 import { ICertificate } from 'aws-cdk-lib/aws-certificatemanager'
 import { IFunction } from 'aws-cdk-lib/aws-lambda'
+import _ from 'lodash'
 import { CommonConstruct } from '../../common'
 import { createCfnOutput } from '../../utils'
 import { LambdaRestApiProps } from './types'
@@ -83,8 +84,8 @@ export class ApiManager {
       retainDeployments: props.retainDeployments,
     })
 
-    if (props.tags && props.tags.length > 0) {
-      props.tags.forEach(tag => {
+    if (props.tags && !_.isEmpty(props.tags)) {
+      _.forEach(props.tags, tag => {
         Tags.of(api).add(tag.key, tag.value)
       })
     }
@@ -153,12 +154,13 @@ export class ApiManager {
         allowOrigins: allowedOrigins ?? Cors.ALL_ORIGINS,
       },
     })
-    methods.forEach(method =>
+
+    _.forEach(methods, method => {
       resource.addMethod(method, integration, {
         authorizer,
         requestParameters: methodRequestParameters,
       })
-    )
+    })
     createCfnOutput(`${id}-${path}ResourceId`, scope, resource.resourceId)
 
     if (addProxy) {
@@ -170,12 +172,13 @@ export class ApiManager {
           allowOrigins: allowedOrigins ?? Cors.ALL_ORIGINS,
         },
       })
-      methods.forEach(method =>
+
+      _.forEach(methods, method => {
         resourceProxy.addMethod(method, proxyIntegration ?? integration, {
           authorizer,
           requestParameters: methodRequestParameters,
         })
-      )
+      })
       createCfnOutput(`${id}-${path}ProxyResourceId`, scope, resourceProxy.resourceId)
     }
 

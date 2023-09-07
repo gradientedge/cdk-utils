@@ -5,6 +5,7 @@ import { CommonConstruct } from './construct'
 import { CommonStackProps } from './types'
 
 import appRoot from 'app-root-path'
+import _ from 'lodash'
 import { isDevStage } from '../../common'
 
 /**
@@ -75,7 +76,7 @@ export class CommonStack extends Stack {
       return
     }
 
-    extraContexts.forEach((context: string) => {
+    _.forEach(extraContexts, (context: string) => {
       const extraContextPath = `${appRoot.path}/${context}`
 
       /* scenario where extra context is configured in cdk.json but absent in file system */
@@ -89,7 +90,7 @@ export class CommonStack extends Stack {
       const extraContextProps = JSON.parse(extraContextPropsBuffer.toString('utf-8'))
 
       /* set each of the property into the cdk node context */
-      Object.keys(extraContextProps).forEach((propKey: any) => {
+      _.keys(extraContextProps).forEach((propKey: any) => {
         this.node.setContext(propKey, extraContextProps[propKey])
       })
     })
@@ -125,13 +126,10 @@ export class CommonStack extends Stack {
     const stageContextProps = JSON.parse(stageContextPropsBuffer.toString('utf-8'))
 
     /* set each of the property into the cdk node context */
-    Object.keys(stageContextProps).forEach((propKey: any) => {
+    _.keys(stageContextProps).forEach((propKey: any) => {
       /* handle object, array properties */
       if (typeof stageContextProps[propKey] === 'object' && !Array.isArray(stageContextProps[propKey])) {
-        this.node.setContext(propKey, {
-          ...this.node.tryGetContext(propKey),
-          ...stageContextProps[propKey],
-        })
+        this.node.setContext(propKey, _.merge(this.node.tryGetContext(propKey), stageContextProps[propKey]))
       } else {
         /* handle all other primitive properties */
         this.node.setContext(propKey, stageContextProps[propKey])

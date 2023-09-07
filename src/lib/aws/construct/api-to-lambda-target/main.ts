@@ -162,16 +162,14 @@ export class ApiToLambdaTarget extends CommonConstruct {
 
     this.props.api.restApi = {
       ...this.props.api.restApi,
-      ...{
-        defaultMethodOptions: {
-          methodResponses: [
-            this.apiToLambdaTargetRestApi.methodResponse,
-            this.apiToLambdaTargetRestApi.methodErrorResponse,
-          ],
-        },
-        deployOptions: {
-          accessLogDestination: new LogGroupLogDestination(accessLogGroup),
-        },
+      defaultMethodOptions: {
+        methodResponses: [
+          this.apiToLambdaTargetRestApi.methodResponse,
+          this.apiToLambdaTargetRestApi.methodErrorResponse,
+        ],
+      },
+      deployOptions: {
+        accessLogDestination: new LogGroupLogDestination(accessLogGroup),
       },
     }
 

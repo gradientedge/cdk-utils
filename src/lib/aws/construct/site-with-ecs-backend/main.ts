@@ -405,15 +405,14 @@ export class SiteWithEcsBackend extends CommonConstruct {
         name: `${this.id}-fs`,
       })
 
-      if (this.props.siteTask.mountPoints && this.props.siteTask.mountPoints.length > 0) {
-        this.props.siteTask.mountPoints.forEach(
-          mountPoint =>
-            this.siteEcsTaskDefinition.defaultContainer?.addMountPoints({
-              containerPath: mountPoint.containerPath,
-              readOnly: mountPoint.readOnly,
-              sourceVolume: `${this.id}-fs`,
-            })
-        )
+      if (this.props.siteTask.mountPoints && !_.isEmpty(this.props.siteTask.mountPoints)) {
+        _.forEach(this.props.siteTask.mountPoints, mountPoint => {
+          this.siteEcsTaskDefinition.defaultContainer?.addMountPoints({
+            containerPath: mountPoint.containerPath,
+            readOnly: mountPoint.readOnly,
+            sourceVolume: `${this.id}-fs`,
+          })
+        })
       }
     }
 

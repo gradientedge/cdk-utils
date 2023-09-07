@@ -1,5 +1,6 @@
 import { Tags } from 'aws-cdk-lib'
 import { CfnCacheCluster, CfnReplicationGroup, CfnSubnetGroup } from 'aws-cdk-lib/aws-elasticache'
+import _ from 'lodash'
 import { CommonConstruct } from '../../common'
 import { createCfnOutput } from '../../utils'
 import { ElastiCacheProps, ReplicatedElastiCacheProps } from './types'
@@ -80,8 +81,8 @@ export class ElastiCacheManager {
 
     elasticacheCluster.addDependency(subnetGroup)
 
-    if (props.tags && props.tags.length > 0) {
-      props.tags.forEach(tag => {
+    if (props.tags && !_.isEmpty(props.tags)) {
+      _.forEach(props.tags, tag => {
         Tags.of(elasticacheCluster).add(tag.key, tag.value)
       })
     }

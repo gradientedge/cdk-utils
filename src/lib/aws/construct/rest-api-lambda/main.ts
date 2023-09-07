@@ -5,6 +5,7 @@ import { AssetCode, IFunction, ILayerVersion, LayerVersion } from 'aws-cdk-lib/a
 import { IHostedZone } from 'aws-cdk-lib/aws-route53'
 import { ISecret } from 'aws-cdk-lib/aws-secretsmanager'
 import { Construct } from 'constructs'
+import _ from 'lodash'
 import { CommonConstruct } from '../../common'
 import { RestApiLambdaEnvironment, RestApiLambdaProps } from './types'
 
@@ -152,7 +153,7 @@ export abstract class RestApiLambda extends CommonConstruct {
 
     if (!this.props.restApiLambdaLayerSources) return
 
-    this.props.restApiLambdaLayerSources.forEach((source: AssetCode, index: number) => {
+    _.forEach(this.props.restApiLambdaLayerSources, (source: AssetCode, index: number) => {
       layers.push(this.lambdaManager.createLambdaLayer(`${this.id}-layer-${index}`, this, source))
     })
 
@@ -208,8 +209,8 @@ export abstract class RestApiLambda extends CommonConstruct {
    */
   protected createApiBasePathMapping() {
     const apiRootPaths = this.props.apiRootPaths
-    if (apiRootPaths && apiRootPaths.length > 0) {
-      apiRootPaths.forEach((apiRootPath: string) => {
+    if (apiRootPaths && !_.isEmpty(apiRootPaths)) {
+      _.forEach(apiRootPaths, (apiRootPath: string) => {
         this.restApiBasePathMappings.push(
           new BasePathMapping(this, `${this.id}-base-bath-mapping-${apiRootPath}`, {
             basePath: apiRootPath,

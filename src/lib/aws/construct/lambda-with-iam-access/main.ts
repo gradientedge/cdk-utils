@@ -4,6 +4,7 @@ import { CfnAccessKey, Policy, PolicyDocument, PolicyStatement, Role, User } fro
 import { AssetCode, IFunction, ILayerVersion, LayerVersion } from 'aws-cdk-lib/aws-lambda'
 import { CfnSecret, Secret } from 'aws-cdk-lib/aws-secretsmanager'
 import { Construct } from 'constructs'
+import _ from 'lodash'
 import { CommonConstruct } from '../../common'
 import { LambdaWithIamAccessEnvironment, LambdaWithIamAccessProps } from './types'
 
@@ -112,7 +113,7 @@ export class LambdaWithIamAccess extends CommonConstruct {
 
     if (!this.props.lambdaLayerSources) return
 
-    this.props.lambdaLayerSources.forEach((source: AssetCode, index: number) => {
+    _.forEach(this.props.lambdaLayerSources, (source: AssetCode, index: number) => {
       layers.push(this.lambdaManager.createLambdaLayer(`${this.id}-layer-${index}`, this, source))
     })
 

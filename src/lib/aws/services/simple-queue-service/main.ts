@@ -1,5 +1,6 @@
 import { Duration, RemovalPolicy, Tags } from 'aws-cdk-lib'
 import { IQueue, Queue } from 'aws-cdk-lib/aws-sqs'
+import _ from 'lodash'
 import { CommonConstruct } from '../../common'
 import { createCfnOutput } from '../../utils'
 import { LambdaProps } from '../lambda'
@@ -59,8 +60,8 @@ export class SqsManager {
         : props.visibilityTimeout,
     })
 
-    if (props.tags && props.tags.length > 0) {
-      props.tags.forEach(tag => {
+    if (props.tags && !_.isEmpty(props.tags)) {
+      _.forEach(props.tags, tag => {
         Tags.of(queue).add(tag.key, tag.value)
       })
     }

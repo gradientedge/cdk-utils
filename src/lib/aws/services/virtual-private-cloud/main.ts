@@ -2,6 +2,7 @@ import { Tags } from 'aws-cdk-lib'
 import { Vpc, VpcProps } from 'aws-cdk-lib/aws-ec2'
 import { CommonConstruct } from '../../common'
 import { createCfnOutput } from '../../utils'
+import _ from 'lodash'
 
 /**
  */
@@ -38,17 +39,17 @@ export class VpcManager {
     })
 
     createCfnOutput(`${id}Id`, scope, vpc.vpcId)
-    createCfnOutput(`${id}PublicSubnetIds`, scope, vpc.publicSubnets.map(subnet => subnet.subnetId).toString())
-    createCfnOutput(`${id}PrivateSubnetIds`, scope, vpc.privateSubnets.map(subnet => subnet.subnetId).toString())
+    createCfnOutput(`${id}PublicSubnetIds`, scope, _.map(vpc.publicSubnets, subnet => subnet.subnetId).toString())
+    createCfnOutput(`${id}PrivateSubnetIds`, scope, _.map(vpc.privateSubnets, subnet => subnet.subnetId).toString())
     createCfnOutput(
       `${id}PublicSubnetRouteTableIds`,
       scope,
-      vpc.publicSubnets.map(subnet => subnet.routeTable.routeTableId).toString()
+      _.map(vpc.publicSubnets, subnet => subnet.routeTable.routeTableId).toString()
     )
     createCfnOutput(
       `${id}PrivateSubnetRouteTableIds`,
       scope,
-      vpc.privateSubnets.map(subnet => subnet.routeTable.routeTableId).toString()
+      _.map(vpc.privateSubnets, subnet => subnet.routeTable.routeTableId).toString()
     )
     createCfnOutput(`${id}AvailabilityZones`, scope, vpc.availabilityZones.toString())
     createCfnOutput(`${id}DefaultSecurityGroup`, scope, vpc.vpcDefaultSecurityGroup.toString())
