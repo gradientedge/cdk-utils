@@ -26,7 +26,7 @@ const config: Config = {
       },
     ],
   ],
-  setupFilesAfterEnv: ['jest-extended', '<rootDir>/setup.js'],
+  setupFilesAfterEnv: ['jest-extended', './setup.js'],
   testEnvironment: 'node',
   testMatch: ['**/?(*.)+(spec|test).[t]s?(x)'],
   transform: {
