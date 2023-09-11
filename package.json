@@ -54,7 +54,7 @@
     "@types/node": "^20.5.9",
     "@types/uuid": "^9.0.3",
     "app-root-path": "^3.1.0",
-    "aws-cdk-lib": "^2.95.0",
+    "aws-cdk-lib": "^2.95.1",
     "cdktf": "^0.18.0",
     "constructs": "^10.2.70",
     "lodash": "^4.17.21",
