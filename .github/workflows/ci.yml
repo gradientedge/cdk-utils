@@ -21,7 +21,7 @@ jobs:
         node-version: [ 18.x ]
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
@@ -76,7 +76,7 @@ jobs:
       NODE_AUTH_TOKEN: ${{ secrets.GIT_TOKEN }}
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
         with:
