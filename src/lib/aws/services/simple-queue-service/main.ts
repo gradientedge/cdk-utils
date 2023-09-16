@@ -34,7 +34,7 @@ export class SqsManager {
     if (!props) throw `Queue props undefined for ${id}`
 
     const queue = new Queue(scope, id, {
-      contentBasedDeduplication: props.contentBasedDeduplication,
+      ...props,
       dataKeyReuse: props.dataKeyReuseInSecs ? Duration.seconds(props.dataKeyReuseInSecs) : props.dataKeyReuse,
       deadLetterQueue: !deadLetterQueue
         ? undefined
@@ -42,14 +42,7 @@ export class SqsManager {
             maxReceiveCount: props.maxReceiveCount ?? 5,
             queue: deadLetterQueue,
           },
-      deduplicationScope: props.deduplicationScope,
       deliveryDelay: props.deliveryDelayInSecs ? Duration.seconds(props.deliveryDelayInSecs) : undefined,
-      encryption: props.encryption,
-      encryptionMasterKey: props.encryptionMasterKey,
-      fifo: props.fifo,
-      fifoThroughputLimit: props.fifoThroughputLimit,
-      maxMessageSizeBytes: props.maxMessageSizeBytes,
-      queueName: props.queueName,
       receiveMessageWaitTime: props.receiveMessageWaitTimeInSecs
         ? Duration.seconds(props.receiveMessageWaitTimeInSecs)
         : props.receiveMessageWaitTime,

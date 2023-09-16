@@ -30,11 +30,9 @@ export class WafManager {
     if (!props) throw `WAF Ip Set props undefined for ${id}`
 
     const ipSet = new CfnIPSet(scope, `${id}`, {
-      addresses: props.addresses,
+      ...props,
       description: `IP Set for ${id} - ${scope.props.stage} stage`,
-      ipAddressVersion: props.ipAddressVersion,
       name: scope.isProductionStage() ? props.name : `${props.name}-${scope.props.stage}`,
-      scope: props.scope,
     })
 
     createCfnOutput(`${id}-ipSetId`, scope, ipSet.attrId)
@@ -53,13 +51,10 @@ export class WafManager {
     if (!props) throw `WAF WebACL props undefined for ${id}`
 
     const webAcl = new CfnWebACL(scope, `${id}`, {
-      defaultAction: props.defaultAction,
+      ...props,
       description: `Web Acl for ${id} - ${scope.props.stage} stage`,
       name: scope.isProductionStage() ? props.name : `${props.name}-${scope.props.stage}`,
-      rules: props.rules,
-      scope: props.scope,
       tags: [{ key: 'service', value: scope.props.name }],
-      visibilityConfig: props.visibilityConfig,
     })
 
     createCfnOutput(`${id}-webAclId`, scope, webAcl.attrId)

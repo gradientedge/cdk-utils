@@ -88,9 +88,7 @@ export class SfnManager {
     if (!props) throw `Step props undefined for ${id}`
     return new Succeed(scope, `${props.name}`, {
       ...props,
-      ...{
-        comment: `Succeed step for ${props.name} - ${scope.props.stage} stage`,
-      },
+      comment: `Succeed step for ${props.name} - ${scope.props.stage} stage`,
     })
   }
 
@@ -104,9 +102,7 @@ export class SfnManager {
     if (!props) throw `Step props undefined for ${id}`
     return new Fail(scope, `${props.name}`, {
       ...props,
-      ...{
-        comment: `Fail step for ${props.name} - ${scope.props.stage} stage`,
-      },
+      comment: `Fail step for ${props.name} - ${scope.props.stage} stage`,
     })
   }
 
@@ -120,9 +116,7 @@ export class SfnManager {
     if (!props) throw `Step props undefined for ${id}`
     return new Pass(scope, `${props.name}`, {
       ...props,
-      ...{
-        comment: `Pass step for ${props.name} - ${scope.props.stage} stage`,
-      },
+      comment: `Pass step for ${props.name} - ${scope.props.stage} stage`,
     })
   }
 
@@ -136,9 +130,7 @@ export class SfnManager {
     if (!props) throw `Step props undefined for ${id}`
     return new Parallel(scope, `${props.name}`, {
       ...props,
-      ...{
-        comment: `Parallel step for ${props.name} - ${scope.props.stage} stage`,
-      },
+      comment: `Parallel step for ${props.name} - ${scope.props.stage} stage`,
     })
   }
 
@@ -152,9 +144,7 @@ export class SfnManager {
     if (!props) throw `Step props undefined for ${id}`
     return new Choice(scope, `${props.name}`, {
       ...props,
-      ...{
-        comment: `Choice step for ${props.name} - ${scope.props.stage} stage`,
-      },
+      comment: `Choice step for ${props.name} - ${scope.props.stage} stage`,
     })
   }
 
@@ -167,10 +157,8 @@ export class SfnManager {
   public createWaitStep(id: string, scope: CommonConstruct, props: SfnWaitProps) {
     return new Wait(scope, `${props.name}`, {
       ...props,
-      ...{
-        comment: `Choice step for ${props.name} - ${scope.props.stage} stage`,
-        time: WaitTime.duration(Duration.seconds(props.delayInSeconds)),
-      },
+      comment: `Choice step for ${props.name} - ${scope.props.stage} stage`,
+      time: WaitTime.duration(Duration.seconds(props.delayInSeconds)),
     })
   }
 
@@ -192,22 +180,9 @@ export class SfnManager {
     if (!props) throw `Step props undefined for ${id}`
     const step = new DynamoGetItem(scope, `${props.name}`, {
       ...props,
-      ...{
-        comment: `DynamoDB GetItem step for ${props.name} - ${scope.props.stage} stage`,
-        consistentRead: props.consistentRead,
-        expressionAttributeNames: props.expressionAttributeNames,
-        heartbeatTimeout: props.heartbeatTimeout,
-        inputPath: props.inputPath,
-        integrationPattern: props.integrationPattern,
-        key: tableKey,
-        outputPath: props.outputPath,
-        projectionExpression: props.projectionExpression,
-        resultPath: props.resultPath,
-        resultSelector: props.resultSelector,
-        returnConsumedCapacity: props.returnConsumedCapacity,
-        table: table,
-        taskTimeout: props.taskTimeout,
-      },
+      comment: `DynamoDB GetItem step for ${props.name} - ${scope.props.stage} stage`,
+      key: tableKey,
+      table,
     })
 
     let retries = props.retries
@@ -218,7 +193,7 @@ export class SfnManager {
     _.forEach(retries, retry => {
       step.addRetry({
         ...retry,
-        ...{ interval: retry.intervalInSecs ? Duration.seconds(retry.intervalInSecs) : retry.interval },
+        interval: retry.intervalInSecs ? Duration.seconds(retry.intervalInSecs) : retry.interval,
       })
     })
 
@@ -243,24 +218,9 @@ export class SfnManager {
     if (!props) throw `Step props undefined for ${id}`
     const step = new DynamoPutItem(scope, `${props.name}`, {
       ...props,
-      ...{
-        comment: `DynamoDB PutItem step for ${props.name} - ${scope.props.stage} stage`,
-        conditionExpression: props.conditionExpression,
-        expressionAttributeNames: props.expressionAttributeNames,
-        expressionAttributeValues: props.expressionAttributeValues,
-        heartbeatTimeout: props.heartbeatTimeout,
-        inputPath: props.inputPath,
-        integrationPattern: props.integrationPattern,
-        item: tableItem,
-        outputPath: props.outputPath,
-        resultPath: props.resultPath,
-        resultSelector: props.resultSelector,
-        returnConsumedCapacity: props.returnConsumedCapacity,
-        returnItemCollectionMetrics: props.returnItemCollectionMetrics,
-        returnValues: props.returnValues,
-        table: table,
-        taskTimeout: props.taskTimeout,
-      },
+      comment: `DynamoDB PutItem step for ${props.name} - ${scope.props.stage} stage`,
+      item: tableItem,
+      table,
     })
 
     let retries = props.retries
@@ -296,24 +256,9 @@ export class SfnManager {
     if (!props) throw `Step props undefined for ${id}`
     const step = new DynamoDeleteItem(scope, `${props.name}`, {
       ...props,
-      ...{
-        comment: `DynamoDB DeleteItem step for ${props.name} - ${scope.props.stage} stage`,
-        conditionExpression: props.conditionExpression,
-        expressionAttributeNames: props.expressionAttributeNames,
-        expressionAttributeValues: props.expressionAttributeValues,
-        heartbeatTimeout: props.heartbeatTimeout,
-        inputPath: props.inputPath,
-        integrationPattern: props.integrationPattern,
-        key: tableKey,
-        outputPath: props.outputPath,
-        resultPath: props.resultPath,
-        resultSelector: props.resultSelector,
-        returnConsumedCapacity: props.returnConsumedCapacity,
-        returnItemCollectionMetrics: props.returnItemCollectionMetrics,
-        returnValues: props.returnValues,
-        table: table,
-        taskTimeout: props.taskTimeout,
-      },
+      comment: `DynamoDB DeleteItem step for ${props.name} - ${scope.props.stage} stage`,
+      key: tableKey,
+      table,
     })
 
     let retries = props.retries
@@ -343,21 +288,8 @@ export class SfnManager {
     if (!props.messageBody) throw 'Message body undefined'
     const step = new SqsSendMessage(scope, `${props.name}`, {
       ...props,
-      ...{
-        comment: `DynamoDB PutItem step for ${props.name} - ${scope.props.stage} stage`,
-        delay: props.delay,
-        heartbeatTimeout: props.heartbeatTimeout,
-        inputPath: props.inputPath,
-        integrationPattern: props.integrationPattern,
-        messageBody: props.messageBody,
-        messageDeduplicationId: props.messageDeduplicationId,
-        messageGroupId: props.messageGroupId,
-        outputPath: props.outputPath,
-        queue: queue,
-        resultPath: props.resultPath,
-        resultSelector: props.resultSelector,
-        taskTimeout: props.taskTimeout,
-      },
+      comment: `DynamoDB PutItem step for ${props.name} - ${scope.props.stage} stage`,
+      queue,
     })
 
     let retries = props.retries
@@ -368,7 +300,7 @@ export class SfnManager {
     _.forEach(retries, retry => {
       step.addRetry({
         ...retry,
-        ...{ interval: retry.intervalInSecs ? Duration.seconds(retry.intervalInSecs) : retry.interval },
+        interval: retry.intervalInSecs ? Duration.seconds(retry.intervalInSecs) : retry.interval,
       })
     })
 
@@ -386,10 +318,8 @@ export class SfnManager {
     if (!props) throw `Step props undefined for ${id}`
     const step = new LambdaInvoke(scope, `${props.name}`, {
       ...props,
-      ...{
-        comment: `Lambda step for ${props.name} - ${scope.props.stage} stage`,
-        lambdaFunction,
-      },
+      comment: `Lambda step for ${props.name} - ${scope.props.stage} stage`,
+      lambdaFunction,
     })
 
     let retries = props.retries
@@ -400,7 +330,7 @@ export class SfnManager {
     _.forEach(retries, retry => {
       step.addRetry({
         ...retry,
-        ...{ interval: retry.intervalInSecs ? Duration.seconds(retry.intervalInSecs) : retry.interval },
+        interval: retry.intervalInSecs ? Duration.seconds(retry.intervalInSecs) : retry.interval,
       })
     })
 
@@ -426,10 +356,8 @@ export class SfnManager {
     if (skipExecution) return this.createPassStep(id, scope, { comment: props.comment, name: props.name })
     const step = new LambdaInvoke(scope, `${props.name}`, {
       ...props,
-      ...{
-        comment: `Lambda step for ${props.name} - ${scope.props.stage} stage`,
-        lambdaFunction,
-      },
+      comment: `Lambda step for ${props.name} - ${scope.props.stage} stage`,
+      lambdaFunction,
     })
 
     let retries = props.retries
@@ -440,7 +368,7 @@ export class SfnManager {
     _.forEach(retries, retry => {
       step.addRetry({
         ...retry,
-        ...{ interval: retry.intervalInSecs ? Duration.seconds(retry.intervalInSecs) : retry.interval },
+        interval: retry.intervalInSecs ? Duration.seconds(retry.intervalInSecs) : retry.interval,
       })
     })
 
@@ -463,11 +391,9 @@ export class SfnManager {
     if (!props) throw `Step props undefined for ${id}`
     const step = new CallApiGatewayRestApiEndpoint(scope, `${props.name}`, {
       ...props,
-      ...{
-        api,
-        comment: `API step for ${props.name} - ${scope.props.stage} stage`,
-        stageName: scope.props.stage,
-      },
+      api,
+      comment: `API step for ${props.name} - ${scope.props.stage} stage`,
+      stageName: scope.props.stage,
     })
 
     let retries = props.retries
@@ -478,7 +404,7 @@ export class SfnManager {
     _.forEach(retries, retry => {
       step.addRetry({
         ...retry,
-        ...{ interval: retry.intervalInSecs ? Duration.seconds(retry.intervalInSecs) : retry.interval },
+        interval: retry.intervalInSecs ? Duration.seconds(retry.intervalInSecs) : retry.interval,
       })
     })
 
@@ -501,9 +427,8 @@ export class SfnManager {
     const step = new StepFunctionsStartExecution(scope, `${id}`, {
       ...props,
       associateWithParent: props.associateWithParent ?? true,
-      inputPath: props.inputPath,
       name: props.name ?? uuidv4(),
-      stateMachine: stateMachine,
+      stateMachine,
     })
 
     let retries = props.retries
@@ -514,7 +439,7 @@ export class SfnManager {
     _.forEach(retries, retry => {
       step.addRetry({
         ...retry,
-        ...{ interval: retry.intervalInSecs ? Duration.seconds(retry.intervalInSecs) : retry.interval },
+        interval: retry.intervalInSecs ? Duration.seconds(retry.intervalInSecs) : retry.interval,
       })
     })
 
@@ -550,6 +475,7 @@ export class SfnManager {
   ) {
     if (!props) throw `State Machine props undefined for ${id}`
     const stateMachine = new StateMachine(scope, `${id}`, {
+      ...props,
       definitionBody: DefinitionBody.fromChainable(definition),
       logs: {
         destination: logGroup,
@@ -558,9 +484,6 @@ export class SfnManager {
       },
       role,
       stateMachineName: `${props.stateMachineName}-${scope.props.stage}`,
-      stateMachineType: props.stateMachineType,
-      timeout: props.timeout,
-      tracingEnabled: props.tracingEnabled,
     })
 
     createCfnOutput(`${id}-stateMachineName`, scope, stateMachine.stateMachineName)

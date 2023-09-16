@@ -34,8 +34,7 @@ export class VpcManager {
   public createVpc(id: string, scope: CommonConstruct, props: VpcProps) {
     if (!props) throw `Vpc props undefined for ${id}`
     const vpc = new Vpc(scope, `${id}`, {
-      ipAddresses: props.ipAddresses,
-      maxAzs: props.maxAzs,
+      ...props,
     })
 
     createCfnOutput(`${id}Id`, scope, vpc.vpcId)

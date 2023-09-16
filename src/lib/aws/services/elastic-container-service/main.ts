@@ -47,13 +47,9 @@ export class EcsManager {
     if (!props) throw `Ecs Cluster props undefined for ${id}`
 
     const ecsCluster = new Cluster(scope, `${id}`, {
-      capacity: props.capacity,
+      ...props,
       clusterName: `${props.clusterName}-${scope.props.stage}`,
-      containerInsights: props.containerInsights,
-      defaultCloudMapNamespace: props.defaultCloudMapNamespace,
-      enableFargateCapacityProviders: props.enableFargateCapacityProviders,
-      executeCommandConfiguration: props.executeCommandConfiguration,
-      vpc: vpc,
+      vpc,
     })
 
     if (props.tags && !_.isEmpty(props.tags)) {
@@ -96,41 +92,33 @@ export class EcsManager {
     if (!props) throw `EcsTask props undefined for ${id}`
 
     const ecsTask = new TaskDefinition(scope, `${id}`, {
+      ...props,
       compatibility: Compatibility.FARGATE,
-      cpu: props.cpu,
-      ephemeralStorageGiB: props.ephemeralStorageGiB,
       executionRole: role,
       family: `${props.family}-${scope.props.stage}`,
-      inferenceAccelerators: props.inferenceAccelerators,
-      ipcMode: props.ipcMode,
-      memoryMiB: props.memoryMiB,
       networkMode: NetworkMode.AWS_VPC,
-      pidMode: props.pidMode,
-      placementConstraints: props.placementConstraints,
-      proxyConfiguration: props.proxyConfiguration,
       runtimePlatform: {
         cpuArchitecture: props.runtimePlatform?.cpuArchitecture ?? CpuArchitecture.X86_64,
         operatingSystemFamily: props.runtimePlatform?.operatingSystemFamily ?? OperatingSystemFamily.LINUX,
       },
       taskRole: role,
-      volumes: props.volumes,
     })
 
     ecsTask.addContainer('EcsContainer', {
-      command: command,
+      command,
       cpu: props.cpu ? parseInt(props.cpu) : undefined,
       disableNetworking: false,
-      environment: environment,
+      environment,
       image: containerImage,
       logging: LogDriver.awsLogs({
-        logGroup: logGroup,
+        logGroup,
         logRetention: props.logging?.logRetention,
         multilinePattern: props.logging?.multilinePattern,
         streamPrefix: `${id}`,
       }),
       memoryLimitMiB: props.memoryMiB ? parseInt(props.memoryMiB) : undefined,
       privileged: false,
-      secrets: secrets,
+      secrets,
     })
 
     if (props.tags && !_.isEmpty(props.tags)) {
@@ -164,29 +152,20 @@ export class EcsManager {
       throw `TaskImageOptions for Ecs Load balanced Fargate Service props undefined for ${id}`
 
     const fargateService = new ApplicationLoadBalancedFargateService(scope, `${id}-ecs-service`, {
+      ...props,
       assignPublicIp: props.assignPublicIp ?? true,
-      certificate: props.certificate,
-      cluster: cluster,
-      cpu: props.cpu,
-      desiredCount: props.desiredCount,
-      domainName: props.domainName,
-      domainZone: props.domainZone,
+      cluster,
       enableECSManagedTags: true,
       healthCheckGracePeriod: props.healthCheckGracePeriod ?? Duration.seconds(60),
-      listenerPort: props.listenerPort,
       loadBalancerName: `${id}-${scope.props.stage}`,
-      memoryLimitMiB: props.memoryLimitMiB,
       runtimePlatform: {
         cpuArchitecture: props.runtimePlatform?.cpuArchitecture ?? CpuArchitecture.X86_64,
         operatingSystemFamily: props.runtimePlatform?.operatingSystemFamily ?? OperatingSystemFamily.LINUX,
       },
       serviceName: `${id}-${scope.props.stage}`,
       taskImageOptions: {
-        containerPort: props.taskImageOptions?.containerPort,
+        ...props.taskImageOptions,
         enableLogging: props.taskImageOptions?.enableLogging ?? true,
-        environment: props.taskImageOptions?.environment,
-        executionRole: props.taskImageOptions?.executionRole,
-        image: props.taskImageOptions.image,
         logDriver:
           props.taskImageOptions?.logDriver ??
           LogDriver.awsLogs({
@@ -195,21 +174,15 @@ export class EcsManager {
             multilinePattern: props.logging?.multilinePattern,
             streamPrefix: `${id}-${scope.props.stage}/ecs`,
           }),
-        secrets: props.taskImageOptions?.secrets,
-        taskRole: props.taskImageOptions?.taskRole,
       },
     })
 
     if (props.healthCheck) {
       fargateService.targetGroup.configureHealthCheck({
+        ...props.healthCheck,
         enabled: props.healthCheck.enabled ?? true,
-        healthyGrpcCodes: props.healthCheck.healthyGrpcCodes,
-        healthyHttpCodes: props.healthCheck.healthyHttpCodes,
-        healthyThresholdCount: props.healthCheck.healthyThresholdCount,
         interval: props.healthCheck.interval ?? Duration.seconds(props.healthCheck.intervalInSecs),
         path: props.healthCheck.path ?? '/',
-        port: props.healthCheck.port,
-        protocol: props.healthCheck.protocol,
         timeout: props.healthCheck.timeout ?? Duration.seconds(props.healthCheck.timeoutInSecs),
         unhealthyThresholdCount: props.healthCheck.unhealthyThresholdCount,
       })

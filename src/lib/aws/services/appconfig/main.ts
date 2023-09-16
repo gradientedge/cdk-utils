@@ -50,9 +50,8 @@ export class AppConfigManager {
     if (!props) throw `AppConfig props undefined for ${id}`
 
     const application = new CfnApplication(scope, `${id}`, {
-      description: props.application.description,
+      ...props.application,
       name: `${props.application.name}-${scope.props.stage}`,
-      tags: props.application.tags,
     })
 
     createCfnOutput(`${id}-ApplicationId`, scope, Fn.ref(application.logicalId))
@@ -78,11 +77,9 @@ export class AppConfigManager {
     if (!props) throw `AppConfig props undefined for ${id}`
 
     const environment = new CfnEnvironment(scope, `${id}`, {
-      applicationId: applicationId,
-      description: props.environment.description,
-      monitors: props.environment.monitors,
+      ...props.environment,
+      applicationId,
       name: props.environment.name ?? scope.props.stage,
-      tags: props.environment.tags,
     })
 
     createCfnOutput(`${id}-configurationEnvironmentId`, scope, Fn.ref(environment.logicalId))
@@ -93,7 +90,7 @@ export class AppConfigManager {
 
   /**
    * @summary Method to create an AppConfig Configuration Profile for a given application
-   * - <p>&#9888; The <b>locationUri</b> is defaulted to <i>hosted</i> if undefined</p>
+   * - The <b>locationUri</b> is defaulted to <i>hosted</i> if undefined</p>
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param applicationId id of the application
@@ -109,14 +106,10 @@ export class AppConfigManager {
     if (!props) throw `AppConfig props undefined for ${id}`
 
     const profile = new CfnConfigurationProfile(scope, `${id}`, {
-      applicationId: applicationId,
-      description: props.configurationProfile.description,
+      ...props.configurationProfile,
+      applicationId,
       locationUri: props.configurationProfile.locationUri || 'hosted',
       name: `${props.configurationProfile.name}-${scope.props.stage}`,
-      retrievalRoleArn: props.configurationProfile.retrievalRoleArn,
-      tags: props.configurationProfile.tags,
-      type: props.configurationProfile.type,
-      validators: props.configurationProfile.validators,
     })
 
     createCfnOutput(`${id}-configurationProfileId`, scope, Fn.ref(profile.logicalId))

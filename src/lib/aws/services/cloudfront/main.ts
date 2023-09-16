@@ -87,12 +87,9 @@ export class CloudFrontManager {
     if (!props) throw `CloudFront props undefined for ${id}`
 
     const distribution = new CloudFrontWebDistribution(scope, `${id}`, {
+      ...props,
       comment: `${id} - ${scope.props.stage} stage`,
-      defaultRootObject: props.defaultRootObject,
-      enableIpV6: props.enableIpV6,
       enabled: props.enabled ?? true,
-      errorConfigurations: props.errorConfigurations,
-      geoRestriction: props.geoRestriction,
       httpVersion: props.httpVersion ?? HttpVersion.HTTP2,
       loggingConfig: {
         bucket: logBucket,
@@ -113,7 +110,6 @@ export class CloudFrontManager {
         securityPolicy: SecurityPolicyProtocol.TLS_V1_1_2016,
         sslMethod: SSLMethod.SNI,
       }),
-      webACLId: props.webACLId,
     })
 
     if (props.tags && !_.isEmpty(props.tags)) {
@@ -154,31 +150,23 @@ export class CloudFrontManager {
     defaultFunctionAssociations?: FunctionAssociation[]
   ) {
     const distribution = new Distribution(scope, `${id}`, {
-      additionalBehaviors: props.additionalBehaviors,
-      certificate: certificate,
+      ...props,
+      certificate,
       comment: `${id} - ${scope.props.stage} stage`,
       defaultBehavior: {
-        cachePolicy: props.defaultBehavior ? props.defaultBehavior.cachePolicy : undefined,
-        edgeLambdas: props.defaultBehavior ? props.defaultBehavior.edgeLambdas : undefined,
+        ...props.defaultBehavior,
         functionAssociations: defaultFunctionAssociations ?? undefined,
-        origin: origin,
-        originRequestPolicy: props.defaultBehavior ? props.defaultBehavior.originRequestPolicy : undefined,
-        viewerProtocolPolicy: props.defaultBehavior ? props.defaultBehavior.viewerProtocolPolicy : undefined,
+        origin,
       },
-      defaultRootObject: props.defaultRootObject,
       domainNames: aliases,
-      enableIpv6: props.enableIpv6,
       enableLogging: props.enableLogging ?? true,
       enabled: props.enabled ?? true,
-      errorResponses: props.errorResponses,
-      geoRestriction: props.geoRestriction,
       httpVersion: props.httpVersion ?? HttpVersion.HTTP2,
-      logBucket: logBucket,
+      logBucket,
       logFilePrefix: props.logFilePrefix ?? `edge/`,
       logIncludesCookies: props.logIncludesCookies ?? true,
       minimumProtocolVersion: props.minimumProtocolVersion ?? SecurityPolicyProtocol.TLS_V1_2_2021,
       priceClass: props.priceClass ?? PriceClass.PRICE_CLASS_ALL,
-      webAclId: props.webAclId,
     })
 
     if (props.tags && !_.isEmpty(props.tags)) {

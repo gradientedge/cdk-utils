@@ -35,19 +35,11 @@ export class S3Manager {
     const bucketLifecycleRules: LifecycleRule[] = []
     _.forEach(props.lifecycleRules, lifecycleRule => {
       bucketLifecycleRules.push({
-        abortIncompleteMultipartUploadAfter: lifecycleRule.abortIncompleteMultipartUploadAfter,
-        enabled: lifecycleRule.enabled,
+        ...lifecycleRule,
         expiration: lifecycleRule.expirationInDays ? Duration.days(lifecycleRule.expirationInDays) : undefined,
-        expirationDate: lifecycleRule.expirationDate,
-        expiredObjectDeleteMarker: lifecycleRule.expiredObjectDeleteMarker,
-        id: lifecycleRule.id,
         noncurrentVersionExpiration: lifecycleRule.noncurrentVersionExpirationInDays
           ? Duration.days(lifecycleRule.noncurrentVersionExpirationInDays)
           : undefined,
-        noncurrentVersionTransitions: lifecycleRule.noncurrentVersionTransitions,
-        prefix: lifecycleRule.prefix,
-        tagFilters: lifecycleRule.tagFilters,
-        transitions: lifecycleRule.transitions,
       })
     })
 
@@ -108,24 +100,13 @@ export class S3Manager {
       }
 
       bucket = new Bucket(scope, `${id}-bucket`, {
-        accessControl: props.accessControl,
-        autoDeleteObjects: props.autoDeleteObjects,
+        ...props,
         blockPublicAccess: props.blockPublicAccess || BlockPublicAccess.BLOCK_ALL,
-        bucketName: bucketName,
-        cors: props.cors,
+        bucketName,
         encryption: props.encryption || BucketEncryption.S3_MANAGED,
-        encryptionKey: props.encryptionKey,
         lifecycleRules: this.determineBucketLifecycleRules(props),
-        metrics: props.metrics,
-        objectOwnership: props.objectOwnership,
-        publicReadAccess: props.publicReadAccess,
         removalPolicy: props.removalPolicy || RemovalPolicy.RETAIN,
         serverAccessLogsBucket: logBucket,
-        serverAccessLogsPrefix: props.serverAccessLogsPrefix,
-        versioned: props.versioned,
-        websiteErrorDocument: props.websiteErrorDocument,
-        websiteIndexDocument: props.websiteIndexDocument,
-        websiteRoutingRules: props.websiteRoutingRules,
       })
 
       const cfnBucket = bucket.node.defaultChild as CfnBucket

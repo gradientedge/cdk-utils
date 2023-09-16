@@ -38,9 +38,9 @@ export class SsmManager {
     if (!props) throw `Parameter props undefined for ${id}`
 
     const parameter = new StringParameter(scope, `${id}`, {
+      ...props,
       description: `${props.description} - ${scope.props.stage} stage`,
       parameterName: `${props.parameterName}-${scope.props.stage}`,
-      stringValue: props.stringValue,
     })
 
     createCfnOutput(`${id}-parameterArn`, scope, parameter.parameterArn)
@@ -73,8 +73,8 @@ export class SsmManager {
     if (!region || region == '') throw `Invalid region for ${id}`
 
     return new SSMParameterReader(scope, `${id}`, {
-      parameterName: parameterName,
-      region: region,
+      parameterName,
+      region,
     }).getParameterValue()
   }
 }

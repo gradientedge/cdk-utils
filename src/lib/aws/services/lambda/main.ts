@@ -101,39 +101,36 @@ export class LambdaManager {
 
     const lambdaFunction = new Function(scope, `${id}`, {
       ...props,
-      ...{
-        allowPublicSubnet: !!vpc,
-        architecture: props.architecture ?? Architecture.ARM_64,
-        code: code,
-        deadLetterQueue: deadLetterQueue,
-        environment: {
-          LAST_MODIFIED_TS: props.excludeLastModifiedTimestamp
-            ? ''
-            : scope.ssmManager.readStringParameter(
-                `${id}-sm-ts`,
-                scope,
-                `${SsmManager.SECRETS_MODIFIED_TIMESTAMP_PARAM}-${scope.props.stage}`
-              ),
-          REGION: scope.props.region,
-          STAGE: scope.props.stage,
-          ...environment,
-        },
-        filesystem: accessPoint ? FileSystem.fromEfsAccessPoint(accessPoint, mountPath || '/mnt/msg') : undefined,
-        functionName: functionName,
-        handler: handler || 'index.lambda_handler',
-        insightsVersion: props.insightsVersion,
-        layers: layers,
-        logRetention: scope.props.logRetention ?? props.logRetention,
-        reservedConcurrentExecutions:
-          props.reservedConcurrentExecutions ?? scope.props.defaultReservedLambdaConcurrentExecutions,
-        role: role instanceof Role ? role : undefined,
-        runtime: props.runtime ?? scope.props.nodejsRuntime ?? CommonStack.NODEJS_RUNTIME,
-        securityGroups: securityGroups,
-        timeout: props.timeoutInSecs ? Duration.seconds(props.timeoutInSecs) : Duration.minutes(15),
-        tracing: scope.props.defaultTracing ?? props.tracing,
-        vpc,
-        vpcSubnets,
+      allowPublicSubnet: !!vpc,
+      architecture: props.architecture ?? Architecture.ARM_64,
+      code,
+      deadLetterQueue,
+      environment: {
+        LAST_MODIFIED_TS: props.excludeLastModifiedTimestamp
+          ? ''
+          : scope.ssmManager.readStringParameter(
+              `${id}-sm-ts`,
+              scope,
+              `${SsmManager.SECRETS_MODIFIED_TIMESTAMP_PARAM}-${scope.props.stage}`
+            ),
+        REGION: scope.props.region,
+        STAGE: scope.props.stage,
+        ...environment,
       },
+      filesystem: accessPoint ? FileSystem.fromEfsAccessPoint(accessPoint, mountPath || '/mnt/msg') : undefined,
+      functionName,
+      handler: handler || 'index.lambda_handler',
+      layers,
+      logRetention: scope.props.logRetention ?? props.logRetention,
+      reservedConcurrentExecutions:
+        props.reservedConcurrentExecutions ?? scope.props.defaultReservedLambdaConcurrentExecutions,
+      role: role instanceof Role ? role : undefined,
+      runtime: props.runtime ?? scope.props.nodejsRuntime ?? CommonStack.NODEJS_RUNTIME,
+      securityGroups,
+      timeout: props.timeoutInSecs ? Duration.seconds(props.timeoutInSecs) : Duration.minutes(15),
+      tracing: scope.props.defaultTracing ?? props.tracing,
+      vpc,
+      vpcSubnets,
     })
 
     if (lambdaFunction.deadLetterQueue && props.dlq?.retriesEnabled) {
@@ -254,36 +251,31 @@ export class LambdaManager {
 
     const lambdaFunction = new DockerImageFunction(scope, `${id}`, {
       ...props,
-      ...{
-        allowPublicSubnet: !!vpc,
-        architecture: props.architecture ?? Architecture.ARM_64,
-        code: code,
-        deadLetterQueue: deadLetterQueue,
-        environment: {
-          LAST_MODIFIED_TS: props.excludeLastModifiedTimestamp
-            ? ''
-            : scope.ssmManager.readStringParameter(
-                `${id}-sm-ts`,
-                scope,
-                `${SsmManager.SECRETS_MODIFIED_TIMESTAMP_PARAM}-${scope.props.stage}`
-              ),
-          REGION: scope.props.region,
-          STAGE: scope.props.stage,
-          ...environment,
-        },
-        filesystem: accessPoint ? FileSystem.fromEfsAccessPoint(accessPoint, mountPath || '/mnt/msg') : undefined,
-        functionName: functionName,
-        insightsVersion: props.insightsVersion,
-        logRetention: scope.props.logRetention ?? props.logRetention,
-        reservedConcurrentExecutions: props.reservedConcurrentExecutions,
-        role: role instanceof Role ? role : undefined,
-        runtime: props.runtime ?? scope.props.nodejsRuntime ?? CommonStack.NODEJS_RUNTIME,
-        securityGroups: securityGroups,
-        timeout: props.timeoutInSecs ? Duration.seconds(props.timeoutInSecs) : Duration.minutes(1),
-        tracing: props.tracing,
-        vpc,
-        vpcSubnets,
+      allowPublicSubnet: !!vpc,
+      architecture: props.architecture ?? Architecture.ARM_64,
+      code,
+      deadLetterQueue,
+      environment: {
+        LAST_MODIFIED_TS: props.excludeLastModifiedTimestamp
+          ? ''
+          : scope.ssmManager.readStringParameter(
+              `${id}-sm-ts`,
+              scope,
+              `${SsmManager.SECRETS_MODIFIED_TIMESTAMP_PARAM}-${scope.props.stage}`
+            ),
+        REGION: scope.props.region,
+        STAGE: scope.props.stage,
+        ...environment,
       },
+      filesystem: accessPoint ? FileSystem.fromEfsAccessPoint(accessPoint, mountPath || '/mnt/msg') : undefined,
+      functionName,
+      logRetention: scope.props.logRetention ?? props.logRetention,
+      role: role instanceof Role ? role : undefined,
+      securityGroups: securityGroups,
+      timeout: props.timeoutInSecs ? Duration.seconds(props.timeoutInSecs) : Duration.minutes(1),
+      tracing: props.tracing,
+      vpc,
+      vpcSubnets,
     })
 
     if (lambdaFunction.deadLetterQueue && props.dlq?.retriesEnabled) {
@@ -318,17 +310,7 @@ export class LambdaManager {
 
     const lambdaFunctionAlias = new Alias(scope, `${id}`, {
       ...props,
-      ...{
-        additionalVersions: props.additionalVersions,
-        aliasName: props.aliasName,
-        description: props.description,
-        maxEventAge: props.maxEventAge,
-        onFailure: props.onFailure,
-        onSuccess: props.onSuccess,
-        provisionedConcurrentExecutions: props.provisionedConcurrentExecutions,
-        retryAttempts: props.retryAttempts,
-        version: lambdaVersion,
-      },
+      version: lambdaVersion,
     })
 
     createCfnOutput(`${id}-lambdaAliasName`, scope, lambdaFunctionAlias.functionArn)

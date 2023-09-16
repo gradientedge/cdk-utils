@@ -53,9 +53,9 @@ export class CloudTrailManager {
     const role = scope.iamManager.createRoleForCloudTrail(`${id}Role`, scope, logGroup)
 
     const cloudTrail = new CfnTrail(scope, `${id}`, {
+      ...props,
       cloudWatchLogsLogGroupArn: logGroup.attrArn,
       cloudWatchLogsRoleArn: role.attrArn,
-      enableLogFileValidation: props.enableLogFileValidation,
       eventSelectors: [
         {
           dataResources: [
@@ -68,9 +68,6 @@ export class CloudTrailManager {
           readWriteType: 'WriteOnly',
         },
       ],
-      includeGlobalServiceEvents: props.includeGlobalServiceEvents,
-      isLogging: props.isLogging,
-      isMultiRegionTrail: props.isMultiRegionTrail,
       s3BucketName: logBucket.bucketName,
       s3KeyPrefix: `logs-${props.trailName}`,
       tags: [{ key: 'service', value: scope.props.name }],

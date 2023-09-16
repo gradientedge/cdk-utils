@@ -39,8 +39,8 @@ export class SnsManager {
     if (!props) throw `Subscription props undefined for ${id}`
 
     const topic = new Topic(scope, id, {
+      ...props,
       displayName: `${props.topicName}-${scope.props.stage}`,
-      fifo: props.fifo,
       topicName: `${props.topicName}-${scope.props.stage}`,
     })
 
@@ -70,8 +70,8 @@ export class SnsManager {
     if (!props) throw `Subscription props undefined for ${id}`
 
     const topic = new Topic(scope, id, {
+      ...props,
       displayName: `${props.topicName}-${scope.props.stage}`,
-      fifo: props.fifo,
       topicName: `${props.topicName}-${scope.props.stage}`,
     })
 

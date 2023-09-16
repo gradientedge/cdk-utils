@@ -38,6 +38,7 @@ export class EventManager {
     if (!props) throw `EventBus props undefined for ${id}`
 
     const eventBus = new EventBus(scope, `${id}`, {
+      ...props,
       eventBusName: `${props.eventBusName}-${scope.props.stage}`,
     })
 
@@ -65,12 +66,9 @@ export class EventManager {
     if (!props) throw `EventRule props undefined for ${id}`
 
     const rule = new Rule(scope, `${id}`, {
-      description: props.description,
-      enabled: props.enabled,
-      eventBus: eventBus,
-      eventPattern: props.eventPattern,
+      ...props,
+      eventBus,
       ruleName: `${props.ruleName}-${scope.props.stage}`,
-      schedule: props.schedule,
     })
 
     if (targets && !_.isEmpty(targets)) {
@@ -113,12 +111,12 @@ export class EventManager {
     if (!props) throw `EventRule props undefined for ${id}`
 
     const eventRule = new CfnRule(scope, `${id}`, {
+      ...props,
       description: 'Rule to send notification to lambda function target',
-      eventBusName: eventBusName,
-      eventPattern: eventPattern,
+      eventBusName,
+      eventPattern,
       name: `${props.name}-${scope.props.stage}`,
-      scheduleExpression: scheduleExpression,
-      state: props.state,
+      scheduleExpression,
       targets: [
         {
           arn: lambdaFunction.functionArn,
@@ -165,10 +163,10 @@ export class EventManager {
     if (!props) throw `EventRule props undefined for ${id}`
 
     const eventRule = new CfnRule(scope, `${id}`, {
+      ...props,
       description: 'Rule to send notification on new objects in data bucket to ecs task target',
-      eventPattern: eventPattern,
+      eventPattern,
       name: `${props.name}-${scope.props.stage}`,
-      state: props.state,
       targets: [
         {
           arn: cluster.clusterArn,
@@ -216,9 +214,6 @@ export class EventManager {
 
     const pipe = new CfnPipe(scope, `${id}`, {
       ...props,
-      description: props.description,
-      enrichment: props.enrichment,
-      enrichmentParameters: props.enrichmentParameters,
       name: `${props.name}-${scope.props.stage}`,
       roleArn: pipeRole.roleArn,
       source: sourceQueue.queueArn,
