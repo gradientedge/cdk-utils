@@ -80,16 +80,8 @@ export class KmsManager {
     if (!props) throw `KMS Key props undefined for ${id}`
 
     const key = new Key(scope, `${id}`, {
-      admins: props.admins,
+      ...props,
       alias: `${props.alias}-${scope.props.stage}`,
-      description: props.description,
-      enableKeyRotation: props.enableKeyRotation,
-      enabled: props.enabled,
-      keySpec: props.keySpec,
-      keyUsage: props.keyUsage,
-      pendingWindow: props.pendingWindow,
-      policy: props.policy,
-      removalPolicy: props.removalPolicy,
     })
 
     createCfnOutput(`${id}-keyId`, scope, key.keyId)

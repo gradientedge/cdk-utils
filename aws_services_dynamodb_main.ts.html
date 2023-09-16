@@ -82,23 +82,8 @@ export class DynamodbManager {
     if (!props) throw `Table props undefined for ${id}`
 
     const table = new Table(scope, `${id}`, {
-      billingMode: props.billingMode,
-      contributorInsightsEnabled: props.contributorInsightsEnabled,
-      encryption: props.encryption,
-      encryptionKey: props.encryptionKey,
-      kinesisStream: props.kinesisStream,
-      partitionKey: props.partitionKey,
-      pointInTimeRecovery: props.pointInTimeRecovery,
-      readCapacity: props.readCapacity,
-      removalPolicy: props.removalPolicy,
-      replicationRegions: props.replicationRegions,
-      replicationTimeout: props.replicationTimeout,
-      sortKey: props.sortKey,
-      stream: props.stream,
+      ...props,
       tableName: `${props.tableName}-${scope.props.stage}`,
-      timeToLiveAttribute: props.timeToLiveAttribute,
-      waitForReplicationToFinish: props.waitForReplicationToFinish,
-      writeCapacity: props.writeCapacity,
     })
 
     if (props.tags &amp;&amp; !_.isEmpty(props.tags)) {

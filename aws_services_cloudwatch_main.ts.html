@@ -112,19 +112,14 @@ export class CloudWatchManager {
     })
 
     const expression = new watch.MathExpression({
+      ...props,
       expression: props.expression,
       period: props.periodInSecs ? cdk.Duration.seconds(props.periodInSecs) : cdk.Duration.minutes(5),
       usingMetrics: metrics,
     })
 
     const alarm = expression.createAlarm(scope, `${id}`, {
-      alarmDescription: props.alarmDescription,
-      alarmName: props.alarmName,
-      comparisonOperator: props.comparisonOperator,
-      datapointsToAlarm: props.datapointsToAlarm,
-      evaluationPeriods: props.evaluationPeriods,
-      threshold: props.threshold,
-      treatMissingData: props.treatMissingData,
+      ...props,
     })
 
     utils.createCfnOutput(`${id}-alarmArn`, scope, alarm.alarmArn)
@@ -144,13 +139,7 @@ export class CloudWatchManager {
     if (!props) throw `Alarm props undefined for ${id}`
 
     const alarm = metric.createAlarm(scope, `${id}`, {
-      alarmDescription: props.alarmDescription,
-      alarmName: props.alarmName,
-      comparisonOperator: props.comparisonOperator,
-      datapointsToAlarm: props.datapointsToAlarm,
-      evaluationPeriods: props.evaluationPeriods,
-      threshold: props.threshold,
-      treatMissingData: props.treatMissingData,
+      ...props,
     })
 
     utils.createCfnOutput(`${id}-alarmArn`, scope, alarm.alarmArn)
@@ -170,11 +159,10 @@ export class CloudWatchManager {
     if (!props) throw `Dashboard props undefined for ${id}`
 
     const dashboard = new watch.Dashboard(scope, `${id}`, {
-      dashboardName: props.dashboardName,
+      ...props,
       end: CloudWatchManager.determineTimeRange(props.end),
-      periodOverride: props.periodOverride,
       start: CloudWatchManager.determineTimeRange(props.start),
-      widgets: widgets,
+      widgets,
     })
 
     utils.createCfnOutput(`${id}-dashboardName`, scope, props.dashboardName)
@@ -407,9 +395,7 @@ export class CloudWatchManager {
   public createTextWidget(id: string, scope: CommonConstruct, props: TextWidgetProps) {
     if (!props) throw `Widget props undefined for ${id}`
     const widget = new watch.TextWidget({
-      height: props.height,
-      markdown: props.markdown,
-      width: props.width,
+      ...props,
     })
 
     if (props.positionX &amp;&amp; props.positionY) widget.position(props.positionX, props.positionY)
@@ -427,14 +413,9 @@ export class CloudWatchManager {
   public createSingleValueWidget(id: string, scope: CommonConstruct, props: NumericWidgetProps, metrics: IMetric[]) {
     if (!props) throw `Widget props undefined for ${id}`
     const widget = new watch.SingleValueWidget({
-      fullPrecision: props.fullPrecision,
-      height: props.height,
-      metrics: metrics,
+      ...props,
+      metrics,
       region: props.region ?? scope.props.region,
-      setPeriodToTimeRange: props.setPeriodToTimeRange,
-      sparkline: props.sparkline,
-      title: props.title,
-      width: props.width,
     })
 
     if (props.positionX &amp;&amp; props.positionY) widget.position(props.positionX, props.positionY)
@@ -452,14 +433,9 @@ export class CloudWatchManager {
   public createGuageWidget(id: string, scope: CommonConstruct, props: GuageWidgetProps, metrics: IMetric[]) {
     if (!props) throw `Widget props undefined for ${id}`
     const widget = new watch.GaugeWidget({
-      height: props.height,
-      leftYAxis: props.leftYAxis,
-      metrics: metrics,
+      ...props,
+      metrics,
       region: props.region ?? scope.props.region,
-      setPeriodToTimeRange: props.setPeriodToTimeRange,
-      statistic: props.statistic,
-      title: props.title,
-      width: props.width,
     })
 
     if (props.positionX &amp;&amp; props.positionY) widget.position(props.positionX, props.positionY)
@@ -484,20 +460,10 @@ export class CloudWatchManager {
   ) {
     if (!props) throw `Widget props undefined for ${id}`
     const widget = new watch.GraphWidget({
-      height: props.height,
+      ...props,
       left: leftYMetrics,
-      leftAnnotations: props.leftAnnotations,
-      leftYAxis: props.leftYAxis,
-      legendPosition: props.legendPosition,
-      liveData: props.liveData,
       region: props.region ?? scope.props.region,
       right: rightYMetrics,
-      rightAnnotations: props.rightAnnotations,
-      rightYAxis: props.rightYAxis,
-      stacked: props.stacked,
-      title: props.title,
-      view: props.view,
-      width: props.width,
     })
 
     if (props.positionX &amp;&amp; props.positionY) widget.position(props.positionX, props.positionY)
@@ -520,10 +486,8 @@ export class CloudWatchManager {
   ) {
     if (!props) throw `Widget props undefined for ${id}`
     const widget = new watch.AlarmStatusWidget({
-      alarms: alarms,
-      height: props.height,
-      title: props.title,
-      width: props.width,
+      ...props,
+      alarms,
     })
 
     if (props.positionX &amp;&amp; props.positionY) widget.position(props.positionX, props.positionY)
@@ -541,14 +505,9 @@ export class CloudWatchManager {
   public createLogQueryWidget(id: string, scope: CommonConstruct, props: LogQueryWidgetProps, logGroupNames: string[]) {
     if (!props) throw `Widget props undefined for ${id}`
     const widget = new watch.LogQueryWidget({
-      height: props.height,
-      logGroupNames: logGroupNames,
-      queryLines: props.queryLines,
-      queryString: props.queryString,
+      ...props,
+      logGroupNames,
       region: props.region ?? scope.props.region,
-      title: props.title,
-      view: props.view,
-      width: props.width,
     })
 
     if (props.positionX &amp;&amp; props.positionY) widget.position(props.positionX, props.positionY)

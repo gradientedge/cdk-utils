@@ -108,24 +108,10 @@ export class ElastiCacheManager {
     const subnetGroup = this.createElastiCacheSubnetGroup(`${id}-subnetGroup`, scope, subnetIds)
 
     const elasticacheCluster = new CfnCacheCluster(scope, `${id}`, {
-      autoMinorVersionUpgrade: props.autoMinorVersionUpgrade,
-      azMode: props.azMode,
-      cacheNodeType: props.cacheNodeType,
-      cacheParameterGroupName: props.cacheParameterGroupName,
-      cacheSecurityGroupNames: props.cacheSecurityGroupNames,
+      ...props,
       cacheSubnetGroupName: subnetGroup.cacheSubnetGroupName,
       clusterName: `${id}-${scope.props.stage}`,
-      engine: props.engine,
-      engineVersion: props.engineVersion,
-      logDeliveryConfigurations: logDeliveryConfigurations,
-      numCacheNodes: props.numCacheNodes,
-      port: props.port,
-      preferredAvailabilityZones: props.preferredAvailabilityZones,
-      preferredMaintenanceWindow: props.preferredMaintenanceWindow,
-      snapshotArns: props.snapshotArns,
-      snapshotName: props.snapshotName,
-      snapshotRetentionLimit: props.snapshotRetentionLimit,
-      snapshotWindow: props.snapshotWindow,
+      logDeliveryConfigurations,
       vpcSecurityGroupIds: securityGroupIds,
     })
 
@@ -164,27 +150,11 @@ export class ElastiCacheManager {
     const subnetGroup = this.createElastiCacheSubnetGroup(`${id}-subnetGroup`, scope, subnetIds)
 
     const elasticacheCluster = new CfnReplicationGroup(scope, `${id}`, {
-      autoMinorVersionUpgrade: props.autoMinorVersionUpgrade,
-      automaticFailoverEnabled: props.automaticFailoverEnabled,
-      cacheNodeType: props.cacheNodeType,
-      cacheParameterGroupName: props.cacheParameterGroupName,
-      cacheSecurityGroupNames: props.cacheSecurityGroupNames,
+      ...props,
       cacheSubnetGroupName: subnetGroup.cacheSubnetGroupName,
-      engine: props.engine,
-      engineVersion: props.engineVersion,
-      globalReplicationGroupId: props.globalReplicationGroupId,
-      logDeliveryConfigurations: props.logDeliveryConfigurations,
-      multiAzEnabled: props.multiAzEnabled,
-      numCacheClusters: props.numCacheClusters,
-      numNodeGroups: props.numNodeGroups,
-      port: props.port,
-      preferredCacheClusterAZs: props.preferredCacheClusterAZs,
-      preferredMaintenanceWindow: props.preferredMaintenanceWindow,
-      primaryClusterId: props.primaryClusterId,
-      replicasPerNodeGroup: props.replicasPerNodeGroup,
       replicationGroupDescription: `${id} Redis Replication Cluster`,
       replicationGroupId: `${id}-${scope.props.stage}`,
-      securityGroupIds: securityGroupIds,
+      securityGroupIds,
     })
 
     elasticacheCluster.addDependency(subnetGroup)

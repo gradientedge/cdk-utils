@@ -96,42 +96,22 @@ export class ApiManager {
   public createLambdaRestApi(id: string, scope: CommonConstruct, props: LambdaRestApiProps, lambdaFunction: IFunction) {
     if (!props) throw `Api props undefined for ${id}`
     const api = new LambdaRestApi(scope, `${id}`, {
-      binaryMediaTypes: props.binaryMediaTypes,
+      ...props,
       cloudWatchRole: props.cloudWatchRole || false,
-      defaultCorsPreflightOptions: props.defaultCorsPreflightOptions,
-      defaultMethodOptions: props.defaultMethodOptions,
       deploy: props.deploy || true,
       deployOptions: {
-        accessLogDestination: props.deployOptions?.accessLogDestination,
-        accessLogFormat: props.deployOptions?.accessLogFormat,
-        cacheClusterEnabled: props.deployOptions?.cacheClusterEnabled,
-        cacheClusterSize: props.deployOptions?.cacheClusterSize,
-        cachingEnabled: props.deployOptions?.cachingEnabled,
-        clientCertificateId: props.deployOptions?.clientCertificateId,
-        dataTraceEnabled: props.deployOptions?.dataTraceEnabled,
+        ...props.deployOptions,
         description: `${id} - ${scope.props.stage} stage`,
-        documentationVersion: props.deployOptions?.documentationVersion,
-        loggingLevel: props.deployOptions?.loggingLevel,
-        methodOptions: props.deployOptions?.methodOptions,
-        metricsEnabled: props.deployOptions?.metricsEnabled,
         stageName: scope.props.stage,
-        tracingEnabled: props.deployOptions?.tracingEnabled,
-        variables: props.deployOptions?.variables,
       },
-      domainName: props.domainName,
       endpointConfiguration: {
+        ...props.endpointConfiguration,
         types: props.endpointConfiguration?.types || [EndpointType.REGIONAL],
-        vpcEndpoints: props.endpointConfiguration?.vpcEndpoints,
       },
-      endpointTypes: props.endpointTypes,
       failOnWarnings: props.failOnWarnings || false,
       handler: lambdaFunction,
-      minCompressionSize: props.minCompressionSize,
-      parameters: props.parameters,
-      policy: props.policy,
       proxy: props.proxy ?? true,
       restApiName: `${props.restApiName}-${scope.props.stage}`,
-      retainDeployments: props.retainDeployments,
     })
 
     if (props.tags &amp;&amp; !_.isEmpty(props.tags)) {
@@ -155,8 +135,8 @@ export class ApiManager {
    */
   public createApiDomain(id: string, scope: CommonConstruct, domainName: string, certificate: ICertificate) {
     const apiDomain = new DomainName(scope, `${id}`, {
-      certificate: certificate,
-      domainName: domainName,
+      certificate,
+      domainName,
       endpointType: scope.isProductionStage() ? EndpointType.EDGE : EndpointType.REGIONAL,
       securityPolicy: SecurityPolicy.TLS_1_2,
     })
@@ -239,11 +219,11 @@ export class ApiManager {
    * @summary Method to create an api deployment
    * @param id
    * @param scope
-   * @param restApi
+   * @param api
    */
-  public createApiDeployment(id: string, scope: CommonConstruct, restApi: IRestApi) {
+  public createApiDeployment(id: string, scope: CommonConstruct, api: IRestApi) {
     new Deployment(scope, `${id}`, {
-      api: restApi,
+      api,
       retainDeployments: false,
     })
   }
