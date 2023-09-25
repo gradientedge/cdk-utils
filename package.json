@@ -47,7 +47,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-secrets-manager": "^3.414.0",
-    "@aws-sdk/credential-providers": "^3.414.0",
+    "@aws-sdk/credential-providers": "^3.418.0",
     "@aws-sdk/types": "^3.413.0",
     "@cdktf/provider-azurerm": "^10.0.3",
     "@types/lodash": "^4.14.198",
