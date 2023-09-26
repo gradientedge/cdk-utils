@@ -180,7 +180,7 @@ export class CloudWatchManager {
     const metricProps: any[] = props.metricProps
     return this.createWidget(id, scope, {
       ...props,
-      metricProps: _.map(metricProps, { ..._, distributionId }),
+      metricProps: metricProps.map(metricProp => ({ ...metricProp, distributionId })),
     })
   }
 
@@ -196,7 +196,7 @@ export class CloudWatchManager {
     const metricProps: any[] = props.metricProps
     return this.createWidget(id, scope, {
       ...props,
-      metricProps: _.map(metricProps, { ..._, stateMachineArn }),
+      metricProps: metricProps.map(metricProp => ({ ...metricProp, stateMachineArn })),
     })
   }
 
@@ -213,7 +213,7 @@ export class CloudWatchManager {
     const metricProps: any[] = props.metricProps
     return this.createWidget(id, scope, {
       ...props,
-      metricProps: _.map(metricProps, { ..._, eventBusName, ruleName }),
+      metricProps: metricProps.map(metricProp => ({ ...metricProp, eventBusName, ruleName })),
     })
   }
 
@@ -229,7 +229,7 @@ export class CloudWatchManager {
     const metricProps: any[] = props.metricProps
     return this.createWidget(id, scope, {
       ...props,
-      metricProps: _.map(metricProps, { ..._, apiName }),
+      metricProps: metricProps.map(metricProp => ({ ...metricProp, apiName })),
     })
   }
 
@@ -245,7 +245,7 @@ export class CloudWatchManager {
     const metricProps: any[] = props.metricProps
     return this.createWidget(id, scope, {
       ...props,
-      metricProps: _.map(metricProps, { ..._, functionName }),
+      metricProps: metricProps.map(metricProp => ({ ...metricProp, functionName })),
     })
   }
 
@@ -261,7 +261,7 @@ export class CloudWatchManager {
     const metricProps: any[] = props.metricProps
     return this.createWidget(id, scope, {
       ...props,
-      metricProps: _.map(metricProps, { ..._, service }),
+      metricProps: metricProps.map(metricProp => ({ ...metricProp, service })),
     })
   }
 
@@ -277,7 +277,7 @@ export class CloudWatchManager {
     const metricProps: any[] = props.metricProps
     return this.createWidget(id, scope, {
       ...props,
-      metricProps: _.map(metricProps, { ..._, clusterName }),
+      metricProps: metricProps.map(metricProp => ({ ...metricProp, clusterName })),
     })
   }
 
@@ -300,7 +300,7 @@ export class CloudWatchManager {
     const metricProps: any[] = props.metricProps
     return this.createWidget(id, scope, {
       ...props,
-      metricProps: _.map(metricProps, { ..._, clusterName, serviceName }),
+      metricProps: metricProps.map(metricProp => ({ ...metricProp, clusterName, serviceName })),
     })
   }
 
@@ -316,7 +316,7 @@ export class CloudWatchManager {
     const metricProps: any[] = props.metricProps
     return this.createWidget(id, scope, {
       ...props,
-      metricProps: _.map(metricProps, { ..._, loadBalancer }),
+      metricProps: metricProps.map(metricProp => ({ ...metricProp, loadBalancer })),
     })
   }
 
@@ -332,7 +332,7 @@ export class CloudWatchManager {
     const metricProps: any[] = props.metricProps
     return this.createWidget(id, scope, {
       ...props,
-      metricProps: _.map(metricProps, { ..._, cacheClusterId }),
+      metricProps: metricProps.map(metricProp => ({ ...metricProp, cacheClusterId })),
     })
   }
 
