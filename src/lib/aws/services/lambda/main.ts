@@ -44,10 +44,12 @@ export class LambdaManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param code
+   * @param architectures
    */
-  public createLambdaLayer(id: string, scope: CommonConstruct, code: AssetCode) {
+  public createLambdaLayer(id: string, scope: CommonConstruct, code: AssetCode, architectures?: Architecture[]) {
     const lambdaLayer = new LayerVersion(scope, `${id}`, {
       code: code,
+      compatibleArchitectures: architectures ?? [Architecture.ARM_64],
       compatibleRuntimes: [scope.props.nodejsRuntime ?? CommonStack.NODEJS_RUNTIME],
       description: `${id}`,
       layerVersionName: `${id}-${scope.props.stage}`,
