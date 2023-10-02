@@ -94,6 +94,25 @@
     "memorySize": 1024,
     "timeoutInSecs": 60
   },
+  "siteLambda": {
+    "functionName": "test-site-lambda",
+    "excludeLastModifiedTimestamp": true,
+    "handler": "run.sh",
+    "logRetention": 7,
+    "memorySize": 1024,
+    "timeoutInSecs": 60,
+    "lambdaAliases": [
+      {
+        "aliasName": "current",
+        "provisionedConcurrency": {
+          "maxCapacity": 32,
+          "minCapacity": 8,
+          "utilizationTarget": 0.8
+        },
+        "retryAttempts": 0
+      }
+    ]
+  },
   "testLambdaEdge": {
     "functionName": "test-lambda-edge",
     "logRetention": 7,

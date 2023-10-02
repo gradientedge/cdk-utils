@@ -1,0 +1,105 @@
+{
+  "legacyCachePolicy": {
+    "cookieBehavior": {
+      "behavior": "none"
+    },
+    "defaultTtlInSeconds": 86400,
+    "enableAcceptEncodingGzip": true,
+    "enableAcceptEncodingBrotli": true,
+    "headerBehavior": {
+      "behavior": "whitelist",
+      "headers": ["X-Original-Host"]
+    },
+    "maxTtlInSeconds": 31536000,
+    "minTtlInSeconds": 60,
+    "queryStringBehavior": {
+      "behavior": "none"
+    }
+  },
+  "siteCachePolicy": {
+    "cachePolicyName": "site-cache-policy",
+    "cookieBehavior": {
+      "behavior": "none"
+    },
+    "defaultTtlInSeconds": 600,
+    "enableAcceptEncodingGzip": true,
+    "enableAcceptEncodingBrotli": true,
+    "headerBehavior": {
+      "behavior": "whitelist",
+      "headers": ["X-Original-Host"]
+    },
+    "maxTtlInSeconds": 2592000,
+    "minTtlInSeconds": 60,
+    "queryStringBehavior": {
+      "behavior": "all"
+    }
+  },
+  "sitePublicCachePolicy": {
+    "cachePolicyName": "public-cache-policy",
+    "cookieBehavior": {
+      "behavior": "none"
+    },
+    "defaultTtlInSeconds": 3600,
+    "enableAcceptEncodingGzip": true,
+    "enableAcceptEncodingBrotli": true,
+    "headerBehavior": {
+      "behavior": "none"
+    },
+    "maxTtlInSeconds": 2592000,
+    "minTtlInSeconds": 3600,
+    "queryStringBehavior": {
+      "behavior": "none"
+    }
+  },
+  "siteErrorCachePolicy": {
+    "cachePolicyName": "error-cache-policy",
+    "cookieBehavior": {
+      "behavior": "none"
+    },
+    "defaultTtlInSeconds": 60,
+    "enableAcceptEncodingGzip": true,
+    "enableAcceptEncodingBrotli": true,
+    "headerBehavior": {
+      "behavior": "none"
+    },
+    "maxTtlInSeconds": 2592000,
+    "minTtlInSeconds": 60,
+    "queryStringBehavior": {
+      "behavior": "none"
+    }
+  },
+  "siteStaticCachePolicy": {
+    "cachePolicyName": "static-cache-policy",
+    "cookieBehavior": {
+      "behavior": "none"
+    },
+    "defaultTtlInSeconds": 2592000,
+    "enableAcceptEncodingGzip": true,
+    "enableAcceptEncodingBrotli": true,
+    "headerBehavior": {
+      "behavior": "none"
+    },
+    "maxTtlInSeconds": 2592000,
+    "minTtlInSeconds": 2592000,
+    "queryStringBehavior": {
+      "behavior": "none"
+    }
+  },
+  "siteStaticWithQueryStringCachePolicy": {
+    "cachePolicyName": "static-query-cache-policy",
+    "cookieBehavior": {
+      "behavior": "none"
+    },
+    "defaultTtlInSeconds": 86400,
+    "enableAcceptEncodingGzip": true,
+    "enableAcceptEncodingBrotli": true,
+    "headerBehavior": {
+      "behavior": "none"
+    },
+    "maxTtlInSeconds": 31536000,
+    "minTtlInSeconds": 86400,
+    "queryStringBehavior": {
+      "behavior": "all"
+    }
+  }
+}

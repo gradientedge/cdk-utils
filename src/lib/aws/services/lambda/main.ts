@@ -60,6 +60,21 @@ export class LambdaManager {
     return lambdaLayer
   }
 
+  public createWebAdapterLayer(id: string, scope: CommonConstruct) {
+    return [
+      LayerVersion.fromLayerVersionArn(
+        scope,
+        `${id}-${Architecture.X86_64}`,
+        `arn:aws:lambda:${scope.props.region}:753240598075:layer:LambdaAdapterLayerX86:17`
+      ),
+      LayerVersion.fromLayerVersionArn(
+        scope,
+        `${id}-${Architecture.ARM_64}`,
+        `arn:aws:lambda:${scope.props.region}:753240598075:layer:LambdaAdapterLayerArm64:17`
+      ),
+    ]
+  }
+
   /**
    * @summary Method to create a lambda function (nodejs)
    * @param id scoped id of the resource
