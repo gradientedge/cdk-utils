@@ -1,0 +1,22 @@
+{
+  "siteOriginRequestPolicy": {
+    "originRequestPolicyName": "origin-request-policy",
+    "cookieBehavior": {
+      "behavior": "all"
+    },
+    "headerBehavior": {
+      "behavior": "whitelist",
+      "headers": [
+        "Accept-Language",
+        "CloudFront-Viewer-Time-Zone",
+        "CloudFront-Viewer-Country",
+        "X-Original-Host",
+        "Origin",
+        "Referer"
+      ]
+    },
+    "queryStringBehavior": {
+      "behavior": "all"
+    }
+  }
+}

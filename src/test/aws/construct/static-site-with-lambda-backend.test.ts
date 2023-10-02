@@ -2,9 +2,10 @@ import * as cdk from 'aws-cdk-lib'
 import { Template } from 'aws-cdk-lib/assertions'
 import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment'
 import { Construct } from 'constructs'
-import { CommonStack, SiteWithEcsBackend, SiteWithEcsBackendProps } from '../../../lib'
+import { CommonStack, SiteWithLambdaBackend, SiteWithLambdaBackendProps } from '../../../lib'
+import { AssetCode } from 'aws-cdk-lib/aws-lambda'
 
-interface TestStackProps extends SiteWithEcsBackendProps {
+interface TestStackProps extends SiteWithLambdaBackendProps {
   testAttribute?: string
 }
 
@@ -17,14 +18,13 @@ const testStackProps = {
   extraContexts: [
     'src/test/aws/common/cdkConfig/dummy.json',
     'src/test/aws/common/cdkConfig/buckets.json',
+    'src/test/aws/common/cdkConfig/cachePolicies.json',
     'src/test/aws/common/cdkConfig/certificates.json',
-    'src/test/aws/common/cdkConfig/clusters.json',
     'src/test/aws/common/cdkConfig/distributions.json',
     'src/test/aws/common/cdkConfig/function.json',
-    'src/test/aws/common/cdkConfig/healthCheck.json',
+    'src/test/aws/common/cdkConfig/lambdas.json',
     'src/test/aws/common/cdkConfig/logs.json',
-    'src/test/aws/common/cdkConfig/tasks.json',
-    'src/test/aws/common/cdkConfig/vpc.json',
+    'src/test/aws/common/cdkConfig/requestPolicies.json',
   ],
   name: 'test-site-stack',
   region: 'eu-west-1',
@@ -41,7 +41,7 @@ class TestCommonStack extends CommonStack {
   constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
     super(parent, name, props)
 
-    this.construct = new TestSiteWithEcsBackendConstruct(this, testStackProps.name, this.props)
+    this.construct = new TestSiteWithLambdaBackend(this, testStackProps.name, this.props)
   }
 
   protected determineConstructProps(props: cdk.StackProps) {
@@ -54,22 +54,22 @@ class TestCommonStack extends CommonStack {
       siteCachePolicy: this.node.tryGetContext('siteCachePolicy'),
       siteCertificate: this.node.tryGetContext('siteCertificate'),
       siteCloudfrontFunctionProps: this.node.tryGetContext('testSite'),
-      siteCluster: this.node.tryGetContext('testCluster'),
       siteDistribution: this.node.tryGetContext('siteDistribution'),
-      siteEcsContainerImagePath: `src/test/aws/common/docker`,
-      siteHealthCheck: this.node.tryGetContext('siteHealthCheck'),
+      siteExecWrapperPath: '/opt/bootstrap',
+      siteHealthEndpoint: '/api/health',
+      siteLambda: this.node.tryGetContext('siteLambda'),
       siteLog: this.node.tryGetContext('testLogGroup'),
       siteLogBucket: this.node.tryGetContext('siteLogBucket'),
+      siteOriginRequestPolicy: this.node.tryGetContext('siteOriginRequestPolicy'),
+      siteOriginResponseHeadersPolicy: this.node.tryGetContext('siteOriginResponseHeadersPolicy'),
+      sitePort: '4000',
       siteRecordName: this.node.tryGetContext('siteSubDomain'),
       siteRegionalCertificate: {
         domainName: this.fullyQualifiedDomain(),
         subjectAlternativeNames: [`*.${this.fullyQualifiedDomain()}`],
         useExistingCertificate: false,
       },
-      siteSource: s3deploy.Source.asset('src/test/aws/common/nodejs/lib'),
       siteSubDomain: this.node.tryGetContext('siteSubDomain'),
-      siteTask: this.node.tryGetContext('testTask'),
-      siteVpc: this.node.tryGetContext('testVpc'),
       testAttribute: this.node.tryGetContext('testAttribute'),
       timezone: this.node.tryGetContext('timezone'),
       useExistingHostedZone: this.node.tryGetContext('useExistingHostedZone'),
@@ -77,16 +77,18 @@ class TestCommonStack extends CommonStack {
   }
 }
 
-class TestSiteWithEcsBackendConstruct extends SiteWithEcsBackend {
+class TestSiteWithLambdaBackend extends SiteWithLambdaBackend {
   declare props: TestStackProps
 
   constructor(parent: Construct, id: string, props: TestStackProps) {
     super(parent, id, props)
     this.props = props
-
     this.id = 'test-site'
-
     this.initResources()
+  }
+
+  protected createSiteLambdaApplication() {
+    this.siteLambdaApplication = AssetCode.fromAsset('src/test/aws/common/nodejs/lib')
   }
 }
 
@@ -94,7 +96,7 @@ const app = new cdk.App({ context: testStackProps })
 const stack = new TestCommonStack(app, 'test-site-stack', testStackProps)
 const template = Template.fromStack(stack)
 
-describe('TestSiteWithEcsBackendConstruct', () => {
+describe('SiteWithLambdaBackend', () => {
   test('is initialised as expected', () => {
     /* test if the created stack have the right properties injected */
     expect(stack.props).toHaveProperty('testAttribute')
@@ -102,72 +104,59 @@ describe('TestSiteWithEcsBackendConstruct', () => {
   })
 })
 
-describe('TestSiteWithEcsBackendConstruct', () => {
+describe('SiteWithLambdaBackend', () => {
   test('synthesises as expected', () => {
     /* test if number of resources are correctly synthesised */
     template.resourceCountIs('AWS::Route53::HostedZone', 0)
-    template.resourceCountIs('AWS::EC2::VPC', 1)
-    template.resourceCountIs('AWS::EC2::Route', 4)
-    template.resourceCountIs('AWS::EC2::RouteTable', 4)
-    template.resourceCountIs('AWS::EC2::Subnet', 4)
-    template.resourceCountIs('AWS::EC2::SubnetRouteTableAssociation', 4)
-    template.resourceCountIs('AWS::EC2::EIP', 2)
-    template.resourceCountIs('AWS::EC2::NatGateway', 2)
-    template.resourceCountIs('AWS::EC2::InternetGateway', 1)
-    template.resourceCountIs('AWS::EC2::VPCGatewayAttachment', 1)
-    template.resourceCountIs('AWS::IAM::Role', 4)
+    template.resourceCountIs('AWS::IAM::Role', 5)
     template.resourceCountIs('AWS::IAM::Policy', 3)
-    template.resourceCountIs('AWS::ECS::Cluster', 1)
-    template.resourceCountIs('AWS::ECS::TaskDefinition', 1)
-    template.resourceCountIs('AWS::Logs::LogGroup', 2)
-    template.resourceCountIs('AWS::EC2::SecurityGroup', 2)
-    template.resourceCountIs('AWS::EC2::SecurityGroupIngress', 1)
-    template.resourceCountIs('AWS::ElasticLoadBalancingV2::LoadBalancer', 1)
-    template.resourceCountIs('AWS::ElasticLoadBalancingV2::Listener', 1)
-    template.resourceCountIs('AWS::ElasticLoadBalancingV2::TargetGroup', 1)
-    template.resourceCountIs('AWS::Route53::RecordSet', 2)
+    template.resourceCountIs('AWS::Logs::LogGroup', 1)
+    template.resourceCountIs('AWS::Route53::RecordSet', 1)
     template.resourceCountIs('AWS::CodeBuild::Project', 1)
     template.resourceCountIs('Custom::AWS', 1)
     template.resourceCountIs('AWS::CloudFront::Distribution', 1)
-    template.resourceCountIs('AWS::Lambda::Function', 2)
+    template.resourceCountIs('AWS::Lambda::Function', 4)
     template.resourceCountIs('AWS::CloudFront::Function', 1)
     template.resourceCountIs('AWS::CloudFront::CachePolicy', 1)
+    template.resourceCountIs('AWS::CloudFront::OriginRequestPolicy', 1)
+    template.resourceCountIs('AWS::Lambda::Version', 1)
+    template.resourceCountIs('AWS::Lambda::Alias', 1)
+    template.resourceCountIs('AWS::Lambda::EventInvokeConfig', 1)
+    template.resourceCountIs('AWS::ApplicationAutoScaling::ScalableTarget', 1)
+    template.resourceCountIs('AWS::ApplicationAutoScaling::ScalingPolicy', 1)
+    template.resourceCountIs('AWS::Lambda::Url', 1)
+    template.resourceCountIs('AWS::Lambda::Permission', 2)
   })
 })
 
-describe('TestSiteWithEcsBackendConstruct', () => {
+describe('SiteWithLambdaBackend', () => {
   test('outputs as expected', () => {
     template.hasOutput('testSiteHostedZoneHostedZoneId', {})
     template.hasOutput('testSiteHostedZoneHostedZoneArn', {})
     template.hasOutput('testSiteCertificateCertificateArn', {})
-    template.hasOutput('commonVpcId', {})
-    template.hasOutput('commonVpcPublicSubnetIds', {})
-    template.hasOutput('commonVpcPrivateSubnetIds', {})
-    template.hasOutput('commonVpcPublicSubnetRouteTableIds', {})
-    template.hasOutput('commonVpcPrivateSubnetRouteTableIds', {})
-    template.hasOutput('commonVpcAvailabilityZones', {})
-    template.hasOutput('testSiteEcsRoleArn', {})
-    template.hasOutput('testSiteEcsRoleName', {})
-    template.hasOutput('testSiteClusterClusterArn', {})
-    template.hasOutput('testSiteClusterClusterName', {})
-    template.hasOutput('testSiteEcsLogGroupLogGroupArn', {})
-    template.hasOutput('testsitestacktestsiteecsserviceLoadBalancerDNS9EF5DCE6', {})
-    template.hasOutput('testsitestacktestsiteecsserviceServiceURLAEFD5591', {})
+    template.hasOutput('testSiteRegionalCertificateCertificateArn', {})
     template.hasOutput('testSiteSiteLogsBucketName', {})
     template.hasOutput('testSiteSiteLogsBucketArn', {})
+    template.hasOutput('testSiteRoleArn', {})
+    template.hasOutput('testSiteRoleName', {})
+    template.hasOutput('testSiteLambdaCurrentLambdaAliasName', {})
+    template.hasOutput('testSiteLambdaCurrentLambdaAliasArn', {})
+    template.hasOutput('testSiteLambdaCurrentAliasArn', {})
+    template.hasOutput('testSiteLambdaCurrentAliasName', {})
+    template.hasOutput('testSiteLambdaLambdaArn', {})
+    template.hasOutput('testSiteLambdaLambdaName', {})
+    template.hasOutput('testSiteUrl', {})
+    template.hasOutput('testSiteFunctionFunctionArn', {})
+    template.hasOutput('testSiteFunctionFunctionName', {})
     template.hasOutput('testSiteDistributionDistributionId', {})
     template.hasOutput('testSiteDistributionDistributionDomainName', {})
     template.hasOutput('testSiteARecordARecordDomainName', {})
     template.hasOutput('testSiteCacheInvalidationBuildImageDockerImageArn', {})
     template.hasOutput('testSiteCacheInvalidationProjectLogGroupLogGroupArn', {})
-    template.hasOutput('testSiteLoadBalancerArn', {})
-    template.hasOutput('testSiteLoadBalancerName', {})
-    template.hasOutput('testSiteLoadBalancerFullName', {})
-    template.hasOutput('testSiteLoadBalancerDnsName', {})
   })
 })
 
-describe('TestSiteWithEcsBackendConstruct', () => {
+describe('SiteWithLambdaBackend', () => {
   test('provisions site log bucket as expected', () => {
     template.hasResourceProperties('AWS::S3::Bucket', {
       AccessControl: 'LogDeliveryWrite',
@@ -197,7 +186,7 @@ describe('TestSiteWithEcsBackendConstruct', () => {
   })
 })
 
-describe('TestSiteWithEcsBackendConstruct', () => {
+describe('SiteWithLambdaBackend', () => {
   test('provisions site distribution as expected', () => {
     template.hasResourceProperties('AWS::CloudFront::Distribution', {
       DistributionConfig: {
@@ -216,6 +205,9 @@ describe('TestSiteWithEcsBackendConstruct', () => {
               },
             },
           ],
+          OriginRequestPolicyId: {
+            Ref: 'testsitestacktestsitesorp2C35A58F',
+          },
           TargetOriginId: 'test-site-server',
           ViewerProtocolPolicy: 'redirect-to-https',
         },
@@ -236,7 +228,19 @@ describe('TestSiteWithEcsBackendConstruct', () => {
               OriginProtocolPolicy: 'https-only',
               OriginSSLProtocols: ['TLSv1.2'],
             },
-            DomainName: 'site-internal-test.test.gradientedge.io',
+            DomainName: {
+              'Fn::Select': [
+                2,
+                {
+                  'Fn::Split': [
+                    '/',
+                    {
+                      'Fn::GetAtt': ['testsitestacktestsitefnaliasFunctionUrlE67BA968', 'FunctionUrl'],
+                    },
+                  ],
+                },
+              ],
+            },
             Id: 'test-site-server',
           },
         ],
@@ -251,69 +255,7 @@ describe('TestSiteWithEcsBackendConstruct', () => {
   })
 })
 
-describe('TestSiteWithEcsBackendConstruct', () => {
-  test('provisions vpc as expected', () => {
-    template.hasResourceProperties('AWS::EC2::VPC', {
-      CidrBlock: '10.0.0.0/16',
-      EnableDnsHostnames: true,
-      EnableDnsSupport: true,
-      InstanceTenancy: 'default',
-    })
-  })
-})
-
-describe('TestSiteWithEcsBackendConstruct', () => {
-  test('provisions cluster as expected', () => {
-    template.hasResourceProperties('AWS::ECS::Cluster', {
-      ClusterName: 'test-storefront-test',
-    })
-  })
-})
-
-describe('TestSiteWithEcsBackendConstruct', () => {
-  test('provisions load balancer as expected', () => {
-    template.hasResourceProperties('AWS::ElasticLoadBalancingV2::LoadBalancer', {
-      Name: 'site-load-balancer-test',
-      Scheme: 'internet-facing',
-      Type: 'application',
-    })
-  })
-})
-
-describe('TestSiteWithEcsBackendConstruct', () => {
-  test('provisions load listener as expected', () => {
-    template.hasResourceProperties('AWS::ElasticLoadBalancingV2::Listener', {
-      Port: 443,
-      Protocol: 'HTTPS',
-    })
-  })
-})
-
-describe('TestSiteWithEcsBackendConstruct', () => {
-  test('provisions target group as expected', () => {
-    template.hasResourceProperties('AWS::ElasticLoadBalancingV2::TargetGroup', {
-      HealthCheckEnabled: true,
-      HealthCheckIntervalSeconds: 30,
-      HealthCheckPath: '/',
-      HealthCheckTimeoutSeconds: 5,
-      Port: 80,
-      Protocol: 'HTTP',
-      TargetType: 'ip',
-    })
-  })
-})
-
-describe('TestSiteWithEcsBackendConstruct', () => {
-  test('provisions task definition as expected', () => {
-    template.hasResourceProperties('AWS::ECS::TaskDefinition', {
-      Cpu: '2048',
-      Memory: '4096',
-      NetworkMode: 'awsvpc',
-    })
-  })
-})
-
-describe('TestSiteWithEcsBackendConstruct', () => {
+describe('SiteWithLambdaBackend', () => {
   test('provisions codebuild project as expected', () => {
     template.hasResourceProperties('AWS::CodeBuild::Project', {
       EncryptionKey: 'alias/aws/s3',
@@ -322,12 +264,8 @@ describe('TestSiteWithEcsBackendConstruct', () => {
   })
 })
 
-describe('TestSiteWithEcsBackendConstruct', () => {
+describe('SiteWithLambdaBackend', () => {
   test('provisions route53 records as expected', () => {
-    template.hasResourceProperties('AWS::Route53::RecordSet', {
-      Name: 'site-internal-test.test.gradientedge.io.',
-      Type: 'A',
-    })
     template.hasResourceProperties('AWS::Route53::RecordSet', {
       Name: 'site-test.test.gradientedge.io.',
       Type: 'A',
@@ -335,7 +273,7 @@ describe('TestSiteWithEcsBackendConstruct', () => {
   })
 })
 
-describe('TestSiteWithEcsBackendConstruct', () => {
+describe('SiteWithLambdaBackend', () => {
   test('provisions cloudfront function as expected', () => {
     template.hasResourceProperties('AWS::CloudFront::Function', {
       FunctionConfig: {
@@ -346,7 +284,7 @@ describe('TestSiteWithEcsBackendConstruct', () => {
   })
 })
 
-describe('TestSiteWithEcsBackendConstruct', () => {
+describe('SiteWithLambdaBackend', () => {
   test('provisions cloudfront cache policy as expected', () => {
     template.hasResourceProperties('AWS::CloudFront::CachePolicy', {
       CachePolicyConfig: {
@@ -355,6 +293,17 @@ describe('TestSiteWithEcsBackendConstruct', () => {
         MaxTTL: 2592000,
         MinTTL: 60,
         Name: 'test-site-site-cache-policy',
+      },
+    })
+  })
+})
+
+describe('SiteWithLambdaBackend', () => {
+  test('provisions cloudfront cache policy as expected', () => {
+    template.hasResourceProperties('AWS::Lambda::Url', {
+      AuthType: 'NONE',
+      TargetFunctionArn: {
+        'Fn::Join': ['', [{ 'Fn::GetAtt': ['testsitestacktestsitelambdaC503A7D7', 'Arn'] }, ':current']],
       },
     })
   })
