@@ -94,10 +94,12 @@ export class LambdaManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param code
+   * @param architectures
    */
-  public createLambdaLayer(id: string, scope: CommonConstruct, code: AssetCode) {
+  public createLambdaLayer(id: string, scope: CommonConstruct, code: AssetCode, architectures?: Architecture[]) {
     const lambdaLayer = new LayerVersion(scope, `${id}`, {
       code: code,
+      compatibleArchitectures: architectures ?? [Architecture.ARM_64],
       compatibleRuntimes: [scope.props.nodejsRuntime ?? CommonStack.NODEJS_RUNTIME],
       description: `${id}`,
       layerVersionName: `${id}-${scope.props.stage}`,
@@ -106,6 +108,21 @@ export class LambdaManager {
     createCfnOutput(`${id}-lambdaLayerArn`, scope, lambdaLayer.layerVersionArn)
 
     return lambdaLayer
+  }
+
+  public createWebAdapterLayer(id: string, scope: CommonConstruct) {
+    return [
+      LayerVersion.fromLayerVersionArn(
+        scope,
+        `${id}-${Architecture.X86_64}`,
+        `arn:aws:lambda:${scope.props.region}:753240598075:layer:LambdaAdapterLayerX86:17`
+      ),
+      LayerVersion.fromLayerVersionArn(
+        scope,
+        `${id}-${Architecture.ARM_64}`,
+        `arn:aws:lambda:${scope.props.region}:753240598075:layer:LambdaAdapterLayerArm64:17`
+      ),
+    ]
   }
 
   /**
