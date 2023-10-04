@@ -5,4 +5,5 @@ import { TagProps } from '../../types'
  */
 export interface LambdaRestApiProps extends LambdaRestApigProps {
   tags?: TagProps[]
+  minCompressionSizeInBytes?: number
 }
