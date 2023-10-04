@@ -1,4 +1,4 @@
-import { Tags } from 'aws-cdk-lib'
+import { Tags, Size } from 'aws-cdk-lib'
 import {
   Cors,
   Deployment,
@@ -60,6 +60,7 @@ export class ApiManager {
       },
       failOnWarnings: props.failOnWarnings || false,
       handler: lambdaFunction,
+      minCompressionSize: props.minCompressionSizeInBytes ? Size.bytes(props.minCompressionSizeInBytes) : undefined,
       proxy: props.proxy ?? true,
       restApiName: `${props.restApiName}-${scope.props.stage}`,
     })
