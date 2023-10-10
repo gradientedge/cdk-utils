@@ -17,6 +17,7 @@ export interface LambdaProps extends FunctionProps {
   dlq?: QueueProps
   excludeLastModifiedTimestamp?: boolean
   lambdaAliases?: LambdaAliasProps[]
+  logLevel?: string
   redriveq?: QueueProps
   tags?: TagProps[]
   timeoutInSecs?: number

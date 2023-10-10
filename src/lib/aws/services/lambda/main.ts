@@ -130,6 +130,7 @@ export class LambdaManager {
               scope,
               `${SsmManager.SECRETS_MODIFIED_TIMESTAMP_PARAM}-${scope.props.stage}`
             ),
+        LOG_LEVEL: props.logLevel,
         REGION: scope.props.region,
         STAGE: scope.props.stage,
         ...environment,
@@ -280,6 +281,7 @@ export class LambdaManager {
               scope,
               `${SsmManager.SECRETS_MODIFIED_TIMESTAMP_PARAM}-${scope.props.stage}`
             ),
+        LOG_LEVEL: props.logLevel,
         REGION: scope.props.region,
         STAGE: scope.props.stage,
         ...environment,

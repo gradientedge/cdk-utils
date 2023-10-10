@@ -185,6 +185,7 @@ describe('TestLambdaConstruct', () => {
     template.hasResourceProperties('AWS::Lambda::Function', {
       Environment: {
         Variables: {
+          LOG_LEVEL: 'info',
           REGION: 'us-east-1',
         },
       },
