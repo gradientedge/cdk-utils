@@ -15,6 +15,7 @@
         "key": "testTagName2",
         "value": "testTagValue2"
       }
-    ]
+    ],
+    "stream": "NEW_AND_OLD_IMAGES"
   }
 }

@@ -8,5 +8,15 @@
         "type": ["testType"]
       }
     }
+  },
+  "testDynamoDbToLambdaPipe": {
+    "name": "test-dynamoDb-to-lambda-pipe",
+    "pipeFilterPattern": {
+      "detail": {
+        "type": ["testType"]
+      }
+    },
+    "dynamoDbStartingPosition": "Latest",
+    "dynamoDbBatchSize": 10
   }
 }

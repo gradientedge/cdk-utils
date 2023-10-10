@@ -9,6 +9,7 @@ import * as sfn from 'aws-cdk-lib/aws-stepfunctions'
 
 interface TestStackProps extends CommonStackProps {
   testCluster: any
+  testDynamoDbToLambdaPipe: any
   testFargateRule: any
   testLambda: any
   testLambdaRule: any
@@ -19,6 +20,7 @@ interface TestStackProps extends CommonStackProps {
   testSubmitStepSuccess: any
   testSubmitWorkflow: any
   testTask: any
+  testTable: any
   testVpc: any
 }
 
@@ -29,6 +31,7 @@ const testStackProps = {
     region: 'eu-west-1',
   },
   extraContexts: [
+    'src/test/aws/common/cdkConfig/dynamodb.json',
     'src/test/aws/common/cdkConfig/ecs.json',
     'src/test/aws/common/cdkConfig/lambdas.json',
     'src/test/aws/common/cdkConfig/logs.json',
@@ -59,6 +62,7 @@ class TestCommonStack extends CommonStack {
       ...super.determineConstructProps(props),
       ...{
         testCluster: this.node.tryGetContext('testCluster'),
+        testDynamoDbToLambdaPipe: this.node.tryGetContext('testDynamoDbToLambdaPipe'),
         testFargateRule: this.node.tryGetContext('testLambda'),
         testLambda: this.node.tryGetContext('testLambda'),
         testLambdaRule: this.node.tryGetContext('testLambda'),
@@ -69,6 +73,7 @@ class TestCommonStack extends CommonStack {
         testSubmitStepSuccess: this.node.tryGetContext('testSubmitStepSuccess'),
         testSubmitWorkflow: this.node.tryGetContext('testSubmitWorkflow'),
         testTask: this.node.tryGetContext('testTask'),
+        testTable: this.node.tryGetContext('testTable'),
         testVpc: this.node.tryGetContext('testVpc'),
       },
     }
@@ -89,6 +94,7 @@ class TestInvalidCommonStack extends CommonStack {
       ...super.determineConstructProps(props),
       ...{
         testCluster: this.node.tryGetContext('testCluster'),
+        testDynamoDbToLambdaPipe: this.node.tryGetContext('testDynamoDbToLambdaPipe'),
         testLambda: this.node.tryGetContext('testLambda'),
         testLogGroup: this.node.tryGetContext('testLogGroup'),
         testSqs: this.node.tryGetContext('testSqs'),
@@ -97,6 +103,7 @@ class TestInvalidCommonStack extends CommonStack {
         testSubmitStepSuccess: this.node.tryGetContext('testSubmitStepSuccess'),
         testSubmitWorkflow: this.node.tryGetContext('testSubmitWorkflow'),
         testTask: this.node.tryGetContext('testTask'),
+        testTable: this.node.tryGetContext('testTable'),
         testVpc: this.node.tryGetContext('testVpc'),
       },
     }
@@ -144,6 +151,8 @@ class TestCommonConstruct extends CommonConstruct {
     )
     this.eventManager.createLambdaRule('test-lambda-rule', this, this.props.testLambdaRule, testLambda)
 
+    const testTable = this.dynamodbManager.createTable('test-table', this, this.props.testTable)
+
     const testQueue = this.sqsManager.createQueue('test-sqs', this, this.props.testSqs)
     const testSubmitStepCreateSomething = this.sfnManager.createLambdaStep(
       'test-choice-step-2',
@@ -171,6 +180,13 @@ class TestCommonConstruct extends CommonConstruct {
       testQueue,
       testStateMachine
     )
+    this.eventManager.createDynamoDbToLambdaCfnPipe(
+      'test-dynamoDb-to-lambda-pipe',
+      this,
+      this.props.testDynamoDbToLambdaPipe,
+      testTable.tableStreamArn!,
+      testLambda
+    )
   }
 }
 
@@ -188,11 +204,12 @@ describe('TestEventConstruct', () => {
 describe('TestEventConstruct', () => {
   test('synthesises as expected', () => {
     /* test if number of resources are correctly synthesised */
+    template.resourceCountIs('AWS::DynamoDB::Table', 1)
     template.resourceCountIs('AWS::Events::Rule', 2)
     template.resourceCountIs('AWS::Lambda::Permission', 1)
     template.resourceCountIs('AWS::SQS::Queue', 1)
     template.resourceCountIs('AWS::StepFunctions::StateMachine', 1)
-    template.resourceCountIs('AWS::Pipes::Pipe', 1)
+    template.resourceCountIs('AWS::Pipes::Pipe', 2)
   })
 })
 
@@ -211,6 +228,10 @@ describe('TestEventConstruct', () => {
     template.hasOutput('testSqsToSfnPipeRoleName', {})
     template.hasOutput('testSqsToSfnPipePipeArn', {})
     template.hasOutput('testSqsToSfnPipePipeName', {})
+    template.hasOutput('testDynamoDbToLambdaPipeRoleArn', {})
+    template.hasOutput('testDynamoDbToLambdaPipeRoleName', {})
+    template.hasOutput('testDynamoDbToLambdaPipePipeArn', {})
+    template.hasOutput('testDynamoDbToLambdaPipePipeName', {})
   })
 })
 
@@ -256,6 +277,32 @@ describe('TestEventConstruct', () => {
           Id: 'test-lambda-rule-test',
         },
       ],
+    })
+  })
+})
+
+describe('TestEventConstruct', () => {
+  test('provisions new eventbridge pipe as expected', () => {
+    template.hasResourceProperties('AWS::Pipes::Pipe', {
+      Name: 'test-dynamoDb-to-lambda-pipe-test',
+      RoleArn: {
+        'Fn::GetAtt': ['testcommonstacktestdynamoDbtolambdapiperoleCDE774CB', 'Arn'],
+      },
+      Source: {
+        'Fn::GetAtt': ['testcommonstacktesttableF9EEAE8E', 'StreamArn'],
+      },
+      SourceParameters: {
+        FilterCriteria: {
+          Filters: [
+            {
+              Pattern: '{"detail":{"type":["testType"]}}',
+            },
+          ],
+        },
+      },
+      Target: {
+        'Fn::GetAtt': ['testcommonstacktestlambda5B168AC2', 'Arn'],
+      },
     })
   })
 })
