@@ -24,6 +24,7 @@
     "logRetention": 7,
     "memorySize": 1024,
     "timeoutInSecs": 60,
+    "logLevel": "info",
     "tags": [
       {
         "key": "testTagName1",
