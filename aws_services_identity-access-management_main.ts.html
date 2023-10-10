@@ -483,6 +483,18 @@ export class IamManager {
   }
 
   /**
+   * @summary Method to create iam statement to poll from dynamodb table
+   * @param resourceArns list of ARNs to allow access to
+   */
+  public statementFordynamoDbStream(resourceArns?: string[]) {
+    return new PolicyStatement({
+      actions: ['dynamodb:DescribeStream', 'dynamodb:GetRecords', 'dynamodb:GetShardIterator', 'dynamodb:ListStreams'],
+      effect: Effect.ALLOW,
+      resources: resourceArns ?? ['*'],
+    })
+  }
+
+  /**
    * @summary Method to create iam statement for cloud trail
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
@@ -708,6 +720,34 @@ export class IamManager {
         }),
       ],
     })
+  }
+
+  /**
+   * @summary Method to create iam statement for dynamoDb to lambda function pipe
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param dynamoDbStreamArn the arn of the dynamoDb Stream queue
+   * @param lambdaFunctionArn the arn of the lambda function
+   */
+  public createRoleForDynamoDbToLambdaPipe(
+    id: string,
+    scope: CommonConstruct,
+    dynamoDbStreamArn: string,
+    lambdaFunctionArn: string
+  ) {
+    const role = new Role(scope, `${id}`, {
+      assumedBy: new ServicePrincipal('pipes.amazonaws.com'),
+      description: `Role for ${id} Pipe`,
+      roleName: `${id}-${scope.props.stage}`,
+    })
+
+    role.addToPolicy(this.statementFordynamoDbStream([dynamoDbStreamArn]))
+    role.addToPolicy(this.statementForInvokeLambda([lambdaFunctionArn]))
+
+    createCfnOutput(`${id}Arn`, scope, role.roleArn)
+    createCfnOutput(`${id}Name`, scope, role.roleName)
+
+    return role
   }
 }
 </code></pre>
