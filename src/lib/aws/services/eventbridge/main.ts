@@ -9,7 +9,7 @@ import { IStateMachine } from 'aws-cdk-lib/aws-stepfunctions'
 import _ from 'lodash'
 import { CommonConstruct } from '../../common'
 import { createCfnOutput } from '../../utils'
-import { EventBusProps, EventRuleProps, RuleProps, SqsToSfnPipeProps } from './types'
+import { EventBusProps, EventRuleProps, RuleProps, SqsToSfnPipeProps, DynamoDbToLambdaPipeProps } from './types'
 
 /**
  * @classdesc Provides operations on AWS EventBridge.
@@ -239,6 +239,57 @@ export class EventManager {
           invocationType: props.sfnInvocationType ?? 'FIRE_AND_FORGET',
         },
       },
+    })
+
+    createCfnOutput(`${id}-pipeArn`, scope, pipe.attrArn)
+    createCfnOutput(`${id}-pipeName`, scope, pipe.name)
+
+    return pipe
+  }
+
+  /**
+   * @summary Method to create an eventbridge pipe with DynamoDb stream as source and lambda function as target
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props the props for the pipe
+   * @param dynamoDbStream the source dynamoDb stream
+   * @param targetLambdaFunction the target lambda function
+   */
+  public createDynamoDbToLambdaCfnPipe(
+    id: string,
+    scope: CommonConstruct,
+    props: DynamoDbToLambdaPipeProps,
+    sourceDynamoDbStreamArn: string,
+    targetLambdaFunction: IFunction
+  ) {
+    const pipeRole = scope.iamManager.createRoleForDynamoDbToLambdaPipe(
+      `${id}-role`,
+      scope,
+      sourceDynamoDbStreamArn,
+      targetLambdaFunction.functionArn
+    )
+
+    const pipe = new CfnPipe(scope, `${id}`, {
+      ...props,
+      name: `${props.name}-${scope.props.stage}`,
+      roleArn: pipeRole.roleArn,
+      source: sourceDynamoDbStreamArn,
+      sourceParameters: {
+        filterCriteria: props.pipeFilterPattern
+          ? {
+              filters: [
+                {
+                  pattern: JSON.stringify(props.pipeFilterPattern),
+                },
+              ],
+            }
+          : undefined,
+        dynamoDbStreamParameters: {
+          startingPosition: props.dynamoDbStartingPosition,
+          batchSize: props.dynamoDbBatchSize,
+        },
+      },
+      target: targetLambdaFunction.functionArn,
     })
 
     createCfnOutput(`${id}-pipeArn`, scope, pipe.attrArn)

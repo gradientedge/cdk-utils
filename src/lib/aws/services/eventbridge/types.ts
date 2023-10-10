@@ -28,3 +28,12 @@ export interface RuleProps extends CfnRuleProps {
 /**
  */
 export interface EventBusProps extends EBProps {}
+
+/**
+ }
+ */
+export interface DynamoDbToLambdaPipeProps extends CfnPipeProps {
+  pipeFilterPattern?: any
+  dynamoDbBatchSize?: number
+  dynamoDbStartingPosition: string
+}
