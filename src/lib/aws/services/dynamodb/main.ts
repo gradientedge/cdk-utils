@@ -1,9 +1,9 @@
 import { Tags } from 'aws-cdk-lib'
-import { Table } from 'aws-cdk-lib/aws-dynamodb'
+import { Table, TableV2 } from 'aws-cdk-lib/aws-dynamodb'
 import _ from 'lodash'
 import { CommonConstruct } from '../../common'
 import { createCfnOutput } from '../../utils'
-import { TableProps } from './types'
+import { TableProps, TablePropsV2 } from './types'
 
 /**
  * @classdesc Provides operations on AWS DynamoDB
@@ -41,6 +41,26 @@ export class DynamodbManager {
         Tags.of(table).add(tag.key, tag.value)
       })
     }
+
+    createCfnOutput(`${id}-tableName`, scope, table.tableName)
+    createCfnOutput(`${id}-tableArn`, scope, table.tableArn)
+
+    return table
+  }
+
+  /**
+   * @summary Method to create a table
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props table props
+   */
+  public createTableV2(id: string, scope: CommonConstruct, props: TablePropsV2) {
+    if (!props) throw `Table props undefined for ${id}`
+
+    const table = new TableV2(scope, `${id}`, {
+      ...props,
+      tableName: `${props.tableName}-${scope.props.stage}`,
+    })
 
     createCfnOutput(`${id}-tableName`, scope, table.tableName)
     createCfnOutput(`${id}-tableArn`, scope, table.tableArn)

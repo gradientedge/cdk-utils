@@ -1,10 +1,11 @@
 import * as cdk from 'aws-cdk-lib'
 import { Template } from 'aws-cdk-lib/assertions'
 import { Construct } from 'constructs'
-import { CommonConstruct, CommonStack, CommonStackProps, TableProps } from '../../../lib'
+import { CommonConstruct, CommonStack, CommonStackProps, TableProps, TablePropsV2 } from '../../../lib'
 
 interface TestStackProps extends CommonStackProps {
   testTable: TableProps
+  testTableV2: TablePropsV2
 }
 
 const testStackProps = {
@@ -35,6 +36,7 @@ class TestCommonStack extends CommonStack {
       ...super.determineConstructProps(props),
       ...{
         testTable: this.node.tryGetContext('testTable'),
+        testTableV2: this.node.tryGetContext('testTableV2'),
       },
     }
   }
@@ -56,6 +58,7 @@ class TestCommonConstruct extends CommonConstruct {
   constructor(parent: Construct, name: string, props: TestStackProps) {
     super(parent, name, props)
     this.dynamodbManager.createTable('test-table', this, this.props.testTable)
+    this.dynamodbManager.createTableV2('test-table-v2', this, this.props.testTableV2)
   }
 }
 
@@ -75,6 +78,8 @@ describe('TestDynamodbConstruct', () => {
     /* test if the created stack have the right properties injected */
     expect(commonStack.props).toHaveProperty('testTable')
     expect(commonStack.props.testTable.tableName).toEqual('test-table')
+    expect(commonStack.props).toHaveProperty('testTableV2')
+    expect(commonStack.props.testTableV2.tableName).toEqual('test-table-v2')
   })
 })
 
