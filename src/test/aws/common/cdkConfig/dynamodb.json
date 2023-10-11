@@ -17,5 +17,27 @@
       }
     ],
     "stream": "NEW_AND_OLD_IMAGES"
+  },
+  "testTableV2": {
+    "tableName": "test-table-v2",
+    "partitionKey": {
+      "name": "id",
+      "type": "S"
+    },
+    "sortKey": {
+      "name": "sort",
+      "type": "S"
+    },
+    "removalPolicy": "destroy",
+    "pointInTimeRecovery": true,
+    "timeToLiveAttribute": "expirationTime",
+    "dynamoStream": "NEW_AND_OLD_IMAGES",
+    "globalSecondaryIndexes": [
+      {
+        "indexName": "index",
+        "partitionKey": { "name": "id", "type": "S" },
+        "sortKey": { "name": "sort", "type": "S" }
+      }
+    ]
   }
 }
