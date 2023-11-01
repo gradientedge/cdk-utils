@@ -129,7 +129,7 @@ export class EventManager {
     new CfnPermission(scope, `${id}LambdaPermission`, {
       action: 'lambda:InvokeFunction',
       functionName: lambdaFunction.functionName,
-      principal: 'amazonaws.com',
+      principal: 'events.amazonaws.com',
       sourceArn: eventRule.attrArn,
     })
 
