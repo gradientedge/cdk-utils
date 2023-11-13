@@ -139,10 +139,10 @@ describe('SiteWithLambdaBackend', () => {
     template.hasOutput('testSiteSiteLogsBucketArn', {})
     template.hasOutput('testSiteRoleArn', {})
     template.hasOutput('testSiteRoleName', {})
-    template.hasOutput('testSiteLambdaCurrentLambdaAliasName', {})
-    template.hasOutput('testSiteLambdaCurrentLambdaAliasArn', {})
-    template.hasOutput('testSiteLambdaCurrentAliasArn', {})
-    template.hasOutput('testSiteLambdaCurrentAliasName', {})
+    template.hasOutput('testSiteLambdaLatestLambdaAliasName', {})
+    template.hasOutput('testSiteLambdaLatestLambdaAliasArn', {})
+    template.hasOutput('testSiteLambdaLatestAliasArn', {})
+    template.hasOutput('testSiteLambdaLatestAliasName', {})
     template.hasOutput('testSiteLambdaLambdaArn', {})
     template.hasOutput('testSiteLambdaLambdaName', {})
     template.hasOutput('testSiteUrl', {})
@@ -303,7 +303,7 @@ describe('SiteWithLambdaBackend', () => {
     template.hasResourceProperties('AWS::Lambda::Url', {
       AuthType: 'NONE',
       TargetFunctionArn: {
-        'Fn::Join': ['', [{ 'Fn::GetAtt': ['testsitestacktestsitelambdaC503A7D7', 'Arn'] }, ':current']],
+        'Fn::Join': ['', [{ 'Fn::GetAtt': ['testsitestacktestsitelambdaC503A7D7', 'Arn'] }, ':latest']],
       },
     })
   })

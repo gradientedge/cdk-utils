@@ -3,4 +3,4 @@ export enum SiteWithLambdaBackendResponseHeaderPolicyType {
   STATIC = 'static',
 }
 
-export const LAMBDA_ALIAS_NAME_CURRENT = 'current'
+export const LAMBDA_ALIAS_NAME_CURRENT = 'latest'

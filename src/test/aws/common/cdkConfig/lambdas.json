@@ -104,7 +104,7 @@
     "timeoutInSecs": 60,
     "lambdaAliases": [
       {
-        "aliasName": "current",
+        "aliasName": "latest",
         "provisionedConcurrency": {
           "maxCapacity": 32,
           "minCapacity": 8,
