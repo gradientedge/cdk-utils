@@ -91,7 +91,7 @@
     "jsdoc-plugin-typescript": "^2.2.1",
     "jsdoc-to-markdown": "^8.0.0",
     "prettier": "^3.0.3",
-    "prettier-plugin-organize-imports": "^3.2.3",
+    "prettier-plugin-organize-imports": "^3.2.4",
     "rimraf": "^5.0.5",
     "semantic-release": "^22.0.7",
     "taffydb": "^2.7.3",
