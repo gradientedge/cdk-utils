@@ -5,7 +5,7 @@ import { StorageAccount } from '@cdktf/provider-azurerm/lib/storage-account'
 import { StorageBlob } from '@cdktf/provider-azurerm/lib/storage-blob'
 import { StorageContainer } from '@cdktf/provider-azurerm/lib/storage-container'
 import { CommonAzureConstruct } from '../../common'
-import { createTfOutput } from '../../utils'
+import { createAzureTfOutput } from '../../utils'
 import { StorageAccountProps, StorageBlobProps, StorageContainerProps } from './types'
 
 /**
@@ -23,7 +23,6 @@ import { StorageAccountProps, StorageBlobProps, StorageContainerProps } from './
  *     this.storageManager.createStorageAccount('MyAccount', this, props)
  *   }
  * }
- * @see [CDKTF S3 Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_s3-readme.html}
  * ```
  */
 export class AzureStorageManager {
@@ -32,6 +31,7 @@ export class AzureStorageManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props storage account properties
+   * @see [CDKTF Storage Account Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/storageAccount.typescript.md}
    */
   public createStorageAccount(id: string, scope: CommonAzureConstruct, props: StorageAccountProps) {
     if (!props) throw `Props undefined for ${id}`
@@ -55,9 +55,9 @@ export class AzureStorageManager {
       },
     })
 
-    createTfOutput(`${id}-storageAccountName`, scope, storageAccount.name)
-    createTfOutput(`${id}-storageAccountFriendlyUniqueId`, scope, storageAccount.friendlyUniqueId)
-    createTfOutput(`${id}-storageAccountId`, scope, storageAccount.id)
+    createAzureTfOutput(`${id}-storageAccountName`, scope, storageAccount.name)
+    createAzureTfOutput(`${id}-storageAccountFriendlyUniqueId`, scope, storageAccount.friendlyUniqueId)
+    createAzureTfOutput(`${id}-storageAccountId`, scope, storageAccount.id)
   }
 
   /**
@@ -65,6 +65,7 @@ export class AzureStorageManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props storage container properties
+   * @see [CDKTF Storage Container Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/storageContainer.typescript.md}
    */
   public createStorageContainer(id: string, scope: CommonAzureConstruct, props: StorageContainerProps) {
     if (!props) throw `Props undefined for ${id}`
@@ -88,9 +89,9 @@ export class AzureStorageManager {
       storageAccountName: storageAccount.name,
     })
 
-    createTfOutput(`${id}-storageContainerName`, scope, storageContainer.name)
-    createTfOutput(`${id}-storageContainerFriendlyUniqueId`, scope, storageContainer.friendlyUniqueId)
-    createTfOutput(`${id}-storageContainerId`, scope, storageContainer.id)
+    createAzureTfOutput(`${id}-storageContainerName`, scope, storageContainer.name)
+    createAzureTfOutput(`${id}-storageContainerFriendlyUniqueId`, scope, storageContainer.friendlyUniqueId)
+    createAzureTfOutput(`${id}-storageContainerId`, scope, storageContainer.id)
   }
 
   /**
@@ -98,6 +99,7 @@ export class AzureStorageManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props storage blob properties
+   * @see [CDKTF Storage Blob Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/storageBlob.typescript.md}
    */
   public createStorageBlob(id: string, scope: CommonAzureConstruct, props: StorageBlobProps) {
     if (!props) throw `Props undefined for ${id}`
@@ -127,8 +129,8 @@ export class AzureStorageManager {
       storageContainerName: storageContainer.name,
     })
 
-    createTfOutput(`${id}-storageBlobName`, scope, storageBlob.name)
-    createTfOutput(`${id}-storageBlobFriendlyUniqueId`, scope, storageBlob.friendlyUniqueId)
-    createTfOutput(`${id}-storageBlobId`, scope, storageBlob.id)
+    createAzureTfOutput(`${id}-storageBlobName`, scope, storageBlob.name)
+    createAzureTfOutput(`${id}-storageBlobFriendlyUniqueId`, scope, storageBlob.friendlyUniqueId)
+    createAzureTfOutput(`${id}-storageBlobId`, scope, storageBlob.id)
   }
 }
