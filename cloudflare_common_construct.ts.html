@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>cloudflare/common/construct.ts - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="main.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <script src="scripts/commonNav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">cloudflare/common/construct.ts</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { CloudflareProvider } from '@cdktf/provider-cloudflare/lib/provider'
+import { TerraformStack } from 'cdktf'
+import { Construct } from 'constructs'
+import { isDevStage, isPrdStage, isTestStage, isUatStage } from '../../common'
+import { CloudflareZoneManager } from '../services'
+import { CommonCloudflareStackProps } from './types'
+
+export class CommonCloudflareConstruct extends TerraformStack {
+  declare props: CommonCloudflareStackProps
+  id: string
+  fullyQualifiedDomainName: string
+  zoneManager: CloudflareZoneManager
+
+  constructor(scope: Construct, id: string, props: CommonCloudflareStackProps) {
+    super(scope, id)
+    this.props = props
+    this.id = id
+
+    this.zoneManager = new CloudflareZoneManager()
+
+    this.determineFullyQualifiedDomain()
+    new CloudflareProvider(this, `${this.id}-provider`, this.props)
+  }
+
+  /**
+   * @summary Determine the fully qualified domain name based on domainName &amp; subDomain
+   */
+  protected determineFullyQualifiedDomain(): void {
+    this.fullyQualifiedDomainName = this.props.subDomain
+      ? `${this.props.subDomain}.${this.props.domainName}`
+      : this.props.domainName
+  }
+
+  /**
+   * @summary Utility method to determine if the initialisation is in development (dev) stage
+   * This is determined by the stage property injected via cdk context
+   */
+  public isDevelopmentStage = () => isDevStage(this.props.stage)
+
+  /**
+   * @summary Utility method to determine if the initialisation is in test (tst) stage
+   * This is determined by the stage property injected via cdk context
+   */
+  public isTestStage = () => isTestStage(this.props.stage)
+
+  /**
+   * @summary Utility method to determine if the initialisation is in uat (uat) stage
+   * This is determined by the stage property injected via cdk context
+   */
+  public isUatStage = () => isUatStage(this.props.stage)
+
+  /**
+   * @summary Utility method to determine if the initialisation is in production (prd) stage
+   * This is determined by the stage property injected via cdk context
+   */
+  public isProductionStage = () => isPrdStage(this.props.stage)
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+    
+</div>
+
+<br class="clear">
+
+<footer>
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>
