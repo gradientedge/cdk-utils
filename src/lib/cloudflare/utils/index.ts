@@ -1,10 +1,10 @@
 import { TerraformOutput } from 'cdktf'
 import _ from 'lodash'
-import { CommonAzureConstruct } from '../common'
+import { CommonCloudflareConstruct } from '../common'
 
-export const createAzureTfOutput = (
+export const createCloudflareTfOutput = (
   id: string,
-  scope: CommonAzureConstruct,
+  scope: CommonCloudflareConstruct,
   value?: string,
   description?: string,
   sensitive?: boolean,

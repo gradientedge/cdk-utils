@@ -1,3 +1,3 @@
-export interface BaseConfigProps {
+export interface BaseAzureConfigProps {
   resourceGroupName: string
 }
