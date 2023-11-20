@@ -1,0 +1,7 @@
+{
+  "testFirewallRule": {
+    "description": "Block site break-in attempts",
+    "action": "block",
+    "products": ["uaBlock"]
+  }
+}

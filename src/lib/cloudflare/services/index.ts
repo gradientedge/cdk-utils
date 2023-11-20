@@ -1,3 +1,5 @@
 export * from './api-shield'
+export * from './filter'
+export * from './firewall'
 export * from './worker'
 export * from './zone'
