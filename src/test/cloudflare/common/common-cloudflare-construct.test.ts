@@ -3,6 +3,8 @@ import { ApiShieldOperation } from '@cdktf/provider-cloudflare/lib/api-shield-op
 import { ApiShieldOperationSchemaValidationSettings } from '@cdktf/provider-cloudflare/lib/api-shield-operation-schema-validation-settings'
 import { ApiShieldSchema } from '@cdktf/provider-cloudflare/lib/api-shield-schema'
 import { ApiShieldSchemaValidationSettings } from '@cdktf/provider-cloudflare/lib/api-shield-schema-validation-settings'
+import { Filter } from '@cdktf/provider-cloudflare/lib/filter'
+import { FirewallRule } from '@cdktf/provider-cloudflare/lib/firewall-rule'
 import { WorkerCronTrigger } from '@cdktf/provider-cloudflare/lib/worker-cron-trigger'
 import { WorkerDomain } from '@cdktf/provider-cloudflare/lib/worker-domain'
 import { WorkerRoute } from '@cdktf/provider-cloudflare/lib/worker-route'
@@ -29,6 +31,7 @@ import {
   CommonCloudflareConstruct,
   CommonCloudflareStack,
   CommonCloudflareStackProps,
+  FilterProps,
   WorkerCronTriggerProps,
   WorkerDomainProps,
   WorkerRouteProps,
@@ -40,6 +43,7 @@ import {
   ZoneProps,
   ZoneSettingsOverrideProps,
 } from '../../../lib'
+import { FirewallRuleProps } from '../../../lib/cloudflare/services/firewall'
 
 interface TestCloudflareStackProps extends CommonCloudflareStackProps {
   testZone: ZoneProps
@@ -57,6 +61,8 @@ interface TestCloudflareStackProps extends CommonCloudflareStackProps {
   testApiShieldSchemaValidationSettings: ApiShieldSchemaValidationSettingsProps
   testApiShieldOperation: ApiShieldOperationProps
   testApiShieldOperationSchemaValidationSettings: ApiShieldOperationSchemaValidationSettingsProps
+  testFilter: FilterProps
+  testFirewallRule: FirewallRuleProps
   testAttribute?: string
 }
 
@@ -66,6 +72,7 @@ const testStackProps: any = {
   extraContexts: [
     'src/test/cloudflare/common/cdkConfig/api-shield.json',
     'src/test/cloudflare/common/cdkConfig/dummy.json',
+    'src/test/cloudflare/common/cdkConfig/filter.json',
     'src/test/cloudflare/common/cdkConfig/worker.json',
     'src/test/cloudflare/common/cdkConfig/zone.json',
   ],
@@ -95,6 +102,8 @@ class TestCommonStack extends CommonCloudflareStack {
       testApiShieldSchema: this.node.tryGetContext('testApiShieldSchema'),
       testApiShieldSchemaValidationSettings: this.node.tryGetContext('testApiShieldSchemaValidationSettings'),
       testAttribute: this.node.tryGetContext('testAttribute'),
+      testFilter: this.node.tryGetContext('testFilter'),
+      testFirewallRule: this.node.tryGetContext('testFirewallRule'),
       testWorkerCronTrigger: this.node.tryGetContext('testWorkerCronTrigger'),
       testWorkerDomain: this.node.tryGetContext('testWorkerDomain'),
       testWorkerRoute: this.node.tryGetContext('testWorkerRoute'),
@@ -186,6 +195,11 @@ class TestCommonConstruct extends CommonCloudflareConstruct {
         operationId: apiOperation.id,
       }
     )
+    const filter = this.filterManager.createApiShield(`test-filter-${this.props.stage}`, this, this.props.testFilter)
+    this.firewallManager.createFirewallRule(`test-firewall-rule-${this.props.stage}`, this, {
+      ...this.props.testFirewallRule,
+      filterId: filter.id,
+    })
   }
 }
 
@@ -235,6 +249,10 @@ describe('TestCloudflareCommonConstruct', () => {
       testApiShieldValDevApiShieldSchemaValidationSettingsId: {
         value: '${cloudflare_api_shield_schema_validation_settings.test-api-shield-val-dev.id}',
       },
+      testFilterDevFilterFriendlyUniqueId: { value: 'test-filter-dev' },
+      testFilterDevFilterId: { value: '${cloudflare_filter.test-filter-dev.id}' },
+      testFirewallRuleDevFirewallRuleFriendlyUniqueId: { value: 'test-firewall-rule-dev' },
+      testFirewallRuleDevFirewallRuleId: { value: '${cloudflare_firewall_rule.test-firewall-rule-dev.id}' },
       testWorkerDomainDevWorkerDomainFriendlyUniqueId: { value: 'test-worker-domain-dev' },
       testWorkerDomainDevWorkerDomainId: { value: '${cloudflare_worker_domain.test-worker-domain-dev.id}' },
       testWorkerRouteDevWorkerRouteFriendlyUniqueId: { value: 'test-worker-route-dev' },
@@ -523,6 +541,27 @@ describe('TestCloudflareCommonConstruct', () => {
       mitigation_action: 'block',
       operation_id: '${cloudflare_api_shield_operation.test-api-shield-op-dev.id}',
       zone_id: '${data.cloudflare_zone.test-api-shield-op-val-dev-data-zone-data-zone.id}',
+    })
+  })
+})
+
+describe('TestCloudflareCommonConstruct', () => {
+  test('provisions filter as expected', () => {
+    expect(construct).toHaveResourceWithProperties(Filter, {
+      description: 'Site break-in attempts that are outside of the office',
+      expression:
+        '(http.request.uri.path ~ ".*wp-login.php" or http.request.uri.path ~ ".*xmlrpc.php") and ip.src ne 192.0.2.1',
+      paused: false,
+      zone_id: '${data.cloudflare_zone.test-filter-dev-data-zone-data-zone.id}',
+    })
+  })
+})
+
+describe('TestCloudflareCommonConstruct', () => {
+  test('provisions firewall rule as expected', () => {
+    expect(construct).toHaveResourceWithProperties(FirewallRule, {
+      filter_id: '${cloudflare_filter.test-filter-dev.id}',
+      zone_id: '${data.cloudflare_zone.test-firewall-rule-dev-data-zone-data-zone.id}',
     })
   })
 })
