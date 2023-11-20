@@ -179,3 +179,4 @@ junit.xml
 
 # cdktf
 cdktf.out/
+!**/sample.js
