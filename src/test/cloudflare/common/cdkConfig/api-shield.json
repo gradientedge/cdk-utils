@@ -1,0 +1,27 @@
+{
+  "testApiShield": {
+    "authIdCharacteristics": [
+      {
+        "name": "test-api-shield",
+        "type": "header"
+      }
+    ]
+  },
+  "testApiShieldOperation": {
+    "endpoint": "/product",
+    "host": "api.gradientedge.io",
+    "method": "GET"
+  },
+  "testApiShieldOperationSchemaValidationSettings": {
+    "mitigationAction": "block"
+  },
+  "testApiShieldSchema": {
+    "kind": "openapi_v3",
+    "name": "test-api",
+    "validation_enabled": true
+  },
+  "testApiShieldSchemaValidationSettings": {
+    "validationDefaultMitigationAction": "log",
+    "validationOverrideMitigationAction": "none"
+  }
+}

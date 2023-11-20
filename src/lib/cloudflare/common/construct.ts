@@ -2,13 +2,14 @@ import { CloudflareProvider } from '@cdktf/provider-cloudflare/lib/provider'
 import { TerraformStack } from 'cdktf'
 import { Construct } from 'constructs'
 import { isDevStage, isPrdStage, isTestStage, isUatStage } from '../../common'
-import { CloudflareWorkerManager, CloudflareZoneManager } from '../services'
+import { CloudflareApiShieldManager, CloudflareWorkerManager, CloudflareZoneManager } from '../services'
 import { CommonCloudflareStackProps } from './types'
 
 export class CommonCloudflareConstruct extends TerraformStack {
   declare props: CommonCloudflareStackProps
   id: string
   fullyQualifiedDomainName: string
+  apiShieldManager: CloudflareApiShieldManager
   workerManager: CloudflareWorkerManager
   zoneManager: CloudflareZoneManager
 
@@ -17,6 +18,7 @@ export class CommonCloudflareConstruct extends TerraformStack {
     this.props = props
     this.id = id
 
+    this.apiShieldManager = new CloudflareApiShieldManager()
     this.zoneManager = new CloudflareZoneManager()
     this.workerManager = new CloudflareWorkerManager()
 
