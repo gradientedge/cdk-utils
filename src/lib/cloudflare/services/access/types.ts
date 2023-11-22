@@ -1,0 +1,23 @@
+import { AccessApplicationConfig } from '@cdktf/provider-cloudflare/lib/access-application'
+import { AccessCaCertificateConfig } from '@cdktf/provider-cloudflare/lib/access-ca-certificate'
+import { AccessCustomPageConfig } from '@cdktf/provider-cloudflare/lib/access-custom-page'
+import { AccessGroupConfig } from '@cdktf/provider-cloudflare/lib/access-group'
+import { AccessIdentityProviderConfig } from '@cdktf/provider-cloudflare/lib/access-identity-provider'
+import { AccessMutualTlsCertificateConfig } from '@cdktf/provider-cloudflare/lib/access-mutual-tls-certificate'
+import { AccessOrganizationConfig } from '@cdktf/provider-cloudflare/lib/access-organization'
+import { AccessPolicyConfig } from '@cdktf/provider-cloudflare/lib/access-policy'
+import { AccessRuleConfig } from '@cdktf/provider-cloudflare/lib/access-rule'
+import { AccessServiceTokenConfig } from '@cdktf/provider-cloudflare/lib/access-service-token'
+import { AccessTagConfig } from '@cdktf/provider-cloudflare/lib/access-tag'
+
+export interface AccessApplicationProps extends AccessApplicationConfig {}
+export interface AccessCaCertificateProps extends AccessCaCertificateConfig {}
+export interface AccessCustomPageProps extends AccessCustomPageConfig {}
+export interface AccessGroupProps extends AccessGroupConfig {}
+export interface AccessIdentityProviderProps extends AccessIdentityProviderConfig {}
+export interface AccessMutualTlsCertificateProps extends AccessMutualTlsCertificateConfig {}
+export interface AccessOrganizationProps extends AccessOrganizationConfig {}
+export interface AccessPolicyProps extends AccessPolicyConfig {}
+export interface AccessRuleProps extends AccessRuleConfig {}
+export interface AccessServiceTokenProps extends AccessServiceTokenConfig {}
+export interface AccessTagProps extends AccessTagConfig {}

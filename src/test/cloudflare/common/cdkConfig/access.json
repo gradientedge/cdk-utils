@@ -1,0 +1,101 @@
+{
+  "testAccessApplication": {
+    "corsHeaders": [
+      {
+        "allowAllHeaders": true,
+        "allowCredentials": true,
+        "allowedOrigins": ["https://example.gradientedge.io"],
+        "maxAge": 10
+      }
+    ],
+    "domain": "myapp",
+    "name": "test-app",
+    "sessionDuration": "24h",
+    "type": "self_hosted"
+  },
+  "testAccessCustomPage": {
+    "name": "403",
+    "type": "forbidden"
+  },
+  "testAccessGroup": {
+    "include": [
+      {
+        "email": ["test@gradientedge.io"]
+      }
+    ],
+    "name": "test-group"
+  },
+  "testAccessMTlsCertificate": {
+    "associatedHostnames": ["test.gradientedge.io"],
+    "name": "test-mtls-cert"
+  },
+  "testAccessOrganisation": {
+    "authDomain": "test.gradientedge.io",
+    "autoRedirectToIdentity": false,
+    "isUiReadOnly": false,
+    "name": "test-org",
+    "userSeatExpirationInactiveTime": "720h"
+  },
+  "testAccessOTPIdentityProvider": {
+    "name": "test-idp-otp",
+    "type": "onetimepin"
+  },
+  "testAccessPolicy": {
+    "decision": "allow",
+    "include": [
+      {
+        "email": ["test@gradientedge.io"]
+      }
+    ],
+    "name": "test-policy-props",
+    "precedence": "1",
+    "require": [
+      {
+        "email": ["test@gradientedge.io"]
+      }
+    ]
+  },
+  "testAccessRuleChallenge": {
+    "configuration": [
+      {
+        "target": "country",
+        "value": "T1"
+      }
+    ],
+    "mode": "challenge",
+    "notes": "Requests coming from known for exit nodes"
+  },
+  "testAccessRuleWhitelist": {
+    "configuration": [
+      {
+        "target": "country",
+        "value": "AU"
+      }
+    ],
+    "mode": "whitelist",
+    "notes": "Requests coming from Australia"
+  },
+  "testAccessSamlIdentityProvider": {
+    "config": [
+      {
+        "attributes": ["email", "username"],
+        "idp_public_cert": "MIIDpDCCAoygAwIBAgIGAV2ka+55MA0GCSqGSIb3DQEBCwUAMIGSMQswCQ...GF/Q2/MHadws97cZg\nuTnQyuOqPuHbnN83d/2l1NSYKCbHt24o",
+        "issuer_url": "jumpcloud",
+        "sign_request": false,
+        "sso_target_url": "https://sso.gradientedge.io/saml2/cloudflareaccess"
+      }
+    ],
+    "name": "test-idp-saml",
+    "type": "saml"
+  },
+  "testAccessServiceToken": {
+    "lifecycle": {
+      "createBeforeDestroy": true
+    },
+    "minDaysForRenewal": 30,
+    "name": "test-service-token"
+  },
+  "testAccessTag": {
+    "name": "test-tag"
+  }
+}

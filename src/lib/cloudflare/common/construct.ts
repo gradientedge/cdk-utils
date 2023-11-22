@@ -3,6 +3,7 @@ import { TerraformStack } from 'cdktf'
 import { Construct } from 'constructs'
 import { isDevStage, isPrdStage, isTestStage, isUatStage } from '../../common'
 import {
+  CloudflareAccessManager,
   CloudflareApiShieldManager,
   CloudflareFilterManager,
   CloudflareFirewallManager,
@@ -15,6 +16,7 @@ export class CommonCloudflareConstruct extends TerraformStack {
   declare props: CommonCloudflareStackProps
   id: string
   fullyQualifiedDomainName: string
+  accessManager: CloudflareAccessManager
   apiShieldManager: CloudflareApiShieldManager
   filterManager: CloudflareFilterManager
   firewallManager: CloudflareFirewallManager
@@ -26,6 +28,7 @@ export class CommonCloudflareConstruct extends TerraformStack {
     this.props = props
     this.id = id
 
+    this.accessManager = new CloudflareAccessManager()
     this.apiShieldManager = new CloudflareApiShieldManager()
     this.filterManager = new CloudflareFilterManager()
     this.firewallManager = new CloudflareFirewallManager()
