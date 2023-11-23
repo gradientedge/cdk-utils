@@ -9,6 +9,7 @@ import {
   CloudflareFilterManager,
   CloudflareFirewallManager,
   CloudflarePageManager,
+  CloudflareRecordManager,
   CloudflareWorkerManager,
   CloudflareZoneManager,
 } from '../services'
@@ -24,6 +25,7 @@ export class CommonCloudflareConstruct extends TerraformStack {
   filterManager: CloudflareFilterManager
   firewallManager: CloudflareFirewallManager
   pageManager: CloudflarePageManager
+  recordManager: CloudflareRecordManager
   workerManager: CloudflareWorkerManager
   zoneManager: CloudflareZoneManager
 
@@ -38,6 +40,7 @@ export class CommonCloudflareConstruct extends TerraformStack {
     this.filterManager = new CloudflareFilterManager()
     this.firewallManager = new CloudflareFirewallManager()
     this.pageManager = new CloudflarePageManager()
+    this.recordManager = new CloudflareRecordManager()
     this.workerManager = new CloudflareWorkerManager()
     this.zoneManager = new CloudflareZoneManager()
 

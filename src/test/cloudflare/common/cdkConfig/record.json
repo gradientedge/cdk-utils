@@ -1,0 +1,14 @@
+{
+  "testARecord": {
+    "name": "testARecord",
+    "ttl": 300,
+    "type": "A",
+    "value": "192.0.2.1"
+  },
+  "testCNameRecord": {
+    "name": "testCNameRecord",
+    "ttl": 300,
+    "type": "A",
+    "value": "example.gradientedge.io"
+  }
+}
