@@ -8,6 +8,7 @@ import {
   CloudflareArgoManager,
   CloudflareFilterManager,
   CloudflareFirewallManager,
+  CloudflarePageManager,
   CloudflareWorkerManager,
   CloudflareZoneManager,
 } from '../services'
@@ -22,6 +23,7 @@ export class CommonCloudflareConstruct extends TerraformStack {
   argoManager: CloudflareArgoManager
   filterManager: CloudflareFilterManager
   firewallManager: CloudflareFirewallManager
+  pageManager: CloudflarePageManager
   workerManager: CloudflareWorkerManager
   zoneManager: CloudflareZoneManager
 
@@ -35,8 +37,9 @@ export class CommonCloudflareConstruct extends TerraformStack {
     this.argoManager = new CloudflareArgoManager()
     this.filterManager = new CloudflareFilterManager()
     this.firewallManager = new CloudflareFirewallManager()
-    this.zoneManager = new CloudflareZoneManager()
+    this.pageManager = new CloudflarePageManager()
     this.workerManager = new CloudflareWorkerManager()
+    this.zoneManager = new CloudflareZoneManager()
 
     this.determineFullyQualifiedDomain()
     new CloudflareProvider(this, `${this.id}-provider`, this.props)
