@@ -5,6 +5,7 @@ import { isDevStage, isPrdStage, isTestStage, isUatStage } from '../../common'
 import {
   CloudflareAccessManager,
   CloudflareApiShieldManager,
+  CloudflareArgoManager,
   CloudflareFilterManager,
   CloudflareFirewallManager,
   CloudflareWorkerManager,
@@ -18,6 +19,7 @@ export class CommonCloudflareConstruct extends TerraformStack {
   fullyQualifiedDomainName: string
   accessManager: CloudflareAccessManager
   apiShieldManager: CloudflareApiShieldManager
+  argoManager: CloudflareArgoManager
   filterManager: CloudflareFilterManager
   firewallManager: CloudflareFirewallManager
   workerManager: CloudflareWorkerManager
@@ -30,6 +32,7 @@ export class CommonCloudflareConstruct extends TerraformStack {
 
     this.accessManager = new CloudflareAccessManager()
     this.apiShieldManager = new CloudflareApiShieldManager()
+    this.argoManager = new CloudflareArgoManager()
     this.filterManager = new CloudflareFilterManager()
     this.firewallManager = new CloudflareFirewallManager()
     this.zoneManager = new CloudflareZoneManager()

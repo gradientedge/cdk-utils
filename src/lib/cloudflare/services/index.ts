@@ -1,5 +1,6 @@
 export * from './access'
 export * from './api-shield'
+export * from './argo'
 export * from './filter'
 export * from './firewall'
 export * from './worker'
