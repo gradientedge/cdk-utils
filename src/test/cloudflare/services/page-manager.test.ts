@@ -150,12 +150,12 @@ describe('TestCloudflarePagesManager', () => {
 describe('TestCloudflarePagesManager', () => {
   test('provisions pages project as expected', () => {
     expect(construct).toHaveResourceWithProperties(PagesProject, {
-      account_id: '123456789012',
+      account_id: '${var.accountId}',
       name: 'test-simple-project-dev',
       production_branch: 'main',
     })
     expect(construct).toHaveResourceWithProperties(PagesProject, {
-      account_id: '123456789012',
+      account_id: '${var.accountId}',
       build_config: {
         build_command: 'npm run build',
         destination_dir: 'dist',
@@ -183,7 +183,7 @@ describe('TestCloudflarePagesManager', () => {
       production_branch: 'main',
     })
     expect(construct).toHaveResourceWithProperties(PagesProject, {
-      account_id: '123456789012',
+      account_id: '${var.accountId}',
       name: 'test-github-project-dev',
       production_branch: 'main',
       source: {
@@ -207,7 +207,7 @@ describe('TestCloudflarePagesManager', () => {
 describe('TestCloudflarePagesManager', () => {
   test('provisions pages domain as expected', () => {
     expect(construct).toHaveResourceWithProperties(PagesDomain, {
-      account_id: '123456789012',
+      account_id: '${var.accountId}',
       domain: 'gradientedge.io',
       project_name: 'test-pages-project-dev',
     })

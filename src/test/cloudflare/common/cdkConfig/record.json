@@ -8,7 +8,7 @@
   "testCNameRecord": {
     "name": "testCNameRecord",
     "ttl": 300,
-    "type": "A",
+    "type": "CNAME",
     "value": "example.gradientedge.io"
   }
 }

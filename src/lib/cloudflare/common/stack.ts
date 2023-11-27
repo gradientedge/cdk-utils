@@ -34,9 +34,6 @@ export class CommonCloudflareStack extends TerraformStack {
     this.determineStageContexts()
 
     this.props = this.determineConstructProps(props)
-
-    /* initialise the construct */
-    this.construct = new CommonCloudflareConstruct(this, 'cdk-utils', this.props)
   }
 
   /**
@@ -47,6 +44,7 @@ export class CommonCloudflareStack extends TerraformStack {
   protected determineConstructProps(props: CommonCloudflareStackProps) {
     return {
       accountId: this.node.tryGetContext('accountId'),
+      apiToken: this.node.tryGetContext('apiToken'),
       domainName: this.node.tryGetContext('domainName'),
       extraContexts: this.node.tryGetContext('extraContexts'),
       features: this.node.tryGetContext('features'),

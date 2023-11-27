@@ -1,20 +1,18 @@
-import { Record } from '@cdktf/provider-cloudflare/lib/record'
 import { Zone } from '@cdktf/provider-cloudflare/lib/zone'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
 import { Construct } from 'constructs'
 import {
-  CommonCloudflareConstruct,
+  CloudflarePagesStaticSite,
+  CloudflarePagesStaticSiteProps,
   CommonCloudflareStack,
   CommonCloudflareStackProps,
-  RecordProps,
-  ZoneProps,
 } from '../../../lib'
+import { PagesProject } from '@cdktf/provider-cloudflare/lib/pages-project'
+import { PagesDomain } from '@cdktf/provider-cloudflare/lib/pages-domain'
+import { Record } from '@cdktf/provider-cloudflare/lib/record'
 
-interface TestCloudflareStackProps extends CommonCloudflareStackProps {
-  testZone: ZoneProps
-  testARecord: RecordProps
-  testCNameRecord: RecordProps
+interface TestCloudflareStackProps extends CloudflarePagesStaticSiteProps {
   testAttribute?: string
 }
 
@@ -23,6 +21,7 @@ const testStackProps: any = {
   domainName: 'gradientedge.io',
   extraContexts: [
     'src/test/cloudflare/common/cdkConfig/dummy.json',
+    'src/test/cloudflare/common/cdkConfig/pages.json',
     'src/test/cloudflare/common/cdkConfig/record.json',
     'src/test/cloudflare/common/cdkConfig/zone.json',
   ],
@@ -44,10 +43,12 @@ class TestCommonStack extends CommonCloudflareStack {
   protected determineConstructProps(props: CommonCloudflareStackProps) {
     return {
       ...super.determineConstructProps(props),
-      testARecord: this.node.tryGetContext('testARecord'),
+      siteAssetDir: `src/test/cloudflare/common/sample.html`,
+      siteCnameRecord: this.node.tryGetContext('testCNameRecord'),
+      sitePagesProject: this.node.tryGetContext('testPagesProject'),
+      siteSubDomain: `test.app`,
+      siteZone: this.node.tryGetContext('testZone'),
       testAttribute: this.node.tryGetContext('testAttribute'),
-      testCNameRecord: this.node.tryGetContext('testCNameRecord'),
-      testZone: this.node.tryGetContext('testZone'),
     }
   }
 }
@@ -64,19 +65,17 @@ class TestInvalidCommonStack extends CommonCloudflareStack {
     return {
       ...super.determineConstructProps(props),
       testAttribute: this.node.tryGetContext('testAttribute'),
-      testZone: this.node.tryGetContext('testZone'),
     }
   }
 }
 
-class TestCommonConstruct extends CommonCloudflareConstruct {
+class TestCommonConstruct extends CloudflarePagesStaticSite {
   declare props: TestCloudflareStackProps
 
   constructor(parent: Construct, name: string, props: TestCloudflareStackProps) {
     super(parent, name, props)
-    this.zoneManager.createZone(`test-zone-${this.props.stage}`, this, this.props.testZone)
-    this.recordManager.createRecord(`test-arecord-${this.props.stage}`, this, this.props.testARecord)
-    this.recordManager.createRecord(`test-cnamerecord-${this.props.stage}`, this, this.props.testCNameRecord)
+
+    this.initResources()
   }
 }
 
@@ -86,14 +85,14 @@ const commonStack = new TestCommonStack(testingApp, 'test-common-stack', testSta
 const stack = Testing.fullSynth(commonStack)
 const construct = Testing.synth(commonStack.construct)
 
-describe('TestCloudflareRecordManager', () => {
+describe('TestCloudflarePagesStaticSite', () => {
   test('handles mis-configurations as expected', () => {
     const error = () => new TestInvalidCommonStack(app, 'test-invalid-stack', testStackProps)
-    expect(error).toThrow('Props undefined for test-arecord-dev')
+    expect(error).toThrow('Props undefined for test-common-stack-zone')
   })
 })
 
-describe('TestCloudflareRecordManager', () => {
+describe('TestCloudflarePagesStaticSite', () => {
   test('is initialised as expected', () => {
     /* test if the created stack have the right properties injected */
     expect(commonStack.props).toHaveProperty('testAttribute')
@@ -101,7 +100,7 @@ describe('TestCloudflareRecordManager', () => {
   })
 })
 
-describe('TestCloudflareRecordManager', () => {
+describe('TestCloudflarePagesStaticSite', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
     expect(construct).toBeDefined()
@@ -110,21 +109,27 @@ describe('TestCloudflareRecordManager', () => {
   })
 })
 
-describe('TestCloudflareRecordManager', () => {
+describe('TestCloudflarePagesStaticSite', () => {
   test('provisions outputs as expected', () => {
     expect(JSON.parse(construct).output).toMatchObject({
-      testArecordDevRecordFriendlyUniqueId: { value: 'test-arecord-dev' },
-      testArecordDevRecordId: { value: '${cloudflare_record.test-arecord-dev.id}' },
-      testCnamerecordDevRecordFriendlyUniqueId: { value: 'test-cnamerecord-dev' },
-      testCnamerecordDevRecordId: { value: '${cloudflare_record.test-cnamerecord-dev.id}' },
-      testZoneDevZoneFriendlyUniqueId: { value: 'test-zone-dev' },
-      testZoneDevZoneId: { value: '${cloudflare_zone.test-zone-dev.id}' },
-      testZoneDevZoneName: { value: '${cloudflare_zone.test-zone-dev.zone}' },
+      testCommonStackSiteDomainPagesDomainFriendlyUniqueId: { value: 'test-common-stack-site-domain' },
+      testCommonStackSiteDomainPagesDomainId: {
+        value: '${cloudflare_pages_domain.test-common-stack-site-domain.id}',
+      },
+      testCommonStackSiteProjectPagesProjectFriendlyUniqueId: { value: 'test-common-stack-site-project' },
+      testCommonStackSiteProjectPagesProjectId: {
+        value: '${cloudflare_pages_project.test-common-stack-site-project.id}',
+      },
+      testCommonStackSiteRecordRecordFriendlyUniqueId: { value: 'test-common-stack-site-record' },
+      testCommonStackSiteRecordRecordId: { value: '${cloudflare_record.test-common-stack-site-record.id}' },
+      testCommonStackZoneZoneFriendlyUniqueId: { value: 'test-common-stack-zone' },
+      testCommonStackZoneZoneId: { value: '${cloudflare_zone.test-common-stack-zone.id}' },
+      testCommonStackZoneZoneName: { value: '${cloudflare_zone.test-common-stack-zone.zone}' },
     })
   })
 })
 
-describe('TestCloudflareRecordManager', () => {
+describe('TestCloudflarePagesStaticSite', () => {
   test('provisions zone as expected', () => {
     expect(construct).toHaveResourceWithProperties(Zone, {
       account_id: 'test-account',
@@ -133,21 +138,34 @@ describe('TestCloudflareRecordManager', () => {
   })
 })
 
-describe('TestCloudflareRecordManager', () => {
-  test('provisions ARecord as expected', () => {
-    expect(construct).toHaveResourceWithProperties(Record, {
-      name: 'testARecord',
-      ttl: 300,
-      type: 'A',
-      value: '192.0.2.1',
-      zone_id: '${data.cloudflare_zone.test-arecord-dev-data-zone-data-zone.id}',
+describe('TestCloudflarePagesStaticSite', () => {
+  test('provisions pages project as expected', () => {
+    expect(construct).toHaveResourceWithProperties(PagesProject, {
+      account_id: '${var.accountId}',
+      name: 'test-simple-project-dev',
+      production_branch: 'main',
     })
+  })
+})
+
+describe('TestCloudflarePagesStaticSite', () => {
+  test('provisions pages domain as expected', () => {
+    expect(construct).toHaveResourceWithProperties(PagesDomain, {
+      account_id: '${var.accountId}',
+      domain: 'test.app.gradientedge.io',
+      project_name: '${cloudflare_pages_project.test-common-stack-site-project.name}',
+    })
+  })
+})
+
+describe('TestCloudflarePagesStaticSite', () => {
+  test('provisions cname record as expected', () => {
     expect(construct).toHaveResourceWithProperties(Record, {
-      name: 'testCNameRecord',
+      name: 'test.app',
       ttl: 300,
       type: 'CNAME',
-      value: 'example.gradientedge.io',
-      zone_id: '${data.cloudflare_zone.test-cnamerecord-dev-data-zone-data-zone.id}',
+      value: '${cloudflare_pages_project.test-common-stack-site-project.name}.pages.dev',
+      zone_id: '${data.cloudflare_zone.test-common-stack-site-record-data-zone-data-zone.id}',
     })
   })
 })
