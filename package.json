@@ -50,7 +50,7 @@
     "@aws-sdk/client-secrets-manager": "^3.454.0",
     "@aws-sdk/credential-providers": "^3.454.0",
     "@aws-sdk/types": "^3.451.0",
-    "@cdktf/provider-azurerm": "^11.0.5",
+    "@cdktf/provider-azurerm": "^11.0.6",
     "@cdktf/provider-cloudflare": "^10.0.3",
     "@types/lodash": "^4.14.201",
     "@types/node": "^20.9.2",
