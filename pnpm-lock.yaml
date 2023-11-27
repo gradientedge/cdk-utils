@@ -17,6 +17,9 @@ importers:
       '@aws-sdk/types':
         specifier: ^3.451.0
         version: 3.451.0
+      '@cdktf/provider-aws':
+        specifier: ^18.0.6
+        version: 18.0.6(cdktf@0.19.1)(constructs@10.3.0)
       '@cdktf/provider-azurerm':
         specifier: ^11.0.6
         version: 11.0.6(cdktf@0.19.1)(constructs@10.3.0)
@@ -1258,6 +1261,17 @@ packages:
   /@bcoe/v8-coverage@0.2.3:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
     dev: true
+
+  /@cdktf/provider-aws@18.0.6(cdktf@0.19.1)(constructs@10.3.0):
+    resolution: {integrity: sha512-sSMiotJ8IaCCnlcnsUJgSHNqxkquEhnv1UPCGfXpHGvpS7d48rY2Einr2Arja0gdLSMHzOojDLUjFYKE7gjScA==}
+    engines: {node: '>= 18.12.0'}
+    peerDependencies:
+      cdktf: ^0.19.0
+      constructs: ^10.0.0
+    dependencies:
+      cdktf: 0.19.1(constructs@10.3.0)
+      constructs: 10.3.0
+    dev: false
 
   /@cdktf/provider-azurerm@11.0.6(cdktf@0.19.1)(constructs@10.3.0):
     resolution: {integrity: sha512-H5nRMVu5qx+uvCwuXNse6701ORKCsIzRhRkW4N7Mz0ftKLJIhcT3hbMopaCpWVKjwA7nOPT3NPWHJF6w7pa2rw==}

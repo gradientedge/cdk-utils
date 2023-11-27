@@ -1,5 +1,6 @@
+import { AwsProvider } from '@cdktf/provider-aws/lib/provider'
 import { CloudflareProvider } from '@cdktf/provider-cloudflare/lib/provider'
-import { TerraformStack, TerraformVariable } from 'cdktf'
+import { DataTerraformRemoteStateS3, S3Backend, TerraformStack, TerraformVariable } from 'cdktf'
 import { Construct } from 'constructs'
 import { isDevStage, isPrdStage, isTestStage, isUatStage } from '../../common'
 import {
@@ -13,7 +14,9 @@ import {
   CloudflareWorkerManager,
   CloudflareZoneManager,
 } from '../services'
+import { RemoteBackend } from './constants'
 import { CommonCloudflareStackProps } from './types'
+import { DataAwsS3BucketObject } from '@cdktf/provider-aws/lib/data-aws-s3-bucket-object'
 
 export class CommonCloudflareConstruct extends TerraformStack {
   declare props: CommonCloudflareStackProps
@@ -47,13 +50,14 @@ export class CommonCloudflareConstruct extends TerraformStack {
     this.determineFullyQualifiedDomain()
     this.determineAccountId()
     this.determineApiToken()
+    this.determineRemoteBackend()
     new CloudflareProvider(this, `${this.id}-provider`, this.props)
   }
 
   /**
    * @summary Determine the fully qualified domain name based on domainName & subDomain
    */
-  protected determineFullyQualifiedDomain(): void {
+  protected determineFullyQualifiedDomain() {
     this.fullyQualifiedDomainName = this.props.subDomain
       ? `${this.props.subDomain}.${this.props.domainName}`
       : this.props.domainName
@@ -62,12 +66,47 @@ export class CommonCloudflareConstruct extends TerraformStack {
   /**
    * @summary Determine the account id based on the cdktf.json context
    */
-  protected determineAccountId(): void {
+  protected determineAccountId() {
     this.props.accountId = new TerraformVariable(this, `accountId`, {}).stringValue
   }
 
-  protected determineApiToken(): void {
+  /**
+   * @summary Determine the api token based on the cdktf.json context
+   */
+  protected determineApiToken() {
     this.props.apiToken = new TerraformVariable(this, `apiToken`, {}).stringValue
+  }
+
+  protected determineRemoteBackend() {
+    const debug = this.node.tryGetContext('debug')
+    switch (this.props.remoteBackend?.type) {
+      case RemoteBackend.s3:
+        new AwsProvider(this, `${this.id}-aws-provider`, {
+          profile: process.env.AWS_PROFILE ?? 'default',
+          region: this.props.remoteBackend.region,
+        })
+        new S3Backend(this, {
+          bucket: this.props.remoteBackend.bucketName,
+          dynamodbTable: this.props.remoteBackend.tableName,
+          key: `${this.id}`,
+          profile: process.env.AWS_PROFILE ?? 'default',
+          region: this.props.remoteBackend.region,
+        })
+        new DataAwsS3BucketObject(this, `${this.id}-remote-state-ref`, {
+          bucket: this.props.remoteBackend.bucketName,
+          key: new DataTerraformRemoteStateS3(this, `${this.id}-remote-state`, {
+            bucket: this.props.remoteBackend.bucketName,
+            key: `${this.id}`,
+          }).getString('bucket_key'),
+        })
+
+        break
+      case RemoteBackend.local:
+        if (debug) console.debug(`Using local backend for ${this.id}`)
+        break
+      default:
+        break
+    }
   }
 
   /**

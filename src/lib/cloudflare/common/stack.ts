@@ -7,6 +7,7 @@ import { TerraformStack } from 'cdktf'
 import { Construct } from 'constructs'
 import _ from 'lodash'
 import { isDevStage } from '../../common'
+import { RemoteBackend } from './constants'
 
 /**
  * @classdesc Common stack to use as a base for all higher level constructs.
@@ -42,6 +43,7 @@ export class CommonCloudflareStack extends TerraformStack {
    * @returns The stack properties
    */
   protected determineConstructProps(props: CommonCloudflareStackProps) {
+    const stage = this.node.tryGetContext('stage')
     return {
       accountId: this.node.tryGetContext('accountId'),
       apiToken: this.node.tryGetContext('apiToken'),
@@ -50,7 +52,7 @@ export class CommonCloudflareStack extends TerraformStack {
       features: this.node.tryGetContext('features'),
       name: this.node.tryGetContext('resourceGroupName'),
       skipStageForARecords: this.node.tryGetContext('skipStageForARecords'),
-      stage: this.node.tryGetContext('stage'),
+      stage: stage,
       subDomain: this.node.tryGetContext('subDomain'),
     }
   }
