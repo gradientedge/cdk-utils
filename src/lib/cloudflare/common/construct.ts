@@ -1,6 +1,6 @@
 import { AwsProvider } from '@cdktf/provider-aws/lib/provider'
 import { CloudflareProvider } from '@cdktf/provider-cloudflare/lib/provider'
-import { DataTerraformRemoteStateS3, S3Backend, TerraformStack, TerraformVariable } from 'cdktf'
+import { S3Backend, TerraformStack, TerraformVariable } from 'cdktf'
 import { Construct } from 'constructs'
 import { isDevStage, isPrdStage, isTestStage, isUatStage } from '../../common'
 import {
@@ -16,7 +16,6 @@ import {
 } from '../services'
 import { RemoteBackend } from './constants'
 import { CommonCloudflareStackProps } from './types'
-import { DataAwsS3BucketObject } from '@cdktf/provider-aws/lib/data-aws-s3-bucket-object'
 
 export class CommonCloudflareConstruct extends TerraformStack {
   declare props: CommonCloudflareStackProps
@@ -92,14 +91,6 @@ export class CommonCloudflareConstruct extends TerraformStack {
           profile: process.env.AWS_PROFILE ?? 'default',
           region: this.props.remoteBackend.region,
         })
-        new DataAwsS3BucketObject(this, `${this.id}-remote-state-ref`, {
-          bucket: this.props.remoteBackend.bucketName,
-          key: new DataTerraformRemoteStateS3(this, `${this.id}-remote-state`, {
-            bucket: this.props.remoteBackend.bucketName,
-            key: `${this.id}`,
-          }).getString('bucket_key'),
-        })
-
         break
       case RemoteBackend.local:
         if (debug) console.debug(`Using local backend for ${this.id}`)
