@@ -1,5 +1,5 @@
 import { CloudflareProvider } from '@cdktf/provider-cloudflare/lib/provider'
-import { TerraformStack } from 'cdktf'
+import { TerraformStack, TerraformVariable } from 'cdktf'
 import { Construct } from 'constructs'
 import { isDevStage, isPrdStage, isTestStage, isUatStage } from '../../common'
 import {
@@ -45,6 +45,8 @@ export class CommonCloudflareConstruct extends TerraformStack {
     this.zoneManager = new CloudflareZoneManager()
 
     this.determineFullyQualifiedDomain()
+    this.determineAccountId()
+    this.determineApiToken()
     new CloudflareProvider(this, `${this.id}-provider`, this.props)
   }
 
@@ -55,6 +57,17 @@ export class CommonCloudflareConstruct extends TerraformStack {
     this.fullyQualifiedDomainName = this.props.subDomain
       ? `${this.props.subDomain}.${this.props.domainName}`
       : this.props.domainName
+  }
+
+  /**
+   * @summary Determine the account id based on the cdktf.json context
+   */
+  protected determineAccountId(): void {
+    this.props.accountId = new TerraformVariable(this, `accountId`, {}).stringValue
+  }
+
+  protected determineApiToken(): void {
+    this.props.apiToken = new TerraformVariable(this, `apiToken`, {}).stringValue
   }
 
   /**

@@ -1,9 +1,10 @@
+import { PageRule } from '@cdktf/provider-cloudflare/lib/page-rule'
 import { PagesDomain } from '@cdktf/provider-cloudflare/lib/pages-domain'
 import { PagesProject } from '@cdktf/provider-cloudflare/lib/pages-project'
+import { LocalExec, Provider } from 'cdktf-local-exec'
 import { CommonCloudflareConstruct } from '../../common'
 import { createCloudflareTfOutput } from '../../utils'
-import { PageRuleProps, PagesDomainProps, PagesProjectProps } from './types'
-import { PageRule } from '@cdktf/provider-cloudflare/lib/page-rule'
+import { PageRuleProps, PagesDomainProps, PagesProjectDeployProps, PagesProjectProps } from './types'
 
 /**
  * @classdesc Provides operations on Cloudflare Pages
@@ -90,5 +91,19 @@ export class CloudflarePageManager {
     createCloudflareTfOutput(`${id}-pageRuleId`, scope, pageRule.id)
 
     return pageRule
+  }
+
+  public deployPagesProject(id: string, scope: CommonCloudflareConstruct, props: PagesProjectDeployProps) {
+    if (!props) throw `Props undefined for ${id}`
+
+    const localExecProvider = new Provider(scope, `${id}`)
+    const branch = scope.isProductionStage() ? 'main' : props.branch
+    const message = process.env.BUILD_NUMBER ?? props.message
+    const deployment = new LocalExec(scope, `${id}-deploy-${new Date().toISOString()}`, {
+      command: `CLOUDFLARE_ACCOUNT_ID=${scope.props.accountId} CLOUDFLARE_API_TOKEN=${scope.props.apiToken} npx wrangler pages deploy ${props.directory} --project-name=${props.projectName} --branch=${props.branch} --commit-message=${message}`,
+      cwd: '',
+    })
+
+    return deployment
   }
 }
