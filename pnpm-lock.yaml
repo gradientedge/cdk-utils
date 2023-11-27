@@ -36,8 +36,8 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0
       aws-cdk-lib:
-        specifier: ^2.110.0
-        version: 2.110.0(constructs@10.3.0)
+        specifier: ^2.110.1
+        version: 2.110.1(constructs@10.3.0)
       cdktf:
         specifier: ^0.19.1
         version: 0.19.1(constructs@10.3.0)
@@ -3108,8 +3108,8 @@ packages:
     engines: {node: '>= 0.4'}
     dev: true
 
-  /aws-cdk-lib@2.110.0(constructs@10.3.0):
-    resolution: {integrity: sha512-4IxjdtaoGjQPqtFyYXG6kOs9t/UTAh06tlGyCPpvhTZNoKNFUkku3H6MArlazpiKtm+dThdF+p5lQLB/kIu/qw==}
+  /aws-cdk-lib@2.110.1(constructs@10.3.0):
+    resolution: {integrity: sha512-Z+42Jc/KSKFdBOpEv4LK9tz6kQUdVvUBquIYhLajam3aGblkonM0/FgexvAqy8iGwUaVEIpVyBTZUP2/VUMalg==}
     engines: {node: '>= 14.15.0'}
     peerDependencies:
       constructs: ^10.0.0
