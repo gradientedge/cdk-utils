@@ -110,13 +110,11 @@ export class CloudflareZoneManager {
     return zone
   }
 
-  public resolveZone(id: string, scope: CommonCloudflareConstruct, options: ZoneOptions) {
-    if (!options) throw `Options undefined for ${id}`
-
+  public resolveZone(id: string, scope: CommonCloudflareConstruct, options?: ZoneOptions) {
     const zone = new DataCloudflareZone(scope, `${id}-data-zone`, {
       accountId: scope.props.accountId,
-      name: options.name ?? scope.props.domainName,
-      zoneId: options.id,
+      name: options?.name ?? scope.props.domainName,
+      zoneId: options?.id,
     })
 
     return zone
