@@ -83,14 +83,14 @@ export class CommonCloudflareConstruct extends TerraformStack {
     switch (this.props.remoteBackend?.type) {
       case RemoteBackend.s3:
         this.awsProvider = new AwsProvider(this, `${this.id}-aws-provider`, {
-          profile: process.env.AWS_PROFILE ?? 'default',
+          profile: process.env.AWS_PROFILE,
           region: this.props.remoteBackend.region,
         })
         this.s3Backend = new S3Backend(this, {
           bucket: this.props.remoteBackend.bucketName,
           dynamodbTable: this.props.remoteBackend.tableName,
           key: `${this.id}`,
-          profile: process.env.AWS_PROFILE ?? 'default',
+          profile: process.env.AWS_PROFILE,
           region: this.props.remoteBackend.region,
         })
         break
