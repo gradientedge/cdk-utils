@@ -30,6 +30,8 @@ export class CommonCloudflareConstruct extends TerraformStack {
   recordManager: CloudflareRecordManager
   workerManager: CloudflareWorkerManager
   zoneManager: CloudflareZoneManager
+  awsProvider: AwsProvider
+  s3Backend: S3Backend
 
   constructor(scope: Construct, id: string, props: CommonCloudflareStackProps) {
     super(scope, id)
@@ -80,11 +82,11 @@ export class CommonCloudflareConstruct extends TerraformStack {
     const debug = this.node.tryGetContext('debug')
     switch (this.props.remoteBackend?.type) {
       case RemoteBackend.s3:
-        new AwsProvider(this, `${this.id}-aws-provider`, {
+        this.awsProvider = new AwsProvider(this, `${this.id}-aws-provider`, {
           profile: process.env.AWS_PROFILE ?? 'default',
           region: this.props.remoteBackend.region,
         })
-        new S3Backend(this, {
+        this.s3Backend = new S3Backend(this, {
           bucket: this.props.remoteBackend.bucketName,
           dynamodbTable: this.props.remoteBackend.tableName,
           key: `${this.id}`,
