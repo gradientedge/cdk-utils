@@ -52,7 +52,7 @@
     "@aws-sdk/types": "^3.460.0",
     "@cdktf/provider-aws": "^18.0.7",
     "@cdktf/provider-azurerm": "^11.0.6",
-    "@cdktf/provider-cloudflare": "^10.0.3",
+    "@cdktf/provider-cloudflare": "^10.0.4",
     "@types/lodash": "^4.14.202",
     "@types/node": "^20.10.0",
     "@types/uuid": "^9.0.7",
