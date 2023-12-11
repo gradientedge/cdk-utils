@@ -77,7 +77,11 @@ export abstract class RestApiLambdaWithCache extends RestApiLambda {
         vpc: this.restApivpc,
       })
 
-      this.restApiSecurityGroup.addIngressRule(Peer.anyIpv4(), Port.allTraffic(), 'All Traffic')
+      if (this.props.restApiVpc.isIPV6) {
+        this.restApiSecurityGroup.addIngressRule(Peer.anyIpv6(), Port.allTraffic(), 'All Traffic')
+      } else {
+        this.restApiSecurityGroup.addIngressRule(Peer.anyIpv4(), Port.allTraffic(), 'All Traffic')
+      }
 
       createCfnOutput(`${this.id}-security-group-id`, this, this.restApiSecurityGroup.securityGroupId)
     }
