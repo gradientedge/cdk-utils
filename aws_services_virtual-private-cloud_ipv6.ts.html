@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>aws/services/virtual-private-cloud/ipv6.ts - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="main.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <script src="scripts/commonNav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">aws/services/virtual-private-cloud/ipv6.ts</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { Fn } from 'aws-cdk-lib'
+import {
+  CfnEgressOnlyInternetGateway,
+  CfnSubnet,
+  CfnVPCCidrBlock,
+  ISubnet,
+  RouterType,
+  Subnet,
+  Vpc,
+} from 'aws-cdk-lib/aws-ec2'
+import _ from 'lodash'
+import { CommonConstruct } from '../../common'
+import { VpcProps } from './types'
+
+export class Ipv6Vpc extends Vpc {
+  public egressOnlyInternetGatewayId: string
+
+  constructor(scope: CommonConstruct, id: string, props: VpcProps) {
+    super(scope, id, props)
+
+    const cfnVpcCidrBlock = new CfnVPCCidrBlock(this, `${id}-ipv6-cidr`, {
+      amazonProvidedIpv6CidrBlock: true,
+      vpcId: this.vpcId,
+    })
+
+    const subnetIpv6CidrBlocks = Fn.cidr(Fn.select(0, this.vpcIpv6CidrBlocks), 256, '64')
+
+    _.forEach([...this.publicSubnets, ...this.privateSubnets, ...this.isolatedSubnets], (subnet, index) => {
+      subnet.node.addDependency(cfnVpcCidrBlock)
+      const cfnSubnet = subnet.node.defaultChild as CfnSubnet
+      cfnSubnet.ipv6CidrBlock = Fn.select(index, subnetIpv6CidrBlocks)
+      cfnSubnet.assignIpv6AddressOnCreation = true
+    })
+
+    const addDefaultIpv6Routes = (subnets: ISubnet[], gatewayId: string, routerType: RouterType) =>
+      subnets.forEach(subnet =>
+        (subnet as Subnet).addRoute(`${id}-default-route`, {
+          destinationIpv6CidrBlock: '::/0',
+          enablesInternetConnectivity: true,
+          routerId: gatewayId,
+          routerType: routerType,
+        })
+      )
+
+    if (this.internetGatewayId) {
+      addDefaultIpv6Routes(this.publicSubnets, this.internetGatewayId, RouterType.GATEWAY)
+    }
+
+    if (_.isEmpty(this.privateSubnets)) {
+      return
+    }
+
+    const egressIgw = new CfnEgressOnlyInternetGateway(this, `${id}-eigw`, { vpcId: this.vpcId })
+    this.egressOnlyInternetGatewayId = egressIgw.ref
+
+    addDefaultIpv6Routes(this.privateSubnets, egressIgw.ref, RouterType.EGRESS_ONLY_INTERNET_GATEWAY)
+  }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+    
+</div>
+
+<br class="clear">
+
+<footer>
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>
