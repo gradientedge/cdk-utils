@@ -1,6 +1,5 @@
 import { RestApiLambdaProps } from '../rest-api-lambda'
-import { VpcProps } from 'aws-cdk-lib/aws-ec2'
-import { ReplicatedElastiCacheProps } from '../../services'
+import { ReplicatedElastiCacheProps, VpcProps } from '../../services'
 
 /**
  */

@@ -1,5 +1,9 @@
 {
   "testVpc": {
     "maxAzs": 2
+  },
+  "testIPV6Vpc": {
+    "isIPV6": true,
+    "maxAzs": 2
   }
 }

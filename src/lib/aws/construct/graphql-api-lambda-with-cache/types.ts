@@ -1,6 +1,5 @@
+import { ReplicatedElastiCacheProps, VpcProps } from '../../services'
 import { GraphQlApiLambdaProps } from '../graphql-api-lambda'
-import { VpcProps } from 'aws-cdk-lib/aws-ec2'
-import { ReplicatedElastiCacheProps } from '../../services'
 
 /**
  * @deprecated Use RestApiLambdaWithCacheProps instead. This will be removed in a future release.

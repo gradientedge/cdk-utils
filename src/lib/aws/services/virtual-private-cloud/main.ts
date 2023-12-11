@@ -1,8 +1,10 @@
 import { Tags } from 'aws-cdk-lib'
-import { Vpc, VpcProps } from 'aws-cdk-lib/aws-ec2'
+import { SubnetType, Vpc } from 'aws-cdk-lib/aws-ec2'
+import _ from 'lodash'
 import { CommonConstruct } from '../../common'
 import { createCfnOutput } from '../../utils'
-import _ from 'lodash'
+import { Ipv6Vpc } from './ipv6'
+import { VpcProps } from './types'
 
 /**
  */
@@ -33,9 +35,19 @@ export class VpcManager {
    */
   public createVpc(id: string, scope: CommonConstruct, props: VpcProps) {
     if (!props) throw `Vpc props undefined for ${id}`
-    const vpc = new Vpc(scope, `${id}`, {
-      ...props,
-    })
+
+    let vpc
+    if (props.isIPV6) {
+      vpc = new Ipv6Vpc(scope, `${id}`, {
+        ...props,
+        subnetConfiguration: [
+          { name: `${id}-public`, subnetType: SubnetType.PUBLIC },
+          { name: `${id}-private`, subnetType: SubnetType.PRIVATE_WITH_EGRESS },
+        ],
+      })
+    } else {
+      vpc = new Vpc(scope, `${id}`, props)
+    }
 
     createCfnOutput(`${id}Id`, scope, vpc.vpcId)
     createCfnOutput(`${id}PublicSubnetIds`, scope, _.map(vpc.publicSubnets, subnet => subnet.subnetId).toString())
