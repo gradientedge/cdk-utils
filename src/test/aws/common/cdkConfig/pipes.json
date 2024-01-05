@@ -1,4 +1,13 @@
 {
+  "testSqsToLambdaPipe": {
+    "name": "test-sqs-to-lambda-pipe",
+    "sqsBatchSize": 10,
+    "pipeFilterPattern": {
+      "detail": {
+        "type": ["testType"]
+      }
+    }
+  },
   "testSqsToSfnPipe": {
     "name": "test-sqs-to-sfn-pipe",
     "sqsBatchSize": 10,

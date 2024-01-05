@@ -4,5 +4,15 @@
     "visibilityTimeoutInSecs": 300,
     "receiveMessageWaitTimeInSecs": 20,
     "retentionInDays": 7
+  },
+  "testPipedQueue": {
+    "queueName": "test-piped-queue",
+    "deliveryDelayInSecs": 0
+  },
+  "testPipedDlq": {
+    "queueName": "test-piped-dlq",
+    "visibilityTimeoutInSecs": 900,
+    "retentionInDays": 7,
+    "deliveryDelayInSecs": 0
   }
 }

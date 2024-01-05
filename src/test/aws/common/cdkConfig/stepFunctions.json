@@ -1,39 +1,57 @@
 {
-  "testSubmitStepSuccess": {
-    "name": "workflow:Complete"
+  "testSecondSubmitWorkflow": {
+    "logs": {
+      "includeExecutionData": true,
+      "level": "ALL"
+    },
+    "stateMachineName": "test-second-workflow",
+    "stateMachineType": "STANDARD",
+    "tags": [
+      {
+        "key": "testTagName1",
+        "value": "testTagValue1"
+      },
+      {
+        "key": "testTagName2",
+        "value": "testTagValue2"
+      }
+    ],
+    "tracingEnabled": false
   },
-  "testSubmitStepFailure": {
-    "name": "workflow:Failed"
+  "testSfnExecution": {
+    "associateWithParent": true,
+    "name": "test-sfn-execution-task"
   },
-  "testSubmitStepValidateSomething": {
-    "name": "step:Something Validated?"
-  },
-  "testSubmitStepValidateSomethingElse": {
-    "name": "step:Something Else Validated?"
+  "testSubmitStepApi": {
+    "name": "step:Call Some API"
   },
   "testSubmitStepCreateSomething": {
     "name": "step:Create Something",
     "outputPath": "$.Payload",
     "retries": [
       {
+        "backoffRate": 2,
         "errors": ["Lambda.TooManyRequestsException"],
         "intervalInSecs": 10,
-        "maxAttempts": 6,
-        "backoffRate": 2
+        "maxAttempts": 6
       }
     ]
   },
-  "testSubmitStepSkippableLambda": {
-    "name": "step:Create Skippable Lambda",
-    "outputPath": "$.Payload",
-    "retries": [
-      {
-        "errors": ["Lambda.TooManyRequestsException"],
-        "intervalInSecs": 10,
-        "maxAttempts": 6,
-        "backoffRate": 2
-      }
-    ]
+  "testSubmitStepCreateSomethingElse": {
+    "name": "step:Create Something Else"
+  },
+  "testSubmitStepCreateSomethingNew": {
+    "name": "step:Create Something New"
+  },
+  "testSubmitStepCreateSomethingParallel": {
+    "name": "parallel:Create Something"
+  },
+  "testSubmitStepDeleteItem": {
+    "name": "step:Delete Item from dynamodb",
+    "outputPath": "$.Payload"
+  },
+  "testSubmitStepFailure": {
+    "name": "workflow:Failed"
   },
   "testSubmitStepGetItem": {
     "name": "step:Get Item from dynamodb",
@@ -43,42 +61,46 @@
     "name": "step:Put Item into dynamodb",
     "outputPath": "$.Payload"
   },
-  "testSubmitStepDeleteItem": {
-    "name": "step:Delete Item from dynamodb",
-    "outputPath": "$.Payload"
-  },
   "testSubmitStepSendMessage": {
-    "name": "step:Send message to SQS",
-    "outputPath": "$.Payload",
     "messageBody": {
       "test": true
     },
-    "messageGroupId": "test"
+    "messageGroupId": "test",
+    "name": "step:Send message to SQS",
+    "outputPath": "$.Payload"
   },
-  "testSubmitStepCreateSomethingParallel": {
-    "name": "parallel:Create Something"
+  "testSubmitStepSkippableLambda": {
+    "name": "step:Create Skippable Lambda",
+    "outputPath": "$.Payload",
+    "retries": [
+      {
+        "backoffRate": 2,
+        "errors": ["Lambda.TooManyRequestsException"],
+        "intervalInSecs": 10,
+        "maxAttempts": 6
+      }
+    ]
   },
-  "testSubmitStepApi": {
-    "name": "step:Call Some API"
+  "testSubmitStepSuccess": {
+    "name": "workflow:Complete"
   },
-  "testSubmitStepCreateSomethingNew": {
-    "name": "step:Create Something New"
+  "testSubmitStepValidateSomething": {
+    "name": "step:Something Validated?"
   },
-  "testSubmitStepCreateSomethingElse": {
-    "name": "step:Create Something Else"
+  "testSubmitStepValidateSomethingElse": {
+    "name": "step:Something Else Validated?"
   },
   "testSubmitStepWait": {
-    "name": "step:Wait",
-    "delayInSeconds": 10
+    "delayInSeconds": 10,
+    "name": "step:Wait"
   },
   "testSubmitWorkflow": {
+    "logs": {
+      "includeExecutionData": true,
+      "level": "ALL"
+    },
     "stateMachineName": "test-workflow",
     "stateMachineType": "STANDARD",
-    "logs": {
-      "includeExecutionData": true,
-      "level": "ALL"
-    },
-    "tracingEnabled": false,
     "tags": [
       {
         "key": "testTagName1",
@@ -88,29 +110,10 @@
         "key": "testTagName2",
         "value": "testTagValue2"
       }
-    ]
+    ],
+    "tracingEnabled": false
   },
-  "testSfnExecution": {
-    "associateWithParent": true,
-    "name": "test-sfn-execution-task"
-  },
-  "testSecondSubmitWorkflow": {
-    "stateMachineName": "test-second-workflow",
-    "stateMachineType": "STANDARD",
-    "logs": {
-      "includeExecutionData": true,
-      "level": "ALL"
-    },
-    "tracingEnabled": false,
-    "tags": [
-      {
-        "key": "testTagName1",
-        "value": "testTagValue1"
-      },
-      {
-        "key": "testTagName2",
-        "value": "testTagValue2"
-      }
-    ]
+  "testWorkflowMapState": {
+    "maxConcurrency": 1
   }
 }

@@ -1,4 +1,8 @@
 {
+  "testAnotherLambdaRule": {
+    "name": "test-another-lambda-rule",
+    "state": "DISABLED"
+  },
   "testFargateRule": {
     "name": "test-fargate-rule",
     "state": "ENABLED"
@@ -7,15 +11,18 @@
     "name": "test-lambda-rule",
     "state": "DISABLED"
   },
-  "testAnotherLambdaRule": {
-    "name": "test-another-lambda-rule",
-    "state": "DISABLED"
+  "testRule": {
+    "enabled": true,
+    "eventPattern": {
+      "detail-type": ["Test"]
+    },
+    "ruleName": "test-rule"
   },
   "testSqsRule": {
-    "ruleName": "test-sqs-rule",
     "description": "Rule to send notification to SQS target",
     "eventPattern": {
       "detail-type": ["Test"]
-    }
+    },
+    "ruleName": "test-sqs-rule"
   }
 }
