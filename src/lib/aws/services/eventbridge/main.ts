@@ -9,7 +9,14 @@ import { IStateMachine } from 'aws-cdk-lib/aws-stepfunctions'
 import _ from 'lodash'
 import { CommonConstruct } from '../../common'
 import { createCfnOutput } from '../../utils'
-import { EventBusProps, EventRuleProps, RuleProps, SqsToSfnPipeProps, DynamoDbToLambdaPipeProps } from './types'
+import {
+  DynamoDbToLambdaPipeProps,
+  EventBusProps,
+  EventRuleProps,
+  RuleProps,
+  SqsToLambdaPipeProps,
+  SqsToSfnPipeProps,
+} from './types'
 
 /**
  * @classdesc Provides operations on AWS EventBridge.
@@ -239,6 +246,57 @@ export class EventManager {
           invocationType: props.sfnInvocationType ?? 'FIRE_AND_FORGET',
         },
       },
+    })
+
+    createCfnOutput(`${id}-pipeArn`, scope, pipe.attrArn)
+    createCfnOutput(`${id}-pipeName`, scope, pipe.name)
+
+    return pipe
+  }
+
+  /**
+   * @summary Method to create an eventbridge pipe with sqs queue as source and lambda function as target
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props the props for the pipe
+   * @param sourceQueue the source sqs queue
+   * @param targetLambdaFunction the target lambda function
+   */
+  public createSqsToLambdaCfnPipe(
+    id: string,
+    scope: CommonConstruct,
+    props: SqsToLambdaPipeProps,
+    sourceQueue: IQueue,
+    targetLambdaFunction: IFunction
+  ) {
+    const pipeRole = scope.iamManager.createRoleForSqsToLambdaPipe(
+      `${id}-role`,
+      scope,
+      sourceQueue.queueArn,
+      targetLambdaFunction.functionArn
+    )
+
+    const pipe = new CfnPipe(scope, `${id}`, {
+      ...props,
+      name: `${props.name}-${scope.props.stage}`,
+      roleArn: pipeRole.roleArn,
+      source: sourceQueue.queueArn,
+      sourceParameters: {
+        filterCriteria: props.pipeFilterPattern
+          ? {
+              filters: [
+                {
+                  pattern: JSON.stringify(props.pipeFilterPattern),
+                },
+              ],
+            }
+          : undefined,
+        sqsQueueParameters: {
+          batchSize: props.sqsBatchSize,
+          maximumBatchingWindowInSeconds: props.sqsMaximumBatchingWindowInSeconds,
+        },
+      },
+      target: targetLambdaFunction.functionArn,
     })
 
     createCfnOutput(`${id}-pipeArn`, scope, pipe.attrArn)

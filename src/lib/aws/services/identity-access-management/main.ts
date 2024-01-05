@@ -641,6 +641,29 @@ export class IamManager {
   }
 
   /**
+   * @summary Method to create iam statement for sqs to lambda pipe
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param queueArn the arn of the sqs queue
+   * @param lambdaArn the arn of the lambda function
+   */
+  public createRoleForSqsToLambdaPipe(id: string, scope: CommonConstruct, queueArn: string, lambdaArn: string) {
+    const role = new Role(scope, `${id}`, {
+      assumedBy: new ServicePrincipal('pipes.amazonaws.com'),
+      description: `Role for ${id} Pipe`,
+      roleName: `${id}-${scope.props.stage}`,
+    })
+
+    role.addToPolicy(this.statementForPollQueue([queueArn]))
+    role.addToPolicy(this.statementForInvokeLambda([lambdaArn]))
+
+    createCfnOutput(`${id}Arn`, scope, role.roleArn)
+    createCfnOutput(`${id}Name`, scope, role.roleName)
+
+    return role
+  }
+
+  /**
    * @summary Method to create iam policy for sqs
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined

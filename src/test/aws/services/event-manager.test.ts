@@ -16,6 +16,7 @@ interface TestStackProps extends CommonStackProps {
   testLogGroup: any
   testSqs: any
   testSqsToSfnPipe: any
+  testSqsToLambdaPipe: any
   testSubmitStepCreateSomething: any
   testSubmitStepSuccess: any
   testSubmitWorkflow: any
@@ -60,22 +61,21 @@ class TestCommonStack extends CommonStack {
   protected determineConstructProps(props: cdk.StackProps) {
     return {
       ...super.determineConstructProps(props),
-      ...{
-        testCluster: this.node.tryGetContext('testCluster'),
-        testDynamoDbToLambdaPipe: this.node.tryGetContext('testDynamoDbToLambdaPipe'),
-        testFargateRule: this.node.tryGetContext('testLambda'),
-        testLambda: this.node.tryGetContext('testLambda'),
-        testLambdaRule: this.node.tryGetContext('testLambda'),
-        testLogGroup: this.node.tryGetContext('testLogGroup'),
-        testSqs: this.node.tryGetContext('testSqs'),
-        testSqsToSfnPipe: this.node.tryGetContext('testSqsToSfnPipe'),
-        testSubmitStepCreateSomething: this.node.tryGetContext('testSubmitStepCreateSomething'),
-        testSubmitStepSuccess: this.node.tryGetContext('testSubmitStepSuccess'),
-        testSubmitWorkflow: this.node.tryGetContext('testSubmitWorkflow'),
-        testTask: this.node.tryGetContext('testTask'),
-        testTable: this.node.tryGetContext('testTable'),
-        testVpc: this.node.tryGetContext('testVpc'),
-      },
+      testCluster: this.node.tryGetContext('testCluster'),
+      testDynamoDbToLambdaPipe: this.node.tryGetContext('testDynamoDbToLambdaPipe'),
+      testFargateRule: this.node.tryGetContext('testLambda'),
+      testLambda: this.node.tryGetContext('testLambda'),
+      testLambdaRule: this.node.tryGetContext('testLambda'),
+      testLogGroup: this.node.tryGetContext('testLogGroup'),
+      testSqs: this.node.tryGetContext('testSqs'),
+      testSqsToLambdaPipe: this.node.tryGetContext('testSqsToLambdaPipe'),
+      testSqsToSfnPipe: this.node.tryGetContext('testSqsToSfnPipe'),
+      testSubmitStepCreateSomething: this.node.tryGetContext('testSubmitStepCreateSomething'),
+      testSubmitStepSuccess: this.node.tryGetContext('testSubmitStepSuccess'),
+      testSubmitWorkflow: this.node.tryGetContext('testSubmitWorkflow'),
+      testTable: this.node.tryGetContext('testTable'),
+      testTask: this.node.tryGetContext('testTask'),
+      testVpc: this.node.tryGetContext('testVpc'),
     }
   }
 }
@@ -92,20 +92,18 @@ class TestInvalidCommonStack extends CommonStack {
   protected determineConstructProps(props: cdk.StackProps) {
     return {
       ...super.determineConstructProps(props),
-      ...{
-        testCluster: this.node.tryGetContext('testCluster'),
-        testDynamoDbToLambdaPipe: this.node.tryGetContext('testDynamoDbToLambdaPipe'),
-        testLambda: this.node.tryGetContext('testLambda'),
-        testLogGroup: this.node.tryGetContext('testLogGroup'),
-        testSqs: this.node.tryGetContext('testSqs'),
-        testSqsToSfnPipe: this.node.tryGetContext('testSqsToSfnPipe'),
-        testSubmitStepCreateSomething: this.node.tryGetContext('testSubmitStepCreateSomething'),
-        testSubmitStepSuccess: this.node.tryGetContext('testSubmitStepSuccess'),
-        testSubmitWorkflow: this.node.tryGetContext('testSubmitWorkflow'),
-        testTask: this.node.tryGetContext('testTask'),
-        testTable: this.node.tryGetContext('testTable'),
-        testVpc: this.node.tryGetContext('testVpc'),
-      },
+      testCluster: this.node.tryGetContext('testCluster'),
+      testDynamoDbToLambdaPipe: this.node.tryGetContext('testDynamoDbToLambdaPipe'),
+      testLambda: this.node.tryGetContext('testLambda'),
+      testLogGroup: this.node.tryGetContext('testLogGroup'),
+      testSqs: this.node.tryGetContext('testSqs'),
+      testSqsToSfnPipe: this.node.tryGetContext('testSqsToSfnPipe'),
+      testSubmitStepCreateSomething: this.node.tryGetContext('testSubmitStepCreateSomething'),
+      testSubmitStepSuccess: this.node.tryGetContext('testSubmitStepSuccess'),
+      testSubmitWorkflow: this.node.tryGetContext('testSubmitWorkflow'),
+      testTable: this.node.tryGetContext('testTable'),
+      testTask: this.node.tryGetContext('testTask'),
+      testVpc: this.node.tryGetContext('testVpc'),
     }
   }
 }
@@ -180,6 +178,13 @@ class TestCommonConstruct extends CommonConstruct {
       testQueue,
       testStateMachine
     )
+    this.eventManager.createSqsToLambdaCfnPipe(
+      'test-sqs-to-lambda-pipe',
+      this,
+      this.props.testSqsToLambdaPipe,
+      testQueue,
+      testLambda
+    )
     this.eventManager.createDynamoDbToLambdaCfnPipe(
       'test-dynamoDb-to-lambda-pipe',
       this,
@@ -209,7 +214,7 @@ describe('TestEventConstruct', () => {
     template.resourceCountIs('AWS::Lambda::Permission', 1)
     template.resourceCountIs('AWS::SQS::Queue', 1)
     template.resourceCountIs('AWS::StepFunctions::StateMachine', 1)
-    template.resourceCountIs('AWS::Pipes::Pipe', 2)
+    template.resourceCountIs('AWS::Pipes::Pipe', 3)
   })
 })
 
@@ -228,6 +233,10 @@ describe('TestEventConstruct', () => {
     template.hasOutput('testSqsToSfnPipeRoleName', {})
     template.hasOutput('testSqsToSfnPipePipeArn', {})
     template.hasOutput('testSqsToSfnPipePipeName', {})
+    template.hasOutput('testSqsToLambdaPipeRoleArn', {})
+    template.hasOutput('testSqsToLambdaPipeRoleName', {})
+    template.hasOutput('testSqsToLambdaPipePipeArn', {})
+    template.hasOutput('testSqsToLambdaPipePipeName', {})
     template.hasOutput('testDynamoDbToLambdaPipeRoleArn', {})
     template.hasOutput('testDynamoDbToLambdaPipeRoleName', {})
     template.hasOutput('testDynamoDbToLambdaPipePipeArn', {})
@@ -337,6 +346,35 @@ describe('TestEventConstruct', () => {
         StepFunctionStateMachineParameters: {
           InvocationType: 'FIRE_AND_FORGET',
         },
+      },
+    })
+  })
+})
+
+describe('TestEventConstruct', () => {
+  test('provisions new eventbridge pipe as expected', () => {
+    template.hasResourceProperties('AWS::Pipes::Pipe', {
+      Name: 'test-sqs-to-lambda-pipe-test',
+      RoleArn: {
+        'Fn::GetAtt': ['testcommonstacktestsqstolambdapiperole7FBE9459', 'Arn'],
+      },
+      Source: {
+        'Fn::GetAtt': ['testcommonstacktestsqs99C34404', 'Arn'],
+      },
+      SourceParameters: {
+        FilterCriteria: {
+          Filters: [
+            {
+              Pattern: '{"detail":{"type":["testType"]}}',
+            },
+          ],
+        },
+        SqsQueueParameters: {
+          BatchSize: 10,
+        },
+      },
+      Target: {
+        'Fn::GetAtt': ['testcommonstacktestlambda5B168AC2', 'Arn'],
       },
     })
   })

@@ -3,12 +3,19 @@ import { CfnRuleProps, EventBusProps as EBProps, RuleProps as EBRuleProps } from
 import { TagProps } from '../../types'
 
 /**
- }
  */
 export interface SqsToSfnPipeProps extends CfnPipeProps {
   pipeFilterPattern?: any
   sfnInputTemplate?: string
   sfnInvocationType?: string
+  sqsBatchSize?: number
+  sqsMaximumBatchingWindowInSeconds?: number
+}
+
+/**
+ */
+export interface SqsToLambdaPipeProps extends CfnPipeProps {
+  pipeFilterPattern?: any
   sqsBatchSize?: number
   sqsMaximumBatchingWindowInSeconds?: number
 }
