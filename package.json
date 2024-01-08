@@ -54,7 +54,7 @@
     "@cdktf/provider-azurerm": "^11.2.0",
     "@cdktf/provider-cloudflare": "^10.0.4",
     "@types/lodash": "^4.14.202",
-    "@types/node": "^20.10.6",
+    "@types/node": "^20.10.7",
     "@types/uuid": "^9.0.7",
     "app-root-path": "^3.1.0",
     "aws-cdk-lib": "^2.118.0",
