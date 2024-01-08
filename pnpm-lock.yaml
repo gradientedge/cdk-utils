@@ -21,8 +21,8 @@ importers:
         specifier: ^18.2.0
         version: 18.2.0(cdktf@0.19.2)(constructs@10.3.0)
       '@cdktf/provider-azurerm':
-        specifier: ^11.2.0
-        version: 11.2.0(cdktf@0.19.2)(constructs@10.3.0)
+        specifier: ^11.3.0
+        version: 11.3.0(cdktf@0.19.2)(constructs@10.3.0)
       '@cdktf/provider-cloudflare':
         specifier: ^10.0.4
         version: 10.0.4(cdktf@0.19.2)(constructs@10.3.0)
@@ -1319,9 +1319,10 @@ packages:
       constructs: 10.3.0
     dev: false
 
-  /@cdktf/provider-azurerm@11.2.0(cdktf@0.19.2)(constructs@10.3.0):
-    resolution: {integrity: sha512-1YpDrScd4YckEVKBPnXUI9yGeRmv7SiQdAj6Mq9eBXWgP1bemRk4mkQlqGm2pe9h5BECLEMZyAg5Cv/JGJX0Uw==}
+  /@cdktf/provider-azurerm@11.3.0(cdktf@0.19.2)(constructs@10.3.0):
+    resolution: {integrity: sha512-IhhKn6M9qrPuoTaSVAXI2aWlw0vxpYkEOaaQqcJXmTL1EAjkvee1KoqbQd+bsnPicu6tuCoX7bTWzM9lVdp66w==}
     engines: {node: '>= 18.12.0'}
+    deprecated: See https://cdk.tf/imports for details on how to continue to use the azurerm provider in your CDK for Terraform (CDKTF) projects by generating the bindings locally.
     peerDependencies:
       cdktf: ^0.19.0
       constructs: ^10.3.0
