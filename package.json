@@ -73,7 +73,7 @@
     "@babel/eslint-parser": "^7.23.3",
     "@babel/plugin-proposal-class-properties": "^7.18.6",
     "@types/jest": "^29.5.11",
-    "@typescript-eslint/eslint-plugin": "^6.17.0",
+    "@typescript-eslint/eslint-plugin": "^6.18.1",
     "@typescript-eslint/parser": "^6.17.0",
     "aws-cdk": "^2.118.0",
     "better-docs": "^2.7.3",
