@@ -2,6 +2,7 @@ import { AliasProps, FunctionProps } from 'aws-cdk-lib/aws-lambda'
 import { TagProps } from '../../types'
 import { EdgeFunctionProps } from 'aws-cdk-lib/aws-cloudfront/lib/experimental'
 import { QueueProps } from '../simple-queue-service'
+import { SqsEventSourceProps } from 'aws-cdk-lib/aws-lambda-event-sources'
 
 /**
  */
@@ -45,4 +46,8 @@ export interface LambdaEnvironment {
   REGION?: string
   STAGE?: string
   TZ: string
+}
+
+export interface SQSEventSourceProps extends SqsEventSourceProps {
+  maxBatchingWindowInSecs: number
 }
