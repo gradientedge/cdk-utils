@@ -1,11 +1,13 @@
-import { ISecurityGroup, IVpc, SubnetSelection } from 'aws-cdk-lib/aws-ec2'
+import { Fn } from 'aws-cdk-lib'
+import { ISecurityGroup, IVpc, SecurityGroup, SubnetSelection } from 'aws-cdk-lib/aws-ec2'
 import { IAccessPoint } from 'aws-cdk-lib/aws-efs'
-import { CfnAccessKey, Policy, PolicyDocument, PolicyStatement, Role, User } from 'aws-cdk-lib/aws-iam'
+import { CfnAccessKey, ManagedPolicy, Policy, PolicyDocument, PolicyStatement, Role, User } from 'aws-cdk-lib/aws-iam'
 import { AssetCode, IFunction, ILayerVersion, LayerVersion } from 'aws-cdk-lib/aws-lambda'
 import { CfnSecret, Secret } from 'aws-cdk-lib/aws-secretsmanager'
 import { Construct } from 'constructs'
 import _ from 'lodash'
 import { CommonConstruct } from '../../common'
+import { Architecture } from '../../services'
 import { LambdaWithIamAccessEnvironment, LambdaWithIamAccessProps } from './types'
 
 /**
@@ -32,7 +34,7 @@ export class LambdaWithIamAccess extends CommonConstruct {
   lambdaPolicy: PolicyDocument
   lambdaRole: Role
   lambdaEnvironment: LambdaWithIamAccessEnvironment
-  lambdaLayers: ILayerVersion[]
+  lambdaLayers: ILayerVersion[] = []
   lambdaFunction: IFunction
   lambdaIamUser: User
   lambdaUserAccessKey: CfnAccessKey
@@ -68,9 +70,23 @@ export class LambdaWithIamAccess extends CommonConstruct {
     this.createIamSecretForLambdaFunction()
   }
 
-  protected resolveVpc() {}
+  protected resolveVpc() {
+    if (this.props.vpcName) {
+      this.lambdaVpc = this.vpcManager.retrieveCommonVpc(`${this.id}-vpc`, this, this.props.vpcName)
+    }
+  }
 
-  protected resolveSecurityGroups() {}
+  protected resolveSecurityGroups() {
+    if (this.props.securityGroupExportName) {
+      const lambdaSecurityGroup = SecurityGroup.fromSecurityGroupId(
+        this,
+        `${this.id}-security-group`,
+        Fn.importValue(this.props.securityGroupExportName)
+      )
+      this.addCfnOutput(`${this.id}-sg`, lambdaSecurityGroup.securityGroupId)
+      this.lambdaSecurityGroups = [lambdaSecurityGroup]
+    }
+  }
 
   protected resolveAccessPoint() {}
 
@@ -83,8 +99,14 @@ export class LambdaWithIamAccess extends CommonConstruct {
    */
   protected createLambdaPolicy() {
     this.lambdaPolicy = new PolicyDocument({
-      statements: [this.iamManager.statementForCreateAnyLogStream()],
+      statements: [this.iamManager.statementForCreateAnyLogStream(), this.iamManager.statementForPutXrayTelemetry()],
     })
+    if (this.props.configEnabled) {
+      this.lambdaPolicy.addStatements(
+        this.iamManager.statementForReadAnyAppConfig(),
+        this.iamManager.statementForAppConfigExecution()
+      )
+    }
   }
 
   /**
@@ -92,6 +114,11 @@ export class LambdaWithIamAccess extends CommonConstruct {
    */
   protected createLambdaRole() {
     this.lambdaRole = this.iamManager.createRoleForLambda(`${this.id}-lambda-role`, this, this.lambdaPolicy)
+    if (this.props.vpcName) {
+      this.lambdaRole.addManagedPolicy(
+        ManagedPolicy.fromAwsManagedPolicyName('service-role/AWSLambdaVPCAccessExecutionRole')
+      )
+    }
   }
 
   /**
@@ -111,19 +138,33 @@ export class LambdaWithIamAccess extends CommonConstruct {
   protected createLambdaLayers() {
     const layers: LayerVersion[] = []
 
-    if (!this.props.lambdaLayerSources) return
+    if (this.props.lambdaLayerSources) {
+      _.forEach(this.props.lambdaLayerSources, (source: AssetCode, index: number) => {
+        layers.push(this.lambdaManager.createLambdaLayer(`${this.id}-layer-${index}`, this, source))
+      })
+      this.lambdaLayers = layers
+    }
 
-    _.forEach(this.props.lambdaLayerSources, (source: AssetCode, index: number) => {
-      layers.push(this.lambdaManager.createLambdaLayer(`${this.id}-layer-${index}`, this, source))
-    })
-
-    this.lambdaLayers = layers
+    if (this.props.configEnabled) {
+      const appConfigExtensionLayer = LayerVersion.fromLayerVersionArn(
+        this,
+        `${this.id}-ac-extlayer`,
+        this.appConfigManager.getArnForAppConfigExtension(this, Architecture.ARM_64)
+      )
+      this.lambdaLayers.push(appConfigExtensionLayer)
+    }
   }
 
   /**
    * @summary Method to create lambda function
    */
   protected createLambdaFunction() {
+    if (this.props.lambdaInsightsVersion) {
+      _.assign(this.props.lambda, {
+        insightsVersion: this.props.lambdaInsightsVersion,
+      })
+    }
+
     this.lambdaFunction = this.lambdaManager.createLambdaFunction(
       `${this.id}-lambda`,
       this,
@@ -154,11 +195,29 @@ export class LambdaWithIamAccess extends CommonConstruct {
       statements: [
         new PolicyStatement({
           actions: ['lambda:InvokeFunction'],
-          resources: [this.lambdaFunction.functionArn],
+          resources: [this.lambdaFunction.functionArn, `${this.lambdaFunction.functionArn}*`],
         }),
       ],
       users: [this.lambdaIamUser],
     })
+
+    if (this.props.lambda.lambdaAliases && !_.isEmpty(this.props.lambda.lambdaAliases)) {
+      _.forEach(this.props.lambda.lambdaAliases, (alias, index) => {
+        new Policy(this, `${this.id}-alias-user-policy`, {
+          policyName: `${this.id}-alias-policy-${index}-${this.props.stage}`,
+          statements: [
+            new PolicyStatement({
+              actions: ['lambda:InvokeFunction'],
+              resources: [
+                Fn.importValue(`${this.id}-${alias.aliasName}AliasArn`),
+                `${Fn.importValue(`${this.id}-${alias.aliasName}AliasArn`)}*`,
+              ],
+            }),
+          ],
+          users: [this.lambdaIamUser],
+        })
+      })
+    }
 
     this.lambdaUserAccessKey = new CfnAccessKey(this, `${this.id}-access-key-${this.props.stage}`, {
       userName: this.lambdaIamUser.userName,

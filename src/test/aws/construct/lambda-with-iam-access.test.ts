@@ -36,7 +36,11 @@ class TestCommonStack extends CommonStack {
   protected determineConstructProps(props: cdk.StackProps) {
     return {
       ...super.determineConstructProps(props),
+      consigEnabled: true,
       lambda: this.node.tryGetContext('testIamLambda'),
+      lambdaInsightsVersion: lambda.LambdaInsightsVersion.fromInsightVersionArn(
+        `arn:aws:lambda:${this.node.tryGetContext('region')}:580247275435:layer:LambdaInsightsExtension-Arm64:2`
+      ),
       lambdaSecret: {
         secretName: 'test-secret',
       },
