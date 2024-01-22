@@ -55,10 +55,8 @@ export class EventHandler extends CommonConstruct {
    * @summary Method to resolve common vpc  or create a new one.
    */
   protected resolveVpc() {
-    if (this.props.useExistingVpc) {
+    if (this.props.vpcName) {
       this.vpc = this.vpcManager.retrieveCommonVpc(`${this.id}-vpc`, this, this.props.vpcName)
-    } else {
-      this.vpc = this.vpcManager.createCommonVpc(this, this.props.vpc, this.props.vpc.vpcName)
     }
   }
 

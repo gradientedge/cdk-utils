@@ -15,9 +15,8 @@ export interface EventHandlerProps extends CommonStackProps {
   eventRuleSchedule: string
   eventSqs: QueueProps
   securityGroupExportName: string
-  useExistingVpc: boolean
   vpc: VpcProps
-  vpcName: string
+  vpcName?: string
   workflow: SfnStateMachineProps
   workflowLog: LogProps
   workflowMapState: SfnMapProps
