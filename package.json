@@ -80,7 +80,7 @@
     "codecov": "^3.8.3",
     "commitizen": "^4.3.0",
     "docdash": "^2.0.2",
-    "dotenv": "^16.3.2",
+    "dotenv": "^16.4.1",
     "eslint": "^8.56.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
