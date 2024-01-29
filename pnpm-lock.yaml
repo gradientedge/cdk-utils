@@ -33,8 +33,8 @@ importers:
         specifier: ^20.11.5
         version: 20.11.5
       '@types/uuid':
-        specifier: ^9.0.7
-        version: 9.0.7
+        specifier: ^9.0.8
+        version: 9.0.8
       app-root-path:
         specifier: ^3.1.0
         version: 3.1.0
@@ -179,8 +179,8 @@ importers:
   app/api-destined-function:
     dependencies:
       '@types/uuid':
-        specifier: ^9.0.7
-        version: 9.0.7
+        specifier: ^9.0.8
+        version: 9.0.8
       uuid:
         specifier: ^9.0.1
         version: 9.0.1
@@ -2604,8 +2604,8 @@ packages:
     resolution: {integrity: sha512-Hl219/BT5fLAaz6NDkSuhzasy49dwQS/DSdu4MdggFB8zcXv7vflBI3xp7FEmkmdDkBUI2bPUNeMttp2knYdxw==}
     dev: true
 
-  /@types/uuid@9.0.7:
-    resolution: {integrity: sha512-WUtIVRUZ9i5dYXefDEAI7sh9/O7jGvHg7Df/5O/gtH3Yabe5odI3UWopVR1qbPXQtvOxWu3mM4XxlYeZtMWF4g==}
+  /@types/uuid@9.0.8:
+    resolution: {integrity: sha512-jg+97EGIcY9AGHJJRaaPVgetKDsrTgbRjQ5Msgjh/DQKEFl0DtyRr/VCOyD1T2R1MNeWPK/u7JoGhlDZnKBAfA==}
     dev: false
 
   /@types/yargs-parser@21.0.0:
