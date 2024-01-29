@@ -16,7 +16,7 @@
     "test": "npx jest --ci --runInBand --passWithNoTests"
   },
   "dependencies": {
-    "@types/uuid": "^9.0.7",
+    "@types/uuid": "^9.0.8",
     "uuid": "^9.0.1"
   },
   "devDependencies": {
