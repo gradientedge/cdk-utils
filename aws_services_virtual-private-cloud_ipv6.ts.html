@@ -80,6 +80,7 @@ export class Ipv6Vpc extends Vpc {
       const cfnSubnet = subnet.node.defaultChild as CfnSubnet
       cfnSubnet.ipv6CidrBlock = Fn.select(index, subnetIpv6CidrBlocks)
       cfnSubnet.assignIpv6AddressOnCreation = true
+      cfnSubnet.ipv6Native = true
     })
 
     const addDefaultIpv6Routes = (subnets: ISubnet[], gatewayId: string, routerType: RouterType) =>
