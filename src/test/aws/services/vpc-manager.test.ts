@@ -161,7 +161,7 @@ describe('TestVpcConstruct', () => {
                 'Fn::Select': [
                   0,
                   {
-                    'Fn::GetAtt': ['testcommonstackCommonVpcC3D1FF9B', 'Ipv6CidrBlocks'],
+                    'Fn::GetAtt': ['testcommonstacktestipv6vpcB91AA9CB', 'Ipv6CidrBlocks'],
                   },
                 ],
               },
@@ -179,14 +179,14 @@ describe('TestVpcConstruct', () => {
       AvailabilityZone: 'dummy1a',
       Ipv6CidrBlock: {
         'Fn::Select': [
-          1,
+          0,
           {
             'Fn::Cidr': [
               {
                 'Fn::Select': [
                   0,
                   {
-                    'Fn::GetAtt': ['testcommonstackCommonVpcC3D1FF9B', 'Ipv6CidrBlocks'],
+                    'Fn::GetAtt': ['testcommonstacktestipv6vpcB91AA9CB', 'Ipv6CidrBlocks'],
                   },
                 ],
               },
@@ -204,14 +204,14 @@ describe('TestVpcConstruct', () => {
       AvailabilityZone: 'dummy1b',
       Ipv6CidrBlock: {
         'Fn::Select': [
-          2,
+          1,
           {
             'Fn::Cidr': [
               {
                 'Fn::Select': [
                   0,
                   {
-                    'Fn::GetAtt': ['testcommonstackCommonVpcC3D1FF9B', 'Ipv6CidrBlocks'],
+                    'Fn::GetAtt': ['testcommonstacktestipv6vpcB91AA9CB', 'Ipv6CidrBlocks'],
                   },
                 ],
               },
@@ -236,7 +236,7 @@ describe('TestVpcConstruct', () => {
                 'Fn::Select': [
                   0,
                   {
-                    'Fn::GetAtt': ['testcommonstackCommonVpcC3D1FF9B', 'Ipv6CidrBlocks'],
+                    'Fn::GetAtt': ['testcommonstacktestipv6vpcB91AA9CB', 'Ipv6CidrBlocks'],
                   },
                 ],
               },
