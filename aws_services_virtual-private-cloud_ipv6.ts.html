@@ -78,6 +78,8 @@ export class Ipv6Vpc extends Vpc {
     _.forEach([...this.publicSubnets, ...this.privateSubnets, ...this.isolatedSubnets], (subnet, index) => {
       subnet.node.addDependency(cfnVpcCidrBlock)
       const cfnSubnet = subnet.node.defaultChild as CfnSubnet
+      cfnSubnet.cidrBlock = undefined
+      cfnSubnet.mapPublicIpOnLaunch = false
       cfnSubnet.ipv6CidrBlock = Fn.select(index, subnetIpv6CidrBlocks)
       cfnSubnet.assignIpv6AddressOnCreation = true
       cfnSubnet.ipv6Native = true
