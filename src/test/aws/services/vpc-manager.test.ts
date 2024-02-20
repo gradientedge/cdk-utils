@@ -152,26 +152,102 @@ describe('TestVpcConstruct', () => {
     })
     template.hasResourceProperties('AWS::EC2::Subnet', {
       AvailabilityZone: 'dummy1a',
-      CidrBlock: '10.0.128.0/18',
+      Ipv6CidrBlock: {
+        'Fn::Select': [
+          0,
+          {
+            'Fn::Cidr': [
+              {
+                'Fn::Select': [
+                  0,
+                  {
+                    'Fn::GetAtt': ['testcommonstacktestipv6vpcB91AA9CB', 'Ipv6CidrBlocks'],
+                  },
+                ],
+              },
+              256,
+              '64',
+            ],
+          },
+        ],
+      },
+      Ipv6Native: true,
       MapPublicIpOnLaunch: false,
       VpcId: { Ref: 'testcommonstacktestipv6vpcB91AA9CB' },
     })
     template.hasResourceProperties('AWS::EC2::Subnet', {
       AvailabilityZone: 'dummy1a',
-      CidrBlock: '10.0.0.0/18',
-      MapPublicIpOnLaunch: true,
-      VpcId: { Ref: 'testcommonstacktestipv6vpcB91AA9CB' },
-    })
-    template.hasResourceProperties('AWS::EC2::Subnet', {
-      AvailabilityZone: 'dummy1b',
-      CidrBlock: '10.0.192.0/18',
+      Ipv6CidrBlock: {
+        'Fn::Select': [
+          0,
+          {
+            'Fn::Cidr': [
+              {
+                'Fn::Select': [
+                  0,
+                  {
+                    'Fn::GetAtt': ['testcommonstacktestipv6vpcB91AA9CB', 'Ipv6CidrBlocks'],
+                  },
+                ],
+              },
+              256,
+              '64',
+            ],
+          },
+        ],
+      },
+      Ipv6Native: true,
       MapPublicIpOnLaunch: false,
       VpcId: { Ref: 'testcommonstacktestipv6vpcB91AA9CB' },
     })
     template.hasResourceProperties('AWS::EC2::Subnet', {
       AvailabilityZone: 'dummy1b',
-      CidrBlock: '10.0.64.0/18',
-      MapPublicIpOnLaunch: true,
+      Ipv6CidrBlock: {
+        'Fn::Select': [
+          1,
+          {
+            'Fn::Cidr': [
+              {
+                'Fn::Select': [
+                  0,
+                  {
+                    'Fn::GetAtt': ['testcommonstacktestipv6vpcB91AA9CB', 'Ipv6CidrBlocks'],
+                  },
+                ],
+              },
+              256,
+              '64',
+            ],
+          },
+        ],
+      },
+      Ipv6Native: true,
+      MapPublicIpOnLaunch: false,
+      VpcId: { Ref: 'testcommonstacktestipv6vpcB91AA9CB' },
+    })
+    template.hasResourceProperties('AWS::EC2::Subnet', {
+      AvailabilityZone: 'dummy1b',
+      Ipv6CidrBlock: {
+        'Fn::Select': [
+          3,
+          {
+            'Fn::Cidr': [
+              {
+                'Fn::Select': [
+                  0,
+                  {
+                    'Fn::GetAtt': ['testcommonstacktestipv6vpcB91AA9CB', 'Ipv6CidrBlocks'],
+                  },
+                ],
+              },
+              256,
+              '64',
+            ],
+          },
+        ],
+      },
+      Ipv6Native: true,
+      MapPublicIpOnLaunch: false,
       VpcId: { Ref: 'testcommonstacktestipv6vpcB91AA9CB' },
     })
   })
