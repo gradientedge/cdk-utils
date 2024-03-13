@@ -257,7 +257,7 @@ export class LambdaManager {
     accessPoint?: IAccessPoint,
     mountPath?: string,
     vpcSubnets?: SubnetSelection,
-    layers?: ILayerVersion[],
+    layers?: ILayerVersion[]
   ) {
     if (!props) throw `Lambda props undefined for ${id}`
 
