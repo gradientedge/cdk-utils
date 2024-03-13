@@ -243,6 +243,7 @@ export class LambdaManager {
    * @param accessPoint
    * @param mountPath
    * @param vpcSubnets
+   * @param layers
    */
   public createLambdaDockerFunction(
     id: string,
@@ -255,7 +256,8 @@ export class LambdaManager {
     securityGroups?: ISecurityGroup[],
     accessPoint?: IAccessPoint,
     mountPath?: string,
-    vpcSubnets?: SubnetSelection
+    vpcSubnets?: SubnetSelection,
+    layers?: ILayerVersion[]
   ) {
     if (!props) throw `Lambda props undefined for ${id}`
 
@@ -288,6 +290,7 @@ export class LambdaManager {
       },
       filesystem: accessPoint ? FileSystem.fromEfsAccessPoint(accessPoint, mountPath || '/mnt/msg') : undefined,
       functionName,
+      layers,
       logRetention: scope.props.logRetention ?? props.logRetention,
       role: role instanceof Role ? role : undefined,
       securityGroups: securityGroups,
