@@ -19,13 +19,13 @@ importers:
         version: 3.496.0
       '@cdktf/provider-aws':
         specifier: ^19.2.0
-        version: 19.2.0(cdktf@0.20.1)(constructs@10.3.0)
+        version: 19.2.0(cdktf@0.20.5)(constructs@10.3.0)
       '@cdktf/provider-azurerm':
         specifier: ^12.2.0
-        version: 12.2.0(cdktf@0.20.1)(constructs@10.3.0)
+        version: 12.2.0(cdktf@0.20.5)(constructs@10.3.0)
       '@cdktf/provider-cloudflare':
         specifier: ^11.0.0
-        version: 11.0.0(cdktf@0.20.1)(constructs@10.3.0)
+        version: 11.0.0(cdktf@0.20.5)(constructs@10.3.0)
       '@types/lodash':
         specifier: ^4.14.202
         version: 4.14.202
@@ -42,11 +42,11 @@ importers:
         specifier: ^2.122.0
         version: 2.122.0(constructs@10.3.0)
       cdktf:
-        specifier: ^0.20.1
-        version: 0.20.1(constructs@10.3.0)
+        specifier: ^0.20.5
+        version: 0.20.5(constructs@10.3.0)
       cdktf-local-exec:
         specifier: ^0.5.2
-        version: 0.5.2(@cdktf/provider-null@10.0.0)(cdktf@0.20.1)(constructs@10.3.0)
+        version: 0.5.2(@cdktf/provider-null@10.0.0)(cdktf@0.20.5)(constructs@10.3.0)
       constructs:
         specifier: ^10.3.0
         version: 10.3.0
@@ -1310,47 +1310,47 @@ packages:
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
     dev: true
 
-  /@cdktf/provider-aws@19.2.0(cdktf@0.20.1)(constructs@10.3.0):
+  /@cdktf/provider-aws@19.2.0(cdktf@0.20.5)(constructs@10.3.0):
     resolution: {integrity: sha512-FetLBwk6UN2xb4qUibJVJchyED+CwnB1LXiKMywyB7aVR04nU4QXsEmD9y+EdIGWdfn5uu63ktd8wp7qCp0sGQ==}
     engines: {node: '>= 18.12.0'}
     peerDependencies:
       cdktf: ^0.20.0
       constructs: ^10.3.0
     dependencies:
-      cdktf: 0.20.1(constructs@10.3.0)
+      cdktf: 0.20.5(constructs@10.3.0)
       constructs: 10.3.0
     dev: false
 
-  /@cdktf/provider-azurerm@12.2.0(cdktf@0.20.1)(constructs@10.3.0):
+  /@cdktf/provider-azurerm@12.2.0(cdktf@0.20.5)(constructs@10.3.0):
     resolution: {integrity: sha512-boYTOgT5qdWu9vioxG82qE+q6kNyboeaJiHfRcB21z3YDHpw9ftBAIazP/qdLCuud/OKlNp/RoCUGS9WXz6WVQ==}
     engines: {node: '>= 18.12.0'}
     peerDependencies:
       cdktf: ^0.20.0
       constructs: ^10.3.0
     dependencies:
-      cdktf: 0.20.1(constructs@10.3.0)
+      cdktf: 0.20.5(constructs@10.3.0)
       constructs: 10.3.0
     dev: false
 
-  /@cdktf/provider-cloudflare@11.0.0(cdktf@0.20.1)(constructs@10.3.0):
+  /@cdktf/provider-cloudflare@11.0.0(cdktf@0.20.5)(constructs@10.3.0):
     resolution: {integrity: sha512-aSGMPzMNW2d+Tx/4niq+b/Ql2fQJRtMqcZXL48I8yz0MKvbfryXKyEcZBGly52J8T9WftCDPUejxuTHEXApFRg==}
     engines: {node: '>= 18.12.0'}
     peerDependencies:
       cdktf: ^0.20.0
       constructs: ^10.3.0
     dependencies:
-      cdktf: 0.20.1(constructs@10.3.0)
+      cdktf: 0.20.5(constructs@10.3.0)
       constructs: 10.3.0
     dev: false
 
-  /@cdktf/provider-null@10.0.0(cdktf@0.20.1)(constructs@10.3.0):
+  /@cdktf/provider-null@10.0.0(cdktf@0.20.5)(constructs@10.3.0):
     resolution: {integrity: sha512-r/2z3N4Z1ADjh4hu3BOyKRcXr0OE1f/b5kh+IdC2BF2dhHVaXGHw2Cvogd+R73PjgBNBv/pZa+wOY16tlgNpaQ==}
     engines: {node: '>= 18.12.0'}
     peerDependencies:
       cdktf: ^0.20.0
       constructs: ^10.3.0
     dependencies:
-      cdktf: 0.20.1(constructs@10.3.0)
+      cdktf: 0.20.5(constructs@10.3.0)
       constructs: 10.3.0
     dev: false
 
@@ -3426,20 +3426,20 @@ packages:
       lodash: 4.17.21
     dev: true
 
-  /cdktf-local-exec@0.5.2(@cdktf/provider-null@10.0.0)(cdktf@0.20.1)(constructs@10.3.0):
+  /cdktf-local-exec@0.5.2(@cdktf/provider-null@10.0.0)(cdktf@0.20.5)(constructs@10.3.0):
     resolution: {integrity: sha512-7eIO0vVv8uWE/1b/O34W6q1hcjtlsOdlua+hVCIvP7YyrEKeKlX+DVsspsAXhoGnK+rSjabhDPElYVKYo7Gr1Q==}
     peerDependencies:
       '@cdktf/provider-null': '>=10.0.0'
       cdktf: '>=0.20.0'
       constructs: '>=10.3.0'
     dependencies:
-      '@cdktf/provider-null': 10.0.0(cdktf@0.20.1)(constructs@10.3.0)
-      cdktf: 0.20.1(constructs@10.3.0)
+      '@cdktf/provider-null': 10.0.0(cdktf@0.20.5)(constructs@10.3.0)
+      cdktf: 0.20.5(constructs@10.3.0)
       constructs: 10.3.0
     dev: false
 
-  /cdktf@0.20.1(constructs@10.3.0):
-    resolution: {integrity: sha512-+ypYzWrC0g+GN5Z6/tPQq4JNh8CVUxNP6rR1ANSHVU0E//GhRUAftxcPxSQh5uLPsJAsvw9dfZFEWSue0p2ekA==}
+  /cdktf@0.20.5(constructs@10.3.0):
+    resolution: {integrity: sha512-CA0RkrKJETnaxGG6fBQHiojTZ8Sl+MCYsISbOqYYRfakHaM9mN4/a0v0bH1u5zi9ODyjyUmjfh7BqGfZagMjRw==}
     peerDependencies:
       constructs: ^10.0.25
     dependencies:
