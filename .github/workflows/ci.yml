@@ -110,7 +110,7 @@ jobs:
         with:
           github_token: ${{ env.GITHUB_TOKEN }}
           publish_dir: ./api-docs
-      - uses: geekyeggo/delete-artifact@v4
+      - uses: geekyeggo/delete-artifact@v5
         with:
           name: |
             docs-artifact
