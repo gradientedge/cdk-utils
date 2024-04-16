@@ -1,4 +1,4 @@
-import { Duration, Tags } from 'aws-cdk-lib'
+import { Duration, RemovalPolicy, Tags } from 'aws-cdk-lib'
 import { ISecurityGroup, IVpc, SubnetSelection } from 'aws-cdk-lib/aws-ec2'
 import { IAccessPoint } from 'aws-cdk-lib/aws-efs'
 import { CfnRole, Role } from 'aws-cdk-lib/aws-iam'
@@ -144,6 +144,7 @@ export class LambdaManager {
       layers,
       logGroup: new LogGroup(scope, `${id}-log-group`, {
         logGroupName: `/aws/lambda/${functionName}`,
+        removalPolicy: RemovalPolicy.DESTROY,
         retention: scope.props.logRetention ?? logRetention,
       }),
       reservedConcurrentExecutions:
@@ -298,6 +299,7 @@ export class LambdaManager {
       functionName,
       logGroup: new LogGroup(scope, `${id}-log-group`, {
         logGroupName: `/aws/lambda/${functionName}`,
+        removalPolicy: RemovalPolicy.DESTROY,
         retention: scope.props.logRetention ?? logRetention,
       }),
       role: role instanceof Role ? role : undefined,
