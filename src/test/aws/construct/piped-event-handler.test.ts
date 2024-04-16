@@ -126,12 +126,12 @@ describe('TestPipedEventHandler', () => {
 describe('TestPipedEventHandler', () => {
   test('synthesises as expected', () => {
     /* test if number of resources are correctly synthesised */
-    template.resourceCountIs('AWS::IAM::Role', 5)
-    template.resourceCountIs('AWS::IAM::Policy', 4)
-    template.resourceCountIs('AWS::Lambda::Function', 2)
+    template.resourceCountIs('AWS::IAM::Role', 4)
+    template.resourceCountIs('AWS::IAM::Policy', 3)
+    template.resourceCountIs('AWS::Lambda::Function', 1)
     template.resourceCountIs('AWS::SQS::Queue', 2)
     template.resourceCountIs('AWS::SQS::QueuePolicy', 1)
-    template.resourceCountIs('AWS::Logs::LogGroup', 1)
+    template.resourceCountIs('AWS::Logs::LogGroup', 2)
     template.resourceCountIs('AWS::StepFunctions::StateMachine', 1)
     template.resourceCountIs('AWS::Pipes::Pipe', 2)
     template.resourceCountIs('AWS::Events::Rule', 1)

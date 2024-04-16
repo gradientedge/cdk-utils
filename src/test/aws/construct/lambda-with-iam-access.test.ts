@@ -75,10 +75,10 @@ describe('TestLambdaWithIamAccess', () => {
 describe('TestLambdaWithIamAccess', () => {
   test('synthesises as expected', () => {
     /* test if number of resources are correctly synthesised */
-    template.resourceCountIs('AWS::IAM::Role', 2)
-    template.resourceCountIs('AWS::IAM::Policy', 2)
-    template.resourceCountIs('Custom::LogRetention', 1)
-    template.resourceCountIs('AWS::Lambda::Function', 2)
+    template.resourceCountIs('AWS::IAM::Role', 1)
+    template.resourceCountIs('AWS::IAM::Policy', 1)
+    template.resourceCountIs('Custom::LogRetention', 0)
+    template.resourceCountIs('AWS::Lambda::Function', 1)
     template.resourceCountIs('AWS::SecretsManager::Secret', 1)
   })
 })

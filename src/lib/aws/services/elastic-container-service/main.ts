@@ -180,11 +180,8 @@ export class EcsManager {
     if (props.healthCheck) {
       fargateService.targetGroup.configureHealthCheck({
         ...props.healthCheck,
-        enabled: props.healthCheck.enabled ?? true,
         interval: props.healthCheck.interval ?? Duration.seconds(props.healthCheck.intervalInSecs),
-        path: props.healthCheck.path ?? '/',
         timeout: props.healthCheck.timeout ?? Duration.seconds(props.healthCheck.timeoutInSecs),
-        unhealthyThresholdCount: props.healthCheck.unhealthyThresholdCount,
       })
     }
 

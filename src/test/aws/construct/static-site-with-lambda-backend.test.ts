@@ -108,14 +108,14 @@ describe('SiteWithLambdaBackend', () => {
   test('synthesises as expected', () => {
     /* test if number of resources are correctly synthesised */
     template.resourceCountIs('AWS::Route53::HostedZone', 0)
-    template.resourceCountIs('AWS::IAM::Role', 5)
-    template.resourceCountIs('AWS::IAM::Policy', 3)
-    template.resourceCountIs('AWS::Logs::LogGroup', 1)
+    template.resourceCountIs('AWS::IAM::Role', 4)
+    template.resourceCountIs('AWS::IAM::Policy', 2)
+    template.resourceCountIs('AWS::Logs::LogGroup', 2)
     template.resourceCountIs('AWS::Route53::RecordSet', 1)
     template.resourceCountIs('AWS::CodeBuild::Project', 1)
     template.resourceCountIs('Custom::AWS', 1)
     template.resourceCountIs('AWS::CloudFront::Distribution', 1)
-    template.resourceCountIs('AWS::Lambda::Function', 4)
+    template.resourceCountIs('AWS::Lambda::Function', 3)
     template.resourceCountIs('AWS::CloudFront::Function', 1)
     template.resourceCountIs('AWS::CloudFront::CachePolicy', 1)
     template.resourceCountIs('AWS::CloudFront::OriginRequestPolicy', 1)

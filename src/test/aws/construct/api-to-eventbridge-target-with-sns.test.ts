@@ -95,9 +95,9 @@ describe('TestApiToEventBridgeTargetWithSnsConstruct', () => {
   test('synthesises as expected', () => {
     /* test if number of resources are correctly synthesised */
     template.resourceCountIs('AWS::Route53::HostedZone', 0)
-    template.resourceCountIs('AWS::IAM::Role', 5)
-    template.resourceCountIs('AWS::IAM::Policy', 5)
-    template.resourceCountIs('Custom::LogRetention', 1)
+    template.resourceCountIs('AWS::IAM::Role', 4)
+    template.resourceCountIs('AWS::IAM::Policy', 4)
+    template.resourceCountIs('Custom::LogRetention', 0)
     template.resourceCountIs('AWS::ApiGateway::RestApi', 1)
     template.resourceCountIs('AWS::ApiGateway::Stage', 1)
     template.resourceCountIs('AWS::ApiGateway::Method', 3)
@@ -105,7 +105,7 @@ describe('TestApiToEventBridgeTargetWithSnsConstruct', () => {
     template.resourceCountIs('AWS::Lambda::Permission', 1)
     template.resourceCountIs('AWS::ApiGateway::DomainName', 1)
     template.resourceCountIs('AWS::Route53::RecordSet', 1)
-    template.resourceCountIs('AWS::Lambda::Function', 3)
+    template.resourceCountIs('AWS::Lambda::Function', 2)
     template.resourceCountIs('AWS::Events::Rule', 2)
     template.resourceCountIs('AWS::SNS::Topic', 1)
     template.resourceCountIs('AWS::Events::EventBus', 1)

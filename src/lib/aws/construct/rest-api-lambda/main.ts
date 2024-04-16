@@ -68,7 +68,6 @@ export abstract class RestApiLambda extends CommonConstruct {
     this.createApiDomain()
     this.createApiBasePathMapping()
     this.createApiRouteAssets()
-    this.createRestApiDeployment()
   }
 
   /**
@@ -243,12 +242,5 @@ export abstract class RestApiLambda extends CommonConstruct {
       this.restApiHostedZone,
       this.props.skipStageForARecords
     )
-  }
-
-  /**
-   * @summary Method to deploy the changes to the RestApi
-   */
-  protected createRestApiDeployment() {
-    this.apiManager.createApiDeployment(`${this.id}-deployment`, this, this.restApi)
   }
 }
