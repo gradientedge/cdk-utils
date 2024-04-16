@@ -15,6 +15,7 @@ import {
   LayerVersion,
 } from 'aws-cdk-lib/aws-lambda'
 import { SqsEventSource } from 'aws-cdk-lib/aws-lambda-event-sources'
+import { LogGroup } from 'aws-cdk-lib/aws-logs'
 import _ from 'lodash'
 import { CommonConstruct, CommonStack } from '../../common'
 import { createCfnOutput } from '../../utils'
@@ -116,8 +117,10 @@ export class LambdaManager {
       deadLetterQueue = scope.sqsManager.createDeadLetterQueueForLambda(`${id}-dlq`, scope, props, redriveQueue)
     }
 
+    const { logRetention, ...lambdaProps } = props
+
     const lambdaFunction = new Function(scope, `${id}`, {
-      ...props,
+      ...lambdaProps,
       allowPublicSubnet: !!vpc,
       architecture: props.architecture ?? Architecture.ARM_64,
       code,
@@ -139,7 +142,10 @@ export class LambdaManager {
       functionName,
       handler: handler || 'index.lambda_handler',
       layers,
-      logRetention: scope.props.logRetention ?? props.logRetention,
+      logGroup: new LogGroup(scope, `${id}-log-group`, {
+        logGroupName: `/aws/lambda/${functionName}`,
+        retention: scope.props.logRetention ?? logRetention,
+      }),
       reservedConcurrentExecutions:
         props.reservedConcurrentExecutions ?? scope.props.defaultReservedLambdaConcurrentExecutions,
       role: role instanceof Role ? role : undefined,
@@ -267,8 +273,10 @@ export class LambdaManager {
       deadLetterQueue = scope.sqsManager.createDeadLetterQueueForLambda(`${id}-dlq`, scope, props, redriveQueue)
     }
 
+    const { logRetention, ...lambdaProps } = props
+
     const lambdaFunction = new DockerImageFunction(scope, `${id}`, {
-      ...props,
+      ...lambdaProps,
       allowPublicSubnet: !!vpc,
       architecture: props.architecture ?? Architecture.ARM_64,
       code,
@@ -288,7 +296,10 @@ export class LambdaManager {
       },
       filesystem: accessPoint ? FileSystem.fromEfsAccessPoint(accessPoint, mountPath || '/mnt/msg') : undefined,
       functionName,
-      logRetention: scope.props.logRetention ?? props.logRetention,
+      logGroup: new LogGroup(scope, `${id}-log-group`, {
+        logGroupName: `/aws/lambda/${functionName}`,
+        retention: scope.props.logRetention ?? logRetention,
+      }),
       role: role instanceof Role ? role : undefined,
       securityGroups: securityGroups,
       timeout: props.timeoutInSecs ? Duration.seconds(props.timeoutInSecs) : Duration.minutes(1),

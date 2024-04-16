@@ -129,10 +129,10 @@ describe('TestApiConstruct', () => {
 describe('TestApiConstruct', () => {
   test('synthesises as expected', () => {
     /* test if number of resources are correctly synthesised */
-    template.resourceCountIs('AWS::IAM::Role', 2)
+    template.resourceCountIs('AWS::IAM::Role', 1)
     template.resourceCountIs('AWS::Lambda::LayerVersion', 1)
     template.resourceCountIs('AWS::Lambda::Permission', 12)
-    template.resourceCountIs('AWS::Lambda::Function', 2)
+    template.resourceCountIs('AWS::Lambda::Function', 1)
     template.resourceCountIs('AWS::ApiGateway::RestApi', 1)
     template.resourceCountIs('AWS::ApiGateway::Deployment', 2)
     template.resourceCountIs('AWS::ApiGateway::Stage', 1)

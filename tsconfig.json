@@ -22,7 +22,7 @@
     "strictPropertyInitialization": false,
     "types": ["node", "jest"],
     "typeRoots": ["node_modules/@types"],
-    "allowSyntheticDefaultImports": true,
+    "allowSyntheticDefaultImports": true
   },
-  "include": ["index.ts", "src/**/*.ts", "app/**/*.ts"],
+  "include": ["index.ts", "src/**/*.ts", "app/**/*.ts"]
 }

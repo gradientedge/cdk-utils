@@ -299,13 +299,13 @@ describe('TestSfnConstruct', () => {
   test('synthesises as expected', () => {
     /* test if number of resources are correctly synthesised */
     template.resourceCountIs('AWS::Lambda::LayerVersion', 1)
-    template.resourceCountIs('AWS::Lambda::Function', 2)
-    template.resourceCountIs('AWS::IAM::Role', 4)
-    template.resourceCountIs('AWS::IAM::Policy', 3)
+    template.resourceCountIs('AWS::Lambda::Function', 1)
+    template.resourceCountIs('AWS::IAM::Role', 3)
+    template.resourceCountIs('AWS::IAM::Policy', 2)
     template.resourceCountIs('AWS::ApiGateway::Stage', 1)
     template.resourceCountIs('AWS::ApiGateway::Deployment', 1)
     template.resourceCountIs('AWS::StepFunctions::StateMachine', 2)
-    template.resourceCountIs('Custom::LogRetention', 1)
+    template.resourceCountIs('Custom::LogRetention', 0)
   })
 })
 

@@ -1,5 +1,11 @@
 import { ScalingSchedule } from 'aws-cdk-lib/aws-applicationautoscaling'
-import { AwsLogDriverProps, ClusterProps, MountPoint, TaskDefinitionProps } from 'aws-cdk-lib/aws-ecs'
+import {
+  AwsLogDriverProps,
+  ClusterProps,
+  HealthCheck as FargateHealthCheck,
+  MountPoint,
+  TaskDefinitionProps,
+} from 'aws-cdk-lib/aws-ecs'
 import { ApplicationLoadBalancedFargateServiceProps } from 'aws-cdk-lib/aws-ecs-patterns'
 import { HealthCheck as ElbHealthCheck } from 'aws-cdk-lib/aws-elasticloadbalancingv2'
 import { TagProps } from '../../types'
@@ -34,9 +40,17 @@ export interface HealthCheck extends ElbHealthCheck {
 }
 
 /**
+ *
+ */
+export interface EcsApplicationLoadBalancedFargateServiceHealthCheck extends FargateHealthCheck {
+  intervalInSecs: number
+  timeoutInSecs: number
+}
+
+/**
  */
 export interface EcsApplicationLoadBalancedFargateServiceProps extends ApplicationLoadBalancedFargateServiceProps {
-  healthCheck?: HealthCheck
+  healthCheck?: EcsApplicationLoadBalancedFargateServiceHealthCheck
   logging?: AwsLogDriverProps
   mountPoints?: MountPoint[]
   siteScaling?: EcsScalingProps
