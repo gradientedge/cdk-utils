@@ -183,7 +183,8 @@ export class ApiToAnyTarget extends CommonConstruct {
       apiResourceProps.allowedMethods,
       apiResourceProps.allowedHeaders,
       apiResourceProps.methodRequestParameters,
-      apiResourceProps.proxyIntegration
+      apiResourceProps.proxyIntegration,
+      apiResourceProps.enableDefaultCors
     )
   }
 
