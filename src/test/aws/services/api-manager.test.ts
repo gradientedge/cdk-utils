@@ -109,7 +109,10 @@ class TestCommonConstruct extends CommonConstruct {
       undefined,
       ['https://example.gradientedge.io'],
       ['GET', 'POST'],
-      ['Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token,X-Site-Key,X-Site-Lang,X-Site-Locale']
+      ['Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token,X-Site-Key,X-Site-Lang,X-Site-Locale'],
+      undefined,
+      undefined,
+      false
     )
     this.apiManager.createApiDeployment('test-deployment', this, api)
   }
