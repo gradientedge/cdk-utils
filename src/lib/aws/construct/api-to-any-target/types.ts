@@ -42,6 +42,7 @@ export interface ApiToAnyTargetRestApiResource {
   path: string
   parent?: IResource
   proxyIntegration?: Integration
+  enableDefaultCors: boolean
 }
 
 export interface ApiToAnyTargetRestApiProps {

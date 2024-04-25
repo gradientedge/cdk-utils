@@ -124,16 +124,25 @@ export class ApiManager {
     allowedMethods?: string[],
     allowedHeaders?: string[],
     methodRequestParameters?: { [param: string]: boolean },
-    proxyIntegration?: Integration
+    proxyIntegration?: Integration,
+    enableDefaultCors?: boolean
   ) {
     const methods = allowedMethods ?? Cors.ALL_METHODS
-    const resource = parent.addResource(path, {
-      defaultCorsPreflightOptions: {
+
+    let defaultCorsPreflightOptions
+    if (!enableDefaultCors) {
+      defaultCorsPreflightOptions = undefined
+    } else {
+      defaultCorsPreflightOptions = {
         allowCredentials: true,
         allowHeaders: allowedHeaders ?? Cors.DEFAULT_HEADERS,
         allowMethods: [...methods, 'OPTIONS'],
         allowOrigins: allowedOrigins ?? Cors.ALL_ORIGINS,
-      },
+      }
+    }
+
+    const resource = parent.addResource(path, {
+      defaultCorsPreflightOptions: defaultCorsPreflightOptions,
     })
 
     _.forEach(methods, method => {
@@ -146,12 +155,7 @@ export class ApiManager {
 
     if (addProxy) {
       const resourceProxy = resource.addResource(`{${path}+}`, {
-        defaultCorsPreflightOptions: {
-          allowCredentials: true,
-          allowHeaders: allowedHeaders ?? Cors.DEFAULT_HEADERS,
-          allowMethods: [...methods, 'OPTIONS'],
-          allowOrigins: allowedOrigins ?? Cors.ALL_ORIGINS,
-        },
+        defaultCorsPreflightOptions: defaultCorsPreflightOptions,
       })
 
       _.forEach(methods, method => {
