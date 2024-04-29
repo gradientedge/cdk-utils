@@ -81,7 +81,7 @@
     "commitizen": "^4.3.0",
     "docdash": "^2.0.2",
     "dotenv": "^16.4.5",
-    "eslint": "^9.0.0",
+    "eslint": "^9.1.1",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-import": "^2.29.1",
     "eslint-plugin-jsdoc": "^48.2.3",
