@@ -112,7 +112,8 @@ class TestCommonConstruct extends CommonConstruct {
       ['Content-Type,Authorization,X-Amz-Date,X-Api-Key,X-Amz-Security-Token,X-Site-Key,X-Site-Lang,X-Site-Locale'],
       undefined,
       undefined,
-      false
+      false,
+      new apig.MockIntegration()
     )
     this.apiManager.createApiDeployment('test-deployment', this, api)
   }

@@ -184,7 +184,8 @@ export class ApiToAnyTarget extends CommonConstruct {
       apiResourceProps.allowedHeaders,
       apiResourceProps.methodRequestParameters,
       apiResourceProps.proxyIntegration,
-      apiResourceProps.enableDefaultCors
+      apiResourceProps.enableDefaultCors,
+      apiResourceProps.mockIntegration
     )
   }
 

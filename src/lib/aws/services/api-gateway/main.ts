@@ -8,6 +8,7 @@ import {
   IResource,
   IRestApi,
   Integration,
+  MockIntegration,
   LambdaRestApi,
   SecurityPolicy,
 } from 'aws-cdk-lib/aws-apigateway'
@@ -111,6 +112,8 @@ export class ApiManager {
    * @param allowedHeaders
    * @param methodRequestParameters
    * @param proxyIntegration
+   * @param enableDefaultCors
+   * @param mockIntegration
    */
   public createApiResource(
     id: string,
@@ -125,7 +128,8 @@ export class ApiManager {
     allowedHeaders?: string[],
     methodRequestParameters?: { [param: string]: boolean },
     proxyIntegration?: Integration,
-    enableDefaultCors?: boolean
+    enableDefaultCors?: boolean,
+    mockIntegration?: MockIntegration
   ) {
     const methods = allowedMethods ?? Cors.ALL_METHODS
 
@@ -146,10 +150,17 @@ export class ApiManager {
     })
 
     _.forEach(methods, method => {
-      resource.addMethod(method, integration, {
-        authorizer,
-        requestParameters: methodRequestParameters,
-      })
+      if (!enableDefaultCors && mockIntegration && method === 'OPTIONS') {
+        resource.addMethod(method, mockIntegration, {
+          authorizer,
+          requestParameters: methodRequestParameters,
+        })
+      } else {
+        resource.addMethod(method, integration, {
+          authorizer,
+          requestParameters: methodRequestParameters,
+        })
+      }
     })
     createCfnOutput(`${id}-${path}ResourceId`, scope, resource.resourceId)
 
@@ -159,10 +170,17 @@ export class ApiManager {
       })
 
       _.forEach(methods, method => {
-        resourceProxy.addMethod(method, proxyIntegration ?? integration, {
-          authorizer,
-          requestParameters: methodRequestParameters,
-        })
+        if (!enableDefaultCors && mockIntegration && method === 'OPTIONS') {
+          resourceProxy.addMethod(method, mockIntegration, {
+            authorizer,
+            requestParameters: methodRequestParameters,
+          })
+        } else {
+          resourceProxy.addMethod(method, proxyIntegration ?? integration, {
+            authorizer,
+            requestParameters: methodRequestParameters,
+          })
+        }
       })
       createCfnOutput(`${id}-${path}ProxyResourceId`, scope, resourceProxy.resourceId)
     }
