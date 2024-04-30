@@ -7,6 +7,7 @@ import {
   Integration,
   Method,
   MethodResponse,
+  MockIntegration,
   Resource,
   RestApiProps,
 } from 'aws-cdk-lib/aws-apigateway'
@@ -43,6 +44,7 @@ export interface ApiToAnyTargetRestApiResource {
   parent?: IResource
   proxyIntegration?: Integration
   enableDefaultCors?: boolean
+  mockIntegration?: MockIntegration
 }
 
 export interface ApiToAnyTargetRestApiProps {
