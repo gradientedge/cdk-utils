@@ -45,6 +45,7 @@ export interface ApiToAnyTargetRestApiResource {
   proxyIntegration?: Integration
   enableDefaultCors?: boolean
   mockIntegration?: MockIntegration
+  mockMethodResponses?: MethodResponse[]
 }
 
 export interface ApiToAnyTargetRestApiProps {

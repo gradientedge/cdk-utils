@@ -8,9 +8,9 @@ import {
   IResource,
   IRestApi,
   Integration,
-  MockIntegration,
   LambdaRestApi,
   SecurityPolicy,
+  MethodResponse,
 } from 'aws-cdk-lib/aws-apigateway'
 import { ICertificate } from 'aws-cdk-lib/aws-certificatemanager'
 import { IFunction } from 'aws-cdk-lib/aws-lambda'
@@ -114,6 +114,7 @@ export class ApiManager {
    * @param proxyIntegration
    * @param enableDefaultCors
    * @param mockIntegration
+   * @param mockMethodResponses
    */
   public createApiResource(
     id: string,
@@ -129,12 +130,13 @@ export class ApiManager {
     methodRequestParameters?: { [param: string]: boolean },
     proxyIntegration?: Integration,
     enableDefaultCors?: boolean,
-    mockIntegration?: MockIntegration
+    mockIntegration?: Integration,
+    mockMethodResponses?: MethodResponse[]
   ) {
     const methods = allowedMethods ?? Cors.ALL_METHODS
 
     let defaultCorsPreflightOptions
-    if (!enableDefaultCors) {
+    if (enableDefaultCors === false) {
       defaultCorsPreflightOptions = undefined
     } else {
       defaultCorsPreflightOptions = {
@@ -150,10 +152,11 @@ export class ApiManager {
     })
 
     _.forEach(methods, method => {
-      if (!enableDefaultCors && mockIntegration && method === 'OPTIONS') {
+      if (enableDefaultCors === false && mockIntegration && method === 'OPTIONS') {
         resource.addMethod(method, mockIntegration, {
           authorizer,
           requestParameters: methodRequestParameters,
+          methodResponses: mockMethodResponses,
         })
       } else {
         resource.addMethod(method, integration, {
@@ -170,10 +173,11 @@ export class ApiManager {
       })
 
       _.forEach(methods, method => {
-        if (!enableDefaultCors && mockIntegration && method === 'OPTIONS') {
+        if (enableDefaultCors === false && mockIntegration && method === 'OPTIONS') {
           resourceProxy.addMethod(method, mockIntegration, {
             authorizer,
             requestParameters: methodRequestParameters,
+            methodResponses: mockMethodResponses,
           })
         } else {
           resourceProxy.addMethod(method, proxyIntegration ?? integration, {
