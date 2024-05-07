@@ -55,7 +55,7 @@ export class StaticSite extends CommonConstruct {
   /**
    * @summary Initialise and provision resources
    */
-  protected initResources() {
+  public initResources() {
     this.resolveHostedZone()
     this.resolveCertificate()
     this.createSiteLogBucket()

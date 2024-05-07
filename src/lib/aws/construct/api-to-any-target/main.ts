@@ -49,7 +49,7 @@ export class ApiToAnyTarget extends CommonConstruct {
     this.apiToAnyTargetRestApi = new ApiToAnyTargetRestApi()
   }
 
-  protected initResources() {
+  public initResources() {
     /* application related resources */
     this.resolveSecrets()
 

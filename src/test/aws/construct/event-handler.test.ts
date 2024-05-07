@@ -73,7 +73,7 @@ class TestEventHandler extends EventHandler {
     this.initResources()
   }
 
-  protected initResources() {
+  public initResources() {
     const testPolicy = new PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this)] })
     const testRole = this.iamManager.createRoleForEcsExecution('test-role', this, testPolicy)
     this.testLambda = this.lambdaManager.createLambdaFunction(

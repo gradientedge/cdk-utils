@@ -36,7 +36,7 @@ export class ApiToLambdaTarget extends CommonConstruct {
     this.apiToLambdaTargetRestApi = new ApiToLambdaTargetRestApi()
   }
 
-  protected initResources() {
+  public initResources() {
     this.resolveSecrets()
     this.resolveHostedZone()
     this.resolveCertificate()

@@ -80,7 +80,7 @@ export class SiteWithLambdaBackend extends CommonConstruct {
   /**
    * @summary Initialise and provision resources
    */
-  protected initResources() {
+  public initResources() {
     this.resolveHostedZone()
     this.resolveCertificate()
     this.resolveSiteSecrets()

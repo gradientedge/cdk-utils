@@ -33,7 +33,7 @@ export class PipedEventHandler extends EventHandler {
     this.provisionTarget = false
   }
 
-  protected initResources() {
+  public initResources() {
     this.createPipedQueue()
     this.handler.sqsTargets = [new SqsQueue(this.pipedQueue)]
     super.initResources()

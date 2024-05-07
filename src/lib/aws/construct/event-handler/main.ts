@@ -41,7 +41,7 @@ export class EventHandler extends CommonConstruct {
     this.handler = new Handler()
   }
 
-  protected initResources() {
+  public initResources() {
     this.createSQSEventSource()
     this.createWorkflow()
     this.createEventRulePattern()
