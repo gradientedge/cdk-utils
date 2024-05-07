@@ -54,7 +54,7 @@ export abstract class RestApiLambda extends CommonConstruct {
   /**
    * @summary Initialise and provision resources
    */
-  protected initResources() {
+  public initResources() {
     this.resolveSecrets()
     this.resolveHostedZone()
     this.resolveCertificate()

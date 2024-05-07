@@ -43,7 +43,7 @@ export abstract class RestApiLambdaWithCache extends RestApiLambda {
     this.id = id
   }
 
-  protected initResources() {
+  public initResources() {
     this.resolveVpc()
     this.resolveSecurityGroup()
     this.createElastiCache()

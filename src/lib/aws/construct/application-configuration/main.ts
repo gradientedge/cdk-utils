@@ -26,7 +26,7 @@ export class ApplicationConfiguration extends CommonConstruct {
     this.id = id
   }
 
-  initResources() {
+  public initResources() {
     this.createConfiguration()
     this.resolveEnvironmentVariables()
   }
