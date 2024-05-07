@@ -8,7 +8,7 @@ interface TestStackProps extends StaticSiteProps {
   testAttribute?: string
 }
 
-const testStackProps = {
+const testContext = {
   domainName: 'gradientedge.io',
   extraContexts: [
     'src/test/aws/common/cdkConfig/dummy.json',
@@ -33,7 +33,7 @@ class TestCommonStack extends CommonStack {
   constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
     super(parent, name, props)
 
-    this.construct = new TestStaticSiteConstruct(this, testStackProps.name, this.props)
+    this.construct = new TestStaticSiteConstruct(this, testContext.name, this.props)
   }
 
   protected determineConstructProps(props: cdk.StackProps) {
@@ -50,6 +50,7 @@ class TestCommonStack extends CommonStack {
         siteRecordName: this.node.tryGetContext('siteSubDomain'),
         siteSource: s3deploy.Source.asset('src/test/aws/common/nodejs/lib'),
         siteSubDomain: this.node.tryGetContext('siteSubDomain'),
+        pruneOnDeployment: this.node.tryGetContext('pruneOnDeployment'),
         testAttribute: this.node.tryGetContext('testAttribute'),
       },
     }
@@ -70,185 +71,230 @@ class TestStaticSiteConstruct extends StaticSite {
   }
 }
 
-const app = new cdk.App({ context: testStackProps })
-const stack = new TestCommonStack(app, 'test-static-site-stack', testStackProps)
-const template = Template.fromStack(stack)
-
-describe('TestStaticSiteConstruct', () => {
-  test('is initialised as expected', () => {
-    /* test if the created stack have the right properties injected */
-    expect(stack.props).toHaveProperty('testAttribute')
-    expect(stack.props.testAttribute).toEqual('success')
+const createStack = (
+  context: typeof testContext | { pruneOnDeployment?: boolean }
+): { stack: TestCommonStack; template: Template } => {
+  const app = new cdk.App({ context })
+  const stack = new TestCommonStack(app, 'test-static-site-stack', {
+    stackName: 'test',
   })
-})
+  const template = Template.fromStack(stack)
+  return { stack, template }
+}
 
-describe('TestStaticSiteConstruct', () => {
-  test('synthesises as expected', () => {
-    /* test if number of resources are correctly synthesised */
-    template.resourceCountIs('AWS::Route53::HostedZone', 1)
-    template.resourceCountIs('AWS::S3::Bucket', 2)
-    template.resourceCountIs('AWS::CloudFront::Distribution', 1)
-    template.resourceCountIs('AWS::Route53::RecordSet', 1)
-    template.resourceCountIs('AWS::Lambda::Function', 3)
-    template.resourceCountIs('Custom::S3AutoDeleteObjects', 2)
-    template.resourceCountIs('Custom::CDKBucketDeployment', 3)
-    template.resourceCountIs('AWS::CloudFront::Function', 1)
-  })
-})
+type TestTuple = [string, { stack: TestCommonStack; template: Template }, { Prune: boolean }]
 
-describe('TestStaticSiteConstruct', () => {
-  test('outputs as expected', () => {
-    template.hasOutput('testStaticSiteHostedZoneHostedZoneId', {})
-    template.hasOutput('testStaticSiteHostedZoneHostedZoneArn', {})
-    template.hasOutput('testStaticSiteCertificateCertificateArn', {})
-    template.hasOutput('testStaticSiteSiteLogsBucketName', {})
-    template.hasOutput('testStaticSiteSiteLogsBucketArn', {})
-    template.hasOutput('testStaticSiteSiteBucketName', {})
-    template.hasOutput('testStaticSiteSiteBucketArn', {})
-    template.hasOutput('testStaticSiteDistributionDistributionId', {})
-    template.hasOutput('testStaticSiteDistributionDistributionDomainName', {})
-    template.hasOutput('testStaticSiteDomainARecordARecordDomainName', {})
-  })
-})
-
-describe('TestStaticSiteConstruct', () => {
-  test('provisions site log bucket as expected', () => {
-    template.hasResourceProperties('AWS::S3::Bucket', {
-      AccessControl: 'LogDeliveryWrite',
-      BucketEncryption: {
-        ServerSideEncryptionConfiguration: [
-          {
-            ServerSideEncryptionByDefault: {
-              SSEAlgorithm: 'AES256',
-            },
-          },
-        ],
-      },
-      BucketName: 'site-logs-test.test.gradientedge.io',
-      PublicAccessBlockConfiguration: {
-        BlockPublicAcls: true,
-        BlockPublicPolicy: true,
-        IgnorePublicAcls: true,
-        RestrictPublicBuckets: true,
-      },
+describe.each<TestTuple>([
+  ['default to prune when prune on deployment is not configured', createStack(testContext), { Prune: true }],
+  [
+    'prunes on deployment when configured to true',
+    createStack({ ...testContext, pruneOnDeployment: true }),
+    { Prune: true },
+  ],
+  [
+    'does not prune on deployment when disabled',
+    createStack({ ...testContext, pruneOnDeployment: false }),
+    { Prune: false },
+  ],
+])('%# %s', (_name, { stack, template }, expected) => {
+  describe('TestStaticSiteConstruct', () => {
+    test('is initialised as expected', async () => {
+      /* test if the created stack have the right properties injected */
+      expect(stack.props).toHaveProperty('testAttribute')
+      expect(stack.props.testAttribute).toEqual('success')
     })
   })
-})
 
-describe('TestStaticSiteConstruct', () => {
-  test('provisions site bucket as expected', () => {
-    template.hasResourceProperties('AWS::S3::Bucket', {
-      AccessControl: 'LogDeliveryWrite',
-      BucketEncryption: {
-        ServerSideEncryptionConfiguration: [
-          {
-            ServerSideEncryptionByDefault: {
-              SSEAlgorithm: 'AES256',
-            },
-          },
-        ],
-      },
-      BucketName: 'site-test.test.gradientedge.io',
-      PublicAccessBlockConfiguration: {
-        BlockPublicAcls: true,
-        BlockPublicPolicy: true,
-        IgnorePublicAcls: true,
-        RestrictPublicBuckets: true,
-      },
+  describe('TestStaticSiteConstruct', () => {
+    test('synthesises as expected', () => {
+      /* test if number of resources are correctly synthesised */
+      template.resourceCountIs('AWS::Route53::HostedZone', 1)
+      template.resourceCountIs('AWS::S3::Bucket', 2)
+      template.resourceCountIs('AWS::CloudFront::Distribution', 1)
+      template.resourceCountIs('AWS::Route53::RecordSet', 1)
+      template.resourceCountIs('AWS::Lambda::Function', 3)
+      template.resourceCountIs('Custom::S3AutoDeleteObjects', 2)
+      template.resourceCountIs('Custom::CDKBucketDeployment', 3)
+      template.resourceCountIs('AWS::CloudFront::Function', 1)
     })
   })
-})
 
-describe('TestStaticSiteConstruct', () => {
-  test('provisions site distribution as expected', () => {
-    template.hasResourceProperties('AWS::CloudFront::Distribution', {
-      DistributionConfig: {
-        Aliases: ['site.test.gradientedge.io'],
-        Comment: 'test-static-site-distribution - test stage',
-        DefaultCacheBehavior: {
-          CachePolicyId: '658327ea-f89d-4fab-a63d-7e88639e58f6',
-          Compress: true,
-          FunctionAssociations: [
+  describe('TestStaticSiteConstruct', () => {
+    test('disable pruning through properties', () => {
+      // const stack = new TestCommonStack(app, 'test-static-site-stack', { ...testStackProps, )
+      // const template = Template.fromStack(stack)
+      // /* test if number of resources are correctly synthesised */
+      // template.resourceCountIs('AWS::Route53::HostedZone', 1)
+      // template.resourceCountIs('AWS::S3::Bucket', 2)
+      // template.resourceCountIs('AWS::CloudFront::Distribution', 1)
+      // template.resourceCountIs('AWS::Route53::RecordSet', 1)
+      // template.resourceCountIs('AWS::Lambda::Function', 3)
+      // template.resourceCountIs('Custom::S3AutoDeleteObjects', 2)
+      // template.resourceCountIs('Custom::CDKBucketDeployment', 3)
+      // template.resourceCountIs('AWS::CloudFront::Function', 1)
+    })
+  })
+
+  describe('TestStaticSiteConstruct', () => {
+    test('outputs as expected', () => {
+      template.hasOutput('testStaticSiteHostedZoneHostedZoneId', {})
+      template.hasOutput('testStaticSiteHostedZoneHostedZoneArn', {})
+      template.hasOutput('testStaticSiteCertificateCertificateArn', {})
+      template.hasOutput('testStaticSiteSiteLogsBucketName', {})
+      template.hasOutput('testStaticSiteSiteLogsBucketArn', {})
+      template.hasOutput('testStaticSiteSiteBucketName', {})
+      template.hasOutput('testStaticSiteSiteBucketArn', {})
+      template.hasOutput('testStaticSiteDistributionDistributionId', {})
+      template.hasOutput('testStaticSiteDistributionDistributionDomainName', {})
+      template.hasOutput('testStaticSiteDomainARecordARecordDomainName', {})
+    })
+  })
+
+  describe('TestStaticSiteConstruct', () => {
+    test('provisions site log bucket as expected', () => {
+      template.hasResourceProperties('AWS::S3::Bucket', {
+        AccessControl: 'LogDeliveryWrite',
+        BucketEncryption: {
+          ServerSideEncryptionConfiguration: [
             {
-              EventType: 'viewer-request',
-              FunctionARN: {
-                'Fn::GetAtt': ['teststaticsitestackteststaticsitefunction9EE64F2F', 'FunctionARN'],
+              ServerSideEncryptionByDefault: {
+                SSEAlgorithm: 'AES256',
               },
             },
           ],
-          TargetOriginId: 'teststaticsitestackteststaticsitedistributionOrigin17FDFDB75',
-          ViewerProtocolPolicy: 'redirect-to-https',
         },
-        Enabled: true,
-        HttpVersion: 'http2',
-        IPV6Enabled: true,
-        Logging: {
-          Bucket: {
-            'Fn::GetAtt': ['teststaticsitestackteststaticsitesitelogsbucket7DECDDDE', 'RegionalDomainName'],
-          },
-          IncludeCookies: true,
-          Prefix: 'edge/',
+        BucketName: 'site-logs-test.test.gradientedge.io',
+        PublicAccessBlockConfiguration: {
+          BlockPublicAcls: true,
+          BlockPublicPolicy: true,
+          IgnorePublicAcls: true,
+          RestrictPublicBuckets: true,
         },
-        Origins: [
-          {
-            CustomOriginConfig: {
-              OriginProtocolPolicy: 'http-only',
-              OriginSSLProtocols: ['TLSv1.2'],
+      })
+    })
+  })
+
+  describe('TestStaticSiteConstruct', () => {
+    test('provisions site bucket as expected', () => {
+      template.hasResourceProperties('AWS::S3::Bucket', {
+        AccessControl: 'LogDeliveryWrite',
+        BucketEncryption: {
+          ServerSideEncryptionConfiguration: [
+            {
+              ServerSideEncryptionByDefault: {
+                SSEAlgorithm: 'AES256',
+              },
             },
-            DomainName: {
-              'Fn::Select': [
-                2,
-                {
-                  'Fn::Split': [
-                    '/',
-                    {
-                      'Fn::GetAtt': ['teststaticsitestackteststaticsitesitebucketDBC08543', 'WebsiteURL'],
-                    },
-                  ],
+          ],
+        },
+        BucketName: 'site-test.test.gradientedge.io',
+        PublicAccessBlockConfiguration: {
+          BlockPublicAcls: true,
+          BlockPublicPolicy: true,
+          IgnorePublicAcls: true,
+          RestrictPublicBuckets: true,
+        },
+      })
+    })
+  })
+
+  describe('TestStaticSiteConstruct', () => {
+    test('provisions site distribution as expected', () => {
+      template.hasResourceProperties('AWS::CloudFront::Distribution', {
+        DistributionConfig: {
+          Aliases: ['site.test.gradientedge.io'],
+          Comment: 'test-static-site-distribution - test stage',
+          DefaultCacheBehavior: {
+            CachePolicyId: '658327ea-f89d-4fab-a63d-7e88639e58f6',
+            Compress: true,
+            FunctionAssociations: [
+              {
+                EventType: 'viewer-request',
+                FunctionARN: {
+                  'Fn::GetAtt': ['teststaticsitestackteststaticsitefunction9EE64F2F', 'FunctionARN'],
                 },
-              ],
-            },
-            Id: 'teststaticsitestackteststaticsitedistributionOrigin17FDFDB75',
-          },
-        ],
-        PriceClass: 'PriceClass_All',
-        ViewerCertificate: {
-          AcmCertificateArn: {
-            'Fn::Join': [
-              '',
-              [
-                'arn:aws:acm:us-east-1:',
-                {
-                  Ref: 'AWS::AccountId',
-                },
-                ':certificate/12345a67-8f85-46da-8441-88c998b4bd64',
-              ],
+              },
             ],
+            TargetOriginId: 'teststaticsitestackteststaticsitedistributionOrigin17FDFDB75',
+            ViewerProtocolPolicy: 'redirect-to-https',
           },
-          MinimumProtocolVersion: 'TLSv1.2_2021',
-          SslSupportMethod: 'sni-only',
+          Enabled: true,
+          HttpVersion: 'http2',
+          IPV6Enabled: true,
+          Logging: {
+            Bucket: {
+              'Fn::GetAtt': ['teststaticsitestackteststaticsitesitelogsbucket7DECDDDE', 'RegionalDomainName'],
+            },
+            IncludeCookies: true,
+            Prefix: 'edge/',
+          },
+          Origins: [
+            {
+              CustomOriginConfig: {
+                OriginProtocolPolicy: 'http-only',
+                OriginSSLProtocols: ['TLSv1.2'],
+              },
+              DomainName: {
+                'Fn::Select': [
+                  2,
+                  {
+                    'Fn::Split': [
+                      '/',
+                      {
+                        'Fn::GetAtt': ['teststaticsitestackteststaticsitesitebucketDBC08543', 'WebsiteURL'],
+                      },
+                    ],
+                  },
+                ],
+              },
+              Id: 'teststaticsitestackteststaticsitedistributionOrigin17FDFDB75',
+            },
+          ],
+          PriceClass: 'PriceClass_All',
+          ViewerCertificate: {
+            AcmCertificateArn: {
+              'Fn::Join': [
+                '',
+                [
+                  'arn:aws:acm:us-east-1:',
+                  {
+                    Ref: 'AWS::AccountId',
+                  },
+                  ':certificate/12345a67-8f85-46da-8441-88c998b4bd64',
+                ],
+              ],
+            },
+            MinimumProtocolVersion: 'TLSv1.2_2021',
+            SslSupportMethod: 'sni-only',
+          },
         },
-      },
+      })
     })
   })
-})
 
-describe('TestStaticSiteConstruct', () => {
-  test('provisions route53 records as expected', () => {
-    template.hasResourceProperties('AWS::Route53::RecordSet', {
-      Name: 'site.test.gradientedge.io.',
-      Type: 'A',
+  describe('TestStaticSiteConstruct', () => {
+    test('provisions route53 records as expected', () => {
+      template.hasResourceProperties('AWS::Route53::RecordSet', {
+        Name: 'site.test.gradientedge.io.',
+        Type: 'A',
+      })
     })
   })
-})
 
-describe('TestStaticSiteConstruct', () => {
-  test('provisions cloudfront function as expected', () => {
-    template.hasResourceProperties('AWS::CloudFront::Function', {
-      FunctionConfig: {
-        Comment: 'test comment',
-      },
-      Name: 'test-static-function-test',
+  describe('TestStaticSiteConstruct', () => {
+    test('provisions cloudfront function as expected', () => {
+      template.hasResourceProperties('AWS::CloudFront::Function', {
+        FunctionConfig: {
+          Comment: 'test comment',
+        },
+        Name: 'test-static-function-test',
+      })
+    })
+  })
+
+  describe('TestStaticSiteConstruct', () => {
+    test('defaults to prune', () => {
+      template.hasResourceProperties('Custom::CDKBucketDeployment', expected)
     })
   })
 })

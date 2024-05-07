@@ -21,5 +21,11 @@ export interface StaticSiteProps extends CommonStackProps {
   siteSource: ISource
   siteSubDomain?: string
   timezone: string
+  /**
+   * Whether to prune the contents of the bucket when deploying assets.
+   *
+   * @default true
+   */
+  pruneOnDeployment?: boolean
   useExistingHostedZone: boolean
 }

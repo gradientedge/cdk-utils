@@ -192,6 +192,7 @@ export class StaticSite extends CommonConstruct {
    * @summary Method to deploy the static assets into s3 bucket for static site
    */
   protected deploySite() {
+    const prune = this.props.pruneOnDeployment ?? true
     this.s3Manager.doBucketDeployment(
       `${this.id}-deployment`,
       this,
@@ -199,7 +200,7 @@ export class StaticSite extends CommonConstruct {
       this.siteDistribution,
       [this.props.siteSource],
       '',
-      true
+      prune
     )
   }
 
