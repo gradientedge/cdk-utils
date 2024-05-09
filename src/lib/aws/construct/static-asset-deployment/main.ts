@@ -5,6 +5,8 @@ import { Construct } from 'constructs'
 import _ from 'lodash'
 import { CommonConstruct } from '../../common'
 import { StaticAssetDeploymentProps } from './types'
+import appRoot from 'app-root-path'
+import path from 'path'
 
 /**
  * @classdesc Provides a construct to create and deploy static assets into S3 bucket
@@ -46,6 +48,7 @@ export class StaticAssetDeployment extends CommonConstruct {
     } else {
       this.loadAssetBucket()
     }
+    this.loadDistribution()
     this.deployStaticAssets()
   }
 
@@ -63,7 +66,7 @@ export class StaticAssetDeployment extends CommonConstruct {
     this.staticAssetBucket = Bucket.fromBucketName(
       this,
       `${this.id}-sa-bucket`,
-      this.props.staticAssetBucket.bucketName
+      this.resolveRef(this.props.staticAssetBucket.bucketName)
     )
   }
 
@@ -76,11 +79,10 @@ export class StaticAssetDeployment extends CommonConstruct {
       this.props.cloudFrontDistribution.invalidationPaths &&
       this.props.cloudFrontDistribution.invalidationPaths.length > 0
     ) {
-      this.cloudfrontDistribution = Distribution.fromDistributionAttributes(
-        this,
-        `${this.id}-sa-distribution`,
-        this.props.cloudFrontDistribution
-      )
+      this.cloudfrontDistribution = Distribution.fromDistributionAttributes(this, `${this.id}-sa-distribution`, {
+        domainName: this.resolveRef(this.props.cloudFrontDistribution.domainName),
+        distributionId: this.resolveRef(this.props.cloudFrontDistribution.distributionId),
+      })
     }
   }
 
@@ -94,7 +96,10 @@ export class StaticAssetDeployment extends CommonConstruct {
       this.props.staticAssetSources.length > 0 &&
       typeof this.props.staticAssetSources[0] === 'string'
     ) {
-      sources = this.props.staticAssetSources.map(source => Source.asset(source))
+      sources = this.props.staticAssetSources.map(source => {
+        const resolvedPath = path.join(appRoot.path, source)
+        return Source.asset(resolvedPath)
+      })
     } else {
       sources = this.props.staticAssetSources as ISource[]
     }
@@ -113,10 +118,18 @@ export class StaticAssetDeployment extends CommonConstruct {
         prune: this.props.prune,
       }
     }
+
+    let destinationKeyPrefixOptions = {}
+    if (this.props.destinationKeyPrefix) {
+      destinationKeyPrefixOptions = {
+        destinationKeyPrefix: this.props.destinationKeyPrefix,
+      }
+    }
     new BucketDeployment(this, `${this.id}-static-deployment`, {
       ...this.props.staticAssetDeployment,
       destinationBucket: this.staticAssetBucket,
       sources: sources,
+      ...destinationKeyPrefixOptions,
       ...distributionOptions,
       ...pruneOptions,
     })

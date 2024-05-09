@@ -1,4 +1,4 @@
-import { CfnOutput } from 'aws-cdk-lib'
+import { CfnOutput, Fn } from 'aws-cdk-lib'
 import { Construct } from 'constructs'
 import { isDevStage, isPrdStage, isTestStage, isUatStage } from '../../common'
 import {
@@ -34,6 +34,7 @@ import {
 } from '../services'
 import { createCfnOutput } from '../utils'
 import { CommonStackProps } from './types'
+import _ from 'lodash'
 
 /**
  * @subcategory Construct
@@ -161,4 +162,13 @@ export class CommonConstruct extends Construct {
    * This is determined by the stage property injected via cdk context
    */
   public isProductionStage = () => isPrdStage(this.props.stage)
+
+  protected resolveRef(value: string): string {
+    _.templateSettings.interpolate = /{{([\s\S]+?)}}/g
+    if (value.startsWith('$ref:')) {
+      const compiled = _.template(value.substring(5))
+      return Fn.importValue(compiled(this.props))
+    }
+    return value
+  }
 }
