@@ -38,6 +38,7 @@
     "prettier": "npx prettier --cache --check \"**/*.{ts,json,md}\"",
     "prettify": "npx prettier --cache --write \"**/*.{ts,json,md}\"",
     "test": "npx rimraf coverage && npx jest --ci --maxWorkers=100%",
+    "test:watch": "npx jest --coverage=false --watchAll",
     "update:deps": "ncu -u --deep --reject react,react-dom",
     "validate": "pnpm prettier && pnpm lint && pnpm test"
   },

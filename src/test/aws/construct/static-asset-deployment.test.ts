@@ -11,7 +11,7 @@ interface TestStackProps extends StaticAssetDeploymentProps {
   staticAssetsForExport: any
 }
 
-const testStackProps = {
+const testContext = {
   domainName: 'gradientedge.io',
   extraContexts: ['src/test/aws/common/cdkConfig/buckets.json'],
   name: 'test-static-asset-deployment-stack',
@@ -30,7 +30,7 @@ class TestCommonStack extends CommonStack {
   constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
     super(parent, name, props)
 
-    this.construct = new TestStaticAssetDeployment(this, testStackProps.name, this.props)
+    this.construct = new TestStaticAssetDeployment(this, testContext.name, this.props)
   }
 
   protected determineConstructProps(props: cdk.StackProps) {
@@ -58,9 +58,20 @@ class TestStaticAssetDeployment extends StaticAssetDeployment {
   }
 }
 
-const app = new cdk.App({ context: testStackProps })
-const stack = new TestCommonStack(app, 'test-static-asset-deployment-stack', testStackProps)
+const app = new cdk.App({ context: testContext })
+const stack = new TestCommonStack(app, 'test-static-asset-deployment-stack', testContext)
 const template = Template.fromStack(stack)
+
+const createStack = (
+  context: typeof testContext | { pruneOnDeployment?: boolean }
+): { stack: TestCommonStack; template: Template } => {
+  const app = new cdk.App({ context })
+  const stack = new TestCommonStack(app, 'test-static-site-stack', {
+    stackName: 'test',
+  })
+  const template = Template.fromStack(stack)
+  return { stack, template }
+}
 
 describe('TestStaticAssetDeploymentConstruct', () => {
   test('is initialised as expected', () => {

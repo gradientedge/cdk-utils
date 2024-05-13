@@ -43,12 +43,13 @@ export class StaticAssetDeployment extends CommonConstruct {
    * @summary Initialise and provision resources
    */
   public initResources() {
-    if (this.props.createBucket) {
-      this.createAssetBucket()
+    // for backward complatibility if createBucket is not provided, it defaults to true
+    if (this.props.createBucket === false) {
+      this.resolveAssetBucket()
     } else {
-      this.loadAssetBucket()
+      this.createAssetBucket()
     }
-    this.loadDistribution()
+    this.resolveDistribution()
     this.deployStaticAssets()
   }
 
@@ -62,7 +63,7 @@ export class StaticAssetDeployment extends CommonConstruct {
   /**
    * @summary Loads the static asset bucket
    */
-  protected loadAssetBucket() {
+  protected resolveAssetBucket() {
     this.staticAssetBucket = Bucket.fromBucketName(
       this,
       `${this.id}-sa-bucket`,
@@ -73,7 +74,7 @@ export class StaticAssetDeployment extends CommonConstruct {
   /**
    * @summary Distribute the load for the static asset bucket if both distribution and paths are provided
    */
-  protected loadDistribution() {
+  protected resolveDistribution() {
     if (
       this.props.cloudFrontDistribution &&
       this.props.cloudFrontDistribution.invalidationPaths &&
