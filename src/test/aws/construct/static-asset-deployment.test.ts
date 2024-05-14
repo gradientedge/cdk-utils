@@ -1,15 +1,15 @@
 import * as cdk from 'aws-cdk-lib'
+import { App, StackProps } from 'aws-cdk-lib'
 import { Template } from 'aws-cdk-lib/assertions'
 import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment'
 import { Construct } from 'constructs'
-import { CommonStack, StaticAssetDeployment, StaticAssetDeploymentProps } from '../../../lib'
-
-interface TestStackProps extends StaticAssetDeploymentProps {
-  staticAssetBucket: any
-  staticAssetDeployment: any
-  staticAssetSources: any
-  staticAssetsForExport: any
-}
+import {
+  CommonStack,
+  StaticAssetDeployment,
+  StaticAssetDeploymentProps,
+  CommonConstruct,
+  CommonStackProps,
+} from '../../../lib'
 
 const testContext = {
   domainName: 'gradientedge.io',
@@ -24,100 +24,135 @@ const testContext = {
   stageContextPath: 'src/test/aws/common/cdkEnv',
 }
 
-class TestCommonStack extends CommonStack {
-  declare props: TestStackProps
+// get props
+function createTestStack<P extends CommonStackProps, T extends CommonConstruct<P>>(
+  app: App,
+  Construct: new (parent: Construct, id: string, props: P) => T,
+  id: string,
+  appProps: P
+): CommonStack {
+  class InitTestCommonStack extends CommonStack {
+    constructor(parent: cdk.App, id: string, props: P) {
+      super(parent, id, props)
 
-  constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
-    super(parent, name, props)
-
-    this.construct = new TestStaticAssetDeployment(this, testContext.name, this.props)
-  }
-
-  protected determineConstructProps(props: cdk.StackProps) {
-    return {
-      ...super.determineConstructProps(props),
-      staticAssetBucket: this.node.tryGetContext('siteBucket'),
-      staticAssetDeployment: {
-        prune: true,
-        retainOnDelete: false,
-      },
-      staticAssetSources: [s3deploy.Source.asset('src/test/aws/common/resources/')],
-      staticAssetsForExport: [{ key: 'myCSV', value: 'test.csv' }],
+      this.construct = new Construct(this, id, { ...this.props, ...props })
+      // ideally this would be part of
+      if ('initResources' in this.construct && typeof this.construct.initResources === 'function') {
+        this.construct.initResources()
+      }
     }
   }
+
+  return new InitTestCommonStack(app, id, appProps)
 }
-
-class TestStaticAssetDeployment extends StaticAssetDeployment {
-  declare props: TestStackProps
-
-  constructor(parent: Construct, id: string, props: TestStackProps) {
-    super(parent, id, props)
-    this.props = props
-    this.id = 'test-static-asset-deployment'
-    this.initResources()
-  }
-}
-
-const app = new cdk.App({ context: testContext })
-const stack = new TestCommonStack(app, 'test-static-asset-deployment-stack', testContext)
-const template = Template.fromStack(stack)
 
 const createStack = (
-  context: typeof testContext | { pruneOnDeployment?: boolean }
-): { stack: TestCommonStack; template: Template } => {
+  context: typeof testContext,
+  props: StaticAssetDeploymentProps
+): { stack: CommonStack; template: Template } => {
   const app = new cdk.App({ context })
-  const stack = new TestCommonStack(app, 'test-static-site-stack', {
-    stackName: 'test',
-  })
+  const stack = createTestStack(app, StaticAssetDeployment, 'test-static-asset-deployment-stack', props)
+
   const template = Template.fromStack(stack)
   return { stack, template }
 }
 
-describe('TestStaticAssetDeploymentConstruct', () => {
-  test('is initialised as expected', () => {
-    /* test if the created stack have the right properties injected */
-    expect(stack.props).toHaveProperty('staticAssetDeployment')
-    expect(stack.props.staticAssetDeployment.prune).toEqual(true)
-  })
-})
+// name, stack and expected
+type TestTuple = [string, { stack: CommonStack; template: Template }, { bucketCount: number }]
 
-describe('TestStaticAssetDeploymentConstruct', () => {
-  test('synthesises as expected', () => {
-    /* test if number of resources are correctly synthesised */
-    template.resourceCountIs('AWS::S3::Bucket', 1)
-    template.resourceCountIs('Custom::S3AutoDeleteObjects', 1)
-    template.resourceCountIs('Custom::CDKBucketDeployment', 1)
-  })
-})
+const defaultProps = {
+  staticAssetBucket: {
+    bucketName: 'site',
+    autoDeleteObjects: true,
+    removalPolicy: 'destroy',
+    serverAccessLogsPrefix: 'logs/',
+    websiteIndexDocument: 'index.html',
+    websiteErrorDocument: 'index.html',
+    existingBucket: false,
+  },
+  staticAssetDeployment: {
+    prune: true,
+    retainOnDelete: false,
+  },
+  staticAssetSources: [s3deploy.Source.asset('src/test/aws/common/resources/')],
+  staticAssetsForExport: [{ key: 'myCSV', value: 'test.csv' }],
+} as any as StaticAssetDeploymentProps
 
-describe('TestStaticAssetDeploymentConstruct', () => {
-  test('outputs as expected', () => {
-    template.hasOutput('testStaticAssetDeploymentSaBucketBucketName', {})
-    template.hasOutput('testStaticAssetDeploymentSaBucketBucketArn', {})
-    template.hasOutput('myCsv', {})
-  })
-})
+describe.each<TestTuple>([
+  [
+    'create bucket when `createBucket` is not configured',
+    createStack(testContext, defaultProps),
+    {
+      bucketCount: 1,
+    },
+  ],
+  [
+    'create bucket when `createBucket` is set to true',
+    createStack(testContext, { ...defaultProps, createBucket: true }),
+    {
+      bucketCount: 1,
+    },
+  ],
+  [
+    'resolves bucket when `createBucket` is set to false',
+    createStack(testContext, { ...defaultProps, createBucket: false }),
+    {
+      bucketCount: 0,
+    },
+  ],
+  // ['uses passed static assets sources', createStack(testContext, testProps), {}],
+  // ['creates statis assets sources when passed as a string reference', createStack(testContext, testProps), {}],
+  // ['uses destinaion key prefix to deploy static assets', createStack(testContext, testProps), {}],
+  // ['uses destinaion key prefix to deploy static assets', createStack({ ...testContext }, testProps), {}],
+  // ['passes prune flag when set to true', createStack({ ...testContext }, testProps), {}],
+  // ['does not pass prune flag when set to false', createStack({ ...testContext }, testProps), {}],
+  // ['does not pass prune flag when is not set', createStack({ ...testContext }, testProps), {}],
+  // prune
+])('%# %s', (_name, { stack, template }, expected) => {
+  // not sure if that make sense if we are testing expected output
 
-describe('TestStaticAssetDeploymentConstruct', () => {
-  test('provisions asset bucket as expected', () => {
-    template.hasResourceProperties('AWS::S3::Bucket', {
-      AccessControl: 'LogDeliveryWrite',
-      BucketEncryption: {
-        ServerSideEncryptionConfiguration: [
-          {
-            ServerSideEncryptionByDefault: {
-              SSEAlgorithm: 'AES256',
-            },
+  describe('TestStaticAssetDeploymentConstruct', () => {
+    test('synthesises as expected', () => {
+      /* test if number of resources are correctly synthesised */
+      template.resourceCountIs('AWS::S3::Bucket', expected.bucketCount)
+      template.resourceCountIs('Custom::S3AutoDeleteObjects', expected.bucketCount)
+      template.resourceCountIs('Custom::CDKBucketDeployment', 1)
+    })
+  })
+
+  describe('TestStaticAssetDeploymentConstruct', () => {
+    test('outputs as expected', () => {
+      if (expected.bucketCount === 1) {
+        template.hasOutput('testStaticAssetDeploymentStackSaBucketBucketName', {})
+        template.hasOutput('testStaticAssetDeploymentStackSaBucketBucketArn', {})
+      }
+      template.hasOutput('myCsv', {})
+    })
+  })
+
+  describe('TestStaticAssetDeploymentConstruct', () => {
+    test('provisions asset bucket as expected', () => {
+      if (expected.bucketCount === 1) {
+        template.hasResourceProperties('AWS::S3::Bucket', {
+          AccessControl: 'LogDeliveryWrite',
+          BucketEncryption: {
+            ServerSideEncryptionConfiguration: [
+              {
+                ServerSideEncryptionByDefault: {
+                  SSEAlgorithm: 'AES256',
+                },
+              },
+            ],
           },
-        ],
-      },
-      BucketName: 'site-test.test.gradientedge.io',
-      PublicAccessBlockConfiguration: {
-        BlockPublicAcls: true,
-        BlockPublicPolicy: true,
-        IgnorePublicAcls: true,
-        RestrictPublicBuckets: true,
-      },
+          BucketName: 'site-test.test.gradientedge.io',
+          PublicAccessBlockConfiguration: {
+            BlockPublicAcls: true,
+            BlockPublicPolicy: true,
+            IgnorePublicAcls: true,
+            RestrictPublicBuckets: true,
+          },
+        })
+      }
     })
   })
 })

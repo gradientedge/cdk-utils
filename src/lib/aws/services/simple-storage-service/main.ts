@@ -72,6 +72,7 @@ export class S3Manager {
    * @param bucketName the bucket name
    */
   public static determineBucketName(scope: CommonConstruct, bucketName: string) {
+    console.log('scope.props.excludeDomainNameForBuckets', scope.props.excludeDomainNameForBuckets)
     return scope.props.excludeDomainNameForBuckets
       ? S3Manager.determineBucketNameByAccountAndRegion(scope, bucketName)
       : S3Manager.determineBucketNameByDomainName(scope, bucketName)

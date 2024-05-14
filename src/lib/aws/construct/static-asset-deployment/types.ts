@@ -13,12 +13,14 @@ export interface StaticAssetDeploymentProps extends CommonStackProps {
    *
    * @default true
    */
+  // we don't need this as this is already in S3BucketProps
   createBucket?: boolean
   staticAssetBucket: S3BucketProps
   staticAssetDeployment: BucketDeploymentProps
   staticAssetSources: any[] | string[]
   staticAssetsForExport?: AssetExport[]
   destinationKeyPrefix?: string
+  // todo we don't need this as this come from S3BucketProps
   prune?: boolean
   /**
    * @summary The CloudFront distribution to associate with the bucket. When value is configured, the construct will invalidate the distribution after the deployment.

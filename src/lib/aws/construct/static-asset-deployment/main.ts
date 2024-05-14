@@ -17,27 +17,14 @@ import path from 'path'
  * class CustomConstruct extends StaticAssetDeployment {
  *   constructor(parent: Construct, id: string, props: StaticAssetDeploymentProps) {
  *     super(parent, id, props)
- *     this.props = props
- *     this.id = id
  *     this.initResources()
  *   }
  * }
  */
-export class StaticAssetDeployment extends CommonConstruct {
-  /* construct properties */
-  props: StaticAssetDeploymentProps
-  id: string
-
+export class StaticAssetDeployment extends CommonConstruct<StaticAssetDeploymentProps> {
   /* construct resources */
   staticAssetBucket: IBucket
   cloudfrontDistribution?: IDistribution
-
-  constructor(parent: Construct, id: string, props: StaticAssetDeploymentProps) {
-    // default to create bucket to keep backward complatibility
-    super(parent, id, props)
-    this.props = props
-    this.id = id
-  }
 
   /**
    * @summary Initialise and provision resources
@@ -57,7 +44,11 @@ export class StaticAssetDeployment extends CommonConstruct {
    * @summary Create the static asset bucket
    */
   protected createAssetBucket() {
-    this.staticAssetBucket = this.s3Manager.createS3Bucket(`${this.id}-sa-bucket`, this, this.props.staticAssetBucket)
+    this.staticAssetBucket = this.s3Manager.createS3Bucket(
+      `${this.node.id}-sa-bucket`,
+      this,
+      this.props.staticAssetBucket
+    )
   }
 
   /**
@@ -66,7 +57,7 @@ export class StaticAssetDeployment extends CommonConstruct {
   protected resolveAssetBucket() {
     this.staticAssetBucket = Bucket.fromBucketName(
       this,
-      `${this.id}-sa-bucket`,
+      `${this.node.id}-sa-bucket`,
       this.resolveRef(this.props.staticAssetBucket.bucketName)
     )
   }
@@ -80,7 +71,7 @@ export class StaticAssetDeployment extends CommonConstruct {
       this.props.cloudFrontDistribution.invalidationPaths &&
       this.props.cloudFrontDistribution.invalidationPaths.length > 0
     ) {
-      this.cloudfrontDistribution = Distribution.fromDistributionAttributes(this, `${this.id}-sa-distribution`, {
+      this.cloudfrontDistribution = Distribution.fromDistributionAttributes(this, `${this.node.id}-sa-distribution`, {
         domainName: this.resolveRef(this.props.cloudFrontDistribution.domainName),
         distributionId: this.resolveRef(this.props.cloudFrontDistribution.distributionId),
       })
@@ -126,7 +117,7 @@ export class StaticAssetDeployment extends CommonConstruct {
         destinationKeyPrefix: this.props.destinationKeyPrefix,
       }
     }
-    new BucketDeployment(this, `${this.id}-static-deployment`, {
+    new BucketDeployment(this, `${this.node.id}-static-deployment`, {
       ...this.props.staticAssetDeployment,
       destinationBucket: this.staticAssetBucket,
       sources: sources,
@@ -136,6 +127,7 @@ export class StaticAssetDeployment extends CommonConstruct {
     })
 
     const staticAssetsForExport = this.props.staticAssetsForExport
+    console.log('what are the static assets for export', this.props.staticAssetsForExport)
     if (!staticAssetsForExport) return
 
     /* optional additional exports needed for asset urls */

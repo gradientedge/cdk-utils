@@ -49,8 +49,8 @@ import _ from 'lodash'
  *   };
  * };
  */
-export class CommonConstruct extends Construct {
-  props: CommonStackProps
+export class CommonConstruct<T extends CommonStackProps = CommonStackProps> extends Construct {
+  props: T
   acmManager: AcmManager
   apiManager: ApiManager
   appConfigManager: AppConfigManager
@@ -83,7 +83,7 @@ export class CommonConstruct extends Construct {
 
   fullyQualifiedDomainName: string
 
-  constructor(parent: Construct, id: string, props: CommonStackProps) {
+  constructor(parent: Construct, id: string, props: T) {
     super(parent, id)
     this.props = props
     this.acmManager = new AcmManager()
