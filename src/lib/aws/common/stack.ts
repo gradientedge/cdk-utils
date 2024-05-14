@@ -78,7 +78,6 @@ export class CommonStack extends Stack {
       return
     }
 
-    console.log('what is the app root path', appRoot.path, __dirname)
     _.forEach(extraContexts, (context: string) => {
       const extraContextPath = path.join(appRoot.path, context)
 

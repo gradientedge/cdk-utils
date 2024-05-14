@@ -127,7 +127,6 @@ export class StaticAssetDeployment extends CommonConstruct<StaticAssetDeployment
     })
 
     const staticAssetsForExport = this.props.staticAssetsForExport
-    console.log('what are the static assets for export', this.props.staticAssetsForExport)
     if (!staticAssetsForExport) return
 
     /* optional additional exports needed for asset urls */

@@ -163,6 +163,13 @@ export class CommonConstruct<T extends CommonStackProps = CommonStackProps> exte
    */
   public isProductionStage = () => isPrdStage(this.props.stage)
 
+  /**
+   * @summary Allows to resolve value from external stack using Fn.importValue. The method checks
+   * if the value starts with $ref: and if so, it resolves the value using Fn.importValue,
+   * otherwise it returns the value as is.
+   *
+   * @param value the value to resolve
+   */
   protected resolveRef(value: string): string {
     _.templateSettings.interpolate = /{{([\s\S]+?)}}/g
     if (value.startsWith('$ref:')) {
