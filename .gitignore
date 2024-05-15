@@ -173,6 +173,8 @@ dist/
 # Jest
 !jest.config.js
 junit.xml
+template.yaml
+template.json
 
 # layers
 **/layers
