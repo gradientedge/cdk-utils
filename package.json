@@ -4,8 +4,10 @@
   "description": "Utilities for AWS CDK provisioning",
   "main": "dist/index.js",
   "engines": {
-    "node": ">=16 <=20"
+    "node": ">=16 <=20",
+    "pnpm": "=8"
   },
+  "packageManager": "pnpm@8.15.8",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gradientedge/cdk-utils.git"
