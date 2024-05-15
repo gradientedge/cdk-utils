@@ -1,7 +1,6 @@
-import { IBucket, Bucket } from 'aws-cdk-lib/aws-s3'
+import { IBucket } from 'aws-cdk-lib/aws-s3'
 import { IDistribution, Distribution } from 'aws-cdk-lib/aws-cloudfront'
 import { BucketDeployment, Source, BucketDeploymentProps, ISource } from 'aws-cdk-lib/aws-s3-deployment'
-import { Construct } from 'constructs'
 import _ from 'lodash'
 import { CommonConstruct } from '../../common'
 import { StaticAssetDeploymentProps } from './types'
@@ -30,12 +29,7 @@ export class StaticAssetDeployment extends CommonConstruct<StaticAssetDeployment
    * @summary Initialise and provision resources
    */
   public initResources() {
-    // for backward complatibility if createBucket is not provided, it defaults to true
-    if (this.props.createBucket === false) {
-      this.resolveAssetBucket()
-    } else {
-      this.createAssetBucket()
-    }
+    this.createAssetBucket()
     this.resolveDistribution()
     this.deployStaticAssets()
   }
@@ -48,17 +42,6 @@ export class StaticAssetDeployment extends CommonConstruct<StaticAssetDeployment
       `${this.node.id}-sa-bucket`,
       this,
       this.props.staticAssetBucket
-    )
-  }
-
-  /**
-   * @summary Loads the static asset bucket
-   */
-  protected resolveAssetBucket() {
-    this.staticAssetBucket = Bucket.fromBucketName(
-      this,
-      `${this.node.id}-sa-bucket`,
-      this.resolveRef(this.props.staticAssetBucket.bucketName)
     )
   }
 
@@ -104,13 +87,6 @@ export class StaticAssetDeployment extends CommonConstruct<StaticAssetDeployment
       }
     }
 
-    let pruneOptions: Pick<BucketDeploymentProps, 'prune'> = {}
-    if (this.props.prune !== undefined) {
-      pruneOptions = {
-        prune: this.props.prune,
-      }
-    }
-
     let destinationKeyPrefixOptions = {}
     if (this.props.destinationKeyPrefix) {
       destinationKeyPrefixOptions = {
@@ -123,7 +99,6 @@ export class StaticAssetDeployment extends CommonConstruct<StaticAssetDeployment
       sources: sources,
       ...destinationKeyPrefixOptions,
       ...distributionOptions,
-      ...pruneOptions,
     })
 
     const staticAssetsForExport = this.props.staticAssetsForExport

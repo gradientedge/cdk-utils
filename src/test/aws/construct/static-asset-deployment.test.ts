@@ -57,12 +57,11 @@ describe('StaticAssetDeployment', () => {
   afterAll(s3AssetSpyRestore)
 
   describe.each<TableTestTuple<StaticAssetDeploymentProps, StaticAssetDeploymentExpected>>([
-    ['create bucket when `createBucket` is not configured', defaultProps, defaultExpected],
-    ['create bucket when `createBucket` is set to true', { ...defaultProps, createBucket: true }, defaultExpected],
+    ['create bucket when it not existing bucket', { ...defaultProps }, defaultExpected],
     [
-      'resolves bucket when `createBucket` is set to false',
-      { ...defaultProps, createBucket: false },
-      { ...defaultExpected, bucketCount: 0, destinationBucket: 'site' },
+      'resolves bucket when it is an existing bucket',
+      { ...defaultProps, staticAssetBucket: { ...defaultProps.staticAssetBucket, existingBucket: true } },
+      { ...defaultExpected, bucketCount: 0, destinationBucket: 'site-test.test.gradientedge.io' },
     ],
     [
       'creates static assets source when passed as a string reference',
@@ -81,7 +80,7 @@ describe('StaticAssetDeployment', () => {
     ],
     [
       'does not pass prune flag when is not set',
-      { ...defaultProps, prune: false },
+      { ...defaultProps, staticAssetDeployment: { ...defaultProps.staticAssetDeployment, prune: false } },
       { ...defaultExpected, prune: false },
     ],
   ])('%# %s', (_name, props, expected) => {
@@ -110,11 +109,9 @@ describe('StaticAssetDeployment', () => {
     })
 
     describe('TestStaticAssetDeploymentConstruct', () => {
-      describeIf(expected.bucketCount === 1, () => {
-        test('has bucket outputs', () => {
-          template.hasOutput('testStaticAssetDeploymentStackSaBucketBucketName', {})
-          template.hasOutput('testStaticAssetDeploymentStackSaBucketBucketArn', {})
-        })
+      test('has bucket outputs', () => {
+        template.hasOutput('testStaticAssetDeploymentStackSaBucketBucketName', {})
+        template.hasOutput('testStaticAssetDeploymentStackSaBucketBucketArn', {})
       })
 
       test('has custom outputs', () => {
