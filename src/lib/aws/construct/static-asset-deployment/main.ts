@@ -1,5 +1,5 @@
 import { IBucket } from 'aws-cdk-lib/aws-s3'
-import { IDistribution, Distribution } from 'aws-cdk-lib/aws-cloudfront'
+import { IDistribution } from 'aws-cdk-lib/aws-cloudfront'
 import { BucketDeployment, Source, BucketDeploymentProps, ISource } from 'aws-cdk-lib/aws-s3-deployment'
 import _ from 'lodash'
 import { CommonConstruct } from '../../common'
@@ -38,7 +38,6 @@ export class StaticAssetDeployment extends CommonConstruct<StaticAssetDeployment
    * @summary Create the static asset bucket
    */
   protected createAssetBucket() {
-    this.props.staticAssetBucket.bucketName = this.resolveRef(this.props.staticAssetBucket.bucketName)
     this.staticAssetBucket = this.s3Manager.createS3Bucket(
       `${this.node.id}-sa-bucket`,
       this,
