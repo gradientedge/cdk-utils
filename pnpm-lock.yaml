@@ -40,7 +40,7 @@ importers:
         version: 3.1.0
       aws-cdk-lib:
         specifier: ^2.138.0
-        version: 2.141.0(constructs@10.3.0)
+        version: 2.138.0(constructs@10.3.0)
       cdktf:
         specifier: ^0.20.7
         version: 0.20.7(constructs@10.3.0)
@@ -3246,8 +3246,8 @@ packages:
       possible-typed-array-names: 1.0.0
     dev: true
 
-  /aws-cdk-lib@2.141.0(constructs@10.3.0):
-    resolution: {integrity: sha512-xda56Lfwpdqg9MssnFdXrAKTmeeNjfrfFCaWwqGqToG6cfGY2W+6wyyoObX60/MeZGhhs3Lhdb/K94ulLJ4X/A==}
+  /aws-cdk-lib@2.138.0(constructs@10.3.0):
+    resolution: {integrity: sha512-BdLOd6Fkl/7PH8RahRbhYQf3zRFCxVtOdkKOAZHHqtaNkmTyfkUGMXyzyQ4rIHvR8EOy1C1x5CAufqoZuJM0gA==}
     engines: {node: '>= 14.15.0'}
     peerDependencies:
       constructs: ^10.0.0

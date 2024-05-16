@@ -38,6 +38,7 @@ export class StaticAssetDeployment extends CommonConstruct<StaticAssetDeployment
    * @summary Create the static asset bucket
    */
   protected createAssetBucket() {
+    this.props.staticAssetBucket.bucketName = this.resolveRef(this.props.staticAssetBucket.bucketName)
     this.staticAssetBucket = this.s3Manager.createS3Bucket(
       `${this.node.id}-sa-bucket`,
       this,
@@ -51,10 +52,11 @@ export class StaticAssetDeployment extends CommonConstruct<StaticAssetDeployment
   protected resolveDistribution() {
     if (
       this.props.cloudFrontDistribution &&
+      this.props.cloudFrontDistribution.domainName &&
       this.props.cloudFrontDistribution.invalidationPaths &&
       this.props.cloudFrontDistribution.invalidationPaths.length > 0
     ) {
-      this.cloudfrontDistribution = Distribution.fromDistributionAttributes(this, `${this.node.id}-sa-distribution`, {
+      this.cloudfrontDistribution = this.cloudFrontManager.resolveDistribution(this, {
         domainName: this.resolveRef(this.props.cloudFrontDistribution.domainName),
         distributionId: this.resolveRef(this.props.cloudFrontDistribution.distributionId),
       })
@@ -93,6 +95,7 @@ export class StaticAssetDeployment extends CommonConstruct<StaticAssetDeployment
         destinationKeyPrefix: this.props.destinationKeyPrefix,
       }
     }
+
     new BucketDeployment(this, `${this.node.id}-static-deployment`, {
       ...this.props.staticAssetDeployment,
       destinationBucket: this.staticAssetBucket,

@@ -172,7 +172,7 @@ export class CommonConstruct<T extends CommonStackProps = CommonStackProps> exte
    */
   protected resolveRef(value: string): string {
     _.templateSettings.interpolate = /{{([\s\S]+?)}}/g
-    if (value.startsWith('$ref:')) {
+    if (value && value.startsWith('$ref:')) {
       const compiled = _.template(value.substring(5))
       return Fn.importValue(compiled(this.props))
     }

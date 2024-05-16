@@ -1,9 +1,10 @@
 import { AppProps } from 'aws-cdk-lib'
-import { Template } from 'aws-cdk-lib/assertions'
+import { Template, Match, Matcher } from 'aws-cdk-lib/assertions'
 import { Source } from 'aws-cdk-lib/aws-s3-deployment'
 import { StaticAssetDeployment, StaticAssetDeploymentProps } from '../../../lib'
 import { TableTestTuple, ref, findOneResourceId, s3AssetSpyInit, mapToBucketName, createApp } from '../../cdk'
-import { describeIf, isLengthOne, isDefined } from '../../jest-ext'
+import { describeIf, isLengthOne, deepAssign } from '../../jest-ext'
+import { writeTemplate } from '../../debug'
 
 const { s3AssetSpySetup, s3AssetSpyRestore } = s3AssetSpyInit()
 
@@ -41,7 +42,8 @@ type StaticAssetDeploymentExpected = {
   bucketCount: number
   prune: boolean
   sourceObjectKeys: Array<string>
-  destinationKeyPrefix?: string
+  destinationKeyPrefix: string | Matcher
+  distributionId: string | Matcher
   destinationBucket?: string
 }
 
@@ -49,6 +51,8 @@ const defaultExpected: StaticAssetDeploymentExpected = {
   bucketCount: 1,
   prune: true,
   sourceObjectKeys: ['resources.zip'],
+  destinationKeyPrefix: Match.absent(),
+  distributionId: Match.absent(),
 }
 
 describe('StaticAssetDeployment', () => {
@@ -57,31 +61,83 @@ describe('StaticAssetDeployment', () => {
   afterAll(s3AssetSpyRestore)
 
   describe.each<TableTestTuple<StaticAssetDeploymentProps, StaticAssetDeploymentExpected>>([
-    ['create bucket when it not existing bucket', { ...defaultProps }, defaultExpected],
+    ['create bucket when it not existing bucket', defaultProps, defaultExpected],
     [
       'resolves bucket when it is an existing bucket',
-      { ...defaultProps, staticAssetBucket: { ...defaultProps.staticAssetBucket, existingBucket: true } },
-      { ...defaultExpected, bucketCount: 0, destinationBucket: 'site-test.test.gradientedge.io' },
+      deepAssign(defaultProps, { staticAssetBucket: { existingBucket: true } }),
+      deepAssign(defaultExpected, { bucketCount: 0, destinationBucket: 'site-test.test.gradientedge.io' }),
     ],
     [
       'creates static assets source when passed as a string reference',
-      { ...defaultProps, staticAssetSources: ['first_object_key'] },
-      { ...defaultExpected, sourceObjectKeys: ['first_object_key.zip'] },
+      deepAssign(defaultProps, { staticAssetSources: ['first_object_key'] }),
+      deepAssign(defaultExpected, { sourceObjectKeys: ['first_object_key.zip'] }),
     ],
     [
       'creates static assets sources when passed as a string reference',
-      { ...defaultProps, staticAssetSources: ['first_object_key', 'second_object_key'] },
-      { ...defaultExpected, sourceObjectKeys: ['first_object_key.zip', 'second_object_key.zip'] },
+      deepAssign(defaultProps, { staticAssetSources: ['first_object_key', 'second_object_key'] }),
+      deepAssign(defaultExpected, { sourceObjectKeys: ['first_object_key.zip', 'second_object_key.zip'] }),
     ],
     [
       'uses destinaion key prefix to deploy static assets',
-      { ...defaultProps, destinationKeyPrefix: 'customprefixkey' },
-      { ...defaultExpected, destinationKeyPrefix: 'customprefixkey' },
+      deepAssign(defaultProps, { destinationKeyPrefix: 'customprefixkey' }),
+      deepAssign(defaultExpected, { destinationKeyPrefix: 'customprefixkey' }),
     ],
     [
       'does not pass prune flag when is not set',
-      { ...defaultProps, staticAssetDeployment: { ...defaultProps.staticAssetDeployment, prune: false } },
-      { ...defaultExpected, prune: false },
+      deepAssign(defaultProps, { staticAssetDeployment: { prune: false } }),
+      deepAssign(defaultExpected, { prune: false }),
+    ],
+    [
+      'invalidates cloudfront distribution when set',
+      deepAssign(defaultProps, {
+        cloudFrontDistribution: {
+          domainName: 'cloudfrontdomain.cloudfront.net',
+          distributionId: 'distributionId',
+          invalidationPaths: ['/invalidate/*'],
+        },
+      }),
+      deepAssign(defaultExpected, { distributionId: 'distributionId' }),
+    ],
+    [
+      'does not set invalidation paths when domain name on cloudfront distribution is not set',
+      deepAssign(defaultProps, {
+        cloudFrontDistribution: {
+          distributionId: 'distributionId',
+          invalidationPaths: ['/invalidate/*'],
+        },
+      }),
+      defaultExpected,
+    ],
+    [
+      'does not set invalidation paths when invalidation paths are not set on cloudfront distribution is not set',
+      deepAssign(defaultProps, {
+        cloudFrontDistribution: {
+          domainName: 'cloudfrontdomain.cloudfront.net',
+          distributionId: 'distributionId',
+        },
+      }),
+      defaultExpected,
+    ],
+    [
+      'does not set invalidation paths when invalidation paths are empty on cloudfront distribution is not set',
+      deepAssign(defaultProps, {
+        cloudFrontDistribution: {
+          domainName: 'cloudfrontdomain.cloudfront.net',
+          distributionId: 'distributionId',
+          invalidationPaths: [],
+        },
+      }),
+      defaultExpected,
+    ],
+    [
+      'does not set invalidation paths when distribution id is not set on cloudfront distribution is not set',
+      deepAssign(defaultProps, {
+        cloudFrontDistribution: {
+          domainName: 'cloudfrontdomain.cloudfront.net',
+          invalidationPaths: [],
+        },
+      }),
+      defaultExpected,
     ],
   ])('%# %s', (_name, props, expected) => {
     let template: Template
@@ -98,6 +154,7 @@ describe('StaticAssetDeployment', () => {
         stackName: 'test-static-asset-deployment-stack',
         Construct: StaticAssetDeployment,
       }))
+      writeTemplate(template, 'yaml')
     })
 
     describe('TestStaticAssetDeploymentConstruct', () => {
@@ -154,14 +211,8 @@ describe('StaticAssetDeployment', () => {
           SourceObjectKeys: expected.sourceObjectKeys,
           SourceBucketNames: mapToBucketName(expected.sourceObjectKeys),
           DestinationBucketName: destinationBucket,
-        })
-      })
-
-      describeIf(isDefined(expected.destinationKeyPrefix), () => {
-        test('destination key prefix', () => {
-          template.hasResourceProperties('Custom::CDKBucketDeployment', {
-            DestinationBucketKeyPrefix: expected.destinationKeyPrefix,
-          })
+          DestinationBucketKeyPrefix: expected.destinationKeyPrefix,
+          DistributionId: expected.distributionId,
         })
       })
     })
