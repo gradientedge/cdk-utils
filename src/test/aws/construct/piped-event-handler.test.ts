@@ -227,6 +227,9 @@ describe('TestPipedEventHandler', () => {
         SqsQueueParameters: { BatchSize: 10 },
       },
       Target: { 'Fn::GetAtt': ['testapistacktestlambdaE20C288B', 'Arn'] },
+      TargetParameters: {
+        InputTemplate: '<$.body>',
+      },
     })
   })
 })

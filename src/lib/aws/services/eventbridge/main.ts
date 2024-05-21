@@ -297,6 +297,9 @@ export class EventManager {
         },
       },
       target: targetLambdaFunction.functionArn,
+      targetParameters: {
+        inputTemplate: props.lambdaInputTemplate,
+      },
     })
 
     createCfnOutput(`${id}-pipeArn`, scope, pipe.attrArn)
