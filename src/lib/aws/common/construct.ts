@@ -49,8 +49,8 @@ import _ from 'lodash'
  *   };
  * };
  */
-export class CommonConstruct<T extends CommonStackProps = CommonStackProps> extends Construct {
-  props: T
+export class CommonConstruct extends Construct {
+  props: CommonStackProps
   acmManager: AcmManager
   apiManager: ApiManager
   appConfigManager: AppConfigManager
@@ -83,7 +83,7 @@ export class CommonConstruct<T extends CommonStackProps = CommonStackProps> exte
 
   fullyQualifiedDomainName: string
 
-  constructor(parent: Construct, id: string, props: T) {
+  constructor(parent: Construct, id: string, props: CommonStackProps) {
     super(parent, id)
     this.props = props
     this.acmManager = new AcmManager()
@@ -162,20 +162,4 @@ export class CommonConstruct<T extends CommonStackProps = CommonStackProps> exte
    * This is determined by the stage property injected via cdk context
    */
   public isProductionStage = () => isPrdStage(this.props.stage)
-
-  /**
-   * @summary Allows to resolve value from external stack using Fn.importValue. The method checks
-   * if the value starts with $ref: and if so, it resolves the value using Fn.importValue,
-   * otherwise it returns the value as is.
-   *
-   * @param value the value to resolve
-   */
-  protected resolveRef(value: string): string {
-    _.templateSettings.interpolate = /{{([\s\S]+?)}}/g
-    if (value && value.startsWith('$ref:')) {
-      const compiled = _.template(value.substring(5))
-      return Fn.importValue(compiled(this.props))
-    }
-    return value
-  }
 }

@@ -1,5 +1,6 @@
 import { IBucket } from 'aws-cdk-lib/aws-s3'
 import { IDistribution } from 'aws-cdk-lib/aws-cloudfront'
+import { Construct } from 'constructs'
 import { BucketDeployment, Source, BucketDeploymentProps, ISource } from 'aws-cdk-lib/aws-s3-deployment'
 import _ from 'lodash'
 import { CommonConstruct } from '../../common'
@@ -20,11 +21,18 @@ import path from 'path'
  *   }
  * }
  */
-export class StaticAssetDeployment extends CommonConstruct<StaticAssetDeploymentProps> {
+export class StaticAssetDeployment extends CommonConstruct {
   /* construct resources */
   staticAssetBucket: IBucket
   cloudfrontDistribution?: IDistribution
+  props: StaticAssetDeploymentProps
+  id: string
 
+  constructor(parent: Construct, id: string, props: StaticAssetDeploymentProps) {
+    super(parent, id, props)
+    this.id = id
+    this.props = props
+  }
   /**
    * @summary Initialise and provision resources
    */
@@ -38,11 +46,7 @@ export class StaticAssetDeployment extends CommonConstruct<StaticAssetDeployment
    * @summary Create the static asset bucket
    */
   protected createAssetBucket() {
-    this.staticAssetBucket = this.s3Manager.createS3Bucket(
-      `${this.node.id}-sa-bucket`,
-      this,
-      this.props.staticAssetBucket
-    )
+    this.staticAssetBucket = this.s3Manager.createS3Bucket(`${this.id}-sa-bucket`, this, this.props.staticAssetBucket)
   }
 
   /**
@@ -56,8 +60,8 @@ export class StaticAssetDeployment extends CommonConstruct<StaticAssetDeployment
       this.props.cloudFrontDistribution.invalidationPaths.length > 0
     ) {
       this.cloudfrontDistribution = this.cloudFrontManager.resolveDistribution(this, {
-        domainName: this.resolveRef(this.props.cloudFrontDistribution.domainName),
-        distributionId: this.resolveRef(this.props.cloudFrontDistribution.distributionId),
+        domainName: this.props.cloudFrontDistribution.domainName,
+        distributionId: this.props.cloudFrontDistribution.distributionId,
       })
     }
   }
@@ -95,7 +99,7 @@ export class StaticAssetDeployment extends CommonConstruct<StaticAssetDeployment
       }
     }
 
-    new BucketDeployment(this, `${this.node.id}-static-deployment`, {
+    new BucketDeployment(this, `${this.id}-static-deployment`, {
       ...this.props.staticAssetDeployment,
       destinationBucket: this.staticAssetBucket,
       sources: sources,
