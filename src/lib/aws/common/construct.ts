@@ -1,4 +1,4 @@
-import { CfnOutput, Fn } from 'aws-cdk-lib'
+import { CfnOutput } from 'aws-cdk-lib'
 import { Construct } from 'constructs'
 import { isDevStage, isPrdStage, isTestStage, isUatStage } from '../../common'
 import {
@@ -34,7 +34,6 @@ import {
 } from '../services'
 import { createCfnOutput } from '../utils'
 import { CommonStackProps } from './types'
-import _ from 'lodash'
 
 /**
  * @subcategory Construct
