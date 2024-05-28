@@ -2,6 +2,7 @@
   "testSqsToLambdaPipe": {
     "name": "test-sqs-to-lambda-pipe",
     "sqsBatchSize": 10,
+    "lambdaInputTemplate": "<$.body>",
     "pipeFilterPattern": {
       "detail": {
         "type": ["testType"]

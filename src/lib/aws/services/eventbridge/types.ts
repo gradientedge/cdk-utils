@@ -17,6 +17,7 @@ export interface SqsToSfnPipeProps extends CfnPipeProps {
 export interface SqsToLambdaPipeProps extends CfnPipeProps {
   pipeFilterPattern?: any
   sqsBatchSize?: number
+  lambdaInputTemplate?: string
   sqsMaximumBatchingWindowInSeconds?: number
 }
 
