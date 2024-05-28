@@ -1,5 +1,6 @@
+import { Fn } from 'aws-cdk-lib'
 import { IBucket } from 'aws-cdk-lib/aws-s3'
-import { IDistribution } from 'aws-cdk-lib/aws-cloudfront'
+import { IDistribution, DistributionAttributes } from 'aws-cdk-lib/aws-cloudfront'
 import { Construct } from 'constructs'
 import { BucketDeployment, Source, BucketDeploymentProps, ISource } from 'aws-cdk-lib/aws-s3-deployment'
 import _ from 'lodash'
@@ -55,14 +56,26 @@ export class StaticAssetDeployment extends CommonConstruct {
   protected resolveDistribution() {
     if (
       this.props.cloudFrontDistribution &&
-      this.props.cloudFrontDistribution.domainName &&
+      (this.props.cloudFrontDistribution.domainName || this.props.cloudFrontDistribution.domainNameRef) &&
+      (this.props.cloudFrontDistribution.distributionId || this.props.cloudFrontDistribution.distributionIdRef) &&
       this.props.cloudFrontDistribution.invalidationPaths &&
       this.props.cloudFrontDistribution.invalidationPaths.length > 0
     ) {
-      this.cloudfrontDistribution = this.cloudFrontManager.resolveDistribution(this, {
-        domainName: this.props.cloudFrontDistribution.domainName,
-        distributionId: this.props.cloudFrontDistribution.distributionId,
-      })
+      let domainName = this.props.cloudFrontDistribution.domainName
+      if (this.props.cloudFrontDistribution.domainNameRef) {
+        domainName = Fn.importValue(this.props.cloudFrontDistribution.domainNameRef)
+      }
+      let distributionId = this.props.cloudFrontDistribution.distributionId
+      if (this.props.cloudFrontDistribution.distributionIdRef) {
+        distributionId = Fn.importValue(this.props.cloudFrontDistribution.distributionIdRef)
+      }
+
+      const distributionAttributes = {
+        domainName: domainName,
+        distributionId: distributionId,
+      } as any as DistributionAttributes
+
+      this.cloudfrontDistribution = this.cloudFrontManager.resolveDistribution(this, distributionAttributes)
     }
   }
 
