@@ -2,7 +2,6 @@ import { App, StackProps } from 'aws-cdk-lib'
 import { Template, Match } from 'aws-cdk-lib/assertions'
 import { Construct } from 'constructs'
 import { StaticAssetDeployment, StaticAssetDeploymentProps, CommonStack } from '../../../lib'
-import { writeTemplate } from '../../debug'
 
 const testStackProps = {
   domainName: 'gradientedge.io',
@@ -52,8 +51,6 @@ class TestStaticAssetDeployment extends StaticAssetDeployment {
 const app = new App({ context: testStackProps })
 const stack = new TestCommonStack(app, 'test-static-asset-deployment-stack', testStackProps)
 const template = Template.fromStack(stack)
-
-writeTemplate(template, 'yaml')
 
 describe('StaticAssetDeployment Existing Bucket', () => {
   describe('TestStaticAssetDeploymentConstruct', () => {
