@@ -27,5 +27,27 @@
         "value": "testTagValue2"
       }
     ]
+  },
+  "staticSiteBucketExisting": {
+    "bucketName": "site",
+    "existingBucket": true,
+    "logBucketName": "site-logs",
+    "accessControl": "LogDeliveryWrite",
+    "autoDeleteObjects": true,
+    "removalPolicy": "destroy",
+    "serverAccessLogsPrefix": "logs/",
+    "websiteIndexDocument": "index.html",
+    "websiteErrorDocument": "index.html",
+    "enableEventBridge": true,
+    "tags": [
+      {
+        "key": "testTagName1",
+        "value": "testTagValue1"
+      },
+      {
+        "key": "testTagName2",
+        "value": "testTagValue2"
+      }
+    ]
   }
 }

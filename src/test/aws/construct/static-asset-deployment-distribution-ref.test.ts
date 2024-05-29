@@ -6,7 +6,7 @@ import { ref, findOneResourceId } from '../../cdk'
 
 const testStackProps = {
   domainName: 'gradientedge.io',
-  extraContexts: ['src/test/aws/common/cdkConfig/buckets.json'],
+  extraContexts: ['src/test/aws/common/cdkConfig/buckets.json', 'src/test/aws/common/cdkConfig/staticAsset.json'],
   name: 'test-static-asset-deployment-stack',
   region: 'eu-west-1',
   siteCreateAltARecord: true,
@@ -32,18 +32,11 @@ class TestCommonStack extends CommonStack {
     return {
       ...super.determineConstructProps(props),
       staticAssetBucket: this.node.tryGetContext('siteBucket'),
-      staticAssetDeployment: {
-        prune: false,
-        retainOnDelete: false,
-      },
+      staticAssetDeployment: this.node.tryGetContext('staticAssetDeployment'),
       staticAssetSources: ['src/test/aws/common/resources/'],
       staticAssetsForExport: [{ key: 'myCSV', value: 'test.csv' }],
-      destinationKeyPrefix: 'destination-path/',
-      cloudFrontDistribution: {
-        domainNameRef: 'test.one.io',
-        distributionIdRef: 'D1',
-        invalidationPaths: ['/*'],
-      },
+      destinationKeyPrefix: this.node.tryGetContext('staticAssetDestinationKeyPrefix'),
+      cloudFrontDistribution: this.node.tryGetContext('staticAssetCloudFrontDistributionRef'),
     }
   }
 }
@@ -63,7 +56,7 @@ const app = new App({ context: testStackProps })
 const stack = new TestCommonStack(app, 'test-static-asset-deployment-stack', testStackProps)
 const template = Template.fromStack(stack)
 
-describe('StaticAssetDeployment', () => {
+describe('StaticAssetDeployment Ref Distribution', () => {
   describe('TestStaticAssetDeploymentConstruct', () => {
     test('synthesises as expected', () => {
       template.resourceCountIs('AWS::S3::Bucket', 1)
@@ -112,7 +105,7 @@ describe('StaticAssetDeployment', () => {
   describe('Custom::CDKBucketDeployment', () => {
     test('properties', () => {
       template.hasResourceProperties('Custom::CDKBucketDeployment', {
-        Prune: false,
+        Prune: true,
         RetainOnDelete: false,
         DestinationBucketName: ref(findOneResourceId(template, 'AWS::S3::Bucket')),
         DestinationBucketKeyPrefix: 'destination-path/',

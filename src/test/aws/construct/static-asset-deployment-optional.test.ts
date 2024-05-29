@@ -3,11 +3,10 @@ import { Template, Capture } from 'aws-cdk-lib/assertions'
 import { Construct } from 'constructs'
 import { StaticAssetDeployment, StaticAssetDeploymentProps, CommonStack } from '../../../lib'
 import { ref, findOneResourceId } from '../../cdk'
-import { writeTemplate } from '../../debug'
 
 const testStackProps = {
   domainName: 'gradientedge.io',
-  extraContexts: ['src/test/aws/common/cdkConfig/buckets.json'],
+  extraContexts: ['src/test/aws/common/cdkConfig/buckets.json', 'src/test/aws/common/cdkConfig/staticAsset.json'],
   name: 'test-static-asset-deployment-stack',
   region: 'eu-west-1',
   siteCreateAltARecord: true,
@@ -33,18 +32,11 @@ class TestCommonStack extends CommonStack {
     return {
       ...super.determineConstructProps(props),
       staticAssetBucket: this.node.tryGetContext('siteBucket'),
-      staticAssetDeployment: {
-        prune: false,
-        retainOnDelete: false,
-      },
-      staticAssetSources: ['src/test/aws/common/resources/'],
+      staticAssetDeployment: this.node.tryGetContext('staticAssetDeploymentNoPrune'),
+      staticAssetSources: this.node.tryGetContext('staticAssetSources'),
       staticAssetsForExport: [{ key: 'myCSV', value: 'test.csv' }],
-      destinationKeyPrefix: 'destination-path/',
-      cloudFrontDistribution: {
-        domainName: 'test.one.io',
-        distributionId: 'D1',
-        invalidationPaths: ['/*'],
-      },
+      destinationKeyPrefix: this.node.tryGetContext('staticAssetDestinationKeyPrefix'),
+      cloudFrontDistribution: this.node.tryGetContext('staticAssetCloudFrontDistribution'),
     }
   }
 }
@@ -64,9 +56,7 @@ const app = new App({ context: testStackProps })
 const stack = new TestCommonStack(app, 'test-static-asset-deployment-stack', testStackProps)
 const template = Template.fromStack(stack)
 
-writeTemplate(template, 'yaml')
-
-describe('StaticAssetDeployment', () => {
+describe('StaticAssetDeployment With Optional Configuration', () => {
   describe('TestStaticAssetDeploymentConstruct', () => {
     test('synthesises as expected', () => {
       template.resourceCountIs('AWS::S3::Bucket', 1)

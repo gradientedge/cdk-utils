@@ -6,7 +6,7 @@ import { writeTemplate } from '../../debug'
 
 const testStackProps = {
   domainName: 'gradientedge.io',
-  extraContexts: ['src/test/aws/common/cdkConfig/buckets.json'],
+  extraContexts: ['src/test/aws/common/cdkConfig/buckets.json', 'src/test/aws/common/cdkConfig/staticAsset.json'],
   name: 'test-static-asset-deployment-stack',
   region: 'eu-west-1',
   siteCreateAltARecord: true,
@@ -31,11 +31,8 @@ class TestCommonStack extends CommonStack {
   protected determineConstructProps(props: StackProps) {
     return {
       ...super.determineConstructProps(props),
-      staticAssetBucket: { ...this.node.tryGetContext('siteBucket'), existingBucket: true },
-      staticAssetDeployment: {
-        prune: false,
-        retainOnDelete: false,
-      },
+      staticAssetBucket: this.node.tryGetContext('staticSiteBucketExisting'),
+      staticAssetDeployment: this.node.tryGetContext('staticAssetDeployment'),
       staticAssetSources: ['src/test/aws/common/resources/'],
     }
   }
@@ -58,7 +55,7 @@ const template = Template.fromStack(stack)
 
 writeTemplate(template, 'yaml')
 
-describe('StaticAssetDeployment', () => {
+describe('StaticAssetDeployment Existing Bucket', () => {
   describe('TestStaticAssetDeploymentConstruct', () => {
     test('synthesises as expected', () => {
       template.resourceCountIs('AWS::S3::Bucket', 0)
@@ -77,7 +74,7 @@ describe('StaticAssetDeployment', () => {
   describe('Custom::CDKBucketDeployment', () => {
     test('properties', () => {
       template.hasResourceProperties('Custom::CDKBucketDeployment', {
-        Prune: false,
+        Prune: true,
         RetainOnDelete: false,
         DestinationBucketName: 'site-test.test.gradientedge.io',
         DestinationBucketKeyPrefix: Match.absent(),

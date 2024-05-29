@@ -7,7 +7,7 @@ import { ref, findOneResourceId } from '../../cdk'
 
 const testStackProps = {
   domainName: 'gradientedge.io',
-  extraContexts: ['src/test/aws/common/cdkConfig/buckets.json'],
+  extraContexts: ['src/test/aws/common/cdkConfig/buckets.json', 'src/test/aws/common/cdkConfig/staticAsset.json'],
   name: 'test-static-asset-deployment-stack',
   region: 'eu-west-1',
   siteCreateAltARecord: true,
@@ -33,10 +33,7 @@ class TestCommonStack extends CommonStack {
     return {
       ...super.determineConstructProps(props),
       staticAssetBucket: this.node.tryGetContext('siteBucket'),
-      staticAssetDeployment: {
-        prune: true,
-        retainOnDelete: false,
-      },
+      staticAssetDeployment: this.node.tryGetContext('staticAssetDeployment'),
       staticAssetSources: [Source.asset('src/test/aws/common/resources/')],
       cloudFrontDistribution: {
         distributionId: 'D1',
@@ -61,7 +58,7 @@ const app = new App({ context: testStackProps })
 const stack = new TestCommonStack(app, 'test-static-asset-deployment-stack', testStackProps)
 const template = Template.fromStack(stack)
 
-describe('StaticAssetDeployment', () => {
+describe('StaticAssetDeployment Missing Domain', () => {
   describe('TestStaticAssetDeploymentConstruct', () => {
     test('synthesises as expected', () => {
       template.resourceCountIs('AWS::S3::Bucket', 1)
