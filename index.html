@@ -99,6 +99,17 @@
 <h3><img src="https://img.shields.io/badge/package.json-4D4D4D?logo=purescript" alt="purescript"></h3>
 <pre class="prettyprint source"><code>&quot;@gradientedge/cdk-utils&quot;: &quot;latest&quot;
 </code></pre>
+<h2>Testing</h2>
+<p>To run test cases, use the following command:</p>
+<pre class="prettyprint source lang-shell"><code>pnpm run test
+</code></pre>
+<p>To focus on the test and watch when you make changes, use the following command:</p>
+<pre class="prettyprint source lang-shell"><code>pnpm test:watch static-asset-deployment-distribution-ref.test.ts
+</code></pre>
+<h3>Toolkit</h3>
+<p>There are common utilities that help with testing constructs which you can find in the <a href="./src/test/tools/cdk">test tools</a> directory.</p>
+<h3>Debug</h3>
+<p>There is a debug utility that can be used to print out the contents of a <code>template</code>. This is useful for debugging and understanding the structure which you can find in the <a href="./src/test/tools/debug">debug</a> directory.</p>
 <!-- references --></article>
     </section>
 
