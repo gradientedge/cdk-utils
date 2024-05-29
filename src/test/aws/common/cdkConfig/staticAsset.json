@@ -7,23 +7,16 @@
     "prune": false,
     "retainOnDelete": false
   },
-  "staticAssetSources": [
-    "src/test/aws/common/resources/",
-    "src/test/aws/common/"
-  ],
+  "staticAssetSources": ["src/test/aws/common/resources/", "src/test/aws/common/"],
   "staticAssetDestinationKeyPrefix": "destination-path/",
   "staticAssetCloudFrontDistributionRef": {
     "domainNameRef": "test.one.io",
     "distributionIdRef": "D1",
-    "invalidationPaths": [
-      "/*"
-    ]
+    "invalidationPaths": ["/*"]
   },
   "staticAssetCloudFrontDistribution": {
     "domainName": "test.one.io",
     "distributionId": "D1",
-    "invalidationPaths": [
-      "/*"
-    ]
+    "invalidationPaths": ["/*"]
   }
 }
