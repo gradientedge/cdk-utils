@@ -4,8 +4,10 @@
   "description": "Utilities for AWS CDK provisioning",
   "main": "dist/index.js",
   "engines": {
-    "node": ">=16 <=20"
+    "node": ">=16 <=20",
+    "pnpm": "=8"
   },
+  "packageManager": "pnpm@8.15.8",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/gradientedge/cdk-utils.git"
@@ -38,6 +40,7 @@
     "prettier": "npx prettier --cache --check \"**/*.{ts,json,md}\"",
     "prettify": "npx prettier --cache --write \"**/*.{ts,json,md}\"",
     "test": "npx rimraf coverage && npx jest --ci --maxWorkers=100%",
+    "test:watch": "npx jest --coverage=false --watchAll",
     "update:deps": "ncu -u --deep --reject react,react-dom",
     "validate": "pnpm prettier && pnpm lint && pnpm test"
   },
@@ -57,7 +60,7 @@
     "@types/node": "^20.12.7",
     "@types/uuid": "^9.0.8",
     "app-root-path": "^3.1.0",
-    "aws-cdk-lib": "^2.137.0",
+    "aws-cdk-lib": "^2.141.0",
     "cdktf": "^0.20.7",
     "cdktf-local-exec": "^0.5.13",
     "constructs": "^10.3.0",
@@ -101,7 +104,8 @@
     "taffydb": "^2.7.3",
     "ts-jest": "^29.1.2",
     "ts-node": "^10.9.2",
-    "typescript": "5.4.5"
+    "typescript": "5.4.5",
+    "yaml": "^2.4.2"
   },
   "optionalDependencies": {
     "prop-types": "^15.8.1",

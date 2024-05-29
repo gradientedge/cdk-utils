@@ -1,6 +1,8 @@
 import { App, Stack, StackProps } from 'aws-cdk-lib'
 import { Runtime } from 'aws-cdk-lib/aws-lambda'
 import fs from 'fs'
+import path from 'path'
+
 import { CommonConstruct } from './construct'
 import { CommonStackProps } from './types'
 
@@ -77,7 +79,7 @@ export class CommonStack extends Stack {
     }
 
     _.forEach(extraContexts, (context: string) => {
-      const extraContextPath = `${appRoot.path}/${context}`
+      const extraContextPath = path.join(appRoot.path, context)
 
       /* scenario where extra context is configured in cdk.json but absent in file system */
       if (!fs.existsSync(extraContextPath)) throw `Extra context properties unavailable in path:${extraContextPath}`
@@ -104,7 +106,8 @@ export class CommonStack extends Stack {
   protected determineStageContexts() {
     const stage = this.node.tryGetContext('stage')
     const stageContextPath = this.node.tryGetContext('stageContextPath') || 'cdkEnv'
-    const stageContextFilePath = `${appRoot.path}/${stageContextPath}/${stage}.json`
+    const stageContextFilePath = path.join(appRoot.path, stageContextPath, `${stage}.json`)
+
     const debug = this.node.tryGetContext('debug')
 
     if (isDevStage(stage)) {

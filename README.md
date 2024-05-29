@@ -57,6 +57,28 @@ pnpm add @gradientedge/cdk-utils
 "@gradientedge/cdk-utils": "latest"
 ```
 
+## Testing
+
+To run test cases, use the following command:
+
+```shell
+pnpm run test
+```
+
+To focus on the test and watch when you make changes, use the following command:
+
+```shell
+pnpm test:watch static-asset-deployment-distribution-ref.test.ts
+```
+
+### Toolkit
+
+There are common utilities that help with testing constructs which you can find in the [test tools](./src/test/tools/cdk) directory.
+
+### Debug
+
+There is a debug utility that can be used to print out the contents of a `template`. This is useful for debugging and understanding the structure which you can find in the [debug](./src/test/tools/debug) directory.
+
 <!-- references -->
 
 [aws-cdk]: https://docs.aws.amazon.com/cdk/latest/guide/home.html

@@ -7,6 +7,7 @@ import { TerraformStack } from 'cdktf'
 import { Construct } from 'constructs'
 import _ from 'lodash'
 import { isDevStage } from '../../common'
+import path from 'path'
 
 /**
  * @classdesc Common stack to use as a base for all higher level constructs.
@@ -72,7 +73,7 @@ export class CommonAzureStack extends TerraformStack {
     }
 
     _.forEach(extraContexts, (context: string) => {
-      const extraContextPath = `${appRoot.path}/${context}`
+      const extraContextPath = path.join(appRoot.path, context)
 
       /* scenario where extra context is configured in cdk.json but absent in file system */
       if (!fs.existsSync(extraContextPath)) throw `Extra context properties unavailable in path:${extraContextPath}`
@@ -99,7 +100,7 @@ export class CommonAzureStack extends TerraformStack {
   protected determineStageContexts() {
     const stage = this.node.tryGetContext('stage')
     const stageContextPath = this.node.tryGetContext('stageContextPath') || 'cdkEnv'
-    const stageContextFilePath = `${appRoot.path}/${stageContextPath}/${stage}.json`
+    const stageContextFilePath = path.join(appRoot.path, stageContextPath, `${stage}.json`)
     const debug = this.node.tryGetContext('debug')
 
     if (isDevStage(stage)) {

@@ -2,6 +2,8 @@ import { Duration, Tags } from 'aws-cdk-lib'
 import { ICertificate } from 'aws-cdk-lib/aws-certificatemanager'
 import * as cf from 'aws-cdk-lib/aws-cloudfront'
 import {
+  IDistribution,
+  DistributionAttributes,
   CloudFrontWebDistribution,
   Distribution,
   Function,
@@ -361,5 +363,9 @@ export class CloudFrontManager {
     createCfnOutput(`${id}-functionName`, scope, cloudfrontFunction.functionName)
 
     return cloudfrontFunction
+  }
+
+  public resolveDistribution(scope: CommonConstruct, props: DistributionAttributes): IDistribution {
+    return Distribution.fromDistributionAttributes(scope, `${scope.node.id}-sa-distribution`, props)
   }
 }
