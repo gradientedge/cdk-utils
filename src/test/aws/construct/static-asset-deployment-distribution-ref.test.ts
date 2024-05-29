@@ -2,7 +2,7 @@ import { App, StackProps } from 'aws-cdk-lib'
 import { Template, Capture } from 'aws-cdk-lib/assertions'
 import { Construct } from 'constructs'
 import { StaticAssetDeployment, StaticAssetDeploymentProps, CommonStack } from '../../../lib'
-import { ref, findOneResourceId } from '../../cdk'
+import { ref, findOneResourceId, importValue } from '../../tools/cdk'
 
 const testStackProps = {
   domainName: 'gradientedge.io',
@@ -109,9 +109,7 @@ describe('StaticAssetDeployment Ref Distribution', () => {
         RetainOnDelete: false,
         DestinationBucketName: ref(findOneResourceId(template, 'AWS::S3::Bucket')),
         DestinationBucketKeyPrefix: 'destination-path/',
-        DistributionId: {
-          'Fn::ImportValue': 'D1',
-        },
+        DistributionId: importValue('D1'),
       })
     })
   })

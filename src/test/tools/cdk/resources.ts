@@ -1,5 +1,8 @@
 import { Template } from 'aws-cdk-lib/assertions'
 
+/**
+ * Finds the resource id of a resource with the given name.
+ */
 const findOneResourceId = (template: Template, name: string): string => {
   const resources = template.findResources(name)
   if (Object.keys(resources).length === 0) {
@@ -10,8 +13,18 @@ const findOneResourceId = (template: Template, name: string): string => {
   return Object.keys(resources)[0]
 }
 
+/**
+ * Wraps value in the Ref CloudFormation function.
+ */
 const ref = (value: string) => {
   return { Ref: value }
 }
 
-export { findOneResourceId, ref }
+/**
+ * Wraps value in the Fn::ImportValue CloudFormation function.
+ */
+const importValue = (value: string) => ({
+  'Fn::ImportValue': value,
+})
+
+export { findOneResourceId, ref, importValue }

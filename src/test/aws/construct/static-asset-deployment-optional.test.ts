@@ -2,7 +2,7 @@ import { App, StackProps } from 'aws-cdk-lib'
 import { Template, Capture } from 'aws-cdk-lib/assertions'
 import { Construct } from 'constructs'
 import { StaticAssetDeployment, StaticAssetDeploymentProps, CommonStack } from '../../../lib'
-import { ref, findOneResourceId } from '../../cdk'
+import { ref, findOneResourceId } from '../../tools/cdk'
 
 const testStackProps = {
   domainName: 'gradientedge.io',
