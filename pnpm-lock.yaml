@@ -45,8 +45,8 @@ importers:
         specifier: ^0.20.7
         version: 0.20.7(constructs@10.3.0)
       cdktf-local-exec:
-        specifier: ^0.5.13
-        version: 0.5.17(@cdktf/provider-null@10.0.0)(cdktf@0.20.7)(constructs@10.3.0)
+        specifier: ^0.5.20
+        version: 0.5.20(@cdktf/provider-null@10.0.0)(cdktf@0.20.7)(constructs@10.3.0)
       constructs:
         specifier: ^10.3.0
         version: 10.3.0
@@ -3564,8 +3564,8 @@ packages:
       lodash: 4.17.21
     dev: true
 
-  /cdktf-local-exec@0.5.17(@cdktf/provider-null@10.0.0)(cdktf@0.20.7)(constructs@10.3.0):
-    resolution: {integrity: sha512-kE6mkcgebdlG5eewE49cHiLWhK+2+a3t+sXYQ7m9HqOwtOc2UKCw+m9UjlradLSDamOQS52dlrHu+QDZ5fLiXw==}
+  /cdktf-local-exec@0.5.20(@cdktf/provider-null@10.0.0)(cdktf@0.20.7)(constructs@10.3.0):
+    resolution: {integrity: sha512-JDmgRankzUC35lzsPKOnj3wntj53+GRTEvz/hjQ+yrUyw9qZB7ZCzNjjcRThM0TRpW8tbM2YFE3p7i6KCZeQqQ==}
     peerDependencies:
       '@cdktf/provider-null': '>=10.0.0'
       cdktf: '>=0.20.0'
