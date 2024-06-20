@@ -11,6 +11,7 @@ import {
   CloudflareFirewallManager,
   CloudflarePageManager,
   CloudflareRecordManager,
+  CloudflareRuleSetManager,
   CloudflareWorkerManager,
   CloudflareZoneManager,
 } from '../services'
@@ -28,6 +29,7 @@ export class CommonCloudflareConstruct extends TerraformStack {
   firewallManager: CloudflareFirewallManager
   pageManager: CloudflarePageManager
   recordManager: CloudflareRecordManager
+  ruleSetManager: CloudflareRuleSetManager
   workerManager: CloudflareWorkerManager
   zoneManager: CloudflareZoneManager
   awsProvider: AwsProvider
@@ -45,6 +47,7 @@ export class CommonCloudflareConstruct extends TerraformStack {
     this.firewallManager = new CloudflareFirewallManager()
     this.pageManager = new CloudflarePageManager()
     this.recordManager = new CloudflareRecordManager()
+    this.ruleSetManager = new CloudflareRuleSetManager()
     this.workerManager = new CloudflareWorkerManager()
     this.zoneManager = new CloudflareZoneManager()
 
