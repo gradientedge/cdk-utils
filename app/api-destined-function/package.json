@@ -16,11 +16,11 @@
     "test": "npx jest --ci --runInBand --passWithNoTests"
   },
   "dependencies": {
-    "@types/uuid": "^9.0.8",
-    "uuid": "^9.0.1"
+    "@types/uuid": "^10.0.0",
+    "uuid": "^10.0.0"
   },
   "devDependencies": {
     "mkdirp": "^3.0.1",
-    "rimraf": "^5.0.5"
+    "rimraf": "^5.0.7"
   }
 }
