@@ -11,13 +11,13 @@ import { CommonCloudflareConstruct } from '../../common'
 import { CloudflareWorkerSiteProps } from './types'
 
 /**
- * @classdesc Provides a construct to create and deploy a cloudflare pages static site
+ * @classdesc Provides a construct to create and deploy a cloudflare worker site
  * @example
- * import { CloudflareWorkerSite, CloudflareStaticSiteProps } '@gradientedge/cdk-utils'
+ * import { CloudflareWorkerSite, CloudflareWorkerSiteProps } '@gradientedge/cdk-utils'
  * import { Construct } from 'constructs'
  *
  * class CustomConstruct extends CloudflareWorkerSite {
- *   constructor(parent: Construct, id: string, props: CloudflareStaticSiteProps) {
+ *   constructor(parent: Construct, id: string, props: CloudflareWorkerSiteProps) {
  *     super(parent, id, props)
  *     this.props = props
  *     this.id = id
