@@ -1,3 +1,5 @@
+import { DataAwsSecretsmanagerSecret } from '@cdktf/provider-aws/lib/data-aws-secretsmanager-secret'
+import { DataAwsSecretsmanagerSecretVersion } from '@cdktf/provider-aws/lib/data-aws-secretsmanager-secret-version'
 import { DataCloudflareZone } from '@cdktf/provider-cloudflare/lib/data-cloudflare-zone'
 import {
   WorkerScript,
@@ -90,5 +92,22 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
       hostname: `${this.props.siteSubDomain}.${this.props.domainName}`,
       service: this.siteWorkerScript.name,
     })
+  }
+
+  /**
+   * @summary Resolve secrets from AWS Secrets Manager
+   * @param secretName the secret name
+   * @param secretKey the secret key
+   * @returns the secret value
+   */
+  protected resolveSecretFromAWS(secretName: string, secretKey: string) {
+    if (!this.awsProvider) return
+    const secret = new DataAwsSecretsmanagerSecret(this, `${this.id}-${secretName}-${secretKey}`, { name: secretName })
+    const secretVersion = new DataAwsSecretsmanagerSecretVersion(this, `${this.id}-${secretName}-${secretKey}-ver`, {
+      provider: this.awsProvider,
+      secretId: secret.id,
+    })
+    if (!secretVersion) throw new Error(`Unable to resolve secret:${secretName}`)
+    return Fn.lookup(Fn.jsondecode(secretVersion.secretString), secretKey)
   }
 }
