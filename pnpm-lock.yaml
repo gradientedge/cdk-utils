@@ -98,8 +98,8 @@ importers:
         specifier: ^7.14.1
         version: 7.14.1(eslint@9.5.0)(typescript@5.5.2)
       aws-cdk:
-        specifier: ^2.147.1
-        version: 2.147.1
+        specifier: ^2.149.0
+        version: 2.149.0
       better-docs:
         specifier: ^2.7.3
         version: 2.7.3(prop-types@15.8.1)(react-dom@17.0.2)(react@17.0.2)
@@ -3128,8 +3128,8 @@ packages:
       - yaml
       - mime-types
 
-  /aws-cdk@2.147.1:
-    resolution: {integrity: sha512-HKlm9j62P/JkYtdTuv0RfZrZyzxnTJwumkaHa//FAAFkZCI+gIwobaUJzlLQh+cK+0hDG98n9Yyw6dOIYgnTLQ==}
+  /aws-cdk@2.149.0:
+    resolution: {integrity: sha512-X+FGIJuBbsFPwA5tM4uOh9qdK1pbPZ6WK1QbtVfN7YsruwEgdx12wB8H3oLh3waFS87/rCww05Z1PzDdM+edCg==}
     engines: {node: '>= 14.15.0'}
     hasBin: true
     optionalDependencies:
