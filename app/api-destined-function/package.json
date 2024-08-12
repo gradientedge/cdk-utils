@@ -21,6 +21,6 @@
   },
   "devDependencies": {
     "mkdirp": "^3.0.1",
-    "rimraf": "^5.0.7"
+    "rimraf": "^6.0.1"
   }
 }
