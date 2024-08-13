@@ -100,6 +100,8 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
     this.resolveEnvironmentVariables()
     this.createWorker()
     this.createWorkerDomain()
+    this.createRuleset()
+    this.createZoneSettingsOverride()
   }
 
   /**
@@ -124,6 +126,9 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
     }
   }
 
+  /**
+   * @summary Create the worker
+   */
   protected createWorker() {
     const workerContent = new TerraformAsset(this, `${this.id}-worker-content`, {
       path: this.props.siteWorkerAsset,
@@ -136,6 +141,9 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
     })
   }
 
+  /**
+   * @summary Create the worker domain
+   */
   protected createWorkerDomain() {
     this.workerManager.createWorkerDomain(`${this.id}-worker-domain`, this, {
       ...this.props.siteWorkerDomain,
@@ -159,6 +167,26 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
     })
     if (!secretVersion) throw new Error(`Unable to resolve secret:${secretName}`)
     return Fn.lookup(Fn.jsondecode(secretVersion.secretString), secretKey)
+  }
+
+  /**
+   * @summary Create the rules
+   */
+  protected createRuleset() {
+    if (!this.props.siteRuleSet) return
+    this.ruleSetManager.createRuleSet(`${this.id}-rule`, this, this.props.siteRuleSet)
+  }
+
+  /**
+   * @summary Create zone settings override
+   */
+  protected createZoneSettingsOverride() {
+    if (!this.props.siteZoneSettingsOverride) return
+    this.zoneManager.createZoneSettingsOverride(
+      `${this.id}-zone-settings-override`,
+      this,
+      this.props.siteZoneSettingsOverride
+    )
   }
 }
 </code></pre>
