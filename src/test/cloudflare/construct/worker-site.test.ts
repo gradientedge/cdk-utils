@@ -1,4 +1,6 @@
+import { Ruleset } from '@cdktf/provider-cloudflare/lib/ruleset'
 import { Zone } from '@cdktf/provider-cloudflare/lib/zone'
+import { ZoneSettingsOverride } from '@cdktf/provider-cloudflare/lib/zone-settings-override'
 import { WorkerScript } from '@cdktf/provider-cloudflare/lib/worker-script'
 import { WorkerDomain } from '@cdktf/provider-cloudflare/lib/worker-domain'
 import { App, Testing } from 'cdktf'
@@ -20,6 +22,7 @@ const testStackProps: any = {
   domainName: 'gradientedge.io',
   extraContexts: [
     'src/test/cloudflare/common/cdkConfig/dummy.json',
+    'src/test/cloudflare/common/cdkConfig/rule-set.json',
     'src/test/cloudflare/common/cdkConfig/worker.json',
     'src/test/cloudflare/common/cdkConfig/zone.json',
   ],
@@ -43,9 +46,11 @@ class TestCommonStack extends CommonCloudflareStack {
       ...super.determineConstructProps(props),
       siteWorkerAsset: `src/test/cloudflare/common/sample.html`,
       siteWorkerDomain: this.node.tryGetContext('testWorkerDomain'),
+      siteRuleSet: this.node.tryGetContext('testRuleSet'),
       siteSubDomain: `test.app`,
       siteWorkerScript: this.node.tryGetContext('testWorkerScript'),
       siteZone: this.node.tryGetContext('testZone'),
+      siteZoneSettingsOverride: this.node.tryGetContext('testZoneSettingsOverride'),
       testAttribute: this.node.tryGetContext('testAttribute'),
     }
   }
@@ -143,6 +148,43 @@ describe('TestCloudflareWorkerSite', () => {
       hostname: 'test.app.gradientedge.io',
       service: '${cloudflare_worker_script.test-common-stack-worker-script.name}',
       zone_id: '${data.cloudflare_zone.test-common-stack-worker-domain-data-zone-data-zone.id}',
+    })
+  })
+})
+
+describe('TestCloudflareWorkerSite', () => {
+  test('provisions Rule Set as expected', () => {
+    expect(construct).toHaveResourceWithProperties(Ruleset, {
+      name: 'testRuleSet',
+      zone_id: '${data.cloudflare_zone.test-common-stack-rule-data-zone-data-zone.id}',
+      rules: {
+        action: 'set_cache_settings',
+      },
+    })
+  })
+})
+
+describe('TestCloudflareWorkerSite', () => {
+  test('provisions zone settings override as expected', () => {
+    expect(construct).toHaveResourceWithProperties(ZoneSettingsOverride, {
+      settings: {
+        automatic_https_rewrites: 'on',
+        brotli: 'on',
+        challenge_ttl: 2700,
+        minify: {
+          css: 'on',
+          html: 'off',
+          js: 'off',
+        },
+        mirage: 'on',
+        opportunistic_encryption: 'on',
+        security_header: {
+          enabled: true,
+        },
+        security_level: 'high',
+        waf: 'on',
+      },
+      zone_id: '${data.cloudflare_zone.test-common-stack-zone-settings-override-data-zone-data-zone.id}',
     })
   })
 })
