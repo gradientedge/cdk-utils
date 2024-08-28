@@ -159,7 +159,7 @@ export class AppConfigManager {
       ...props.configurationProfile,
       applicationId,
       locationUri: props.configurationProfile.locationUri || 'hosted',
-      name: `${props.configurationProfile.name}-${scope.props.stage}`,
+      name: scope.resourceNameFormatter(props.configurationProfile.name, props.resourceNameOptions),
     })
 
     createCfnOutput(`${id}-configurationProfileId`, scope, Fn.ref(profile.logicalId))

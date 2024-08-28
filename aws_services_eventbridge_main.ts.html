@@ -95,9 +95,13 @@ export class EventManager {
     if (!props) throw `EventBus props undefined for ${id}`
     if (!props.eventBusName) throw `EventBus eventBusName undefined for ${id}`
 
+    let eventBusName = props.eventBusName
+    if (eventBusName &amp;&amp; eventBusName != 'default') {
+      eventBusName = scope.resourceNameFormatter(props.eventBusName, props.resourceNameOptions)
+    }
     const eventBus = new EventBus(scope, `${id}`, {
       ...props,
-      eventBusName: scope.resourceNameFormatter(props.eventBusName, props.resourceNameOptions),
+      eventBusName,
     })
 
     createCfnOutput(`${id}-eventBusName`, scope, `${props.eventBusName}-${scope.props.stage}`)
