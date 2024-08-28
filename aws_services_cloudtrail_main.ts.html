@@ -122,7 +122,7 @@ export class CloudTrailManager {
       s3BucketName: logBucket.bucketName,
       s3KeyPrefix: `logs-${props.trailName}`,
       tags: [{ key: 'service', value: scope.props.name }],
-      trailName: scope.resourceNameFormatter(props.trailName, props.resourceNameOptions),
+      trailName: scope.resourceNameFormatter.format(props.trailName, props.resourceNameOptions),
     })
 
     cloudTrail.addDependency(logBucketPolicy)

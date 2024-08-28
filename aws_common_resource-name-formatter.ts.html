@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>aws/common/resource-name-formatter.ts - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="main.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <script src="scripts/commonNav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">aws/common/resource-name-formatter.ts</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { Construct } from 'constructs'
+import { CommonStackProps, ResourceNameFormatterProps } from './types'
+
+export class ResourceNameFormatter extends Construct {
+  props: CommonStackProps
+
+  constructor(parent: Construct, id: string, props: CommonStackProps) {
+    super(parent, id)
+    this.props = props
+  }
+
+  /**
+   * @summary Helper method to format a resource name based on the provided options
+   * @param resourceName the resource name to format
+   * @param options options to control the formatting of the resource name
+   * @returns The formatted resource name
+   */
+  public format(resourceName: string, options?: ResourceNameFormatterProps) {
+    const resourceNameElements = []
+    resourceNameElements.push(options?.prefix ?? this.props.resourcePrefix)
+    resourceNameElements.push(resourceName)
+    resourceNameElements.push(options?.suffix ?? this.props.resourceSuffix)
+    resourceNameElements.push(this.props.stage)
+    return resourceNameElements.filter(resourceNameElement => resourceNameElement != undefined).join('-')
+  }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+    
+</div>
+
+<br class="clear">
+
+<footer>
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>

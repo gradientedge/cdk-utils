@@ -209,7 +209,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
       this.apiEvent.eventBus = EventBus.fromEventBusName(
         this,
         `${this.id}-event-bus`,
-        this.resourceNameFormatter(this.props.event.eventBusName ?? 'default')
+        this.resourceNameFormatter.format(this.props.event.eventBusName ?? 'default')
       )
       return
     }
@@ -225,7 +225,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
     if (this.props.api.useExisting) return
     this.apiEvent.logGroup = this.logManager.createLogGroup(`${this.id}-log`, this, {
       ...{
-        logGroupName: `/${this.resourceNameFormatter(this.id)}/events/api-to-eventbridge-target`,
+        logGroupName: `/${this.resourceNameFormatter.format(this.id)}/events/api-to-eventbridge-target`,
       },
       ...this.props.event.logGroup,
     })
@@ -406,7 +406,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
       `${this.id}-rest-api-access-log`,
       this,
       {
-        logGroupName: `/custom/api/${this.resourceNameFormatter(this.id)}-rest-api-access`,
+        logGroupName: `/custom/api/${this.resourceNameFormatter.format(this.id)}-rest-api-access`,
         removalPolicy: RemovalPolicy.DESTROY,
       }
     )
@@ -456,7 +456,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
         types: [EndpointType.REGIONAL],
       },
       ...this.props.api.restApi,
-      restApiName: this.resourceNameFormatter(
+      restApiName: this.resourceNameFormatter.format(
         this.props.api.restApi?.restApiName,
         this.props.api.restApi?.resourceNameOptions
       ),

@@ -188,7 +188,7 @@ export class ApiToLambdaTarget extends CommonConstruct {
     this.apiToLambdaTargetRestApi.lambda = Function.fromFunctionName(
       this,
       `${this.id}-lambda`,
-      this.resourceNameFormatter(this.props.lambdaFunctionName)
+      this.resourceNameFormatter.format(this.props.lambdaFunctionName)
     )
   }
 
@@ -206,7 +206,7 @@ export class ApiToLambdaTarget extends CommonConstruct {
     }
 
     const accessLogGroup = this.logManager.createLogGroup(`${this.id}-rest-api-access-log`, this, {
-      logGroupName: `/custom/api/${this.resourceNameFormatter(this.id)}-rest-api-access`,
+      logGroupName: `/custom/api/${this.resourceNameFormatter.format(this.id)}-rest-api-access`,
       removalPolicy: RemovalPolicy.DESTROY,
     })
 
