@@ -126,7 +126,7 @@ describe('TestAppConfigConstruct', () => {
   test('provisions new profile as expected', () => {
     template.hasResourceProperties('AWS::AppConfig::ConfigurationProfile', {
       Description: 'test-profile',
-      Name: 'test-profile-test',
+      Name: 'cdktest-test-profile-test',
     })
   })
 })

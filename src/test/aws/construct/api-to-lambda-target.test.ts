@@ -213,7 +213,7 @@ describe('TestApiToLambdaTargetConstruct', () => {
 describe('TestApiToLambdaTargetConstruct', () => {
   test('provisions log group as expected', () => {
     template.hasResourceProperties('AWS::Logs::LogGroup', {
-      LogGroupName: '/custom/api/test-rest-api-access-test',
+      LogGroupName: '/custom/api/cdktest-test-test-rest-api-access-test',
       RetentionInDays: 731,
     })
   })

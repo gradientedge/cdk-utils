@@ -18,6 +18,10 @@
     },
     "ruleName": "test-rule"
   },
+  "testEventBridgeTargetRule": {
+    "enabled": true,
+    "ruleName": "test-eb-target-rule"
+  },
   "testSqsRule": {
     "description": "Rule to send notification to SQS target",
     "eventPattern": {

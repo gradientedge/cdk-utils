@@ -52,7 +52,7 @@ class TestCommonStack extends CommonStack {
         apiSubDomain: this.node.tryGetContext('apiSubDomain'),
         event: {
           eventBusName: 'test',
-          rule: this.node.tryGetContext('testLambdaRule'),
+          rule: this.node.tryGetContext('testEventBridgeTargetRule'),
         },
         logLevel: this.node.tryGetContext('logLevel'),
         nodeEnv: this.node.tryGetContext('nodeEnv'),
@@ -202,7 +202,7 @@ describe('TestApiToEventBridgeTargetConstruct', () => {
 describe('TestApiToEventBridgeTargetConstruct', () => {
   test('provisions log group as expected', () => {
     template.hasResourceProperties('AWS::Logs::LogGroup', {
-      LogGroupName: '/test/events/api-to-eventbridge-target-test',
+      LogGroupName: '/cdktest-test-test/events/api-to-eventbridge-target-test',
     })
   })
 })
@@ -213,7 +213,7 @@ describe('TestApiToEventBridgeTargetConstruct', () => {
       EventPattern: {
         source: ['api-to-eventbridge-target'],
       },
-      Name: 'cdktest-test-api-to-eventbridge-target-test',
+      Name: 'cdktest-test-eb-target-rule-test',
       State: 'ENABLED',
     })
   })

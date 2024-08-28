@@ -93,7 +93,7 @@ describe('TestApplicationConfiguration', () => {
   test('provisions new profile as expected', () => {
     template.hasResourceProperties('AWS::AppConfig::ConfigurationProfile', {
       Description: 'test-profile',
-      Name: 'test-profile-test',
+      Name: 'cdktest-test-profile-test',
     })
   })
 })
@@ -127,7 +127,7 @@ describe('TestApplicationConfiguration', () => {
     template.hasResourceProperties('AWS::AppConfig::DeploymentStrategy', {
       DeploymentDurationInMinutes: 0,
       GrowthFactor: 100,
-      Name: 'test-deployment-strategy',
+      Name: 'cdktest-test-deployment-strategy-test',
       ReplicateTo: 'NONE',
     })
   })
