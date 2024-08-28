@@ -63,9 +63,9 @@ class TestCommonStack extends CommonStack {
       ...super.determineConstructProps(props),
       testCluster: this.node.tryGetContext('testCluster'),
       testDynamoDbToLambdaPipe: this.node.tryGetContext('testDynamoDbToLambdaPipe'),
-      testFargateRule: this.node.tryGetContext('testLambda'),
+      testFargateRule: this.node.tryGetContext('testFargateRule'),
       testLambda: this.node.tryGetContext('testLambda'),
-      testLambdaRule: this.node.tryGetContext('testLambda'),
+      testLambdaRule: this.node.tryGetContext('testLambdaRule'),
       testLogGroup: this.node.tryGetContext('testLogGroup'),
       testSqs: this.node.tryGetContext('testSqs'),
       testSqsToLambdaPipe: this.node.tryGetContext('testSqsToLambdaPipe'),
@@ -248,6 +248,8 @@ describe('TestEventConstruct', () => {
   test('provisions new fargate event rule as expected', () => {
     template.hasResourceProperties('AWS::Events::Rule', {
       Description: 'Rule to send notification on new objects in data bucket to ecs task target',
+      Name: 'cdktest-test-fargate-rule-test',
+      State: 'ENABLED',
       Targets: [
         {
           Arn: {
@@ -262,11 +264,9 @@ describe('TestEventConstruct', () => {
               },
             },
             TaskCount: 1,
-            TaskDefinitionArn: {
-              Ref: 'testcommonstacktesttask23AF6E18',
-            },
+            TaskDefinitionArn: { Ref: 'testcommonstacktesttask23AF6E18' },
           },
-          Id: 'test-fargate-rule-test',
+          Id: 'cdktest-test-fargate-rule-test',
           RoleArn: {
             'Fn::GetAtt': ['testcommonstacktestecsrole9F6D8BF8', 'Arn'],
           },
@@ -278,12 +278,12 @@ describe('TestEventConstruct', () => {
   test('provisions new lambda event rule as expected', () => {
     template.hasResourceProperties('AWS::Events::Rule', {
       Description: 'Rule to send notification to lambda function target',
+      Name: 'cdktest-test-lambda-rule-test',
+      State: 'DISABLED',
       Targets: [
         {
-          Arn: {
-            'Fn::GetAtt': ['testcommonstacktestlambda5B168AC2', 'Arn'],
-          },
-          Id: 'test-lambda-rule-test',
+          Arn: { 'Fn::GetAtt': ['testcommonstacktestlambda5B168AC2', 'Arn'] },
+          Id: 'cdktest-test-lambda-rule-test',
         },
       ],
     })
@@ -293,7 +293,7 @@ describe('TestEventConstruct', () => {
 describe('TestEventConstruct', () => {
   test('provisions new eventbridge pipe as expected', () => {
     template.hasResourceProperties('AWS::Pipes::Pipe', {
-      Name: 'test-dynamoDb-to-lambda-pipe-test',
+      Name: 'cdktest-test-dynamoDb-to-lambda-pipe-test',
       RoleArn: {
         'Fn::GetAtt': ['testcommonstacktestdynamoDbtolambdapiperoleCDE774CB', 'Arn'],
       },
@@ -319,7 +319,7 @@ describe('TestEventConstruct', () => {
 describe('TestEventConstruct', () => {
   test('provisions new eventbridge pipe as expected', () => {
     template.hasResourceProperties('AWS::Pipes::Pipe', {
-      Name: 'test-sqs-to-sfn-pipe-test',
+      Name: 'cdktest-test-sqs-to-sfn-pipe-test',
       RoleArn: {
         'Fn::GetAtt': ['testcommonstacktestsqstosfnpiperole2EFA5C05', 'Arn'],
       },
@@ -354,7 +354,7 @@ describe('TestEventConstruct', () => {
 describe('TestEventConstruct', () => {
   test('provisions new eventbridge pipe as expected', () => {
     template.hasResourceProperties('AWS::Pipes::Pipe', {
-      Name: 'test-sqs-to-lambda-pipe-test',
+      Name: 'cdktest-test-sqs-to-lambda-pipe-test',
       RoleArn: {
         'Fn::GetAtt': ['testcommonstacktestsqstolambdapiperole7FBE9459', 'Arn'],
       },

@@ -189,7 +189,7 @@ describe('TestLambdaConstruct', () => {
           REGION: 'us-east-1',
         },
       },
-      FunctionName: 'test-lambda-test',
+      FunctionName: 'cdktest-test-lambda-test',
       Handler: 'index.lambda_handler',
       MemorySize: 1024,
       Runtime: 'nodejs18.x',
@@ -209,7 +209,7 @@ describe('TestLambdaConstruct', () => {
 
   test('provisions new edge lambda as expected', () => {
     template.hasResourceProperties('AWS::Lambda::Function', {
-      FunctionName: 'test-lambda-edge-test',
+      FunctionName: 'cdktest-test-lambda-edge-test',
       Handler: 'index.handler',
       MemorySize: 1024,
       Runtime: 'nodejs18.x',
@@ -233,7 +233,7 @@ describe('TestLambdaConstruct', () => {
           REGION: 'us-east-1',
         },
       },
-      FunctionName: 'test-lambda-concurrency-test',
+      FunctionName: 'cdktest-test-lambda-concurrency-test',
       Handler: 'index.lambda_handler',
       MemorySize: 1024,
       Runtime: 'nodejs18.x',
@@ -253,7 +253,7 @@ describe('TestLambdaConstruct', () => {
   test('provisions new redrive queue as expected', () => {
     template.hasResourceProperties('AWS::SQS::Queue', {
       MessageRetentionPeriod: 604800,
-      QueueName: 'test-lambda-with-error-handling-redriveq-test',
+      QueueName: 'cdktest-test-lambda-with-error-handling-redriveq-test',
       ReceiveMessageWaitTimeSeconds: 20,
       VisibilityTimeout: 300,
     })
@@ -262,7 +262,7 @@ describe('TestLambdaConstruct', () => {
   test('provisions new dead letter queue as expected', () => {
     template.hasResourceProperties('AWS::SQS::Queue', {
       MessageRetentionPeriod: 604800,
-      QueueName: 'test-lambda-with-error-handling-dlq-test',
+      QueueName: 'cdktest-test-lambda-with-error-handling-dlq-test',
       ReceiveMessageWaitTimeSeconds: 20,
       VisibilityTimeout: 300,
     })

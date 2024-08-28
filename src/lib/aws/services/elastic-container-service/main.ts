@@ -148,6 +148,8 @@ export class EcsManager {
     logGroup: ILogGroup
   ) {
     if (!props) throw `Ecs Load balanced Fargate Service props undefined for ${id}`
+    if (!props.loadBalancerName) throw `Ecs loadBalancerName undefined for ${id}`
+    if (!props.serviceName) throw `Ecs serviceName undefined for ${id}`
     if (!props.taskImageOptions)
       throw `TaskImageOptions for Ecs Load balanced Fargate Service props undefined for ${id}`
 
@@ -157,12 +159,12 @@ export class EcsManager {
       cluster,
       enableECSManagedTags: true,
       healthCheckGracePeriod: props.healthCheckGracePeriod ?? Duration.seconds(60),
-      loadBalancerName: `${id}-${scope.props.stage}`,
+      loadBalancerName: scope.resourceNameFormatter(props.loadBalancerName, props.resourceNameOptions),
       runtimePlatform: {
         cpuArchitecture: props.runtimePlatform?.cpuArchitecture ?? CpuArchitecture.X86_64,
         operatingSystemFamily: props.runtimePlatform?.operatingSystemFamily ?? OperatingSystemFamily.LINUX,
       },
-      serviceName: `${id}-${scope.props.stage}`,
+      serviceName: scope.resourceNameFormatter(props.serviceName, props.resourceNameOptions),
       taskImageOptions: {
         ...props.taskImageOptions,
         enableLogging: props.taskImageOptions?.enableLogging ?? true,

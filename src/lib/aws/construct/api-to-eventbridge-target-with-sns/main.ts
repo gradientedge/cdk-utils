@@ -362,7 +362,7 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
       `${this.id}-destined-topic`,
       this,
       {
-        topicName: `${this.id}-destined-topic`,
+        topicName: this.resourceNameFormatter(`${this.id}-destined-topic`),
       },
       this.apiDestinedLambda.function
     )
@@ -513,6 +513,8 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
       removalPolicy: RemovalPolicy.DESTROY,
     })
 
+    if (!this.props.api.restApi?.restApiName) throw `RestApi name undefined for ${this.id}`
+
     this.apiDestinedRestApi.api = new RestApi(this, `${this.id}-sns-rest-api`, {
       defaultCorsPreflightOptions: {
         allowHeaders: Cors.DEFAULT_HEADERS,
@@ -535,8 +537,11 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
       endpointConfiguration: {
         types: [EndpointType.REGIONAL],
       },
-      restApiName: `${this.id}-destined-rest-api-${this.props.stage}`,
       ...this.props.api,
+      restApiName: this.resourceNameFormatter(
+        this.props.api.restApi?.restApiName,
+        this.props.api.restApi?.resourceNameOptions
+      ),
     })
     this.addCfnOutput(`${this.id}-restApiId`, this.apiDestinedRestApi.api.restApiId)
     this.addCfnOutput(`${this.id}-restApiRootResourceId`, this.apiDestinedRestApi.api.root.resourceId)

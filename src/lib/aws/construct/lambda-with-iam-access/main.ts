@@ -187,11 +187,11 @@ export class LambdaWithIamAccess extends CommonConstruct {
    */
   protected createIamUserForLambdaFunction() {
     this.lambdaIamUser = new User(this, `${this.id}-lambda-user`, {
-      userName: `${this.id}-user-${this.props.stage}`,
+      userName: this.resourceNameFormatter(`${this.id}-user`),
     })
 
     new Policy(this, `${this.id}-lambda-user-policy`, {
-      policyName: `${this.id}-policy-${this.props.stage}`,
+      policyName: this.resourceNameFormatter(`${this.id}-policy`),
       statements: [
         new PolicyStatement({
           actions: ['lambda:InvokeFunction'],
@@ -204,7 +204,7 @@ export class LambdaWithIamAccess extends CommonConstruct {
     if (this.props.lambda.lambdaAliases && !_.isEmpty(this.props.lambda.lambdaAliases)) {
       _.forEach(this.props.lambda.lambdaAliases, (alias, index) => {
         new Policy(this, `${this.id}-alias-user-policy`, {
-          policyName: `${this.id}-alias-policy-${index}-${this.props.stage}`,
+          policyName: this.resourceNameFormatter(`${this.id}--alias-policy-${index}`),
           statements: [
             new PolicyStatement({
               actions: ['lambda:InvokeFunction'],
@@ -230,9 +230,9 @@ export class LambdaWithIamAccess extends CommonConstruct {
    * @summary Method to create iam secret for the lambda function
    */
   protected createIamSecretForLambdaFunction() {
-    this.lambdaUserAccessSecret = new Secret(
-      this,
+    this.lambdaUserAccessSecret = this.secretsManager.createSecret(
       `${this.id}-lambda-user-secret-${this.props.stage}`,
+      this,
       this.props.lambdaSecret
     )
 

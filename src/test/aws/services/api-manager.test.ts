@@ -163,7 +163,7 @@ describe('TestApiConstruct', () => {
 describe('TestApiConstruct', () => {
   test('provisions new rest api as expected', () => {
     template.hasResourceProperties('AWS::ApiGateway::RestApi', {
-      Name: 'test-lambda-rest-api-test',
+      Name: 'cdktest-test-lambda-rest-api-test',
     })
   })
 })

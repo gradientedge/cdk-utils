@@ -105,7 +105,7 @@ describe('TestWafConstruct', () => {
       Addresses: ['0.0.0.0/32'],
       Description: 'IP Set for test-ip-set - test stage',
       IPAddressVersion: 'IPV4',
-      Name: 'test-ipset-test',
+      Name: 'cdktest-test-ipset-test',
       Scope: 'REGIONAL',
     })
   })
@@ -119,7 +119,7 @@ describe('TestWafConstruct', () => {
         Block: {},
       },
       Description: 'Web Acl for test-web-acl - test stage',
-      Name: 'test-webacl-test',
+      Name: 'cdktest-test-webacl-test',
       Scope: 'CLOUDFRONT',
       Tags: [
         {

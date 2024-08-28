@@ -37,11 +37,12 @@ export class SnsManager {
     emails: string[]
   ) {
     if (!props) throw `Subscription props undefined for ${id}`
+    if (!props.topicName) throw `Subscription topicName undefined for ${id}`
 
     const topic = new Topic(scope, id, {
       ...props,
-      displayName: `${props.topicName}-${scope.props.stage}`,
-      topicName: `${props.topicName}-${scope.props.stage}`,
+      displayName: scope.resourceNameFormatter(props.topicName, props.resourceNameOptions),
+      topicName: scope.resourceNameFormatter(props.topicName, props.resourceNameOptions),
     })
 
     if (emails && !_.isEmpty(emails)) {
@@ -68,11 +69,12 @@ export class SnsManager {
     lambdaFunction: IFunction
   ) {
     if (!props) throw `Subscription props undefined for ${id}`
+    if (!props.topicName) throw `Subscription topicName undefined for ${id}`
 
     const topic = new Topic(scope, id, {
       ...props,
-      displayName: `${props.topicName}-${scope.props.stage}`,
-      topicName: `${props.topicName}-${scope.props.stage}`,
+      displayName: scope.resourceNameFormatter(props.topicName, props.resourceNameOptions),
+      topicName: scope.resourceNameFormatter(props.topicName, props.resourceNameOptions),
     })
 
     topic.addSubscription(new LambdaSubscription(lambdaFunction))

@@ -138,7 +138,7 @@ describe('TestCloudTrailConstruct', () => {
       IsLogging: true,
       IsMultiRegionTrail: false,
       S3KeyPrefix: 'logs-test-trail',
-      TrailName: 'test-trail-test',
+      TrailName: 'cdktest-test-trail-test',
     })
   })
 })

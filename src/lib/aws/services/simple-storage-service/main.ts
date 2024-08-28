@@ -71,10 +71,14 @@ export class S3Manager {
    * @param scope scope in which this resource is defined
    * @param bucketName the bucket name
    */
-  public static determineBucketName(scope: CommonConstruct, bucketName: string) {
-    return scope.props.excludeDomainNameForBuckets
-      ? S3Manager.determineBucketNameByAccountAndRegion(scope, bucketName)
-      : S3Manager.determineBucketNameByDomainName(scope, bucketName)
+  public static determineBucketName(scope: CommonConstruct, props: S3BucketProps, bucketName: string) {
+    if (!scope.props.excludeDomainNameForBuckets) {
+      return S3Manager.determineBucketNameByDomainName(scope, bucketName)
+    }
+    if (!scope.props.excludeAccountNumberForBuckets) {
+      return S3Manager.determineBucketNameByAccountAndRegion(scope, bucketName)
+    }
+    return scope.resourceNameFormatter(bucketName, props.resourceNameOptions)
   }
 
   /**
@@ -88,15 +92,15 @@ export class S3Manager {
 
     let bucket: IBucket
 
-    const bucketName = S3Manager.determineBucketName(scope, props.bucketName)
+    const bucketName = S3Manager.determineBucketName(scope, props, props.bucketName)
 
     if (props.existingBucket && props.bucketName) {
-      bucket = Bucket.fromBucketName(scope, `${id}`, bucketName)
+      bucket = Bucket.fromBucketName(scope, `${id}`, S3Manager.determineBucketName(scope, props, props.bucketName))
     } else {
       let logBucket
       if (props.logBucketName) {
-        const logBucketName = S3Manager.determineBucketName(scope, props.logBucketName)
-        logBucket = Bucket.fromBucketName(scope, `${id}-logs`, logBucketName)
+        const logBucketName = S3Manager.determineBucketName(scope, props, props.logBucketName)
+        logBucket = Bucket.fromBucketName(scope, `${id}-logs`, props.logBucketName)
       }
 
       bucket = new Bucket(scope, `${id}-bucket`, {

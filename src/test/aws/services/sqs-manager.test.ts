@@ -113,7 +113,7 @@ describe('TestSqsConstruct', () => {
   test('provisions new queue as expected', () => {
     template.hasResourceProperties('AWS::SQS::Queue', {
       MessageRetentionPeriod: 604800,
-      QueueName: 'test-sqs',
+      QueueName: 'cdktest-test-sqs-test',
       ReceiveMessageWaitTimeSeconds: 20,
       VisibilityTimeout: 300,
     })
@@ -122,7 +122,7 @@ describe('TestSqsConstruct', () => {
   test('provisions new redrive queue as expected', () => {
     template.hasResourceProperties('AWS::SQS::Queue', {
       MessageRetentionPeriod: 604800,
-      QueueName: 'test-lambda-with-error-handling-redriveq-test',
+      QueueName: 'cdktest-test-lambda-with-error-handling-redriveq-test',
       ReceiveMessageWaitTimeSeconds: 20,
       VisibilityTimeout: 300,
     })
@@ -131,7 +131,7 @@ describe('TestSqsConstruct', () => {
   test('provisions new dead letter queue as expected', () => {
     template.hasResourceProperties('AWS::SQS::Queue', {
       MessageRetentionPeriod: 604800,
-      QueueName: 'test-lambda-with-error-handling-dlq-test',
+      QueueName: 'cdktest-test-lambda-with-error-handling-dlq-test',
       ReceiveMessageWaitTimeSeconds: 20,
       VisibilityTimeout: 300,
     })

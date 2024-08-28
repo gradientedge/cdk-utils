@@ -139,15 +139,15 @@ describe('TestSnsConstruct', () => {
 describe('TestSnsConstruct', () => {
   test('provisions new topic as expected', () => {
     template.hasResourceProperties('AWS::SNS::Topic', {
-      DisplayName: 'test-service-test',
+      DisplayName: 'cdktest-test-service-test',
       FifoTopic: false,
-      TopicName: 'test-service-test',
+      TopicName: 'cdktest-test-service-test',
     })
 
     template.hasResourceProperties('AWS::SNS::Topic', {
-      DisplayName: 'test-another-service-test',
+      DisplayName: 'cdktest-test-another-service-test',
       FifoTopic: true,
-      TopicName: 'test-another-service-test.fifo',
+      TopicName: 'cdktest-test-another-service-test.fifo',
     })
   })
 })

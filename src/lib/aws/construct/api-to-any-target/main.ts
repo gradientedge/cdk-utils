@@ -126,6 +126,8 @@ export class ApiToAnyTarget extends CommonConstruct {
       return
     }
 
+    if (!this.props.api.restApi?.restApiName) throw `RestApi name undefined for ${this.id}`
+
     this.apiToAnyTargetRestApi.api = new RestApi(this, `${this.id}-rest-api`, {
       cloudWatchRole: this.props.api.restApi?.cloudWatchRole ?? true,
       defaultCorsPreflightOptions: {
@@ -151,8 +153,11 @@ export class ApiToAnyTarget extends CommonConstruct {
       endpointConfiguration: {
         types: [this.isProductionStage() ? EndpointType.EDGE : EndpointType.REGIONAL],
       },
-      restApiName: `${this.id}-rest-api-${this.props.stage}`,
       ...this.props.api.restApi,
+      restApiName: this.resourceNameFormatter(
+        this.props.api.restApi?.restApiName,
+        this.props.api.restApi?.resourceNameOptions
+      ),
     })
     this.addCfnOutput(`${this.id}-restApiId`, this.apiToAnyTargetRestApi.api.restApiId)
     this.addCfnOutput(`${this.id}-restApiRootResourceId`, this.apiToAnyTargetRestApi.api.root.resourceId)

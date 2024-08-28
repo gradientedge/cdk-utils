@@ -172,7 +172,7 @@ describe('TestPipedEventHandler', () => {
   test('provisions event rule as expected', () => {
     template.hasResourceProperties('AWS::Events::Rule', {
       EventPattern: { 'detail-type': ['Test'] },
-      Name: 'test-rule-test',
+      Name: 'cdktest-test-rule-test',
       State: 'ENABLED',
       Targets: [{ Arn: { 'Fn::GetAtt': ['testapistacktestpipequeue5A230831', 'Arn'] }, Id: 'Target0' }],
     })
@@ -196,7 +196,7 @@ describe('TestPipedEventHandler', () => {
         Level: 'ALL',
       },
       RoleArn: { 'Fn::GetAtt': ['testapistacktestworkflowroleCDE15AC1', 'Arn'] },
-      StateMachineName: 'test-workflow-test',
+      StateMachineName: 'cdktest-test-workflow-test',
       StateMachineType: 'STANDARD',
     })
   })
@@ -205,7 +205,7 @@ describe('TestPipedEventHandler', () => {
 describe('TestPipedEventHandler', () => {
   test('provisions pipes as expected', () => {
     template.hasResourceProperties('AWS::Pipes::Pipe', {
-      Name: 'test-sqs-to-sfn-pipe-test',
+      Name: 'cdktest-test-sqs-to-sfn-pipe-test',
       RoleArn: { 'Fn::GetAtt': ['testapistacktestpipesfnroleEDFDEB2D', 'Arn'] },
       Source: { 'Fn::GetAtt': ['testapistacktestpipequeue5A230831', 'Arn'] },
       SourceParameters: {
@@ -219,7 +219,7 @@ describe('TestPipedEventHandler', () => {
       },
     })
     template.hasResourceProperties('AWS::Pipes::Pipe', {
-      Name: 'test-sqs-to-lambda-pipe-test',
+      Name: 'cdktest-test-sqs-to-lambda-pipe-test',
       RoleArn: { 'Fn::GetAtt': ['testapistacktestpipelambda0role731A03AA', 'Arn'] },
       Source: { 'Fn::GetAtt': ['testapistacktestpipequeue5A230831', 'Arn'] },
       SourceParameters: {

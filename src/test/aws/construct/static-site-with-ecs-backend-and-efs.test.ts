@@ -285,7 +285,7 @@ describe('TestSiteWithEcsBackendAndEfsConstruct', () => {
 describe('TestSiteWithEcsBackendAndEfsConstruct', () => {
   test('provisions load balancer as expected', () => {
     template.hasResourceProperties('AWS::ElasticLoadBalancingV2::LoadBalancer', {
-      Name: 'site-load-balancer-test',
+      Name: 'cdktest-site-load-balancer-test',
       Scheme: 'internet-facing',
       Type: 'application',
     })
@@ -339,12 +339,12 @@ describe('TestSiteWithEcsBackendAndEfsConstruct', () => {
             {
               ContainerPath: '/test',
               ReadOnly: false,
-              SourceVolume: 'test-site-fs',
+              SourceVolume: 'cdktest-sitefs-test',
             },
             {
               ContainerPath: '/test2',
               ReadOnly: false,
-              SourceVolume: 'test-site-fs',
+              SourceVolume: 'cdktest-sitefs-test',
             },
           ],
           Name: 'web',
@@ -374,7 +374,7 @@ describe('TestSiteWithEcsBackendAndEfsConstruct', () => {
               Ref: 'testsitestacktestsitefs4DAB9666',
             },
           },
-          Name: 'test-site-fs',
+          Name: 'cdktest-sitefs-test',
         },
       ],
     })
@@ -409,7 +409,7 @@ describe('TestSiteWithEcsBackendAndEfsConstruct', () => {
       FunctionConfig: {
         Comment: 'test comment',
       },
-      Name: 'test-site-function-test',
+      Name: 'cdktest-test-site-function-test',
     })
   })
 })
@@ -418,7 +418,7 @@ describe('TestEfsManager', () => {
   test('provisions site efs as expected', () => {
     template.hasResourceProperties('AWS::EFS::FileSystem', {
       Encrypted: true,
-      FileSystemTags: [{ Key: 'Name', Value: 'sitefs-test' }],
+      FileSystemTags: [{ Key: 'Name', Value: 'cdktest-sitefs-test' }],
       LifecyclePolicies: [{ TransitionToIA: 'AFTER_7_DAYS' }, { TransitionToPrimaryStorageClass: 'AFTER_1_ACCESS' }],
       PerformanceMode: 'generalPurpose',
     })

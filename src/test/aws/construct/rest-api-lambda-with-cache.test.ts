@@ -158,7 +158,7 @@ describe('TestRestApiWithCacheLambdaConstruct', () => {
         Types: ['REGIONAL'],
       },
       FailOnWarnings: false,
-      Name: 'test-lambda-rest-api-test',
+      Name: 'cdktest-test-lambda-rest-api-test',
     })
   })
 })
@@ -227,7 +227,7 @@ describe('TestRestApiWithCacheLambdaConstruct', () => {
           TZ: 'UTC',
         },
       },
-      FunctionName: 'test-restapi-server-test',
+      FunctionName: 'cdktest-test-restapi-server-test',
       Handler: 'index.handler',
       MemorySize: 1024,
       Runtime: 'nodejs18.x',

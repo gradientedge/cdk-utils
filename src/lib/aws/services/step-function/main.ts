@@ -474,6 +474,8 @@ export class SfnManager {
     role?: IRole
   ) {
     if (!props) throw `State Machine props undefined for ${id}`
+    if (!props.stateMachineName) throw `State Machine stateMachineName undefined for ${id}`
+
     const stateMachine = new StateMachine(scope, `${id}`, {
       ...props,
       definitionBody: DefinitionBody.fromChainable(definition),
@@ -483,7 +485,7 @@ export class SfnManager {
         level: props.logs?.level ?? LogLevel.ALL,
       },
       role,
-      stateMachineName: `${props.stateMachineName}-${scope.props.stage}`,
+      stateMachineName: scope.resourceNameFormatter(props.stateMachineName, props.resourceNameOptions),
     })
 
     createCfnOutput(`${id}-stateMachineName`, scope, stateMachine.stateMachineName)

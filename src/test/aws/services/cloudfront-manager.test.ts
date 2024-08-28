@@ -202,7 +202,7 @@ describe('TestCloudFrontConstruct', () => {
 describe('TestCloudFrontConstruct', () => {
   test('provisions new edge lambda as expected', () => {
     template.hasResourceProperties('AWS::Lambda::Function', {
-      FunctionName: 'test-lambda-edge-test',
+      FunctionName: 'cdktest-test-lambda-edge-test',
       Handler: 'index.handler',
       MemorySize: 1024,
       Runtime: 'nodejs18.x',
@@ -300,7 +300,7 @@ describe('TestCloudFrontConstruct', () => {
               {
                 EventType: 'origin-request',
                 LambdaFunctionARN: {
-                  Ref: 'testcommonstacktestlambdaedgeFnCurrentVersionD68B801D343f717388209a2096f8d3a566478f0e',
+                  Ref: 'testcommonstacktestlambdaedgeFnCurrentVersionD68B801Daa6ec2aab0c234c49749004561f3a62d',
                 },
               },
             ],
@@ -385,7 +385,7 @@ describe('TestCloudFrontConstruct', () => {
       FunctionConfig: {
         Comment: 'test comment',
       },
-      Name: 'test-function-test',
+      Name: 'cdktest-test-function-test',
     })
   })
 })

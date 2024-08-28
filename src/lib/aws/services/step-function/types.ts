@@ -18,6 +18,7 @@ import {
   SqsSendMessageProps,
   StepFunctionsStartExecutionProps,
 } from 'aws-cdk-lib/aws-stepfunctions-tasks'
+import { ResourceNameFormatterProps } from '../../common'
 
 /**
  */
@@ -107,7 +108,9 @@ export interface SfnCallApiGatewayRestApiEndpointProps extends CallApiGatewayRes
 
 /**
  */
-export interface SfnStateMachineProps extends StateMachineProps {}
+export interface SfnStateMachineProps extends StateMachineProps {
+  resourceNameOptions?: ResourceNameFormatterProps
+}
 
 /**
  */

@@ -44,6 +44,9 @@ class TestCommonStack extends CommonStack {
           resource: 'notify',
           useExisting: false,
           withResource: true,
+          restApi: {
+            restApiName: 'test-restapi',
+          },
         },
         apiRootPaths: this.node.tryGetContext('apiRootPaths'),
         apiSubDomain: this.node.tryGetContext('apiSubDomain'),
@@ -138,7 +141,7 @@ describe('TestApiToEventBridgeTargetConstruct', () => {
       EndpointConfiguration: {
         Types: ['REGIONAL'],
       },
-      Name: 'test-rest-api-test',
+      Name: 'cdktest-test-restapi-test',
     })
   })
 })
@@ -210,7 +213,7 @@ describe('TestApiToEventBridgeTargetConstruct', () => {
       EventPattern: {
         source: ['api-to-eventbridge-target'],
       },
-      Name: 'test-api-to-eventbridge-target-test',
+      Name: 'cdktest-test-api-to-eventbridge-target-test',
       State: 'ENABLED',
     })
   })

@@ -3,6 +3,7 @@ import {
   CloudFrontWebDistributionProps,
   FunctionProps,
 } from 'aws-cdk-lib/aws-cloudfront'
+import { ResourceNameFormatterProps } from '../../common'
 import { TagProps } from '../../types'
 
 /**
@@ -22,4 +23,5 @@ export interface DistributionProps extends CfDistributionProps {
 export interface CloudfrontFunctionProps extends FunctionProps {
   eventType: string
   functionFilePath: string
+  resourceNameOptions?: ResourceNameFormatterProps
 }

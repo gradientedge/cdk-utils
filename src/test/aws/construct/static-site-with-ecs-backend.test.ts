@@ -273,7 +273,7 @@ describe('TestSiteWithEcsBackendConstruct', () => {
 describe('TestSiteWithEcsBackendConstruct', () => {
   test('provisions load balancer as expected', () => {
     template.hasResourceProperties('AWS::ElasticLoadBalancingV2::LoadBalancer', {
-      Name: 'site-load-balancer-test',
+      Name: 'cdktest-site-load-balancer-test',
       Scheme: 'internet-facing',
       Type: 'application',
     })
@@ -341,7 +341,7 @@ describe('TestSiteWithEcsBackendConstruct', () => {
       FunctionConfig: {
         Comment: 'test comment',
       },
-      Name: 'test-site-function-test',
+      Name: 'cdktest-test-site-function-test',
     })
   })
 })
@@ -354,7 +354,7 @@ describe('TestSiteWithEcsBackendConstruct', () => {
         DefaultTTL: 86400,
         MaxTTL: 2592000,
         MinTTL: 60,
-        Name: 'test-site-site-cache-policy',
+        Name: 'cdktest-site-cache-policy-test',
       },
     })
   })

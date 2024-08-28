@@ -28,11 +28,12 @@ export class WafManager {
    */
   public createIpSet(id: string, scope: CommonConstruct, props: WafIPSetProps) {
     if (!props) throw `WAF Ip Set props undefined for ${id}`
+    if (!props.name) throw `WAF Ip Set name undefined for ${id}`
 
     const ipSet = new CfnIPSet(scope, `${id}`, {
       ...props,
       description: `IP Set for ${id} - ${scope.props.stage} stage`,
-      name: scope.isProductionStage() ? props.name : `${props.name}-${scope.props.stage}`,
+      name: scope.resourceNameFormatter(props.name, props.resourceNameOptions),
     })
 
     createCfnOutput(`${id}-ipSetId`, scope, ipSet.attrId)
@@ -49,11 +50,12 @@ export class WafManager {
    */
   public createWebAcl(id: string, scope: CommonConstruct, props: WafWebACLProps) {
     if (!props) throw `WAF WebACL props undefined for ${id}`
+    if (!props.name) throw `WAF WebACL name undefined for ${id}`
 
     const webAcl = new CfnWebACL(scope, `${id}`, {
       ...props,
       description: `Web Acl for ${id} - ${scope.props.stage} stage`,
-      name: scope.isProductionStage() ? props.name : `${props.name}-${scope.props.stage}`,
+      name: scope.resourceNameFormatter(props.name, props.resourceNameOptions),
       tags: [{ key: 'service', value: scope.props.name }],
     })
 

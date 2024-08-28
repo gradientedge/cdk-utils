@@ -11,7 +11,6 @@ interface TestStackProps extends StaticSiteProps {
 const testStackProps = {
   domainName: 'gradientedge.io',
   excludeDomainNameForBuckets: true,
-  excludeAccountNumberForBuckets: true,
   extraContexts: [
     'src/test/aws/common/cdkConfig/dummy.json',
     'src/test/aws/common/cdkConfig/buckets.json',
@@ -126,7 +125,7 @@ describe('TestStaticSiteConstruct', () => {
           },
         ],
       },
-      BucketName: 'cdktest-site-logs-test',
+      BucketName: { 'Fn::Join': ['', ['site-logs-', { Ref: 'AWS::AccountId' }, '-eu-west-1-test']] },
       PublicAccessBlockConfiguration: {
         BlockPublicAcls: true,
         BlockPublicPolicy: true,
@@ -150,7 +149,7 @@ describe('TestStaticSiteConstruct', () => {
           },
         ],
       },
-      BucketName: 'cdktest-site-test',
+      BucketName: { 'Fn::Join': ['', ['site-', { Ref: 'AWS::AccountId' }, '-eu-west-1-test']] },
       PublicAccessBlockConfiguration: {
         BlockPublicAcls: true,
         BlockPublicPolicy: true,

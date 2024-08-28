@@ -108,8 +108,9 @@ export class LambdaManager {
     vpcSubnets?: SubnetSelection
   ) {
     if (!props) throw `Lambda props undefined for ${id}`
+    if (!props.functionName) throw `Lambda functionName undefined for ${id}`
 
-    const functionName = `${props.functionName}-${scope.props.stage}`
+    const functionName = scope.resourceNameFormatter(props.functionName, props.resourceNameOptions)
 
     let deadLetterQueue
     if (props.deadLetterQueueEnabled) {
@@ -265,8 +266,9 @@ export class LambdaManager {
     vpcSubnets?: SubnetSelection
   ) {
     if (!props) throw `Lambda props undefined for ${id}`
+    if (!props.functionName) throw `Lambda functionName undefined for ${id}`
 
-    const functionName = `${props.functionName}-${scope.props.stage}`
+    const functionName = scope.resourceNameFormatter(props.functionName, props.resourceNameOptions)
 
     let deadLetterQueue
     if (props.deadLetterQueueEnabled) {

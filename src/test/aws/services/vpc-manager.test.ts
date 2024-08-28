@@ -267,36 +267,68 @@ describe('TestVpcConstruct', () => {
 describe('TestVpcConstruct', () => {
   test('provisions new subnet route table associations as expected', () => {
     template.hasResourceProperties('AWS::EC2::SubnetRouteTableAssociation', {
-      RouteTableId: { Ref: 'testcommonstackCommonVpcPublicSubnet1RouteTableD9640A00' },
-      SubnetId: { Ref: 'testcommonstackCommonVpcPublicSubnet1Subnet31169F35' },
+      RouteTableId: {
+        Ref: 'testcommonstackCommonVpcPublicSubnet1RouteTableD9640A00',
+      },
+      SubnetId: {
+        Ref: 'testcommonstackCommonVpcPublicSubnet1Subnet31169F35',
+      },
     })
     template.hasResourceProperties('AWS::EC2::SubnetRouteTableAssociation', {
-      RouteTableId: { Ref: 'testcommonstackCommonVpcPublicSubnet2RouteTable5F5F391A' },
-      SubnetId: { Ref: 'testcommonstackCommonVpcPublicSubnet2Subnet61BA0786' },
+      RouteTableId: {
+        Ref: 'testcommonstackCommonVpcPublicSubnet2RouteTable5F5F391A',
+      },
+      SubnetId: {
+        Ref: 'testcommonstackCommonVpcPublicSubnet2Subnet61BA0786',
+      },
     })
     template.hasResourceProperties('AWS::EC2::SubnetRouteTableAssociation', {
-      RouteTableId: { Ref: 'testcommonstackCommonVpcPrivateSubnet1RouteTableCCEE8F90' },
-      SubnetId: { Ref: 'testcommonstackCommonVpcPrivateSubnet1Subnet9547CBF7' },
+      RouteTableId: {
+        Ref: 'testcommonstackCommonVpcPrivateSubnet1RouteTableCCEE8F90',
+      },
+      SubnetId: {
+        Ref: 'testcommonstackCommonVpcPrivateSubnet1Subnet9547CBF7',
+      },
     })
     template.hasResourceProperties('AWS::EC2::SubnetRouteTableAssociation', {
-      RouteTableId: { Ref: 'testcommonstackCommonVpcPrivateSubnet2RouteTableD5728369' },
-      SubnetId: { Ref: 'testcommonstackCommonVpcPrivateSubnet2Subnet71CD8397' },
+      RouteTableId: {
+        Ref: 'testcommonstackCommonVpcPrivateSubnet2RouteTableD5728369',
+      },
+      SubnetId: {
+        Ref: 'testcommonstackCommonVpcPrivateSubnet2Subnet71CD8397',
+      },
     })
     template.hasResourceProperties('AWS::EC2::SubnetRouteTableAssociation', {
-      RouteTableId: { Ref: 'testcommonstacktestipv6vpctestipv6vpcpublicSubnet1RouteTable69755D28' },
-      SubnetId: { Ref: 'testcommonstacktestipv6vpctestipv6vpcpublicSubnet1Subnet16195348' },
+      RouteTableId: {
+        Ref: 'testcommonstacktestipv6vpccdktestcommonipv4vpctestpublicSubnet1RouteTable8250924E',
+      },
+      SubnetId: {
+        Ref: 'testcommonstacktestipv6vpccdktestcommonipv4vpctestpublicSubnet1Subnet0A3DA440',
+      },
     })
     template.hasResourceProperties('AWS::EC2::SubnetRouteTableAssociation', {
-      RouteTableId: { Ref: 'testcommonstacktestipv6vpctestipv6vpcpublicSubnet2RouteTable1FA969F0' },
-      SubnetId: { Ref: 'testcommonstacktestipv6vpctestipv6vpcpublicSubnet2Subnet23AF1F65' },
+      RouteTableId: {
+        Ref: 'testcommonstacktestipv6vpccdktestcommonipv4vpctestpublicSubnet2RouteTable3683D568',
+      },
+      SubnetId: {
+        Ref: 'testcommonstacktestipv6vpccdktestcommonipv4vpctestpublicSubnet2Subnet6E5D2F9F',
+      },
     })
     template.hasResourceProperties('AWS::EC2::SubnetRouteTableAssociation', {
-      RouteTableId: { Ref: 'testcommonstacktestipv6vpctestipv6vpcprivateSubnet1RouteTable5DEA43C4' },
-      SubnetId: { Ref: 'testcommonstacktestipv6vpctestipv6vpcprivateSubnet1SubnetBF57A746' },
+      RouteTableId: {
+        Ref: 'testcommonstacktestipv6vpccdktestcommonipv4vpctestprivateSubnet1RouteTable2792D522',
+      },
+      SubnetId: {
+        Ref: 'testcommonstacktestipv6vpccdktestcommonipv4vpctestprivateSubnet1Subnet73C10700',
+      },
     })
     template.hasResourceProperties('AWS::EC2::SubnetRouteTableAssociation', {
-      RouteTableId: { Ref: 'testcommonstacktestipv6vpctestipv6vpcprivateSubnet2RouteTableF43597A4' },
-      SubnetId: { Ref: 'testcommonstacktestipv6vpctestipv6vpcprivateSubnet2Subnet33298444' },
+      RouteTableId: {
+        Ref: 'testcommonstacktestipv6vpccdktestcommonipv4vpctestprivateSubnet2RouteTableAFB08AEE',
+      },
+      SubnetId: {
+        Ref: 'testcommonstacktestipv6vpccdktestcommonipv4vpctestprivateSubnet2Subnet27C63831',
+      },
     })
   })
 })
@@ -305,63 +337,111 @@ describe('TestVpcConstruct', () => {
   test('provisions new routes as expected', () => {
     template.hasResourceProperties('AWS::EC2::Route', {
       DestinationCidrBlock: '0.0.0.0/0',
-      GatewayId: { Ref: 'testcommonstackCommonVpcIGWF0CD8ED4' },
-      RouteTableId: { Ref: 'testcommonstackCommonVpcPublicSubnet1RouteTableD9640A00' },
+      GatewayId: {
+        Ref: 'testcommonstackCommonVpcIGWF0CD8ED4',
+      },
+      RouteTableId: {
+        Ref: 'testcommonstackCommonVpcPublicSubnet1RouteTableD9640A00',
+      },
     })
     template.hasResourceProperties('AWS::EC2::Route', {
       DestinationCidrBlock: '0.0.0.0/0',
-      GatewayId: { Ref: 'testcommonstackCommonVpcIGWF0CD8ED4' },
-      RouteTableId: { Ref: 'testcommonstackCommonVpcPublicSubnet2RouteTable5F5F391A' },
+      GatewayId: {
+        Ref: 'testcommonstackCommonVpcIGWF0CD8ED4',
+      },
+      RouteTableId: {
+        Ref: 'testcommonstackCommonVpcPublicSubnet2RouteTable5F5F391A',
+      },
     })
     template.hasResourceProperties('AWS::EC2::Route', {
       DestinationCidrBlock: '0.0.0.0/0',
-      NatGatewayId: { Ref: 'testcommonstackCommonVpcPublicSubnet1NATGateway1CE45E70' },
-      RouteTableId: { Ref: 'testcommonstackCommonVpcPrivateSubnet1RouteTableCCEE8F90' },
+      NatGatewayId: {
+        Ref: 'testcommonstackCommonVpcPublicSubnet1NATGateway1CE45E70',
+      },
+      RouteTableId: {
+        Ref: 'testcommonstackCommonVpcPrivateSubnet1RouteTableCCEE8F90',
+      },
     })
     template.hasResourceProperties('AWS::EC2::Route', {
       DestinationCidrBlock: '0.0.0.0/0',
-      NatGatewayId: { Ref: 'testcommonstackCommonVpcPublicSubnet2NATGatewayA2B5CBDE' },
-      RouteTableId: { Ref: 'testcommonstackCommonVpcPrivateSubnet2RouteTableD5728369' },
+      NatGatewayId: {
+        Ref: 'testcommonstackCommonVpcPublicSubnet2NATGatewayA2B5CBDE',
+      },
+      RouteTableId: {
+        Ref: 'testcommonstackCommonVpcPrivateSubnet2RouteTableD5728369',
+      },
     })
     template.hasResourceProperties('AWS::EC2::Route', {
       DestinationCidrBlock: '0.0.0.0/0',
-      GatewayId: { Ref: 'testcommonstacktestipv6vpcIGW91A45734' },
-      RouteTableId: { Ref: 'testcommonstacktestipv6vpctestipv6vpcpublicSubnet1RouteTable69755D28' },
-    })
-    template.hasResourceProperties('AWS::EC2::Route', {
-      DestinationCidrBlock: '0.0.0.0/0',
-      GatewayId: { Ref: 'testcommonstacktestipv6vpcIGW91A45734' },
-      RouteTableId: { Ref: 'testcommonstacktestipv6vpctestipv6vpcpublicSubnet2RouteTable1FA969F0' },
-    })
-    template.hasResourceProperties('AWS::EC2::Route', {
-      DestinationCidrBlock: '0.0.0.0/0',
-      NatGatewayId: { Ref: 'testcommonstacktestipv6vpctestipv6vpcpublicSubnet1NATGateway8DCF4B2C' },
-      RouteTableId: { Ref: 'testcommonstacktestipv6vpctestipv6vpcprivateSubnet1RouteTable5DEA43C4' },
-    })
-    template.hasResourceProperties('AWS::EC2::Route', {
-      DestinationCidrBlock: '0.0.0.0/0',
-      NatGatewayId: { Ref: 'testcommonstacktestipv6vpctestipv6vpcpublicSubnet2NATGateway3A32C6B1' },
-      RouteTableId: { Ref: 'testcommonstacktestipv6vpctestipv6vpcprivateSubnet2RouteTableF43597A4' },
+      GatewayId: {
+        Ref: 'testcommonstacktestipv6vpcIGW91A45734',
+      },
+      RouteTableId: {
+        Ref: 'testcommonstacktestipv6vpccdktestcommonipv4vpctestpublicSubnet1RouteTable8250924E',
+      },
     })
     template.hasResourceProperties('AWS::EC2::Route', {
       DestinationIpv6CidrBlock: '::/0',
-      GatewayId: { Ref: 'testcommonstacktestipv6vpcIGW91A45734' },
-      RouteTableId: { Ref: 'testcommonstacktestipv6vpctestipv6vpcpublicSubnet1RouteTable69755D28' },
+      GatewayId: {
+        Ref: 'testcommonstacktestipv6vpcIGW91A45734',
+      },
+      RouteTableId: {
+        Ref: 'testcommonstacktestipv6vpccdktestcommonipv4vpctestpublicSubnet1RouteTable8250924E',
+      },
+    })
+    template.hasResourceProperties('AWS::EC2::Route', {
+      DestinationCidrBlock: '0.0.0.0/0',
+      GatewayId: {
+        Ref: 'testcommonstacktestipv6vpcIGW91A45734',
+      },
+      RouteTableId: {
+        Ref: 'testcommonstacktestipv6vpccdktestcommonipv4vpctestpublicSubnet2RouteTable3683D568',
+      },
     })
     template.hasResourceProperties('AWS::EC2::Route', {
       DestinationIpv6CidrBlock: '::/0',
-      GatewayId: { Ref: 'testcommonstacktestipv6vpcIGW91A45734' },
-      RouteTableId: { Ref: 'testcommonstacktestipv6vpctestipv6vpcpublicSubnet2RouteTable1FA969F0' },
+      GatewayId: {
+        Ref: 'testcommonstacktestipv6vpcIGW91A45734',
+      },
+      RouteTableId: {
+        Ref: 'testcommonstacktestipv6vpccdktestcommonipv4vpctestpublicSubnet2RouteTable3683D568',
+      },
+    })
+    template.hasResourceProperties('AWS::EC2::Route', {
+      DestinationCidrBlock: '0.0.0.0/0',
+      NatGatewayId: {
+        Ref: 'testcommonstacktestipv6vpccdktestcommonipv4vpctestpublicSubnet1NATGateway0699069D',
+      },
+      RouteTableId: {
+        Ref: 'testcommonstacktestipv6vpccdktestcommonipv4vpctestprivateSubnet1RouteTable2792D522',
+      },
     })
     template.hasResourceProperties('AWS::EC2::Route', {
       DestinationIpv6CidrBlock: '::/0',
-      EgressOnlyInternetGatewayId: { Ref: 'testcommonstacktestipv6vpctestipv6vpceigw1DF87C6A' },
-      RouteTableId: { Ref: 'testcommonstacktestipv6vpctestipv6vpcprivateSubnet1RouteTable5DEA43C4' },
+      EgressOnlyInternetGatewayId: {
+        Ref: 'testcommonstacktestipv6vpctestipv6vpceigw1DF87C6A',
+      },
+      RouteTableId: {
+        Ref: 'testcommonstacktestipv6vpccdktestcommonipv4vpctestprivateSubnet1RouteTable2792D522',
+      },
+    })
+    template.hasResourceProperties('AWS::EC2::Route', {
+      DestinationCidrBlock: '0.0.0.0/0',
+      NatGatewayId: {
+        Ref: 'testcommonstacktestipv6vpccdktestcommonipv4vpctestpublicSubnet2NATGateway4DBCF0EF',
+      },
+      RouteTableId: {
+        Ref: 'testcommonstacktestipv6vpccdktestcommonipv4vpctestprivateSubnet2RouteTableAFB08AEE',
+      },
     })
     template.hasResourceProperties('AWS::EC2::Route', {
       DestinationIpv6CidrBlock: '::/0',
-      EgressOnlyInternetGatewayId: { Ref: 'testcommonstacktestipv6vpctestipv6vpceigw1DF87C6A' },
-      RouteTableId: { Ref: 'testcommonstacktestipv6vpctestipv6vpcprivateSubnet2RouteTableF43597A4' },
+      EgressOnlyInternetGatewayId: {
+        Ref: 'testcommonstacktestipv6vpctestipv6vpceigw1DF87C6A',
+      },
+      RouteTableId: {
+        Ref: 'testcommonstacktestipv6vpccdktestcommonipv4vpctestprivateSubnet2RouteTableAFB08AEE',
+      },
     })
   })
 })
@@ -377,28 +457,60 @@ describe('TestVpcConstruct', () => {
 describe('TestVpcConstruct', () => {
   test('provisions new nat gateway as expected', () => {
     template.hasResourceProperties('AWS::EC2::NatGateway', {
-      AllocationId: { 'Fn::GetAtt': ['testcommonstackCommonVpcPublicSubnet1EIP91C6B23F', 'AllocationId'] },
-      SubnetId: { Ref: 'testcommonstackCommonVpcPublicSubnet1Subnet31169F35' },
-      Tags: [{ Key: 'Name', Value: 'test-common-stack/test-common-stack/CommonVpc/PublicSubnet1' }],
-    })
-    template.hasResourceProperties('AWS::EC2::NatGateway', {
-      AllocationId: { 'Fn::GetAtt': ['testcommonstackCommonVpcPublicSubnet2EIP96CA5D13', 'AllocationId'] },
-      SubnetId: { Ref: 'testcommonstackCommonVpcPublicSubnet2Subnet61BA0786' },
-      Tags: [{ Key: 'Name', Value: 'test-common-stack/test-common-stack/CommonVpc/PublicSubnet2' }],
+      AllocationId: {
+        'Fn::GetAtt': ['testcommonstackCommonVpcPublicSubnet1EIP91C6B23F', 'AllocationId'],
+      },
+      SubnetId: {
+        Ref: 'testcommonstackCommonVpcPublicSubnet1Subnet31169F35',
+      },
+      Tags: [
+        {
+          Key: 'Name',
+          Value: 'test-common-stack/test-common-stack/CommonVpc/PublicSubnet1',
+        },
+      ],
     })
     template.hasResourceProperties('AWS::EC2::NatGateway', {
       AllocationId: {
-        'Fn::GetAtt': ['testcommonstacktestipv6vpctestipv6vpcpublicSubnet1EIP9DA0DC95', 'AllocationId'],
+        'Fn::GetAtt': ['testcommonstackCommonVpcPublicSubnet2EIP96CA5D13', 'AllocationId'],
       },
-      SubnetId: { Ref: 'testcommonstacktestipv6vpctestipv6vpcpublicSubnet1Subnet16195348' },
-      Tags: [{ Key: 'Name', Value: 'test-common-stack/test-common-stack/test-ipv6-vpc/test-ipv6-vpc-publicSubnet1' }],
+      SubnetId: {
+        Ref: 'testcommonstackCommonVpcPublicSubnet2Subnet61BA0786',
+      },
+      Tags: [
+        {
+          Key: 'Name',
+          Value: 'test-common-stack/test-common-stack/CommonVpc/PublicSubnet2',
+        },
+      ],
     })
     template.hasResourceProperties('AWS::EC2::NatGateway', {
       AllocationId: {
-        'Fn::GetAtt': ['testcommonstacktestipv6vpctestipv6vpcpublicSubnet2EIP6D515E3E', 'AllocationId'],
+        'Fn::GetAtt': ['testcommonstacktestipv6vpccdktestcommonipv4vpctestpublicSubnet1EIP9FEE8E83', 'AllocationId'],
       },
-      SubnetId: { Ref: 'testcommonstacktestipv6vpctestipv6vpcpublicSubnet2Subnet23AF1F65' },
-      Tags: [{ Key: 'Name', Value: 'test-common-stack/test-common-stack/test-ipv6-vpc/test-ipv6-vpc-publicSubnet2' }],
+      SubnetId: {
+        Ref: 'testcommonstacktestipv6vpccdktestcommonipv4vpctestpublicSubnet1Subnet0A3DA440',
+      },
+      Tags: [
+        {
+          Key: 'Name',
+          Value: 'test-common-stack/test-common-stack/test-ipv6-vpc/cdktest-common-ipv4-vpc-test-publicSubnet1',
+        },
+      ],
+    })
+    template.hasResourceProperties('AWS::EC2::NatGateway', {
+      AllocationId: {
+        'Fn::GetAtt': ['testcommonstacktestipv6vpccdktestcommonipv4vpctestpublicSubnet2EIP1B676341', 'AllocationId'],
+      },
+      SubnetId: {
+        Ref: 'testcommonstacktestipv6vpccdktestcommonipv4vpctestpublicSubnet2Subnet6E5D2F9F',
+      },
+      Tags: [
+        {
+          Key: 'Name',
+          Value: 'test-common-stack/test-common-stack/test-ipv6-vpc/cdktest-common-ipv4-vpc-test-publicSubnet2',
+        },
+      ],
     })
   })
 })

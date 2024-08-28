@@ -9,13 +9,12 @@ import {
   MethodResponse,
   MockIntegration,
   Resource,
-  RestApiProps,
 } from 'aws-cdk-lib/aws-apigateway'
 import { ICertificate } from 'aws-cdk-lib/aws-certificatemanager'
 import { LogGroup } from 'aws-cdk-lib/aws-logs'
 import { IHostedZone } from 'aws-cdk-lib/aws-route53'
 import { CommonStackProps } from '../../common'
-import { AcmProps } from '../../services'
+import { AcmProps, RestApigProps } from '../../services'
 
 export interface ApiToAnyTargetRestApiType {
   accessLogGroup: LogGroup
@@ -54,7 +53,7 @@ export interface ApiToAnyTargetRestApiProps {
   importedRestApiRootResourceRef?: string
   methodErrorResponse: MethodResponse
   methodResponse: MethodResponse
-  restApi: RestApiProps
+  restApi: RestApigProps
   useExisting: boolean
   withResource?: boolean
 }

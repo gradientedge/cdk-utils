@@ -128,7 +128,7 @@ describe('TestEfsManager', () => {
   test('provisions efs as expected', () => {
     template.hasResourceProperties('AWS::EFS::FileSystem', {
       Encrypted: true,
-      FileSystemTags: [{ Key: 'Name', Value: 'testfs-test' }],
+      FileSystemTags: [{ Key: 'Name', Value: 'cdktest-testfs-test' }],
       LifecyclePolicies: [{ TransitionToIA: 'AFTER_7_DAYS' }, { TransitionToPrimaryStorageClass: 'AFTER_1_ACCESS' }],
       PerformanceMode: 'generalPurpose',
     })

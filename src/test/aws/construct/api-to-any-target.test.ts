@@ -127,7 +127,7 @@ describe('TestApiToAnyTargetConstruct', () => {
       EndpointConfiguration: {
         Types: ['REGIONAL'],
       },
-      Name: 'service',
+      Name: 'cdktest-service-test',
     })
   })
 })

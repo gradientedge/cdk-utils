@@ -118,7 +118,7 @@ describe('TestElastiCacheConstruct', () => {
 describe('TestElastiCacheConstruct', () => {
   test('provisions new elastiCache as expected', () => {
     template.hasResourceProperties('AWS::ElastiCache::CacheCluster', {
-      ClusterName: 'test-elasticache-test',
+      ClusterName: 'cdktest-test-elasticache-cluster-test',
       Engine: 'redis',
     })
   })

@@ -54,13 +54,14 @@ export class ElastiCacheManager {
     logDeliveryConfigurations?: any
   ) {
     if (!props) throw `ElastiCache props undefined for ${id}`
+    if (!props.clusterName) throw `ElastiCache clusterName undefined for ${id}`
 
     const subnetGroup = this.createElastiCacheSubnetGroup(`${id}-subnetGroup`, scope, subnetIds)
 
     const elasticacheCluster = new CfnCacheCluster(scope, `${id}`, {
       ...props,
       cacheSubnetGroupName: subnetGroup.cacheSubnetGroupName,
-      clusterName: `${id}-${scope.props.stage}`,
+      clusterName: scope.resourceNameFormatter(props.clusterName, props.resourceNameOptions),
       logDeliveryConfigurations,
       vpcSecurityGroupIds: securityGroupIds,
     })
