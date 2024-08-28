@@ -159,12 +159,12 @@ export class EcsManager {
       cluster,
       enableECSManagedTags: true,
       healthCheckGracePeriod: props.healthCheckGracePeriod ?? Duration.seconds(60),
-      loadBalancerName: scope.resourceNameFormatter(props.loadBalancerName, props.resourceNameOptions),
+      loadBalancerName: scope.resourceNameFormatter.format(props.loadBalancerName, props.resourceNameOptions),
       runtimePlatform: {
         cpuArchitecture: props.runtimePlatform?.cpuArchitecture ?? CpuArchitecture.X86_64,
         operatingSystemFamily: props.runtimePlatform?.operatingSystemFamily ?? OperatingSystemFamily.LINUX,
       },
-      serviceName: scope.resourceNameFormatter(props.serviceName, props.resourceNameOptions),
+      serviceName: scope.resourceNameFormatter.format(props.serviceName, props.resourceNameOptions),
       taskImageOptions: {
         ...props.taskImageOptions,
         enableLogging: props.taskImageOptions?.enableLogging ?? true,

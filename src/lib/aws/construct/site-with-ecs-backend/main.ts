@@ -296,11 +296,11 @@ export class SiteWithEcsBackend extends CommonConstruct {
       enableECSManagedTags: true,
       healthCheckGracePeriod: Duration.seconds(60),
       listenerPort: this.props.siteTask.listenerPort,
-      loadBalancerName: this.resourceNameFormatter(this.props.siteTask.loadBalancerName ?? this.id),
+      loadBalancerName: this.resourceNameFormatter.format(this.props.siteTask.loadBalancerName ?? this.id),
       maxHealthyPercent: this.props.siteTask.maxHealthyPercent,
       memoryLimitMiB: this.props.siteTask.memoryLimitMiB,
       minHealthyPercent: this.props.siteTask.minHealthyPercent,
-      serviceName: this.resourceNameFormatter(this.props.siteTask.serviceName ?? this.id),
+      serviceName: this.resourceNameFormatter.format(this.props.siteTask.serviceName ?? this.id),
       taskDefinition: this.props.siteTask.taskDefinition,
       taskImageOptions: {
         containerPort: this.props.siteTask.taskImageOptions?.containerPort,
@@ -400,7 +400,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
           transitEncryption: this.props.siteFileSystem.transitEncryption,
           transitEncryptionPort: this.props.siteFileSystem.transitEncryptionPort,
         },
-        name: this.resourceNameFormatter(this.props.siteFileSystem?.fileSystemName ?? this.id),
+        name: this.resourceNameFormatter.format(this.props.siteFileSystem?.fileSystemName ?? this.id),
       })
 
       if (this.props.siteTask.mountPoints && !_.isEmpty(this.props.siteTask.mountPoints)) {
@@ -408,7 +408,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
           this.siteEcsTaskDefinition.defaultContainer?.addMountPoints({
             containerPath: mountPoint.containerPath,
             readOnly: mountPoint.readOnly,
-            sourceVolume: this.resourceNameFormatter(this.props.siteFileSystem?.fileSystemName ?? this.id),
+            sourceVolume: this.resourceNameFormatter.format(this.props.siteFileSystem?.fileSystemName ?? this.id),
           })
         })
       }
@@ -431,7 +431,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
     if (!siteCachePolicy.cachePolicyName) throw `SiteCachePolicy cachePolicyName undefined for ${id}`
 
     return new CachePolicy(this, `${id}`, {
-      cachePolicyName: this.resourceNameFormatter(siteCachePolicy.cachePolicyName),
+      cachePolicyName: this.resourceNameFormatter.format(siteCachePolicy.cachePolicyName),
       comment: `Policy for ${this.id}-distribution - ${this.props.stage} stage`,
       cookieBehavior: siteCachePolicy.cookieBehavior,
       enableAcceptEncodingBrotli: siteCachePolicy.enableAcceptEncodingBrotli,
@@ -460,7 +460,9 @@ export class SiteWithEcsBackend extends CommonConstruct {
       comment: `Request Policy for ${this.id}-distribution - ${this.props.stage} stage`,
       cookieBehavior: this.props.siteOriginRequestPolicy.cookieBehavior,
       headerBehavior: this.props.siteOriginRequestPolicy.headerBehavior,
-      originRequestPolicyName: this.resourceNameFormatter(this.props.siteOriginRequestPolicy.originRequestPolicyName),
+      originRequestPolicyName: this.resourceNameFormatter.format(
+        this.props.siteOriginRequestPolicy.originRequestPolicyName
+      ),
       queryStringBehavior: this.props.siteOriginRequestPolicy.queryStringBehavior,
     })
 
@@ -477,7 +479,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
     return new ResponseHeadersPolicy(this, `${this.id}-${props.type}-srhp`, {
       ...props,
       comment: `Response Header Policy for ${props.type} for ${this.id}-distribution - ${this.props.stage} stage`,
-      responseHeadersPolicyName: this.resourceNameFormatter(props.responseHeadersPolicyName),
+      responseHeadersPolicyName: this.resourceNameFormatter.format(props.responseHeadersPolicyName),
       securityHeadersBehavior: {
         ...props.securityHeadersBehavior,
         strictTransportSecurity: {

@@ -461,10 +461,10 @@ export class IamManager {
       policies: [
         {
           policyDocument: policy,
-          policyName: scope.resourceNameFormatter(`${id}-policy`),
+          policyName: scope.resourceNameFormatter.format(`${id}-policy`),
         },
       ],
-      roleName: scope.resourceNameFormatter(id),
+      roleName: scope.resourceNameFormatter.format(id),
     })
 
     createCfnOutput(`${id}Arn`, scope, role.attrArn)
@@ -489,7 +489,7 @@ export class IamManager {
       assumedBy: new ServicePrincipal('events.amazonaws.com'),
       description: `Role for ${id} ECS Task execution from EventBridge`,
       inlinePolicies: { policy },
-      roleName: scope.resourceNameFormatter(id),
+      roleName: scope.resourceNameFormatter.format(id),
     })
 
     createCfnOutput(`${id}Arn`, scope, role.roleArn)
@@ -516,7 +516,7 @@ export class IamManager {
           'arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy'
         ),
       ],
-      roleName: scope.resourceNameFormatter(id),
+      roleName: scope.resourceNameFormatter.format(id),
     })
 
     createCfnOutput(`${id}Arn`, scope, role.roleArn)
@@ -549,7 +549,7 @@ export class IamManager {
           'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
         ),
       ],
-      roleName: scope.resourceNameFormatter(id),
+      roleName: scope.resourceNameFormatter.format(id),
     })
 
     createCfnOutput(`${id}Arn`, scope, role.roleArn)
@@ -575,7 +575,7 @@ export class IamManager {
       assumedBy: servicePrincipal ?? new ServicePrincipal('appconfig.amazonaws.com'),
       description: `Role for ${id} AppConfig Secrets`,
       inlinePolicies: { policy },
-      roleName: scope.resourceNameFormatter(id),
+      roleName: scope.resourceNameFormatter.format(id),
     })
 
     createCfnOutput(`${id}Arn`, scope, role.roleArn)
@@ -608,7 +608,7 @@ export class IamManager {
           'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
         ),
       ],
-      roleName: scope.resourceNameFormatter(id),
+      roleName: scope.resourceNameFormatter.format(id),
     })
 
     createCfnOutput(`${id}Arn`, scope, role.roleArn)
@@ -628,7 +628,7 @@ export class IamManager {
     const role = new Role(scope, `${id}`, {
       assumedBy: new ServicePrincipal('pipes.amazonaws.com'),
       description: `Role for ${id} Pipe`,
-      roleName: scope.resourceNameFormatter(id),
+      roleName: scope.resourceNameFormatter.format(id),
     })
 
     role.addToPolicy(this.statementForPollQueue([queueArn]))
@@ -651,7 +651,7 @@ export class IamManager {
     const role = new Role(scope, `${id}`, {
       assumedBy: new ServicePrincipal('pipes.amazonaws.com'),
       description: `Role for ${id} Pipe`,
-      roleName: scope.resourceNameFormatter(id),
+      roleName: scope.resourceNameFormatter.format(id),
     })
 
     role.addToPolicy(this.statementForPollQueue([queueArn]))
@@ -711,7 +711,7 @@ export class IamManager {
     const role = new Role(scope, `${id}`, {
       assumedBy: new ServicePrincipal('pipes.amazonaws.com'),
       description: `Role for ${id} Pipe`,
-      roleName: scope.resourceNameFormatter(id),
+      roleName: scope.resourceNameFormatter.format(id),
     })
 
     role.addToPolicy(this.statementFordynamoDbStream([dynamoDbStreamArn]))
