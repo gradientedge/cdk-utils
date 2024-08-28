@@ -424,6 +424,8 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
       return
     }
 
+    if (!this.props.api.restApi?.restApiName) throw `RestApi name undefined for ${this.id}`
+
     this.apiToEventBridgeTargetRestApi.api = new RestApi(this, `${this.id}-rest-api`, {
       cloudWatchRole: this.props.api.restApi?.cloudWatchRole ?? true,
       defaultCorsPreflightOptions: {
@@ -452,9 +454,13 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
       endpointConfiguration: {
         types: [EndpointType.REGIONAL],
       },
-      restApiName: `${this.id}-rest-api-${this.props.stage}`,
       ...this.props.api.restApi,
+      restApiName: this.resourceNameFormatter(
+        this.props.api.restApi?.restApiName,
+        this.props.api.restApi?.resourceNameOptions
+      ),
     })
+
     this.addCfnOutput(`${this.id}-restApiId`, this.apiToEventBridgeTargetRestApi.api.restApiId)
     this.addCfnOutput(`${this.id}-restApiRootResourceId`, this.apiToEventBridgeTargetRestApi.api.root.resourceId)
   }

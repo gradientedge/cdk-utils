@@ -346,13 +346,11 @@ export class SiteWithEcsBackend extends CommonConstruct {
       enableECSManagedTags: true,
       healthCheckGracePeriod: Duration.seconds(60),
       listenerPort: this.props.siteTask.listenerPort,
-      loadBalancerName: this.props.siteTask.loadBalancerName
-        ? `${this.props.siteTask.loadBalancerName}-${this.props.stage}`
-        : `${this.id}-${this.props.stage}`,
+      loadBalancerName: this.resourceNameFormatter(this.props.siteTask.loadBalancerName ?? this.id),
       maxHealthyPercent: this.props.siteTask.maxHealthyPercent,
       memoryLimitMiB: this.props.siteTask.memoryLimitMiB,
       minHealthyPercent: this.props.siteTask.minHealthyPercent,
-      serviceName: `${this.id}-${this.props.stage}`,
+      serviceName: this.resourceNameFormatter(this.props.siteTask.serviceName ?? this.id),
       taskDefinition: this.props.siteTask.taskDefinition,
       taskImageOptions: {
         containerPort: this.props.siteTask.taskImageOptions?.containerPort,
@@ -452,7 +450,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
           transitEncryption: this.props.siteFileSystem.transitEncryption,
           transitEncryptionPort: this.props.siteFileSystem.transitEncryptionPort,
         },
-        name: `${this.id}-fs`,
+        name: this.resourceNameFormatter(this.props.siteFileSystem?.fileSystemName ?? this.id),
       })
 
       if (this.props.siteTask.mountPoints &amp;&amp; !_.isEmpty(this.props.siteTask.mountPoints)) {
@@ -460,7 +458,7 @@ export class SiteWithEcsBackend extends CommonConstruct {
           this.siteEcsTaskDefinition.defaultContainer?.addMountPoints({
             containerPath: mountPoint.containerPath,
             readOnly: mountPoint.readOnly,
-            sourceVolume: `${this.id}-fs`,
+            sourceVolume: this.resourceNameFormatter(this.props.siteFileSystem?.fileSystemName ?? this.id),
           })
         })
       }
@@ -480,8 +478,10 @@ export class SiteWithEcsBackend extends CommonConstruct {
   }
 
   protected createSiteCachePolicy(id: string, siteCachePolicy: SiteCachePolicyProps) {
+    if (!siteCachePolicy.cachePolicyName) throw `SiteCachePolicy cachePolicyName undefined for ${id}`
+
     return new CachePolicy(this, `${id}`, {
-      cachePolicyName: `${this.id}-${siteCachePolicy.cachePolicyName}`,
+      cachePolicyName: this.resourceNameFormatter(siteCachePolicy.cachePolicyName),
       comment: `Policy for ${this.id}-distribution - ${this.props.stage} stage`,
       cookieBehavior: siteCachePolicy.cookieBehavior,
       enableAcceptEncodingBrotli: siteCachePolicy.enableAcceptEncodingBrotli,
@@ -503,11 +503,14 @@ export class SiteWithEcsBackend extends CommonConstruct {
 
   protected createSiteOriginRequestPolicy() {
     if (!this.props.siteOriginRequestPolicy) return
+    if (!this.props.siteOriginRequestPolicy.originRequestPolicyName)
+      throw `SiteOriginRequestPolicy originRequestPolicyName undefined for ${this.id}`
+
     this.siteOriginRequestPolicy = new OriginRequestPolicy(this, `${this.id}-sorp`, {
       comment: `Request Policy for ${this.id}-distribution - ${this.props.stage} stage`,
       cookieBehavior: this.props.siteOriginRequestPolicy.cookieBehavior,
       headerBehavior: this.props.siteOriginRequestPolicy.headerBehavior,
-      originRequestPolicyName: `${this.id}-origin-request`,
+      originRequestPolicyName: this.resourceNameFormatter(this.props.siteOriginRequestPolicy.originRequestPolicyName),
       queryStringBehavior: this.props.siteOriginRequestPolicy.queryStringBehavior,
     })
 
@@ -518,10 +521,13 @@ export class SiteWithEcsBackend extends CommonConstruct {
 
   protected createResponseHeaderPolicy(props: SiteResponseHeadersPolicyProps) {
     if (!props) return undefined
+    if (!props.responseHeadersPolicyName)
+      throw `SiteResponseHeadersPolicy responseHeadersPolicyName undefined for ${this.id}`
+
     return new ResponseHeadersPolicy(this, `${this.id}-${props.type}-srhp`, {
       ...props,
       comment: `Response Header Policy for ${props.type} for ${this.id}-distribution - ${this.props.stage} stage`,
-      responseHeadersPolicyName: `${this.id}-${props.type}-response`,
+      responseHeadersPolicyName: this.resourceNameFormatter(props.responseHeadersPolicyName),
       securityHeadersBehavior: {
         ...props.securityHeadersBehavior,
         strictTransportSecurity: {

@@ -240,8 +240,10 @@ export class SiteWithLambdaBackend extends CommonConstruct {
   }
 
   protected createSiteCachePolicy(id: string, siteCachePolicy: SiteWithLambdaBackendCachePolicyProps) {
+    if (!siteCachePolicy.cachePolicyName) throw `SiteCachePolicy cachePolicyName undefined for ${id}`
+
     return new CachePolicy(this, `${id}`, {
-      cachePolicyName: `${this.id}-${siteCachePolicy.cachePolicyName}`,
+      cachePolicyName: this.resourceNameFormatter(siteCachePolicy.cachePolicyName),
       comment: `Policy for ${this.id}-distribution - ${this.props.stage} stage`,
       cookieBehavior: siteCachePolicy.cookieBehavior,
       enableAcceptEncodingBrotli: siteCachePolicy.enableAcceptEncodingBrotli,
@@ -263,11 +265,14 @@ export class SiteWithLambdaBackend extends CommonConstruct {
 
   protected createSiteOriginRequestPolicy() {
     if (!this.props.siteOriginRequestPolicy) return
+    if (!this.props.siteOriginRequestPolicy.originRequestPolicyName)
+      throw `SiteOriginRequestPolicy originRequestPolicyName undefined for ${this.id}`
+
     this.siteOriginRequestPolicy = new OriginRequestPolicy(this, `${this.id}-sorp`, {
       comment: `Request Policy for ${this.id}-distribution - ${this.props.stage} stage`,
       cookieBehavior: this.props.siteOriginRequestPolicy.cookieBehavior,
       headerBehavior: this.props.siteOriginRequestPolicy.headerBehavior,
-      originRequestPolicyName: `${this.id}-origin-request`,
+      originRequestPolicyName: this.resourceNameFormatter(this.props.siteOriginRequestPolicy.originRequestPolicyName),
       queryStringBehavior: this.props.siteOriginRequestPolicy.queryStringBehavior,
     })
 
@@ -278,10 +283,13 @@ export class SiteWithLambdaBackend extends CommonConstruct {
 
   protected createResponseHeaderPolicy(props: SiteWithLambdaBackendResponseHeadersPolicyProps) {
     if (!props) return undefined
+    if (!props.responseHeadersPolicyName)
+      throw `SiteResponseHeadersPolicy responseHeadersPolicyName undefined for ${this.id}`
+
     return new ResponseHeadersPolicy(this, `${this.id}-${props.type}-srhp`, {
       ...props,
       comment: `Response Header Policy for ${props.type} for ${this.id}-distribution - ${this.props.stage} stage`,
-      responseHeadersPolicyName: `${this.id}-${props.type}-response`,
+      responseHeadersPolicyName: this.resourceNameFormatter(props.responseHeadersPolicyName),
       securityHeadersBehavior: {
         ...props.securityHeadersBehavior,
         strictTransportSecurity: {

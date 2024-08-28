@@ -83,10 +83,13 @@ export class EvidentlyManager {
    * @param props the project properties
    */
   public createProject(id: string, scope: CommonConstruct, props: EvidentlyProjectProps) {
+    if (!props) throw `EvidentlyProject props undefined for ${id}`
+    if (!props.name) throw `EvidentlyProject name undefined for ${id}`
+
     const project = new CfnProject(scope, `${id}`, {
       ...props,
       description: `${props.description} ${scope.props.stage}`,
-      name: `${props.name}-${scope.props.stage}`,
+      name: scope.resourceNameFormatter(props.name, props.resourceNameOptions),
     })
     createCfnOutput(`${id}-projectArn`, scope, project.attrArn)
     createCfnOutput(`${id}-projectName`, scope, project.name)
@@ -100,6 +103,8 @@ export class EvidentlyManager {
    * @param props the feature properties
    */
   public createFeature(id: string, scope: CommonConstruct, props: EvidentlyFeatureProps) {
+    if (!props) throw `EvidentlyFeature props undefined for ${id}`
+
     const feature = new CfnFeature(scope, `${id}`, props)
     createCfnOutput(`${id}-featureArn`, scope, feature.attrArn)
     createCfnOutput(`${id}-featureName`, scope, feature.name)
@@ -113,10 +118,13 @@ export class EvidentlyManager {
    * @param props the launch properties
    */
   public createLaunch(id: string, scope: CommonConstruct, props: EvidentlyLaunchProps) {
+    if (!props) throw `EvidentlyLaunch props undefined for ${id}`
+    if (!props.name) throw `EvidentlyLaunch name undefined for ${id}`
+
     const launch = new CfnLaunch(scope, `${id}`, {
       ...props,
       description: `${props.description} ${scope.props.stage}`,
-      name: `${props.name}-${scope.props.stage}`,
+      name: scope.resourceNameFormatter(props.name, props.resourceNameOptions),
     })
     createCfnOutput(`${id}-launchArn`, scope, launch.attrArn)
     createCfnOutput(`${id}-launchName`, scope, launch.name)
@@ -130,10 +138,13 @@ export class EvidentlyManager {
    * @param props the experiment properties
    */
   public createExperiment(id: string, scope: CommonConstruct, props: EvidentlyExperimentProps) {
+    if (!props) throw `EvidentlyExperiment props undefined for ${id}`
+    if (!props.name) throw `EvidentlyExperiment name undefined for ${id}`
+
     const experiment = new CfnExperiment(scope, `${id}`, {
       ...props,
       description: `${props.description} ${scope.props.stage}`,
-      name: `${props.name}-${scope.props.stage}`,
+      name: scope.resourceNameFormatter(props.name, props.resourceNameOptions),
     })
     createCfnOutput(`${id}-experimentArn`, scope, experiment.attrArn)
     createCfnOutput(`${id}-experimentName`, scope, experiment.name)
@@ -147,10 +158,13 @@ export class EvidentlyManager {
    * @param props the segment properties
    */
   public createSegment(id: string, scope: CommonConstruct, props: EvidentlySegmentProps) {
+    if (!props) throw `EvidentlySegment props undefined for ${id}`
+    if (!props.name) throw `EvidentlySegment name undefined for ${id}`
+
     const segment = new CfnSegment(scope, `${id}`, {
       ...props,
       description: `${props.description} ${scope.props.stage}`,
-      name: `${props.name}-${scope.props.stage}`,
+      name: scope.resourceNameFormatter(props.name, props.resourceNameOptions),
     })
     createCfnOutput(`${id}-segmentArn`, scope, segment.attrArn)
     createCfnOutput(`${id}-segmentName`, scope, segment.name)
