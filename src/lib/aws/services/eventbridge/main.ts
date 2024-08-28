@@ -43,10 +43,11 @@ export class EventManager {
    */
   public createEventBus(id: string, scope: CommonConstruct, props: EventBusProps) {
     if (!props) throw `EventBus props undefined for ${id}`
+    if (!props.eventBusName) throw `EventBus eventBusName undefined for ${id}`
 
     const eventBus = new EventBus(scope, `${id}`, {
       ...props,
-      eventBusName: `${props.eventBusName}-${scope.props.stage}`,
+      eventBusName: scope.resourceNameFormatter(props.eventBusName, props.resourceNameOptions),
     })
 
     createCfnOutput(`${id}-eventBusName`, scope, `${props.eventBusName}-${scope.props.stage}`)
@@ -71,11 +72,12 @@ export class EventManager {
     targets?: IRuleTarget[]
   ) {
     if (!props) throw `EventRule props undefined for ${id}`
+    if (!props.ruleName) throw `EventRule ruleName undefined for ${id}`
 
     const rule = new Rule(scope, `${id}`, {
       ...props,
       eventBus,
-      ruleName: `${props.ruleName}-${scope.props.stage}`,
+      ruleName: scope.resourceNameFormatter(props.ruleName, props.resourceNameOptions),
     })
 
     if (targets && !_.isEmpty(targets)) {
@@ -116,22 +118,29 @@ export class EventManager {
     scheduleExpression?: string
   ) {
     if (!props) throw `EventRule props undefined for ${id}`
+    if (!props.name) throw `EventRule name undefined for ${id}`
 
     const eventRule = new CfnRule(scope, `${id}`, {
       ...props,
       description: 'Rule to send notification to lambda function target',
       eventBusName,
       eventPattern,
-      name: `${props.name}-${scope.props.stage}`,
+      name: scope.resourceNameFormatter(props.name, props.resourceNameOptions),
       scheduleExpression,
       targets: [
         {
           arn: lambdaFunction.functionArn,
-          id: `${id}-${scope.props.stage}`,
+          id: scope.resourceNameFormatter(props.name, props.resourceNameOptions),
           input: props.input ?? undefined,
         },
       ],
     })
+
+    if (props.tags && !_.isEmpty(props.tags)) {
+      _.forEach(props.tags, tag => {
+        Tags.of(eventRule).add(tag.key, tag.value)
+      })
+    }
 
     new CfnPermission(scope, `${id}LambdaPermission`, {
       action: 'lambda:InvokeFunction',
@@ -168,12 +177,13 @@ export class EventManager {
     eventPattern?: any
   ) {
     if (!props) throw `EventRule props undefined for ${id}`
+    if (!props.name) throw `EventRule name undefined for ${id}`
 
     const eventRule = new CfnRule(scope, `${id}`, {
       ...props,
       description: 'Rule to send notification on new objects in data bucket to ecs task target',
       eventPattern,
-      name: `${props.name}-${scope.props.stage}`,
+      name: scope.resourceNameFormatter(props.name, props.resourceNameOptions),
       targets: [
         {
           arn: cluster.clusterArn,
@@ -185,7 +195,7 @@ export class EventManager {
             taskCount: 1,
             taskDefinitionArn: task.taskDefinitionArn,
           },
-          id: `${id}-${scope.props.stage}`,
+          id: scope.resourceNameFormatter(props.name, props.resourceNameOptions),
           roleArn: role instanceof Role ? role.roleArn : role.attrArn,
         },
       ],
@@ -212,6 +222,9 @@ export class EventManager {
     sourceQueue: IQueue,
     targetStepFunction: IStateMachine
   ) {
+    if (!props) throw `Pipe props undefined for ${id}`
+    if (!props.name) throw `Pipe name undefined for ${id}`
+
     const pipeRole = scope.iamManager.createRoleForSqsToSfnPipe(
       `${id}-role`,
       scope,
@@ -221,7 +234,7 @@ export class EventManager {
 
     const pipe = new CfnPipe(scope, `${id}`, {
       ...props,
-      name: `${props.name}-${scope.props.stage}`,
+      name: scope.resourceNameFormatter(props.name, props.resourceNameOptions),
       roleArn: pipeRole.roleArn,
       source: sourceQueue.queueArn,
       sourceParameters: {
@@ -269,6 +282,9 @@ export class EventManager {
     sourceQueue: IQueue,
     targetLambdaFunction: IFunction
   ) {
+    if (!props) throw `Pipe props undefined for ${id}`
+    if (!props.name) throw `Pipe name undefined for ${id}`
+
     const pipeRole = scope.iamManager.createRoleForSqsToLambdaPipe(
       `${id}-role`,
       scope,
@@ -278,7 +294,7 @@ export class EventManager {
 
     const pipe = new CfnPipe(scope, `${id}`, {
       ...props,
-      name: `${props.name}-${scope.props.stage}`,
+      name: scope.resourceNameFormatter(props.name, props.resourceNameOptions),
       roleArn: pipeRole.roleArn,
       source: sourceQueue.queueArn,
       sourceParameters: {
@@ -323,6 +339,9 @@ export class EventManager {
     sourceDynamoDbStreamArn: string,
     targetLambdaFunction: IFunction
   ) {
+    if (!props) throw `Pipe props undefined for ${id}`
+    if (!props.name) throw `Pipe name undefined for ${id}`
+
     const pipeRole = scope.iamManager.createRoleForDynamoDbToLambdaPipe(
       `${id}-role`,
       scope,
@@ -332,7 +351,7 @@ export class EventManager {
 
     const pipe = new CfnPipe(scope, `${id}`, {
       ...props,
-      name: `${props.name}-${scope.props.stage}`,
+      name: scope.resourceNameFormatter(props.name, props.resourceNameOptions),
       roleArn: pipeRole.roleArn,
       source: sourceDynamoDbStreamArn,
       sourceParameters: {

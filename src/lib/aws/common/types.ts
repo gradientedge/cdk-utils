@@ -7,9 +7,18 @@ import { BaseProps } from '../../common'
  */
 export interface CommonStackProps extends BaseProps, StackProps {
   region: string
+  resourceProjectIdentifier?: string
+  resourcePrefix?: string
+  resourceSuffix?: string
   logRetention?: RetentionDays
   defaultReservedLambdaConcurrentExecutions?: number
   defaultTracing?: Tracing
   excludeDomainNameForBuckets?: boolean
+  excludeAccountNumberForBuckets?: boolean
   nodejsRuntime?: Runtime
+}
+
+export interface ResourceNameFormatterProps {
+  prefix?: string
+  suffix?: string
 }

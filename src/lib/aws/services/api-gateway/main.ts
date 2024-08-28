@@ -46,6 +46,8 @@ export class ApiManager {
    */
   public createLambdaRestApi(id: string, scope: CommonConstruct, props: LambdaRestApiProps, lambdaFunction: IFunction) {
     if (!props) throw `Api props undefined for ${id}`
+    if (!props.restApiName) throw `Api restApiName undefined for ${id}`
+
     const api = new LambdaRestApi(scope, `${id}`, {
       ...props,
       cloudWatchRole: props.cloudWatchRole || false,
@@ -63,7 +65,7 @@ export class ApiManager {
       handler: lambdaFunction,
       minCompressionSize: props.minCompressionSizeInBytes ? Size.bytes(props.minCompressionSizeInBytes) : undefined,
       proxy: props.proxy ?? true,
-      restApiName: `${props.restApiName}-${scope.props.stage}`,
+      restApiName: scope.resourceNameFormatter(props.restApiName, props.resourceNameOptions),
     })
 
     if (props.tags && !_.isEmpty(props.tags)) {

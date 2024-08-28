@@ -38,6 +38,7 @@ export class EksManager {
     vpc: IVpc
   ) {
     if (!props) throw `EksCluster props undefined for ${id}`
+    if (!props.clusterName) throw `EksCluster clusterName undefined for ${id}`
 
     const appLabel = { app: `${id}`.toLowerCase() }
 
@@ -81,7 +82,7 @@ export class EksManager {
     }
 
     const cluster = new Cluster(scope, `${id}Cluster`, {
-      clusterName: `${id.toLowerCase()}-${scope.props.stage}`,
+      clusterName: scope.resourceNameFormatter(props.clusterName, props.resourceNameOptions),
       defaultCapacity: props.appCapacity,
       defaultCapacityInstance: InstanceType.of(InstanceClass.T3, InstanceSize.LARGE),
       version: KubernetesVersion.V1_27,

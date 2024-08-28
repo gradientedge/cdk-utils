@@ -1,5 +1,3 @@
-import { IEventBus, Rule } from 'aws-cdk-lib/aws-events'
-import { LogGroup } from 'aws-cdk-lib/aws-logs'
 import {
   DomainName,
   IAuthorizer,
@@ -12,15 +10,16 @@ import {
   Model,
   ModelOptions,
   Resource,
-  RestApiProps,
 } from 'aws-cdk-lib/aws-apigateway'
 import { ICertificate } from 'aws-cdk-lib/aws-certificatemanager'
+import { IEventBus, Rule } from 'aws-cdk-lib/aws-events'
+import { PolicyDocument, Role } from 'aws-cdk-lib/aws-iam'
+import { AssetCode } from 'aws-cdk-lib/aws-lambda'
+import { LogGroup } from 'aws-cdk-lib/aws-logs'
 import { IHostedZone } from 'aws-cdk-lib/aws-route53'
 import { ITopic } from 'aws-cdk-lib/aws-sns'
-import { PolicyDocument, Role } from 'aws-cdk-lib/aws-iam'
 import { CommonStackProps } from '../../common'
-import { AcmProps, EventRuleProps, LambdaProps, LogProps } from '../../services'
-import { AssetCode } from 'aws-cdk-lib/aws-lambda'
+import { AcmProps, EventRuleProps, LambdaProps, LogProps, RestApigProps } from '../../services'
 
 /**
  */
@@ -73,7 +72,7 @@ export interface ApiToEventBridgeTargetRestApiProps {
   methodResponse?: MethodResponse
   resource: string
   responseModel?: ModelOptions
-  restApi?: RestApiProps
+  restApi?: RestApigProps
   useExisting: boolean
   withResource?: boolean
 }

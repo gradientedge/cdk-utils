@@ -8,6 +8,7 @@ import {
 } from 'aws-cdk-lib/aws-ecs'
 import { ApplicationLoadBalancedFargateServiceProps } from 'aws-cdk-lib/aws-ecs-patterns'
 import { HealthCheck as ElbHealthCheck } from 'aws-cdk-lib/aws-elasticloadbalancingv2'
+import { ResourceNameFormatterProps } from '../../common'
 import { TagProps } from '../../types'
 
 /**
@@ -54,4 +55,5 @@ export interface EcsApplicationLoadBalancedFargateServiceProps extends Applicati
   logging?: AwsLogDriverProps
   mountPoints?: MountPoint[]
   siteScaling?: EcsScalingProps
+  resourceNameOptions?: ResourceNameFormatterProps
 }

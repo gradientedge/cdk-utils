@@ -1,6 +1,7 @@
 {
   "testEks": {
     "appContainerPort": 9000,
-    "appCapacity": 2
+    "appCapacity": 2,
+    "clusterName": "test-cluster"
   }
 }

@@ -411,7 +411,7 @@ describe('TestSfnConstruct', () => {
       RoleArn: {
         'Fn::GetAtt': ['testcommonstacktestparallelstepRole68F267C5', 'Arn'],
       },
-      StateMachineName: 'test-workflow-test',
+      StateMachineName: 'cdktest-test-workflow-test',
       StateMachineType: 'STANDARD',
     })
   })
@@ -452,7 +452,7 @@ describe('TestSfnConstruct', () => {
       RoleArn: {
         'Fn::GetAtt': ['testcommonstacktestsecondsfnRole66E6DE7B', 'Arn'],
       },
-      StateMachineName: 'test-second-workflow-test',
+      StateMachineName: 'cdktest-test-second-workflow-test',
       StateMachineType: 'STANDARD',
     })
   })

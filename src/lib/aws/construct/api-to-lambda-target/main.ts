@@ -138,7 +138,7 @@ export class ApiToLambdaTarget extends CommonConstruct {
     this.apiToLambdaTargetRestApi.lambda = Function.fromFunctionName(
       this,
       `${this.id}-lambda`,
-      this.props.lambdaFunctionName
+      this.resourceNameFormatter(this.props.lambdaFunctionName)
     )
   }
 

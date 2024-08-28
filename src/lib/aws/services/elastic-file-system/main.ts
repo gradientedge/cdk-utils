@@ -54,11 +54,12 @@ export class EfsManager {
     vpcSubnets?: SubnetSelection
   ) {
     if (!props) throw `EFS props undefined for ${id}`
+    if (!props.fileSystemName) throw `EFS fileSystemName undefined for ${id}`
 
     const fileSystemId = props.provisionNewOnDeployment ? `${id}-${new Date().getMilliseconds()}` : `${id}`
     const fileSystem = new FileSystem(scope, `${fileSystemId}`, {
       ...props,
-      fileSystemName: props.fileSystemName ? `${props.fileSystemName}-${scope.props.stage}` : undefined,
+      fileSystemName: scope.resourceNameFormatter(props.fileSystemName, props.resourceNameOptions),
       lifecyclePolicy: props.lifecyclePolicy ?? LifecyclePolicy.AFTER_7_DAYS,
       outOfInfrequentAccessPolicy: props.outOfInfrequentAccessPolicy ?? OutOfInfrequentAccessPolicy.AFTER_1_ACCESS,
       performanceMode: props.performanceMode ?? PerformanceMode.GENERAL_PURPOSE,

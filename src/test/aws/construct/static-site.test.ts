@@ -287,7 +287,7 @@ describe.each<TestTuple>([
         FunctionConfig: {
           Comment: 'test comment',
         },
-        Name: 'test-static-function-test',
+        Name: 'cdktest-test-static-function-test',
       })
     })
   })

@@ -84,7 +84,7 @@ describe('TestApplicationConfiguration', () => {
   test('provisions new application as expected', () => {
     template.hasResourceProperties('AWS::AppConfig::Application', {
       Description: 'test-application desc',
-      Name: 'test-application-test',
+      Name: 'cdktest-test-application-test',
     })
   })
 })

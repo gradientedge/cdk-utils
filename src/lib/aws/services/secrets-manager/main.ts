@@ -1,8 +1,9 @@
 import { GetSecretValueCommand, SecretsManagerClient } from '@aws-sdk/client-secrets-manager'
 import { Fn } from 'aws-cdk-lib'
-import { Secret, SecretProps } from 'aws-cdk-lib/aws-secretsmanager'
+import { Secret } from 'aws-cdk-lib/aws-secretsmanager'
 import { CommonConstruct } from '../../common'
 import { createCfnOutput, determineCredentials } from '../../utils'
+import { SecretBaseProps } from './types'
 
 /**
  * @classdesc Provides operations on AWS Secrets Manager.
@@ -27,10 +28,13 @@ export class SecretsManager {
    * @param scope scope in which this resource is defined
    * @param props the secret properties
    */
-  public createSecret(id: string, scope: CommonConstruct, props: SecretProps) {
+  public createSecret(id: string, scope: CommonConstruct, props: SecretBaseProps) {
+    if (!props) throw `Secret props undefined for ${id}`
+    if (!props.secretName) throw `Secret name undefined for ${id}`
+
     const secret = new Secret(scope, `${id}`, {
       ...props,
-      secretName: `${props.secretName}-${scope.props.stage}`,
+      secretName: scope.resourceNameFormatter(props.secretName, props.resourceNameOptions),
     })
 
     createCfnOutput(`${id}-secretName`, scope, secret.secretName)

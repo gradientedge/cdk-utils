@@ -275,6 +275,7 @@ export class CloudFrontManager {
     mountPath?: string
   ) {
     if (!props) throw `EdgeFunction props undefined for ${id}`
+    if (!props.functionName) throw `EdgeFunction functionName undefined for ${id}`
 
     const edgeFunction = new cf.experimental.EdgeFunction(scope, `${id}`, {
       code: code,
@@ -283,7 +284,7 @@ export class CloudFrontManager {
         ...environment,
       },
       filesystem: accessPoint ? FileSystem.fromEfsAccessPoint(accessPoint, mountPath ?? '/mnt/msg') : undefined,
-      functionName: `${props.functionName}-${scope.props.stage}`,
+      functionName: scope.resourceNameFormatter(props.functionName, props.resourceNameOptions),
       handler: props.handler ?? 'index.handler',
       layers: layers,
       logRetention: props.logRetention,
@@ -351,12 +352,15 @@ export class CloudFrontManager {
    * @param props
    */
   public createCloudfrontFunction(id: string, scope: CommonConstruct, props: CloudfrontFunctionProps) {
+    if (!props) throw `CloudFront Function props undefined for ${id}`
+    if (!props.functionName) throw `CloudFront Function functionName undefined for ${id}`
+
     const cloudfrontFunction = new Function(scope, `${id}`, {
       code: FunctionCode.fromFile({
         filePath: props.functionFilePath,
       }),
       comment: props.comment,
-      functionName: `${props.functionName}-${scope.props.stage}`,
+      functionName: scope.resourceNameFormatter(props.functionName, props.resourceNameOptions),
     })
 
     createCfnOutput(`${id}-functionArn`, scope, cloudfrontFunction.functionArn)

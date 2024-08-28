@@ -1,4 +1,5 @@
-import { LambdaRestApiProps as LambdaRestApigProps } from 'aws-cdk-lib/aws-apigateway'
+import { LambdaRestApiProps as LambdaRestApigProps, RestApiProps } from 'aws-cdk-lib/aws-apigateway'
+import { ResourceNameFormatterProps } from '../../common'
 import { TagProps } from '../../types'
 
 /**
@@ -6,4 +7,9 @@ import { TagProps } from '../../types'
 export interface LambdaRestApiProps extends LambdaRestApigProps {
   tags?: TagProps[]
   minCompressionSizeInBytes?: number
+  resourceNameOptions?: ResourceNameFormatterProps
+}
+
+export interface RestApigProps extends RestApiProps {
+  resourceNameOptions?: ResourceNameFormatterProps
 }

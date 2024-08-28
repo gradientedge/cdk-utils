@@ -35,15 +35,18 @@ export class VpcManager {
    */
   public createVpc(id: string, scope: CommonConstruct, props: VpcProps) {
     if (!props) throw `Vpc props undefined for ${id}`
+    if (!props.vpcName) throw `Vpc vpcName undefined for ${id}`
 
+    const vpcName = scope.resourceNameFormatter(props.vpcName, props.resourceNameOptions)
     let vpc
     if (props.isIPV6) {
       vpc = new Ipv6Vpc(scope, `${id}`, {
         ...props,
         subnetConfiguration: [
-          { name: `${id}-public`, subnetType: SubnetType.PUBLIC },
-          { name: `${id}-private`, subnetType: SubnetType.PRIVATE_WITH_EGRESS },
+          { name: `${vpcName}-public`, subnetType: SubnetType.PUBLIC },
+          { name: `${vpcName}-private`, subnetType: SubnetType.PRIVATE_WITH_EGRESS },
         ],
+        vpcName,
       })
     } else {
       vpc = new Vpc(scope, `${id}`, props)
@@ -88,6 +91,9 @@ export class VpcManager {
    * @param vpcIdentifier optional identifier for VPC
    */
   public retrieveCommonVpc(id: string, scope: CommonConstruct, vpcIdentifier?: string) {
-    return Vpc.fromLookup(scope, `${id}`, { vpcName: vpcIdentifier ?? CommonVpcIdentifier })
+    const vpcName = scope.resourceNameFormatter(vpcIdentifier ?? CommonVpcIdentifier)
+    return Vpc.fromLookup(scope, `${id}`, {
+      vpcName: scope.resourceNameFormatter(vpcIdentifier ?? CommonVpcIdentifier),
+    })
   }
 }

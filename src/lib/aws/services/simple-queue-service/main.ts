@@ -32,6 +32,10 @@ export class SqsManager {
    */
   public createQueue(id: string, scope: CommonConstruct, props: QueueProps, deadLetterQueue?: IQueue) {
     if (!props) throw `Queue props undefined for ${id}`
+    if (!props.queueName) throw `Queue queueName undefined for ${id}`
+
+    let queueName = scope.resourceNameFormatter(props.queueName, props.resourceNameOptions)
+    if (props.fifo) queueName += '.fifo'
 
     const queue = new Queue(scope, id, {
       ...props,
@@ -43,6 +47,7 @@ export class SqsManager {
             queue: deadLetterQueue,
           },
       deliveryDelay: props.deliveryDelayInSecs ? Duration.seconds(props.deliveryDelayInSecs) : undefined,
+      queueName,
       receiveMessageWaitTime: props.receiveMessageWaitTimeInSecs
         ? Duration.seconds(props.receiveMessageWaitTimeInSecs)
         : props.receiveMessageWaitTime,
@@ -75,9 +80,7 @@ export class SqsManager {
   public createRedriveQueueForLambda(id: string, scope: CommonConstruct, props: LambdaProps) {
     return this.createQueue(`${id}`, scope, {
       ...props.redriveq,
-      queueName: props.redriveq?.fifo
-        ? `${props.functionName}-redriveq-${scope.props.stage}.fifo`
-        : `${props.functionName}-redriveq-${scope.props.stage}`,
+      queueName: `${props.functionName}-redriveq`,
     })
   }
 
@@ -98,13 +101,11 @@ export class SqsManager {
     if (props.dlq) {
       queueProps = {
         ...props.dlq,
-        queueName: props.dlq.fifo
-          ? `${props.functionName}-dlq-${scope.props.stage}.fifo`
-          : `${props.functionName}-dlq-${scope.props.stage}`,
+        queueName: `${props.functionName}-dlq`,
       }
     } else {
       queueProps = {
-        queueName: `${props.functionName}-dlq-${scope.props.stage}`,
+        queueName: `${props.functionName}-dlq`,
       }
     }
 

@@ -278,7 +278,7 @@ describe('SiteWithLambdaBackend', () => {
       FunctionConfig: {
         Comment: 'test comment',
       },
-      Name: 'test-site-function-test',
+      Name: 'cdktest-test-site-function-test',
     })
   })
 })
@@ -291,7 +291,7 @@ describe('SiteWithLambdaBackend', () => {
         DefaultTTL: 86400,
         MaxTTL: 2592000,
         MinTTL: 60,
-        Name: 'test-site-site-cache-policy',
+        Name: 'cdktest-site-cache-policy-test',
       },
     })
   })

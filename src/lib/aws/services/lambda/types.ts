@@ -1,8 +1,9 @@
-import { AliasProps, FunctionProps } from 'aws-cdk-lib/aws-lambda'
-import { TagProps } from '../../types'
 import { EdgeFunctionProps } from 'aws-cdk-lib/aws-cloudfront/lib/experimental'
-import { QueueProps } from '../simple-queue-service'
+import { AliasProps, FunctionProps } from 'aws-cdk-lib/aws-lambda'
 import { SqsEventSourceProps } from 'aws-cdk-lib/aws-lambda-event-sources'
+import { ResourceNameFormatterProps } from '../../common'
+import { TagProps } from '../../types'
+import { QueueProps } from '../simple-queue-service'
 
 /**
  */
@@ -22,6 +23,7 @@ export interface LambdaProps extends FunctionProps {
   redriveq?: QueueProps
   tags?: TagProps[]
   timeoutInSecs?: number
+  resourceNameOptions?: ResourceNameFormatterProps
 }
 
 /**
@@ -36,6 +38,7 @@ export interface LambdaAliasProps extends AliasProps {
 export interface LambdaEdgeProps extends EdgeFunctionProps {
   tags?: TagProps[]
   timeoutInSecs?: number
+  resourceNameOptions?: ResourceNameFormatterProps
 }
 
 /**

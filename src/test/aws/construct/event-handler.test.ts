@@ -159,7 +159,7 @@ describe('TestEventHandler', () => {
   test('provisions event rule as expected', () => {
     template.hasResourceProperties('AWS::Events::Rule', {
       EventPattern: { 'detail-type': ['Test'] },
-      Name: 'test-rule-test',
+      Name: 'cdktest-test-rule-test',
       State: 'ENABLED',
       Targets: [
         {

@@ -51,7 +51,7 @@ export class AppConfigManager {
 
     const application = new CfnApplication(scope, `${id}`, {
       ...props.application,
-      name: `${props.application.name}-${scope.props.stage}`,
+      name: scope.resourceNameFormatter(props.application.name, props.resourceNameOptions),
     })
 
     createCfnOutput(`${id}-ApplicationId`, scope, Fn.ref(application.logicalId))

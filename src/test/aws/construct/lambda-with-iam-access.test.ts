@@ -109,7 +109,7 @@ describe('TestLambdaWithIamAccess', () => {
           STAGE: 'test',
         },
       },
-      FunctionName: 'test-iam-lambda-test',
+      FunctionName: 'cdktest-test-iam-lambda-test',
       Handler: 'index.handler',
       MemorySize: 1024,
       Role: {
@@ -134,7 +134,7 @@ describe('TestLambdaWithIamAccess', () => {
 describe('TestLambdaWithIamAccess', () => {
   test('provisions secret as expected', () => {
     template.hasResourceProperties('AWS::SecretsManager::Secret', {
-      Name: 'test-secret',
+      Name: 'cdktest-test-secret-test',
       SecretString: {
         'Fn::Join': [
           '',

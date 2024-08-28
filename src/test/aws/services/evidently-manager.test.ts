@@ -124,13 +124,13 @@ describe('TestEvidentlyConstruct', () => {
         LogGroup: 'test-logs',
       },
       Description: 'Test project test',
-      Name: 'test-project-test',
+      Name: 'cdktest-test-project-test',
     })
   })
 })
 
 describe('TestEvidentlyConstruct', () => {
-  test('provisions new proejct as expected', () => {
+  test('provisions new feature as expected', () => {
     template.hasResourceProperties('AWS::Evidently::Feature', {
       DefaultVariation: 'v1',
       Description: 'Indicator for isSomethingEnabled as a flag',
@@ -154,7 +154,7 @@ describe('TestEvidentlyConstruct', () => {
 })
 
 describe('TestEvidentlyConstruct', () => {
-  test('provisions new proejct as expected', () => {
+  test('provisions new launch as expected', () => {
     template.hasResourceProperties('AWS::Evidently::Launch', {
       Description: 'Test launch test',
       ExecutionStatus: {
@@ -172,7 +172,7 @@ describe('TestEvidentlyConstruct', () => {
           Variation: 'v2',
         },
       ],
-      Name: 'test-launch-test',
+      Name: 'cdktest-test-launch-test',
       Project: {
         'Fn::GetAtt': ['testcommonstacktestProjectB14CB69E', 'Arn'],
       },
@@ -196,7 +196,7 @@ describe('TestEvidentlyConstruct', () => {
 })
 
 describe('TestEvidentlyConstruct', () => {
-  test('provisions new proejct as expected', () => {
+  test('provisions new experiment as expected', () => {
     template.hasResourceProperties('AWS::Evidently::Experiment', {
       Description: 'Test experiment test',
       MetricGoals: [
@@ -207,7 +207,7 @@ describe('TestEvidentlyConstruct', () => {
           ValueKey: 'testKey',
         },
       ],
-      Name: 'test-experiment-test',
+      Name: 'cdktest-test-experiment-test',
       OnlineAbConfig: {
         ControlTreatmentName: 'test-control-1',
         TreatmentWeights: [
@@ -250,10 +250,10 @@ describe('TestEvidentlyConstruct', () => {
 })
 
 describe('TestEvidentlyConstruct', () => {
-  test('provisions new proejct as expected', () => {
+  test('provisions new segment as expected', () => {
     template.hasResourceProperties('AWS::Evidently::Segment', {
       Description: 'Test segment test',
-      Name: 'test-segment-test',
+      Name: 'cdktest-test-segment-test',
     })
   })
 })

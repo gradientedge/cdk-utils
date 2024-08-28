@@ -1,9 +1,11 @@
 {
   "testVpc": {
-    "maxAzs": 2
+    "maxAzs": 2,
+    "vpcName": "common-vpc"
   },
   "testIPV6Vpc": {
     "isIPV6": true,
-    "maxAzs": 2
+    "maxAzs": 2,
+    "vpcName": "common-ipv4-vpc"
   }
 }

@@ -49,6 +49,7 @@ export class CloudTrailManager {
     logBucketPolicy: CfnBucketPolicy
   ) {
     if (!props) throw `CloudTrail props undefined for ${id}`
+    if (!props.trailName) throw `CloudTrail trailName undefined for ${id}`
 
     const role = scope.iamManager.createRoleForCloudTrail(`${id}Role`, scope, logGroup)
 
@@ -71,7 +72,7 @@ export class CloudTrailManager {
       s3BucketName: logBucket.bucketName,
       s3KeyPrefix: `logs-${props.trailName}`,
       tags: [{ key: 'service', value: scope.props.name }],
-      trailName: `${props.trailName}-${scope.props.stage}`,
+      trailName: scope.resourceNameFormatter(props.trailName, props.resourceNameOptions),
     })
 
     cloudTrail.addDependency(logBucketPolicy)

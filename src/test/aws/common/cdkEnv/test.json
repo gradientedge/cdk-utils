@@ -1,11 +1,12 @@
 {
+  "apiSubDomain": "api",
+  "logLevel": "debug",
+  "nodeEnv": "development",
+  "resourcePrefix": "cdktest",
+  "siteSubDomain": "site",
   "stage": "test",
   "subDomain": "test",
-  "siteSubDomain": "site",
-  "apiSubDomain": "api",
-  "useExistingHostedZone": true,
-  "logLevel": "debug",
+  "testAttribute": "success",
   "timezone": "UTC",
-  "nodeEnv": "development",
-  "testAttribute": "success"
+  "useExistingHostedZone": true
 }

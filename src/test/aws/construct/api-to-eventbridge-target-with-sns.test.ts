@@ -45,6 +45,9 @@ class TestCommonStack extends CommonStack {
           resource: 'notify',
           useExisting: false,
           withResource: true,
+          restApi: {
+            restApiName: 'test-destined-restapi',
+          },
         },
         apiRootPaths: this.node.tryGetContext('apiRootPaths'),
         apiSubDomain: this.node.tryGetContext('apiSubDomain'),
@@ -154,7 +157,7 @@ describe('TestApiToEventBridgeTargetWithSnsConstruct', () => {
       EndpointConfiguration: {
         Types: ['REGIONAL'],
       },
-      Name: 'test-destined-rest-api-test',
+      Name: 'cdktest-test-destined-restapi-test',
     })
   })
 })
@@ -224,7 +227,7 @@ describe('TestApiToEventBridgeTargetWithSnsConstruct', () => {
           TZ: 'UTC',
         },
       },
-      FunctionName: 'test-api-destined-test',
+      FunctionName: 'cdktest-test-api-destined-test',
       Handler: 'lambda.handler',
       MemorySize: 1024,
       Runtime: 'nodejs18.x',
@@ -258,7 +261,7 @@ describe('TestApiToEventBridgeTargetWithSnsConstruct', () => {
           },
         },
       },
-      Name: 'test-api-destination-success-test',
+      Name: 'cdktest-test-api-destination-success-test',
       State: 'ENABLED',
     })
   })
@@ -272,7 +275,7 @@ describe('TestApiToEventBridgeTargetWithSnsConstruct', () => {
           },
         },
       },
-      Name: 'test-api-destination-failure-test',
+      Name: 'cdktest-test-api-destination-failure-test',
       State: 'ENABLED',
     })
   })

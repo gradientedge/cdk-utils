@@ -106,7 +106,7 @@ describe('TestEksConstruct', () => {
   test('provisions new cluster as expected', () => {
     template.hasResourceProperties('Custom::AWSCDK-EKS-Cluster', {
       Config: {
-        name: 'test-depl-test',
+        name: 'cdktest-test-cluster-test',
       },
     })
   })

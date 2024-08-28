@@ -119,6 +119,9 @@ describe('TestApiToLambdaTargetConstruct', () => {
     template.resourceCountIs('AWS::ApiGateway::DomainName', 1)
     template.resourceCountIs('AWS::Route53::RecordSet', 1)
     template.resourceCountIs('AWS::ApiGateway::BasePathMapping', 1)
+    template.resourceCountIs('AWS::IAM::Role', 2)
+    template.resourceCountIs('AWS::IAM::Policy', 0)
+    template.resourceCountIs('AWS::Lambda::Function', 1)
   })
 })
 
@@ -154,7 +157,7 @@ describe('TestApiToLambdaTargetConstruct', () => {
       EndpointConfiguration: {
         Types: ['REGIONAL'],
       },
-      Name: 'test-rest-api-test',
+      Name: 'cdktest-test-rest-api-test',
     })
   })
 })
@@ -212,6 +215,54 @@ describe('TestApiToLambdaTargetConstruct', () => {
     template.hasResourceProperties('AWS::Logs::LogGroup', {
       LogGroupName: '/custom/api/test-rest-api-access-test',
       RetentionInDays: 731,
+    })
+  })
+})
+
+describe('TestApiToLambdaTargetConstruct', () => {
+  test('provisions lambda function as expected', () => {
+    template.hasResourceProperties('AWS::Lambda::Function', {
+      Architectures: ['arm64'],
+      Code: {
+        S3Bucket: 'cdk-hnb659fds-assets-123456789-eu-west-1',
+        S3Key: 'd5523e3b961cf2272cb4c94da89e310809981614bd36996014e2f23058109580.zip',
+      },
+      Environment: {
+        Variables: {
+          LAST_MODIFIED_TS: 'dummy-value-for-secrets-last-modified-timestamp-test',
+          LOG_LEVEL: 'info',
+          REGION: 'eu-west-1',
+          STAGE: 'test',
+        },
+      },
+      FunctionName: 'cdktest-test-lambda-test',
+      Handler: 'index.lambda_handler',
+      Layers: [
+        {
+          Ref: 'testapitoebstacktestlambdalayerECE80592',
+        },
+      ],
+      LoggingConfig: {
+        LogGroup: {
+          Ref: 'testapitoebstacktestsrclambdaloggroup55A5A8E0',
+        },
+      },
+      MemorySize: 1024,
+      Role: {
+        'Fn::GetAtt': ['testapitoebstacktestroleD9D398F5', 'Arn'],
+      },
+      Runtime: 'nodejs18.x',
+      Tags: [
+        {
+          Key: 'testTagName1',
+          Value: 'testTagValue1',
+        },
+        {
+          Key: 'testTagName2',
+          Value: 'testTagValue2',
+        },
+      ],
+      Timeout: 60,
     })
   })
 })
