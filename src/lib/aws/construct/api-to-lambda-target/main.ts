@@ -156,7 +156,7 @@ export class ApiToLambdaTarget extends CommonConstruct {
     }
 
     const accessLogGroup = this.logManager.createLogGroup(`${this.id}-rest-api-access-log`, this, {
-      logGroupName: `/custom/api/${this.id}-rest-api-access`,
+      logGroupName: `/custom/api/${this.resourceNameFormatter(this.id)}-rest-api-access`,
       removalPolicy: RemovalPolicy.DESTROY,
     })
 

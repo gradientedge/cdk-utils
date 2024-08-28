@@ -159,12 +159,12 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
       this.apiEvent.eventBus = EventBus.fromEventBusName(
         this,
         `${this.id}-event-bus`,
-        `${this.props.event.eventBusName}-${this.props.stage}`
+        this.resourceNameFormatter(this.props.event.eventBusName ?? 'default')
       )
       return
     }
     this.apiEvent.eventBus = this.eventManager.createEventBus(`${this.id}-event-bus`, this, {
-      eventBusName: `${this.props.event.eventBusName}`,
+      eventBusName: this.props.event.eventBusName ?? 'default',
     })
   }
 
@@ -175,7 +175,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
     if (this.props.api.useExisting) return
     this.apiEvent.logGroup = this.logManager.createLogGroup(`${this.id}-log`, this, {
       ...{
-        logGroupName: `/${this.id}/events/api-to-eventbridge-target`,
+        logGroupName: `/${this.resourceNameFormatter(this.id)}/events/api-to-eventbridge-target`,
       },
       ...this.props.event.logGroup,
     })
@@ -186,11 +186,12 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
    */
   protected createApiToEventBridgeTargetRule() {
     if (this.props.api.useExisting) return
+    if (!this.props.event.rule.ruleName) throw `Event ruleName undefined for ${this.id}`
+
     this.props.event.rule = {
       eventPattern: {
         source: ['api-to-eventbridge-target'],
       },
-      ruleName: `${this.id}-api-to-eventbridge-target`,
       ...this.props.event.rule,
     }
     this.apiEvent.rule = this.eventManager.createRule(
@@ -355,7 +356,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
       `${this.id}-rest-api-access-log`,
       this,
       {
-        logGroupName: `/custom/api/${this.id}-rest-api-access`,
+        logGroupName: `/custom/api/${this.resourceNameFormatter(this.id)}-rest-api-access`,
         removalPolicy: RemovalPolicy.DESTROY,
       }
     )

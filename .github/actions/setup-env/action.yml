@@ -6,4 +6,4 @@ runs:
   steps:
     - name: Install Pnpm
       shell: bash
-      run: npm i -g pnpm@8
+      run: npm i -g pnpm@9
