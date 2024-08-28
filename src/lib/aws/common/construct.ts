@@ -33,7 +33,8 @@ import {
   WafManager,
 } from '../services'
 import { createCfnOutput } from '../utils'
-import { CommonStackProps, ResourceNameFormatterProps } from './types'
+import { ResourceNameFormatter } from './resource-name-formatter'
+import { CommonStackProps } from './types'
 
 /**
  * @subcategory Construct
@@ -50,6 +51,7 @@ import { CommonStackProps, ResourceNameFormatterProps } from './types'
  */
 export class CommonConstruct extends Construct {
   props: CommonStackProps
+  resourceNameFormatter: ResourceNameFormatter
   acmManager: AcmManager
   apiManager: ApiManager
   appConfigManager: AppConfigManager
@@ -85,6 +87,7 @@ export class CommonConstruct extends Construct {
   constructor(parent: Construct, id: string, props: CommonStackProps) {
     super(parent, id)
     this.props = props
+    this.resourceNameFormatter = new ResourceNameFormatter(this, `${id}-rnf`, props)
     this.acmManager = new AcmManager()
     this.apiManager = new ApiManager()
     this.appConfigManager = new AppConfigManager()
@@ -116,21 +119,6 @@ export class CommonConstruct extends Construct {
     this.wafManager = new WafManager()
 
     this.determineFullyQualifiedDomain()
-  }
-
-  /**
-   * @summary Helper method to format a resource name based on the provided options
-   * @param resourceName the resource name to format
-   * @param options options to control the formatting of the resource name
-   * @returns The formatted resource name
-   */
-  public resourceNameFormatter(resourceName: string, options?: ResourceNameFormatterProps) {
-    const resourceNameElements = []
-    resourceNameElements.push(options?.prefix ?? this.props.resourcePrefix)
-    resourceNameElements.push(resourceName)
-    resourceNameElements.push(options?.suffix ?? this.props.resourceSuffix)
-    resourceNameElements.push(this.props.stage)
-    return resourceNameElements.filter(resourceNameElement => resourceNameElement != undefined).join('-')
   }
 
   /**

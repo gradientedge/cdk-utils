@@ -47,7 +47,7 @@ export class EventManager {
 
     let eventBusName = props.eventBusName
     if (eventBusName && eventBusName != 'default') {
-      eventBusName = scope.resourceNameFormatter(props.eventBusName, props.resourceNameOptions)
+      eventBusName = scope.resourceNameFormatter.format(props.eventBusName, props.resourceNameOptions)
     }
     const eventBus = new EventBus(scope, `${id}`, {
       ...props,
@@ -81,7 +81,7 @@ export class EventManager {
     const rule = new Rule(scope, `${id}`, {
       ...props,
       eventBus,
-      ruleName: scope.resourceNameFormatter(props.ruleName, props.resourceNameOptions),
+      ruleName: scope.resourceNameFormatter.format(props.ruleName, props.resourceNameOptions),
     })
 
     if (targets && !_.isEmpty(targets)) {
@@ -129,12 +129,12 @@ export class EventManager {
       description: 'Rule to send notification to lambda function target',
       eventBusName,
       eventPattern,
-      name: scope.resourceNameFormatter(props.name, props.resourceNameOptions),
+      name: scope.resourceNameFormatter.format(props.name, props.resourceNameOptions),
       scheduleExpression,
       targets: [
         {
           arn: lambdaFunction.functionArn,
-          id: scope.resourceNameFormatter(props.name, props.resourceNameOptions),
+          id: scope.resourceNameFormatter.format(props.name, props.resourceNameOptions),
           input: props.input ?? undefined,
         },
       ],
@@ -187,7 +187,7 @@ export class EventManager {
       ...props,
       description: 'Rule to send notification on new objects in data bucket to ecs task target',
       eventPattern,
-      name: scope.resourceNameFormatter(props.name, props.resourceNameOptions),
+      name: scope.resourceNameFormatter.format(props.name, props.resourceNameOptions),
       targets: [
         {
           arn: cluster.clusterArn,
@@ -199,7 +199,7 @@ export class EventManager {
             taskCount: 1,
             taskDefinitionArn: task.taskDefinitionArn,
           },
-          id: scope.resourceNameFormatter(props.name, props.resourceNameOptions),
+          id: scope.resourceNameFormatter.format(props.name, props.resourceNameOptions),
           roleArn: role instanceof Role ? role.roleArn : role.attrArn,
         },
       ],
@@ -238,7 +238,7 @@ export class EventManager {
 
     const pipe = new CfnPipe(scope, `${id}`, {
       ...props,
-      name: scope.resourceNameFormatter(props.name, props.resourceNameOptions),
+      name: scope.resourceNameFormatter.format(props.name, props.resourceNameOptions),
       roleArn: pipeRole.roleArn,
       source: sourceQueue.queueArn,
       sourceParameters: {
@@ -298,7 +298,7 @@ export class EventManager {
 
     const pipe = new CfnPipe(scope, `${id}`, {
       ...props,
-      name: scope.resourceNameFormatter(props.name, props.resourceNameOptions),
+      name: scope.resourceNameFormatter.format(props.name, props.resourceNameOptions),
       roleArn: pipeRole.roleArn,
       source: sourceQueue.queueArn,
       sourceParameters: {
@@ -355,7 +355,7 @@ export class EventManager {
 
     const pipe = new CfnPipe(scope, `${id}`, {
       ...props,
-      name: scope.resourceNameFormatter(props.name, props.resourceNameOptions),
+      name: scope.resourceNameFormatter.format(props.name, props.resourceNameOptions),
       roleArn: pipeRole.roleArn,
       source: sourceDynamoDbStreamArn,
       sourceParameters: {

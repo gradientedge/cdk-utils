@@ -34,7 +34,7 @@ export class SecretsManager {
 
     const secret = new Secret(scope, `${id}`, {
       ...props,
-      secretName: scope.resourceNameFormatter(props.secretName, props.resourceNameOptions),
+      secretName: scope.resourceNameFormatter.format(props.secretName, props.resourceNameOptions),
     })
 
     createCfnOutput(`${id}-secretName`, scope, secret.secretName)

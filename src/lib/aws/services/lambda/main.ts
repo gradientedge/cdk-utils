@@ -110,7 +110,7 @@ export class LambdaManager {
     if (!props) throw `Lambda props undefined for ${id}`
     if (!props.functionName) throw `Lambda functionName undefined for ${id}`
 
-    const functionName = scope.resourceNameFormatter(props.functionName, props.resourceNameOptions)
+    const functionName = scope.resourceNameFormatter.format(props.functionName, props.resourceNameOptions)
 
     let deadLetterQueue
     if (props.deadLetterQueueEnabled) {
@@ -268,7 +268,7 @@ export class LambdaManager {
     if (!props) throw `Lambda props undefined for ${id}`
     if (!props.functionName) throw `Lambda functionName undefined for ${id}`
 
-    const functionName = scope.resourceNameFormatter(props.functionName, props.resourceNameOptions)
+    const functionName = scope.resourceNameFormatter.format(props.functionName, props.resourceNameOptions)
 
     let deadLetterQueue
     if (props.deadLetterQueueEnabled) {

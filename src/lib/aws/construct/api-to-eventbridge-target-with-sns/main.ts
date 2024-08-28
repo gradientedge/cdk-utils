@@ -362,7 +362,7 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
       `${this.id}-destined-topic`,
       this,
       {
-        topicName: this.resourceNameFormatter(`${this.id}-destined-topic`),
+        topicName: this.resourceNameFormatter.format(`${this.id}-destined-topic`),
       },
       this.apiDestinedLambda.function
     )
@@ -538,7 +538,7 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
         types: [EndpointType.REGIONAL],
       },
       ...this.props.api,
-      restApiName: this.resourceNameFormatter(
+      restApiName: this.resourceNameFormatter.format(
         this.props.api.restApi?.restApiName,
         this.props.api.restApi?.resourceNameOptions
       ),

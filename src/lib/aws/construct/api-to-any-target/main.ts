@@ -154,7 +154,7 @@ export class ApiToAnyTarget extends CommonConstruct {
         types: [this.isProductionStage() ? EndpointType.EDGE : EndpointType.REGIONAL],
       },
       ...this.props.api.restApi,
-      restApiName: this.resourceNameFormatter(
+      restApiName: this.resourceNameFormatter.format(
         this.props.api.restApi?.restApiName,
         this.props.api.restApi?.resourceNameOptions
       ),

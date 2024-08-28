@@ -193,7 +193,7 @@ export class SiteWithLambdaBackend extends CommonConstruct {
     if (!siteCachePolicy.cachePolicyName) throw `SiteCachePolicy cachePolicyName undefined for ${id}`
 
     return new CachePolicy(this, `${id}`, {
-      cachePolicyName: this.resourceNameFormatter(siteCachePolicy.cachePolicyName),
+      cachePolicyName: this.resourceNameFormatter.format(siteCachePolicy.cachePolicyName),
       comment: `Policy for ${this.id}-distribution - ${this.props.stage} stage`,
       cookieBehavior: siteCachePolicy.cookieBehavior,
       enableAcceptEncodingBrotli: siteCachePolicy.enableAcceptEncodingBrotli,
@@ -222,7 +222,9 @@ export class SiteWithLambdaBackend extends CommonConstruct {
       comment: `Request Policy for ${this.id}-distribution - ${this.props.stage} stage`,
       cookieBehavior: this.props.siteOriginRequestPolicy.cookieBehavior,
       headerBehavior: this.props.siteOriginRequestPolicy.headerBehavior,
-      originRequestPolicyName: this.resourceNameFormatter(this.props.siteOriginRequestPolicy.originRequestPolicyName),
+      originRequestPolicyName: this.resourceNameFormatter.format(
+        this.props.siteOriginRequestPolicy.originRequestPolicyName
+      ),
       queryStringBehavior: this.props.siteOriginRequestPolicy.queryStringBehavior,
     })
 
@@ -239,7 +241,7 @@ export class SiteWithLambdaBackend extends CommonConstruct {
     return new ResponseHeadersPolicy(this, `${this.id}-${props.type}-srhp`, {
       ...props,
       comment: `Response Header Policy for ${props.type} for ${this.id}-distribution - ${this.props.stage} stage`,
-      responseHeadersPolicyName: this.resourceNameFormatter(props.responseHeadersPolicyName),
+      responseHeadersPolicyName: this.resourceNameFormatter.format(props.responseHeadersPolicyName),
       securityHeadersBehavior: {
         ...props.securityHeadersBehavior,
         strictTransportSecurity: {
