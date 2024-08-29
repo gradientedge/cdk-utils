@@ -62,7 +62,7 @@ class TestCommonConstruct extends CommonConstruct {
 
   constructor(parent: Construct, name: string, props: TestStackProps) {
     super(parent, name, props)
-    this.vpcManager.createCommonVpc(this, this.props.testVpc)
+    this.vpcManager.createCommonVpc(`${name}-vpc`, this, this.props.testVpc, this.props.testVpc.vpcName)
     this.vpcManager.createVpc('test-ipv6-vpc', this, this.props.testIPV6Vpc)
   }
 }
@@ -96,13 +96,13 @@ describe('TestVpcConstruct', () => {
 
 describe('TestVpcConstruct', () => {
   test('outputs as expected', () => {
-    template.hasOutput('commonVpcId', {})
-    template.hasOutput('commonVpcPublicSubnetIds', {})
-    template.hasOutput('commonVpcPrivateSubnetIds', {})
-    template.hasOutput('commonVpcPublicSubnetRouteTableIds', {})
-    template.hasOutput('commonVpcPrivateSubnetRouteTableIds', {})
-    template.hasOutput('commonVpcAvailabilityZones', {})
-    template.hasOutput('commonVpcDefaultSecurityGroup', {})
+    template.hasOutput('testCommonStackVpcId', {})
+    template.hasOutput('testCommonStackVpcPublicSubnetIds', {})
+    template.hasOutput('testCommonStackVpcPrivateSubnetIds', {})
+    template.hasOutput('testCommonStackVpcPublicSubnetRouteTableIds', {})
+    template.hasOutput('testCommonStackVpcPrivateSubnetRouteTableIds', {})
+    template.hasOutput('testCommonStackVpcAvailabilityZones', {})
+    template.hasOutput('testCommonStackVpcDefaultSecurityGroup', {})
     template.hasOutput('testIpv6VpcId', {})
     template.hasOutput('testIpv6VpcPublicSubnetIds', {})
     template.hasOutput('testIpv6VpcPrivateSubnetIds', {})
@@ -120,6 +120,25 @@ describe('TestVpcConstruct', () => {
       EnableDnsHostnames: true,
       EnableDnsSupport: true,
       InstanceTenancy: 'default',
+      Tags: [
+        {
+          Key: 'Name',
+          Value: 'cdktest-common-vpc-test',
+        },
+      ],
+    })
+
+    template.hasResourceProperties('AWS::EC2::VPC', {
+      CidrBlock: '10.0.0.0/16',
+      EnableDnsHostnames: true,
+      EnableDnsSupport: true,
+      InstanceTenancy: 'default',
+      Tags: [
+        {
+          Key: 'Name',
+          Value: 'cdktest-common-ipv4-vpc-test',
+        },
+      ],
     })
   })
 })
@@ -128,29 +147,94 @@ describe('TestVpcConstruct', () => {
   test('provisions new vpc subnets as expected', () => {
     template.hasResourceProperties('AWS::EC2::Subnet', {
       AvailabilityZone: 'dummy1a',
-      CidrBlock: '10.0.128.0/18',
-      MapPublicIpOnLaunch: false,
-      VpcId: { Ref: 'testcommonstackCommonVpcC3D1FF9B' },
-    })
-    template.hasResourceProperties('AWS::EC2::Subnet', {
-      AvailabilityZone: 'dummy1a',
       CidrBlock: '10.0.0.0/18',
       MapPublicIpOnLaunch: true,
-      VpcId: { Ref: 'testcommonstackCommonVpcC3D1FF9B' },
-    })
-    template.hasResourceProperties('AWS::EC2::Subnet', {
-      AvailabilityZone: 'dummy1b',
-      CidrBlock: '10.0.192.0/18',
-      MapPublicIpOnLaunch: false,
-      VpcId: { Ref: 'testcommonstackCommonVpcC3D1FF9B' },
+      Tags: [
+        {
+          Key: 'aws-cdk:subnet-name',
+          Value: 'Public',
+        },
+        {
+          Key: 'aws-cdk:subnet-type',
+          Value: 'Public',
+        },
+        {
+          Key: 'Name',
+          Value: 'test-common-stack/test-common-stack/test-common-stack-vpc/PublicSubnet1',
+        },
+      ],
+      VpcId: {
+        Ref: 'testcommonstacktestcommonstackvpcD67F1E27',
+      },
     })
     template.hasResourceProperties('AWS::EC2::Subnet', {
       AvailabilityZone: 'dummy1b',
       CidrBlock: '10.0.64.0/18',
       MapPublicIpOnLaunch: true,
-      VpcId: { Ref: 'testcommonstackCommonVpcC3D1FF9B' },
+      Tags: [
+        {
+          Key: 'aws-cdk:subnet-name',
+          Value: 'Public',
+        },
+        {
+          Key: 'aws-cdk:subnet-type',
+          Value: 'Public',
+        },
+        {
+          Key: 'Name',
+          Value: 'test-common-stack/test-common-stack/test-common-stack-vpc/PublicSubnet2',
+        },
+      ],
+      VpcId: {
+        Ref: 'testcommonstacktestcommonstackvpcD67F1E27',
+      },
     })
     template.hasResourceProperties('AWS::EC2::Subnet', {
+      AvailabilityZone: 'dummy1a',
+      CidrBlock: '10.0.128.0/18',
+      MapPublicIpOnLaunch: false,
+      Tags: [
+        {
+          Key: 'aws-cdk:subnet-name',
+          Value: 'Private',
+        },
+        {
+          Key: 'aws-cdk:subnet-type',
+          Value: 'Private',
+        },
+        {
+          Key: 'Name',
+          Value: 'test-common-stack/test-common-stack/test-common-stack-vpc/PrivateSubnet1',
+        },
+      ],
+      VpcId: {
+        Ref: 'testcommonstacktestcommonstackvpcD67F1E27',
+      },
+    })
+    template.hasResourceProperties('AWS::EC2::Subnet', {
+      AvailabilityZone: 'dummy1b',
+      CidrBlock: '10.0.192.0/18',
+      MapPublicIpOnLaunch: false,
+      Tags: [
+        {
+          Key: 'aws-cdk:subnet-name',
+          Value: 'Private',
+        },
+        {
+          Key: 'aws-cdk:subnet-type',
+          Value: 'Private',
+        },
+        {
+          Key: 'Name',
+          Value: 'test-common-stack/test-common-stack/test-common-stack-vpc/PrivateSubnet2',
+        },
+      ],
+      VpcId: {
+        Ref: 'testcommonstacktestcommonstackvpcD67F1E27',
+      },
+    })
+    template.hasResourceProperties('AWS::EC2::Subnet', {
+      AssignIpv6AddressOnCreation: true,
       AvailabilityZone: 'dummy1a',
       Ipv6CidrBlock: {
         'Fn::Select': [
@@ -173,34 +257,26 @@ describe('TestVpcConstruct', () => {
       },
       Ipv6Native: true,
       MapPublicIpOnLaunch: false,
-      VpcId: { Ref: 'testcommonstacktestipv6vpcB91AA9CB' },
-    })
-    template.hasResourceProperties('AWS::EC2::Subnet', {
-      AvailabilityZone: 'dummy1a',
-      Ipv6CidrBlock: {
-        'Fn::Select': [
-          0,
-          {
-            'Fn::Cidr': [
-              {
-                'Fn::Select': [
-                  0,
-                  {
-                    'Fn::GetAtt': ['testcommonstacktestipv6vpcB91AA9CB', 'Ipv6CidrBlocks'],
-                  },
-                ],
-              },
-              256,
-              '64',
-            ],
-          },
-        ],
+      Tags: [
+        {
+          Key: 'aws-cdk:subnet-name',
+          Value: 'cdktest-common-ipv4-vpc-test-public',
+        },
+        {
+          Key: 'aws-cdk:subnet-type',
+          Value: 'Public',
+        },
+        {
+          Key: 'Name',
+          Value: 'test-common-stack/test-common-stack/test-ipv6-vpc/cdktest-common-ipv4-vpc-test-publicSubnet1',
+        },
+      ],
+      VpcId: {
+        Ref: 'testcommonstacktestipv6vpcB91AA9CB',
       },
-      Ipv6Native: true,
-      MapPublicIpOnLaunch: false,
-      VpcId: { Ref: 'testcommonstacktestipv6vpcB91AA9CB' },
     })
     template.hasResourceProperties('AWS::EC2::Subnet', {
+      AssignIpv6AddressOnCreation: true,
       AvailabilityZone: 'dummy1b',
       Ipv6CidrBlock: {
         'Fn::Select': [
@@ -223,13 +299,30 @@ describe('TestVpcConstruct', () => {
       },
       Ipv6Native: true,
       MapPublicIpOnLaunch: false,
-      VpcId: { Ref: 'testcommonstacktestipv6vpcB91AA9CB' },
+      Tags: [
+        {
+          Key: 'aws-cdk:subnet-name',
+          Value: 'cdktest-common-ipv4-vpc-test-public',
+        },
+        {
+          Key: 'aws-cdk:subnet-type',
+          Value: 'Public',
+        },
+        {
+          Key: 'Name',
+          Value: 'test-common-stack/test-common-stack/test-ipv6-vpc/cdktest-common-ipv4-vpc-test-publicSubnet2',
+        },
+      ],
+      VpcId: {
+        Ref: 'testcommonstacktestipv6vpcB91AA9CB',
+      },
     })
     template.hasResourceProperties('AWS::EC2::Subnet', {
-      AvailabilityZone: 'dummy1b',
+      AssignIpv6AddressOnCreation: true,
+      AvailabilityZone: 'dummy1a',
       Ipv6CidrBlock: {
         'Fn::Select': [
-          3,
+          2,
           {
             'Fn::Cidr': [
               {
@@ -248,7 +341,65 @@ describe('TestVpcConstruct', () => {
       },
       Ipv6Native: true,
       MapPublicIpOnLaunch: false,
-      VpcId: { Ref: 'testcommonstacktestipv6vpcB91AA9CB' },
+      Tags: [
+        {
+          Key: 'aws-cdk:subnet-name',
+          Value: 'cdktest-common-ipv4-vpc-test-private',
+        },
+        {
+          Key: 'aws-cdk:subnet-type',
+          Value: 'Private',
+        },
+        {
+          Key: 'Name',
+          Value: 'test-common-stack/test-common-stack/test-ipv6-vpc/cdktest-common-ipv4-vpc-test-privateSubnet1',
+        },
+      ],
+      VpcId: {
+        Ref: 'testcommonstacktestipv6vpcB91AA9CB',
+      },
+    })
+    template.hasResourceProperties('AWS::EC2::Subnet', {
+      AssignIpv6AddressOnCreation: true,
+      AvailabilityZone: 'dummy1b',
+      Ipv6CidrBlock: {
+        'Fn::Select': [
+          1,
+          {
+            'Fn::Cidr': [
+              {
+                'Fn::Select': [
+                  0,
+                  {
+                    'Fn::GetAtt': ['testcommonstacktestipv6vpcB91AA9CB', 'Ipv6CidrBlocks'],
+                  },
+                ],
+              },
+              256,
+              '64',
+            ],
+          },
+        ],
+      },
+      Ipv6Native: true,
+      MapPublicIpOnLaunch: false,
+      Tags: [
+        {
+          Key: 'aws-cdk:subnet-name',
+          Value: 'cdktest-common-ipv4-vpc-test-public',
+        },
+        {
+          Key: 'aws-cdk:subnet-type',
+          Value: 'Public',
+        },
+        {
+          Key: 'Name',
+          Value: 'test-common-stack/test-common-stack/test-ipv6-vpc/cdktest-common-ipv4-vpc-test-publicSubnet2',
+        },
+      ],
+      VpcId: {
+        Ref: 'testcommonstacktestipv6vpcB91AA9CB',
+      },
     })
   })
 })
@@ -256,10 +407,99 @@ describe('TestVpcConstruct', () => {
 describe('TestVpcConstruct', () => {
   test('provisions new route tables as expected', () => {
     template.hasResourceProperties('AWS::EC2::RouteTable', {
-      VpcId: { Ref: 'testcommonstackCommonVpcC3D1FF9B' },
+      Tags: [
+        {
+          Key: 'Name',
+          Value: 'test-common-stack/test-common-stack/test-common-stack-vpc/PublicSubnet1',
+        },
+      ],
+      VpcId: {
+        Ref: 'testcommonstacktestcommonstackvpcD67F1E27',
+      },
     })
+
     template.hasResourceProperties('AWS::EC2::RouteTable', {
-      VpcId: { Ref: 'testcommonstacktestipv6vpcB91AA9CB' },
+      Tags: [
+        {
+          Key: 'Name',
+          Value: 'test-common-stack/test-common-stack/test-common-stack-vpc/PublicSubnet2',
+        },
+      ],
+      VpcId: {
+        Ref: 'testcommonstacktestcommonstackvpcD67F1E27',
+      },
+    })
+
+    template.hasResourceProperties('AWS::EC2::RouteTable', {
+      Tags: [
+        {
+          Key: 'Name',
+          Value: 'test-common-stack/test-common-stack/test-common-stack-vpc/PrivateSubnet1',
+        },
+      ],
+      VpcId: {
+        Ref: 'testcommonstacktestcommonstackvpcD67F1E27',
+      },
+    })
+
+    template.hasResourceProperties('AWS::EC2::RouteTable', {
+      Tags: [
+        {
+          Key: 'Name',
+          Value: 'test-common-stack/test-common-stack/test-common-stack-vpc/PrivateSubnet2',
+        },
+      ],
+      VpcId: {
+        Ref: 'testcommonstacktestcommonstackvpcD67F1E27',
+      },
+    })
+
+    template.hasResourceProperties('AWS::EC2::RouteTable', {
+      Tags: [
+        {
+          Key: 'Name',
+          Value: 'test-common-stack/test-common-stack/test-ipv6-vpc/cdktest-common-ipv4-vpc-test-publicSubnet1',
+        },
+      ],
+      VpcId: {
+        Ref: 'testcommonstacktestipv6vpcB91AA9CB',
+      },
+    })
+
+    template.hasResourceProperties('AWS::EC2::RouteTable', {
+      Tags: [
+        {
+          Key: 'Name',
+          Value: 'test-common-stack/test-common-stack/test-ipv6-vpc/cdktest-common-ipv4-vpc-test-publicSubnet2',
+        },
+      ],
+      VpcId: {
+        Ref: 'testcommonstacktestipv6vpcB91AA9CB',
+      },
+    })
+
+    template.hasResourceProperties('AWS::EC2::RouteTable', {
+      Tags: [
+        {
+          Key: 'Name',
+          Value: 'test-common-stack/test-common-stack/test-ipv6-vpc/cdktest-common-ipv4-vpc-test-privateSubnet1',
+        },
+      ],
+      VpcId: {
+        Ref: 'testcommonstacktestipv6vpcB91AA9CB',
+      },
+    })
+
+    template.hasResourceProperties('AWS::EC2::RouteTable', {
+      Tags: [
+        {
+          Key: 'Name',
+          Value: 'test-common-stack/test-common-stack/test-ipv6-vpc/cdktest-common-ipv4-vpc-test-privateSubnet2',
+        },
+      ],
+      VpcId: {
+        Ref: 'testcommonstacktestipv6vpcB91AA9CB',
+      },
     })
   })
 })
@@ -268,34 +508,34 @@ describe('TestVpcConstruct', () => {
   test('provisions new subnet route table associations as expected', () => {
     template.hasResourceProperties('AWS::EC2::SubnetRouteTableAssociation', {
       RouteTableId: {
-        Ref: 'testcommonstackCommonVpcPublicSubnet1RouteTableD9640A00',
+        Ref: 'testcommonstacktestcommonstackvpcPublicSubnet1RouteTableB0BB0283',
       },
       SubnetId: {
-        Ref: 'testcommonstackCommonVpcPublicSubnet1Subnet31169F35',
+        Ref: 'testcommonstacktestcommonstackvpcPublicSubnet1Subnet2C5C54CE',
       },
     })
     template.hasResourceProperties('AWS::EC2::SubnetRouteTableAssociation', {
       RouteTableId: {
-        Ref: 'testcommonstackCommonVpcPublicSubnet2RouteTable5F5F391A',
+        Ref: 'testcommonstacktestcommonstackvpcPublicSubnet2RouteTableC62CC65C',
       },
       SubnetId: {
-        Ref: 'testcommonstackCommonVpcPublicSubnet2Subnet61BA0786',
+        Ref: 'testcommonstacktestcommonstackvpcPublicSubnet2Subnet59F247DC',
       },
     })
     template.hasResourceProperties('AWS::EC2::SubnetRouteTableAssociation', {
       RouteTableId: {
-        Ref: 'testcommonstackCommonVpcPrivateSubnet1RouteTableCCEE8F90',
+        Ref: 'testcommonstacktestcommonstackvpcPrivateSubnet1RouteTableD6E96AB0',
       },
       SubnetId: {
-        Ref: 'testcommonstackCommonVpcPrivateSubnet1Subnet9547CBF7',
+        Ref: 'testcommonstacktestcommonstackvpcPrivateSubnet1SubnetBF5BA88B',
       },
     })
     template.hasResourceProperties('AWS::EC2::SubnetRouteTableAssociation', {
       RouteTableId: {
-        Ref: 'testcommonstackCommonVpcPrivateSubnet2RouteTableD5728369',
+        Ref: 'testcommonstacktestcommonstackvpcPrivateSubnet2RouteTableC17941EF',
       },
       SubnetId: {
-        Ref: 'testcommonstackCommonVpcPrivateSubnet2Subnet71CD8397',
+        Ref: 'testcommonstacktestcommonstackvpcPrivateSubnet2Subnet5D0058D0',
       },
     })
     template.hasResourceProperties('AWS::EC2::SubnetRouteTableAssociation', {
@@ -338,37 +578,37 @@ describe('TestVpcConstruct', () => {
     template.hasResourceProperties('AWS::EC2::Route', {
       DestinationCidrBlock: '0.0.0.0/0',
       GatewayId: {
-        Ref: 'testcommonstackCommonVpcIGWF0CD8ED4',
+        Ref: 'testcommonstacktestcommonstackvpcIGW984D47A2',
       },
       RouteTableId: {
-        Ref: 'testcommonstackCommonVpcPublicSubnet1RouteTableD9640A00',
+        Ref: 'testcommonstacktestcommonstackvpcPublicSubnet1RouteTableB0BB0283',
       },
     })
     template.hasResourceProperties('AWS::EC2::Route', {
       DestinationCidrBlock: '0.0.0.0/0',
       GatewayId: {
-        Ref: 'testcommonstackCommonVpcIGWF0CD8ED4',
+        Ref: 'testcommonstacktestcommonstackvpcIGW984D47A2',
       },
       RouteTableId: {
-        Ref: 'testcommonstackCommonVpcPublicSubnet2RouteTable5F5F391A',
+        Ref: 'testcommonstacktestcommonstackvpcPublicSubnet2RouteTableC62CC65C',
       },
     })
     template.hasResourceProperties('AWS::EC2::Route', {
       DestinationCidrBlock: '0.0.0.0/0',
       NatGatewayId: {
-        Ref: 'testcommonstackCommonVpcPublicSubnet1NATGateway1CE45E70',
+        Ref: 'testcommonstacktestcommonstackvpcPublicSubnet1NATGateway29CBDD9F',
       },
       RouteTableId: {
-        Ref: 'testcommonstackCommonVpcPrivateSubnet1RouteTableCCEE8F90',
+        Ref: 'testcommonstacktestcommonstackvpcPrivateSubnet1RouteTableD6E96AB0',
       },
     })
     template.hasResourceProperties('AWS::EC2::Route', {
       DestinationCidrBlock: '0.0.0.0/0',
       NatGatewayId: {
-        Ref: 'testcommonstackCommonVpcPublicSubnet2NATGatewayA2B5CBDE',
+        Ref: 'testcommonstacktestcommonstackvpcPublicSubnet2NATGateway81C8BF0C',
       },
       RouteTableId: {
-        Ref: 'testcommonstackCommonVpcPrivateSubnet2RouteTableD5728369',
+        Ref: 'testcommonstacktestcommonstackvpcPrivateSubnet2RouteTableC17941EF',
       },
     })
     template.hasResourceProperties('AWS::EC2::Route', {
@@ -458,29 +698,29 @@ describe('TestVpcConstruct', () => {
   test('provisions new nat gateway as expected', () => {
     template.hasResourceProperties('AWS::EC2::NatGateway', {
       AllocationId: {
-        'Fn::GetAtt': ['testcommonstackCommonVpcPublicSubnet1EIP91C6B23F', 'AllocationId'],
+        'Fn::GetAtt': ['testcommonstacktestcommonstackvpcPublicSubnet1EIPC233721F', 'AllocationId'],
       },
       SubnetId: {
-        Ref: 'testcommonstackCommonVpcPublicSubnet1Subnet31169F35',
+        Ref: 'testcommonstacktestcommonstackvpcPublicSubnet1Subnet2C5C54CE',
       },
       Tags: [
         {
           Key: 'Name',
-          Value: 'test-common-stack/test-common-stack/CommonVpc/PublicSubnet1',
+          Value: 'test-common-stack/test-common-stack/test-common-stack-vpc/PublicSubnet1',
         },
       ],
     })
     template.hasResourceProperties('AWS::EC2::NatGateway', {
       AllocationId: {
-        'Fn::GetAtt': ['testcommonstackCommonVpcPublicSubnet2EIP96CA5D13', 'AllocationId'],
+        'Fn::GetAtt': ['testcommonstacktestcommonstackvpcPublicSubnet2EIP904C6AC0', 'AllocationId'],
       },
       SubnetId: {
-        Ref: 'testcommonstackCommonVpcPublicSubnet2Subnet61BA0786',
+        Ref: 'testcommonstacktestcommonstackvpcPublicSubnet2Subnet59F247DC',
       },
       Tags: [
         {
           Key: 'Name',
-          Value: 'test-common-stack/test-common-stack/CommonVpc/PublicSubnet2',
+          Value: 'test-common-stack/test-common-stack/test-common-stack-vpc/PublicSubnet2',
         },
       ],
     })
@@ -518,8 +758,8 @@ describe('TestVpcConstruct', () => {
 describe('TestVpcConstruct', () => {
   test('provisions new vpc gateway attachment as expected', () => {
     template.hasResourceProperties('AWS::EC2::VPCGatewayAttachment', {
-      InternetGatewayId: { Ref: 'testcommonstackCommonVpcIGWF0CD8ED4' },
-      VpcId: { Ref: 'testcommonstackCommonVpcC3D1FF9B' },
+      InternetGatewayId: { Ref: 'testcommonstacktestcommonstackvpcIGW984D47A2' },
+      VpcId: { Ref: 'testcommonstacktestcommonstackvpcD67F1E27' },
     })
     template.hasResourceProperties('AWS::EC2::VPCGatewayAttachment', {
       InternetGatewayId: { Ref: 'testcommonstacktestipv6vpcIGW91A45734' },

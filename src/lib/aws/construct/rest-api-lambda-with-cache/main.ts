@@ -57,7 +57,12 @@ export abstract class RestApiLambdaWithCache extends RestApiLambda {
     if (this.props.useExistingVpc) {
       this.restApivpc = this.vpcManager.retrieveCommonVpc(`${this.id}-vpc`, this, this.props.vpcName)
     } else {
-      this.restApivpc = this.vpcManager.createCommonVpc(this, this.props.restApiVpc, this.props.restApiVpc.vpcName)
+      this.restApivpc = this.vpcManager.createCommonVpc(
+        `${this.id}-vpc`,
+        this,
+        this.props.restApiVpc,
+        this.props.restApiVpc.vpcName
+      )
     }
   }
 

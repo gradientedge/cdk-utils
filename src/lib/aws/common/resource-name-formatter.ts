@@ -17,9 +17,11 @@ export class ResourceNameFormatter extends Construct {
    */
   public format(resourceName: string, options?: ResourceNameFormatterProps) {
     const resourceNameElements = []
+    resourceNameElements.push(options?.globalPrefix ? this.props.globalPrefix : undefined)
     resourceNameElements.push(options?.prefix ?? this.props.resourcePrefix)
     resourceNameElements.push(resourceName)
     resourceNameElements.push(options?.suffix ?? this.props.resourceSuffix)
+    resourceNameElements.push(options?.globalSuffix ? this.props.globalSuffix : undefined)
     resourceNameElements.push(this.props.stage)
     return resourceNameElements.filter(resourceNameElement => resourceNameElement != undefined).join('-')
   }

@@ -126,8 +126,12 @@ describe('TestRestApiWithCacheLambdaConstruct', () => {
 
 describe('TestRestApiWithCacheLambdaConstruct', () => {
   test('outputs as expected', () => {
-    template.hasOutput('commonVpcId', {})
-    template.hasOutput('commonVpcPrivateSubnetIds', {})
+    template.hasOutput('testRestapiVpcId', {})
+    template.hasOutput('testRestapiVpcPublicSubnetIds', {})
+    template.hasOutput('testRestapiVpcPrivateSubnetIds', {})
+    template.hasOutput('testRestapiVpcPublicSubnetRouteTableIds', {})
+    template.hasOutput('testRestapiVpcPrivateSubnetRouteTableIds', {})
+    template.hasOutput('testRestapiVpcAvailabilityZones', {})
     template.hasOutput('testRestapiHostedZoneHostedZoneId', {})
     template.hasOutput('testRestapiHostedZoneHostedZoneArn', {})
     template.hasOutput('testRestapiCertificateCertificateArn', {})

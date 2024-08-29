@@ -77,7 +77,7 @@ class TestCommonConstruct extends CommonConstruct {
     const testLogGroup = this.logManager.createCfnLogGroup('test-log-group', this, this.props.testLogGroup)
     const testLogGroup2 = this.logManager.createLogGroup('test-log-group-2', this, this.props.testLogGroup)
     const testBucket = this.s3Manager.createS3Bucket('test-ct-bucket', this, this.props.testBucket)
-    const testVpc = this.vpcManager.createCommonVpc(this, this.props.testVpc)
+    const testVpc = this.vpcManager.createCommonVpc(`${name}-vpc`, this, this.props.testVpc)
     const testCluster = this.ecsManager.createEcsCluster('test-cluster', this, this.props.testCluster, testVpc)
     const testImage = ecs.ContainerImage.fromAsset('src/test/aws/common/docker')
     const testPolicy = new iam.PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this)] })

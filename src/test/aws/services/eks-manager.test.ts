@@ -65,7 +65,7 @@ class TestCommonConstruct extends CommonConstruct {
 
   constructor(parent: Construct, name: string, props: TestStackProps) {
     super(parent, name, props)
-    const testVpc = this.vpcManager.createCommonVpc(this, this.props.testVpc)
+    const testVpc = this.vpcManager.createCommonVpc(`${name}-vpc`, this, this.props.testVpc)
     const testImage = this.ecrManager.createDockerImage('test-image', this, 'src/test/aws/common/docker')
     this.eksManager.createEksDeployment('test-depl', this, this.props.testEks, testImage, testVpc)
   }

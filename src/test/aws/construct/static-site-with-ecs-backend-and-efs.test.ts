@@ -148,12 +148,12 @@ describe('TestSiteWithEcsBackendAndEfsConstruct', () => {
     template.hasOutput('testSiteHostedZoneHostedZoneId', {})
     template.hasOutput('testSiteHostedZoneHostedZoneArn', {})
     template.hasOutput('testSiteCertificateCertificateArn', {})
-    template.hasOutput('commonVpcId', {})
-    template.hasOutput('commonVpcPublicSubnetIds', {})
-    template.hasOutput('commonVpcPrivateSubnetIds', {})
-    template.hasOutput('commonVpcPublicSubnetRouteTableIds', {})
-    template.hasOutput('commonVpcPrivateSubnetRouteTableIds', {})
-    template.hasOutput('commonVpcAvailabilityZones', {})
+    template.hasOutput('testSiteVpcId', {})
+    template.hasOutput('testSiteVpcPublicSubnetIds', {})
+    template.hasOutput('testSiteVpcPrivateSubnetIds', {})
+    template.hasOutput('testSiteVpcPublicSubnetRouteTableIds', {})
+    template.hasOutput('testSiteVpcPrivateSubnetRouteTableIds', {})
+    template.hasOutput('testSiteVpcAvailabilityZones', {})
     template.hasOutput('testSiteEcsRoleArn', {})
     template.hasOutput('testSiteEcsRoleName', {})
     template.hasOutput('testSiteClusterClusterArn', {})
@@ -489,7 +489,7 @@ describe('TestEfsManager', () => {
         },
       ],
       SubnetId: {
-        Ref: 'testsitestackCommonVpcPrivateSubnet1Subnet81D11B6D',
+        Ref: 'testsitestacktestsitevpcPrivateSubnet1Subnet8ABB1758',
       },
     })
 
@@ -503,7 +503,7 @@ describe('TestEfsManager', () => {
         },
       ],
       SubnetId: {
-        Ref: 'testsitestackCommonVpcPrivateSubnet2SubnetB177B853',
+        Ref: 'testsitestacktestsitevpcPrivateSubnet1Subnet8ABB1758',
       },
     })
   })

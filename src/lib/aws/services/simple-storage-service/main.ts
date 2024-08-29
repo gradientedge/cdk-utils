@@ -99,8 +99,11 @@ export class S3Manager {
     } else {
       let logBucket
       if (props.logBucketName) {
-        const logBucketName = S3Manager.determineBucketName(scope, props, props.logBucketName)
-        logBucket = Bucket.fromBucketName(scope, `${id}-logs`, props.logBucketName)
+        logBucket = Bucket.fromBucketName(
+          scope,
+          `${id}-logs`,
+          S3Manager.determineBucketName(scope, props, props.logBucketName)
+        )
       }
 
       bucket = new Bucket(scope, `${id}-bucket`, {

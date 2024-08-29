@@ -8,6 +8,8 @@ import { BaseProps } from '../../common'
 export interface CommonStackProps extends BaseProps, StackProps {
   region: string
   resourceProjectIdentifier?: string
+  globalPrefix?: string
+  globalSuffix?: string
   resourcePrefix?: string
   resourceSuffix?: string
   logRetention?: RetentionDays
@@ -19,6 +21,8 @@ export interface CommonStackProps extends BaseProps, StackProps {
 }
 
 export interface ResourceNameFormatterProps {
+  globalPrefix?: boolean
+  globalSuffix?: boolean
   prefix?: string
   suffix?: string
 }
