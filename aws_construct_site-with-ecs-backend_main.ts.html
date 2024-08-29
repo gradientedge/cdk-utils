@@ -263,9 +263,14 @@ export class SiteWithEcsBackend extends CommonConstruct {
    */
   protected createVpc() {
     if (this.props.useExistingVpc) {
-      this.siteVpc = this.vpcManager.retrieveCommonVpc(`${this.id}`, this, this.props.siteVpc.vpcName)
+      this.siteVpc = this.vpcManager.retrieveCommonVpc(`${this.id}-vpc`, this, this.props.siteVpc.vpcName)
     } else {
-      this.siteVpc = this.vpcManager.createCommonVpc(this, this.props.siteVpc, this.props.siteVpc.vpcName)
+      this.siteVpc = this.vpcManager.createCommonVpc(
+        `${this.id}-vpc`,
+        this,
+        this.props.siteVpc,
+        this.props.siteVpc.vpcName
+      )
     }
   }
 

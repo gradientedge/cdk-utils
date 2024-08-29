@@ -99,7 +99,10 @@ export class VpcManager {
         vpcName,
       })
     } else {
-      vpc = new Vpc(scope, `${id}`, props)
+      vpc = new Vpc(scope, `${id}`, {
+        ...props,
+        vpcName,
+      })
     }
 
     createCfnOutput(`${id}Id`, scope, vpc.vpcId)
@@ -123,13 +126,17 @@ export class VpcManager {
 
   /**
    * @summary Method to create a common vpc
+   * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props
    * @param vpcIdentifier optional identifier for VPC
    */
-  public createCommonVpc(scope: CommonConstruct, props: VpcProps, vpcIdentifier?: string) {
-    const vpc = this.createVpc(CommonVpcIdentifier, scope, props)
-    Tags.of(vpc).add('Name', vpcIdentifier ?? CommonVpcIdentifier)
+  public createCommonVpc(id: string, scope: CommonConstruct, props: VpcProps, vpcIdentifier?: string) {
+    const vpc = this.createVpc(id, scope, props)
+    Tags.of(vpc).add(
+      'Name',
+      scope.resourceNameFormatter.format(vpcIdentifier ?? CommonVpcIdentifier, props.resourceNameOptions)
+    )
 
     return vpc
   }
@@ -141,7 +148,6 @@ export class VpcManager {
    * @param vpcIdentifier optional identifier for VPC
    */
   public retrieveCommonVpc(id: string, scope: CommonConstruct, vpcIdentifier?: string) {
-    const vpcName = scope.resourceNameFormatter.format(vpcIdentifier ?? CommonVpcIdentifier)
     return Vpc.fromLookup(scope, `${id}`, {
       vpcName: scope.resourceNameFormatter.format(vpcIdentifier ?? CommonVpcIdentifier),
     })
