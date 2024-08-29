@@ -28,10 +28,11 @@ export class KmsManager {
    */
   public createKey(id: string, scope: CommonConstruct, props: KmsKeyProps) {
     if (!props) throw `KMS Key props undefined for ${id}`
+    if (!props.alias) throw `KMS Key alias undefined for ${id}`
 
     const key = new Key(scope, `${id}`, {
       ...props,
-      alias: `${props.alias}-${scope.props.stage}`,
+      alias: scope.resourceNameFormatter.format(props.alias, props.resourceNameOptions),
     })
 
     createCfnOutput(`${id}-keyId`, scope, key.keyId)

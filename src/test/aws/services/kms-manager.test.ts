@@ -93,7 +93,7 @@ describe('TestKmsConstruct', () => {
 })
 
 describe('TestKmsConstruct', () => {
-  test('provisions new certificate as expected', () => {
+  test('provisions new kms key as expected', () => {
     template.hasResourceProperties('AWS::KMS::Key', {
       EnableKeyRotation: true,
       KeyPolicy: {

@@ -73,7 +73,7 @@ describe('TestSsmConstruct', () => {
   test('provisions new ip set as expected', () => {
     template.hasResourceProperties('AWS::SSM::Parameter', {
       Description: 'test param description - test stage',
-      Name: 'test-param-test',
+      Name: 'cdktest-test-param-test',
       Type: 'String',
       Value: 'Hello World!',
     })

@@ -78,7 +78,7 @@ class TestCommonConstruct extends CommonConstruct {
 
   constructor(parent: Construct, name: string, props: TestStackProps) {
     super(parent, name, props)
-    const testVpc = this.vpcManager.createCommonVpc(this, this.props.testVpc)
+    const testVpc = this.vpcManager.createCommonVpc(`${name}-vpc`, this, this.props.testVpc)
     const testCluster = this.ecsManager.createEcsCluster('test-cluster', this, this.props.testCluster, testVpc)
     const testImage = ecs.ContainerImage.fromAsset('src/test/aws/common/docker')
     const testLogGroup = this.logManager.createLogGroup('test-log-group', this, this.props.testLogGroup)

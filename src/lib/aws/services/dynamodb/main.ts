@@ -30,10 +30,11 @@ export class DynamodbManager {
    */
   public createTable(id: string, scope: CommonConstruct, props: TableProps) {
     if (!props) throw `Table props undefined for ${id}`
+    if (!props.tableName) throw `Table tableName undefined for ${id}`
 
     const table = new Table(scope, `${id}`, {
       ...props,
-      tableName: `${props.tableName}-${scope.props.stage}`,
+      tableName: scope.resourceNameFormatter.format(props.tableName, props.resourceNameOptions),
     })
 
     if (props.tags && !_.isEmpty(props.tags)) {
@@ -62,6 +63,12 @@ export class DynamodbManager {
       ...props,
       tableName: scope.resourceNameFormatter.format(props.tableName, props.resourceNameOptions),
     })
+
+    if (props.tags && !_.isEmpty(props.tags)) {
+      _.forEach(props.tags, tag => {
+        Tags.of(table).add(tag.key, tag.value)
+      })
+    }
 
     createCfnOutput(`${id}-tableName`, scope, table.tableName)
     createCfnOutput(`${id}-tableArn`, scope, table.tableArn)

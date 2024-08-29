@@ -116,7 +116,7 @@ describe('TestDynamodbConstruct', () => {
         ReadCapacityUnits: 5,
         WriteCapacityUnits: 5,
       },
-      TableName: 'test-table-test',
+      TableName: 'cdktest-test-table-test',
     })
   })
 })

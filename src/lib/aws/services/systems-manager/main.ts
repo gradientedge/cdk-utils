@@ -1,4 +1,4 @@
-import { StringParameter, StringParameterProps } from 'aws-cdk-lib/aws-ssm'
+import { StringParameter } from 'aws-cdk-lib/aws-ssm'
 import {
   AwsCustomResource,
   AwsCustomResourcePolicy,
@@ -7,7 +7,7 @@ import {
 } from 'aws-cdk-lib/custom-resources'
 import { CommonConstruct } from '../../common'
 import { createCfnOutput } from '../../utils'
-import { SSMParameterReaderProps } from './types'
+import { SSMParameterReaderProps, SSMStringParameterProps } from './types'
 
 /**
  * @classdesc Provides operations on AWS Systems Manager.
@@ -34,13 +34,14 @@ export class SsmManager {
    * @param scope scope in which this resource is defined
    * @param props parameter props
    */
-  public writeStringToParameters(id: string, scope: CommonConstruct, props: StringParameterProps) {
+  public writeStringToParameters(id: string, scope: CommonConstruct, props: SSMStringParameterProps) {
     if (!props) throw `Parameter props undefined for ${id}`
+    if (!props.parameterName) throw `Parameter parameterName undefined for ${id}`
 
     const parameter = new StringParameter(scope, `${id}`, {
       ...props,
       description: `${props.description} - ${scope.props.stage} stage`,
-      parameterName: `${props.parameterName}-${scope.props.stage}`,
+      parameterName: scope.resourceNameFormatter.format(props.parameterName, props.resourceNameOptions),
     })
 
     createCfnOutput(`${id}-parameterArn`, scope, parameter.parameterArn)
