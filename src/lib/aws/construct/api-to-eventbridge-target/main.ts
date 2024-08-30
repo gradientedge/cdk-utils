@@ -159,7 +159,10 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
       this.apiEvent.eventBus = EventBus.fromEventBusName(
         this,
         `${this.id}-event-bus`,
-        this.resourceNameFormatter.format(this.props.event.eventBusName ?? 'default')
+        this.resourceNameFormatter.format(
+          this.props.event.eventBusName ?? 'default',
+          this.props.resourceNameOptions?.eventbridgeBus
+        )
       )
       return
     }

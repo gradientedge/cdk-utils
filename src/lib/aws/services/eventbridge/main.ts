@@ -46,7 +46,7 @@ export class EventManager {
     if (!props.eventBusName) throw `EventBus eventBusName undefined for ${id}`
 
     let eventBusName = props.eventBusName
-    if (eventBusName && eventBusName != 'default') {
+    if (eventBusName != 'default') {
       eventBusName = scope.resourceNameFormatter.format(
         props.eventBusName,
         scope.props.resourceNameOptions?.eventbridgeBus
