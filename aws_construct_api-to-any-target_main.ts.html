@@ -161,7 +161,7 @@ export class ApiToAnyTarget extends CommonConstruct {
 
   protected createApiToAnyTargetRestApiLogGroup() {
     this.apiToAnyTargetRestApi.accessLogGroup = this.logManager.createLogGroup(`${this.id}-rest-api-access-log`, this, {
-      logGroupName: `/custom/api/${this.id}-rest-api-access`,
+      logGroupName: `${this.id}-access`,
       removalPolicy: RemovalPolicy.DESTROY,
     })
   }
@@ -206,7 +206,7 @@ export class ApiToAnyTarget extends CommonConstruct {
       ...this.props.api.restApi,
       restApiName: this.resourceNameFormatter.format(
         this.props.api.restApi?.restApiName,
-        this.props.api.restApi?.resourceNameOptions
+        this.props.resourceNameOptions?.apigateway
       ),
     })
     this.addCfnOutput(`${this.id}-restApiId`, this.apiToAnyTargetRestApi.api.restApiId)

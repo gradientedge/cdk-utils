@@ -84,7 +84,7 @@ export class SqsManager {
     if (!props) throw `Queue props undefined for ${id}`
     if (!props.queueName) throw `Queue queueName undefined for ${id}`
 
-    let queueName = scope.resourceNameFormatter.format(props.queueName, props.resourceNameOptions)
+    let queueName = scope.resourceNameFormatter.format(props.queueName, scope.props.resourceNameOptions?.sqs)
     if (props.fifo) queueName += '.fifo'
 
     const queue = new Queue(scope, id, {

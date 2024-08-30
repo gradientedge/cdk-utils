@@ -111,7 +111,7 @@ export class ElastiCacheManager {
     const elasticacheCluster = new CfnCacheCluster(scope, `${id}`, {
       ...props,
       cacheSubnetGroupName: subnetGroup.cacheSubnetGroupName,
-      clusterName: scope.resourceNameFormatter.format(props.clusterName, props.resourceNameOptions),
+      clusterName: scope.resourceNameFormatter.format(props.clusterName, scope.props.resourceNameOptions?.elasticache),
       logDeliveryConfigurations,
       vpcSecurityGroupIds: securityGroupIds,
     })

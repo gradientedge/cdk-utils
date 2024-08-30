@@ -109,7 +109,7 @@ export class EfsManager {
     const fileSystemId = props.provisionNewOnDeployment ? `${id}-${new Date().getMilliseconds()}` : `${id}`
     const fileSystem = new FileSystem(scope, `${fileSystemId}`, {
       ...props,
-      fileSystemName: scope.resourceNameFormatter.format(props.fileSystemName, props.resourceNameOptions),
+      fileSystemName: scope.resourceNameFormatter.format(props.fileSystemName, scope.props.resourceNameOptions?.efs),
       lifecyclePolicy: props.lifecyclePolicy ?? LifecyclePolicy.AFTER_7_DAYS,
       outOfInfrequentAccessPolicy: props.outOfInfrequentAccessPolicy ?? OutOfInfrequentAccessPolicy.AFTER_1_ACCESS,
       performanceMode: props.performanceMode ?? PerformanceMode.GENERAL_PURPOSE,

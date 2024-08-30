@@ -157,9 +157,14 @@ export class CloudWatchManager {
    */
   public createDashboard(id: string, scope: CommonConstruct, props: DashboardProps, widgets?: watch.IWidget[][]) {
     if (!props) throw `Dashboard props undefined for ${id}`
+    if (!props.dashboardName) throw `Dashboard dashboardName undefined for ${id}`
 
     const dashboard = new watch.Dashboard(scope, `${id}`, {
       ...props,
+      dashboardName: scope.resourceNameFormatter.format(
+        props.dashboardName,
+        scope.props.resourceNameOptions?.cloudwatch
+      ),
       end: CloudWatchManager.determineTimeRange(props.end),
       start: CloudWatchManager.determineTimeRange(props.start),
       widgets,

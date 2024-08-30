@@ -91,8 +91,8 @@ export class SnsManager {
 
     const topic = new Topic(scope, id, {
       ...props,
-      displayName: scope.resourceNameFormatter.format(props.topicName, props.resourceNameOptions),
-      topicName: scope.resourceNameFormatter.format(props.topicName, props.resourceNameOptions),
+      displayName: scope.resourceNameFormatter.format(props.topicName, scope.props.resourceNameOptions?.sns),
+      topicName: scope.resourceNameFormatter.format(props.topicName, scope.props.resourceNameOptions?.sns),
     })
 
     if (emails &amp;&amp; !_.isEmpty(emails)) {
@@ -123,8 +123,8 @@ export class SnsManager {
 
     const topic = new Topic(scope, id, {
       ...props,
-      displayName: scope.resourceNameFormatter.format(props.topicName, props.resourceNameOptions),
-      topicName: scope.resourceNameFormatter.format(props.topicName, props.resourceNameOptions),
+      displayName: scope.resourceNameFormatter.format(props.topicName, scope.props.resourceNameOptions?.sns),
+      topicName: scope.resourceNameFormatter.format(props.topicName, scope.props.resourceNameOptions?.sns),
     })
 
     topic.addSubscription(new LambdaSubscription(lambdaFunction))

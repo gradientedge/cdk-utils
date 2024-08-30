@@ -91,7 +91,7 @@ export class SsmManager {
     const parameter = new StringParameter(scope, `${id}`, {
       ...props,
       description: `${props.description} - ${scope.props.stage} stage`,
-      parameterName: scope.resourceNameFormatter.format(props.parameterName, props.resourceNameOptions),
+      parameterName: scope.resourceNameFormatter.format(props.parameterName, scope.props.resourceNameOptions?.ssm),
     })
 
     createCfnOutput(`${id}-parameterArn`, scope, parameter.parameterArn)

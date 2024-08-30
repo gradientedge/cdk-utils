@@ -82,7 +82,7 @@ export class KmsManager {
 
     const key = new Key(scope, `${id}`, {
       ...props,
-      alias: scope.resourceNameFormatter.format(props.alias, props.resourceNameOptions),
+      alias: scope.resourceNameFormatter.format(props.alias, scope.props.resourceNameOptions?.kms),
     })
 
     createCfnOutput(`${id}-keyId`, scope, key.keyId)

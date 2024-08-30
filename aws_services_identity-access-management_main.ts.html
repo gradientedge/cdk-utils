@@ -311,44 +311,6 @@ export class IamManager {
   }
 
   /**
-   * @summary Method to create iam policy to invalidate cloudfront cache
-   * @param resourceArns list of ARNs to allow access to
-   */
-  public policyForCloudfrontInvalidation(resourceArns?: string[]) {
-    return new PolicyDocument({
-      statements: [
-        this.statementForCreateAnyLogStream(),
-        this.statementForPutAnyLogEvent(),
-        this.statementForCloudfrontInvalidation(),
-        new PolicyStatement({
-          actions: [
-            'ecr:GetDownloadUrlForLayer',
-            'ecr:BatchGetImage',
-            'ecr:BatchCheckLayerAvailability',
-            'ecr:GetAuthorizationToken',
-          ],
-          effect: Effect.ALLOW,
-          resources: resourceArns ?? ['*'],
-        }),
-      ],
-    })
-  }
-
-  /**
-   * @summary Method to create iam role to invalidate cloudfront cache
-   * @param id scoped id of the resource
-   * @param scope scope in which this resource is defined
-   */
-  public roleForCloudfrontInvalidation(id: string, scope: CommonConstruct) {
-    return new Role(scope, `${id}-install-deps-project-role`, {
-      assumedBy: new ServicePrincipal('codebuild.amazonaws.com'),
-      inlinePolicies: {
-        codeBuildPolicy: this.policyForCloudfrontInvalidation(),
-      },
-    })
-  }
-
-  /**
    * @summary Method to create iam statement to assume iam role
    * @param scope scope in which this resource is defined
    * @param servicePrincipals
@@ -495,222 +457,27 @@ export class IamManager {
   }
 
   /**
-   * @summary Method to create iam statement for cloud trail
-   * @param id scoped id of the resource
-   * @param scope scope in which this resource is defined
-   * @param logGroup
+   * @summary Method to create iam policy to invalidate cloudfront cache
+   * @param resourceArns list of ARNs to allow access to
    */
-  public createRoleForCloudTrail(id: string, scope: CommonConstruct, logGroup: CfnLogGroup) {
-    const policy = new PolicyDocument({
-      statements: [this.statementForCreateLogStream(scope, logGroup), this.statementForPutLogEvent(scope, logGroup)],
-    })
-    const role = new CfnRole(scope, `${id}`, {
-      assumeRolePolicyDocument: new PolicyDocument({
-        statements: [this.statementForAssumeRole(scope, [new ServicePrincipal('cloudtrail.amazonaws.com')])],
-      }),
-      policies: [
-        {
-          policyDocument: policy,
-          policyName: scope.resourceNameFormatter.format(`${id}-policy`),
-        },
+  public createPolicyForCloudfrontInvalidation(resourceArns?: string[]) {
+    return new PolicyDocument({
+      statements: [
+        this.statementForCreateAnyLogStream(),
+        this.statementForPutAnyLogEvent(),
+        this.statementForCloudfrontInvalidation(),
+        new PolicyStatement({
+          actions: [
+            'ecr:GetDownloadUrlForLayer',
+            'ecr:BatchGetImage',
+            'ecr:BatchCheckLayerAvailability',
+            'ecr:GetAuthorizationToken',
+          ],
+          effect: Effect.ALLOW,
+          resources: resourceArns ?? ['*'],
+        }),
       ],
-      roleName: scope.resourceNameFormatter.format(id),
     })
-
-    createCfnOutput(`${id}Arn`, scope, role.attrArn)
-    createCfnOutput(`${id}Name`, scope, role.roleName)
-
-    return role
-  }
-
-  /**
-   * @summary Method to create iam statement for ecs event
-   * @param id scoped id of the resource
-   * @param scope scope in which this resource is defined
-   * @param cluster
-   * @param task
-   */
-  public createRoleForEcsEvent(id: string, scope: CommonConstruct, cluster: ICluster, task: ITaskDefinition) {
-    const policy = new PolicyDocument({
-      statements: [this.statementForRunEcsTask(scope, cluster, task), this.statementForEcsPassRole()],
-    })
-
-    const role = new Role(scope, `${id}`, {
-      assumedBy: new ServicePrincipal('events.amazonaws.com'),
-      description: `Role for ${id} ECS Task execution from EventBridge`,
-      inlinePolicies: { policy },
-      roleName: scope.resourceNameFormatter.format(id),
-    })
-
-    createCfnOutput(`${id}Arn`, scope, role.roleArn)
-    createCfnOutput(`${id}Name`, scope, role.roleName)
-
-    return role
-  }
-
-  /**
-   * @summary Method to create iam statement for ecs execution
-   * @param id scoped id of the resource
-   * @param scope scope in which this resource is defined
-   * @param policy
-   */
-  public createRoleForEcsExecution(id: string, scope: CommonConstruct, policy: PolicyDocument) {
-    const role = new Role(scope, `${id}`, {
-      assumedBy: new ServicePrincipal('ecs-tasks.amazonaws.com'),
-      description: `Role for ${id} ECS Task execution`,
-      inlinePolicies: { policy },
-      managedPolicies: [
-        ManagedPolicy.fromManagedPolicyArn(
-          scope,
-          `${id}-AmazonECSTaskExecutionRolePolicy`,
-          'arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy'
-        ),
-      ],
-      roleName: scope.resourceNameFormatter.format(id),
-    })
-
-    createCfnOutput(`${id}Arn`, scope, role.roleArn)
-    createCfnOutput(`${id}Name`, scope, role.roleName)
-
-    return role
-  }
-
-  /**
-   * @summary Method to create iam statement for lambda execution
-   * @param id scoped id of the resource
-   * @param scope scope in which this resource is defined
-   * @param policy
-   * @param servicePrincipal
-   */
-  public createRoleForLambda(
-    id: string,
-    scope: CommonConstruct,
-    policy: PolicyDocument,
-    servicePrincipal?: ServicePrincipal
-  ) {
-    const role = new Role(scope, `${id}`, {
-      assumedBy: servicePrincipal ?? new ServicePrincipal('lambda.amazonaws.com'),
-      description: `Role for ${id} Lambda function`,
-      inlinePolicies: { policy },
-      managedPolicies: [
-        ManagedPolicy.fromManagedPolicyArn(
-          scope,
-          `${id}-AWSLambdaBasicExecutionRole`,
-          'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
-        ),
-      ],
-      roleName: scope.resourceNameFormatter.format(id),
-    })
-
-    createCfnOutput(`${id}Arn`, scope, role.roleArn)
-    createCfnOutput(`${id}Name`, scope, role.roleName)
-
-    return role
-  }
-
-  /**
-   * @summary Method to create iam statement for appconfig secrets manager integration
-   * @param id scoped id of the resource
-   * @param scope scope in which this resource is defined
-   * @param policy
-   * @param servicePrincipal
-   */
-  public createRoleForAppConfigSecrets(
-    id: string,
-    scope: CommonConstruct,
-    policy: PolicyDocument,
-    servicePrincipal?: ServicePrincipal
-  ) {
-    const role = new Role(scope, `${id}`, {
-      assumedBy: servicePrincipal ?? new ServicePrincipal('appconfig.amazonaws.com'),
-      description: `Role for ${id} AppConfig Secrets`,
-      inlinePolicies: { policy },
-      roleName: scope.resourceNameFormatter.format(id),
-    })
-
-    createCfnOutput(`${id}Arn`, scope, role.roleArn)
-    createCfnOutput(`${id}Name`, scope, role.roleName)
-
-    return role
-  }
-
-  /**
-   * @summary Method to create iam statement for step function execution
-   * @param id scoped id of the resource
-   * @param scope scope in which this resource is defined
-   * @param policy
-   * @param servicePrincipal
-   */
-  public createRoleForStepFunction(
-    id: string,
-    scope: CommonConstruct,
-    policy: PolicyDocument,
-    servicePrincipal?: ServicePrincipal
-  ) {
-    const role = new Role(scope, `${id}`, {
-      assumedBy: servicePrincipal ?? new ServicePrincipal('states.amazonaws.com'),
-      description: `Role for ${id} Lambda function`,
-      inlinePolicies: { policy },
-      managedPolicies: [
-        ManagedPolicy.fromManagedPolicyArn(
-          scope,
-          `${id}-AWSLambdaBasicExecutionRole`,
-          'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
-        ),
-      ],
-      roleName: scope.resourceNameFormatter.format(id),
-    })
-
-    createCfnOutput(`${id}Arn`, scope, role.roleArn)
-    createCfnOutput(`${id}Name`, scope, role.roleName)
-
-    return role
-  }
-
-  /**
-   * @summary Method to create iam statement for sqs to step function pipe
-   * @param id scoped id of the resource
-   * @param scope scope in which this resource is defined
-   * @param queueArn the arn of the sqs queue
-   * @param stepFunctionArn the arn of the step function
-   */
-  public createRoleForSqsToSfnPipe(id: string, scope: CommonConstruct, queueArn: string, stepFunctionArn: string) {
-    const role = new Role(scope, `${id}`, {
-      assumedBy: new ServicePrincipal('pipes.amazonaws.com'),
-      description: `Role for ${id} Pipe`,
-      roleName: scope.resourceNameFormatter.format(id),
-    })
-
-    role.addToPolicy(this.statementForPollQueue([queueArn]))
-    role.addToPolicy(this.statementForStartExecution([stepFunctionArn]))
-
-    createCfnOutput(`${id}Arn`, scope, role.roleArn)
-    createCfnOutput(`${id}Name`, scope, role.roleName)
-
-    return role
-  }
-
-  /**
-   * @summary Method to create iam statement for sqs to lambda pipe
-   * @param id scoped id of the resource
-   * @param scope scope in which this resource is defined
-   * @param queueArn the arn of the sqs queue
-   * @param lambdaArn the arn of the lambda function
-   */
-  public createRoleForSqsToLambdaPipe(id: string, scope: CommonConstruct, queueArn: string, lambdaArn: string) {
-    const role = new Role(scope, `${id}`, {
-      assumedBy: new ServicePrincipal('pipes.amazonaws.com'),
-      description: `Role for ${id} Pipe`,
-      roleName: scope.resourceNameFormatter.format(id),
-    })
-
-    role.addToPolicy(this.statementForPollQueue([queueArn]))
-    role.addToPolicy(this.statementForInvokeLambda([lambdaArn]))
-
-    createCfnOutput(`${id}Arn`, scope, role.roleArn)
-    createCfnOutput(`${id}Name`, scope, role.roleName)
-
-    return role
   }
 
   /**
@@ -746,6 +513,240 @@ export class IamManager {
   }
 
   /**
+   * @summary Method to create iam role to invalidate cloudfront cache
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   */
+  public createRoleForCloudfrontInvalidation(id: string, scope: CommonConstruct) {
+    return new Role(scope, `${id}-install-deps-project-role`, {
+      assumedBy: new ServicePrincipal('codebuild.amazonaws.com'),
+      inlinePolicies: {
+        codeBuildPolicy: this.createPolicyForCloudfrontInvalidation(),
+      },
+      roleName: scope.resourceNameFormatter.format(`${id}-cf-invalidation`, scope.props.resourceNameOptions?.iam),
+    })
+  }
+
+  /**
+   * @summary Method to create iam statement for cloud trail
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param logGroup
+   */
+  public createRoleForCloudTrail(id: string, scope: CommonConstruct, logGroup: CfnLogGroup) {
+    const policy = new PolicyDocument({
+      statements: [this.statementForCreateLogStream(scope, logGroup), this.statementForPutLogEvent(scope, logGroup)],
+    })
+    const role = new CfnRole(scope, `${id}`, {
+      assumeRolePolicyDocument: new PolicyDocument({
+        statements: [this.statementForAssumeRole(scope, [new ServicePrincipal('cloudtrail.amazonaws.com')])],
+      }),
+      policies: [
+        {
+          policyDocument: policy,
+          policyName: scope.resourceNameFormatter.format(`${id}-policy`),
+        },
+      ],
+      roleName: scope.resourceNameFormatter.format(`${id}-trail`, scope.props.resourceNameOptions?.iam),
+    })
+
+    createCfnOutput(`${id}Arn`, scope, role.attrArn)
+    createCfnOutput(`${id}Name`, scope, role.roleName)
+
+    return role
+  }
+
+  /**
+   * @summary Method to create iam statement for ecs event
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param cluster
+   * @param task
+   */
+  public createRoleForEcsEvent(id: string, scope: CommonConstruct, cluster: ICluster, task: ITaskDefinition) {
+    const policy = new PolicyDocument({
+      statements: [this.statementForRunEcsTask(scope, cluster, task), this.statementForEcsPassRole()],
+    })
+
+    const role = new Role(scope, `${id}`, {
+      assumedBy: new ServicePrincipal('events.amazonaws.com'),
+      description: `Role for ${id} ECS Task execution from EventBridge`,
+      inlinePolicies: { policy },
+      roleName: scope.resourceNameFormatter.format(`${id}-ecs-event`, scope.props.resourceNameOptions?.iam),
+    })
+
+    createCfnOutput(`${id}Arn`, scope, role.roleArn)
+    createCfnOutput(`${id}Name`, scope, role.roleName)
+
+    return role
+  }
+
+  /**
+   * @summary Method to create iam statement for ecs execution
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param policy
+   */
+  public createRoleForEcsExecution(id: string, scope: CommonConstruct, policy: PolicyDocument) {
+    const role = new Role(scope, `${id}`, {
+      assumedBy: new ServicePrincipal('ecs-tasks.amazonaws.com'),
+      description: `Role for ${id} ECS Task execution`,
+      inlinePolicies: { policy },
+      managedPolicies: [
+        ManagedPolicy.fromManagedPolicyArn(
+          scope,
+          `${id}-AmazonECSTaskExecutionRolePolicy`,
+          'arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy'
+        ),
+      ],
+      roleName: scope.resourceNameFormatter.format(`${id}-ecs-exec`, scope.props.resourceNameOptions?.iam),
+    })
+
+    createCfnOutput(`${id}Arn`, scope, role.roleArn)
+    createCfnOutput(`${id}Name`, scope, role.roleName)
+
+    return role
+  }
+
+  /**
+   * @summary Method to create iam statement for lambda execution
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param policy
+   * @param servicePrincipal
+   */
+  public createRoleForLambda(
+    id: string,
+    scope: CommonConstruct,
+    policy: PolicyDocument,
+    servicePrincipal?: ServicePrincipal
+  ) {
+    const role = new Role(scope, `${id}`, {
+      assumedBy: servicePrincipal ?? new ServicePrincipal('lambda.amazonaws.com'),
+      description: `Role for ${id} Lambda function`,
+      inlinePolicies: { policy },
+      managedPolicies: [
+        ManagedPolicy.fromManagedPolicyArn(
+          scope,
+          `${id}-AWSLambdaBasicExecutionRole`,
+          'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+        ),
+      ],
+      roleName: scope.resourceNameFormatter.format(`${id}-lambda`, scope.props.resourceNameOptions?.iam),
+    })
+
+    createCfnOutput(`${id}Arn`, scope, role.roleArn)
+    createCfnOutput(`${id}Name`, scope, role.roleName)
+
+    return role
+  }
+
+  /**
+   * @summary Method to create iam statement for appconfig secrets manager integration
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param policy
+   * @param servicePrincipal
+   */
+  public createRoleForAppConfigSecrets(
+    id: string,
+    scope: CommonConstruct,
+    policy: PolicyDocument,
+    servicePrincipal?: ServicePrincipal
+  ) {
+    const role = new Role(scope, `${id}`, {
+      assumedBy: servicePrincipal ?? new ServicePrincipal('appconfig.amazonaws.com'),
+      description: `Role for ${id} AppConfig Secrets`,
+      inlinePolicies: { policy },
+      roleName: scope.resourceNameFormatter.format(`${id}-app-secrets`, scope.props.resourceNameOptions?.iam),
+    })
+
+    createCfnOutput(`${id}Arn`, scope, role.roleArn)
+    createCfnOutput(`${id}Name`, scope, role.roleName)
+
+    return role
+  }
+
+  /**
+   * @summary Method to create iam statement for step function execution
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param policy
+   * @param servicePrincipal
+   */
+  public createRoleForStepFunction(
+    id: string,
+    scope: CommonConstruct,
+    policy: PolicyDocument,
+    servicePrincipal?: ServicePrincipal
+  ) {
+    const role = new Role(scope, `${id}`, {
+      assumedBy: servicePrincipal ?? new ServicePrincipal('states.amazonaws.com'),
+      description: `Role for ${id} Lambda function`,
+      inlinePolicies: { policy },
+      managedPolicies: [
+        ManagedPolicy.fromManagedPolicyArn(
+          scope,
+          `${id}-AWSLambdaBasicExecutionRole`,
+          'arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole'
+        ),
+      ],
+      roleName: scope.resourceNameFormatter.format(`${id}-sfn-exec`, scope.props.resourceNameOptions?.iam),
+    })
+
+    createCfnOutput(`${id}Arn`, scope, role.roleArn)
+    createCfnOutput(`${id}Name`, scope, role.roleName)
+
+    return role
+  }
+
+  /**
+   * @summary Method to create iam statement for sqs to step function pipe
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param queueArn the arn of the sqs queue
+   * @param stepFunctionArn the arn of the step function
+   */
+  public createRoleForSqsToSfnPipe(id: string, scope: CommonConstruct, queueArn: string, stepFunctionArn: string) {
+    const role = new Role(scope, `${id}`, {
+      assumedBy: new ServicePrincipal('pipes.amazonaws.com'),
+      description: `Role for ${id} Pipe`,
+      roleName: scope.resourceNameFormatter.format(`${id}-pipe`, scope.props.resourceNameOptions?.iam),
+    })
+
+    role.addToPolicy(this.statementForPollQueue([queueArn]))
+    role.addToPolicy(this.statementForStartExecution([stepFunctionArn]))
+
+    createCfnOutput(`${id}Arn`, scope, role.roleArn)
+    createCfnOutput(`${id}Name`, scope, role.roleName)
+
+    return role
+  }
+
+  /**
+   * @summary Method to create iam statement for sqs to lambda pipe
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param queueArn the arn of the sqs queue
+   * @param lambdaArn the arn of the lambda function
+   */
+  public createRoleForSqsToLambdaPipe(id: string, scope: CommonConstruct, queueArn: string, lambdaArn: string) {
+    const role = new Role(scope, `${id}`, {
+      assumedBy: new ServicePrincipal('pipes.amazonaws.com'),
+      description: `Role for ${id} Pipe`,
+      roleName: scope.resourceNameFormatter.format(`${id}-pipe`, scope.props.resourceNameOptions?.iam),
+    })
+
+    role.addToPolicy(this.statementForPollQueue([queueArn]))
+    role.addToPolicy(this.statementForInvokeLambda([lambdaArn]))
+
+    createCfnOutput(`${id}Arn`, scope, role.roleArn)
+    createCfnOutput(`${id}Name`, scope, role.roleName)
+
+    return role
+  }
+
+  /**
    * @summary Method to create iam statement for dynamoDb to lambda function pipe
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
@@ -761,7 +762,7 @@ export class IamManager {
     const role = new Role(scope, `${id}`, {
       assumedBy: new ServicePrincipal('pipes.amazonaws.com'),
       description: `Role for ${id} Pipe`,
-      roleName: scope.resourceNameFormatter.format(id),
+      roleName: scope.resourceNameFormatter.format(`${id}-pipe`, scope.props.resourceNameOptions?.iam),
     })
 
     role.addToPolicy(this.statementFordynamoDbStream([dynamoDbStreamArn]))
