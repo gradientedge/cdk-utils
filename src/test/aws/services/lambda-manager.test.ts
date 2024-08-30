@@ -177,7 +177,7 @@ describe('TestLambdaConstruct', () => {
     template.hasResourceProperties('AWS::Lambda::LayerVersion', {
       CompatibleRuntimes: ['nodejs18.x'],
       Description: 'test-lambda-layer',
-      LayerName: 'test-lambda-layer-test',
+      LayerName: 'cdktest-test-lambda-layer-test',
     })
   })
 

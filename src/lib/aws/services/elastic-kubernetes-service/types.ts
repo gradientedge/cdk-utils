@@ -6,5 +6,4 @@ import { ResourceNameFormatterProps } from '../../common'
 export interface EksClusterProps extends ClusterProps {
   appCapacity: number
   appContainerPort: number
-  resourceNameOptions?: ResourceNameFormatterProps
 }

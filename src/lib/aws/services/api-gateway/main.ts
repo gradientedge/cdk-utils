@@ -65,7 +65,7 @@ export class ApiManager {
       handler: lambdaFunction,
       minCompressionSize: props.minCompressionSizeInBytes ? Size.bytes(props.minCompressionSizeInBytes) : undefined,
       proxy: props.proxy ?? true,
-      restApiName: scope.resourceNameFormatter.format(props.restApiName, props.resourceNameOptions),
+      restApiName: scope.resourceNameFormatter.format(props.restApiName, scope.props.resourceNameOptions?.apigateway),
     })
 
     if (props.tags && !_.isEmpty(props.tags)) {

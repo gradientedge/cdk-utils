@@ -55,5 +55,4 @@ export interface EcsApplicationLoadBalancedFargateServiceProps extends Applicati
   logging?: AwsLogDriverProps
   mountPoints?: MountPoint[]
   siteScaling?: EcsScalingProps
-  resourceNameOptions?: ResourceNameFormatterProps
 }

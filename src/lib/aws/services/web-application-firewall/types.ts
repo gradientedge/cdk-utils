@@ -3,12 +3,8 @@ import { ResourceNameFormatterProps } from '../../common'
 
 /**
  */
-export interface WafIPSetProps extends CfnIPSetProps {
-  resourceNameOptions?: ResourceNameFormatterProps
-}
+export interface WafIPSetProps extends CfnIPSetProps {}
 
 /**
  */
-export interface WafWebACLProps extends CfnWebACLProps {
-  resourceNameOptions?: ResourceNameFormatterProps
-}
+export interface WafWebACLProps extends CfnWebACLProps {}

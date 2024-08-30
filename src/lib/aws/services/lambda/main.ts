@@ -53,7 +53,7 @@ export class LambdaManager {
       compatibleArchitectures: architectures ?? [Architecture.ARM_64],
       compatibleRuntimes: [scope.props.nodejsRuntime ?? CommonStack.NODEJS_RUNTIME],
       description: `${id}`,
-      layerVersionName: `${id}-${scope.props.stage}`,
+      layerVersionName: scope.resourceNameFormatter.format(id, scope.props.resourceNameOptions?.lambdaLayer),
     })
 
     createCfnOutput(`${id}-lambdaLayerArn`, scope, lambdaLayer.layerVersionArn)
@@ -110,7 +110,10 @@ export class LambdaManager {
     if (!props) throw `Lambda props undefined for ${id}`
     if (!props.functionName) throw `Lambda functionName undefined for ${id}`
 
-    const functionName = scope.resourceNameFormatter.format(props.functionName, props.resourceNameOptions)
+    const functionName = scope.resourceNameFormatter.format(
+      props.functionName,
+      scope.props.resourceNameOptions?.lambdaFunction
+    )
 
     let deadLetterQueue
     if (props.deadLetterQueueEnabled) {
@@ -143,8 +146,8 @@ export class LambdaManager {
       functionName,
       handler: handler || 'index.lambda_handler',
       layers,
-      logGroup: new LogGroup(scope, `${id}-log-group`, {
-        logGroupName: `/aws/lambda/${functionName}`,
+      logGroup: scope.logManager.createLogGroup(`${id}-log-group`, scope, {
+        logGroupName: props.functionName,
         removalPolicy: RemovalPolicy.DESTROY,
         retention: scope.props.logRetention ?? logRetention,
       }),
@@ -268,7 +271,10 @@ export class LambdaManager {
     if (!props) throw `Lambda props undefined for ${id}`
     if (!props.functionName) throw `Lambda functionName undefined for ${id}`
 
-    const functionName = scope.resourceNameFormatter.format(props.functionName, props.resourceNameOptions)
+    const functionName = scope.resourceNameFormatter.format(
+      props.functionName,
+      scope.props.resourceNameOptions?.lambdaFunction
+    )
 
     let deadLetterQueue
     if (props.deadLetterQueueEnabled) {
@@ -299,8 +305,8 @@ export class LambdaManager {
       },
       filesystem: accessPoint ? FileSystem.fromEfsAccessPoint(accessPoint, mountPath || '/mnt/msg') : undefined,
       functionName,
-      logGroup: new LogGroup(scope, `${id}-log-group`, {
-        logGroupName: `/aws/lambda/${functionName}`,
+      logGroup: scope.logManager.createLogGroup(`${id}-log-group`, scope, {
+        logGroupName: props.functionName,
         removalPolicy: RemovalPolicy.DESTROY,
         retention: scope.props.logRetention ?? logRetention,
       }),

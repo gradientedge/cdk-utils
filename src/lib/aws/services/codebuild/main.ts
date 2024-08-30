@@ -71,7 +71,7 @@ export class CodeBuildManager {
           }),
         },
       },
-      role: scope.iamManager.roleForCloudfrontInvalidation(id, scope),
+      role: scope.iamManager.createRoleForCloudfrontInvalidation(id, scope),
       timeout: Duration.minutes(5),
     })
   }

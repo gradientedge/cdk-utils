@@ -3,9 +3,7 @@ import { ResourceNameFormatterProps } from '../../common'
 
 /**
  */
-export interface ElastiCacheProps extends CfnCacheClusterProps {
-  resourceNameOptions?: ResourceNameFormatterProps
-}
+export interface ElastiCacheProps extends CfnCacheClusterProps {}
 
 /**
  */

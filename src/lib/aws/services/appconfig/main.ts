@@ -51,7 +51,7 @@ export class AppConfigManager {
 
     const application = new CfnApplication(scope, `${id}`, {
       ...props.application,
-      name: scope.resourceNameFormatter.format(props.application.name, props.resourceNameOptions),
+      name: scope.resourceNameFormatter.format(props.application.name, scope.props.resourceNameOptions?.appconfig),
     })
 
     createCfnOutput(`${id}-ApplicationId`, scope, Fn.ref(application.logicalId))
@@ -109,7 +109,10 @@ export class AppConfigManager {
       ...props.configurationProfile,
       applicationId,
       locationUri: props.configurationProfile.locationUri || 'hosted',
-      name: scope.resourceNameFormatter.format(props.configurationProfile.name, props.resourceNameOptions),
+      name: scope.resourceNameFormatter.format(
+        props.configurationProfile.name,
+        scope.props.resourceNameOptions?.appconfig
+      ),
     })
 
     createCfnOutput(`${id}-configurationProfileId`, scope, Fn.ref(profile.logicalId))

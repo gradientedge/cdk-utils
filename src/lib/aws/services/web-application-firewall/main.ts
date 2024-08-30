@@ -33,7 +33,7 @@ export class WafManager {
     const ipSet = new CfnIPSet(scope, `${id}`, {
       ...props,
       description: `IP Set for ${id} - ${scope.props.stage} stage`,
-      name: scope.resourceNameFormatter.format(props.name, props.resourceNameOptions),
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.waf),
     })
 
     createCfnOutput(`${id}-ipSetId`, scope, ipSet.attrId)
@@ -55,7 +55,7 @@ export class WafManager {
     const webAcl = new CfnWebACL(scope, `${id}`, {
       ...props,
       description: `Web Acl for ${id} - ${scope.props.stage} stage`,
-      name: scope.resourceNameFormatter.format(props.name, props.resourceNameOptions),
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.waf),
       tags: [{ key: 'service', value: scope.props.name }],
     })
 

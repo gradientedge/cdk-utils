@@ -14,5 +14,4 @@ export interface QueueProps extends sqs.QueueProps {
   retryBatchSize?: number
   tags?: TagProps[]
   visibilityTimeoutInSecs?: number
-  resourceNameOptions?: ResourceNameFormatterProps
 }

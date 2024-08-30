@@ -78,7 +78,7 @@ export class S3Manager {
     if (!scope.props.excludeAccountNumberForBuckets) {
       return S3Manager.determineBucketNameByAccountAndRegion(scope, bucketName)
     }
-    return scope.resourceNameFormatter.format(bucketName, props.resourceNameOptions)
+    return scope.resourceNameFormatter.format(bucketName, scope.props.resourceNameOptions?.s3)
   }
 
   /**

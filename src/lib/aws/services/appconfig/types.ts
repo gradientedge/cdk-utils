@@ -16,5 +16,4 @@ export interface AppConfigProps {
   deploymentStrategy: CfnDeploymentStrategyProps
   environment: CfnEnvironmentProps
   id: string
-  resourceNameOptions?: ResourceNameFormatterProps
 }

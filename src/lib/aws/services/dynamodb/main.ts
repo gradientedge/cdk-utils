@@ -34,7 +34,7 @@ export class DynamodbManager {
 
     const table = new Table(scope, `${id}`, {
       ...props,
-      tableName: scope.resourceNameFormatter.format(props.tableName, props.resourceNameOptions),
+      tableName: scope.resourceNameFormatter.format(props.tableName, scope.props.resourceNameOptions?.table),
     })
 
     if (props.tags && !_.isEmpty(props.tags)) {
@@ -61,7 +61,7 @@ export class DynamodbManager {
 
     const table = new TableV2(scope, `${id}`, {
       ...props,
-      tableName: scope.resourceNameFormatter.format(props.tableName, props.resourceNameOptions),
+      tableName: scope.resourceNameFormatter.format(props.tableName, scope.props.resourceNameOptions?.table),
     })
 
     if (props.tags && !_.isEmpty(props.tags)) {

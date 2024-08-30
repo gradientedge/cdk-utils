@@ -10,7 +10,6 @@ export interface EfsFileSystemProps extends FileSystemProps {
   rootDirectory?: string
   transitEncryption?: string
   transitEncryptionPort?: number
-  resourceNameOptions?: ResourceNameFormatterProps
 }
 
 /**

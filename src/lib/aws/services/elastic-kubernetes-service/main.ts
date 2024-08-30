@@ -82,7 +82,7 @@ export class EksManager {
     }
 
     const cluster = new Cluster(scope, `${id}Cluster`, {
-      clusterName: scope.resourceNameFormatter.format(props.clusterName, props.resourceNameOptions),
+      clusterName: scope.resourceNameFormatter.format(props.clusterName, scope.props.resourceNameOptions?.eks),
       defaultCapacity: props.appCapacity,
       defaultCapacityInstance: InstanceType.of(InstanceClass.T3, InstanceSize.LARGE),
       version: KubernetesVersion.V1_27,

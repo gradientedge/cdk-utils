@@ -175,7 +175,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
     if (this.props.api.useExisting) return
     this.apiEvent.logGroup = this.logManager.createLogGroup(`${this.id}-log`, this, {
       ...{
-        logGroupName: `/${this.resourceNameFormatter.format(this.id)}/events/api-to-eventbridge-target`,
+        logGroupName: `${this.id}-api-to-event-bridge-target`,
       },
       ...this.props.event.logGroup,
     })
@@ -356,7 +356,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
       `${this.id}-rest-api-access-log`,
       this,
       {
-        logGroupName: `/custom/api/${this.resourceNameFormatter.format(this.id)}-rest-api-access`,
+        logGroupName: `${this.id}-access`,
         removalPolicy: RemovalPolicy.DESTROY,
       }
     )
@@ -408,7 +408,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
       ...this.props.api.restApi,
       restApiName: this.resourceNameFormatter.format(
         this.props.api.restApi?.restApiName,
-        this.props.api.restApi?.resourceNameOptions
+        this.props.resourceNameOptions?.apigateway
       ),
     })
 

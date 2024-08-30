@@ -3,6 +3,4 @@ import { ResourceNameFormatterProps } from '../../common'
 
 /**
  */
-export interface SubscriptionProps extends TopicProps {
-  resourceNameOptions?: ResourceNameFormatterProps
-}
+export interface SubscriptionProps extends TopicProps {}

@@ -339,7 +339,7 @@ describe('TestCloudWatchConstruct', () => {
 describe('TestCloudWatchConstruct', () => {
   test('provisions new dashboard as expected', () => {
     template.hasResourceProperties('AWS::CloudWatch::Dashboard', {
-      DashboardName: 'test-monitoring-dashboard',
+      DashboardName: 'cdktest-test-monitoring-dashboard-test',
     })
   })
 })

@@ -3,6 +3,4 @@ import { ResourceNameFormatterProps } from '../../common'
 
 /**
  */
-export interface KmsKeyProps extends KeyProps {
-  resourceNameOptions?: ResourceNameFormatterProps
-}
+export interface KmsKeyProps extends KeyProps {}
