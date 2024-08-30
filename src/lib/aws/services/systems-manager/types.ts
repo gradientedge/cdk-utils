@@ -8,6 +8,4 @@ export interface SSMParameterReaderProps {
   region: string
 }
 
-export interface SSMStringParameterProps extends StringParameterProps {
-  resourceNameOptions?: ResourceNameFormatterProps
-}
+export interface SSMStringParameterProps extends StringParameterProps {}

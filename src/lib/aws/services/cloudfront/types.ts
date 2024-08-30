@@ -23,5 +23,4 @@ export interface DistributionProps extends CfDistributionProps {
 export interface CloudfrontFunctionProps extends FunctionProps {
   eventType: string
   functionFilePath: string
-  resourceNameOptions?: ResourceNameFormatterProps
 }

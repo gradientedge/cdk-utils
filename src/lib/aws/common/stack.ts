@@ -60,6 +60,7 @@ export class CommonStack extends Stack {
       region: this.node.tryGetContext('region'),
       globalPrefix: this.node.tryGetContext('globalPrefix'),
       globalSuffix: this.node.tryGetContext('globalSuffix'),
+      resourceNameOptions: this.node.tryGetContext('resourceNameOptions'),
       resourcePrefix: this.node.tryGetContext('resourcePrefix'),
       resourceSuffix: this.node.tryGetContext('resourceSuffix'),
       skipStageForARecords: this.node.tryGetContext('skipStageForARecords'),

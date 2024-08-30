@@ -60,10 +60,11 @@ export class LogManager {
    */
   public createCfnLogGroup(id: string, scope: CommonConstruct, props: LogProps) {
     if (!props) throw `Logs props undefined for ${id}`
+    if (!props.logGroupName) throw `Logs logGroupName undefined for ${id}`
 
     const logGroup = new logs.CfnLogGroup(scope, `${id}`, {
       ...props,
-      logGroupName: `${props.logGroupName}-${scope.props.stage}`,
+      logGroupName: `/${scope.resourceNameFormatter.format(props.logGroupName, scope.props.resourceNameOptions?.logs)}`,
       retentionInDays: props.retention,
     })
 
@@ -86,10 +87,11 @@ export class LogManager {
    */
   public createLogGroup(id: string, scope: CommonConstruct, props: LogProps) {
     if (!props) throw `Logs props undefined for ${id}`
+    if (!props.logGroupName) throw `Logs logGroupName undefined for ${id}`
 
     const logGroup = new logs.LogGroup(scope, `${id}`, {
       ...props,
-      logGroupName: `${props.logGroupName}-${scope.props.stage}`,
+      logGroupName: `/${scope.resourceNameFormatter.format(props.logGroupName, scope.props.resourceNameOptions?.logs)}`,
       removalPolicy: props.removalPolicy ?? cdk.RemovalPolicy.DESTROY,
       retention: props.retention,
     })

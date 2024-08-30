@@ -37,7 +37,7 @@ export class VpcManager {
     if (!props) throw `Vpc props undefined for ${id}`
     if (!props.vpcName) throw `Vpc vpcName undefined for ${id}`
 
-    const vpcName = scope.resourceNameFormatter.format(props.vpcName, props.resourceNameOptions)
+    const vpcName = scope.resourceNameFormatter.format(props.vpcName, scope.props.resourceNameOptions?.vpc)
     let vpc
     if (props.isIPV6) {
       vpc = new Ipv6Vpc(scope, `${id}`, {
@@ -85,7 +85,7 @@ export class VpcManager {
     const vpc = this.createVpc(id, scope, props)
     Tags.of(vpc).add(
       'Name',
-      scope.resourceNameFormatter.format(vpcIdentifier ?? CommonVpcIdentifier, props.resourceNameOptions)
+      scope.resourceNameFormatter.format(vpcIdentifier ?? CommonVpcIdentifier, scope.props.resourceNameOptions?.vpc)
     )
 
     return vpc

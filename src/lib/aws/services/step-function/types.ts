@@ -108,9 +108,7 @@ export interface SfnCallApiGatewayRestApiEndpointProps extends CallApiGatewayRes
 
 /**
  */
-export interface SfnStateMachineProps extends StateMachineProps {
-  resourceNameOptions?: ResourceNameFormatterProps
-}
+export interface SfnStateMachineProps extends StateMachineProps {}
 
 /**
  */

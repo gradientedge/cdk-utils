@@ -18,6 +18,7 @@ export interface CommonStackProps extends BaseProps, StackProps {
   excludeDomainNameForBuckets?: boolean
   excludeAccountNumberForBuckets?: boolean
   nodejsRuntime?: Runtime
+  resourceNameOptions?: { [key: string]: ResourceNameFormatterProps }
 }
 
 export interface ResourceNameFormatterProps {

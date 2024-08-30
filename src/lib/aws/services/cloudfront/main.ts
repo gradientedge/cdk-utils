@@ -284,7 +284,7 @@ export class CloudFrontManager {
         ...environment,
       },
       filesystem: accessPoint ? FileSystem.fromEfsAccessPoint(accessPoint, mountPath ?? '/mnt/msg') : undefined,
-      functionName: scope.resourceNameFormatter.format(props.functionName, props.resourceNameOptions),
+      functionName: scope.resourceNameFormatter.format(props.functionName, scope.props.resourceNameOptions?.cloudfront),
       handler: props.handler ?? 'index.handler',
       layers: layers,
       logRetention: props.logRetention,
@@ -360,7 +360,7 @@ export class CloudFrontManager {
         filePath: props.functionFilePath,
       }),
       comment: props.comment,
-      functionName: scope.resourceNameFormatter.format(props.functionName, props.resourceNameOptions),
+      functionName: scope.resourceNameFormatter.format(props.functionName, scope.props.resourceNameOptions?.cloudfront),
     })
 
     createCfnOutput(`${id}-functionArn`, scope, cloudfrontFunction.functionArn)

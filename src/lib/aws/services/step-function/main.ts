@@ -485,7 +485,10 @@ export class SfnManager {
         level: props.logs?.level ?? LogLevel.ALL,
       },
       role,
-      stateMachineName: scope.resourceNameFormatter.format(props.stateMachineName, props.resourceNameOptions),
+      stateMachineName: scope.resourceNameFormatter.format(
+        props.stateMachineName,
+        scope.props.resourceNameOptions?.stepFunction
+      ),
     })
 
     createCfnOutput(`${id}-stateMachineName`, scope, stateMachine.stateMachineName)

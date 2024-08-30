@@ -274,7 +274,7 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
   protected createApiDestinationLogGroupSuccess() {
     if (this.props.api.useExisting) return
     this.apiEvent.logGroupSuccess = this.logManager.createLogGroup(`${this.id}-destination-success-log`, this, {
-      logGroupName: `/${this.id}/events/api-destination-success`,
+      logGroupName: `${this.id}-destination`,
       ...this.props.event.logGroupSuccess,
     })
   }
@@ -314,7 +314,7 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
   protected createApiDestinationLogGroupFailure() {
     if (this.props.api.useExisting) return
     this.apiEvent.logGroupFailure = this.logManager.createLogGroup(`${this.id}-destination-failure-log`, this, {
-      logGroupName: `/${this.id}/events/api-destination-failure`,
+      logGroupName: `${this.id}-destination-failure`,
       ...this.props.event.logGroupFailure,
     })
   }
@@ -509,7 +509,7 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
     }
 
     const accessLogGroup = this.logManager.createLogGroup(`${this.id}-sns-rest-api-access-log`, this, {
-      logGroupName: `/custom/api/${this.id}-destined-rest-api-access`,
+      logGroupName: `${this.id}-access`,
       removalPolicy: RemovalPolicy.DESTROY,
     })
 
@@ -540,7 +540,7 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
       ...this.props.api,
       restApiName: this.resourceNameFormatter.format(
         this.props.api.restApi?.restApiName,
-        this.props.api.restApi?.resourceNameOptions
+        this.props.resourceNameOptions?.apigateway
       ),
     })
     this.addCfnOutput(`${this.id}-restApiId`, this.apiDestinedRestApi.api.restApiId)

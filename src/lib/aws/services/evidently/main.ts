@@ -39,7 +39,7 @@ export class EvidentlyManager {
     const project = new CfnProject(scope, `${id}`, {
       ...props,
       description: `${props.description} ${scope.props.stage}`,
-      name: scope.resourceNameFormatter.format(props.name, props.resourceNameOptions),
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.evidentlyProject),
     })
     createCfnOutput(`${id}-projectArn`, scope, project.attrArn)
     createCfnOutput(`${id}-projectName`, scope, project.name)
@@ -74,7 +74,7 @@ export class EvidentlyManager {
     const launch = new CfnLaunch(scope, `${id}`, {
       ...props,
       description: `${props.description} ${scope.props.stage}`,
-      name: scope.resourceNameFormatter.format(props.name, props.resourceNameOptions),
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.evidentlyLaunch),
     })
     createCfnOutput(`${id}-launchArn`, scope, launch.attrArn)
     createCfnOutput(`${id}-launchName`, scope, launch.name)
@@ -94,7 +94,7 @@ export class EvidentlyManager {
     const experiment = new CfnExperiment(scope, `${id}`, {
       ...props,
       description: `${props.description} ${scope.props.stage}`,
-      name: scope.resourceNameFormatter.format(props.name, props.resourceNameOptions),
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.evidentlyExperiment),
     })
     createCfnOutput(`${id}-experimentArn`, scope, experiment.attrArn)
     createCfnOutput(`${id}-experimentName`, scope, experiment.name)
@@ -114,7 +114,7 @@ export class EvidentlyManager {
     const segment = new CfnSegment(scope, `${id}`, {
       ...props,
       description: `${props.description} ${scope.props.stage}`,
-      name: scope.resourceNameFormatter.format(props.name, props.resourceNameOptions),
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.evidentlySegment),
     })
     createCfnOutput(`${id}-segmentArn`, scope, segment.attrArn)
     createCfnOutput(`${id}-segmentName`, scope, segment.name)

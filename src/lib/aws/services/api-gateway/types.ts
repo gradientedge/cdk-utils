@@ -7,9 +7,6 @@ import { TagProps } from '../../types'
 export interface LambdaRestApiProps extends LambdaRestApigProps {
   tags?: TagProps[]
   minCompressionSizeInBytes?: number
-  resourceNameOptions?: ResourceNameFormatterProps
 }
 
-export interface RestApigProps extends RestApiProps {
-  resourceNameOptions?: ResourceNameFormatterProps
-}
+export interface RestApigProps extends RestApiProps {}

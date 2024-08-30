@@ -11,7 +11,6 @@ export interface SqsToSfnPipeProps extends CfnPipeProps {
   sfnInvocationType?: string
   sqsBatchSize?: number
   sqsMaximumBatchingWindowInSeconds?: number
-  resourceNameOptions?: ResourceNameFormatterProps
 }
 
 /**
@@ -21,13 +20,11 @@ export interface SqsToLambdaPipeProps extends CfnPipeProps {
   sqsBatchSize?: number
   lambdaInputTemplate?: string
   sqsMaximumBatchingWindowInSeconds?: number
-  resourceNameOptions?: ResourceNameFormatterProps
 }
 
 /**
  */
 export interface EventRuleProps extends EBRuleProps {
-  resourceNameOptions?: ResourceNameFormatterProps
   tags?: TagProps[]
 }
 
@@ -35,15 +32,12 @@ export interface EventRuleProps extends EBRuleProps {
  */
 export interface RuleProps extends CfnRuleProps {
   input?: string
-  resourceNameOptions?: ResourceNameFormatterProps
   tags?: TagProps[]
 }
 
 /**
  */
-export interface EventBusProps extends EBProps {
-  resourceNameOptions?: ResourceNameFormatterProps
-}
+export interface EventBusProps extends EBProps {}
 
 /**
  }
@@ -52,5 +46,4 @@ export interface DynamoDbToLambdaPipeProps extends CfnPipeProps {
   pipeFilterPattern?: any
   dynamoDbBatchSize?: number
   dynamoDbStartingPosition: string
-  resourceNameOptions?: ResourceNameFormatterProps
 }

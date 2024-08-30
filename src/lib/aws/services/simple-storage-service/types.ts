@@ -25,6 +25,5 @@ export interface S3BucketProps extends s3.BucketProps {
   existingBucket?: boolean
   lifecycleRules?: LifecycleRule[]
   logBucketName?: string
-  resourceNameOptions?: ResourceNameFormatterProps
   tags?: TagProps[]
 }

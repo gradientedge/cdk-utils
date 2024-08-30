@@ -23,7 +23,6 @@ export interface LambdaProps extends FunctionProps {
   redriveq?: QueueProps
   tags?: TagProps[]
   timeoutInSecs?: number
-  resourceNameOptions?: ResourceNameFormatterProps
 }
 
 /**
@@ -38,7 +37,6 @@ export interface LambdaAliasProps extends AliasProps {
 export interface LambdaEdgeProps extends EdgeFunctionProps {
   tags?: TagProps[]
   timeoutInSecs?: number
-  resourceNameOptions?: ResourceNameFormatterProps
 }
 
 /**

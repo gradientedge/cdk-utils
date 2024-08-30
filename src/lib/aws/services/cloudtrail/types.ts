@@ -3,6 +3,4 @@ import { ResourceNameFormatterProps } from '../../common'
 
 /**
  */
-export interface CloudTrailProps extends CfnTrailProps {
-  resourceNameOptions?: ResourceNameFormatterProps
-}
+export interface CloudTrailProps extends CfnTrailProps {}
