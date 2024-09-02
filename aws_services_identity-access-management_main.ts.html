@@ -658,7 +658,7 @@ export class IamManager {
       assumedBy: servicePrincipal ?? new ServicePrincipal('appconfig.amazonaws.com'),
       description: `Role for ${id} AppConfig Secrets`,
       inlinePolicies: { policy },
-      roleName: scope.resourceNameFormatter.format(`${id}-app-secrets`, scope.props.resourceNameOptions?.iam),
+      roleName: scope.resourceNameFormatter.format(`${id}-config`, scope.props.resourceNameOptions?.iam),
     })
 
     createCfnOutput(`${id}Arn`, scope, role.roleArn)
