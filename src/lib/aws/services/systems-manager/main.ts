@@ -59,7 +59,10 @@ export class SsmManager {
   public readStringParameter(id: string, scope: CommonConstruct, parameterName: string) {
     if (!parameterName || parameterName == '') throw 'Invalid parameter name'
 
-    return StringParameter.valueFromLookup(scope, parameterName)
+    return StringParameter.valueFromLookup(
+      scope,
+      scope.resourceNameFormatter.format(parameterName, scope.props.resourceNameOptions?.ssm)
+    )
   }
 
   /**
@@ -74,7 +77,7 @@ export class SsmManager {
     if (!region || region == '') throw `Invalid region for ${id}`
 
     return new SSMParameterReader(scope, `${id}`, {
-      parameterName,
+      parameterName: scope.resourceNameFormatter.format(parameterName, scope.props.resourceNameOptions?.ssm),
       region,
     }).getParameterValue()
   }
@@ -90,7 +93,7 @@ export class SSMParameterReader extends AwsCustomResource {
     const ssmAwsSdkCall: AwsSdkCall = {
       action: 'getParameter',
       parameters: {
-        Name: `${parameterName}-${scope.props.stage}`,
+        Name: parameterName,
       },
       physicalResourceId: PhysicalResourceId.of(Date.now().toString()),
       region,
