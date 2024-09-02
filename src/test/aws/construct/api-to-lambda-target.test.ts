@@ -234,7 +234,7 @@ describe('TestApiToLambdaTargetConstruct', () => {
       },
       Environment: {
         Variables: {
-          LAST_MODIFIED_TS: 'dummy-value-for-secrets-last-modified-timestamp-test',
+          LAST_MODIFIED_TS: 'dummy-value-for-cdktest-secrets-last-modified-timestamp-test',
           LOG_LEVEL: 'info',
           REGION: 'eu-west-1',
           STAGE: 'test',

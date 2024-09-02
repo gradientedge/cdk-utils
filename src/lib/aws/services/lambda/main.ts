@@ -135,7 +135,7 @@ export class LambdaManager {
           : scope.ssmManager.readStringParameter(
               `${id}-sm-ts`,
               scope,
-              `${SsmManager.SECRETS_MODIFIED_TIMESTAMP_PARAM}-${scope.props.stage}`
+              `${SsmManager.SECRETS_MODIFIED_TIMESTAMP_PARAM}`
             ),
         LOG_LEVEL: props.logLevel,
         REGION: scope.props.region,
@@ -296,7 +296,7 @@ export class LambdaManager {
           : scope.ssmManager.readStringParameter(
               `${id}-sm-ts`,
               scope,
-              `${SsmManager.SECRETS_MODIFIED_TIMESTAMP_PARAM}-${scope.props.stage}`
+              `${SsmManager.SECRETS_MODIFIED_TIMESTAMP_PARAM}`
             ),
         LOG_LEVEL: props.logLevel,
         REGION: scope.props.region,
