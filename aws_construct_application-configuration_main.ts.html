@@ -129,7 +129,10 @@ export class ApplicationConfiguration extends CommonConstruct {
     this.appConfigDeploymentStrategy = new CfnDeploymentStrategy(this, `${this.id}-ac-deployment-strategy`, {
       deploymentDurationInMinutes: this.props.appConfig.deploymentStrategy.deploymentDurationInMinutes,
       growthFactor: this.props.appConfig.deploymentStrategy.growthFactor,
-      name: this.resourceNameFormatter.format(this.props.appConfig.deploymentStrategy.name),
+      name: this.resourceNameFormatter.format(
+        this.props.appConfig.deploymentStrategy.name,
+        this.props.resourceNameOptions?.appconfig
+      ),
       replicateTo: this.props.appConfig.deploymentStrategy.replicateTo,
     })
   }
