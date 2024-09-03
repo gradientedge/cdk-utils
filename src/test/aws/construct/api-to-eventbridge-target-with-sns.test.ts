@@ -237,13 +237,13 @@ describe('TestApiToEventBridgeTargetWithSnsConstruct', () => {
 
   test('provisions success log group as expected', () => {
     template.hasResourceProperties('AWS::Logs::LogGroup', {
-      LogGroupName: 'cdktest-test-destination-failure-test',
+      LogGroupName: 'test-destination-failure-test',
     })
   })
 
   test('provisions failure log group as expected', () => {
     template.hasResourceProperties('AWS::Logs::LogGroup', {
-      LogGroupName: 'cdktest-test-destination-test',
+      LogGroupName: 'test-destination-test',
     })
   })
 })

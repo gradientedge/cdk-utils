@@ -147,7 +147,7 @@ export class LambdaManager {
       handler: handler || 'index.lambda_handler',
       layers,
       logGroup: scope.logManager.createLogGroup(`${id}-log-group`, scope, {
-        logGroupName: props.functionName,
+        logGroupName: functionName,
         removalPolicy: RemovalPolicy.DESTROY,
         retention: scope.props.logRetention ?? logRetention,
       }),
@@ -306,7 +306,7 @@ export class LambdaManager {
       filesystem: accessPoint ? FileSystem.fromEfsAccessPoint(accessPoint, mountPath || '/mnt/msg') : undefined,
       functionName,
       logGroup: scope.logManager.createLogGroup(`${id}-log-group`, scope, {
-        logGroupName: props.functionName,
+        logGroupName: functionName,
         removalPolicy: RemovalPolicy.DESTROY,
         retention: scope.props.logRetention ?? logRetention,
       }),

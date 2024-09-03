@@ -130,7 +130,6 @@ describe('TestApiToLambdaTargetConstruct', () => {
     template.hasOutput('testHostedZoneHostedZoneId', {})
     template.hasOutput('testHostedZoneHostedZoneArn', {})
     template.hasOutput('testCertificateCertificateArn', {})
-    template.hasOutput('testRestApiAccessLogLogGroupArn', {})
     template.hasOutput('testLambdaRestApiRestApiId', {})
     template.hasOutput('testLambdaRestApiRestApiName', {})
     template.hasOutput('testRestApiRootResourceId', {})
@@ -213,7 +212,7 @@ describe('TestApiToLambdaTargetConstruct', () => {
 describe('TestApiToLambdaTargetConstruct', () => {
   test('provisions log group as expected', () => {
     template.hasResourceProperties('AWS::Logs::LogGroup', {
-      LogGroupName: 'cdktest-test-access-test',
+      LogGroupName: 'cdktest-test-rest-api-access-test',
       RetentionInDays: 731,
     })
 

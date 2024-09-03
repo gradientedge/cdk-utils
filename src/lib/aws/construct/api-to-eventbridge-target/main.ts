@@ -94,7 +94,6 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
     this.createApiToEventBridgeTargetIntegrationResponse()
     this.createApiToEventBridgeTargetIntegrationErrorResponse()
     this.createApiToEventBridgeTargetIntegration()
-    this.createApiToEventBridgeTargetRestApiLogGroup()
     this.createApiToEventBridgeTargetRestApi()
     this.createApiToEventBridgeTargetResource()
     this.createApiToEventBridgeTargetResponseModel()
@@ -178,7 +177,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
     if (this.props.api.useExisting) return
     this.apiEvent.logGroup = this.logManager.createLogGroup(`${this.id}-log`, this, {
       ...{
-        logGroupName: `${this.id}-api-to-event-bridge-target`,
+        logGroupName: `${this.id}-api-to-event-bridge-target-${this.props.stage}`,
       },
       ...this.props.event.logGroup,
     })
@@ -354,17 +353,6 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
     }
   }
 
-  protected createApiToEventBridgeTargetRestApiLogGroup() {
-    this.apiToEventBridgeTargetRestApi.accessLogGroup = this.logManager.createLogGroup(
-      `${this.id}-rest-api-access-log`,
-      this,
-      {
-        logGroupName: `${this.id}-access`,
-        removalPolicy: RemovalPolicy.DESTROY,
-      }
-    )
-  }
-
   /**
    * @summary Method to create rest restApi for Api
    */
@@ -379,6 +367,25 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
     }
 
     if (!this.props.api.restApi?.restApiName) throw `RestApi name undefined for ${this.id}`
+
+    const restApiName = this.resourceNameFormatter.format(
+      this.props.api.restApi?.restApiName,
+      this.props.resourceNameOptions?.apigateway
+    )
+
+    const restApiAccessLogName = this.resourceNameFormatter.format(
+      `${this.props.api.restApi?.restApiName}-access`,
+      this.props.resourceNameOptions?.apigateway
+    )
+
+    this.apiToEventBridgeTargetRestApi.accessLogGroup = this.logManager.createLogGroup(
+      `${this.id}-rest-api-access-log`,
+      this,
+      {
+        logGroupName: restApiAccessLogName,
+        removalPolicy: RemovalPolicy.DESTROY,
+      }
+    )
 
     this.apiToEventBridgeTargetRestApi.api = new RestApi(this, `${this.id}-rest-api`, {
       cloudWatchRole: this.props.api.restApi?.cloudWatchRole ?? true,
@@ -409,10 +416,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
         types: [EndpointType.REGIONAL],
       },
       ...this.props.api.restApi,
-      restApiName: this.resourceNameFormatter.format(
-        this.props.api.restApi?.restApiName,
-        this.props.resourceNameOptions?.apigateway
-      ),
+      restApiName,
     })
 
     this.addCfnOutput(`${this.id}-restApiId`, this.apiToEventBridgeTargetRestApi.api.restApiId)

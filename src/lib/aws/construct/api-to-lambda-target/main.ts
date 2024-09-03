@@ -1,11 +1,5 @@
-import { Fn, RemovalPolicy } from 'aws-cdk-lib'
-import {
-  BasePathMapping,
-  LambdaIntegration,
-  LogGroupLogDestination,
-  Resource,
-  RestApi,
-} from 'aws-cdk-lib/aws-apigateway'
+import { Fn } from 'aws-cdk-lib'
+import { BasePathMapping, LambdaIntegration, Resource, RestApi } from 'aws-cdk-lib/aws-apigateway'
 import { PolicyDocument, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam'
 import { Function } from 'aws-cdk-lib/aws-lambda'
 import { ISecret } from 'aws-cdk-lib/aws-secretsmanager'
@@ -155,11 +149,6 @@ export class ApiToLambdaTarget extends CommonConstruct {
       return
     }
 
-    const accessLogGroup = this.logManager.createLogGroup(`${this.id}-rest-api-access-log`, this, {
-      logGroupName: `${this.id}-access`,
-      removalPolicy: RemovalPolicy.DESTROY,
-    })
-
     this.props.api.restApi = {
       ...this.props.api.restApi,
       defaultMethodOptions: {
@@ -167,9 +156,6 @@ export class ApiToLambdaTarget extends CommonConstruct {
           this.apiToLambdaTargetRestApi.methodResponse,
           this.apiToLambdaTargetRestApi.methodErrorResponse,
         ],
-      },
-      deployOptions: {
-        accessLogDestination: new LogGroupLogDestination(accessLogGroup),
       },
     }
 

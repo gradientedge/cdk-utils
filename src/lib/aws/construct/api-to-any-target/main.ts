@@ -58,7 +58,6 @@ export class ApiToAnyTarget extends CommonConstruct {
     this.resolveCertificate()
 
     /* restApi related resources */
-    this.createApiToAnyTargetRestApiLogGroup()
     this.createApiToAnyTargetRestApi()
     this.createApiDomain()
     this.createApiBasePathMapping()
@@ -109,13 +108,6 @@ export class ApiToAnyTarget extends CommonConstruct {
     )
   }
 
-  protected createApiToAnyTargetRestApiLogGroup() {
-    this.apiToAnyTargetRestApi.accessLogGroup = this.logManager.createLogGroup(`${this.id}-rest-api-access-log`, this, {
-      logGroupName: `${this.id}-access`,
-      removalPolicy: RemovalPolicy.DESTROY,
-    })
-  }
-
   protected createApiToAnyTargetRestApi() {
     if (this.props.api.useExisting && this.props.api.importedRestApiRef) {
       this.apiToAnyTargetRestApi.api = RestApi.fromRestApiId(
@@ -127,6 +119,21 @@ export class ApiToAnyTarget extends CommonConstruct {
     }
 
     if (!this.props.api.restApi?.restApiName) throw `RestApi name undefined for ${this.id}`
+
+    const restApiName = this.resourceNameFormatter.format(
+      this.props.api.restApi?.restApiName,
+      this.props.resourceNameOptions?.apigateway
+    )
+
+    const restApiAccessLogName = this.resourceNameFormatter.format(
+      `${this.props.api.restApi?.restApiName}-access`,
+      this.props.resourceNameOptions?.apigateway
+    )
+
+    this.apiToAnyTargetRestApi.accessLogGroup = this.logManager.createLogGroup(`${this.id}-rest-api-access-log`, this, {
+      logGroupName: restApiAccessLogName,
+      removalPolicy: RemovalPolicy.DESTROY,
+    })
 
     this.apiToAnyTargetRestApi.api = new RestApi(this, `${this.id}-rest-api`, {
       cloudWatchRole: this.props.api.restApi?.cloudWatchRole ?? true,
@@ -154,10 +161,7 @@ export class ApiToAnyTarget extends CommonConstruct {
         types: [this.isProductionStage() ? EndpointType.EDGE : EndpointType.REGIONAL],
       },
       ...this.props.api.restApi,
-      restApiName: this.resourceNameFormatter.format(
-        this.props.api.restApi?.restApiName,
-        this.props.resourceNameOptions?.apigateway
-      ),
+      restApiName,
     })
     this.addCfnOutput(`${this.id}-restApiId`, this.apiToAnyTargetRestApi.api.restApiId)
     this.addCfnOutput(`${this.id}-restApiRootResourceId`, this.apiToAnyTargetRestApi.api.root.resourceId)

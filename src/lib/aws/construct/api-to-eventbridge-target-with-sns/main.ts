@@ -274,7 +274,7 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
   protected createApiDestinationLogGroupSuccess() {
     if (this.props.api.useExisting) return
     this.apiEvent.logGroupSuccess = this.logManager.createLogGroup(`${this.id}-destination-success-log`, this, {
-      logGroupName: `${this.id}-destination`,
+      logGroupName: `${this.id}-destination-${this.props.stage}`,
       ...this.props.event.logGroupSuccess,
     })
   }
@@ -314,7 +314,7 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
   protected createApiDestinationLogGroupFailure() {
     if (this.props.api.useExisting) return
     this.apiEvent.logGroupFailure = this.logManager.createLogGroup(`${this.id}-destination-failure-log`, this, {
-      logGroupName: `${this.id}-destination-failure`,
+      logGroupName: `${this.id}-destination-failure-${this.props.stage}`,
       ...this.props.event.logGroupFailure,
     })
   }
@@ -508,12 +508,22 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
       return
     }
 
-    const accessLogGroup = this.logManager.createLogGroup(`${this.id}-sns-rest-api-access-log`, this, {
-      logGroupName: `${this.id}-access`,
+    if (!this.props.api.restApi?.restApiName) throw `RestApi name undefined for ${this.id}`
+
+    const restApiName = this.resourceNameFormatter.format(
+      this.props.api.restApi?.restApiName,
+      this.props.resourceNameOptions?.apigateway
+    )
+
+    const restApiAccessLogName = this.resourceNameFormatter.format(
+      `${this.props.api.restApi?.restApiName}-access`,
+      this.props.resourceNameOptions?.apigateway
+    )
+
+    const accessLogGroup = this.logManager.createLogGroup(`${this.id}-rest-api-access-log`, this, {
+      logGroupName: restApiAccessLogName,
       removalPolicy: RemovalPolicy.DESTROY,
     })
-
-    if (!this.props.api.restApi?.restApiName) throw `RestApi name undefined for ${this.id}`
 
     this.apiDestinedRestApi.api = new RestApi(this, `${this.id}-sns-rest-api`, {
       defaultCorsPreflightOptions: {
@@ -538,10 +548,7 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
         types: [EndpointType.REGIONAL],
       },
       ...this.props.api,
-      restApiName: this.resourceNameFormatter.format(
-        this.props.api.restApi?.restApiName,
-        this.props.resourceNameOptions?.apigateway
-      ),
+      restApiName,
     })
     this.addCfnOutput(`${this.id}-restApiId`, this.apiDestinedRestApi.api.restApiId)
     this.addCfnOutput(`${this.id}-restApiRootResourceId`, this.apiDestinedRestApi.api.root.resourceId)
