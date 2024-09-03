@@ -202,7 +202,7 @@ describe('TestApiToEventBridgeTargetConstruct', () => {
 describe('TestApiToEventBridgeTargetConstruct', () => {
   test('provisions log group as expected', () => {
     template.hasResourceProperties('AWS::Logs::LogGroup', {
-      LogGroupName: '/cdktest-test-api-to-event-bridge-target-test',
+      LogGroupName: 'cdktest-test-api-to-event-bridge-target-test',
     })
   })
 })

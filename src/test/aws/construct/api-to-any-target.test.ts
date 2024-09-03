@@ -179,7 +179,7 @@ describe('TestApiToAnyTargetConstruct', () => {
 describe('TestApiToAnyTargetConstruct', () => {
   test('provisions log group as expected', () => {
     template.hasResourceProperties('AWS::Logs::LogGroup', {
-      LogGroupName: '/cdktest-test-access-test',
+      LogGroupName: 'cdktest-test-access-test',
       RetentionInDays: 731,
     })
   })

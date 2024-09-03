@@ -71,7 +71,7 @@ describe('TestEventTargetConstruct', () => {
 describe('TestEventTargetConstruct', () => {
   test('provisions new log group target as expected', () => {
     template.hasResourceProperties('AWS::Logs::LogGroup', {
-      LogGroupName: '/cdktest-test-lg-test',
+      LogGroupName: 'cdktest-test-lg-test',
     })
   })
 })
