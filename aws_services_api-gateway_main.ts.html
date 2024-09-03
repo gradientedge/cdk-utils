@@ -48,7 +48,7 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { Tags, Size } from 'aws-cdk-lib'
+            <pre class="prettyprint source linenums"><code>import { RemovalPolicy, Size, Tags } from 'aws-cdk-lib'
 import {
   Cors,
   Deployment,
@@ -59,8 +59,9 @@ import {
   IRestApi,
   Integration,
   LambdaRestApi,
-  SecurityPolicy,
+  LogGroupLogDestination,
   MethodResponse,
+  SecurityPolicy,
 } from 'aws-cdk-lib/aws-apigateway'
 import { ICertificate } from 'aws-cdk-lib/aws-certificatemanager'
 import { IFunction } from 'aws-cdk-lib/aws-lambda'
@@ -98,12 +99,27 @@ export class ApiManager {
     if (!props) throw `Api props undefined for ${id}`
     if (!props.restApiName) throw `Api restApiName undefined for ${id}`
 
+    const restApiName = scope.resourceNameFormatter.format(
+      props.restApiName,
+      scope.props.resourceNameOptions?.apigateway
+    )
+    const restApiAccessLogName = scope.resourceNameFormatter.format(
+      `${props.restApiName}-access`,
+      scope.props.resourceNameOptions?.apigateway
+    )
+
+    const accessLogGroup = scope.logManager.createLogGroup(`${id}-rest-api-access-log`, scope, {
+      logGroupName: restApiAccessLogName,
+      removalPolicy: RemovalPolicy.DESTROY,
+    })
+
     const api = new LambdaRestApi(scope, `${id}`, {
       ...props,
       cloudWatchRole: props.cloudWatchRole || false,
       deploy: props.deploy || true,
       deployOptions: {
         ...props.deployOptions,
+        accessLogDestination: new LogGroupLogDestination(accessLogGroup),
         description: `${id} - ${scope.props.stage} stage`,
         stageName: scope.props.stage,
       },
@@ -115,7 +131,7 @@ export class ApiManager {
       handler: lambdaFunction,
       minCompressionSize: props.minCompressionSizeInBytes ? Size.bytes(props.minCompressionSizeInBytes) : undefined,
       proxy: props.proxy ?? true,
-      restApiName: scope.resourceNameFormatter.format(props.restApiName, scope.props.resourceNameOptions?.apigateway),
+      restApiName,
     })
 
     if (props.tags &amp;&amp; !_.isEmpty(props.tags)) {
