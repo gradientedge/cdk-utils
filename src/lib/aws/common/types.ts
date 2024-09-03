@@ -22,6 +22,7 @@ export interface CommonStackProps extends BaseProps, StackProps {
 }
 
 export interface ResourceNameFormatterProps {
+  exclude?: boolean
   globalPrefix?: boolean
   globalSuffix?: boolean
   prefix?: string
