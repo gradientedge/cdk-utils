@@ -55,8 +55,8 @@ jobs:
         if: ${{ github.event_name == 'push' && success() }}
         with:
           junit_files: coverage/junit.xml
-      - name: Publish Code Coverage
-        run: npx codecov
+      # - name: Publish Code Coverage
+      #   run: npx codecov
       - uses: actions/upload-artifact@v4
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && success() }}
         with:
