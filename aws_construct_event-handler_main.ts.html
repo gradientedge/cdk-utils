@@ -167,7 +167,12 @@ export class EventHandler extends CommonConstruct {
    * @summary Method to resolve the event bus name or use the default bus.
    */
   protected resolveEventBus() {
-    this.handler.eventBus = EventBus.fromEventBusName(this, `${this.id}-bus`, this.props.eventBusName ?? 'default')
+    this.handler.eventBus = EventBus.fromEventBusName(
+      this,
+      `${this.id}-bus`,
+      this.resourceNameFormatter.format(this.props.eventBusName, this.props.resourceNameOptions?.eventbridgeBus) ??
+        'default'
+    )
   }
 
   /**
