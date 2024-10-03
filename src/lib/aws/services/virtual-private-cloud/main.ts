@@ -99,7 +99,10 @@ export class VpcManager {
    */
   public retrieveCommonVpc(id: string, scope: CommonConstruct, vpcIdentifier?: string) {
     return Vpc.fromLookup(scope, `${id}`, {
-      vpcName: scope.resourceNameFormatter.format(vpcIdentifier ?? CommonVpcIdentifier),
+      vpcName: scope.resourceNameFormatter.format(
+        vpcIdentifier ?? CommonVpcIdentifier,
+        scope.props.resourceNameOptions?.vpc
+      ),
     })
   }
 }
