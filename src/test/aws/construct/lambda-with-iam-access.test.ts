@@ -104,7 +104,6 @@ describe('TestLambdaWithIamAccess', () => {
       },
       Environment: {
         Variables: {
-          LAST_MODIFIED_TS: '',
           REGION: 'eu-west-1',
           STAGE: 'test',
         },

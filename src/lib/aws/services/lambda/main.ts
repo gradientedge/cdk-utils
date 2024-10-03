@@ -130,13 +130,6 @@ export class LambdaManager {
       code,
       deadLetterQueue,
       environment: {
-        LAST_MODIFIED_TS: props.excludeLastModifiedTimestamp
-          ? ''
-          : scope.ssmManager.readStringParameter(
-              `${id}-sm-ts`,
-              scope,
-              `${SsmManager.SECRETS_MODIFIED_TIMESTAMP_PARAM}`
-            ),
         LOG_LEVEL: props.logLevel,
         REGION: scope.props.region,
         STAGE: scope.props.stage,
@@ -291,13 +284,6 @@ export class LambdaManager {
       code,
       deadLetterQueue,
       environment: {
-        LAST_MODIFIED_TS: props.excludeLastModifiedTimestamp
-          ? ''
-          : scope.ssmManager.readStringParameter(
-              `${id}-sm-ts`,
-              scope,
-              `${SsmManager.SECRETS_MODIFIED_TIMESTAMP_PARAM}`
-            ),
         LOG_LEVEL: props.logLevel,
         REGION: scope.props.region,
         STAGE: scope.props.stage,
