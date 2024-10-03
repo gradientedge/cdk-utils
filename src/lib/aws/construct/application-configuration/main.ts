@@ -1,11 +1,13 @@
-import { Fn } from 'aws-cdk-lib'
+import { Duration, Fn } from 'aws-cdk-lib'
 import {
   CfnApplication,
   CfnConfigurationProfile,
   CfnDeployment,
-  CfnDeploymentStrategy,
   CfnEnvironment,
   CfnHostedConfigurationVersion,
+  DeploymentStrategy,
+  IDeploymentStrategy,
+  RolloutStrategy,
 } from 'aws-cdk-lib/aws-appconfig'
 import { Construct } from 'constructs'
 import { CommonConstruct } from '../../common'
@@ -18,7 +20,7 @@ export class ApplicationConfiguration extends CommonConstruct {
   appConfigEnvironment: CfnEnvironment
   appConfigProfile: CfnConfigurationProfile
   appConfigVersion: CfnHostedConfigurationVersion
-  appConfigDeploymentStrategy: CfnDeploymentStrategy
+  appConfigDeploymentStrategy: IDeploymentStrategy
 
   constructor(parent: Construct, id: string, props: ApplicationConfigurationProps) {
     super(parent, id, props)
@@ -76,14 +78,30 @@ export class ApplicationConfiguration extends CommonConstruct {
   }
 
   protected createAppConfigDeploymentStrategy() {
-    this.appConfigDeploymentStrategy = new CfnDeploymentStrategy(this, `${this.id}-ac-deployment-strategy`, {
-      deploymentDurationInMinutes: this.props.appConfig.deploymentStrategy.deploymentDurationInMinutes,
-      growthFactor: this.props.appConfig.deploymentStrategy.growthFactor,
-      name: this.resourceNameFormatter.format(
-        this.props.appConfig.deploymentStrategy.name,
+    if (!this.props.appConfig.deploymentStrategy) return
+
+    if (this.props.appConfig.deploymentStrategy?.deploymentStrategyArn) {
+      this.appConfigDeploymentStrategy = DeploymentStrategy.fromDeploymentStrategyArn(
+        this,
+        `${this.id}-ac-deployment-strategy`,
+        this.props.appConfig.deploymentStrategy?.deploymentStrategyArn
+      )
+      return
+    }
+
+    this.appConfigDeploymentStrategy = new DeploymentStrategy(this, `${this.id}-ac-deployment-strategy`, {
+      ...this.props.appConfig.deploymentStrategy,
+      rolloutStrategy:
+        this.props.appConfig.deploymentStrategy?.rolloutStrategy ??
+        RolloutStrategy.linear({
+          growthFactor: 100,
+          deploymentDuration: Duration.minutes(0),
+          finalBakeTime: Duration.minutes(0),
+        }),
+      deploymentStrategyName: this.resourceNameFormatter.format(
+        this.props.appConfig.deploymentStrategy.deploymentStrategyName ?? 'common-deployment-strategy',
         this.props.resourceNameOptions?.appconfig
       ),
-      replicateTo: this.props.appConfig.deploymentStrategy.replicateTo,
     })
   }
 
@@ -92,7 +110,7 @@ export class ApplicationConfiguration extends CommonConstruct {
       applicationId: Fn.ref(this.appConfigApplication.logicalId),
       configurationProfileId: Fn.ref(this.appConfigProfile.logicalId),
       configurationVersion: Fn.ref(this.appConfigVersion.logicalId),
-      deploymentStrategyId: Fn.ref(this.appConfigDeploymentStrategy.logicalId),
+      deploymentStrategyId: this.appConfigDeploymentStrategy.deploymentStrategyId,
       environmentId: Fn.ref(this.appConfigEnvironment.logicalId),
     })
   }

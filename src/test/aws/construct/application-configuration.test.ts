@@ -127,7 +127,7 @@ describe('TestApplicationConfiguration', () => {
     template.hasResourceProperties('AWS::AppConfig::DeploymentStrategy', {
       DeploymentDurationInMinutes: 0,
       GrowthFactor: 100,
-      Name: 'cdktest-test-deployment-strategy-test',
+      Name: 'cdktest-common-deployment-strategy-test',
       ReplicateTo: 'NONE',
     })
   })
@@ -146,7 +146,7 @@ describe('TestApplicationConfiguration', () => {
         Ref: 'testapplicationconfigurationstacktestapplicationconfigurationacconfiguration4AEFF082',
       },
       DeploymentStrategyId: {
-        Ref: 'testapplicationconfigurationstacktestapplicationconfigurationacdeploymentstrategy33B0D1FB',
+        Ref: 'testapplicationconfigurationstacktestapplicationconfigurationacdeploymentstrategyD00939D0',
       },
       EnvironmentId: {
         Ref: 'testapplicationconfigurationstacktestapplicationconfigurationacenvironment582C21A3',

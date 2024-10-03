@@ -1,5 +1,11 @@
 import { Fn } from 'aws-cdk-lib'
-import { CfnApplication, CfnConfigurationProfile, CfnEnvironment } from 'aws-cdk-lib/aws-appconfig'
+import {
+  CfnApplication,
+  CfnConfigurationProfile,
+  CfnEnvironment,
+  DeploymentStrategy,
+  RolloutStrategy,
+} from 'aws-cdk-lib/aws-appconfig'
 import { CommonConstruct } from '../../common'
 import { createCfnOutput } from '../../utils'
 import { Architecture } from '../constants'
@@ -119,5 +125,31 @@ export class AppConfigManager {
     createCfnOutput(`${id}-configurationProfileName`, scope, profile.name)
 
     return profile
+  }
+
+  /**
+   * @summary Method to create an AppConfig Deployment Strategy
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props
+   * @returns the appconfig deployment strategy
+   */
+  public createDeploymentStrategy(id: string, scope: CommonConstruct, props: AppConfigProps): DeploymentStrategy {
+    if (!props) throw `AppConfig props undefined for ${id}`
+    if (!props.deploymentStrategy) throw `AppConfig deploymentStrategy props undefined for ${id}`
+
+    const deploymentStrategy = new DeploymentStrategy(scope, `${id}`, {
+      ...props,
+      deploymentStrategyName: scope.resourceNameFormatter.format(
+        props.deploymentStrategy.deploymentStrategyName ?? 'common-deployment-strategy',
+        scope.props.resourceNameOptions?.appconfig
+      ),
+      rolloutStrategy: props.deploymentStrategy.rolloutStrategy ?? RolloutStrategy.ALL_AT_ONCE,
+    })
+
+    createCfnOutput(`${id}-deploymentStrategyId`, scope, deploymentStrategy.deploymentStrategyId)
+    createCfnOutput(`${id}-deploymentStrategyArn`, scope, deploymentStrategy.deploymentStrategyArn)
+
+    return deploymentStrategy
   }
 }
