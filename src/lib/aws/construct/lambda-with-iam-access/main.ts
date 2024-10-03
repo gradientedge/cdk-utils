@@ -209,10 +209,8 @@ export class LambdaWithIamAccess extends CommonConstruct {
             new PolicyStatement({
               actions: ['lambda:InvokeFunction'],
               resources: [
-                Fn.importValue(
-                  `${this.id}-${this.props.stage}-${_.camelCase(`${this.id}Lambda-${alias.aliasName}`)}AliasArn`
-                ),
-                `${Fn.importValue(`${this.id}-${this.props.stage}-${_.camelCase(`${this.id}Lambda-${alias.aliasName}`)}AliasArn`)}*`,
+                `${this.lambdaFunction.functionArn}:${alias.aliasName}`,
+                `${this.lambdaFunction.functionArn}:${alias.aliasName}*`,
               ],
             }),
           ],
