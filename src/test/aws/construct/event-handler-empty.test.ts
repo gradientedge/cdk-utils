@@ -45,7 +45,6 @@ class TestCommonStack extends CommonStack {
   protected determineConstructProps(props: cdk.StackProps) {
     return {
       ...super.determineConstructProps(props),
-      eventRetentionInDays: 7,
     }
   }
 }
