@@ -97,6 +97,7 @@ export class EventHandler extends CommonConstruct {
    * @summary Method to create the event rule pattern.
    */
   protected createEventRulePattern() {
+    if (!this.props.eventRule) return
     this.handler.rulePattern = this.props.eventRule.eventPattern
   }
 
@@ -130,7 +131,13 @@ export class EventHandler extends CommonConstruct {
    */
   protected createEventArchive() {
     /* do not enable for scheduled events */
-    if (this.props.eventRule.schedule || this.props.eventRuleSchedule || !this.props.eventRuleArchiveEnabled) return
+    if (
+      !this.props.eventRule ||
+      this.props.eventRule.schedule ||
+      this.props.eventRuleSchedule ||
+      !this.props.eventRuleArchiveEnabled
+    )
+      return
     this.handler.archive = new Archive(this, `${this.id}-archive`, {
       archiveName: `${this.props.eventRule.ruleName}-${this.props.stage}`.replace(
         `${this.node.tryGetContext('stackName')}-`,
@@ -147,6 +154,7 @@ export class EventHandler extends CommonConstruct {
    * @summary Method to create the event rule.
    */
   protected createEventRule() {
+    if (!this.props.eventRule) return
     let schedule
     if (this.props.eventRuleSchedule) {
       schedule = Schedule.expression(this.props.eventRuleSchedule)

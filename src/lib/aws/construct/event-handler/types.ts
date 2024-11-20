@@ -10,7 +10,7 @@ import { EventRuleProps, LogProps, QueueProps, SfnMapProps, SfnStateMachineProps
 export interface EventHandlerProps extends CommonStackProps {
   eventBusName: string
   eventRetentionInDays: number
-  eventRule: EventRuleProps
+  eventRule?: EventRuleProps
   eventRuleArchiveEnabled: boolean
   eventRuleSchedule: string
   eventSqs: QueueProps
