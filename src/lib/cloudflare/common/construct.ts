@@ -83,7 +83,7 @@ export class CommonCloudflareConstruct extends TerraformStack {
   }
 
   /**
-   * @summary Determine the account id based on the cdktf.json context
+   * @summary Determine the stage based on the cdktf.json context
    */
   protected determineStage() {
     this.props.stage = this.node.tryGetContext('stage') ?? new TerraformVariable(this, `stage`, {}).stringValue
