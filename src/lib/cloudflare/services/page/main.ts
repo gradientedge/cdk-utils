@@ -101,6 +101,7 @@ export class CloudflarePageManager {
     const deployment = new LocalExec(scope, `${id}-deploy-${new Date().toISOString()}`, {
       command: `CLOUDFLARE_ACCOUNT_ID=${scope.props.accountId} CLOUDFLARE_API_TOKEN=${scope.props.apiToken} npx wrangler pages deploy ${props.directory} --project-name=${props.projectName} --branch=${props.branch} --commit-message=${message}`,
       cwd: '',
+      dependsOn: props.dependsOn,
     })
 
     return deployment

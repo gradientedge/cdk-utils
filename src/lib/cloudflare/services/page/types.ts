@@ -10,4 +10,5 @@ export interface PagesProjectDeployProps {
   directory: string
   message: string
   projectName: string
+  dependsOn?: any
 }
