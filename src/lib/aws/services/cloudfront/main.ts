@@ -356,10 +356,10 @@ export class CloudFrontManager {
     if (!props.functionName) throw `CloudFront Function functionName undefined for ${id}`
 
     const cloudfrontFunction = new Function(scope, `${id}`, {
+      ...props,
       code: FunctionCode.fromFile({
         filePath: props.functionFilePath,
       }),
-      comment: props.comment,
       functionName: scope.resourceNameFormatter.format(props.functionName, scope.props.resourceNameOptions?.cloudfront),
     })
 
