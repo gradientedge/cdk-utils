@@ -37,6 +37,7 @@ export class CloudflarePagesStaticSite extends CommonCloudflareConstruct {
   sitePagesPreviewEnvironmentVariables: { [key: string]: string }
   sitePagesSecrets: { [key: string]: string }
   sitePagesPreviewSecrets: { [key: string]: string }
+  siteDeploymentDependsOn: any
 
   constructor(parent: Construct, id: string, props: CloudflarePagesStaticSiteProps) {
     super(parent, id, props)
@@ -161,6 +162,7 @@ export class CloudflarePagesStaticSite extends CommonCloudflareConstruct {
       directory: this.props.siteAssetDir,
       message: this.props.siteDeployMessage,
       projectName: this.sitePagesProject.name,
+      dependsOn: this.siteDeploymentDependsOn,
     })
   }
 }
