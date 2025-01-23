@@ -2,7 +2,7 @@ import { AzurermProvider } from '@cdktf/provider-azurerm/lib/provider'
 import { TerraformStack } from 'cdktf'
 import { Construct } from 'constructs'
 import { isDevStage, isPrdStage, isTestStage, isUatStage } from '../../common'
-import { AzureStorageManager, AzureKeyVaultManager, AzureApiManagementManager } from '../services'
+import { AzureStorageManager, AzureKeyVaultManager, AzureApiManagementManager, AzureFunctionManager } from '../services'
 import { CommonAzureStackProps } from './types'
 
 export class CommonAzureConstruct extends TerraformStack {
@@ -10,6 +10,7 @@ export class CommonAzureConstruct extends TerraformStack {
   id: string
   fullyQualifiedDomainName: string
   apiManagementtManager: AzureApiManagementManager
+  functiontManager: AzureFunctionManager
   keyVaultManager: AzureKeyVaultManager
   storageManager: AzureStorageManager
 
@@ -19,6 +20,7 @@ export class CommonAzureConstruct extends TerraformStack {
     this.id = id
 
     this.apiManagementtManager = new AzureApiManagementManager()
+    this.functiontManager = new AzureFunctionManager()
     this.keyVaultManager = new AzureKeyVaultManager()
     this.storageManager = new AzureStorageManager()
 

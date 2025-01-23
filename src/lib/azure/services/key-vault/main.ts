@@ -27,7 +27,7 @@ export class AzureKeyVaultManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props key vault properties
-   * @see [CDKTF Key Vaultt Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/keyVault.typescript.md}
+   * @see [CDKTF Key Vault Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/keyVault.typescript.md}
    */
   public createKeyVault(id: string, scope: CommonAzureConstruct, props: KeyVaultProps) {
     if (!props) throw `Props undefined for ${id}`

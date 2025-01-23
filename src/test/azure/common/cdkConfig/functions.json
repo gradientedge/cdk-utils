@@ -1,0 +1,9 @@
+{
+  "testFunctionApp": {
+    "name": "test-function-app"
+  },
+  "testFunction": {
+    "name": "test-function",
+    "functionAppName": "test-function-app"
+  }
+}

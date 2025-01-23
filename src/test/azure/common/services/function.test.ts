@@ -1,17 +1,25 @@
-import { KeyVault } from '@cdktf/provider-azurerm/lib/key-vault'
+import { FunctionApp } from '@cdktf/provider-azurerm/lib/function-app'
+import { FunctionAppFunction } from '@cdktf/provider-azurerm/lib/function-app-function'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
 import { Construct } from 'constructs'
-import { CommonAzureConstruct, CommonAzureStack, CommonAzureStackProps, KeyVaultProps } from '../../../../lib'
+import {
+  CommonAzureConstruct,
+  CommonAzureStack,
+  CommonAzureStackProps,
+  FunctionAppProps,
+  FunctionProps,
+} from '../../../../lib'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
-  testKeyVault: KeyVaultProps
+  testFunctionApp: FunctionAppProps
+  testFunction: FunctionProps
   testAttribute?: string
 }
 
 const testStackProps: any = {
   domainName: 'gradientedge.io',
-  extraContexts: ['src/test/azure/common/cdkConfig/dummy.json', 'src/test/azure/common/cdkConfig/key-vault.json'],
+  extraContexts: ['src/test/azure/common/cdkConfig/dummy.json', 'src/test/azure/common/cdkConfig/functions.json'],
   features: {},
   name: 'test-common-stack',
   resourceGroupName: 'test-rg',
@@ -32,7 +40,8 @@ class TestCommonStack extends CommonAzureStack {
     return {
       ...super.determineConstructProps(props),
       testAttribute: this.node.tryGetContext('testAttribute'),
-      testKeyVault: this.node.tryGetContext('testKeyVault'),
+      testFunctionApp: this.node.tryGetContext('testFunctionApp'),
+      testFunction: this.node.tryGetContext('testFunction'),
     }
   }
 }
@@ -52,7 +61,8 @@ class TestCommonConstruct extends CommonAzureConstruct {
 
   constructor(parent: Construct, name: string, props: TestAzureStackProps) {
     super(parent, name, props)
-    this.keyVaultManager.createKeyVault(`test-key-vault-${this.props.stage}`, this, this.props.testKeyVault)
+    this.functiontManager.createFunctionApp(`test-function-app-${this.props.stage}`, this, this.props.testFunctionApp)
+    this.functiontManager.createFunction(`test-function-${this.props.stage}`, this, this.props.testFunction)
   }
 }
 
@@ -62,14 +72,14 @@ const commonStack = new TestCommonStack(testingApp, 'test-common-stack', testSta
 const stack = Testing.fullSynth(commonStack)
 const construct = Testing.synth(commonStack.construct)
 
-describe('TestAzureKeyVaultConstruct', () => {
+describe('TestAzureFunctionAppConstruct', () => {
   test('handles mis-configurations as expected', () => {
     const error = () => new TestInvalidCommonStack(app, 'test-invalid-stack', testStackProps)
-    expect(error).toThrow('Props undefined for test-key-vault-dev')
+    expect(error).toThrow('Props undefined for test-function-app-dev')
   })
 })
 
-describe('TestAzureKeyVaultConstruct', () => {
+describe('TestAzureFunctionAppConstruct', () => {
   test('is initialised as expected', () => {
     /* test if the created stack have the right properties injected */
     expect(commonStack.props).toHaveProperty('testAttribute')
@@ -77,7 +87,7 @@ describe('TestAzureKeyVaultConstruct', () => {
   })
 })
 
-describe('TestAzureKeyVaultConstruct', () => {
+describe('TestAzureFunctionAppConstruct', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
     expect(construct).toBeDefined()
@@ -86,27 +96,44 @@ describe('TestAzureKeyVaultConstruct', () => {
   })
 })
 
-describe('TestAzureKeyVaultConstruct', () => {
+describe('TestAzureFunctionAppConstruct', () => {
   test('provisions outputs as expected', () => {
     expect(JSON.parse(construct).output).toMatchObject({
-      testKeyVaultDevKeyVaultFriendlyUniqueId: {
-        value: 'test-key-vault-dev-kv',
+      testFunctionAppDevFunctionAppFriendlyUniqueId: {
+        value: 'test-function-app-dev-fa',
       },
-      testKeyVaultDevKeyVaultId: {
-        value: '${azurerm_key_vault.test-key-vault-dev-kv.id}',
+      testFunctionAppDevFunctionAppId: {
+        value: '${azurerm_function_app.test-function-app-dev-fa.id}',
       },
-      testKeyVaultDevKeyVaultName: {
-        value: '${azurerm_key_vault.test-key-vault-dev-kv.name}',
+      testFunctionAppDevFunctionAppName: {
+        value: '${azurerm_function_app.test-function-app-dev-fa.name}',
+      },
+      testFunctionDevFunctionFriendlyUniqueId: {
+        value: 'test-function-dev-fc',
+      },
+      testFunctionDevFunctionId: {
+        value: '${azurerm_function_app_function.test-function-dev-fc.id}',
+      },
+      testFunctionDevFunctionName: {
+        value: '${azurerm_function_app_function.test-function-dev-fc.name}',
       },
     })
   })
 })
 
-describe('TestAzureKeyVaultConstruct', () => {
-  test('provisions key vault as expected', () => {
-    expect(construct).toHaveResourceWithProperties(KeyVault, {
-      name: 'test-key-vault-dev',
-      resource_group_name: '${data.azurerm_resource_group.test-key-vault-dev-kv-rg.name}',
+describe('TestAzureFunctionAppConstruct', () => {
+  test('provisions function app as expected', () => {
+    expect(construct).toHaveResourceWithProperties(FunctionApp, {
+      name: 'test-function-app-dev',
+      resource_group_name: '${data.azurerm_resource_group.test-function-app-dev-fa-rg.name}',
+    })
+  })
+})
+
+describe('TestAzureFunctionConstruct', () => {
+  test('provisions function as expected', () => {
+    expect(construct).toHaveResourceWithProperties(FunctionAppFunction, {
+      name: 'test-function-dev',
     })
   })
 })

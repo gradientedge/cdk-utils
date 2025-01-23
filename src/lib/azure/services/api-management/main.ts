@@ -5,7 +5,7 @@ import { createAzureTfOutput } from '../../utils'
 import { ApiManagementProps } from './types'
 
 /**
- * @classdesc Provides operations on Azure Key Vault
+ * @classdesc Provides operations on Azure Api Management
  * - A new instance of this class is injected into {@link CommonAzureConstruct} constructor.
  * - If a custom construct extends {@link CommonAzureConstruct}, an instance is available within the context.
  * @example
@@ -23,11 +23,11 @@ import { ApiManagementProps } from './types'
  */
 export class AzureApiManagementManager {
   /**
-   * @summary Method to create a new key vault
+   * @summary Method to create a new api management
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props key vault properties
-   * @see [CDKTF Key Vaultt Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/apiManagement.typescript.md}
+   * @param props api management properties
+   * @see [CDKTF Api management Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/apiManagement.typescript.md}
    */
   public createApiManagement(id: string, scope: CommonAzureConstruct, props: ApiManagementProps) {
     if (!props) throw `Props undefined for ${id}`

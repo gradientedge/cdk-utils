@@ -109,7 +109,7 @@ describe('TestAzureApiManagementConstruct', () => {
 })
 
 describe('TestAzureApiManagementConstruct', () => {
-  test('provisions storage account as expected', () => {
+  test('provisions api management as expected', () => {
     expect(construct).toHaveResourceWithProperties(ApiManagement, {
       name: 'test-api-management-dev',
       resource_group_name: '${data.azurerm_resource_group.test-api-management-dev-am-rg.name}',
