@@ -1,9 +1,10 @@
 import { AzurermProvider } from '@cdktf/provider-azurerm/lib/provider'
-import { TerraformStack } from 'cdktf'
+import { AzurermBackend, TerraformStack } from 'cdktf'
 import { Construct } from 'constructs'
 import { isDevStage, isPrdStage, isTestStage, isUatStage } from '../../common'
 import { AzureStorageManager, AzureKeyVaultManager, AzureApiManagementManager, AzureFunctionManager } from '../services'
 import { CommonAzureStackProps } from './types'
+import { AzureRemoteBackend } from './constants'
 
 export class CommonAzureConstruct extends TerraformStack {
   declare props: CommonAzureStackProps
@@ -25,6 +26,7 @@ export class CommonAzureConstruct extends TerraformStack {
     this.storageManager = new AzureStorageManager()
 
     this.determineFullyQualifiedDomain()
+    this.determineRemoteBackend()
     new AzurermProvider(this, `${this.id}-provider`, this.props)
   }
 
@@ -35,6 +37,26 @@ export class CommonAzureConstruct extends TerraformStack {
     this.fullyQualifiedDomainName = this.props.subDomain
       ? `${this.props.subDomain}.${this.props.domainName}`
       : this.props.domainName
+  }
+
+  protected determineRemoteBackend() {
+    const debug = this.node.tryGetContext('debug')
+    switch (this.props.remoteBackend?.type) {
+      case AzureRemoteBackend.azurerm:
+        new AzurermBackend(this, {
+          storageAccountName: this.props.remoteBackend.storageAccountName,
+          containerName: this.props.remoteBackend.containerName,
+          key: `${this.id}`,
+          subscriptionId: this.props.subscriptionId,
+          resourceGroupName: this.props.remoteBackend.resourceGroupName,
+        })
+        break
+      case AzureRemoteBackend.local:
+        if (debug) console.debug(`Using local backend for ${this.id}`)
+        break
+      default:
+        break
+    }
   }
 
   /**

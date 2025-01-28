@@ -55,6 +55,7 @@ export class CommonAzureStack extends TerraformStack {
       skipStageForARecords: this.node.tryGetContext('skipStageForARecords'),
       stage: this.node.tryGetContext('stage'),
       subDomain: this.node.tryGetContext('subDomain'),
+      subscriptionId: this.node.tryGetContext('subscriptionId'),
     }
   }
 
