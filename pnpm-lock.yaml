@@ -39,8 +39,8 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0
       aws-cdk-lib:
-        specifier: ^2.173.0
-        version: 2.176.0(constructs@10.4.2)
+        specifier: ^2.177.0
+        version: 2.177.0(constructs@10.4.2)
       cdktf:
         specifier: ^0.20.10
         version: 0.20.11(constructs@10.4.2)
@@ -201,8 +201,8 @@ packages:
     resolution: {integrity: sha512-30iZtAPgz+LTIYoeivqYo853f02jBYSd5uGnGpkFV0M3xOt9aN73erkgYAmZU43x4VfqcnLxW9Kpg3R5LC4YYw==}
     engines: {node: '>=6.0.0'}
 
-  '@aws-cdk/asset-awscli-v1@2.2.219':
-    resolution: {integrity: sha512-pwkEucYvK3MjoVShBnCWMLKk8/nAhElEM7OPcen/hSlsYoPRkZeZbPDM2XmTjvfUKWD5TQmobs39iBSrgbb1gg==}
+  '@aws-cdk/asset-awscli-v1@2.2.221':
+    resolution: {integrity: sha512-+Vu2cMvgtkaHwNezrTVng4+FAMAWKJTkC/2ZQlgkbY05k0lHHK/2eWKqBhTeA7EpxVrx9uFN7GdBFz3mcThpxg==}
 
   '@aws-cdk/asset-kubectl-v20@2.1.3':
     resolution: {integrity: sha512-cDG1w3ieM6eOT9mTefRuTypk95+oyD7P5X/wRltwmYxU7nZc3+076YEVS6vrjDKr3ADYbfn0lDKpfB1FBtO9CQ==}
@@ -210,8 +210,8 @@ packages:
   '@aws-cdk/asset-node-proxy-agent-v6@2.1.0':
     resolution: {integrity: sha512-7bY3J8GCVxLupn/kNmpPc5VJz8grx+4RKfnnJiO1LG+uxkZfANZG3RMHhE+qQxxwkyQ9/MfPtTpf748UhR425A==}
 
-  '@aws-cdk/cloud-assembly-schema@39.1.50':
-    resolution: {integrity: sha512-A9ZPrdCw4xJFkNITmo0XN1DPq84lxXzreFFoFWtM6wiAqHHDlAEv/vVhhdn4+ojoIiYHN1ro6PQga7eqAco46Q==}
+  '@aws-cdk/cloud-assembly-schema@39.2.8':
+    resolution: {integrity: sha512-VkppFgLbm5M1/K8S+BimI/0COq+E9fCDcdDyAe4gFizHNZTALZA4sMds2kug1rtPFKCcWAexrycs2D4iQHcRCw==}
     bundledDependencies:
       - jsonschema
       - semver
@@ -1372,8 +1372,8 @@ packages:
     resolution: {integrity: sha512-wvUjBtSGN7+7SjNpq/9M2Tg350UZD3q62IFZLbRAR1bSMlCo1ZaeW+BJ+D090e4hIIZLBcTDWe4Mh4jvUDajzQ==}
     engines: {node: '>= 0.4'}
 
-  aws-cdk-lib@2.176.0:
-    resolution: {integrity: sha512-6Gs2kBaq4elQ4fNAOiCgbD9oOLx/heb/Lp4OVE6Uf7FulYW0DikWJXxR5GWJslTJ4/sCf3UU91q415fc0bruLg==}
+  aws-cdk-lib@2.177.0:
+    resolution: {integrity: sha512-nTnHAwjZaPJ5gfJjtzE/MyK6q0a66nWthoJl7l8srucRb+I30dczhbbXor6QCdVpJaTRAEliMOMq23aglsAQbg==}
     engines: {node: '>= 14.15.0'}
     peerDependencies:
       constructs: ^10.0.0
@@ -3096,9 +3096,11 @@ packages:
 
   lodash.get@4.4.2:
     resolution: {integrity: sha512-z+Uw/vLuy6gQe8cfaFWD7p0wVv8fJl3mbzXh33RS+0oW2wvUqiRXiQ69gLWSLpgB5/6sU+r6BlQR0MBILadqTQ==}
+    deprecated: This package is deprecated. Use the optional chaining (?.) operator instead.
 
   lodash.isequal@4.5.0:
     resolution: {integrity: sha512-pDo3lu8Jhfjqls6GkMgpahsF9kCyayhgykjyLMNFTKWrpVdAQtYyB4muAMWozBB4ig/dtWAmsMxLEI8wuz+DYQ==}
+    deprecated: This package is deprecated. Use require('node:util').isDeepStrictEqual instead.
 
   lodash.isplainobject@4.0.6:
     resolution: {integrity: sha512-oSXzaWypCMHkPC3NvBEaPHf0KsA5mvPrOPgQWDsbg8n7orZ290M0BmC/jgRZ4vcJ6DTAhjrsSYgdsW/F+MFOBA==}
@@ -3120,6 +3122,7 @@ packages:
 
   lodash.omit@4.5.0:
     resolution: {integrity: sha512-XeqSp49hNGmlkj2EJlfrQFIzQ6lXdNro9sddtQzcJY8QaoC2GO0DT7xaIokHeyM+mIT0mPMlPvkYzg2xCuHdZg==}
+    deprecated: This package is deprecated. Use destructuring assignment syntax instead.
 
   lodash.uniq@4.5.0:
     resolution: {integrity: sha512-xfBaXQd9ryd9dlSDvnvI0lvxfLJlYAZzXomUYzLKtUeOQvOP5piqAWuGtrhWeqaXK9hhoM/iyJc5AV+XfsX3HQ==}
@@ -4585,13 +4588,13 @@ snapshots:
       '@jridgewell/gen-mapping': 0.3.8
       '@jridgewell/trace-mapping': 0.3.25
 
-  '@aws-cdk/asset-awscli-v1@2.2.219': {}
+  '@aws-cdk/asset-awscli-v1@2.2.221': {}
 
   '@aws-cdk/asset-kubectl-v20@2.1.3': {}
 
   '@aws-cdk/asset-node-proxy-agent-v6@2.1.0': {}
 
-  '@aws-cdk/cloud-assembly-schema@39.1.50': {}
+  '@aws-cdk/cloud-assembly-schema@39.2.8': {}
 
   '@aws-crypto/sha256-browser@5.2.0':
     dependencies:
@@ -6388,12 +6391,12 @@ snapshots:
     dependencies:
       possible-typed-array-names: 1.0.0
 
-  aws-cdk-lib@2.176.0(constructs@10.4.2):
+  aws-cdk-lib@2.177.0(constructs@10.4.2):
     dependencies:
-      '@aws-cdk/asset-awscli-v1': 2.2.219
+      '@aws-cdk/asset-awscli-v1': 2.2.221
       '@aws-cdk/asset-kubectl-v20': 2.1.3
       '@aws-cdk/asset-node-proxy-agent-v6': 2.1.0
-      '@aws-cdk/cloud-assembly-schema': 39.1.50
+      '@aws-cdk/cloud-assembly-schema': 39.2.8
       constructs: 10.4.2
 
   aws-cdk@2.176.0:
