@@ -46,6 +46,9 @@ export class AzureFunctionManager {
       ...props,
       name: `${props.name}-${scope.props.stage}`,
       resourceGroupName: resourceGroup.name,
+      tags: props.tags ?? {
+        environment: scope.props.stage,
+      },
     })
 
     createAzureTfOutput(`${id}-functionAppName`, scope, functionApp.name)

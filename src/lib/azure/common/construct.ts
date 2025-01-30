@@ -2,7 +2,13 @@ import { AzurermProvider } from '@cdktf/provider-azurerm/lib/provider'
 import { AzurermBackend, TerraformStack } from 'cdktf'
 import { Construct } from 'constructs'
 import { isDevStage, isPrdStage, isTestStage, isUatStage } from '../../common'
-import { AzureStorageManager, AzureKeyVaultManager, AzureApiManagementManager, AzureFunctionManager } from '../services'
+import {
+  AzureStorageManager,
+  AzureKeyVaultManager,
+  AzureApiManagementManager,
+  AzureFunctionManager,
+  AzureResourceGroupManager,
+} from '../services'
 import { CommonAzureStackProps } from './types'
 import { AzureRemoteBackend } from './constants'
 
@@ -13,6 +19,7 @@ export class CommonAzureConstruct extends TerraformStack {
   apiManagementtManager: AzureApiManagementManager
   functiontManager: AzureFunctionManager
   keyVaultManager: AzureKeyVaultManager
+  resourceGroupManager: AzureResourceGroupManager
   storageManager: AzureStorageManager
 
   constructor(scope: Construct, id: string, props: CommonAzureStackProps) {
@@ -23,6 +30,7 @@ export class CommonAzureConstruct extends TerraformStack {
     this.apiManagementtManager = new AzureApiManagementManager()
     this.functiontManager = new AzureFunctionManager()
     this.keyVaultManager = new AzureKeyVaultManager()
+    this.resourceGroupManager = new AzureResourceGroupManager()
     this.storageManager = new AzureStorageManager()
 
     this.determineFullyQualifiedDomain()

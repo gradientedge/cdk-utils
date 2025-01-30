@@ -1,4 +1,5 @@
 export * from './api-management'
 export * from './function'
 export * from './key-vault'
+export * from './resource-group'
 export * from './storage'

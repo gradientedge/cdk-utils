@@ -44,6 +44,9 @@ export class AzureApiManagementManager {
       ...props,
       name: `${props.name}-${scope.props.stage}`,
       resourceGroupName: resourceGroup.name,
+      tags: props.tags ?? {
+        environment: scope.props.stage,
+      },
     })
 
     createAzureTfOutput(`${id}-apiManagementName`, scope, apiManagement.name)
