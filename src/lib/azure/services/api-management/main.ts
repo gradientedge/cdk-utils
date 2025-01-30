@@ -52,5 +52,7 @@ export class AzureApiManagementManager {
     createAzureTfOutput(`${id}-apiManagementName`, scope, apiManagement.name)
     createAzureTfOutput(`${id}-apiManagementFriendlyUniqueId`, scope, apiManagement.friendlyUniqueId)
     createAzureTfOutput(`${id}-apiManagementId`, scope, apiManagement.id)
+
+    return apiManagement
   }
 }

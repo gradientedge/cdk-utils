@@ -35,7 +35,7 @@ export class AzureKeyVaultManager {
     const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-kv-rg`, {
       name: scope.props.resourceGroupName
         ? `${scope.props.resourceGroupName}-${scope.props.stage}`
-        : `${props.resourceGroupName}-${scope.props.stage}`,
+        : `${props.resourceGroupName}`,
     })
 
     if (!resourceGroup) throw `Resource group undefined for ${id}`
@@ -43,7 +43,9 @@ export class AzureKeyVaultManager {
     const keyVault = new KeyVault(scope, `${id}-kv`, {
       ...props,
       name: `${props.name}-${scope.props.stage}`,
+      location: resourceGroup.location,
       resourceGroupName: resourceGroup.name,
+      skuName: props.skuName ?? 'standard',
       tags: props.tags ?? {
         environment: scope.props.stage,
       },
@@ -52,5 +54,7 @@ export class AzureKeyVaultManager {
     createAzureTfOutput(`${id}-keyVaultName`, scope, keyVault.name)
     createAzureTfOutput(`${id}-keyVaultFriendlyUniqueId`, scope, keyVault.friendlyUniqueId)
     createAzureTfOutput(`${id}-keyVaultId`, scope, keyVault.id)
+
+    return keyVault
   }
 }

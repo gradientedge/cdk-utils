@@ -109,7 +109,7 @@ describe('TestAzureResourceGroupConstruct', () => {
 describe('TestAzureResourceGroupConstruct', () => {
   test('provisions resource group as expected', () => {
     expect(construct).toHaveResourceWithProperties(ResourceGroup, {
-      name: 'test-resource-group-dev',
+      name: 'test-resource-group',
       tags: {
         environment: 'dev',
       },

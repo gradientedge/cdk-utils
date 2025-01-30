@@ -54,6 +54,8 @@ export class AzureFunctionManager {
     createAzureTfOutput(`${id}-functionAppName`, scope, functionApp.name)
     createAzureTfOutput(`${id}-functionAppFriendlyUniqueId`, scope, functionApp.friendlyUniqueId)
     createAzureTfOutput(`${id}-functionAppId`, scope, functionApp.id)
+
+    return functionApp
   }
 
   /**
@@ -87,5 +89,7 @@ export class AzureFunctionManager {
     createAzureTfOutput(`${id}-functionName`, scope, functionAppFunction.name)
     createAzureTfOutput(`${id}-functionFriendlyUniqueId`, scope, functionAppFunction.friendlyUniqueId)
     createAzureTfOutput(`${id}-functionId`, scope, functionAppFunction.id)
+
+    return functionAppFunction
   }
 }

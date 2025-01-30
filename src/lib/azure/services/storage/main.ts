@@ -58,6 +58,8 @@ export class AzureStorageManager {
     createAzureTfOutput(`${id}-storageAccountName`, scope, storageAccount.name)
     createAzureTfOutput(`${id}-storageAccountFriendlyUniqueId`, scope, storageAccount.friendlyUniqueId)
     createAzureTfOutput(`${id}-storageAccountId`, scope, storageAccount.id)
+
+    return storageAccount
   }
 
   /**
@@ -92,6 +94,8 @@ export class AzureStorageManager {
     createAzureTfOutput(`${id}-storageContainerName`, scope, storageContainer.name)
     createAzureTfOutput(`${id}-storageContainerFriendlyUniqueId`, scope, storageContainer.friendlyUniqueId)
     createAzureTfOutput(`${id}-storageContainerId`, scope, storageContainer.id)
+
+    return storageContainer
   }
 
   /**
@@ -132,5 +136,7 @@ export class AzureStorageManager {
     createAzureTfOutput(`${id}-storageBlobName`, scope, storageBlob.name)
     createAzureTfOutput(`${id}-storageBlobFriendlyUniqueId`, scope, storageBlob.friendlyUniqueId)
     createAzureTfOutput(`${id}-storageBlobId`, scope, storageBlob.id)
+
+    return storageBlob
   }
 }

@@ -33,7 +33,8 @@ export class AzureResourceGroupManager {
 
     const resourceGroup = new ResourceGroup(scope, `${id}-rg`, {
       ...props,
-      name: `${props.name}-${scope.props.stage}`,
+      name: props.name,
+      location: props.location,
       tags: props.tags ?? {
         environment: scope.props.stage,
       },
@@ -42,5 +43,7 @@ export class AzureResourceGroupManager {
     createAzureTfOutput(`${id}-resourceGroupName`, scope, resourceGroup.name)
     createAzureTfOutput(`${id}-resourceGroupFriendlyUniqueId`, scope, resourceGroup.friendlyUniqueId)
     createAzureTfOutput(`${id}-resourceGroupId`, scope, resourceGroup.id)
+
+    return resourceGroup
   }
 }

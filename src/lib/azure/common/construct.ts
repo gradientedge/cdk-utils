@@ -1,4 +1,5 @@
 import { AzurermProvider } from '@cdktf/provider-azurerm/lib/provider'
+import { DataAzurermClientConfig } from '@cdktf/provider-azurerm/lib/data-azurerm-client-config'
 import { AzurermBackend, TerraformStack } from 'cdktf'
 import { Construct } from 'constructs'
 import { isDevStage, isPrdStage, isTestStage, isUatStage } from '../../common'
@@ -16,6 +17,7 @@ export class CommonAzureConstruct extends TerraformStack {
   declare props: CommonAzureStackProps
   id: string
   fullyQualifiedDomainName: string
+  tenantId: string
   apiManagementtManager: AzureApiManagementManager
   functiontManager: AzureFunctionManager
   keyVaultManager: AzureKeyVaultManager
@@ -35,6 +37,7 @@ export class CommonAzureConstruct extends TerraformStack {
 
     this.determineFullyQualifiedDomain()
     this.determineRemoteBackend()
+    this.determineTenantId()
     new AzurermProvider(this, `${this.id}-provider`, this.props)
   }
 
@@ -65,6 +68,10 @@ export class CommonAzureConstruct extends TerraformStack {
       default:
         break
     }
+  }
+
+  protected determineTenantId() {
+    this.tenantId = new DataAzurermClientConfig(this, 'current', {}).tenantId
   }
 
   /**
