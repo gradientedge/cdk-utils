@@ -35,9 +35,6 @@ export class CommonAzureStack extends TerraformStack {
     this.determineStageContexts()
 
     this.props = this.determineConstructProps(props)
-
-    /* initialise the construct */
-    this.construct = new CommonAzureConstruct(this, 'cdk-utils', this.props)
   }
 
   /**
