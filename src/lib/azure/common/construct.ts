@@ -1,14 +1,27 @@
 import { AzurermProvider } from '@cdktf/provider-azurerm/lib/provider'
-import { TerraformStack } from 'cdktf'
+import { DataAzurermClientConfig } from '@cdktf/provider-azurerm/lib/data-azurerm-client-config'
+import { AzurermBackend, TerraformStack } from 'cdktf'
 import { Construct } from 'constructs'
 import { isDevStage, isPrdStage, isTestStage, isUatStage } from '../../common'
-import { AzureStorageManager } from '../services'
+import {
+  AzureStorageManager,
+  AzureKeyVaultManager,
+  AzureApiManagementManager,
+  AzureFunctionManager,
+  AzureResourceGroupManager,
+} from '../services'
 import { CommonAzureStackProps } from './types'
+import { AzureRemoteBackend } from './constants'
 
 export class CommonAzureConstruct extends TerraformStack {
   declare props: CommonAzureStackProps
   id: string
   fullyQualifiedDomainName: string
+  tenantId: string
+  apiManagementtManager: AzureApiManagementManager
+  functiontManager: AzureFunctionManager
+  keyVaultManager: AzureKeyVaultManager
+  resourceGroupManager: AzureResourceGroupManager
   storageManager: AzureStorageManager
 
   constructor(scope: Construct, id: string, props: CommonAzureStackProps) {
@@ -16,9 +29,15 @@ export class CommonAzureConstruct extends TerraformStack {
     this.props = props
     this.id = id
 
+    this.apiManagementtManager = new AzureApiManagementManager()
+    this.functiontManager = new AzureFunctionManager()
+    this.keyVaultManager = new AzureKeyVaultManager()
+    this.resourceGroupManager = new AzureResourceGroupManager()
     this.storageManager = new AzureStorageManager()
 
     this.determineFullyQualifiedDomain()
+    this.determineRemoteBackend()
+    this.determineTenantId()
     new AzurermProvider(this, `${this.id}-provider`, this.props)
   }
 
@@ -29,6 +48,30 @@ export class CommonAzureConstruct extends TerraformStack {
     this.fullyQualifiedDomainName = this.props.subDomain
       ? `${this.props.subDomain}.${this.props.domainName}`
       : this.props.domainName
+  }
+
+  protected determineRemoteBackend() {
+    const debug = this.node.tryGetContext('debug')
+    switch (this.props.remoteBackend?.type) {
+      case AzureRemoteBackend.azurerm:
+        new AzurermBackend(this, {
+          storageAccountName: this.props.remoteBackend.storageAccountName,
+          containerName: this.props.remoteBackend.containerName,
+          key: `${this.id}`,
+          subscriptionId: this.props.subscriptionId,
+          resourceGroupName: this.props.remoteBackend.resourceGroupName,
+        })
+        break
+      case AzureRemoteBackend.local:
+        if (debug) console.debug(`Using local backend for ${this.id}`)
+        break
+      default:
+        break
+    }
+  }
+
+  protected determineTenantId() {
+    this.tenantId = new DataAzurermClientConfig(this, 'current', {}).tenantId
   }
 
   /**
