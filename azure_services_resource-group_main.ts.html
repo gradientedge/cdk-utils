@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>azure/services/resource-group/main.ts - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="main.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <script src="scripts/commonNav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">azure/services/resource-group/main.ts</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { ResourceGroup } from '@cdktf/provider-azurerm/lib/resource-group'
+import { CommonAzureConstruct } from '../../common'
+import { createAzureTfOutput } from '../../utils'
+import { ResourceGroupProps } from './types'
+
+/**
+ * @classdesc Provides operations on Azure Resource Group
+ * - A new instance of this class is injected into {@link CommonAzureConstruct} constructor.
+ * - If a custom construct extends {@link CommonAzureConstruct}, an instance is available within the context.
+ * @example
+ * ```
+ * import { CommonAzureConstruct, CommonAzureStackProps } from '@gradientedge/cdk-utils'
+ *
+ * class CustomConstruct extends CommonAzureConstruct {
+ *   constructor(parent: Construct, id: string, props: CommonAzureStackProps) {
+ *     super(parent, id, props)
+ *     this.props = props
+ *     this.resourceGroupManager.createResourceGroup('MyResourceGroup', this, props)
+ *   }
+ * }
+ * ```
+ */
+export class AzureResourceGroupManager {
+  /**
+   * @summary Method to create a new resource group
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props resource group properties
+   * @see [CDKTF Resource Group Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/resourceGroup.typescript.md}
+   */
+  public createResourceGroup(id: string, scope: CommonAzureConstruct, props: ResourceGroupProps) {
+    if (!props) throw `Props undefined for ${id}`
+
+    const resourceGroup = new ResourceGroup(scope, `${id}-rg`, {
+      ...props,
+      name: props.name,
+      location: props.location,
+      tags: props.tags ?? {
+        environment: scope.props.stage,
+      },
+    })
+
+    createAzureTfOutput(`${id}-resourceGroupName`, scope, resourceGroup.name)
+    createAzureTfOutput(`${id}-resourceGroupFriendlyUniqueId`, scope, resourceGroup.friendlyUniqueId)
+    createAzureTfOutput(`${id}-resourceGroupId`, scope, resourceGroup.id)
+
+    return resourceGroup
+  }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+    
+</div>
+
+<br class="clear">
+
+<footer>
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>
