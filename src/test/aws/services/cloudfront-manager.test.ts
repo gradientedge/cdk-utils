@@ -205,7 +205,7 @@ describe('TestCloudFrontConstruct', () => {
       FunctionName: 'cdktest-test-lambda-edge-test',
       Handler: 'index.handler',
       MemorySize: 1024,
-      Runtime: 'nodejs18.x',
+      Runtime: 'nodejs22.x',
       Timeout: 60,
     })
   })
@@ -300,7 +300,7 @@ describe('TestCloudFrontConstruct', () => {
               {
                 EventType: 'origin-request',
                 LambdaFunctionARN: {
-                  Ref: 'testcommonstacktestlambdaedgeFnCurrentVersionD68B801Daa6ec2aab0c234c49749004561f3a62d',
+                  Ref: 'testcommonstacktestlambdaedgeFnCurrentVersionD68B801D9d6108a98f70ba4470b66b29067e19fe',
                 },
               },
             ],

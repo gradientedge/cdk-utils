@@ -230,7 +230,7 @@ describe('TestApiToEventBridgeTargetWithSnsConstruct', () => {
       FunctionName: 'cdktest-test-api-destined-test',
       Handler: 'lambda.handler',
       MemorySize: 1024,
-      Runtime: 'nodejs18.x',
+      Runtime: 'nodejs22.x',
       Timeout: 60,
     })
   })

@@ -220,7 +220,7 @@ describe('TestRestApiLambdaConstruct', () => {
       FunctionName: 'cdktest-test-restapi-server-test',
       Handler: 'index.handler',
       MemorySize: 1024,
-      Runtime: 'nodejs18.x',
+      Runtime: 'nodejs22.x',
       Timeout: 300,
     })
   })
