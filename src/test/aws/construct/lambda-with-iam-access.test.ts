@@ -114,7 +114,7 @@ describe('TestLambdaWithIamAccess', () => {
       Role: {
         'Fn::GetAtt': ['testlambdawithiamaccessstacktestlambdawithiamlambdarole5E03F475', 'Arn'],
       },
-      Runtime: 'nodejs18.x',
+      Runtime: 'nodejs22.x',
       Tags: [
         {
           Key: 'testTagName1',

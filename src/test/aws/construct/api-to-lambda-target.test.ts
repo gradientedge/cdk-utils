@@ -254,7 +254,7 @@ describe('TestApiToLambdaTargetConstruct', () => {
       Role: {
         'Fn::GetAtt': ['testapitoebstacktestroleD9D398F5', 'Arn'],
       },
-      Runtime: 'nodejs18.x',
+      Runtime: 'nodejs22.x',
       Tags: [
         {
           Key: 'testTagName1',

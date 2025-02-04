@@ -75,7 +75,7 @@ jobs:
     needs: [validate]
     strategy:
       matrix:
-        node-version: [20.x]
+        node-version: [22.x]
     env:
       GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
       NODE_AUTH_TOKEN: ${{ secrets.GIT_TOKEN }}
