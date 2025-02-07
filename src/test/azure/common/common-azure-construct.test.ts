@@ -165,7 +165,7 @@ describe('TestAzureCommonConstruct', () => {
     expect(construct).toHaveResourceWithProperties(StorageAccount, {
       account_tier: 'Standard',
       location: '${data.azurerm_resource_group.test-storage-account-dev-sc-rg.location}',
-      name: 'test-storage-account-dev',
+      name: 'teststorageaccountdev',
       resource_group_name: '${data.azurerm_resource_group.test-storage-account-dev-sc-rg.name}',
       tags: {
         environment: 'dev',

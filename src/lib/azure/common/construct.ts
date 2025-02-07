@@ -9,6 +9,7 @@ import {
   AzureApiManagementManager,
   AzureFunctionManager,
   AzureResourceGroupManager,
+  AzureAppServiceManager,
 } from '../services'
 import { CommonAzureStackProps } from './types'
 import { AzureRemoteBackend } from './constants'
@@ -19,6 +20,7 @@ export class CommonAzureConstruct extends TerraformStack {
   fullyQualifiedDomainName: string
   tenantId: string
   apiManagementtManager: AzureApiManagementManager
+  appServiceManager: AzureAppServiceManager
   functiontManager: AzureFunctionManager
   keyVaultManager: AzureKeyVaultManager
   resourceGroupManager: AzureResourceGroupManager
@@ -30,6 +32,7 @@ export class CommonAzureConstruct extends TerraformStack {
     this.id = id
 
     this.apiManagementtManager = new AzureApiManagementManager()
+    this.appServiceManager = new AzureAppServiceManager()
     this.functiontManager = new AzureFunctionManager()
     this.keyVaultManager = new AzureKeyVaultManager()
     this.resourceGroupManager = new AzureResourceGroupManager()

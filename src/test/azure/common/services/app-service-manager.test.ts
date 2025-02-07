@@ -1,25 +1,17 @@
-import { LinuxFunctionApp } from '@cdktf/provider-azurerm/lib/linux-function-app'
-import { FunctionAppFunction } from '@cdktf/provider-azurerm/lib/function-app-function'
+import { ServicePlan } from '@cdktf/provider-azurerm/lib/service-plan'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
 import { Construct } from 'constructs'
-import {
-  CommonAzureConstruct,
-  CommonAzureStack,
-  CommonAzureStackProps,
-  FunctionAppProps,
-  FunctionProps,
-} from '../../../../lib'
+import { CommonAzureConstruct, CommonAzureStack, CommonAzureStackProps, ServicePlanProps } from '../../../../lib'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
-  testFunctionApp: FunctionAppProps
-  testFunction: FunctionProps
+  testAppServicePlan: ServicePlanProps
   testAttribute?: string
 }
 
 const testStackProps: any = {
   domainName: 'gradientedge.io',
-  extraContexts: ['src/test/azure/common/cdkConfig/dummy.json', 'src/test/azure/common/cdkConfig/functions.json'],
+  extraContexts: ['src/test/azure/common/cdkConfig/dummy.json', 'src/test/azure/common/cdkConfig/app-service.json'],
   features: {},
   name: 'test-common-stack',
   resourceGroupName: 'test-rg',
@@ -40,8 +32,7 @@ class TestCommonStack extends CommonAzureStack {
     return {
       ...super.determineConstructProps(props),
       testAttribute: this.node.tryGetContext('testAttribute'),
-      testFunctionApp: this.node.tryGetContext('testFunctionApp'),
-      testFunction: this.node.tryGetContext('testFunction'),
+      testAppServicePlan: this.node.tryGetContext('testAppServicePlan'),
     }
   }
 }
@@ -61,8 +52,11 @@ class TestCommonConstruct extends CommonAzureConstruct {
 
   constructor(parent: Construct, name: string, props: TestAzureStackProps) {
     super(parent, name, props)
-    this.functiontManager.createFunctionApp(`test-function-app-${this.props.stage}`, this, this.props.testFunctionApp)
-    this.functiontManager.createFunction(`test-function-${this.props.stage}`, this, this.props.testFunction)
+    this.appServiceManager.createAppServicePlan(
+      `test-app-service-plan-${this.props.stage}`,
+      this,
+      this.props.testAppServicePlan
+    )
   }
 }
 
@@ -72,14 +66,16 @@ const commonStack = new TestCommonStack(testingApp, 'test-common-stack', testSta
 const stack = Testing.fullSynth(commonStack)
 const construct = Testing.synth(commonStack.construct)
 
-describe('TestAzureFunctionAppConstruct', () => {
+console.log(expect(construct).toHaveResourceWithProperties(ServicePlan, {}))
+
+describe('TestAzureAppServicePlanConstruct', () => {
   test('handles mis-configurations as expected', () => {
     const error = () => new TestInvalidCommonStack(app, 'test-invalid-stack', testStackProps)
-    expect(error).toThrow('Props undefined for test-function-app-dev')
+    expect(error).toThrow('Props undefined for test-app-service-plan-dev')
   })
 })
 
-describe('TestAzureFunctionAppConstruct', () => {
+describe('TestAzureAppServicePlanConstruct', () => {
   test('is initialised as expected', () => {
     /* test if the created stack have the right properties injected */
     expect(commonStack.props).toHaveProperty('testAttribute')
@@ -87,7 +83,7 @@ describe('TestAzureFunctionAppConstruct', () => {
   })
 })
 
-describe('TestAzureFunctionAppConstruct', () => {
+describe('TestAzureAppServicePlanConstruct', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
     expect(construct).toBeDefined()
@@ -96,44 +92,27 @@ describe('TestAzureFunctionAppConstruct', () => {
   })
 })
 
-describe('TestAzureFunctionAppConstruct', () => {
+describe('TestAzureAppServicePlanConstruct', () => {
   test('provisions outputs as expected', () => {
     expect(JSON.parse(construct).output).toMatchObject({
-      testFunctionAppDevFunctionAppFriendlyUniqueId: {
-        value: 'test-function-app-dev-fa',
+      testAppServicePlanDevAppServicePlanFriendlyUniqueId: {
+        value: 'test-app-service-plan-dev-am',
       },
-      testFunctionAppDevFunctionAppId: {
-        value: '${azurerm_linux_function_app.test-function-app-dev-fa.id}',
+      testAppServicePlanDevAppServicePlanId: {
+        value: '${azurerm_service_plan.test-app-service-plan-dev-am.id}',
       },
-      testFunctionAppDevFunctionAppName: {
-        value: '${azurerm_linux_function_app.test-function-app-dev-fa.name}',
-      },
-      testFunctionDevFunctionFriendlyUniqueId: {
-        value: 'test-function-dev-fc',
-      },
-      testFunctionDevFunctionId: {
-        value: '${azurerm_function_app_function.test-function-dev-fc.id}',
-      },
-      testFunctionDevFunctionName: {
-        value: '${azurerm_function_app_function.test-function-dev-fc.name}',
+      testAppServicePlanDevAppServicePlanName: {
+        value: '${azurerm_service_plan.test-app-service-plan-dev-am.name}',
       },
     })
   })
 })
 
-describe('TestAzureFunctionAppConstruct', () => {
-  test('provisions function app as expected', () => {
-    expect(construct).toHaveResourceWithProperties(LinuxFunctionApp, {
-      name: 'test-function-app-dev',
-      resource_group_name: '${data.azurerm_resource_group.test-function-app-dev-fa-rg.name}',
-    })
-  })
-})
-
-describe('TestAzureFunctionConstruct', () => {
-  test('provisions function as expected', () => {
-    expect(construct).toHaveResourceWithProperties(FunctionAppFunction, {
-      name: 'test-function-dev',
+describe('TestAzureAppServicePlanConstruct', () => {
+  test('provisions api management as expected', () => {
+    expect(construct).toHaveResourceWithProperties(ServicePlan, {
+      name: 'test-app-service-plan-dev',
+      resource_group_name: '${data.azurerm_resource_group.test-app-service-plan-dev-am-rg.name}',
     })
   })
 })
