@@ -21,8 +21,8 @@ importers:
         specifier: ^19.50.0
         version: 19.50.0(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2)
       '@cdktf/provider-azurerm':
-        specifier: ^13.17.0
-        version: 13.17.0(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2)
+        specifier: ^13.17.1
+        version: 13.17.1(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2)
       '@cdktf/provider-cloudflare':
         specifier: ^11.29.0
         version: 11.29.0(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2)
@@ -560,8 +560,8 @@ packages:
       cdktf: ^0.20.0
       constructs: ^10.3.0
 
-  '@cdktf/provider-azurerm@13.17.0':
-    resolution: {integrity: sha512-lYd4D0AZWMAW9GeCpTJ/UChhqYHKNhfTzV0yUBOtNeTgFJRSNu8kmdDZHO29WoxsWBlbX3pneaki7WKgQYIx7Q==}
+  '@cdktf/provider-azurerm@13.17.1':
+    resolution: {integrity: sha512-e3TS+V59FDleu/jQk4bJ7XEQrCZxXhJ3rf2/ILlnIjIRwZil0z3rF/fFDa3L94/VeNCa4tzC+9+0dgBkFHKYJQ==}
     engines: {node: '>= 18.12.0'}
     peerDependencies:
       cdktf: ^0.20.0
@@ -3109,9 +3109,11 @@ packages:
 
   lodash.get@4.4.2:
     resolution: {integrity: sha512-z+Uw/vLuy6gQe8cfaFWD7p0wVv8fJl3mbzXh33RS+0oW2wvUqiRXiQ69gLWSLpgB5/6sU+r6BlQR0MBILadqTQ==}
+    deprecated: This package is deprecated. Use the optional chaining (?.) operator instead.
 
   lodash.isequal@4.5.0:
     resolution: {integrity: sha512-pDo3lu8Jhfjqls6GkMgpahsF9kCyayhgykjyLMNFTKWrpVdAQtYyB4muAMWozBB4ig/dtWAmsMxLEI8wuz+DYQ==}
+    deprecated: This package is deprecated. Use require('node:util').isDeepStrictEqual instead.
 
   lodash.isplainobject@4.0.6:
     resolution: {integrity: sha512-oSXzaWypCMHkPC3NvBEaPHf0KsA5mvPrOPgQWDsbg8n7orZ290M0BmC/jgRZ4vcJ6DTAhjrsSYgdsW/F+MFOBA==}
@@ -3133,6 +3135,7 @@ packages:
 
   lodash.omit@4.5.0:
     resolution: {integrity: sha512-XeqSp49hNGmlkj2EJlfrQFIzQ6lXdNro9sddtQzcJY8QaoC2GO0DT7xaIokHeyM+mIT0mPMlPvkYzg2xCuHdZg==}
+    deprecated: This package is deprecated. Use destructuring assignment syntax instead.
 
   lodash.uniq@4.5.0:
     resolution: {integrity: sha512-xfBaXQd9ryd9dlSDvnvI0lvxfLJlYAZzXomUYzLKtUeOQvOP5piqAWuGtrhWeqaXK9hhoM/iyJc5AV+XfsX3HQ==}
@@ -5301,7 +5304,7 @@ snapshots:
       cdktf: 0.20.11(constructs@10.4.2)
       constructs: 10.4.2
 
-  '@cdktf/provider-azurerm@13.17.0(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2)':
+  '@cdktf/provider-azurerm@13.17.1(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2)':
     dependencies:
       cdktf: 0.20.11(constructs@10.4.2)
       constructs: 10.4.2
