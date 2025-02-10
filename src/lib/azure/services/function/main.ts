@@ -70,7 +70,7 @@ export class AzureFunctionManager {
     const functionAppFunction = new FunctionAppFunction(scope, `${id}-fc`, {
       ...props,
       name: `${props.name}-${scope.props.stage}`,
-      configJson: JSON.stringify(props.configJson || {})
+      configJson: JSON.stringify(props.configJson || {}),
     })
 
     createAzureTfOutput(`${id}-functionName`, scope, functionAppFunction.name)
