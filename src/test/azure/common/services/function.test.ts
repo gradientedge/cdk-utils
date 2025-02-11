@@ -1,4 +1,4 @@
-import { FunctionApp } from '@cdktf/provider-azurerm/lib/function-app'
+import { LinuxFunctionApp } from '@cdktf/provider-azurerm/lib/linux-function-app'
 import { FunctionAppFunction } from '@cdktf/provider-azurerm/lib/function-app-function'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
@@ -103,10 +103,10 @@ describe('TestAzureFunctionAppConstruct', () => {
         value: 'test-function-app-dev-fa',
       },
       testFunctionAppDevFunctionAppId: {
-        value: '${azurerm_function_app.test-function-app-dev-fa.id}',
+        value: '${azurerm_linux_function_app.test-function-app-dev-fa.id}',
       },
       testFunctionAppDevFunctionAppName: {
-        value: '${azurerm_function_app.test-function-app-dev-fa.name}',
+        value: '${azurerm_linux_function_app.test-function-app-dev-fa.name}',
       },
       testFunctionDevFunctionFriendlyUniqueId: {
         value: 'test-function-dev-fc',
@@ -123,7 +123,7 @@ describe('TestAzureFunctionAppConstruct', () => {
 
 describe('TestAzureFunctionAppConstruct', () => {
   test('provisions function app as expected', () => {
-    expect(construct).toHaveResourceWithProperties(FunctionApp, {
+    expect(construct).toHaveResourceWithProperties(LinuxFunctionApp, {
       name: 'test-function-app-dev',
       resource_group_name: '${data.azurerm_resource_group.test-function-app-dev-fa-rg.name}',
     })

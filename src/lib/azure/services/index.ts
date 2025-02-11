@@ -1,4 +1,7 @@
 export * from './api-management'
+export * from './app-configuration'
+export * from './app-service'
+export * from './application-insights'
 export * from './function'
 export * from './key-vault'
 export * from './resource-group'

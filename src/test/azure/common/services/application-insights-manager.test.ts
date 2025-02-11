@@ -1,17 +1,25 @@
-import { ApiManagement } from '@cdktf/provider-azurerm/lib/api-management'
+import { ApplicationInsights } from '@cdktf/provider-azurerm/lib/application-insights'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
 import { Construct } from 'constructs'
-import { CommonAzureConstruct, CommonAzureStack, CommonAzureStackProps, ApiManagementProps } from '../../../../lib'
+import {
+  CommonAzureConstruct,
+  CommonAzureStack,
+  CommonAzureStackProps,
+  ApplicationInsightsProps,
+} from '../../../../lib'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
-  testApiManagement: ApiManagementProps
+  testApplicationInsights: ApplicationInsightsProps
   testAttribute?: string
 }
 
 const testStackProps: any = {
   domainName: 'gradientedge.io',
-  extraContexts: ['src/test/azure/common/cdkConfig/dummy.json', 'src/test/azure/common/cdkConfig/api-management.json'],
+  extraContexts: [
+    'src/test/azure/common/cdkConfig/dummy.json',
+    'src/test/azure/common/cdkConfig/application-insights.json',
+  ],
   features: {},
   name: 'test-common-stack',
   resourceGroupName: 'test-rg',
@@ -32,7 +40,7 @@ class TestCommonStack extends CommonAzureStack {
     return {
       ...super.determineConstructProps(props),
       testAttribute: this.node.tryGetContext('testAttribute'),
-      testApiManagement: this.node.tryGetContext('testApiManagement'),
+      testApplicationInsights: this.node.tryGetContext('testApplicationInsights'),
     }
   }
 }
@@ -52,10 +60,10 @@ class TestCommonConstruct extends CommonAzureConstruct {
 
   constructor(parent: Construct, name: string, props: TestAzureStackProps) {
     super(parent, name, props)
-    this.apiManagementManager.createApiManagement(
-      `test-api-management-${this.props.stage}`,
+    this.applicationInsightsManager.createApplicationInsights(
+      `test-application-insights-${this.props.stage}`,
       this,
-      this.props.testApiManagement
+      this.props.testApplicationInsights
     )
   }
 }
@@ -66,16 +74,16 @@ const commonStack = new TestCommonStack(testingApp, 'test-common-stack', testSta
 const stack = Testing.fullSynth(commonStack)
 const construct = Testing.synth(commonStack.construct)
 
-console.log(expect(construct).toHaveResourceWithProperties(ApiManagement, {}))
+console.log(expect(construct).toHaveResourceWithProperties(ApplicationInsights, {}))
 
-describe('TestAzureApiManagementConstruct', () => {
+describe('TestAzureApplicationInsightsConstruct', () => {
   test('handles mis-configurations as expected', () => {
     const error = () => new TestInvalidCommonStack(app, 'test-invalid-stack', testStackProps)
-    expect(error).toThrow('Props undefined for test-api-management-dev')
+    expect(error).toThrow('Props undefined for test-application-insights-dev')
   })
 })
 
-describe('TestAzureApiManagementConstruct', () => {
+describe('TestAzureApplicationInsightsConstruct', () => {
   test('is initialised as expected', () => {
     /* test if the created stack have the right properties injected */
     expect(commonStack.props).toHaveProperty('testAttribute')
@@ -83,7 +91,7 @@ describe('TestAzureApiManagementConstruct', () => {
   })
 })
 
-describe('TestAzureApiManagementConstruct', () => {
+describe('TestAzureApplicationInsightsConstruct', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
     expect(construct).toBeDefined()
@@ -92,27 +100,27 @@ describe('TestAzureApiManagementConstruct', () => {
   })
 })
 
-describe('TestAzureApiManagementConstruct', () => {
+describe('TestAzureApplicationInsightsConstruct', () => {
   test('provisions outputs as expected', () => {
     expect(JSON.parse(construct).output).toMatchObject({
-      testApiManagementDevApiManagementFriendlyUniqueId: {
-        value: 'test-api-management-dev-am',
+      testApplicationInsightsDevApplicationInsightsFriendlyUniqueId: {
+        value: 'test-application-insights-dev-am',
       },
-      testApiManagementDevApiManagementId: {
-        value: '${azurerm_api_management.test-api-management-dev-am.id}',
+      testApplicationInsightsDevApplicationInsightsId: {
+        value: '${azurerm_application_insights.test-application-insights-dev-am.id}',
       },
-      testApiManagementDevApiManagementName: {
-        value: '${azurerm_api_management.test-api-management-dev-am.name}',
+      testApplicationInsightsDevApplicationInsightsName: {
+        value: '${azurerm_application_insights.test-application-insights-dev-am.name}',
       },
     })
   })
 })
 
-describe('TestAzureApiManagementConstruct', () => {
+describe('TestAzureApplicationInsightsConstruct', () => {
   test('provisions api management as expected', () => {
-    expect(construct).toHaveResourceWithProperties(ApiManagement, {
-      name: 'test-api-management-dev',
-      resource_group_name: '${data.azurerm_resource_group.test-api-management-dev-am-rg.name}',
+    expect(construct).toHaveResourceWithProperties(ApplicationInsights, {
+      name: 'test-application-insights-dev',
+      resource_group_name: '${data.azurerm_resource_group.test-application-insights-dev-am-rg.name}',
     })
   })
 })

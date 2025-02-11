@@ -1,6 +1,5 @@
 import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group'
-import { DataAzurermFunctionApp } from '@cdktf/provider-azurerm/lib/data-azurerm-function-app'
-import { FunctionApp } from '@cdktf/provider-azurerm/lib/function-app'
+import { LinuxFunctionApp } from '@cdktf/provider-azurerm/lib/linux-function-app'
 import { FunctionAppFunction } from '@cdktf/provider-azurerm/lib/function-app-function'
 import { CommonAzureConstruct } from '../../common'
 import { createAzureTfOutput } from '../../utils'
@@ -37,12 +36,12 @@ export class AzureFunctionManager {
     const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-fa-rg`, {
       name: scope.props.resourceGroupName
         ? `${scope.props.resourceGroupName}-${scope.props.stage}`
-        : `${props.resourceGroupName}-${scope.props.stage}`,
+        : `${props.resourceGroupName}`,
     })
 
     if (!resourceGroup) throw `Resource group undefined for ${id}`
 
-    const functionApp = new FunctionApp(scope, `${id}-fa`, {
+    const functionApp = new LinuxFunctionApp(scope, `${id}-fa`, {
       ...props,
       name: `${props.name}-${scope.props.stage}`,
       resourceGroupName: resourceGroup.name,
@@ -68,22 +67,10 @@ export class AzureFunctionManager {
   public createFunction(id: string, scope: CommonAzureConstruct, props: FunctionProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-sb-rg`, {
-      name: scope.props.resourceGroupName
-        ? `${scope.props.resourceGroupName}-${scope.props.stage}`
-        : `${props.resourceGroupName}-${scope.props.stage}`,
-    })
-
-    if (!resourceGroup) throw `Resource group undefined for ${id}`
-
-    const storageAccount = new DataAzurermFunctionApp(scope, `${id}-sa`, {
-      name: `${props.functionAppName}-${scope.props.stage}`,
-      resourceGroupName: resourceGroup.name,
-    })
-
     const functionAppFunction = new FunctionAppFunction(scope, `${id}-fc`, {
       ...props,
       name: `${props.name}-${scope.props.stage}`,
+      configJson: JSON.stringify(props.configJson || {}),
     })
 
     createAzureTfOutput(`${id}-functionName`, scope, functionAppFunction.name)

@@ -39,7 +39,7 @@ export class AzureStorageManager {
     const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-sc-rg`, {
       name: scope.props.resourceGroupName
         ? `${scope.props.resourceGroupName}-${scope.props.stage}`
-        : `${props.resourceGroupName}-${scope.props.stage}`,
+        : `${props.resourceGroupName}`,
     })
 
     if (!resourceGroup) throw `Resource group undefined for ${id}`
@@ -48,7 +48,7 @@ export class AzureStorageManager {
       ...props,
       accountTier: props.accountTier ?? 'Standard',
       location: props.location ?? resourceGroup.location,
-      name: `${props.name}-${scope.props.stage}`,
+      name: `${props.name}-${scope.props.stage}`.replace(/\W/g, '').toLowerCase(),
       resourceGroupName: resourceGroup.name,
       tags: props.tags ?? {
         environment: scope.props.stage,
@@ -75,7 +75,7 @@ export class AzureStorageManager {
     const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-sc-rg`, {
       name: scope.props.resourceGroupName
         ? `${scope.props.resourceGroupName}-${scope.props.stage}`
-        : `${props.resourceGroupName}-${scope.props.stage}`,
+        : `${props.resourceGroupName}`,
     })
 
     if (!resourceGroup) throw `Resource group undefined for ${id}`
@@ -111,7 +111,7 @@ export class AzureStorageManager {
     const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-sb-rg`, {
       name: scope.props.resourceGroupName
         ? `${scope.props.resourceGroupName}-${scope.props.stage}`
-        : `${props.resourceGroupName}-${scope.props.stage}`,
+        : `${props.resourceGroupName}`,
     })
 
     if (!resourceGroup) throw `Resource group undefined for ${id}`
