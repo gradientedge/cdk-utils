@@ -1,11 +1,24 @@
 import { ApiManagement } from '@cdktf/provider-azurerm/lib/api-management'
+import { ApiManagementApi } from '@cdktf/provider-azurerm/lib/api-management-api'
+import { ApiManagementBackend } from '@cdktf/provider-azurerm/lib/api-management-backend'
+import { ApiManagementApiOperation } from '@cdktf/provider-azurerm/lib/api-management-api-operation'
+import { ApiManagementApiOperationPolicy } from '@cdktf/provider-azurerm/lib/api-management-api-operation-policy'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
 import { Construct } from 'constructs'
-import { CommonAzureConstruct, CommonAzureStack, CommonAzureStackProps, ApiManagementProps } from '../../../../lib'
+import {
+  CommonAzureConstruct,
+  CommonAzureStack,
+  CommonAzureStackProps,
+  ApiManagementProps,
+  ApiManagementBackendProps,
+  ApiManagementApiProps,
+} from '../../../../lib'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
   testApiManagement: ApiManagementProps
+  testApiManagementBackend: ApiManagementBackendProps
+  testApiManagementApi: ApiManagementApiProps
   testAttribute?: string
 }
 
@@ -33,6 +46,8 @@ class TestCommonStack extends CommonAzureStack {
       ...super.determineConstructProps(props),
       testAttribute: this.node.tryGetContext('testAttribute'),
       testApiManagement: this.node.tryGetContext('testApiManagement'),
+      testApiManagementBackend: this.node.tryGetContext('testApiManagementBackend'),
+      testApiManagementApi: this.node.tryGetContext('testApiManagementApi'),
     }
   }
 }
@@ -49,14 +64,52 @@ class TestInvalidCommonStack extends CommonAzureStack {
 
 class TestCommonConstruct extends CommonAzureConstruct {
   declare props: TestAzureStackProps
+  apiManagement: ApiManagement
+  apiManagementBackend: ApiManagementBackend
 
   constructor(parent: Construct, name: string, props: TestAzureStackProps) {
     super(parent, name, props)
-    this.apiManagementManager.createApiManagement(
+    this.apiManagement = this.apiManagementManager.createApiManagement(
       `test-api-management-${this.props.stage}`,
       this,
       this.props.testApiManagement
     )
+
+    this.apiManagementBackend = this.apiManagementManager.createApiManagementBackend(
+      `test-api-management-${this.props.stage}`,
+      this,
+      {
+        ...this.props.testApiManagementBackend,
+        apiManagementName: this.apiManagement.name,
+        resourceGroupName: this.apiManagement.resourceGroupName,
+      }
+    )
+
+    const policyXmlContent = `<policies>
+          <inbound>
+              <base />
+              <set-backend-service id="apim-generated-policy" backend-id="${this.apiManagementBackend.name}" />
+          </inbound>
+          <backend>
+              <base />
+          </backend>
+          <outbound>
+              <base />
+          </outbound>
+          <on-error>
+              <base />
+          </on-error>
+        </policies>`
+
+    this.apiManagementManager.createApiManagementApi(`test-api-management-${this.props.stage}`, this, {
+      ...this.props.testApiManagementApi,
+      apiManagementName: this.apiManagement.name,
+      resourceGroupName: this.apiManagement.resourceGroupName,
+      operations: [
+        { path: 'test', method: 'get', xmlContent: policyXmlContent },
+        { path: 'test', method: 'post', xmlContent: policyXmlContent },
+      ],
+    })
   }
 }
 
@@ -104,6 +157,22 @@ describe('TestAzureApiManagementConstruct', () => {
       testApiManagementDevApiManagementName: {
         value: '${azurerm_api_management.test-api-management-dev-am.name}',
       },
+      testApiManagementDevApiManagementApiFriendlyUniqueId: {
+        value: 'test-api-management-dev-am-api',
+      },
+      testApiManagementDevApiManagementApiId: {
+        value: '${azurerm_api_management_api.test-api-management-dev-am-api.id}',
+      },
+      testApiManagementDevApiManagementApiName: {
+        value: '${azurerm_api_management_api.test-api-management-dev-am-api.name}',
+      },
+      testApiManagementDevTestGetApimOperationPolicyFriendlyUniqueId: {
+        value: 'test-api-management-dev-apim-api-operation-policy-test-get',
+      },
+      testApiManagementDevTestGetApimOperationPolicyId: {
+        value:
+          '${azurerm_api_management_api_operation_policy.test-api-management-dev-apim-api-operation-policy-test-get.id}',
+      },
     })
   })
 })
@@ -113,6 +182,60 @@ describe('TestAzureApiManagementConstruct', () => {
     expect(construct).toHaveResourceWithProperties(ApiManagement, {
       name: 'test-api-management-dev',
       resource_group_name: '${data.azurerm_resource_group.test-api-management-dev-am-rg.name}',
+    })
+  })
+})
+
+describe('TestAzureApiManagementConstruct', () => {
+  test('provisions api management api as expected', () => {
+    expect(construct).toHaveResourceWithProperties(ApiManagementApi, {
+      api_management_name: '${azurerm_api_management.test-api-management-dev-am.name}',
+      display_name: 'test-api-management-api',
+      name: 'test-api-management-api-dev',
+      protocols: ['https'],
+      resource_group_name: '${azurerm_api_management.test-api-management-dev-am.resource_group_name}',
+      revision: '1',
+      subscription_required: false,
+    })
+  })
+})
+
+describe('TestAzureApiManagementConstruct', () => {
+  test('provisions api management backend as expected', () => {
+    expect(construct).toHaveResourceWithProperties(ApiManagementBackend, {
+      api_management_name: '${azurerm_api_management.test-api-management-dev-am.name}',
+      description: 'Backend for test-api-management-backend-dev',
+      name: 'test-api-management-backend-dev',
+      protocol: 'http',
+      resource_group_name: '${azurerm_api_management.test-api-management-dev-am.resource_group_name}',
+    })
+  })
+})
+
+describe('TestAzureApiManagementConstruct', () => {
+  test('provisions api management api operation as expected', () => {
+    expect(construct).toHaveResourceWithProperties(ApiManagementApiOperation, {
+      api_management_name: '${azurerm_api_management_api.test-api-management-dev-am-api.api_management_name}',
+      api_name: '${azurerm_api_management_api.test-api-management-dev-am-api.name}',
+      display_name: '/test',
+      method: 'GET',
+      operation_id: 'test-get',
+      resource_group_name: '${azurerm_api_management_api.test-api-management-dev-am-api.resource_group_name}',
+      url_template: '/test',
+    })
+  })
+})
+
+describe('TestAzureApiManagementConstruct', () => {
+  test('provisions api management api operation as expected', () => {
+    expect(construct).toHaveResourceWithProperties(ApiManagementApiOperationPolicy, {
+      api_management_name: '${azurerm_api_management_api.test-api-management-dev-am-api.api_management_name}',
+      api_name: '${azurerm_api_management_api.test-api-management-dev-am-api.name}',
+      operation_id:
+        '${azurerm_api_management_api_operation.test-api-management-dev-apim-api-operation-test-get.operation_id}',
+      resource_group_name: '${azurerm_api_management_api.test-api-management-dev-am-api.resource_group_name}',
+      xml_content:
+        '<policies>\n          <inbound>\n              <base />\n              <set-backend-service id="apim-generated-policy" backend-id="${azurerm_api_management_backend.test-api-management-dev-am-be.name}" />\n          </inbound>\n          <backend>\n              <base />\n          </backend>\n          <outbound>\n              <base />\n          </outbound>\n          <on-error>\n              <base />\n          </on-error>\n        </policies>',
     })
   })
 })
