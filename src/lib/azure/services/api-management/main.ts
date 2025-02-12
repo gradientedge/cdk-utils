@@ -8,6 +8,10 @@ import { ApiManagement } from '@cdktf/provider-azurerm/lib/api-management'
 import { ApiManagementApi } from '@cdktf/provider-azurerm/lib/api-management-api'
 import { ApiManagementApiOperation } from '@cdktf/provider-azurerm/lib/api-management-api-operation'
 import { ApiManagementApiOperationPolicy } from '@cdktf/provider-azurerm/lib/api-management-api-operation-policy'
+import {
+  ApiManagementLogger,
+  ApiManagementLoggerApplicationInsights,
+} from '@cdktf/provider-azurerm/lib/api-management-logger'
 import { CommonAzureConstruct } from '../../common'
 import { createAzureTfOutput } from '../../utils'
 import { ApiManagementProps, ApiManagementBackendProps, ApiManagementApiProps } from './types'
@@ -38,7 +42,12 @@ export class AzureApiManagementManager {
    * @param props api management properties
    * @see [CDKTF Api management Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/apiManagement.typescript.md}
    */
-  public createApiManagement(id: string, scope: CommonAzureConstruct, props: ApiManagementProps) {
+  public createApiManagement(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: ApiManagementProps,
+    applicationInsightsKey?: ApiManagementLoggerApplicationInsights['instrumentationKey']
+  ) {
     if (!props) throw `Props undefined for ${id}`
 
     const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-am-rg`, {
@@ -57,6 +66,17 @@ export class AzureApiManagementManager {
         environment: scope.props.stage,
       },
     })
+
+    if (applicationInsightsKey) {
+      new ApiManagementLogger(scope, `${id}-am-logger`, {
+        name: `${props.name}-${scope.props.stage}`,
+        resourceGroupName: resourceGroup.name,
+        apiManagementName: apiManagement.name,
+        applicationInsights: {
+          instrumentationKey: applicationInsightsKey,
+        },
+      })
+    }
 
     createAzureTfOutput(`${id}-apiManagementName`, scope, apiManagement.name)
     createAzureTfOutput(`${id}-apiManagementFriendlyUniqueId`, scope, apiManagement.friendlyUniqueId)
