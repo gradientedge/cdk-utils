@@ -154,7 +154,7 @@ export class AzureApiManagementManager {
       displayName: props.displayName || props.name,
       revision: props.revision || '1',
       protocols: props.protocols || ['https'],
-      subscriptionRequired: props.subscriptionRequired || false,
+      subscriptionRequired: props.subscriptionRequired || true,
     })
 
     _.forEach(props.operations, operation => {

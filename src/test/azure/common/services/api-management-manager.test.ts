@@ -195,7 +195,7 @@ describe('TestAzureApiManagementConstruct', () => {
       protocols: ['https'],
       resource_group_name: '${azurerm_api_management.test-api-management-dev-am.resource_group_name}',
       revision: '1',
-      subscription_required: false,
+      subscription_required: true,
     })
   })
 })
