@@ -1,5 +1,11 @@
 {
   "testApiManagement": {
     "name": "test-api-management"
+  },
+  "testApiManagementBackend": {
+    "name": "test-api-management-backend"
+  },
+  "testApiManagementApi": {
+    "name": "test-api-management-api"
   }
 }
