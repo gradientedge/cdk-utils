@@ -12,6 +12,7 @@ import {
   AzureAppServiceManager,
   AzureApplicationInsightsManager,
   AzureAppConfigurationManager,
+  AzureCosmosDbManager,
 } from '../services'
 import { CommonAzureStackProps } from './types'
 import { AzureRemoteBackend } from './constants'
@@ -25,6 +26,7 @@ export class CommonAzureConstruct extends TerraformStack {
   appServiceManager: AzureAppServiceManager
   applicationInsightsManager: AzureApplicationInsightsManager
   appConfigurationManager: AzureAppConfigurationManager
+  cosmosDbManager: AzureCosmosDbManager
   functiontManager: AzureFunctionManager
   keyVaultManager: AzureKeyVaultManager
   resourceGroupManager: AzureResourceGroupManager
@@ -39,6 +41,7 @@ export class CommonAzureConstruct extends TerraformStack {
     this.appServiceManager = new AzureAppServiceManager()
     this.applicationInsightsManager = new AzureApplicationInsightsManager()
     this.appConfigurationManager = new AzureAppConfigurationManager()
+    this.cosmosDbManager = new AzureCosmosDbManager()
     this.functiontManager = new AzureFunctionManager()
     this.keyVaultManager = new AzureKeyVaultManager()
     this.resourceGroupManager = new AzureResourceGroupManager()

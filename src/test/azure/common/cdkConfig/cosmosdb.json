@@ -1,0 +1,42 @@
+{
+  "testCosmosDbAccount": {
+    "name": "test-cosmosdb-account",
+    "offerType": "Standard",
+    "consistencyPolicy": {
+      "consistencyLevel": "Strong"
+    }
+  },
+  "testCosmosDbDatabase": {
+    "name": "test-cosmosdb-database"
+  },
+  "testCosmosDbContainer": {
+    "name": "test-cosmosdb-container",
+    "partitionKeyPaths": ["/testPartitionKey"],
+    "indexingPolicy": {
+      "includedPath": [
+        {
+          "path": "/*"
+        }
+      ],
+      "excludedPath": [
+        {
+          "path": "/*"
+        }
+      ],
+      "compositeIndex": [
+        {
+          "index": [
+            {
+              "path": "/assetTypeAndKey",
+              "order": "Ascending"
+            },
+            {
+              "path": "/assetType",
+              "order": "Ascending"
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
