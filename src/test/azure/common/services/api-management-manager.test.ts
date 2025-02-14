@@ -105,10 +105,7 @@ class TestCommonConstruct extends CommonAzureConstruct {
       ...this.props.testApiManagementApi,
       apiManagementName: this.apiManagement.name,
       resourceGroupName: this.apiManagement.resourceGroupName,
-      operations: [
-        { path: 'test', method: 'get', xmlContent: policyXmlContent },
-        { path: 'test', method: 'post', xmlContent: policyXmlContent },
-      ],
+      policyXmlContent,
     })
   }
 }
@@ -120,6 +117,10 @@ const stack = Testing.fullSynth(commonStack)
 const construct = Testing.synth(commonStack.construct)
 
 console.log(expect(construct).toHaveResourceWithProperties(ApiManagement, {}))
+console.log(expect(construct).toHaveResourceWithProperties(ApiManagementApi, {}))
+console.log(expect(construct).toHaveResourceWithProperties(ApiManagementBackend, {}))
+console.log(expect(construct).toHaveResourceWithProperties(ApiManagementApiOperation, {}))
+console.log(expect(construct).toHaveResourceWithProperties(ApiManagementApiOperationPolicy, {}))
 
 describe('TestAzureApiManagementConstruct', () => {
   test('handles mis-configurations as expected', () => {
@@ -195,7 +196,6 @@ describe('TestAzureApiManagementConstruct', () => {
       protocols: ['https'],
       resource_group_name: '${azurerm_api_management.test-api-management-dev-am.resource_group_name}',
       revision: '1',
-      subscription_required: true,
     })
   })
 })

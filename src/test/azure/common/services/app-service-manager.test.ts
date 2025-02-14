@@ -109,7 +109,7 @@ describe('TestAzureAppServicePlanConstruct', () => {
 })
 
 describe('TestAzureAppServicePlanConstruct', () => {
-  test('provisions api management as expected', () => {
+  test('provisions app service plan as expected', () => {
     expect(construct).toHaveResourceWithProperties(ServicePlan, {
       name: 'test-app-service-plan-dev',
       resource_group_name: '${data.azurerm_resource_group.test-app-service-plan-dev-am-rg.name}',

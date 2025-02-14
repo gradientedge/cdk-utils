@@ -117,7 +117,7 @@ describe('TestAzureApplicationInsightsConstruct', () => {
 })
 
 describe('TestAzureApplicationInsightsConstruct', () => {
-  test('provisions api management as expected', () => {
+  test('provisions application insights as expected', () => {
     expect(construct).toHaveResourceWithProperties(ApplicationInsights, {
       name: 'test-application-insights-dev',
       resource_group_name: '${data.azurerm_resource_group.test-application-insights-dev-am-rg.name}',

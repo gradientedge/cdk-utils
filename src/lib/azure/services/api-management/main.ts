@@ -154,8 +154,11 @@ export class AzureApiManagementManager {
       displayName: props.displayName || props.name,
       revision: props.revision || '1',
       protocols: props.protocols || ['https'],
-      subscriptionRequired: props.subscriptionRequired || true,
     })
+
+    createAzureTfOutput(`${id}-apiManagementApiName`, scope, apiManagementApi.name)
+    createAzureTfOutput(`${id}-apiManagementApiFriendlyUniqueId`, scope, apiManagementApi.friendlyUniqueId)
+    createAzureTfOutput(`${id}-apiManagementApiId`, scope, apiManagementApi.id)
 
     _.forEach(props.operations, operation => {
       const apimOperation = new ApiManagementApiOperation(
@@ -172,18 +175,6 @@ export class AzureApiManagementManager {
         }
       )
 
-      const apimOperationPolicy = new ApiManagementApiOperationPolicy(
-        scope,
-        `${id}-apim-api-operation-policy-${operation.path}-${operation.method}`,
-        {
-          apiManagementName: apiManagementApi.apiManagementName,
-          resourceGroupName: apiManagementApi.resourceGroupName,
-          apiName: apiManagementApi.name,
-          operationId: apimOperation.operationId,
-          xmlContent: operation.xmlContent,
-        }
-      )
-
       createAzureTfOutput(
         `${id}-${operation.path}-${operation.method}-apimOperationOperationId`,
         scope,
@@ -196,21 +187,31 @@ export class AzureApiManagementManager {
       )
       createAzureTfOutput(`${id}-${operation.path}-${operation.method}-apimOperationId`, scope, apimOperation.id)
 
-      createAzureTfOutput(
-        `${id}-${operation.path}-${operation.method}-apimOperationPolicyFriendlyUniqueId`,
-        scope,
-        apimOperationPolicy.friendlyUniqueId
-      )
-      createAzureTfOutput(
-        `${id}-${operation.path}-${operation.method}-apimOperationPolicyId`,
-        scope,
-        apimOperationPolicy.id
-      )
-    })
+      if (props.policyXmlContent) {
+        const apimOperationPolicy = new ApiManagementApiOperationPolicy(
+          scope,
+          `${id}-apim-api-operation-policy-${operation.path}-${operation.method}`,
+          {
+            apiManagementName: apiManagementApi.apiManagementName,
+            resourceGroupName: apiManagementApi.resourceGroupName,
+            apiName: apiManagementApi.name,
+            operationId: apimOperation.operationId,
+            xmlContent: props.policyXmlContent,
+          }
+        )
 
-    createAzureTfOutput(`${id}-apiManagementApiName`, scope, apiManagementApi.name)
-    createAzureTfOutput(`${id}-apiManagementApiFriendlyUniqueId`, scope, apiManagementApi.friendlyUniqueId)
-    createAzureTfOutput(`${id}-apiManagementApiId`, scope, apiManagementApi.id)
+        createAzureTfOutput(
+          `${id}-${operation.path}-${operation.method}-apimOperationPolicyFriendlyUniqueId`,
+          scope,
+          apimOperationPolicy.friendlyUniqueId
+        )
+        createAzureTfOutput(
+          `${id}-${operation.path}-${operation.method}-apimOperationPolicyId`,
+          scope,
+          apimOperationPolicy.id
+        )
+      }
+    })
 
     return apiManagementApi
   }

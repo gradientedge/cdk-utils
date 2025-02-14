@@ -10,10 +10,10 @@ export interface ApiManagementBackendProps extends ApiManagementBackendConfig {}
 
 export interface ApiManagementApiProps extends ApiManagementApiConfig {
   operations: OperationsProps[]
+  policyXmlContent?: ApiManagementApiOperationPolicyConfig['xmlContent']
 }
 
 export interface OperationsProps {
   path: ApiManagementApiOperationConfig['urlTemplate']
   method: ApiManagementApiOperationConfig['method']
-  xmlContent?: ApiManagementApiOperationPolicyConfig['xmlContent']
 }

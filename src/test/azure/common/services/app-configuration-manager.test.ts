@@ -112,7 +112,7 @@ describe('TestAzureAppConfigurationConstruct', () => {
 })
 
 describe('TestAzureAppConfigurationConstruct', () => {
-  test('provisions api management as expected', () => {
+  test('provisions app configuration as expected', () => {
     expect(construct).toHaveResourceWithProperties(AppConfiguration, {
       name: 'test-app-configuration-dev',
       resource_group_name: '${data.azurerm_resource_group.test-app-configuration-dev-am-rg.name}',

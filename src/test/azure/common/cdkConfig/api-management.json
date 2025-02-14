@@ -6,6 +6,10 @@
     "name": "test-api-management-backend"
   },
   "testApiManagementApi": {
-    "name": "test-api-management-api"
+    "name": "test-api-management-api",
+    "operations": [
+      { "path": "test", "method": "get" },
+      { "path": "test", "method": "post" }
+    ]
   }
 }
