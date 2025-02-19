@@ -163,7 +163,7 @@ export class AzureFunctionManager {
 
     const functionAppFlexConsumption = new DataAzurermLinuxFunctionApp(scope, `${id}-fa-flex`, {
       name: functionApp.name,
-      resourceGroupName: resourceGroup.name
+      resourceGroupName: resourceGroup.name,
     })
 
     return functionAppFlexConsumption
