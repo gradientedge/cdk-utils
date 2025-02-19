@@ -131,14 +131,15 @@ export class AzureStorageManager {
     if (!resourceGroup) throw `Resource group undefined for ${id}`
 
     const storageAccount = new DataAzurermStorageAccount(scope, `${id}-sa`, {
-      name: `${props.storageAccountName}-${scope.props.stage}`,
+      name: `${props.storageAccountName}-${scope.props.stage}`.replace(/\W/g, '').toLowerCase(),
       resourceGroupName: resourceGroup.name,
     })
 
     const storageContainer = new StorageContainer(scope, `${id}-sc`, {
       ...props,
       name: `${props.name}-${scope.props.stage}`,
-      storageAccountName: storageAccount.name,
+      storageAccountName: undefined, // the `storage_account_name` property has been deprecated in favour of `storage_account_id` and will be removed in version 5.0 of the Provider.
+      storageAccountId: storageAccount.id,
     })
 
     createAzureTfOutput(`${id}-storageContainerName`, scope, storageContainer.name)
@@ -173,7 +174,8 @@ export class AzureStorageManager {
 
     const storageContainer = new DataAzurermStorageContainer(scope, `${id}-sc`, {
       name: `${props.storageContainerName}-${scope.props.stage}`,
-      storageAccountName: storageAccount.name,
+      storageAccountName: undefined, // the `storage_account_name` property has been deprecated in favour of `storage_account_id` and will be removed in version 5.0 of the Provider.
+      storageAccountId: storageAccount.id,
     })
 
     const storageBlob = new StorageBlob(scope, `${id}-sb`, {

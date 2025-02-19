@@ -91,7 +91,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_function_main.ts.html">azure/services/function/main.ts</a>, <a href="azure_services_function_main.ts.html#line23">line 23</a>
+        <a href="azure_services_function_main.ts.html">azure/services/function/main.ts</a>, <a href="azure_services_function_main.ts.html#line25">line 25</a>
     </li></ul></dd>
     
 
@@ -144,7 +144,7 @@ import { CommonAzureConstruct, CommonAzureStackProps } from '@gradientedge/cdk-u
 class CustomConstruct extends CommonAzureConstruct {
   constructor(parent: Construct, id: string, props: CommonAzureStackProps) {
     super(parent, id, props)
-    this.props = props
+    this.props: props
     this.functionManager.createFunctionApp('MyFunctionApp', this, props)
   }
 }
@@ -214,7 +214,7 @@ class CustomConstruct extends CommonAzureConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_function_main.ts.html">azure/services/function/main.ts</a>, <a href="azure_services_function_main.ts.html#line61">line 61</a>
+        <a href="azure_services_function_main.ts.html">azure/services/function/main.ts</a>, <a href="azure_services_function_main.ts.html#line63">line 63</a>
     </li></ul></dd>
     
 
@@ -388,7 +388,7 @@ class CustomConstruct extends CommonAzureConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_function_main.ts.html">azure/services/function/main.ts</a>, <a href="azure_services_function_main.ts.html#line31">line 31</a>
+        <a href="azure_services_function_main.ts.html">azure/services/function/main.ts</a>, <a href="azure_services_function_main.ts.html#line33">line 33</a>
     </li></ul></dd>
     
 
@@ -515,6 +515,173 @@ class CustomConstruct extends CommonAzureConstruct {
             
 
             <td class="description last"><p>function app properties</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="createFunctionAppFlexConsumption"><span class="type-signature"></span>createFunctionAppFlexConsumption<span class="signature">(id, scope, props)</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to create a new flex consumption function app</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_services_function_main.ts.html">azure/services/function/main.ts</a>, <a href="azure_services_function_main.ts.html#line82">line 82</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="h5-parameters">Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>scoped id of the resource</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>scope</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>scope in which this resource is defined</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>props</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>flex consumption function app properties</p></td>
         </tr>
 
     
