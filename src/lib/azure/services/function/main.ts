@@ -162,7 +162,7 @@ export class AzureFunctionManager {
 
       ignoreMissingProperty: true,
       ignoreCasing: true,
-      schemaValidationEnabled: false
+      schemaValidationEnabled: false,
     })
 
     const functionAppFlexConsumption = new DataAzurermLinuxFunctionApp(scope, `${id}-fa-flex`, {
