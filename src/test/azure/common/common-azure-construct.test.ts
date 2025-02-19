@@ -146,14 +146,13 @@ describe('TestAzureCommonConstruct', () => {
           resource_group_name: '${data.azurerm_resource_group.test-storage-blob-dev-sb-rg.name}',
         },
         'test-storage-container-dev-sa': {
-          name: 'test-storage-account-dev',
+          name: 'teststorageaccountdev',
           resource_group_name: '${data.azurerm_resource_group.test-storage-container-dev-sc-rg.name}',
         },
       },
       azurerm_storage_container: {
         'test-storage-blob-dev-sc': {
           name: 'test-storage-container-dev',
-          storage_account_name: '${data.azurerm_storage_account.test-storage-blob-dev-sa.name}',
         },
       },
     })
@@ -178,7 +177,7 @@ describe('TestAzureCommonConstruct', () => {
   test('provisions storage container as expected', () => {
     expect(construct).toHaveResourceWithProperties(StorageContainer, {
       name: 'test-storage-container-dev',
-      storage_account_name: '${data.azurerm_storage_account.test-storage-container-dev-sa.name}',
+      storage_account_id: '${data.azurerm_storage_account.test-storage-container-dev-sa.id}',
     })
   })
 })

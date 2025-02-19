@@ -1,9 +1,11 @@
 import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group'
+import { DataAzurermLinuxFunctionApp } from '@cdktf/provider-azurerm/lib/data-azurerm-linux-function-app'
 import { LinuxFunctionApp } from '@cdktf/provider-azurerm/lib/linux-function-app'
 import { FunctionAppFunction } from '@cdktf/provider-azurerm/lib/function-app-function'
+import { Resource } from '../../.gen/providers/azapi/resource'
 import { CommonAzureConstruct } from '../../common'
 import { createAzureTfOutput } from '../../utils'
-import { FunctionAppProps, FunctionProps } from './types'
+import { FunctionAppProps, FunctionProps, FunctionAppFlexConsumptionProps } from './types'
 
 /**
  * @classdesc Provides operations on Azure Functions
@@ -16,7 +18,7 @@ import { FunctionAppProps, FunctionProps } from './types'
  * class CustomConstruct extends CommonAzureConstruct {
  *   constructor(parent: Construct, id: string, props: CommonAzureStackProps) {
  *     super(parent, id, props)
- *     this.props = props
+ *     this.props: props
  *     this.functionManager.createFunctionApp('MyFunctionApp', this, props)
  *   }
  * }
@@ -78,5 +80,96 @@ export class AzureFunctionManager {
     createAzureTfOutput(`${id}-functionId`, scope, functionAppFunction.id)
 
     return functionAppFunction
+  }
+
+  /**
+   * @summary Method to create a new flex consumption function app
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props flex consumption function app properties
+   */
+  public createFunctionAppFlexConsumption(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: FunctionAppFlexConsumptionProps
+  ) {
+    if (!props) throw `Props undefined for ${id}`
+
+    const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-fa-rg`, {
+      name: scope.props.resourceGroupName
+        ? `${scope.props.resourceGroupName}-${scope.props.stage}`
+        : `${props.resourceGroupName}`,
+    })
+
+    if (!resourceGroup) throw `Resource group undefined for ${id}`
+
+    const functionApp = new Resource(scope, `${id}-fa`, {
+      type: 'Microsoft.Web/sites@2023-12-01',
+      name: `${props.name}-${scope.props.stage}`,
+      location: resourceGroup.location,
+      parentId: resourceGroup.id,
+
+      body: {
+        kind: props.kind || 'functionapp,linux',
+
+        properties: {
+          serverFarmId: props.appServicePlanId,
+          httpsOnly: props.httpsOnly || true,
+
+          functionAppConfig: {
+            deployment: {
+              storage: {
+                type: props.deploymentStorageType || 'blobContainer',
+                value: `${props.blobEndpoint}${props.containerName}`,
+                authentication: {
+                  type: props.deploymentAuthenticationType || 'StorageAccountConnectionString',
+                  storageAccountConnectionStringName:
+                    props.storageAccountConnectionStringName || 'DEPLOYMENT_STORAGE_CONNECTION_STRING',
+                },
+              },
+            },
+            runtime: {
+              name: props.runtime || 'node',
+              version: props.runtimeVersion || '20',
+            },
+            scaleAndConcurrency: {
+              instanceMemoryMB: props.instanceMemory || 2048,
+              maximumInstanceCount: props.maximumInstanceCount || 40,
+              triggers: {},
+            },
+          },
+
+          siteConfig: {
+            appSettings: props.appSettings.concat([
+              {
+                name: 'FUNCTIONS_EXTENSION_VERSION',
+                value: '~4',
+              },
+              {
+                name: 'AzureWebJobsStorage',
+                value: props.storageConnectionString,
+              },
+              {
+                name: 'DEPLOYMENT_STORAGE_CONNECTION_STRING',
+                value: props.storageConnectionString,
+              },
+            ]),
+          },
+        },
+      },
+
+      identity: [{ type: 'SystemAssigned' }],
+
+      ignoreMissingProperty: true,
+      ignoreCasing: true,
+      schemaValidationEnabled: false,
+    })
+
+    const functionAppFlexConsumption = new DataAzurermLinuxFunctionApp(scope, `${id}-fa-flex`, {
+      name: functionApp.name,
+      resourceGroupName: resourceGroup.name,
+    })
+
+    return functionAppFlexConsumption
   }
 }
