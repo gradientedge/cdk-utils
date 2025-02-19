@@ -7,20 +7,20 @@ export interface FunctionAppProps extends LinuxFunctionAppConfig {}
 export interface FunctionProps extends FunctionAppFunctionConfig {}
 
 export interface FunctionAppFlexConsumptionProps {
-  name: string
-  kind?: string
-  httpsOnly?: string
-  resourceGroupName: string
   appServicePlanId: string
-  runtime?: string
-  runtimeVersion?: string
+  appSettings: any
   blobEndpoint: string
   containerName: string
-  storageConnectionString: string
-  deploymentStorageType?: string
-  appSettings: any
   deploymentAuthenticationType?: string
-  storageAccountConnectionStringName?: string
+  deploymentStorageType?: string
+  httpsOnly?: string
   instanceMemory?: number
+  kind?: string
   maximumInstanceCount?: number
+  name: string
+  resourceGroupName: string
+  runtime?: string
+  runtimeVersion?: string
+  storageAccountConnectionStringName?: string
+  storageConnectionString: string
 }
