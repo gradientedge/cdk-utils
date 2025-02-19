@@ -1,4 +1,5 @@
 import { AzurermProvider } from '@cdktf/provider-azurerm/lib/provider'
+import { AzapiProvider } from '../.gen/providers/azapi/provider'
 import { DataAzurermClientConfig } from '@cdktf/provider-azurerm/lib/data-azurerm-client-config'
 import { AzurermBackend, TerraformStack } from 'cdktf'
 import { Construct } from 'constructs'
@@ -51,6 +52,7 @@ export class CommonAzureConstruct extends TerraformStack {
     this.determineRemoteBackend()
     this.determineTenantId()
     new AzurermProvider(this, `${this.id}-provider`, this.props)
+    new AzapiProvider(this, `${this.id}-azapi-provider`, this.props)
   }
 
   /**
