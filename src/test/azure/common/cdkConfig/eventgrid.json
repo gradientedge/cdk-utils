@@ -1,0 +1,8 @@
+{
+  "testEventgridTopic": {
+    "name": "test-eventgrid-topic"
+  },
+  "testEventgridEventSubscription": {
+    "name": "test-eventgrid-subscription"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "testServicebusTopic": {
+    "name": "test-servicebus-topic"
+  },
+  "testServicebusSubscription": {
+    "name": "test-servicebus-subscription"
+  }
+}

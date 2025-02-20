@@ -2,10 +2,9 @@ import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azure
 import { CosmosdbAccount } from '@cdktf/provider-azurerm/lib/cosmosdb-account'
 import { CosmosdbSqlDatabase } from '@cdktf/provider-azurerm/lib/cosmosdb-sql-database'
 import { CosmosdbSqlContainer } from '@cdktf/provider-azurerm/lib/cosmosdb-sql-container'
-import { CosmosdbTable } from '@cdktf/provider-azurerm/lib/cosmosdb-table'
 import { CommonAzureConstruct } from '../../common'
 import { createAzureTfOutput } from '../../utils'
-import { CosmosdbAccountProps, CosmosdbTableProps, CosmosdbSqlContainerProps, CosmosdbSqlDatabaseProps } from './types'
+import { CosmosdbAccountProps, CosmosdbSqlContainerProps, CosmosdbSqlDatabaseProps } from './types'
 
 /**
  * @classdesc Provides operations on Azure CosmosDB
