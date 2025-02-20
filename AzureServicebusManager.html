@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>AzureFunctionManager - Documentation</title>
+    <title>AzureServicebusManager - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -38,7 +38,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">AzureFunctionManager</h1>
+    <h1 class="page-title">AzureServicebusManager</h1>
     
 
     
@@ -52,11 +52,11 @@
     
         <h2>
         
-            AzureFunctionManager
+            AzureServicebusManager
         
         </h2>
         
-            <div class="class-description usertext"><p>Provides operations on Azure Functions</p>
+            <div class="class-description usertext"><p>Provides operations on Azure CosmosDB</p>
 <ul>
 <li>A new instance of this class is injected into <a href="CommonAzureConstruct.html">CommonAzureConstruct</a> constructor.</li>
 <li>If a custom construct extends <a href="CommonAzureConstruct.html">CommonAzureConstruct</a>, an instance is available within the context.</li>
@@ -75,7 +75,7 @@
     <h2>Constructor</h2>
     
 
-    <h4 class="name" id="AzureFunctionManager"><span class="type-signature"></span>new AzureFunctionManager<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="AzureServicebusManager"><span class="type-signature"></span>new AzureServicebusManager<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
@@ -91,7 +91,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_function_main.ts.html">azure/services/function/main.ts</a>, <a href="azure_services_function_main.ts.html#line24">line 24</a>
+        <a href="azure_services_servicebus_main.ts.html">azure/services/servicebus/main.ts</a>, <a href="azure_services_servicebus_main.ts.html#line22">line 22</a>
     </li></ul></dd>
     
 
@@ -144,8 +144,8 @@ import { CommonAzureConstruct, CommonAzureStackProps } from '@gradientedge/cdk-u
 class CustomConstruct extends CommonAzureConstruct {
   constructor(parent: Construct, id: string, props: CommonAzureStackProps) {
     super(parent, id, props)
-    this.props: props
-    this.functionManager.createFunctionApp('MyFunctionApp', this, props)
+    this.props = props
+    this.CosmosDbManager.createCosmosAccount('MyCosmosDb', this, props)
   }
 }
 ```</code></pre>
@@ -196,10 +196,10 @@ class CustomConstruct extends CommonAzureConstruct {
 
     
 
-    <h4 class="name" id="createFunction"><span class="type-signature"></span>createFunction<span class="signature">(id, scope, props)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="createServicebusSubscription"><span class="type-signature"></span>createServicebusSubscription<span class="signature">(id, scope, props)</span><span class="type-signature"></span></h4>
 
     
-    <p class="summary usertext"><p>Method to create a new function</p></p>
+    <p class="summary usertext"><p>Method to create a new servicebus subscription</p></p>
     
 
 
@@ -214,7 +214,7 @@ class CustomConstruct extends CommonAzureConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_function_main.ts.html">azure/services/function/main.ts</a>, <a href="azure_services_function_main.ts.html#line62">line 62</a>
+        <a href="azure_services_servicebus_main.ts.html">azure/services/servicebus/main.ts</a>, <a href="azure_services_servicebus_main.ts.html#line49">line 49</a>
     </li></ul></dd>
     
 
@@ -248,7 +248,7 @@ class CustomConstruct extends CommonAzureConstruct {
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><p><a href="https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/functionAppFunction.typescript.md">CDKTF Function Module</a></p></li>
+            <li><p><a href="https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/servicebusSubscription.typescript.md">CDKTF Servicebus Subscription Module</a></p></li>
         </ul>
     </dd>
     
@@ -340,7 +340,7 @@ class CustomConstruct extends CommonAzureConstruct {
 
             
 
-            <td class="description last"><p>function properties</p></td>
+            <td class="description last"><p>servicebus subscription properties</p></td>
         </tr>
 
     
@@ -370,10 +370,10 @@ class CustomConstruct extends CommonAzureConstruct {
 
     
 
-    <h4 class="name" id="createFunctionApp"><span class="type-signature"></span>createFunctionApp<span class="signature">(id, scope, props)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="createServicebusTopic"><span class="type-signature"></span>createServicebusTopic<span class="signature">(id, scope, props)</span><span class="type-signature"></span></h4>
 
     
-    <p class="summary usertext"><p>Method to create a new function app</p></p>
+    <p class="summary usertext"><p>Method to create a new servicebus topic</p></p>
     
 
 
@@ -388,7 +388,7 @@ class CustomConstruct extends CommonAzureConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_function_main.ts.html">azure/services/function/main.ts</a>, <a href="azure_services_function_main.ts.html#line32">line 32</a>
+        <a href="azure_services_servicebus_main.ts.html">azure/services/servicebus/main.ts</a>, <a href="azure_services_servicebus_main.ts.html#line30">line 30</a>
     </li></ul></dd>
     
 
@@ -422,7 +422,7 @@ class CustomConstruct extends CommonAzureConstruct {
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><p><a href="https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/functionApp.typescript.md">CDKTF Function App Module</a></p></li>
+            <li><p><a href="https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/servicebusTopic.typescript.md">CDKTF Servicebus Topic Module</a></p></li>
         </ul>
     </dd>
     
@@ -514,174 +514,7 @@ class CustomConstruct extends CommonAzureConstruct {
 
             
 
-            <td class="description last"><p>function app properties</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="createFunctionAppFlexConsumption"><span class="type-signature"></span>createFunctionAppFlexConsumption<span class="signature">(id, scope, props)</span><span class="type-signature"></span></h4>
-
-    
-    <p class="summary usertext"><p>Method to create a new flex consumption function app</p></p>
-    
-
-
-
-
-<dl class="details">
-    
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_function_main.ts.html">azure/services/function/main.ts</a>, <a href="azure_services_function_main.ts.html#line81">line 81</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <h5 class="h5-parameters">Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>id</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>scoped id of the resource</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>scope</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>scope in which this resource is defined</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>props</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>flex consumption function app properties</p></td>
+            <td class="description last"><p>servicebus topic properties</p></td>
         </tr>
 
     
