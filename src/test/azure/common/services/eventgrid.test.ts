@@ -61,13 +61,13 @@ class TestCommonConstruct extends CommonAzureConstruct {
 
   constructor(parent: Construct, name: string, props: TestAzureStackProps) {
     super(parent, name, props)
-    this.eventgridManager.createEventgridTopic(
+    this.eventGridManager.createEventgridTopic(
       `test-eventgrid-topic-${this.props.stage}`,
       this,
       this.props.testEventgridTopic
     )
 
-    this.eventgridManager.createEventgridSubscription(
+    this.eventGridManager.createEventgridSubscription(
       `test-eventgrid-subscription-${this.props.stage}`,
       this,
       this.props.testEventgridEventSubscription

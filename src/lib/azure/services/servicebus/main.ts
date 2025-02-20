@@ -21,7 +21,7 @@ import { ServicebusTopicProps, ServicebusSubscriptionProps } from './types'
  * }
  * ```
  */
-export class AzureServicebusManager {
+export class AzureServiceBusManager {
   /**
    * @summary Method to create a new servicebus topic
    * @param id scoped id of the resource
