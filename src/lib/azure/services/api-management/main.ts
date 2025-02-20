@@ -163,34 +163,35 @@ export class AzureApiManagementManager {
     _.forEach(props.operations, operation => {
       const apimOperation = new ApiManagementApiOperation(
         scope,
-        `${id}-apim-api-operation-${operation.path}-${operation.method}`,
+        `${id}-apim-api-operation-${operation.displayName}-${operation.method}`,
         {
-          operationId: `${operation.path}-${operation.method}`,
+          operationId: `${operation.displayName}-${operation.method}`,
           method: operation.method.toUpperCase(),
           apiManagementName: apiManagementApi.apiManagementName,
           resourceGroupName: apiManagementApi.resourceGroupName,
           apiName: apiManagementApi.name,
-          displayName: `/${operation.path}`,
-          urlTemplate: `/${operation.path}`,
+          displayName: operation.displayName,
+          urlTemplate: operation.urlTemplate,
+          templateParameter: operation.templateParameter
         }
       )
 
       createAzureTfOutput(
-        `${id}-${operation.path}-${operation.method}-apimOperationOperationId`,
+        `${id}-${operation.displayName}-${operation.method}-apimOperationOperationId`,
         scope,
         apimOperation.operationId
       )
       createAzureTfOutput(
-        `${id}-${operation.path}-${operation.method}-apimOperationFriendlyUniqueId`,
+        `${id}-${operation.displayName}-${operation.method}-apimOperationFriendlyUniqueId`,
         scope,
         apimOperation.friendlyUniqueId
       )
-      createAzureTfOutput(`${id}-${operation.path}-${operation.method}-apimOperationId`, scope, apimOperation.id)
+      createAzureTfOutput(`${id}-${operation.displayName}-${operation.method}-apimOperationId`, scope, apimOperation.id)
 
       if (props.policyXmlContent) {
         const apimOperationPolicy = new ApiManagementApiOperationPolicy(
           scope,
-          `${id}-apim-api-operation-policy-${operation.path}-${operation.method}`,
+          `${id}-apim-api-operation-policy-${operation.displayName}-${operation.method}`,
           {
             apiManagementName: apiManagementApi.apiManagementName,
             resourceGroupName: apiManagementApi.resourceGroupName,
@@ -201,12 +202,12 @@ export class AzureApiManagementManager {
         )
 
         createAzureTfOutput(
-          `${id}-${operation.path}-${operation.method}-apimOperationPolicyFriendlyUniqueId`,
+          `${id}-${operation.displayName}-${operation.method}-apimOperationPolicyFriendlyUniqueId`,
           scope,
           apimOperationPolicy.friendlyUniqueId
         )
         createAzureTfOutput(
-          `${id}-${operation.path}-${operation.method}-apimOperationPolicyId`,
+          `${id}-${operation.displayName}-${operation.method}-apimOperationPolicyId`,
           scope,
           apimOperationPolicy.id
         )
