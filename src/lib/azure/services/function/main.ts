@@ -6,7 +6,6 @@ import { LocalExec, Provider } from 'cdktf-local-exec'
 import { CommonAzureConstruct } from '../../common'
 import { createAzureTfOutput } from '../../utils'
 import { FunctionAppProps, FunctionProps, FunctionAppFlexConsumptionProps } from './types'
-import { Fn } from 'cdktf'
 
 /**
  * @classdesc Provides operations on Azure Functions
@@ -169,7 +168,7 @@ export class AzureFunctionManager {
     new Provider(scope, `${id}-local-exec-provider`)
     new LocalExec(scope, `${id}-function-app-deploy`, {
       triggers: {
-        id: Fn.timestamp(),
+        id: props.sourceCodeHash,
       },
       command: `az functionapp deployment source config-zip --resource-group ${resourceGroup.name} --name ${functionApp.name} --src ${props.deploySource}`,
     })

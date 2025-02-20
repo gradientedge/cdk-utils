@@ -23,5 +23,6 @@ export interface FunctionAppFlexConsumptionProps {
   runtimeVersion?: string
   storageAccountConnectionStringName?: string
   storageConnectionString: string
+  sourceCodeHash: string
   deploySource: string
 }
