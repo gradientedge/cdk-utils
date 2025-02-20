@@ -168,7 +168,7 @@ export class AzureFunctionManager {
     new Provider(scope, `${id}-local-exec-provider`)
     new LocalExec(scope, `${id}-function-app-deploy`, {
       triggers: {
-        id: props.sourceCodeHash,
+        hash: props.sourceCodeHash,
       },
       command: `az functionapp deployment source config-zip --resource-group ${resourceGroup.name} --name ${functionApp.name} --src ${props.deploySource}`,
     })
