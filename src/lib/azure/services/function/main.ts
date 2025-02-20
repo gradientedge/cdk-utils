@@ -1,5 +1,4 @@
 import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group'
-import { DataAzurermLinuxFunctionApp } from '@cdktf/provider-azurerm/lib/data-azurerm-linux-function-app'
 import { LinuxFunctionApp } from '@cdktf/provider-azurerm/lib/linux-function-app'
 import { FunctionAppFunction } from '@cdktf/provider-azurerm/lib/function-app-function'
 import { Resource } from '../../.gen/providers/azapi/resource'
@@ -165,11 +164,6 @@ export class AzureFunctionManager {
       schemaValidationEnabled: false,
     })
 
-    const functionAppFlexConsumption = new DataAzurermLinuxFunctionApp(scope, `${id}-fa-flex`, {
-      name: functionApp.name,
-      resourceGroupName: resourceGroup.name,
-    })
-
-    return functionAppFlexConsumption
+    return functionApp
   }
 }
