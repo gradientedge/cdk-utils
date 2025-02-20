@@ -6,7 +6,9 @@ import { ApiManagementApiOperationPolicyConfig } from '@cdktf/provider-azurerm/l
 
 export interface ApiManagementProps extends ApiManagementConfig {}
 
-export interface ApiManagementBackendProps extends ApiManagementBackendConfig {}
+export interface ApiManagementBackendProps extends ApiManagementBackendConfig {
+  basePath?: string
+}
 
 export interface ApiManagementApiProps extends ApiManagementApiConfig {
   operations: OperationsProps[]
