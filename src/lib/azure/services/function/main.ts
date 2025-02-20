@@ -2,6 +2,7 @@ import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azure
 import { LinuxFunctionApp } from '@cdktf/provider-azurerm/lib/linux-function-app'
 import { FunctionAppFunction } from '@cdktf/provider-azurerm/lib/function-app-function'
 import { Resource } from '../../.gen/providers/azapi/resource'
+import { LocalExec, Provider } from 'cdktf-local-exec'
 import { CommonAzureConstruct } from '../../common'
 import { createAzureTfOutput } from '../../utils'
 import { FunctionAppProps, FunctionProps, FunctionAppFlexConsumptionProps } from './types'
@@ -162,6 +163,14 @@ export class AzureFunctionManager {
       ignoreMissingProperty: true,
       ignoreCasing: true,
       schemaValidationEnabled: false,
+    })
+
+    new Provider(scope, `${id}-local-exec-provider`)
+    new LocalExec(scope, `${id}-function-app-deploy`, {
+      triggers: {
+        hash: props.sourceCodeHash,
+      },
+      command: `az functionapp deployment source config-zip --resource-group ${resourceGroup.name} --name ${functionApp.name} --src ${props.deploySource}`,
     })
 
     return functionApp
