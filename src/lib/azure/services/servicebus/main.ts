@@ -21,13 +21,13 @@ import { ServicebusTopicProps, ServicebusSubscriptionProps } from './types'
  * }
  * ```
  */
-export class AzureServiceBusManager {
+export class AzureServicebusManager {
   /**
    * @summary Method to create a new servicebus topic
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props servicebus topic properties
-   * @see [CDKTF Servicebus Topic Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/cosmosdbAccount.typescript.md}
+   * @see [CDKTF Servicebus Topic Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/servicebusTopic.typescript.md}
    */
   public createServicebusTopic(id: string, scope: CommonAzureConstruct, props: ServicebusTopicProps) {
     if (!props) throw `Props undefined for ${id}`
@@ -49,7 +49,7 @@ export class AzureServiceBusManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props servicebus subscription properties
-   * @see [CDKTF Servicebus Subscription Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/cosmosdbAccount.typescript.md}
+   * @see [CDKTF Servicebus Subscription Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/servicebusSubscription.typescript.md}
    */
   public createServicebusSubscription(id: string, scope: CommonAzureConstruct, props: ServicebusSubscriptionProps) {
     if (!props) throw `Props undefined for ${id}`

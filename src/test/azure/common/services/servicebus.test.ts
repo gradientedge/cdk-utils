@@ -61,13 +61,13 @@ class TestCommonConstruct extends CommonAzureConstruct {
 
   constructor(parent: Construct, name: string, props: TestAzureStackProps) {
     super(parent, name, props)
-    this.serviceBusManager.createServicebusTopic(
+    this.servicebusManager.createServicebusTopic(
       `test-servicebus-topic-${this.props.stage}`,
       this,
       this.props.testServicebusTopic
     )
 
-    this.serviceBusManager.createServicebusSubscription(
+    this.servicebusManager.createServicebusSubscription(
       `test-servicebus-subscription-${this.props.stage}`,
       this,
       this.props.testServicebusSubscription

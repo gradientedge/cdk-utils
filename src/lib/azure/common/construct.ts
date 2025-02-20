@@ -14,8 +14,8 @@ import {
   AzureApplicationInsightsManager,
   AzureAppConfigurationManager,
   AzureCosmosDbManager,
-  AzureServiceBusManager,
-  AzureEventGridManager,
+  AzureServicebusManager,
+  AzureEventgridManager,
 } from '../services'
 import { CommonAzureStackProps } from './types'
 import { AzureRemoteBackend } from './constants'
@@ -34,8 +34,8 @@ export class CommonAzureConstruct extends TerraformStack {
   keyVaultManager: AzureKeyVaultManager
   resourceGroupManager: AzureResourceGroupManager
   storageManager: AzureStorageManager
-  serviceBusManager: AzureServiceBusManager
-  eventGridManager: AzureEventGridManager
+  servicebusManager: AzureServicebusManager
+  eventgridManager: AzureEventgridManager
 
   constructor(scope: Construct, id: string, props: CommonAzureStackProps) {
     super(scope, id)
@@ -51,8 +51,8 @@ export class CommonAzureConstruct extends TerraformStack {
     this.keyVaultManager = new AzureKeyVaultManager()
     this.resourceGroupManager = new AzureResourceGroupManager()
     this.storageManager = new AzureStorageManager()
-    this.serviceBusManager = new AzureServiceBusManager()
-    this.eventGridManager = new AzureEventGridManager()
+    this.servicebusManager = new AzureServicebusManager()
+    this.eventgridManager = new AzureEventgridManager()
 
     this.determineFullyQualifiedDomain()
     this.determineRemoteBackend()

@@ -22,7 +22,7 @@ import { EventgridTopicProps, EventgridEventSubscriptionProps } from './types'
  * }
  * ```
  */
-export class AzureEventGridManager {
+export class AzureEventgridManager {
   /**
    * @summary Method to create a new eventgrid topic
    * @param id scoped id of the resource
