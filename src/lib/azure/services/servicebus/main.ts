@@ -1,11 +1,19 @@
+import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group'
+import { ServicebusNamespace } from '@cdktf/provider-azurerm/lib/servicebus-namespace'
 import { ServicebusTopic } from '@cdktf/provider-azurerm/lib/servicebus-topic'
 import { ServicebusSubscription } from '@cdktf/provider-azurerm/lib/servicebus-subscription'
+import { ServicebusQueue } from '@cdktf/provider-azurerm/lib/servicebus-queue'
 import { CommonAzureConstruct } from '../../common'
 import { createAzureTfOutput } from '../../utils'
-import { ServicebusTopicProps, ServicebusSubscriptionProps } from './types'
+import {
+  ServicebusTopicProps,
+  ServicebusSubscriptionProps,
+  ServicebusNamespaceProps,
+  ServicebusQueueProps,
+} from './types'
 
 /**
- * @classdesc Provides operations on Azure CosmosDB
+ * @classdesc Provides operations on Azure Servicebus
  * - A new instance of this class is injected into {@link CommonAzureConstruct} constructor.
  * - If a custom construct extends {@link CommonAzureConstruct}, an instance is available within the context.
  * @example
@@ -16,12 +24,51 @@ import { ServicebusTopicProps, ServicebusSubscriptionProps } from './types'
  *   constructor(parent: Construct, id: string, props: CommonAzureStackProps) {
  *     super(parent, id, props)
  *     this.props = props
- *     this.CosmosDbManager.createCosmosAccount('MyCosmosDb', this, props)
+ *     this.ServicebusManager.createServicebusTopic('MyServicebusTopic', this, props)
  *   }
  * }
  * ```
  */
 export class AzureServicebusManager {
+  /**
+   * @summary Method to create a new servicebus namespace
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props servicebus namespace properties
+   * @see [CDKTF Servicebus Namespace Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/servicebusNamespace.typescript.md}
+   */
+  public createServicebusNamespace(id: string, scope: CommonAzureConstruct, props: ServicebusNamespaceProps) {
+    if (!props) throw `Props undefined for ${id}`
+
+    const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-sn-rg`, {
+      name: scope.props.resourceGroupName
+        ? `${scope.props.resourceGroupName}-${scope.props.stage}`
+        : `${props.resourceGroupName}`,
+    })
+
+    if (!resourceGroup) throw `Resource group undefined for ${id}`
+
+    const servicebusNamespace = new ServicebusNamespace(scope, `${id}-sn`, {
+      ...props,
+      name: `${props.name}-${scope.props.stage}`,
+      resourceGroupName: resourceGroup.name,
+      location: resourceGroup.location,
+      identity: {
+        type: props.identity?.type || 'SystemAssigned',
+      },
+      sku: props.sku || 'Standard',
+      tags: props.tags ?? {
+        environment: scope.props.stage,
+      },
+    })
+
+    createAzureTfOutput(`${id}-servicebusNamespaceName`, scope, servicebusNamespace.name)
+    createAzureTfOutput(`${id}-servicebusNamespaceFriendlyUniqueId`, scope, servicebusNamespace.friendlyUniqueId)
+    createAzureTfOutput(`${id}-servicebusNamespaceId`, scope, servicebusNamespace.id)
+
+    return servicebusNamespace
+  }
+
   /**
    * @summary Method to create a new servicebus topic
    * @param id scoped id of the resource
@@ -35,6 +82,7 @@ export class AzureServicebusManager {
     const servicebusTopic = new ServicebusTopic(scope, `${id}-st`, {
       ...props,
       name: `${props.name}-${scope.props.stage}`,
+      namespaceId: props.namespaceId,
     })
 
     createAzureTfOutput(`${id}-servicebusTopicName`, scope, servicebusTopic.name)
@@ -42,6 +90,29 @@ export class AzureServicebusManager {
     createAzureTfOutput(`${id}-servicebusTopicId`, scope, servicebusTopic.id)
 
     return servicebusTopic
+  }
+
+  /**
+   * @summary Method to create a new servicebus queue
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props servicebus queue properties
+   * @see [CDKTF Servicebus Queue Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/servicebusQueue.typescript.md}
+   */
+  public createServicebusQueue(id: string, scope: CommonAzureConstruct, props: ServicebusQueueProps) {
+    if (!props) throw `Props undefined for ${id}`
+
+    const servicebusQueue = new ServicebusQueue(scope, `${id}-sq`, {
+      ...props,
+      name: `${props.name}-${scope.props.stage}`,
+      namespaceId: props.namespaceId,
+    })
+
+    createAzureTfOutput(`${id}-servicebusQueueName`, scope, servicebusQueue.name)
+    createAzureTfOutput(`${id}-servicebusQueueFriendlyUniqueId`, scope, servicebusQueue.friendlyUniqueId)
+    createAzureTfOutput(`${id}-servicebusQueueId`, scope, servicebusQueue.id)
+
+    return servicebusQueue
   }
 
   /**
@@ -57,6 +128,7 @@ export class AzureServicebusManager {
     const servicebusSubscription = new ServicebusSubscription(scope, `${id}-ss`, {
       ...props,
       name: `${props.name}-${scope.props.stage}`,
+      maxDeliveryCount: props.maxDeliveryCount || 1,
     })
 
     createAzureTfOutput(`${id}-servicebusSubscriptionName`, scope, servicebusSubscription.name)

@@ -133,7 +133,7 @@ describe('TestAzureEventgridConstruct', () => {
 })
 
 describe('TestAzureEventgridConstruct', () => {
-  test('provisions cosmosdb topic as expected', () => {
+  test('provisions eventgrid topic as expected', () => {
     expect(construct).toHaveResourceWithProperties(EventgridTopic, {
       location: '${data.azurerm_resource_group.test-eventgrid-topic-dev-et-rg.location}',
       name: 'test-eventgrid-topic-dev',
@@ -146,7 +146,7 @@ describe('TestAzureEventgridConstruct', () => {
 })
 
 describe('TestAzureEventgridConstruct', () => {
-  test('provisions cosmosdb subscription as expected', () => {
+  test('provisions eventgrid subscription as expected', () => {
     expect(construct).toHaveResourceWithProperties(EventgridEventSubscription, {
       name: 'test-eventgrid-subscription-dev',
     })
