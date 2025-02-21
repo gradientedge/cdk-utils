@@ -71,6 +71,8 @@ export class AzureEventgridManager {
     const eventgridSubscription = new EventgridEventSubscription(scope, `${id}-es`, {
       ...props,
       name: `${props.name}-${scope.props.stage}`,
+      eventDeliverySchema: props.eventDeliverySchema || 'CloudEventSchemaV1_0',
+      advancedFilteringOnArraysEnabled: props.advancedFilteringOnArraysEnabled || true,
     })
 
     createAzureTfOutput(`${id}-eventgridSubscriptiontName`, scope, eventgridSubscription.name)

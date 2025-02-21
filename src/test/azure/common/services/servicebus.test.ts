@@ -7,12 +7,18 @@ import {
   CommonAzureConstruct,
   CommonAzureStack,
   CommonAzureStackProps,
-  ServicebusTopicProps,
   ServicebusSubscriptionProps,
+  ServicebusTopicProps,
+  ServicebusQueueProps,
+  ServicebusNamespaceProps,
 } from '../../../../lib'
+import { ServicebusNamespace } from '@cdktf/provider-azurerm/lib/servicebus-namespace'
+import { ServicebusQueue } from '@cdktf/provider-azurerm/lib/servicebus-queue'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
+  testServicebusNamespace: ServicebusNamespaceProps
   testServicebusTopic: ServicebusTopicProps
+  testServicebusQueue: ServicebusQueueProps
   testServicebusSubscription: ServicebusSubscriptionProps
   testAttribute?: string
 }
@@ -40,7 +46,9 @@ class TestCommonStack extends CommonAzureStack {
     return {
       ...super.determineConstructProps(props),
       testAttribute: this.node.tryGetContext('testAttribute'),
+      testServicebusNamespace: this.node.tryGetContext('testServicebusNamespace'),
       testServicebusTopic: this.node.tryGetContext('testServicebusTopic'),
+      testServicebusQueue: this.node.tryGetContext('testServicebusQueue'),
       testServicebusSubscription: this.node.tryGetContext('testServicebusSubscription'),
     }
   }
@@ -61,17 +69,26 @@ class TestCommonConstruct extends CommonAzureConstruct {
 
   constructor(parent: Construct, name: string, props: TestAzureStackProps) {
     super(parent, name, props)
-    this.servicebusManager.createServicebusTopic(
-      `test-servicebus-topic-${this.props.stage}`,
+    const namespace = this.servicebusManager.createServicebusNamespace(
+      `test-servicebus-namespace-${this.props.stage}`,
       this,
-      this.props.testServicebusTopic
+      this.props.testServicebusNamespace
     )
 
-    this.servicebusManager.createServicebusSubscription(
-      `test-servicebus-subscription-${this.props.stage}`,
-      this,
-      this.props.testServicebusSubscription
-    )
+    const topic = this.servicebusManager.createServicebusTopic(`test-servicebus-topic-${this.props.stage}`, this, {
+      ...this.props.testServicebusTopic,
+      namespaceId: namespace.id,
+    })
+
+    this.servicebusManager.createServicebusQueue(`test-servicebus-topic-${this.props.stage}`, this, {
+      ...this.props.testServicebusQueue,
+      namespaceId: namespace.id,
+    })
+
+    this.servicebusManager.createServicebusSubscription(`test-servicebus-subscription-${this.props.stage}`, this, {
+      ...this.props.testServicebusSubscription,
+      topicId: topic.id,
+    })
   }
 }
 
@@ -86,7 +103,7 @@ console.log(expect(construct).toHaveResourceWithProperties(ServicebusTopic, {}))
 describe('TestAzureServicebusConstruct', () => {
   test('handles mis-configurations as expected', () => {
     const error = () => new TestInvalidCommonStack(app, 'test-invalid-stack', testStackProps)
-    expect(error).toThrow('Props undefined for test-servicebus-topic-dev')
+    expect(error).toThrow('Props undefined for test-servicebus-namespace-dev')
   })
 })
 
@@ -119,28 +136,66 @@ describe('TestAzureServicebusConstruct', () => {
       testServicebusTopicDevServicebusTopicFriendlyUniqueId: {
         value: 'test-servicebus-topic-dev-st',
       },
+      testServicebusNamespaceDevServicebusNamespaceFriendlyUniqueId: {
+        value: 'test-servicebus-namespace-dev-sn',
+      },
       testServicebusTopicDevServicebusTopicId: {
         value: '${azurerm_servicebus_topic.test-servicebus-topic-dev-st.id}',
+      },
+      testServicebusNamespaceDevServicebusNamespaceId: {
+        value: '${azurerm_servicebus_namespace.test-servicebus-namespace-dev-sn.id}',
       },
       testServicebusTopicDevServicebusTopicName: {
         value: '${azurerm_servicebus_topic.test-servicebus-topic-dev-st.name}',
       },
+      testServicebusNamespaceDevServicebusNamespaceName: {
+        value: '${azurerm_servicebus_namespace.test-servicebus-namespace-dev-sn.name}',
+      },
     })
   })
 })
 
 describe('TestAzureServicebusConstruct', () => {
-  test('provisions cosmosdb topic as expected', () => {
+  test('provisions servicebus namespace as expected', () => {
+    expect(construct).toHaveResourceWithProperties(ServicebusNamespace, {
+      identity: {
+        type: 'SystemAssigned',
+      },
+      location: '${data.azurerm_resource_group.test-servicebus-namespace-dev-sn-rg.location}',
+      name: 'test-servicebus-namespace-dev',
+      resource_group_name: '${data.azurerm_resource_group.test-servicebus-namespace-dev-sn-rg.name}',
+      sku: 'Standard',
+      tags: {
+        environment: 'dev',
+      },
+    })
+  })
+})
+
+describe('TestAzureServicebusConstruct', () => {
+  test('provisions servicebus topic as expected', () => {
     expect(construct).toHaveResourceWithProperties(ServicebusTopic, {
       name: 'test-servicebus-topic-dev',
+      namespace_id: '${azurerm_servicebus_namespace.test-servicebus-namespace-dev-sn.id}',
     })
   })
 })
 
 describe('TestAzureServicebusConstruct', () => {
-  test('provisions cosmosdb subscription as expected', () => {
+  test('provisions servicebus queue as expected', () => {
+    expect(construct).toHaveResourceWithProperties(ServicebusQueue, {
+      name: 'test-servicebus-queue-dev',
+      namespace_id: '${azurerm_servicebus_namespace.test-servicebus-namespace-dev-sn.id}',
+    })
+  })
+})
+
+describe('TestAzureServicebusConstruct', () => {
+  test('provisions servicebus subscription as expected', () => {
     expect(construct).toHaveResourceWithProperties(ServicebusSubscription, {
+      max_delivery_count: 1,
       name: 'test-servicebus-subscription-dev',
+      topic_id: '${azurerm_servicebus_topic.test-servicebus-topic-dev-st.id}',
     })
   })
 })

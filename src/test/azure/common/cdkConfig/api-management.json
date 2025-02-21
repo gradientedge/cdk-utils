@@ -8,8 +8,23 @@
   "testApiManagementApi": {
     "name": "test-api-management-api",
     "operations": [
-      { "path": "test", "method": "get" },
-      { "path": "test", "method": "post" }
+      {
+        "displayName": "test",
+        "method": "get",
+        "urlTemplate": "/test"
+      },
+      {
+        "displayName": "test",
+        "method": "post",
+        "urlTemplate": "/test/{path}",
+        "templateParameter": [
+          {
+            "name": "path",
+            "required": true,
+            "type": ""
+          }
+        ]
+      }
     ]
   }
 }

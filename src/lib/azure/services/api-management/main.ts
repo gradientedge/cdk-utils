@@ -172,7 +172,7 @@ export class AzureApiManagementManager {
           apiName: apiManagementApi.name,
           displayName: operation.displayName,
           urlTemplate: operation.urlTemplate,
-          templateParameter: operation.templateParameter
+          templateParameter: operation.templateParameter,
         }
       )
 

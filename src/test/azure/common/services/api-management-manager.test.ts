@@ -217,11 +217,32 @@ describe('TestAzureApiManagementConstruct', () => {
     expect(construct).toHaveResourceWithProperties(ApiManagementApiOperation, {
       api_management_name: '${azurerm_api_management_api.test-api-management-dev-am-api.api_management_name}',
       api_name: '${azurerm_api_management_api.test-api-management-dev-am-api.name}',
-      display_name: '/test',
+      display_name: 'test',
       method: 'GET',
       operation_id: 'test-get',
       resource_group_name: '${azurerm_api_management_api.test-api-management-dev-am-api.resource_group_name}',
       url_template: '/test',
+    })
+  })
+})
+
+describe('TestAzureApiManagementConstruct', () => {
+  test('provisions api management api operation as expected', () => {
+    expect(construct).toHaveResourceWithProperties(ApiManagementApiOperation, {
+      api_management_name: '${azurerm_api_management_api.test-api-management-dev-am-api.api_management_name}',
+      api_name: '${azurerm_api_management_api.test-api-management-dev-am-api.name}',
+      display_name: 'test',
+      method: 'POST',
+      operation_id: 'test-post',
+      resource_group_name: '${azurerm_api_management_api.test-api-management-dev-am-api.resource_group_name}',
+      template_parameter: [
+        {
+          name: 'path',
+          required: true,
+          type: '',
+        },
+      ],
+      url_template: '/test/{path}',
     })
   })
 })
