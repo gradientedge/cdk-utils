@@ -56,7 +56,7 @@
         
         </h2>
         
-            <div class="class-description usertext"><p>Provides operations on Azure CosmosDB</p>
+            <div class="class-description usertext"><p>Provides operations on Azure Servicebus</p>
 <ul>
 <li>A new instance of this class is injected into <a href="CommonAzureConstruct.html">CommonAzureConstruct</a> constructor.</li>
 <li>If a custom construct extends <a href="CommonAzureConstruct.html">CommonAzureConstruct</a>, an instance is available within the context.</li>
@@ -91,7 +91,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_servicebus_main.ts.html">azure/services/servicebus/main.ts</a>, <a href="azure_services_servicebus_main.ts.html#line22">line 22</a>
+        <a href="azure_services_servicebus_main.ts.html">azure/services/servicebus/main.ts</a>, <a href="azure_services_servicebus_main.ts.html#line25">line 25</a>
     </li></ul></dd>
     
 
@@ -145,7 +145,7 @@ class CustomConstruct extends CommonAzureConstruct {
   constructor(parent: Construct, id: string, props: CommonAzureStackProps) {
     super(parent, id, props)
     this.props = props
-    this.CosmosDbManager.createCosmosAccount('MyCosmosDb', this, props)
+    this.ServicebusManager.createServicebusTopic('MyServicebusTopic', this, props)
   }
 }
 ```</code></pre>
@@ -196,6 +196,354 @@ class CustomConstruct extends CommonAzureConstruct {
 
     
 
+    <h4 class="name" id="createServicebusNamespace"><span class="type-signature"></span>createServicebusNamespace<span class="signature">(id, scope, props)</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to create a new servicebus namespace</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_services_servicebus_main.ts.html">azure/services/servicebus/main.ts</a>, <a href="azure_services_servicebus_main.ts.html#line33">line 33</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><p><a href="https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/servicebusNamespace.typescript.md">CDKTF Servicebus Namespace Module</a></p></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="h5-parameters">Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>scoped id of the resource</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>scope</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>scope in which this resource is defined</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>props</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>servicebus namespace properties</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="createServicebusQueue"><span class="type-signature"></span>createServicebusQueue<span class="signature">(id, scope, props)</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to create a new servicebus queue</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_services_servicebus_main.ts.html">azure/services/servicebus/main.ts</a>, <a href="azure_services_servicebus_main.ts.html#line88">line 88</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><p><a href="https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/servicebusQueue.typescript.md">CDKTF Servicebus Queue Module</a></p></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="h5-parameters">Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>scoped id of the resource</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>scope</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>scope in which this resource is defined</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>props</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>servicebus queue properties</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
     <h4 class="name" id="createServicebusSubscription"><span class="type-signature"></span>createServicebusSubscription<span class="signature">(id, scope, props)</span><span class="type-signature"></span></h4>
 
     
@@ -214,7 +562,7 @@ class CustomConstruct extends CommonAzureConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_servicebus_main.ts.html">azure/services/servicebus/main.ts</a>, <a href="azure_services_servicebus_main.ts.html#line49">line 49</a>
+        <a href="azure_services_servicebus_main.ts.html">azure/services/servicebus/main.ts</a>, <a href="azure_services_servicebus_main.ts.html#line108">line 108</a>
     </li></ul></dd>
     
 
@@ -388,7 +736,7 @@ class CustomConstruct extends CommonAzureConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_servicebus_main.ts.html">azure/services/servicebus/main.ts</a>, <a href="azure_services_servicebus_main.ts.html#line30">line 30</a>
+        <a href="azure_services_servicebus_main.ts.html">azure/services/servicebus/main.ts</a>, <a href="azure_services_servicebus_main.ts.html#line68">line 68</a>
     </li></ul></dd>
     
 
