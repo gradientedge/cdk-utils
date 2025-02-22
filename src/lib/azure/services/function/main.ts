@@ -154,7 +154,7 @@ export class AzureFunctionManager {
                 value: props.storageConnectionString,
               },
             ]),
-            connectionString: props.connectionStrings
+            connectionStrings: props.connectionStrings
           },
         },
       },
