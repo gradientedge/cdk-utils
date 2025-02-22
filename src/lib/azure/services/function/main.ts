@@ -104,7 +104,7 @@ export class AzureFunctionManager {
     if (!resourceGroup) throw `Resource group undefined for ${id}`
 
     const functionApp = new Resource(scope, `${id}-fa`, {
-      type: 'Microsoft.Web/sites@2023-12-01',
+      type: 'Microsoft.Web/sites@2024-04-01',
       name: `${props.name}-${scope.props.stage}`,
       location: resourceGroup.location,
       parentId: resourceGroup.id,
@@ -154,6 +154,7 @@ export class AzureFunctionManager {
                 value: props.storageConnectionString,
               },
             ]),
+            connectionString: props.connectionStrings
           },
         },
       },

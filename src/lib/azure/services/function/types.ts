@@ -10,9 +10,11 @@ export interface FunctionAppFlexConsumptionProps {
   appServicePlanId: string
   appSettings: any
   blobEndpoint: string
+  connectionStrings: any
   containerName: string
   deploymentAuthenticationType?: string
   deploymentStorageType?: string
+  deploySource: string
   httpsOnly?: string
   instanceMemory?: number
   kind?: string
@@ -24,5 +26,4 @@ export interface FunctionAppFlexConsumptionProps {
   storageAccountConnectionStringName?: string
   storageConnectionString: string
   sourceCodeHash: string
-  deploySource: string
 }
