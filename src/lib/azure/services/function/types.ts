@@ -7,6 +7,7 @@ export interface FunctionAppProps extends LinuxFunctionAppConfig {}
 export interface FunctionProps extends FunctionAppFunctionConfig {}
 
 export interface FunctionAppFlexConsumptionProps {
+  alwaysReady?: any
   appServicePlanId: string
   appSettings: any
   blobEndpoint: string

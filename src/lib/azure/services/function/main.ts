@@ -133,6 +133,7 @@ export class AzureFunctionManager {
               version: props.runtimeVersion || '20',
             },
             scaleAndConcurrency: {
+              alwaysReady: props.alwaysReady,
               instanceMemoryMB: props.instanceMemory || 2048,
               maximumInstanceCount: props.maximumInstanceCount || 40,
               triggers: {},
