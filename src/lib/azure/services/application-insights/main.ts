@@ -42,8 +42,9 @@ export class AzureApplicationInsightsManager {
 
     const applicationInsights = new ApplicationInsights(scope, `${id}-am`, {
       ...props,
-      name: `${props.name}-${scope.props.stage}`,
+      name: `${props.name}-${scope.props.stage}` || '',
       resourceGroupName: resourceGroup.name,
+      applicationType: props.applicationType || 'web',
       tags: props.tags ?? {
         environment: scope.props.stage,
       },
