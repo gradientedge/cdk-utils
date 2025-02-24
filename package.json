@@ -62,7 +62,7 @@
     "app-root-path": "^3.1.0",
     "aws-cdk-lib": "^2.177.0",
     "cdktf": "^0.20.11",
-    "cdktf-local-exec": "^0.5.54",
+    "cdktf-local-exec": "^0.5.57",
     "constructs": "^10.4.2",
     "lodash": "^4.17.21",
     "moment": "^2.30.1",
