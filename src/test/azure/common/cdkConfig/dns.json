@@ -1,0 +1,15 @@
+{
+  "testDnsZone": {
+    "name": "test-dns-zone"
+  },
+  "testDnsARecord": {
+    "name": "test-a-record",
+    "ttl": 300,
+    "records": "test-record"
+  },
+  "testDnsCnameRecord": {
+    "name": "test-cname-record",
+    "ttl": 300,
+    "target_resource_id": "test-resource"
+  }
+}

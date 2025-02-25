@@ -16,26 +16,30 @@ import {
   AzureCosmosDbManager,
   AzureServicebusManager,
   AzureEventgridManager,
+  AzureDnsManager,
+  AzureLogAnalyticsWorkspaceManager,
 } from '../services'
 import { CommonAzureStackProps } from './types'
 import { AzureRemoteBackend } from './constants'
 
 export class CommonAzureConstruct extends TerraformStack {
   declare props: CommonAzureStackProps
-  id: string
-  fullyQualifiedDomainName: string
-  tenantId: string
   apiManagementManager: AzureApiManagementManager
+  appConfigurationManager: AzureAppConfigurationManager
   appServiceManager: AzureAppServiceManager
   applicationInsightsManager: AzureApplicationInsightsManager
-  appConfigurationManager: AzureAppConfigurationManager
   cosmosDbManager: AzureCosmosDbManager
-  functiontManager: AzureFunctionManager
-  keyVaultManager: AzureKeyVaultManager
-  resourceGroupManager: AzureResourceGroupManager
-  storageManager: AzureStorageManager
-  servicebusManager: AzureServicebusManager
+  dnsManager: AzureDnsManager
   eventgridManager: AzureEventgridManager
+  fullyQualifiedDomainName: string
+  functiontManager: AzureFunctionManager
+  id: string
+  keyVaultManager: AzureKeyVaultManager
+  logAnalyticsWorkspaceManager: AzureLogAnalyticsWorkspaceManager
+  resourceGroupManager: AzureResourceGroupManager
+  servicebusManager: AzureServicebusManager
+  storageManager: AzureStorageManager
+  tenantId: string
 
   constructor(scope: Construct, id: string, props: CommonAzureStackProps) {
     super(scope, id)
@@ -43,22 +47,25 @@ export class CommonAzureConstruct extends TerraformStack {
     this.id = id
 
     this.apiManagementManager = new AzureApiManagementManager()
+    this.appConfigurationManager = new AzureAppConfigurationManager()
     this.appServiceManager = new AzureAppServiceManager()
     this.applicationInsightsManager = new AzureApplicationInsightsManager()
-    this.appConfigurationManager = new AzureAppConfigurationManager()
     this.cosmosDbManager = new AzureCosmosDbManager()
+    this.dnsManager = new AzureDnsManager()
+    this.eventgridManager = new AzureEventgridManager()
     this.functiontManager = new AzureFunctionManager()
     this.keyVaultManager = new AzureKeyVaultManager()
+    this.logAnalyticsWorkspaceManager = new AzureLogAnalyticsWorkspaceManager()
     this.resourceGroupManager = new AzureResourceGroupManager()
-    this.storageManager = new AzureStorageManager()
     this.servicebusManager = new AzureServicebusManager()
-    this.eventgridManager = new AzureEventgridManager()
+    this.storageManager = new AzureStorageManager()
 
     this.determineFullyQualifiedDomain()
     this.determineRemoteBackend()
     this.determineTenantId()
-    new AzurermProvider(this, `${this.id}-provider`, this.props)
+
     new AzapiProvider(this, `${this.id}-azapi-provider`, this.props)
+    new AzurermProvider(this, `${this.id}-provider`, this.props)
   }
 
   /**
