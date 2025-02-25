@@ -49,6 +49,10 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group'
+import {
+  DataAzurermEventgridTopic,
+  DataAzurermEventgridTopicConfig,
+} from '@cdktf/provider-azurerm/lib/data-azurerm-eventgrid-topic'
 import { EventgridTopic } from '@cdktf/provider-azurerm/lib/eventgrid-topic'
 import { EventgridEventSubscription } from '@cdktf/provider-azurerm/lib/eventgrid-event-subscription'
 import { CommonAzureConstruct } from '../../common'
@@ -104,6 +108,39 @@ export class AzureEventgridManager {
     createAzureTfOutput(`${id}-eventgridTopicName`, scope, eventgridTopic.name)
     createAzureTfOutput(`${id}-eventgridTopicFriendlyUniqueId`, scope, eventgridTopic.friendlyUniqueId)
     createAzureTfOutput(`${id}-eventgridTopicId`, scope, eventgridTopic.id)
+    createAzureTfOutput(`${id}-eventgridTopicEndpoint`, scope, eventgridTopic.endpoint)
+
+    return eventgridTopic
+  }
+
+  /**
+   * @summary Method to resolve an existing eventgrid topic
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props eventgrid topic properties
+   * @see [CDKTF Eventgrid Topic Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/eventgridTopic.typescript.md}
+   */
+  public resolveEventgridTopic(id: string, scope: CommonAzureConstruct, props: DataAzurermEventgridTopicConfig) {
+    if (!props) throw `Props undefined for ${id}`
+
+    const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-et-rg`, {
+      name: scope.props.resourceGroupName
+        ? `${scope.props.resourceGroupName}-${scope.props.stage}`
+        : `${props.resourceGroupName}`,
+    })
+
+    if (!resourceGroup) throw `Resource group undefined for ${id}`
+
+    const eventgridTopic = new DataAzurermEventgridTopic(scope, `${id}-et`, {
+      ...props,
+      name: `${props.name}-${scope.props.stage}`,
+      resourceGroupName: resourceGroup.name,
+    })
+
+    createAzureTfOutput(`${id}-eventgridTopicName`, scope, eventgridTopic.name)
+    createAzureTfOutput(`${id}-eventgridTopicFriendlyUniqueId`, scope, eventgridTopic.friendlyUniqueId)
+    createAzureTfOutput(`${id}-eventgridTopicId`, scope, eventgridTopic.id)
+    createAzureTfOutput(`${id}-eventgridTopicEndpoint`, scope, eventgridTopic.endpoint)
 
     return eventgridTopic
   }
