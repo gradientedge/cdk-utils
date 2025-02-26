@@ -82,16 +82,15 @@ export class AzureApplicationInsightsManager {
   public createApplicationInsights(id: string, scope: CommonAzureConstruct, props: ApplicationInsightsProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-am-rg`, {
-      name: scope.resourceNameFormatter.format(
-        scope.props.resourceGroupName || props.resourceGroupName,
-        scope.props.resourceNameOptions?.resourceGroup
-      ),
+    const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-ai-rg`, {
+      name: scope.props.resourceGroupName
+        ? `${scope.props.resourceGroupName}-${scope.props.stage}`
+        : `${props.resourceGroupName}`,
     })
 
     if (!resourceGroup) throw `Resource group undefined for ${id}`
 
-    const applicationInsights = new ApplicationInsights(scope, `${id}-am`, {
+    const applicationInsights = new ApplicationInsights(scope, `${id}-ai`, {
       ...props,
       name: `${props.name}-${scope.props.stage}` || '',
       resourceGroupName: resourceGroup.name,

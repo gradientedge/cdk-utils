@@ -82,16 +82,15 @@ export class AzureAppServiceManager {
   public createAppServicePlan(id: string, scope: CommonAzureConstruct, props: ServicePlanProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-am-rg`, {
-      name: scope.resourceNameFormatter.format(
-        scope.props.resourceGroupName || props.resourceGroupName,
-        scope.props.resourceNameOptions?.resourceGroup
-      ),
+    const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-as-rg`, {
+      name: scope.props.resourceGroupName
+        ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
+        : `${props.resourceGroupName}`,
     })
 
     if (!resourceGroup) throw `Resource group undefined for ${id}`
 
-    const appServicePlan = new ServicePlan(scope, `${id}-am`, {
+    const appServicePlan = new ServicePlan(scope, `${id}-as`, {
       ...props,
       name: scope.resourceNameFormatter.format(props.name),
       resourceGroupName: resourceGroup.name,
