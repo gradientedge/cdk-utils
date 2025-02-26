@@ -98,7 +98,7 @@ export class AzureEventgridManager {
 
     const eventgridTopic = new EventgridTopic(scope, `${id}-et`, {
       ...props,
-      name: `${props.name}-${scope.props.stage}`,
+      name: scope.resourceNameFormatter.format(props.name),
       location: resourceGroup.location,
       resourceGroupName: resourceGroup.name,
       tags: props.tags ?? {
