@@ -1,25 +1,20 @@
-import { LinuxFunctionApp } from '@cdktf/provider-azurerm/lib/linux-function-app'
-import { FunctionAppFunction } from '@cdktf/provider-azurerm/lib/function-app-function'
+import { LogAnalyticsWorkspace } from '@cdktf/provider-azurerm/lib/log-analytics-workspace'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
 import { Construct } from 'constructs'
-import {
-  CommonAzureConstruct,
-  CommonAzureStack,
-  CommonAzureStackProps,
-  FunctionAppProps,
-  FunctionProps,
-} from '../../../../lib'
+import { CommonAzureConstruct, CommonAzureStack, CommonAzureStackProps, LogAnalyticsWorkspaceProps } from '../../../lib'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
-  testFunctionApp: FunctionAppProps
-  testFunction: FunctionProps
+  testLogAnalyticsWorkspace: LogAnalyticsWorkspaceProps
   testAttribute?: string
 }
 
 const testStackProps: any = {
   domainName: 'gradientedge.io',
-  extraContexts: ['src/test/azure/common/cdkConfig/dummy.json', 'src/test/azure/common/cdkConfig/functions.json'],
+  extraContexts: [
+    'src/test/azure/common/cdkConfig/dummy.json',
+    'src/test/azure/common/cdkConfig/log-analytics-workspace.json',
+  ],
   features: {},
   name: 'test-common-stack',
   resourceGroupName: 'test-rg',
@@ -40,8 +35,7 @@ class TestCommonStack extends CommonAzureStack {
     return {
       ...super.determineConstructProps(props),
       testAttribute: this.node.tryGetContext('testAttribute'),
-      testFunctionApp: this.node.tryGetContext('testFunctionApp'),
-      testFunction: this.node.tryGetContext('testFunction'),
+      testLogAnalyticsWorkspace: this.node.tryGetContext('testLogAnalyticsWorkspace'),
     }
   }
 }
@@ -61,8 +55,11 @@ class TestCommonConstruct extends CommonAzureConstruct {
 
   constructor(parent: Construct, name: string, props: TestAzureStackProps) {
     super(parent, name, props)
-    this.functiontManager.createFunctionApp(`test-function-app-${this.props.stage}`, this, this.props.testFunctionApp)
-    this.functiontManager.createFunction(`test-function-${this.props.stage}`, this, this.props.testFunction)
+    this.logAnalyticsWorkspaceManager.createLogAnalyticsWorkspace(
+      `test-log-analytics-workspace-${this.props.stage}`,
+      this,
+      this.props.testLogAnalyticsWorkspace
+    )
   }
 }
 
@@ -72,14 +69,16 @@ const commonStack = new TestCommonStack(testingApp, 'test-common-stack', testSta
 const stack = Testing.fullSynth(commonStack)
 const construct = Testing.synth(commonStack.construct)
 
-describe('TestAzureFunctionAppConstruct', () => {
+console.log(expect(construct).toHaveResourceWithProperties(LogAnalyticsWorkspace, {}))
+
+describe('TestAzureLogAnalyticsWorkspaceConstruct', () => {
   test('handles mis-configurations as expected', () => {
     const error = () => new TestInvalidCommonStack(app, 'test-invalid-stack', testStackProps)
-    expect(error).toThrow('Props undefined for test-function-app-dev')
+    expect(error).toThrow('Props undefined for test-log-analytics-workspace-dev')
   })
 })
 
-describe('TestAzureFunctionAppConstruct', () => {
+describe('TestAzureLogAnalyticsWorkspaceConstruct', () => {
   test('is initialised as expected', () => {
     /* test if the created stack have the right properties injected */
     expect(commonStack.props).toHaveProperty('testAttribute')
@@ -87,7 +86,7 @@ describe('TestAzureFunctionAppConstruct', () => {
   })
 })
 
-describe('TestAzureFunctionAppConstruct', () => {
+describe('TestAzureLogAnalyticsWorkspaceConstruct', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
     expect(construct).toBeDefined()
@@ -96,44 +95,31 @@ describe('TestAzureFunctionAppConstruct', () => {
   })
 })
 
-describe('TestAzureFunctionAppConstruct', () => {
+describe('TestAzureLogAnalyticsWorkspaceConstruct', () => {
   test('provisions outputs as expected', () => {
     expect(JSON.parse(construct).output).toMatchObject({
-      testFunctionAppDevFunctionAppFriendlyUniqueId: {
-        value: 'test-function-app-dev-fa',
+      testLogAnalyticsWorkspaceDevLogAnalyticsWorkspaceFriendlyUniqueId: {
+        value: 'test-log-analytics-workspace-dev-lw',
       },
-      testFunctionAppDevFunctionAppId: {
-        value: '${azurerm_linux_function_app.test-function-app-dev-fa.id}',
+      testLogAnalyticsWorkspaceDevLogAnalyticsWorkspaceId: {
+        value: '${azurerm_log_analytics_workspace.test-log-analytics-workspace-dev-lw.id}',
       },
-      testFunctionAppDevFunctionAppName: {
-        value: '${azurerm_linux_function_app.test-function-app-dev-fa.name}',
-      },
-      testFunctionDevFunctionFriendlyUniqueId: {
-        value: 'test-function-dev-fc',
-      },
-      testFunctionDevFunctionId: {
-        value: '${azurerm_function_app_function.test-function-dev-fc.id}',
-      },
-      testFunctionDevFunctionName: {
-        value: '${azurerm_function_app_function.test-function-dev-fc.name}',
+      testLogAnalyticsWorkspaceDevLogAnalyticsWorkspaceName: {
+        value: '${azurerm_log_analytics_workspace.test-log-analytics-workspace-dev-lw.name}',
       },
     })
   })
 })
 
-describe('TestAzureFunctionAppConstruct', () => {
-  test('provisions function app as expected', () => {
-    expect(construct).toHaveResourceWithProperties(LinuxFunctionApp, {
-      name: 'test-function-app-dev',
-      resource_group_name: '${data.azurerm_resource_group.test-function-app-dev-fa-rg.name}',
-    })
-  })
-})
-
-describe('TestAzureFunctionConstruct', () => {
-  test('provisions function as expected', () => {
-    expect(construct).toHaveResourceWithProperties(FunctionAppFunction, {
-      name: 'test-function-dev',
+describe('TestAzureLogAnalyticsWorkspaceConstruct', () => {
+  test('provisions log analytics workspace as expected', () => {
+    expect(construct).toHaveResourceWithProperties(LogAnalyticsWorkspace, {
+      location: '${data.azurerm_resource_group.test-log-analytics-workspace-dev-lw-rg.location}',
+      name: 'test-log-analytics-workspace-dev',
+      resource_group_name: '${data.azurerm_resource_group.test-log-analytics-workspace-dev-lw-rg.name}',
+      tags: {
+        environment: 'dev',
+      },
     })
   })
 })

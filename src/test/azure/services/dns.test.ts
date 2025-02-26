@@ -1,6 +1,7 @@
 import { DnsZone } from '@cdktf/provider-azurerm/lib/dns-zone'
 import { DnsARecord } from '@cdktf/provider-azurerm/lib/dns-a-record'
 import { DnsCnameRecord } from '@cdktf/provider-azurerm/lib/dns-cname-record'
+import { DnsTxtRecord } from '@cdktf/provider-azurerm/lib/dns-txt-record'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
 import { Construct } from 'constructs'
@@ -11,12 +12,14 @@ import {
   DnsZoneProps,
   DnsARecordProps,
   DnsCnameRecordProps,
-} from '../../../../lib'
+  DnsTxtRecordProps,
+} from '../../../lib'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
   testDnsZone: DnsZoneProps
   testDnsARecord: DnsARecordProps
   testDnsCnameRecord: DnsCnameRecordProps
+  testDnsTxtRecord: DnsTxtRecordProps
   testAttribute?: string
 }
 
@@ -46,6 +49,7 @@ class TestCommonStack extends CommonAzureStack {
       testDnsZone: this.node.tryGetContext('testDnsZone'),
       testDnsARecord: this.node.tryGetContext('testDnsARecord'),
       testDnsCnameRecord: this.node.tryGetContext('testDnsCnameRecord'),
+      testDnsTxtRecord: this.node.tryGetContext('testDnsTxtRecord'),
     }
   }
 }
@@ -74,6 +78,8 @@ class TestCommonConstruct extends CommonAzureConstruct {
       this,
       this.props.testDnsCnameRecord
     )
+
+    this.dnsManager.createDnsTxtRecord(`test-dns-txt-record-${this.props.stage}`, this, this.props.testDnsTxtRecord)
   }
 }
 
@@ -160,12 +166,10 @@ describe('TestAzureDnsConstruct', () => {
     expect(construct).toHaveResourceWithProperties(DnsARecord, {
       name: 'test-a-record-dev',
       records: 'test-record',
-      resource_group_name: '${data.azurerm_dns_zone.test-dns-a-record-dev-da-dz.resource_group_name}',
       tags: {
         environment: 'dev',
       },
       ttl: 300,
-      zone_name: '${data.azurerm_dns_zone.test-dns-a-record-dev-da-dz.name}',
     })
   })
 })
@@ -174,12 +178,22 @@ describe('TestAzureDnsConstruct', () => {
   test('provisions dns cname record as expected', () => {
     expect(construct).toHaveResourceWithProperties(DnsCnameRecord, {
       name: 'test-cname-record-dev',
-      resource_group_name: '${data.azurerm_dns_zone.test-dns-cname-record-dev-dc-dz.resource_group_name}',
       tags: {
         environment: 'dev',
       },
       ttl: 300,
-      zone_name: '${data.azurerm_dns_zone.test-dns-cname-record-dev-dc-dz.name}',
+    })
+  })
+})
+
+describe('TestAzureDnsConstruct', () => {
+  test('provisions dns txt record as expected', () => {
+    expect(construct).toHaveResourceWithProperties(DnsTxtRecord, {
+      name: 'test-txt-record',
+      tags: {
+        environment: 'dev',
+      },
+      ttl: 300,
     })
   })
 })

@@ -1,17 +1,20 @@
-import { KeyVault } from '@cdktf/provider-azurerm/lib/key-vault'
+import { AppConfiguration } from '@cdktf/provider-azurerm/lib/app-configuration'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
 import { Construct } from 'constructs'
-import { CommonAzureConstruct, CommonAzureStack, CommonAzureStackProps, KeyVaultProps } from '../../../../lib'
+import { CommonAzureConstruct, CommonAzureStack, CommonAzureStackProps, AppConfigurationProps } from '../../../lib'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
-  testKeyVault: KeyVaultProps
+  testAppConfiguration: AppConfigurationProps
   testAttribute?: string
 }
 
 const testStackProps: any = {
   domainName: 'gradientedge.io',
-  extraContexts: ['src/test/azure/common/cdkConfig/dummy.json', 'src/test/azure/common/cdkConfig/key-vault.json'],
+  extraContexts: [
+    'src/test/azure/common/cdkConfig/dummy.json',
+    'src/test/azure/common/cdkConfig/app-configuration.json',
+  ],
   features: {},
   name: 'test-common-stack',
   resourceGroupName: 'test-rg',
@@ -32,7 +35,7 @@ class TestCommonStack extends CommonAzureStack {
     return {
       ...super.determineConstructProps(props),
       testAttribute: this.node.tryGetContext('testAttribute'),
-      testKeyVault: this.node.tryGetContext('testKeyVault'),
+      testAppConfiguration: this.node.tryGetContext('testAppConfiguration'),
     }
   }
 }
@@ -52,7 +55,11 @@ class TestCommonConstruct extends CommonAzureConstruct {
 
   constructor(parent: Construct, name: string, props: TestAzureStackProps) {
     super(parent, name, props)
-    this.keyVaultManager.createKeyVault(`test-key-vault-${this.props.stage}`, this, this.props.testKeyVault)
+    this.appConfigurationManager.createAppConfiguration(
+      `test-app-configuration-${this.props.stage}`,
+      this,
+      this.props.testAppConfiguration
+    )
   }
 }
 
@@ -62,14 +69,16 @@ const commonStack = new TestCommonStack(testingApp, 'test-common-stack', testSta
 const stack = Testing.fullSynth(commonStack)
 const construct = Testing.synth(commonStack.construct)
 
-describe('TestAzureKeyVaultConstruct', () => {
+console.log(expect(construct).toHaveResourceWithProperties(AppConfiguration, {}))
+
+describe('TestAzureAppConfigurationConstruct', () => {
   test('handles mis-configurations as expected', () => {
     const error = () => new TestInvalidCommonStack(app, 'test-invalid-stack', testStackProps)
-    expect(error).toThrow('Props undefined for test-key-vault-dev')
+    expect(error).toThrow('Props undefined for test-app-configuration-dev')
   })
 })
 
-describe('TestAzureKeyVaultConstruct', () => {
+describe('TestAzureAppConfigurationConstruct', () => {
   test('is initialised as expected', () => {
     /* test if the created stack have the right properties injected */
     expect(commonStack.props).toHaveProperty('testAttribute')
@@ -77,7 +86,7 @@ describe('TestAzureKeyVaultConstruct', () => {
   })
 })
 
-describe('TestAzureKeyVaultConstruct', () => {
+describe('TestAzureAppConfigurationConstruct', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
     expect(construct).toBeDefined()
@@ -86,27 +95,27 @@ describe('TestAzureKeyVaultConstruct', () => {
   })
 })
 
-describe('TestAzureKeyVaultConstruct', () => {
+describe('TestAzureAppConfigurationConstruct', () => {
   test('provisions outputs as expected', () => {
     expect(JSON.parse(construct).output).toMatchObject({
-      testKeyVaultDevKeyVaultFriendlyUniqueId: {
-        value: 'test-key-vault-dev-kv',
+      testAppConfigurationDevAppConfigurationFriendlyUniqueId: {
+        value: 'test-app-configuration-dev-am',
       },
-      testKeyVaultDevKeyVaultId: {
-        value: '${azurerm_key_vault.test-key-vault-dev-kv.id}',
+      testAppConfigurationDevAppConfigurationId: {
+        value: '${azurerm_app_configuration.test-app-configuration-dev-am.id}',
       },
-      testKeyVaultDevKeyVaultName: {
-        value: '${azurerm_key_vault.test-key-vault-dev-kv.name}',
+      testAppConfigurationDevAppConfigurationName: {
+        value: '${azurerm_app_configuration.test-app-configuration-dev-am.name}',
       },
     })
   })
 })
 
-describe('TestAzureKeyVaultConstruct', () => {
-  test('provisions key vault as expected', () => {
-    expect(construct).toHaveResourceWithProperties(KeyVault, {
-      name: 'test-key-vault-dev',
-      resource_group_name: '${data.azurerm_resource_group.test-key-vault-dev-kv-rg.name}',
+describe('TestAzureAppConfigurationConstruct', () => {
+  test('provisions app configuration as expected', () => {
+    expect(construct).toHaveResourceWithProperties(AppConfiguration, {
+      name: 'test-app-configuration-dev',
+      resource_group_name: '${data.azurerm_resource_group.test-app-configuration-dev-am-rg.name}',
     })
   })
 })

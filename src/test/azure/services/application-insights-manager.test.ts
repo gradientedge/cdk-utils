@@ -1,17 +1,20 @@
-import { ResourceGroup } from '@cdktf/provider-azurerm/lib/resource-group'
+import { ApplicationInsights } from '@cdktf/provider-azurerm/lib/application-insights'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
 import { Construct } from 'constructs'
-import { CommonAzureConstruct, CommonAzureStack, CommonAzureStackProps, ResourceGroupProps } from '../../../../lib'
+import { CommonAzureConstruct, CommonAzureStack, CommonAzureStackProps, ApplicationInsightsProps } from '../../../lib'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
-  testResourceGroup: ResourceGroupProps
+  testApplicationInsights: ApplicationInsightsProps
   testAttribute?: string
 }
 
 const testStackProps: any = {
   domainName: 'gradientedge.io',
-  extraContexts: ['src/test/azure/common/cdkConfig/dummy.json', 'src/test/azure/common/cdkConfig/resource-group.json'],
+  extraContexts: [
+    'src/test/azure/common/cdkConfig/dummy.json',
+    'src/test/azure/common/cdkConfig/application-insights.json',
+  ],
   features: {},
   name: 'test-common-stack',
   resourceGroupName: 'test-rg',
@@ -32,7 +35,7 @@ class TestCommonStack extends CommonAzureStack {
     return {
       ...super.determineConstructProps(props),
       testAttribute: this.node.tryGetContext('testAttribute'),
-      testResourceGroup: this.node.tryGetContext('testResourceGroup'),
+      testApplicationInsights: this.node.tryGetContext('testApplicationInsights'),
     }
   }
 }
@@ -52,10 +55,10 @@ class TestCommonConstruct extends CommonAzureConstruct {
 
   constructor(parent: Construct, name: string, props: TestAzureStackProps) {
     super(parent, name, props)
-    this.resourceGroupManager.createResourceGroup(
-      `test-resource-group-${this.props.stage}`,
+    this.applicationInsightsManager.createApplicationInsights(
+      `test-application-insights-${this.props.stage}`,
       this,
-      this.props.testResourceGroup
+      this.props.testApplicationInsights
     )
   }
 }
@@ -66,14 +69,16 @@ const commonStack = new TestCommonStack(testingApp, 'test-common-stack', testSta
 const stack = Testing.fullSynth(commonStack)
 const construct = Testing.synth(commonStack.construct)
 
-describe('TestAzureResourceGroupConstruct', () => {
+console.log(expect(construct).toHaveResourceWithProperties(ApplicationInsights, {}))
+
+describe('TestAzureApplicationInsightsConstruct', () => {
   test('handles mis-configurations as expected', () => {
     const error = () => new TestInvalidCommonStack(app, 'test-invalid-stack', testStackProps)
-    expect(error).toThrow('Props undefined for test-resource-group-dev')
+    expect(error).toThrow('Props undefined for test-application-insights-dev')
   })
 })
 
-describe('TestAzureResourceGroupConstruct', () => {
+describe('TestAzureApplicationInsightsConstruct', () => {
   test('is initialised as expected', () => {
     /* test if the created stack have the right properties injected */
     expect(commonStack.props).toHaveProperty('testAttribute')
@@ -81,7 +86,7 @@ describe('TestAzureResourceGroupConstruct', () => {
   })
 })
 
-describe('TestAzureResourceGroupConstruct', () => {
+describe('TestAzureApplicationInsightsConstruct', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
     expect(construct).toBeDefined()
@@ -90,29 +95,27 @@ describe('TestAzureResourceGroupConstruct', () => {
   })
 })
 
-describe('TestAzureResourceGroupConstruct', () => {
+describe('TestAzureApplicationInsightsConstruct', () => {
   test('provisions outputs as expected', () => {
     expect(JSON.parse(construct).output).toMatchObject({
-      testResourceGroupDevResourceGroupFriendlyUniqueId: {
-        value: 'test-resource-group-dev-rg',
+      testApplicationInsightsDevApplicationInsightsFriendlyUniqueId: {
+        value: 'test-application-insights-dev-am',
       },
-      testResourceGroupDevResourceGroupId: {
-        value: '${azurerm_resource_group.test-resource-group-dev-rg.id}',
+      testApplicationInsightsDevApplicationInsightsId: {
+        value: '${azurerm_application_insights.test-application-insights-dev-am.id}',
       },
-      testResourceGroupDevResourceGroupName: {
-        value: '${azurerm_resource_group.test-resource-group-dev-rg.name}',
+      testApplicationInsightsDevApplicationInsightsName: {
+        value: '${azurerm_application_insights.test-application-insights-dev-am.name}',
       },
     })
   })
 })
 
-describe('TestAzureResourceGroupConstruct', () => {
-  test('provisions resource group as expected', () => {
-    expect(construct).toHaveResourceWithProperties(ResourceGroup, {
-      name: 'test-resource-group',
-      tags: {
-        environment: 'dev',
-      },
+describe('TestAzureApplicationInsightsConstruct', () => {
+  test('provisions application insights as expected', () => {
+    expect(construct).toHaveResourceWithProperties(ApplicationInsights, {
+      name: 'test-application-insights-dev',
+      resource_group_name: '${data.azurerm_resource_group.test-application-insights-dev-am-rg.name}',
     })
   })
 })

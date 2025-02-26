@@ -13,7 +13,7 @@ import {
   ApiManagementProps,
   ApiManagementBackendProps,
   ApiManagementApiProps,
-} from '../../../../lib'
+} from '../../../lib'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
   testApiManagement: ApiManagementProps

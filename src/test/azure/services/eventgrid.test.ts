@@ -9,7 +9,7 @@ import {
   CommonAzureStackProps,
   EventgridTopicProps,
   EventgridEventSubscriptionProps,
-} from '../../../../lib'
+} from '../../../lib'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
   testEventgridTopic: EventgridTopicProps
