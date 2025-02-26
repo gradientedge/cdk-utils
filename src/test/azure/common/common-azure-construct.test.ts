@@ -130,7 +130,7 @@ describe('TestAzureCommonConstruct', () => {
   test('provisions data as expected', () => {
     expect(JSON.parse(construct).data).toMatchObject({
       azurerm_resource_group: {
-        'test-storage-account-dev-sc-rg': {
+        'test-storage-account-dev-sa-rg': {
           name: 'test-rg-dev',
         },
         'test-storage-blob-dev-sb-rg': {
@@ -156,9 +156,9 @@ describe('TestAzureCommonConstruct', () => {
   test('provisions storage account as expected', () => {
     expect(construct).toHaveResourceWithProperties(StorageAccount, {
       account_tier: 'Standard',
-      location: '${data.azurerm_resource_group.test-storage-account-dev-sc-rg.location}',
+      location: '${data.azurerm_resource_group.test-storage-account-dev-sa-rg.location}',
       name: 'teststorageaccountdev',
-      resource_group_name: '${data.azurerm_resource_group.test-storage-account-dev-sc-rg.name}',
+      resource_group_name: '${data.azurerm_resource_group.test-storage-account-dev-sa-rg.name}',
       tags: {
         environment: 'dev',
       },

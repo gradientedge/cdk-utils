@@ -36,10 +36,9 @@ export class AzureFunctionManager {
     if (!props) throw `Props undefined for ${id}`
 
     const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-fa-rg`, {
-      name: scope.resourceNameFormatter.format(
-        scope.props.resourceGroupName || props.resourceGroupName,
-        scope.props.resourceNameOptions?.resourceGroup
-      ),
+      name: scope.props.resourceGroupName
+        ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
+        : `${props.resourceGroupName}`,
     })
 
     if (!resourceGroup) throw `Resource group undefined for ${id}`
@@ -97,10 +96,9 @@ export class AzureFunctionManager {
     if (!props) throw `Props undefined for ${id}`
 
     const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-fa-rg`, {
-      name: scope.resourceNameFormatter.format(
-        scope.props.resourceGroupName || props.resourceGroupName,
-        scope.props.resourceNameOptions?.resourceGroup
-      ),
+      name: scope.props.resourceGroupName
+        ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
+        : `${props.resourceGroupName}`,
     })
 
     if (!resourceGroup) throw `Resource group undefined for ${id}`

@@ -96,13 +96,13 @@ describe('TestAzureAppServicePlanConstruct', () => {
   test('provisions outputs as expected', () => {
     expect(JSON.parse(construct).output).toMatchObject({
       testAppServicePlanDevAppServicePlanFriendlyUniqueId: {
-        value: 'test-app-service-plan-dev-am',
+        value: 'test-app-service-plan-dev-as',
       },
       testAppServicePlanDevAppServicePlanId: {
-        value: '${azurerm_service_plan.test-app-service-plan-dev-am.id}',
+        value: '${azurerm_service_plan.test-app-service-plan-dev-as.id}',
       },
       testAppServicePlanDevAppServicePlanName: {
-        value: '${azurerm_service_plan.test-app-service-plan-dev-am.name}',
+        value: '${azurerm_service_plan.test-app-service-plan-dev-as.name}',
       },
     })
   })
@@ -112,7 +112,10 @@ describe('TestAzureAppServicePlanConstruct', () => {
   test('provisions app service plan as expected', () => {
     expect(construct).toHaveResourceWithProperties(ServicePlan, {
       name: 'test-app-service-plan-dev',
-      resource_group_name: '${data.azurerm_resource_group.test-app-service-plan-dev-am-rg.name}',
+      resource_group_name: '${data.azurerm_resource_group.test-app-service-plan-dev-as-rg.name}',
+      tags: {
+        environment: 'dev',
+      },
     })
   })
 })

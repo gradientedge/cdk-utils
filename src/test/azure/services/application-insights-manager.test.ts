@@ -99,13 +99,13 @@ describe('TestAzureApplicationInsightsConstruct', () => {
   test('provisions outputs as expected', () => {
     expect(JSON.parse(construct).output).toMatchObject({
       testApplicationInsightsDevApplicationInsightsFriendlyUniqueId: {
-        value: 'test-application-insights-dev-am',
+        value: 'test-application-insights-dev-ai',
       },
       testApplicationInsightsDevApplicationInsightsId: {
-        value: '${azurerm_application_insights.test-application-insights-dev-am.id}',
+        value: '${azurerm_application_insights.test-application-insights-dev-ai.id}',
       },
       testApplicationInsightsDevApplicationInsightsName: {
-        value: '${azurerm_application_insights.test-application-insights-dev-am.name}',
+        value: '${azurerm_application_insights.test-application-insights-dev-ai.name}',
       },
     })
   })
@@ -114,8 +114,12 @@ describe('TestAzureApplicationInsightsConstruct', () => {
 describe('TestAzureApplicationInsightsConstruct', () => {
   test('provisions application insights as expected', () => {
     expect(construct).toHaveResourceWithProperties(ApplicationInsights, {
+      application_type: 'web',
       name: 'test-application-insights-dev',
-      resource_group_name: '${data.azurerm_resource_group.test-application-insights-dev-am-rg.name}',
+      resource_group_name: '${data.azurerm_resource_group.test-application-insights-dev-ai-rg.name}',
+      tags: {
+        environment: 'dev',
+      },
     })
   })
 })
