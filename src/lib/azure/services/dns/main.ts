@@ -1,11 +1,11 @@
 import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group'
-import { DataAzurermDnsZone } from '@cdktf/provider-azurerm/lib/data-azurerm-dns-zone'
 import { DnsZone } from '@cdktf/provider-azurerm/lib/dns-zone'
 import { DnsARecord } from '@cdktf/provider-azurerm/lib/dns-a-record'
 import { DnsCnameRecord } from '@cdktf/provider-azurerm/lib/dns-cname-record'
+import { DnsTxtRecord } from '@cdktf/provider-azurerm/lib/dns-txt-record'
 import { CommonAzureConstruct } from '../../common'
 import { createAzureTfOutput } from '../../utils'
-import { DnsZoneProps, DnsARecordProps, DnsCnameRecordProps } from './types'
+import { DnsZoneProps, DnsARecordProps, DnsCnameRecordProps, DnsTxtRecordProps } from './types'
 
 /**
  * @classdesc Provides operations on Azure DNS
@@ -69,16 +69,9 @@ export class AzureDnsManager {
   public createDnsARecord(id: string, scope: CommonAzureConstruct, props: DnsARecordProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    const dnsZone = new DataAzurermDnsZone(scope, `${id}-da-dz`, {
-      name: props.zoneName,
-      resourceGroupName: props.resourceGroupName,
-    })
-
     const dnsARecord = new DnsARecord(scope, `${id}-da`, {
       ...props,
-      name: `${props.name}-${scope.props.stage}`,
-      resourceGroupName: dnsZone.resourceGroupName,
-      zoneName: dnsZone.name,
+      ttl: props.ttl || 300,
       tags: props.tags ?? {
         environment: scope.props.stage,
       },
@@ -101,16 +94,9 @@ export class AzureDnsManager {
   public createDnsCnameRecord(id: string, scope: CommonAzureConstruct, props: DnsCnameRecordProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    const dnsZone = new DataAzurermDnsZone(scope, `${id}-dc-dz`, {
-      name: props.zoneName,
-      resourceGroupName: props.resourceGroupName,
-    })
-
     const dnsCnameRecord = new DnsCnameRecord(scope, `${id}-dc`, {
       ...props,
-      name: `${props.name}-${scope.props.stage}`,
-      resourceGroupName: dnsZone.resourceGroupName,
-      zoneName: dnsZone.name,
+      ttl: props.ttl || 300,
       tags: props.tags ?? {
         environment: scope.props.stage,
       },
@@ -121,5 +107,30 @@ export class AzureDnsManager {
     createAzureTfOutput(`${id}-dnsCnameRecordId`, scope, dnsCnameRecord.id)
 
     return dnsCnameRecord
+  }
+
+  /**
+   * @summary Method to create a new DNS TXT Record
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props dns txt record properties
+   * @see [CDKTF DNS TXT Record Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/DnsCnameRecord.typescript.md}
+   */
+  public createDnsTxtRecord(id: string, scope: CommonAzureConstruct, props: DnsTxtRecordProps) {
+    if (!props) throw `Props undefined for ${id}`
+
+    const dnsTxtRecord = new DnsTxtRecord(scope, `${id}-dc`, {
+      ...props,
+      ttl: props.ttl || 300,
+      tags: props.tags ?? {
+        environment: scope.props.stage,
+      },
+    })
+
+    createAzureTfOutput(`${id}-dnsTxtRecordName`, scope, dnsTxtRecord.name)
+    createAzureTfOutput(`${id}-dnsTxtRecordFriendlyUniqueId`, scope, dnsTxtRecord.friendlyUniqueId)
+    createAzureTfOutput(`${id}-dnsTxtRecordId`, scope, dnsTxtRecord.id)
+
+    return dnsTxtRecord
   }
 }

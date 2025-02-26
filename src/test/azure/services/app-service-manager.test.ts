@@ -1,25 +1,17 @@
-import { LogAnalyticsWorkspace } from '@cdktf/provider-azurerm/lib/log-analytics-workspace'
+import { ServicePlan } from '@cdktf/provider-azurerm/lib/service-plan'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
 import { Construct } from 'constructs'
-import {
-  CommonAzureConstruct,
-  CommonAzureStack,
-  CommonAzureStackProps,
-  LogAnalyticsWorkspaceProps,
-} from '../../../../lib'
+import { CommonAzureConstruct, CommonAzureStack, CommonAzureStackProps, ServicePlanProps } from '../../../lib'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
-  testLogAnalyticsWorkspace: LogAnalyticsWorkspaceProps
+  testAppServicePlan: ServicePlanProps
   testAttribute?: string
 }
 
 const testStackProps: any = {
   domainName: 'gradientedge.io',
-  extraContexts: [
-    'src/test/azure/common/cdkConfig/dummy.json',
-    'src/test/azure/common/cdkConfig/log-analytics-workspace.json',
-  ],
+  extraContexts: ['src/test/azure/common/cdkConfig/dummy.json', 'src/test/azure/common/cdkConfig/app-service.json'],
   features: {},
   name: 'test-common-stack',
   resourceGroupName: 'test-rg',
@@ -40,7 +32,7 @@ class TestCommonStack extends CommonAzureStack {
     return {
       ...super.determineConstructProps(props),
       testAttribute: this.node.tryGetContext('testAttribute'),
-      testLogAnalyticsWorkspace: this.node.tryGetContext('testLogAnalyticsWorkspace'),
+      testAppServicePlan: this.node.tryGetContext('testAppServicePlan'),
     }
   }
 }
@@ -60,10 +52,10 @@ class TestCommonConstruct extends CommonAzureConstruct {
 
   constructor(parent: Construct, name: string, props: TestAzureStackProps) {
     super(parent, name, props)
-    this.logAnalyticsWorkspaceManager.createLogAnalyticsWorkspace(
-      `test-log-analytics-workspace-${this.props.stage}`,
+    this.appServiceManager.createAppServicePlan(
+      `test-app-service-plan-${this.props.stage}`,
       this,
-      this.props.testLogAnalyticsWorkspace
+      this.props.testAppServicePlan
     )
   }
 }
@@ -74,16 +66,16 @@ const commonStack = new TestCommonStack(testingApp, 'test-common-stack', testSta
 const stack = Testing.fullSynth(commonStack)
 const construct = Testing.synth(commonStack.construct)
 
-console.log(expect(construct).toHaveResourceWithProperties(LogAnalyticsWorkspace, {}))
+console.log(expect(construct).toHaveResourceWithProperties(ServicePlan, {}))
 
-describe('TestAzureLogAnalyticsWorkspaceConstruct', () => {
+describe('TestAzureAppServicePlanConstruct', () => {
   test('handles mis-configurations as expected', () => {
     const error = () => new TestInvalidCommonStack(app, 'test-invalid-stack', testStackProps)
-    expect(error).toThrow('Props undefined for test-log-analytics-workspace-dev')
+    expect(error).toThrow('Props undefined for test-app-service-plan-dev')
   })
 })
 
-describe('TestAzureLogAnalyticsWorkspaceConstruct', () => {
+describe('TestAzureAppServicePlanConstruct', () => {
   test('is initialised as expected', () => {
     /* test if the created stack have the right properties injected */
     expect(commonStack.props).toHaveProperty('testAttribute')
@@ -91,7 +83,7 @@ describe('TestAzureLogAnalyticsWorkspaceConstruct', () => {
   })
 })
 
-describe('TestAzureLogAnalyticsWorkspaceConstruct', () => {
+describe('TestAzureAppServicePlanConstruct', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
     expect(construct).toBeDefined()
@@ -100,31 +92,27 @@ describe('TestAzureLogAnalyticsWorkspaceConstruct', () => {
   })
 })
 
-describe('TestAzureLogAnalyticsWorkspaceConstruct', () => {
+describe('TestAzureAppServicePlanConstruct', () => {
   test('provisions outputs as expected', () => {
     expect(JSON.parse(construct).output).toMatchObject({
-      testLogAnalyticsWorkspaceDevLogAnalyticsWorkspaceFriendlyUniqueId: {
-        value: 'test-log-analytics-workspace-dev-lw',
+      testAppServicePlanDevAppServicePlanFriendlyUniqueId: {
+        value: 'test-app-service-plan-dev-am',
       },
-      testLogAnalyticsWorkspaceDevLogAnalyticsWorkspaceId: {
-        value: '${azurerm_log_analytics_workspace.test-log-analytics-workspace-dev-lw.id}',
+      testAppServicePlanDevAppServicePlanId: {
+        value: '${azurerm_service_plan.test-app-service-plan-dev-am.id}',
       },
-      testLogAnalyticsWorkspaceDevLogAnalyticsWorkspaceName: {
-        value: '${azurerm_log_analytics_workspace.test-log-analytics-workspace-dev-lw.name}',
+      testAppServicePlanDevAppServicePlanName: {
+        value: '${azurerm_service_plan.test-app-service-plan-dev-am.name}',
       },
     })
   })
 })
 
-describe('TestAzureLogAnalyticsWorkspaceConstruct', () => {
-  test('provisions log analytics workspace as expected', () => {
-    expect(construct).toHaveResourceWithProperties(LogAnalyticsWorkspace, {
-      location: '${data.azurerm_resource_group.test-log-analytics-workspace-dev-lw-rg.location}',
-      name: 'test-log-analytics-workspace-dev',
-      resource_group_name: '${data.azurerm_resource_group.test-log-analytics-workspace-dev-lw-rg.name}',
-      tags: {
-        environment: 'dev',
-      },
+describe('TestAzureAppServicePlanConstruct', () => {
+  test('provisions app service plan as expected', () => {
+    expect(construct).toHaveResourceWithProperties(ServicePlan, {
+      name: 'test-app-service-plan-dev',
+      resource_group_name: '${data.azurerm_resource_group.test-app-service-plan-dev-am-rg.name}',
     })
   })
 })

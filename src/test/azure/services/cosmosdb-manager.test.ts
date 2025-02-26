@@ -9,7 +9,7 @@ import {
   CosmosdbAccountProps,
   CosmosdbSqlDatabaseProps,
   CosmosdbSqlContainerProps,
-} from '../../../../lib'
+} from '../../../lib'
 import { CosmosdbSqlDatabase } from '@cdktf/provider-azurerm/lib/cosmosdb-sql-database'
 import { CosmosdbSqlContainer } from '@cdktf/provider-azurerm/lib/cosmosdb-sql-container'
 

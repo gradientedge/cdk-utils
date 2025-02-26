@@ -1,17 +1,17 @@
-import { ServicePlan } from '@cdktf/provider-azurerm/lib/service-plan'
+import { ResourceGroup } from '@cdktf/provider-azurerm/lib/resource-group'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
 import { Construct } from 'constructs'
-import { CommonAzureConstruct, CommonAzureStack, CommonAzureStackProps, ServicePlanProps } from '../../../../lib'
+import { CommonAzureConstruct, CommonAzureStack, CommonAzureStackProps, ResourceGroupProps } from '../../../lib'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
-  testAppServicePlan: ServicePlanProps
+  testResourceGroup: ResourceGroupProps
   testAttribute?: string
 }
 
 const testStackProps: any = {
   domainName: 'gradientedge.io',
-  extraContexts: ['src/test/azure/common/cdkConfig/dummy.json', 'src/test/azure/common/cdkConfig/app-service.json'],
+  extraContexts: ['src/test/azure/common/cdkConfig/dummy.json', 'src/test/azure/common/cdkConfig/resource-group.json'],
   features: {},
   name: 'test-common-stack',
   resourceGroupName: 'test-rg',
@@ -32,7 +32,7 @@ class TestCommonStack extends CommonAzureStack {
     return {
       ...super.determineConstructProps(props),
       testAttribute: this.node.tryGetContext('testAttribute'),
-      testAppServicePlan: this.node.tryGetContext('testAppServicePlan'),
+      testResourceGroup: this.node.tryGetContext('testResourceGroup'),
     }
   }
 }
@@ -52,10 +52,10 @@ class TestCommonConstruct extends CommonAzureConstruct {
 
   constructor(parent: Construct, name: string, props: TestAzureStackProps) {
     super(parent, name, props)
-    this.appServiceManager.createAppServicePlan(
-      `test-app-service-plan-${this.props.stage}`,
+    this.resourceGroupManager.createResourceGroup(
+      `test-resource-group-${this.props.stage}`,
       this,
-      this.props.testAppServicePlan
+      this.props.testResourceGroup
     )
   }
 }
@@ -66,16 +66,14 @@ const commonStack = new TestCommonStack(testingApp, 'test-common-stack', testSta
 const stack = Testing.fullSynth(commonStack)
 const construct = Testing.synth(commonStack.construct)
 
-console.log(expect(construct).toHaveResourceWithProperties(ServicePlan, {}))
-
-describe('TestAzureAppServicePlanConstruct', () => {
+describe('TestAzureResourceGroupConstruct', () => {
   test('handles mis-configurations as expected', () => {
     const error = () => new TestInvalidCommonStack(app, 'test-invalid-stack', testStackProps)
-    expect(error).toThrow('Props undefined for test-app-service-plan-dev')
+    expect(error).toThrow('Props undefined for test-resource-group-dev')
   })
 })
 
-describe('TestAzureAppServicePlanConstruct', () => {
+describe('TestAzureResourceGroupConstruct', () => {
   test('is initialised as expected', () => {
     /* test if the created stack have the right properties injected */
     expect(commonStack.props).toHaveProperty('testAttribute')
@@ -83,7 +81,7 @@ describe('TestAzureAppServicePlanConstruct', () => {
   })
 })
 
-describe('TestAzureAppServicePlanConstruct', () => {
+describe('TestAzureResourceGroupConstruct', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
     expect(construct).toBeDefined()
@@ -92,27 +90,29 @@ describe('TestAzureAppServicePlanConstruct', () => {
   })
 })
 
-describe('TestAzureAppServicePlanConstruct', () => {
+describe('TestAzureResourceGroupConstruct', () => {
   test('provisions outputs as expected', () => {
     expect(JSON.parse(construct).output).toMatchObject({
-      testAppServicePlanDevAppServicePlanFriendlyUniqueId: {
-        value: 'test-app-service-plan-dev-am',
+      testResourceGroupDevResourceGroupFriendlyUniqueId: {
+        value: 'test-resource-group-dev-rg',
       },
-      testAppServicePlanDevAppServicePlanId: {
-        value: '${azurerm_service_plan.test-app-service-plan-dev-am.id}',
+      testResourceGroupDevResourceGroupId: {
+        value: '${azurerm_resource_group.test-resource-group-dev-rg.id}',
       },
-      testAppServicePlanDevAppServicePlanName: {
-        value: '${azurerm_service_plan.test-app-service-plan-dev-am.name}',
+      testResourceGroupDevResourceGroupName: {
+        value: '${azurerm_resource_group.test-resource-group-dev-rg.name}',
       },
     })
   })
 })
 
-describe('TestAzureAppServicePlanConstruct', () => {
-  test('provisions app service plan as expected', () => {
-    expect(construct).toHaveResourceWithProperties(ServicePlan, {
-      name: 'test-app-service-plan-dev',
-      resource_group_name: '${data.azurerm_resource_group.test-app-service-plan-dev-am-rg.name}',
+describe('TestAzureResourceGroupConstruct', () => {
+  test('provisions resource group as expected', () => {
+    expect(construct).toHaveResourceWithProperties(ResourceGroup, {
+      name: 'test-resource-group',
+      tags: {
+        environment: 'dev',
+      },
     })
   })
 })

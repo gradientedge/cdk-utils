@@ -11,5 +11,10 @@
     "name": "test-cname-record",
     "ttl": 300,
     "target_resource_id": "test-resource"
+  },
+  "testDnsTxtRecord": {
+    "name": "test-txt-record",
+    "ttl": 300,
+    "records": "test-record"
   }
 }

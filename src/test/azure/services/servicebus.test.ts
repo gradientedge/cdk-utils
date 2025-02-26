@@ -11,7 +11,7 @@ import {
   ServicebusTopicProps,
   ServicebusQueueProps,
   ServicebusNamespaceProps,
-} from '../../../../lib'
+} from '../../../lib'
 import { ServicebusNamespace } from '@cdktf/provider-azurerm/lib/servicebus-namespace'
 import { ServicebusQueue } from '@cdktf/provider-azurerm/lib/servicebus-queue'
 

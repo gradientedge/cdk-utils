@@ -1,4 +1,5 @@
-import { ApplicationInsights } from '@cdktf/provider-azurerm/lib/application-insights'
+import { LinuxFunctionApp } from '@cdktf/provider-azurerm/lib/linux-function-app'
+import { FunctionAppFunction } from '@cdktf/provider-azurerm/lib/function-app-function'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
 import { Construct } from 'constructs'
@@ -6,20 +7,19 @@ import {
   CommonAzureConstruct,
   CommonAzureStack,
   CommonAzureStackProps,
-  ApplicationInsightsProps,
-} from '../../../../lib'
+  FunctionAppProps,
+  FunctionProps,
+} from '../../../lib'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
-  testApplicationInsights: ApplicationInsightsProps
+  testFunctionApp: FunctionAppProps
+  testFunction: FunctionProps
   testAttribute?: string
 }
 
 const testStackProps: any = {
   domainName: 'gradientedge.io',
-  extraContexts: [
-    'src/test/azure/common/cdkConfig/dummy.json',
-    'src/test/azure/common/cdkConfig/application-insights.json',
-  ],
+  extraContexts: ['src/test/azure/common/cdkConfig/dummy.json', 'src/test/azure/common/cdkConfig/functions.json'],
   features: {},
   name: 'test-common-stack',
   resourceGroupName: 'test-rg',
@@ -40,7 +40,8 @@ class TestCommonStack extends CommonAzureStack {
     return {
       ...super.determineConstructProps(props),
       testAttribute: this.node.tryGetContext('testAttribute'),
-      testApplicationInsights: this.node.tryGetContext('testApplicationInsights'),
+      testFunctionApp: this.node.tryGetContext('testFunctionApp'),
+      testFunction: this.node.tryGetContext('testFunction'),
     }
   }
 }
@@ -60,11 +61,8 @@ class TestCommonConstruct extends CommonAzureConstruct {
 
   constructor(parent: Construct, name: string, props: TestAzureStackProps) {
     super(parent, name, props)
-    this.applicationInsightsManager.createApplicationInsights(
-      `test-application-insights-${this.props.stage}`,
-      this,
-      this.props.testApplicationInsights
-    )
+    this.functiontManager.createFunctionApp(`test-function-app-${this.props.stage}`, this, this.props.testFunctionApp)
+    this.functiontManager.createFunction(`test-function-${this.props.stage}`, this, this.props.testFunction)
   }
 }
 
@@ -74,16 +72,14 @@ const commonStack = new TestCommonStack(testingApp, 'test-common-stack', testSta
 const stack = Testing.fullSynth(commonStack)
 const construct = Testing.synth(commonStack.construct)
 
-console.log(expect(construct).toHaveResourceWithProperties(ApplicationInsights, {}))
-
-describe('TestAzureApplicationInsightsConstruct', () => {
+describe('TestAzureFunctionAppConstruct', () => {
   test('handles mis-configurations as expected', () => {
     const error = () => new TestInvalidCommonStack(app, 'test-invalid-stack', testStackProps)
-    expect(error).toThrow('Props undefined for test-application-insights-dev')
+    expect(error).toThrow('Props undefined for test-function-app-dev')
   })
 })
 
-describe('TestAzureApplicationInsightsConstruct', () => {
+describe('TestAzureFunctionAppConstruct', () => {
   test('is initialised as expected', () => {
     /* test if the created stack have the right properties injected */
     expect(commonStack.props).toHaveProperty('testAttribute')
@@ -91,7 +87,7 @@ describe('TestAzureApplicationInsightsConstruct', () => {
   })
 })
 
-describe('TestAzureApplicationInsightsConstruct', () => {
+describe('TestAzureFunctionAppConstruct', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
     expect(construct).toBeDefined()
@@ -100,27 +96,44 @@ describe('TestAzureApplicationInsightsConstruct', () => {
   })
 })
 
-describe('TestAzureApplicationInsightsConstruct', () => {
+describe('TestAzureFunctionAppConstruct', () => {
   test('provisions outputs as expected', () => {
     expect(JSON.parse(construct).output).toMatchObject({
-      testApplicationInsightsDevApplicationInsightsFriendlyUniqueId: {
-        value: 'test-application-insights-dev-am',
+      testFunctionAppDevFunctionAppFriendlyUniqueId: {
+        value: 'test-function-app-dev-fa',
       },
-      testApplicationInsightsDevApplicationInsightsId: {
-        value: '${azurerm_application_insights.test-application-insights-dev-am.id}',
+      testFunctionAppDevFunctionAppId: {
+        value: '${azurerm_linux_function_app.test-function-app-dev-fa.id}',
       },
-      testApplicationInsightsDevApplicationInsightsName: {
-        value: '${azurerm_application_insights.test-application-insights-dev-am.name}',
+      testFunctionAppDevFunctionAppName: {
+        value: '${azurerm_linux_function_app.test-function-app-dev-fa.name}',
+      },
+      testFunctionDevFunctionFriendlyUniqueId: {
+        value: 'test-function-dev-fc',
+      },
+      testFunctionDevFunctionId: {
+        value: '${azurerm_function_app_function.test-function-dev-fc.id}',
+      },
+      testFunctionDevFunctionName: {
+        value: '${azurerm_function_app_function.test-function-dev-fc.name}',
       },
     })
   })
 })
 
-describe('TestAzureApplicationInsightsConstruct', () => {
-  test('provisions application insights as expected', () => {
-    expect(construct).toHaveResourceWithProperties(ApplicationInsights, {
-      name: 'test-application-insights-dev',
-      resource_group_name: '${data.azurerm_resource_group.test-application-insights-dev-am-rg.name}',
+describe('TestAzureFunctionAppConstruct', () => {
+  test('provisions function app as expected', () => {
+    expect(construct).toHaveResourceWithProperties(LinuxFunctionApp, {
+      name: 'test-function-app-dev',
+      resource_group_name: '${data.azurerm_resource_group.test-function-app-dev-fa-rg.name}',
+    })
+  })
+})
+
+describe('TestAzureFunctionConstruct', () => {
+  test('provisions function as expected', () => {
+    expect(construct).toHaveResourceWithProperties(FunctionAppFunction, {
+      name: 'test-function-dev',
     })
   })
 })
