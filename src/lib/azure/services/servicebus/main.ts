@@ -41,16 +41,17 @@ export class AzureServicebusManager {
     if (!props) throw `Props undefined for ${id}`
 
     const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-sn-rg`, {
-      name: scope.props.resourceGroupName
-        ? `${scope.props.resourceGroupName}-${scope.props.stage}`
-        : `${props.resourceGroupName}`,
+      name: scope.resourceNameFormatter.format(
+        scope.props.resourceGroupName || props.resourceGroupName,
+        scope.props.resourceNameOptions?.resourceGroup
+      ),
     })
 
     if (!resourceGroup) throw `Resource group undefined for ${id}`
 
     const servicebusNamespace = new ServicebusNamespace(scope, `${id}-sn`, {
       ...props,
-      name: `${props.name}-${scope.props.stage}`,
+      name: scope.resourceNameFormatter.format(props.name),
       resourceGroupName: resourceGroup.name,
       location: resourceGroup.location,
       identity: {
@@ -81,7 +82,7 @@ export class AzureServicebusManager {
 
     const servicebusTopic = new ServicebusTopic(scope, `${id}-st`, {
       ...props,
-      name: `${props.name}-${scope.props.stage}`,
+      name: scope.resourceNameFormatter.format(props.name),
       namespaceId: props.namespaceId,
     })
 
@@ -104,7 +105,7 @@ export class AzureServicebusManager {
 
     const servicebusQueue = new ServicebusQueue(scope, `${id}-sq`, {
       ...props,
-      name: `${props.name}-${scope.props.stage}`,
+      name: scope.resourceNameFormatter.format(props.name),
       namespaceId: props.namespaceId,
     })
 
@@ -127,7 +128,7 @@ export class AzureServicebusManager {
 
     const servicebusSubscription = new ServicebusSubscription(scope, `${id}-ss`, {
       ...props,
-      name: `${props.name}-${scope.props.stage}`,
+      name: scope.resourceNameFormatter.format(props.name),
       maxDeliveryCount: props.maxDeliveryCount || 1,
     })
 

@@ -36,16 +36,17 @@ export class AzureDnsManager {
     if (!props) throw `Props undefined for ${id}`
 
     const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-am-rg`, {
-      name: scope.props.resourceGroupName
-        ? `${scope.props.resourceGroupName}-${scope.props.stage}`
-        : `${props.resourceGroupName}`,
+      name: scope.resourceNameFormatter.format(
+        scope.props.resourceGroupName || props.resourceGroupName,
+        scope.props.resourceNameOptions?.resourceGroup
+      ),
     })
 
     if (!resourceGroup) throw `Resource group undefined for ${id}`
 
     const dnsZone = new DnsZone(scope, `${id}-dz`, {
       ...props,
-      name: `${props.name}-${scope.props.stage}`,
+      name: scope.resourceNameFormatter.format(props.name),
       resourceGroupName: resourceGroup.name,
       tags: props.tags ?? {
         environment: scope.props.stage,
@@ -76,7 +77,7 @@ export class AzureDnsManager {
 
     const dnsARecord = new DnsARecord(scope, `${id}-da`, {
       ...props,
-      name: `${props.name}-${scope.props.stage}`,
+      name: scope.resourceNameFormatter.format(props.name),
       resourceGroupName: dnsZone.resourceGroupName,
       zoneName: dnsZone.name,
       tags: props.tags ?? {
@@ -108,7 +109,7 @@ export class AzureDnsManager {
 
     const dnsCnameRecord = new DnsCnameRecord(scope, `${id}-dc`, {
       ...props,
-      name: `${props.name}-${scope.props.stage}`,
+      name: scope.resourceNameFormatter.format(props.name),
       resourceGroupName: dnsZone.resourceGroupName,
       zoneName: dnsZone.name,
       tags: props.tags ?? {
