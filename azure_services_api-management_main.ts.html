@@ -101,9 +101,10 @@ export class AzureApiManagementManager {
     if (!props) throw `Props undefined for ${id}`
 
     const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-am-rg`, {
-      name: scope.props.resourceGroupName
-        ? `${scope.props.resourceGroupName}-${scope.props.stage}`
-        : `${props.resourceGroupName}`,
+      name: scope.resourceNameFormatter.format(
+        scope.props.resourceGroupName || props.resourceGroupName,
+        scope.props.resourceNameOptions?.resourceGroup
+      ),
     })
 
     if (!resourceGroup) throw `Resource group undefined for ${id}`

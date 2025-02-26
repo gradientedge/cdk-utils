@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>azure/common/resource-name-formatter.ts - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="main.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <script src="scripts/commonNav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">azure/common/resource-name-formatter.ts</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { Construct } from 'constructs'
+import { AzureResourceNameFormatterProps } from './types'
+import { CommonAzureStackProps } from './types'
+
+export class AzureResourceNameFormatter extends Construct {
+  props: CommonAzureStackProps
+
+  constructor(parent: Construct, id: string, props: CommonAzureStackProps) {
+    super(parent, id)
+    this.props = props
+  }
+
+  /**
+   * @summary Helper method to format azure resource name based on the provided options
+   * @param resourceName The azure resource name to format
+   * @param options Options to control the formatting of the resource name
+   * @returns The formatted Azure-compliant resource name
+   */
+  public format(resourceName: string, options?: AzureResourceNameFormatterProps) {
+    const azureResourceNameElements = []
+
+    if (!options?.exclude) {
+      azureResourceNameElements.push(options?.globalPrefix ? this.props.globalPrefix : undefined)
+      azureResourceNameElements.push(options?.prefix ?? this.props.resourcePrefix)
+    }
+
+    azureResourceNameElements.push(resourceName)
+
+    if (!options?.exclude) {
+      azureResourceNameElements.push(options?.suffix ?? this.props.resourceSuffix)
+      azureResourceNameElements.push(options?.globalSuffix ? this.props.globalSuffix : undefined)
+    }
+
+    azureResourceNameElements.push(this.props.stage)
+
+    return azureResourceNameElements.filter(Boolean).join('-')
+  }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+    
+</div>
+
+<br class="clear">
+
+<footer>
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>
