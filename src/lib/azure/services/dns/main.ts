@@ -35,11 +35,10 @@ export class AzureDnsManager {
   public createDnsZone(id: string, scope: CommonAzureConstruct, props: DnsZoneProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-am-rg`, {
-      name: scope.resourceNameFormatter.format(
-        scope.props.resourceGroupName || props.resourceGroupName,
-        scope.props.resourceNameOptions?.resourceGroup
-      ),
+    const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-dz-rg`, {
+      name: scope.props.resourceGroupName
+        ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
+        : `${props.resourceGroupName}`,
     })
 
     if (!resourceGroup) throw `Resource group undefined for ${id}`

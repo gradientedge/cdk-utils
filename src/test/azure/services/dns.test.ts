@@ -153,7 +153,7 @@ describe('TestAzureDnsConstruct', () => {
   test('provisions dns zone as expected', () => {
     expect(construct).toHaveResourceWithProperties(DnsZone, {
       name: 'test-dns-zone-dev',
-      resource_group_name: '${data.azurerm_resource_group.test-dns-zone-dev-am-rg.name}',
+      resource_group_name: '${data.azurerm_resource_group.test-dns-zone-dev-dz-rg.name}',
       tags: {
         environment: 'dev',
       },

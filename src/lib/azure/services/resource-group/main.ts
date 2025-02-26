@@ -33,7 +33,7 @@ export class AzureResourceGroupManager {
 
     const resourceGroup = new ResourceGroup(scope, `${id}-rg`, {
       ...props,
-      name: props.name,
+      name: scope.resourceNameFormatter.format(props.name),
       location: props.location,
       tags: props.tags ?? {
         environment: scope.props.stage,

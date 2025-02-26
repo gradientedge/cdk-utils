@@ -99,13 +99,13 @@ describe('TestAzureAppConfigurationConstruct', () => {
   test('provisions outputs as expected', () => {
     expect(JSON.parse(construct).output).toMatchObject({
       testAppConfigurationDevAppConfigurationFriendlyUniqueId: {
-        value: 'test-app-configuration-dev-am',
+        value: 'test-app-configuration-dev-ac',
       },
       testAppConfigurationDevAppConfigurationId: {
-        value: '${azurerm_app_configuration.test-app-configuration-dev-am.id}',
+        value: '${azurerm_app_configuration.test-app-configuration-dev-ac.id}',
       },
       testAppConfigurationDevAppConfigurationName: {
-        value: '${azurerm_app_configuration.test-app-configuration-dev-am.name}',
+        value: '${azurerm_app_configuration.test-app-configuration-dev-ac.name}',
       },
     })
   })
@@ -115,7 +115,10 @@ describe('TestAzureAppConfigurationConstruct', () => {
   test('provisions app configuration as expected', () => {
     expect(construct).toHaveResourceWithProperties(AppConfiguration, {
       name: 'test-app-configuration-dev',
-      resource_group_name: '${data.azurerm_resource_group.test-app-configuration-dev-am-rg.name}',
+      resource_group_name: '${data.azurerm_resource_group.test-app-configuration-dev-ac-rg.name}',
+      tags: {
+        environment: 'dev',
+      },
     })
   })
 })
