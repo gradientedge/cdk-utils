@@ -21,6 +21,7 @@ import {
 } from '../services'
 import { CommonAzureStackProps } from './types'
 import { AzureRemoteBackend } from './constants'
+import { AzureResourceNameFormatter } from './resource-name-formatter'
 
 export class CommonAzureConstruct extends TerraformStack {
   declare props: CommonAzureStackProps
@@ -37,6 +38,7 @@ export class CommonAzureConstruct extends TerraformStack {
   keyVaultManager: AzureKeyVaultManager
   logAnalyticsWorkspaceManager: AzureLogAnalyticsWorkspaceManager
   resourceGroupManager: AzureResourceGroupManager
+  resourceNameFormatter: AzureResourceNameFormatter
   servicebusManager: AzureServicebusManager
   storageManager: AzureStorageManager
   tenantId: string
@@ -57,6 +59,7 @@ export class CommonAzureConstruct extends TerraformStack {
     this.keyVaultManager = new AzureKeyVaultManager()
     this.logAnalyticsWorkspaceManager = new AzureLogAnalyticsWorkspaceManager()
     this.resourceGroupManager = new AzureResourceGroupManager()
+    this.resourceNameFormatter = new AzureResourceNameFormatter(this, `${id}-rnf`, props)
     this.servicebusManager = new AzureServicebusManager()
     this.storageManager = new AzureStorageManager()
 

@@ -35,16 +35,17 @@ export class AzureCosmosDbManager {
     if (!props) throw `Props undefined for ${id}`
 
     const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-ca-rg`, {
-      name: scope.props.resourceGroupName
-        ? `${scope.props.resourceGroupName}-${scope.props.stage}`
-        : `${props.resourceGroupName}`,
+      name: scope.resourceNameFormatter.format(
+        scope.props.resourceGroupName || props.resourceGroupName,
+        scope.props.resourceNameOptions?.resourceGroup
+      ),
     })
 
     if (!resourceGroup) throw `Resource group undefined for ${id}`
 
     const cosmosdbAccount = new CosmosdbAccount(scope, `${id}-ca`, {
       ...props,
-      name: `${props.name}-${scope.props.stage}`,
+      name: scope.resourceNameFormatter.format(props.name),
       location: resourceGroup.location,
       resourceGroupName: resourceGroup.name,
       tags: props.tags ?? {
@@ -70,16 +71,17 @@ export class AzureCosmosDbManager {
     if (!props) throw `Props undefined for ${id}`
 
     const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-cd-rg`, {
-      name: scope.props.resourceGroupName
-        ? `${scope.props.resourceGroupName}-${scope.props.stage}`
-        : `${props.resourceGroupName}`,
+      name: scope.resourceNameFormatter.format(
+        scope.props.resourceGroupName || props.resourceGroupName,
+        scope.props.resourceNameOptions?.resourceGroup
+      ),
     })
 
     if (!resourceGroup) throw `Resource group undefined for ${id}`
 
     const cosmosdbDatatbase = new CosmosdbSqlDatabase(scope, `${id}-cd`, {
       ...props,
-      name: `${props.name}-${scope.props.stage}`,
+      name: scope.resourceNameFormatter.format(props.name),
       resourceGroupName: resourceGroup.name,
     })
 
@@ -110,7 +112,7 @@ export class AzureCosmosDbManager {
 
     const cosmosdbContainer = new CosmosdbSqlContainer(scope, `${id}-cc`, {
       ...props,
-      name: `${props.name}-${scope.props.stage}`,
+      name: scope.resourceNameFormatter.format(props.name),
       resourceGroupName: resourceGroup.name,
     })
 

@@ -33,16 +33,17 @@ export class AzureKeyVaultManager {
     if (!props) throw `Props undefined for ${id}`
 
     const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-kv-rg`, {
-      name: scope.props.resourceGroupName
-        ? `${scope.props.resourceGroupName}-${scope.props.stage}`
-        : `${props.resourceGroupName}`,
+      name: scope.resourceNameFormatter.format(
+        scope.props.resourceGroupName || props.resourceGroupName,
+        scope.props.resourceNameOptions?.resourceGroup
+      ),
     })
 
     if (!resourceGroup) throw `Resource group undefined for ${id}`
 
     const keyVault = new KeyVault(scope, `${id}-kv`, {
       ...props,
-      name: `${props.name}-${scope.props.stage}`,
+      name: scope.resourceNameFormatter.format(props.name),
       location: resourceGroup.location,
       resourceGroupName: resourceGroup.name,
       skuName: props.skuName ?? 'standard',
