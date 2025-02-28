@@ -12,3 +12,7 @@ export interface ApiManagementApiProps extends ApiManagementApiConfig {
   operations: ApiManagementApiOperationConfig[]
   policyXmlContent?: ApiManagementApiOperationPolicyConfig['xmlContent']
 }
+
+export interface ApiManagementV2Props extends ApiManagementConfig {
+  body: any
+}
