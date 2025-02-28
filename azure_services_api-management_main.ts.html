@@ -53,6 +53,7 @@ import {
   DataAzurermApiManagement,
   DataAzurermApiManagementConfig,
 } from '@cdktf/provider-azurerm/lib/data-azurerm-api-management'
+
 import { ApiManagementBackend } from '@cdktf/provider-azurerm/lib/api-management-backend'
 import { ApiManagement } from '@cdktf/provider-azurerm/lib/api-management'
 import { ApiManagementApi } from '@cdktf/provider-azurerm/lib/api-management-api'
@@ -62,9 +63,10 @@ import {
   ApiManagementLogger,
   ApiManagementLoggerApplicationInsights,
 } from '@cdktf/provider-azurerm/lib/api-management-logger'
+import { Resource } from '../../.gen/providers/azapi/resource'
 import { CommonAzureConstruct } from '../../common'
 import { createAzureTfOutput } from '../../utils'
-import { ApiManagementProps, ApiManagementBackendProps, ApiManagementApiProps } from './types'
+import { ApiManagementProps, ApiManagementBackendProps, ApiManagementApiProps, ApiManagementV2Props } from './types'
 import _ from 'lodash'
 
 /**
@@ -101,7 +103,9 @@ export class AzureApiManagementManager {
     if (!props) throw `Props undefined for ${id}`
 
     const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-am-rg`, {
-      name: scope.props.resourceGroupName || props.resourceGroupName,
+      name: scope.props.resourceGroupName
+        ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
+        : `${props.resourceGroupName}`,
     })
 
     if (!resourceGroup) throw `Resource group undefined for ${id}`
@@ -144,7 +148,9 @@ export class AzureApiManagementManager {
     if (!props) throw `Props undefined for ${id}`
 
     const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-am-rg`, {
-      name: scope.props.resourceGroupName || props.resourceGroupName,
+      name: scope.props.resourceGroupName
+        ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
+        : `${props.resourceGroupName}`,
     })
 
     if (!resourceGroup) throw `Resource group undefined for ${id}`
@@ -156,6 +162,80 @@ export class AzureApiManagementManager {
         ? `${scope.props.resourceGroupName}-${scope.props.stage}`
         : `${props.resourceGroupName}`,
     })
+
+    return apiManagement
+  }
+
+  /**
+   * @summary Method to create a new api management
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props api management properties
+   * @see [CDKTF Api management Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/apiManagement.typescript.md}
+   */
+  public createApiManagementv2(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: ApiManagementV2Props,
+    applicationInsightsKey?: ApiManagementLoggerApplicationInsights['instrumentationKey']
+  ) {
+    if (!props) throw `Props undefined for ${id}`
+
+    const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-am-rg`, {
+      name: scope.props.resourceGroupName
+        ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
+        : `${props.resourceGroupName}`,
+    })
+
+    if (!resourceGroup) throw `Resource group undefined for ${id}`
+
+    const apiManagement = new Resource(scope, `${id}-am`, {
+      type: 'Microsoft.ApiManagement/service@2024-05-01',
+      name: scope.resourceNameFormatter.format(props.name),
+      location: resourceGroup.location,
+      parentId: resourceGroup.id,
+
+      body: {
+        properties: {
+          apiVersionConstraint: {
+            minApiVersion: '2019-12-01',
+          },
+          publisherName: props.publisherName,
+          publisherEmail: props.publisherEmail,
+        },
+        sku: {
+          capacity: 1,
+          name: props.skuName,
+        },
+      },
+
+      responseExportValues: ['properties.gatewayUrl'],
+
+      identity: [
+        {
+          type: 'SystemAssigned',
+        },
+      ],
+
+      ignoreMissingProperty: true,
+      ignoreCasing: true,
+      schemaValidationEnabled: false,
+    })
+
+    if (applicationInsightsKey) {
+      new ApiManagementLogger(scope, `${id}-am-logger`, {
+        name: scope.resourceNameFormatter.format(props.name),
+        resourceGroupName: resourceGroup.name,
+        apiManagementName: apiManagement.name,
+        applicationInsights: {
+          instrumentationKey: applicationInsightsKey,
+        },
+      })
+    }
+
+    createAzureTfOutput(`${id}-apiManagementName`, scope, apiManagement.name)
+    createAzureTfOutput(`${id}-apiManagementFriendlyUniqueId`, scope, apiManagement.friendlyUniqueId)
+    createAzureTfOutput(`${id}-apiManagementId`, scope, apiManagement.id)
 
     return apiManagement
   }
