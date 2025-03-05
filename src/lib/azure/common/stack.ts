@@ -47,6 +47,7 @@ export class CommonAzureStack extends TerraformStack {
       domainName: this.node.tryGetContext('domainName'),
       extraContexts: this.node.tryGetContext('extraContexts'),
       features: this.node.tryGetContext('features'),
+      location: this.node.tryGetContext('location'),
       name: this.node.tryGetContext('resourceGroupName'),
       resourceGroupName: this.node.tryGetContext('resourceGroupName'),
       skipStageForARecords: this.node.tryGetContext('skipStageForARecords'),
