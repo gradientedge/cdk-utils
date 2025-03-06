@@ -62,7 +62,7 @@ export class AzureApiManagementManager {
 
     const apiManagement = new ApiManagement(scope, `${id}-am`, {
       ...props,
-      name: scope.resourceNameFormatter.format(props.name),
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.apiManagement),
       resourceGroupName: resourceGroup.name,
       tags: props.tags ?? {
         environment: scope.props.stage,

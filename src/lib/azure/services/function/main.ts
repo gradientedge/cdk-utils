@@ -105,7 +105,7 @@ export class AzureFunctionManager {
 
     const functionApp = new Resource(scope, `${id}-fa`, {
       type: 'Microsoft.Web/sites@2024-04-01',
-      name: scope.resourceNameFormatter.format(props.name),
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.function),
       location: resourceGroup.location,
       parentId: resourceGroup.id,
 

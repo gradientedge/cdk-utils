@@ -110,7 +110,7 @@ export class AzureCosmosDbManager {
 
     const cosmosdbContainer = new CosmosdbSqlContainer(scope, `${id}-cc`, {
       ...props,
-      name: scope.resourceNameFormatter.format(props.name),
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.cosmosDbSqlContainer),
       resourceGroupName: resourceGroup.name,
     })
 

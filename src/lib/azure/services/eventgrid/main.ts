@@ -83,7 +83,7 @@ export class AzureEventgridManager {
 
     const eventgridTopic = new DataAzurermEventgridTopic(scope, `${id}-et`, {
       ...props,
-      name: scope.resourceNameFormatter.format(props.name),
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.eventGridTopic),
       resourceGroupName: resourceGroup.name,
     })
 

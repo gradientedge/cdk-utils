@@ -42,7 +42,7 @@ export class AzureAppConfigurationManager {
 
     const appConfiguration = new AppConfiguration(scope, `${id}-ac`, {
       ...props,
-      name: `${props.name}-${scope.props.stage}`,
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.appConfiguration),
       resourceGroupName: resourceGroup.name,
       tags: props.tags ?? {
         environment: scope.props.stage,

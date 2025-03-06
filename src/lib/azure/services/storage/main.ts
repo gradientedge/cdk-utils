@@ -48,7 +48,10 @@ export class AzureStorageManager {
       ...props,
       accountTier: props.accountTier ?? 'Standard',
       location: props.location ?? resourceGroup.location,
-      name: `${props.name}-${scope.props.stage}`.replace(/\W/g, '').toLowerCase(),
+      name: scope.resourceNameFormatter
+        .format(props.name, scope.props.resourceNameOptions?.storageAccount)
+        .replace(/\W/g, '')
+        .toLowerCase(),
       resourceGroupName: resourceGroup.name,
       tags: props.tags ?? {
         environment: scope.props.stage,

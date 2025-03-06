@@ -127,7 +127,7 @@ export class AzureServicebusManager {
 
     const servicebusSubscription = new ServicebusSubscription(scope, `${id}-ss`, {
       ...props,
-      name: scope.resourceNameFormatter.format(props.name),
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.serviceBusSubscription),
       maxDeliveryCount: props.maxDeliveryCount || 1,
     })
 
