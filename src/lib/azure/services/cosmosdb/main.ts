@@ -44,7 +44,7 @@ export class AzureCosmosDbManager {
 
     const cosmosdbAccount = new CosmosdbAccount(scope, `${id}-ca`, {
       ...props,
-      name: scope.resourceNameFormatter.format(props.name),
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.cosmosDbAccount),
       location: resourceGroup.location,
       resourceGroupName: resourceGroup.name,
       tags: props.tags ?? {
@@ -79,7 +79,7 @@ export class AzureCosmosDbManager {
 
     const cosmosdbDatatbase = new CosmosdbSqlDatabase(scope, `${id}-cd`, {
       ...props,
-      name: scope.resourceNameFormatter.format(props.name),
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.cosmosDbSqlDatabase),
       resourceGroupName: resourceGroup.name,
     })
 

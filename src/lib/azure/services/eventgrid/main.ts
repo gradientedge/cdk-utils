@@ -47,7 +47,7 @@ export class AzureEventgridManager {
 
     const eventgridTopic = new EventgridTopic(scope, `${id}-et`, {
       ...props,
-      name: scope.resourceNameFormatter.format(props.name),
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.eventGridTopic),
       location: resourceGroup.location,
       resourceGroupName: resourceGroup.name,
       tags: props.tags ?? {
@@ -107,7 +107,7 @@ export class AzureEventgridManager {
 
     const eventgridSubscription = new EventgridEventSubscription(scope, `${id}-es`, {
       ...props,
-      name: scope.resourceNameFormatter.format(props.name),
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.eventGridEventSubscription),
       eventDeliverySchema: props.eventDeliverySchema || 'CloudEventSchemaV1_0',
       advancedFilteringOnArraysEnabled: props.advancedFilteringOnArraysEnabled || true,
     })

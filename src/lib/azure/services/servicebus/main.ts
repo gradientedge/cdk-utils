@@ -50,7 +50,7 @@ export class AzureServicebusManager {
 
     const servicebusNamespace = new ServicebusNamespace(scope, `${id}-sn`, {
       ...props,
-      name: scope.resourceNameFormatter.format(props.name),
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.serviceBusNamespace),
       resourceGroupName: resourceGroup.name,
       location: resourceGroup.location,
       identity: {
@@ -81,7 +81,7 @@ export class AzureServicebusManager {
 
     const servicebusTopic = new ServicebusTopic(scope, `${id}-st`, {
       ...props,
-      name: scope.resourceNameFormatter.format(props.name),
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.serviceBusTopic),
       namespaceId: props.namespaceId,
     })
 
@@ -104,7 +104,7 @@ export class AzureServicebusManager {
 
     const servicebusQueue = new ServicebusQueue(scope, `${id}-sq`, {
       ...props,
-      name: scope.resourceNameFormatter.format(props.name),
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.serviceBusQueue),
       namespaceId: props.namespaceId,
     })
 

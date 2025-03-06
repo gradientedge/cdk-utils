@@ -77,7 +77,7 @@ export class AzureStorageManager {
 
     const storageContainer = new StorageContainer(scope, `${id}-sc`, {
       ...props,
-      name: scope.resourceNameFormatter.format(props.name),
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.storageContainer),
     })
 
     createAzureTfOutput(`${id}-storageContainerName`, scope, storageContainer.name)
@@ -118,7 +118,7 @@ export class AzureStorageManager {
 
     const storageBlob = new StorageBlob(scope, `${id}-sb`, {
       ...props,
-      name: scope.resourceNameFormatter.format(props.name),
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.storageBlob),
       storageAccountName: storageAccount.name,
       storageContainerName: storageContainer.name,
     })

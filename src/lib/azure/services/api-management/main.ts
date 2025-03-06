@@ -71,7 +71,7 @@ export class AzureApiManagementManager {
 
     if (applicationInsightsKey) {
       new ApiManagementLogger(scope, `${id}-am-logger`, {
-        name: scope.resourceNameFormatter.format(props.name),
+        name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.apiManagementLogger),
         resourceGroupName: resourceGroup.name,
         apiManagementName: apiManagement.name,
         applicationInsights: {
@@ -107,7 +107,7 @@ export class AzureApiManagementManager {
 
     const apiManagement = new DataAzurermApiManagement(scope, `${id}-am`, {
       ...props,
-      name: scope.resourceNameFormatter.format(props.name),
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.dataAzurermApiManagement),
       resourceGroupName: scope.props.resourceGroupName
         ? `${scope.props.resourceGroupName}-${scope.props.stage}`
         : `${props.resourceGroupName}`,
@@ -141,7 +141,7 @@ export class AzureApiManagementManager {
 
     const apiManagement = new Resource(scope, `${id}-am`, {
       type: 'Microsoft.ApiManagement/service@2024-05-01',
-      name: scope.resourceNameFormatter.format(props.name),
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.apiManagement),
       location: resourceGroup.location,
       parentId: resourceGroup.id,
 
@@ -174,7 +174,7 @@ export class AzureApiManagementManager {
 
     if (applicationInsightsKey) {
       new ApiManagementLogger(scope, `${id}-am-logger`, {
-        name: scope.resourceNameFormatter.format(props.name),
+        name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.apiManagementLogger),
         resourceGroupName: resourceGroup.name,
         apiManagementName: apiManagement.name,
         applicationInsights: {
@@ -202,7 +202,7 @@ export class AzureApiManagementManager {
 
     const apiManagementBackend = new ApiManagementBackend(scope, `${id}-am-be`, {
       ...props,
-      name: scope.resourceNameFormatter.format(props.name),
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.apiManagementBackend),
       description: props.description || `Backend for ${props.name}-${scope.props.stage}`,
       protocol: props.protocol || 'http',
     })
@@ -226,7 +226,7 @@ export class AzureApiManagementManager {
 
     const apiManagementApi = new ApiManagementApi(scope, `${id}-am-api`, {
       ...props,
-      name: scope.resourceNameFormatter.format(props.name),
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.apiManagementApi),
       displayName: props.displayName || props.name,
       revision: props.revision || '1',
       protocols: props.protocols || ['https'],
