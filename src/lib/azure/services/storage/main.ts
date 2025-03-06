@@ -48,7 +48,10 @@ export class AzureStorageManager {
       ...props,
       accountTier: props.accountTier ?? 'Standard',
       location: props.location ?? resourceGroup.location,
-      name: `${props.name}-${scope.props.stage}`.replace(/\W/g, '').toLowerCase(),
+      name: scope.resourceNameFormatter
+        .format(props.name, scope.props.resourceNameOptions?.storageAccount)
+        .replace(/\W/g, '')
+        .toLowerCase(),
       resourceGroupName: resourceGroup.name,
       tags: props.tags ?? {
         environment: scope.props.stage,
@@ -74,7 +77,7 @@ export class AzureStorageManager {
 
     const storageContainer = new StorageContainer(scope, `${id}-sc`, {
       ...props,
-      name: scope.resourceNameFormatter.format(props.name),
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.storageContainer),
     })
 
     createAzureTfOutput(`${id}-storageContainerName`, scope, storageContainer.name)
@@ -115,7 +118,7 @@ export class AzureStorageManager {
 
     const storageBlob = new StorageBlob(scope, `${id}-sb`, {
       ...props,
-      name: scope.resourceNameFormatter.format(props.name),
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.storageBlob),
       storageAccountName: storageAccount.name,
       storageContainerName: storageContainer.name,
     })
