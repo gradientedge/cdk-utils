@@ -50,7 +50,7 @@
         <article>
             <pre class="prettyprint source linenums"><code>import { AwsProvider } from '@cdktf/provider-aws/lib/provider'
 import { CloudflareProvider } from '@cdktf/provider-cloudflare/lib/provider'
-import { S3Backend, TerraformStack, TerraformVariable } from 'cdktf'
+import { AzurermBackend, S3Backend, TerraformStack, TerraformVariable } from 'cdktf'
 import { Construct } from 'constructs'
 import { isDevStage, isPrdStage, isTestStage, isUatStage } from '../../common'
 import {
@@ -145,6 +145,15 @@ export class CommonCloudflareConstruct extends TerraformStack {
           key: `${this.id}`,
           profile: process.env.AWS_PROFILE,
           region: this.props.remoteBackend.region,
+        })
+        break
+      case RemoteBackend.azurerm:
+        new AzurermBackend(this, {
+          storageAccountName: this.props.remoteBackend.storageAccountName,
+          containerName: this.props.remoteBackend.containerName,
+          key: `${this.id}`,
+          subscriptionId: this.props.remoteBackend.subscriptionId,
+          resourceGroupName: this.props.remoteBackend.resourceGroupName,
         })
         break
       case RemoteBackend.local:
