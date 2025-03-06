@@ -164,7 +164,7 @@ describe('TestAzureDnsConstruct', () => {
 describe('TestAzureDnsConstruct', () => {
   test('provisions dns a record as expected', () => {
     expect(construct).toHaveResourceWithProperties(DnsARecord, {
-      name: 'test-a-record-dev',
+      name: 'test-a-record',
       records: 'test-record',
       tags: {
         environment: 'dev',
@@ -177,7 +177,7 @@ describe('TestAzureDnsConstruct', () => {
 describe('TestAzureDnsConstruct', () => {
   test('provisions dns cname record as expected', () => {
     expect(construct).toHaveResourceWithProperties(DnsCnameRecord, {
-      name: 'test-cname-record-dev',
+      name: 'test-cname-record',
       tags: {
         environment: 'dev',
       },

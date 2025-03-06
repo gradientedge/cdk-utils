@@ -26,5 +26,14 @@
         ]
       }
     ]
+  },
+  "testApiManagementCustomDomain": {
+    "gateway": [
+      {
+        "hostName": "test-hostname",
+        "keyVaultId": "test-keyVault-id",
+        "negotiateClientCertificate": false
+      }
+    ]
   }
 }

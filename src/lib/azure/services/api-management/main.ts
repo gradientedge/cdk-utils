@@ -3,7 +3,7 @@ import {
   DataAzurermApiManagement,
   DataAzurermApiManagementConfig,
 } from '@cdktf/provider-azurerm/lib/data-azurerm-api-management'
-
+import { ApiManagementCustomDomain } from '@cdktf/provider-azurerm/lib/api-management-custom-domain'
 import { ApiManagementBackend } from '@cdktf/provider-azurerm/lib/api-management-backend'
 import { ApiManagement } from '@cdktf/provider-azurerm/lib/api-management'
 import { ApiManagementApi } from '@cdktf/provider-azurerm/lib/api-management-api'
@@ -16,7 +16,13 @@ import {
 import { Resource } from '../../.gen/providers/azapi/resource'
 import { CommonAzureConstruct } from '../../common'
 import { createAzureTfOutput } from '../../utils'
-import { ApiManagementProps, ApiManagementBackendProps, ApiManagementApiProps, ApiManagementV2Props } from './types'
+import {
+  ApiManagementProps,
+  ApiManagementBackendProps,
+  ApiManagementApiProps,
+  ApiManagementV2Props,
+  ApiManagementCustomDomainProps,
+} from './types'
 import _ from 'lodash'
 
 /**
@@ -159,7 +165,7 @@ export class AzureApiManagementManager {
         },
       },
 
-      responseExportValues: ['properties.gatewayUrl'],
+      responseExportValues: ['*'],
 
       identity: [
         {
@@ -291,5 +297,31 @@ export class AzureApiManagementManager {
     })
 
     return apiManagementApi
+  }
+
+  /**
+   * @summary Method to create a new api management custom domain
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props api management custom domain properties
+   * @see [CDKTF Api management Custom Domain Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/createApiManagementCustomDomain.typescript.md}
+   */
+  public createApiManagementCustomDomain(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: ApiManagementCustomDomainProps
+  ) {
+    if (!props) throw `Props undefined for ${id}`
+
+    const apiManagementCustomDomain = new ApiManagementCustomDomain(scope, `${id}-am-cd`, props)
+
+    createAzureTfOutput(
+      `${id}-apiManagementCustomDomainFriendlyUniqueId`,
+      scope,
+      apiManagementCustomDomain.friendlyUniqueId
+    )
+    createAzureTfOutput(`${id}-apiManagementCustomDomainId`, scope, apiManagementCustomDomain.id)
+
+    return apiManagementCustomDomain
   }
 }
