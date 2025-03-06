@@ -45,7 +45,7 @@ export class AzureFunctionManager {
 
     const functionApp = new LinuxFunctionApp(scope, `${id}-fa`, {
       ...props,
-      name: scope.resourceNameFormatter.format(props.name),
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.linuxFunctionApp),
       resourceGroupName: resourceGroup.name,
       tags: props.tags ?? {
         environment: scope.props.stage,
