@@ -92,7 +92,7 @@ export class AzureAppServiceManager {
 
     const appServicePlan = new ServicePlan(scope, `${id}-as`, {
       ...props,
-      name: scope.resourceNameFormatter.format(props.name),
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.appServicePlan),
       resourceGroupName: resourceGroup.name,
       tags: props.tags ?? {
         environment: scope.props.stage,

@@ -92,7 +92,7 @@ export class AzureLogAnalyticsWorkspaceManager {
 
     const logAnalyticsWorkspace = new LogAnalyticsWorkspace(scope, `${id}-lw`, {
       ...props,
-      name: scope.resourceNameFormatter.format(props.name),
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.logAnalyticsWorkspace),
       location: resourceGroup.location,
       resourceGroupName: resourceGroup.name,
       tags: props.tags ?? {
