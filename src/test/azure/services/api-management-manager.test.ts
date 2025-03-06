@@ -13,12 +13,15 @@ import {
   ApiManagementProps,
   ApiManagementBackendProps,
   ApiManagementApiProps,
+  ApiManagementCustomDomainProps,
 } from '../../../lib'
+import { ApiManagementCustomDomain } from '@cdktf/provider-azurerm/lib/api-management-custom-domain'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
   testApiManagement: ApiManagementProps
   testApiManagementBackend: ApiManagementBackendProps
   testApiManagementApi: ApiManagementApiProps
+  testApiManagementCustomDomain: ApiManagementCustomDomainProps
   testAttribute?: string
 }
 
@@ -48,6 +51,7 @@ class TestCommonStack extends CommonAzureStack {
       testApiManagement: this.node.tryGetContext('testApiManagement'),
       testApiManagementBackend: this.node.tryGetContext('testApiManagementBackend'),
       testApiManagementApi: this.node.tryGetContext('testApiManagementApi'),
+      testApiManagementCustomDomain: this.node.tryGetContext('testApiManagementCustomDomain'),
     }
   }
 }
@@ -106,6 +110,15 @@ class TestCommonConstruct extends CommonAzureConstruct {
       apiManagementName: this.apiManagement.name,
       resourceGroupName: this.apiManagement.resourceGroupName,
       policyXmlContent,
+    })
+
+    this.apiManagementManager.createApiManagementCustomDomain(`test-api-management-${this.props.stage}`, this, {
+      ...this.props.testApiManagementCustomDomain,
+      apiManagementId: this.apiManagement.id,
+    })
+
+    this.apiManagementManager.resolveApiManagement(`test-resolve-api-management-${this.props.stage}`, this, {
+      ...this.props.testApiManagement,
     })
   }
 }
@@ -257,6 +270,21 @@ describe('TestAzureApiManagementConstruct', () => {
       resource_group_name: '${azurerm_api_management_api.test-api-management-dev-am-api.resource_group_name}',
       xml_content:
         '<policies>\n          <inbound>\n              <base />\n              <set-backend-service id="apim-generated-policy" backend-id="${azurerm_api_management_backend.test-api-management-dev-am-be.name}" />\n          </inbound>\n          <backend>\n              <base />\n          </backend>\n          <outbound>\n              <base />\n          </outbound>\n          <on-error>\n              <base />\n          </on-error>\n        </policies>',
+    })
+  })
+})
+
+describe('TestAzureApiManagementConstruct', () => {
+  test('provisions api management custom domain as expected', () => {
+    expect(construct).toHaveResourceWithProperties(ApiManagementCustomDomain, {
+      api_management_id: '${azurerm_api_management.test-api-management-dev-am.id}',
+      gateway: [
+        {
+          host_name: 'test-hostname',
+          key_vault_id: 'test-keyVault-id',
+          negotiate_client_certificate: false,
+        },
+      ],
     })
   })
 })

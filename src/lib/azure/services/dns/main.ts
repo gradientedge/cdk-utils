@@ -71,7 +71,6 @@ export class AzureDnsManager {
 
     const dnsARecord = new DnsARecord(scope, `${id}-da`, {
       ...props,
-      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.dnsARecord),
       ttl: props.ttl || 300,
       tags: props.tags ?? {
         environment: scope.props.stage,
@@ -97,7 +96,6 @@ export class AzureDnsManager {
 
     const dnsCnameRecord = new DnsCnameRecord(scope, `${id}-dc`, {
       ...props,
-      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.dnsCnameRecord),
       ttl: props.ttl || 300,
       tags: props.tags ?? {
         environment: scope.props.stage,

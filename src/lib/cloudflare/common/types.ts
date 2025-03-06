@@ -7,6 +7,10 @@ export interface RemoteBackendProps {
   region: string
   tableName: string
   type: RemoteBackend
+  storageAccountName: string
+  containerName: string
+  subscriptionId: string
+  resourceGroupName: string
 }
 
 /**
