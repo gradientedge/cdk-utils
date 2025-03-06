@@ -45,7 +45,7 @@ export class AzureFunctionManager {
 
     const functionApp = new LinuxFunctionApp(scope, `${id}-fa`, {
       ...props,
-      name: scope.resourceNameFormatter.format(props.name),
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.linuxFunctionApp),
       resourceGroupName: resourceGroup.name,
       tags: props.tags ?? {
         environment: scope.props.stage,
@@ -71,7 +71,7 @@ export class AzureFunctionManager {
 
     const functionAppFunction = new FunctionAppFunction(scope, `${id}-fc`, {
       ...props,
-      name: scope.resourceNameFormatter.format(props.name),
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.functionAppFunction),
       configJson: JSON.stringify(props.configJson || {}),
     })
 
@@ -105,7 +105,7 @@ export class AzureFunctionManager {
 
     const functionApp = new Resource(scope, `${id}-fa`, {
       type: 'Microsoft.Web/sites@2024-04-01',
-      name: scope.resourceNameFormatter.format(props.name),
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.functionApp),
       location: resourceGroup.location,
       parentId: resourceGroup.id,
 

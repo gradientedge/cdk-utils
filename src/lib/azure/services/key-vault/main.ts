@@ -42,7 +42,7 @@ export class AzureKeyVaultManager {
 
     const keyVault = new KeyVault(scope, `${id}-kv`, {
       ...props,
-      name: scope.resourceNameFormatter.format(props.name),
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.keyVault),
       location: resourceGroup.location,
       resourceGroupName: resourceGroup.name,
       skuName: props.skuName ?? 'standard',
