@@ -1,9 +1,9 @@
 import fs from 'fs'
 import { CommonAzureConstruct } from './construct'
 import { CommonAzureStackProps } from './types'
-
+import { TagsAddingAspect } from './tagging'
 import appRoot from 'app-root-path'
-import { TerraformStack } from 'cdktf'
+import { Aspects, TerraformStack } from 'cdktf'
 import { Construct } from 'constructs'
 import _ from 'lodash'
 import { isDevStage } from '../../common'
@@ -35,6 +35,8 @@ export class CommonAzureStack extends TerraformStack {
     this.determineStageContexts()
 
     this.props = this.determineConstructProps(props)
+
+    Aspects.of(this).add(new TagsAddingAspect(this.props.defaultTags || {}))
   }
 
   /**
