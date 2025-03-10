@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>azure/common/tagging.ts - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="main.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <script src="scripts/commonNav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">azure/common/tagging.ts</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { IAspect } from 'cdktf'
+import { IConstruct } from 'constructs'
+import { RESOURCES_TO_EXCLUDE_TAGS } from './constants'
+
+type TaggableConstruct = IConstruct &amp; {
+  tags?: { [key: string]: string } | string[]
+  tagsInput?: { [key: string]: string } | string[]
+}
+
+function isTaggableConstruct(node: IConstruct): node is TaggableConstruct {
+  return 'tags' in node &amp;&amp; 'tagsInput' in node
+}
+
+export class TagsAddingAspect implements IAspect {
+  constructor(private tagsToAdd: Record&lt;string, string>) {}
+
+  // This method is called on every Construct within the specified scope (resources, data sources, etc.).
+  visit(node: IConstruct) {
+    // We need to take the input value to not create a circular reference
+    if (!isTaggableConstruct(node)) {
+      return
+    }
+
+    // Determine if the resource excludes `tags`
+    if (RESOURCES_TO_EXCLUDE_TAGS.has(node.constructor.name)) {
+      node.tags = undefined // Completely remove tags for this resource
+      return
+    }
+
+    const currentTags = node.tagsInput || {}
+    node.tags = { ...this.tagsToAdd, ...currentTags }
+  }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+    
+</div>
+
+<br class="clear">
+
+<footer>
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>
