@@ -1,13 +1,14 @@
 import { IAspect } from 'cdktf'
 import { IConstruct } from 'constructs'
+import { RESOURCES_TO_EXCLUDE_TAGS } from './constants'
 
 type TaggableConstruct = IConstruct & {
-  tags?: { [key: string]: string }
-  tagsInput?: { [key: string]: string }
+  tags?: { [key: string]: string } | string[]
+  tagsInput?: { [key: string]: string } | string[]
 }
 
-function isTaggableConstruct(defaultTags: IConstruct): defaultTags is TaggableConstruct {
-  return 'tags' in defaultTags && 'tagsInput' in defaultTags
+function isTaggableConstruct(node: IConstruct): node is TaggableConstruct {
+  return 'tags' in node && 'tagsInput' in node
 }
 
 export class TagsAddingAspect implements IAspect {
@@ -15,10 +16,18 @@ export class TagsAddingAspect implements IAspect {
 
   // This method is called on every Construct within the specified scope (resources, data sources, etc.).
   visit(node: IConstruct) {
-    if (isTaggableConstruct(node)) {
-      // We need to take the input value to not create a circular reference
-      const currentTags = node.tagsInput || {}
-      node.tags = { ...this.tagsToAdd, ...currentTags }
+    // We need to take the input value to not create a circular reference
+    if (!isTaggableConstruct(node)) {
+      return
     }
+
+    // Determine if the resource excludes `tags`
+    if (RESOURCES_TO_EXCLUDE_TAGS.has(node.constructor.name)) {
+      node.tags = undefined // Completely remove tags for this resource
+      return
+    }
+
+    const currentTags = node.tagsInput || {}
+    node.tags = { ...this.tagsToAdd, ...currentTags }
   }
 }
