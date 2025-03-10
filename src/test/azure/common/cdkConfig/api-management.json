@@ -16,7 +16,7 @@
       {
         "displayName": "test",
         "method": "post",
-        "urlTemplate": "/test/{path}",
+        "urlTemplate": "/test/{*path}",
         "templateParameter": [
           {
             "name": "path",

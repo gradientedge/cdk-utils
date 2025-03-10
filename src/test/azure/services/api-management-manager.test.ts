@@ -255,7 +255,7 @@ describe('TestAzureApiManagementConstruct', () => {
           type: '',
         },
       ],
-      url_template: '/test/{path}',
+      url_template: '/test/{*path}',
     })
   })
 })

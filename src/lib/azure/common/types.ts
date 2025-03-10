@@ -14,6 +14,7 @@ export interface CommonAzureStackProps extends BaseProps, AzurermProviderConfig 
   resourceSuffix?: string
   resourceNameOptions?: { [key: string]: AzureResourceNameFormatterProps }
   location?: string
+  defaultTags?: { [key: string]: string }
 }
 
 export interface AzureRemoteBackendProps extends AzurermBackendConfig {
