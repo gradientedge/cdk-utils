@@ -50,6 +50,10 @@ export class AzureCosmosDbManager {
       tags: props.tags ?? {
         environment: scope.props.stage,
       },
+      defaultIdentityType: props.defaultIdentityType || 'SystemAssignedIdentity',
+      identity: props.identity || {
+        type: 'SystemAssigned',
+      },
     })
 
     createAzureTfOutput(`${id}-cosmosdbAccountName`, scope, cosmosdbAccount.name)
