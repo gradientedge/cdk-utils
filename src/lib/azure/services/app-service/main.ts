@@ -77,7 +77,7 @@ export class AzureAppServiceManager {
 
     const linuxWebApp = new LinuxWebApp(scope, `${id}-lwa`, {
       ...props,
-      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.appServicePlan),
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.linuxWebApp),
       resourceGroupName: resourceGroup.name,
       httpsOnly: props.httpsOnly || true,
 
