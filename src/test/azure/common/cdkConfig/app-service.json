@@ -1,5 +1,18 @@
 {
   "testAppServicePlan": {
     "name": "test-app-service-plan"
+  },
+  "testLinuxWebApp": {
+    "name": "test-linux-web-app",
+    "enabled": true,
+    "httpsOnly": true,
+    "identity": [
+      {
+        "type": "SystemAssigned"
+      }
+    ],
+    "siteConfig": {
+      "alwaysOn": true
+    }
   }
 }

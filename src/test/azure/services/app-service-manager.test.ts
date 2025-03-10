@@ -1,12 +1,20 @@
 import { ServicePlan } from '@cdktf/provider-azurerm/lib/service-plan'
+import { LinuxWebApp } from '@cdktf/provider-azurerm/lib/linux-web-app'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
 import { Construct } from 'constructs'
-import { CommonAzureConstruct, CommonAzureStack, CommonAzureStackProps, ServicePlanProps } from '../../../lib'
+import {
+  CommonAzureConstruct,
+  CommonAzureStack,
+  CommonAzureStackProps,
+  ServicePlanProps,
+  LinuxWebAppProps,
+} from '../../../lib'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
   testAppServicePlan: ServicePlanProps
   testAttribute?: string
+  testLinuxWebApp: LinuxWebAppProps
 }
 
 const testStackProps: any = {
@@ -33,6 +41,7 @@ class TestCommonStack extends CommonAzureStack {
       ...super.determineConstructProps(props),
       testAttribute: this.node.tryGetContext('testAttribute'),
       testAppServicePlan: this.node.tryGetContext('testAppServicePlan'),
+      testLinuxWebApp: this.node.tryGetContext('testLinuxWebApp'),
     }
   }
 }
@@ -52,11 +61,16 @@ class TestCommonConstruct extends CommonAzureConstruct {
 
   constructor(parent: Construct, name: string, props: TestAzureStackProps) {
     super(parent, name, props)
-    this.appServiceManager.createAppServicePlan(
+    const appServicePlan = this.appServiceManager.createAppServicePlan(
       `test-app-service-plan-${this.props.stage}`,
       this,
       this.props.testAppServicePlan
     )
+
+    this.appServiceManager.createLinuxWebApp(`test-linux-web-app-${this.props.stage}`, this, {
+      ...this.props.testLinuxWebApp,
+      servicePlanId: appServicePlan.id,
+    })
   }
 }
 
@@ -104,6 +118,15 @@ describe('TestAzureAppServicePlanConstruct', () => {
       testAppServicePlanDevAppServicePlanName: {
         value: '${azurerm_service_plan.test-app-service-plan-dev-as.name}',
       },
+      testLinuxWebAppDevLinuxWebAppFriendlyUniqueId: {
+        value: 'test-linux-web-app-dev-lwa',
+      },
+      testLinuxWebAppDevLinuxWebAppId: {
+        value: '${azurerm_linux_web_app.test-linux-web-app-dev-lwa.id}',
+      },
+      testLinuxWebAppDevLinuxWebAppName: {
+        value: '${azurerm_linux_web_app.test-linux-web-app-dev-lwa.name}',
+      },
     })
   })
 })
@@ -113,6 +136,27 @@ describe('TestAzureAppServicePlanConstruct', () => {
     expect(construct).toHaveResourceWithProperties(ServicePlan, {
       name: 'test-app-service-plan-dev',
       resource_group_name: '${data.azurerm_resource_group.test-app-service-plan-dev-as-rg.name}',
+      tags: {
+        environment: 'dev',
+      },
+    })
+  })
+})
+
+describe('TestAzureLinuxWebAppConstruct', () => {
+  test('provisions linux web app as expected', () => {
+    expect(construct).toHaveResourceWithProperties(LinuxWebApp, {
+      enabled: true,
+      https_only: true,
+      name: 'test-linux-web-app-dev',
+      resource_group_name: '${data.azurerm_resource_group.test-linux-web-app-dev-as-rg.name}',
+      service_plan_id: '${azurerm_service_plan.test-app-service-plan-dev-as.id}',
+      site_config: {
+        always_on: true,
+        application_stack: {
+          node_version: '22-lts',
+        },
+      },
       tags: {
         environment: 'dev',
       },
