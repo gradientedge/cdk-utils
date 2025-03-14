@@ -137,12 +137,15 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
       name: keyVaultName,
       provider: this.azurermProvider,
     })
-    const secretValue = new DataAzurermKeyVaultSecret(this, `${this.id}-${resourceGroupName}-${keyVaultName}-${secretKey}-data`, {
-      name: secretKey,
-      keyVaultId: keyvalu.id,
-      provider: this.azurermProvider,
-
-    })
+    const secretValue = new DataAzurermKeyVaultSecret(
+      this,
+      `${this.id}-${resourceGroupName}-${keyVaultName}-${secretKey}-data`,
+      {
+        name: secretKey,
+        keyVaultId: keyvalu.id,
+        provider: this.azurermProvider,
+      }
+    )
     if (!secretValue) throw new Error(`Unable to resolve secret:${secretKey}`)
     return secretValue.value
   }
