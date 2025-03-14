@@ -1,5 +1,7 @@
 import { DataAwsSecretsmanagerSecret } from '@cdktf/provider-aws/lib/data-aws-secretsmanager-secret'
 import { DataAwsSecretsmanagerSecretVersion } from '@cdktf/provider-aws/lib/data-aws-secretsmanager-secret-version'
+import { DataAzurermKeyVault } from '@cdktf/provider-azurerm/lib/data-azurerm-key-vault'
+import { DataAzurermKeyVaultSecret } from '@cdktf/provider-azurerm/lib/data-azurerm-key-vault-secret'
 import { DataCloudflareZone } from '@cdktf/provider-cloudflare/lib/data-cloudflare-zone'
 import {
   WorkerScript,
@@ -11,6 +13,7 @@ import { Fn, TerraformAsset, AssetType } from 'cdktf'
 import { Construct } from 'constructs'
 import { CommonCloudflareConstruct } from '../../common'
 import { CloudflareWorkerSiteProps } from './types'
+import { keyVault, resourceGroup } from '@cdktf/provider-azurerm'
 
 /**
  * @classdesc Provides a construct to create and deploy a cloudflare worker site
@@ -117,6 +120,29 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
     })
     if (!secretVersion) throw new Error(`Unable to resolve secret:${secretName}`)
     return Fn.lookup(Fn.jsondecode(secretVersion.secretString), secretKey)
+  }
+
+  /**
+   * @summary Resolve secrets from Azure Key Vault
+   * @param secretName the secret name
+   * @param secretKey the secret key
+   * @returns the secret value
+   */
+  protected resolveSecretFromAzure(resourceGroupName: string, keyVaultName: string, secretKey: string) {
+    if (!this.azurermProvider) return
+    const keyvalu = new DataAzurermKeyVault(this, `${this.id}-${resourceGroupName}-${keyVaultName}-data`, {
+      resourceGroupName: resourceGroupName,
+      name: keyVaultName,
+      provider: this.azurermProvider,
+    })
+    const secretValue = new DataAzurermKeyVaultSecret(this, `${this.id}-${resourceGroupName}-${keyVaultName}-${secretKey}-data`, {
+      name: secretKey,
+      keyVaultId: keyvalu.id,
+      provider: this.azurermProvider,
+
+    })
+    if (!secretValue) throw new Error(`Unable to resolve secret:${secretKey}`)
+    return secretValue.value
   }
 
   /**
