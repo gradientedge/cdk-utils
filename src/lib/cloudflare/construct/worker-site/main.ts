@@ -124,7 +124,9 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
 
   /**
    * @summary Resolve secrets from Azure Key Vault
-   * @param secretName the secret name
+   *
+   * @param resourceGroupName the resource group name where the key vault is located
+   * @param keyVaultName the key vault name
    * @param secretKey the secret key
    * @returns the secret value
    */
