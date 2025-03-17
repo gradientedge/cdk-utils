@@ -86,6 +86,7 @@ export class CommonCloudflareConstruct extends TerraformStack {
 
   protected determineRemoteBackend() {
     const debug = this.node.tryGetContext('debug')
+    console.log('what is remote bucket type', this.props.remoteBackend?.type)
     switch (this.props.remoteBackend?.type) {
       case RemoteBackend.s3:
         this.awsProvider = new AwsProvider(this, `${this.id}-aws-provider`, {
@@ -101,6 +102,7 @@ export class CommonCloudflareConstruct extends TerraformStack {
         })
         break
       case RemoteBackend.azurerm:
+        console.log('what is the subscription id', this.props.remoteBackend.subscriptionId)
         this.azurermProvider = new AzurermProvider(this, `${this.id}-azurerm-provider`, {
           features: [{}],
           subscriptionId: this.props.remoteBackend.subscriptionId,

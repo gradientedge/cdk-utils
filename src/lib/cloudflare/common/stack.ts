@@ -54,6 +54,10 @@ export class CommonCloudflareStack extends TerraformStack {
       skipStageForARecords: this.node.tryGetContext('skipStageForARecords'),
       stage: stage,
       subDomain: this.node.tryGetContext('subDomain'),
+      globalPrefix: this.node.tryGetContext('globalPrefix'),
+      globalSuffix: this.node.tryGetContext('globalSuffix'),
+      resourcePrefix: this.node.tryGetContext('resourcePrefix'),
+      resourceSuffix: this.node.tryGetContext('resourceSuffix'),
     }
   }
 

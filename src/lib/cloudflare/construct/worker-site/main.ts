@@ -112,7 +112,9 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
    * @returns the secret value
    */
   protected resolveSecretFromAWS(secretName: string, secretKey: string) {
-    if (!this.awsProvider) return
+    if (!this.awsProvider) {
+      throw new Error(`Unable to resolve secret:${secretKey}. AWS provider not found`)
+    }
     const secret = new DataAwsSecretsmanagerSecret(this, `${this.id}-${secretName}-${secretKey}`, { name: secretName })
     const secretVersion = new DataAwsSecretsmanagerSecretVersion(this, `${this.id}-${secretName}-${secretKey}-ver`, {
       provider: this.awsProvider,
@@ -131,23 +133,25 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
    * @returns the secret value
    */
   protected resolveSecretFromAzure(resourceGroupName: string, keyVaultName: string, secretKey: string) {
-    if (!this.azurermProvider) return
-    const keyvalu = new DataAzurermKeyVault(this, `${this.id}-${resourceGroupName}-${keyVaultName}-data`, {
+    if (!this.azurermProvider) {
+      throw new Error(`Unable to resolve secret:${secretKey}. Azurerm provider not found`)
+    }
+    const keyVaultData = new DataAzurermKeyVault(this, `${this.id}-${resourceGroupName}-${keyVaultName}-${secretKey}-vault`, {
       resourceGroupName: resourceGroupName,
       name: keyVaultName,
       provider: this.azurermProvider,
     })
-    const secretValue = new DataAzurermKeyVaultSecret(
+    const secretValueData = new DataAzurermKeyVaultSecret(
       this,
-      `${this.id}-${resourceGroupName}-${keyVaultName}-${secretKey}-data`,
+      `${this.id}-${resourceGroupName}-${keyVaultName}-${secretKey}-secret`,
       {
         name: secretKey,
-        keyVaultId: keyvalu.id,
+        keyVaultId: keyVaultData.id,
         provider: this.azurermProvider,
       }
     )
-    if (!secretValue) throw new Error(`Unable to resolve secret:${secretKey}`)
-    return secretValue.value
+    if (!secretValueData) throw new Error(`Unable to resolve secret:${secretKey}`)
+    return secretValueData.value
   }
 
   /**
