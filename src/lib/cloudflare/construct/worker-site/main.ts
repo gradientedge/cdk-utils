@@ -13,7 +13,6 @@ import { Fn, TerraformAsset, AssetType } from 'cdktf'
 import { Construct } from 'constructs'
 import { CommonCloudflareConstruct } from '../../common'
 import { CloudflareWorkerSiteProps } from './types'
-import { keyVault, resourceGroup } from '@cdktf/provider-azurerm'
 
 /**
  * @classdesc Provides a construct to create and deploy a cloudflare worker site
@@ -136,11 +135,15 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
     if (!this.azurermProvider) {
       throw new Error(`Unable to resolve secret:${secretKey}. Azurerm provider not found`)
     }
-    const keyVaultData = new DataAzurermKeyVault(this, `${this.id}-${resourceGroupName}-${keyVaultName}-${secretKey}-vault`, {
-      resourceGroupName: resourceGroupName,
-      name: keyVaultName,
-      provider: this.azurermProvider,
-    })
+    const keyVaultData = new DataAzurermKeyVault(
+      this,
+      `${this.id}-${resourceGroupName}-${keyVaultName}-${secretKey}-vault`,
+      {
+        resourceGroupName: resourceGroupName,
+        name: keyVaultName,
+        provider: this.azurermProvider,
+      }
+    )
     const secretValueData = new DataAzurermKeyVaultSecret(
       this,
       `${this.id}-${resourceGroupName}-${keyVaultName}-${secretKey}-secret`,
