@@ -20,8 +20,4 @@ export interface CommonCloudflareStackProps extends BaseProps, CloudflareProvide
   apiToken: string
   remoteBackend?: RemoteBackendProps
   useExistingZone?: boolean
-  globalPrefix?: string
-  globalSuffix?: string
-  resourcePrefix?: string
-  resourceSuffix?: string
 }

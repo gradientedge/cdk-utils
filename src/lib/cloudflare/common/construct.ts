@@ -102,7 +102,6 @@ export class CommonCloudflareConstruct extends TerraformStack {
         })
         break
       case RemoteBackend.azurerm:
-        console.log('what is the subscription id', this.props.remoteBackend.subscriptionId)
         this.azurermProvider = new AzurermProvider(this, `${this.id}-azurerm-provider`, {
           features: [{}],
           subscriptionId: this.props.remoteBackend.subscriptionId,
