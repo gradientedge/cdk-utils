@@ -1,5 +1,6 @@
 import { AwsProvider } from '@cdktf/provider-aws/lib/provider'
 import { CloudflareProvider } from '@cdktf/provider-cloudflare/lib/provider'
+import { AzurermProvider } from '@cdktf/provider-azurerm/lib/provider'
 import { AzurermBackend, S3Backend, TerraformStack, TerraformVariable } from 'cdktf'
 import { Construct } from 'constructs'
 import { isDevStage, isPrdStage, isTestStage, isUatStage } from '../../common'
@@ -34,6 +35,8 @@ export class CommonCloudflareConstruct extends TerraformStack {
   zoneManager: CloudflareZoneManager
   awsProvider: AwsProvider
   s3Backend: S3Backend
+  azurermProvider: AzurermProvider
+  azurermBackend: AzurermBackend
 
   constructor(scope: Construct, id: string, props: CommonCloudflareStackProps) {
     super(scope, id)
@@ -83,6 +86,7 @@ export class CommonCloudflareConstruct extends TerraformStack {
 
   protected determineRemoteBackend() {
     const debug = this.node.tryGetContext('debug')
+
     switch (this.props.remoteBackend?.type) {
       case RemoteBackend.s3:
         this.awsProvider = new AwsProvider(this, `${this.id}-aws-provider`, {
@@ -98,7 +102,11 @@ export class CommonCloudflareConstruct extends TerraformStack {
         })
         break
       case RemoteBackend.azurerm:
-        new AzurermBackend(this, {
+        this.azurermProvider = new AzurermProvider(this, `${this.id}-azurerm-provider`, {
+          features: [{}],
+          subscriptionId: this.props.remoteBackend.subscriptionId,
+        })
+        this.azurermBackend = new AzurermBackend(this, {
           storageAccountName: this.props.remoteBackend.storageAccountName,
           containerName: this.props.remoteBackend.containerName,
           key: `${this.id}`,
