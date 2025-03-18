@@ -129,15 +129,15 @@ export class AzureAppServiceManager {
       ...props,
       name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.linuxWebApp),
       resourceGroupName: resourceGroup.name,
-      httpsOnly: props.httpsOnly || true,
+      httpsOnly: props.httpsOnly ?? true,
 
       identity: props.identity || {
         type: 'SystemAssigned',
       },
       siteConfig: {
         ...props.siteConfig,
-        alwaysOn: props.siteConfig.alwaysOn || true,
-        applicationStack: props.siteConfig.applicationStack || { nodeVersion: '22-lts' },
+        alwaysOn: props.siteConfig.alwaysOn ?? true,
+        applicationStack: props.siteConfig.applicationStack ?? { nodeVersion: '22-lts' },
       },
       tags: props.tags ?? {
         environment: scope.props.stage,
