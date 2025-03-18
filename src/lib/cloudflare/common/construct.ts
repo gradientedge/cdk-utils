@@ -86,7 +86,7 @@ export class CommonCloudflareConstruct extends TerraformStack {
 
   protected determineRemoteBackend() {
     const debug = this.node.tryGetContext('debug')
-    console.log('what is remote bucket type', this.props.remoteBackend?.type)
+
     switch (this.props.remoteBackend?.type) {
       case RemoteBackend.s3:
         this.awsProvider = new AwsProvider(this, `${this.id}-aws-provider`, {
