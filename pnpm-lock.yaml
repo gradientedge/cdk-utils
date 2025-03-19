@@ -21,7 +21,7 @@ importers:
         specifier: ^19.50.0
         version: 19.52.0(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2)
       '@cdktf/provider-azurerm':
-        specifier: 13.22.0
+        specifier: ^13.22.0
         version: 13.22.0(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2)
       '@cdktf/provider-cloudflare':
         specifier: ^11.29.0
@@ -39,7 +39,7 @@ importers:
         specifier: ^3.1.0
         version: 3.1.0
       aws-cdk-lib:
-        specifier: 2.178.1
+        specifier: ^2.178.1
         version: 2.178.1(constructs@10.4.2)
       cdktf:
         specifier: ^0.20.11
