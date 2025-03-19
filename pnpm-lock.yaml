@@ -45,8 +45,8 @@ importers:
         specifier: ^0.20.11
         version: 0.20.11(constructs@10.4.2)
       cdktf-local-exec:
-        specifier: ^0.5.54
-        version: 0.5.54(@cdktf/provider-null@10.0.1(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2))(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2)
+        specifier: ^0.5.60
+        version: 0.5.60(@cdktf/provider-null@10.0.1(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2))(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2)
       constructs:
         specifier: ^10.4.2
         version: 10.4.2
@@ -1546,8 +1546,8 @@ packages:
     resolution: {integrity: sha512-prMTQVpcns/tzFgFVkVp6ak6RykZyWb3gu8ckUpd6YkTlacOd3DXGJjIpD4Q6zJirizvaiAjSSHlOsA+6sNh2A==}
     engines: {node: '>= 10'}
 
-  cdktf-local-exec@0.5.54:
-    resolution: {integrity: sha512-c0I8ATmFw3Me9eL4bR8usKvTgRsSnz3VgffA/Pisancl0uGsGJFBRyTPq9d1jFfpxQPAUK3568s+AmUKHXlTvg==}
+  cdktf-local-exec@0.5.60:
+    resolution: {integrity: sha512-czE5GrLHzjOW7gYbvvXiDVbxerpn05V95DRNhIum9NCBICWRCxtYwTuZP5qLIlny6XBR7jQORt9eF5RrOQdtZw==}
     peerDependencies:
       '@cdktf/provider-null': '>=10.0.0'
       cdktf: '>=0.20.0'
@@ -6603,7 +6603,7 @@ snapshots:
     dependencies:
       lodash: 4.17.21
 
-  cdktf-local-exec@0.5.54(@cdktf/provider-null@10.0.1(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2))(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2):
+  cdktf-local-exec@0.5.60(@cdktf/provider-null@10.0.1(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2))(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2):
     dependencies:
       '@cdktf/provider-null': 10.0.1(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2)
       cdktf: 0.20.11(constructs@10.4.2)
