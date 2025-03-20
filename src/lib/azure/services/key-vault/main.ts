@@ -34,8 +34,8 @@ export class AzureKeyVaultManager {
 
     const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-kv-rg`, {
       name: scope.props.resourceGroupName
-        ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-        : `${props.resourceGroupName}`,
+          ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
+          : `${props.resourceGroupName}`,
     })
 
     if (!resourceGroup) throw `Resource group undefined for ${id}`
@@ -46,8 +46,9 @@ export class AzureKeyVaultManager {
       location: resourceGroup.location,
       resourceGroupName: resourceGroup.name,
       skuName: props.skuName || 'standard',
-      enableRbacAuthorization: props.enableRbacAuthorization || true,
-      softDeleteRetentionDays: props.softDeleteRetentionDays || 90,
+      enableRbacAuthorization: props.enableRbacAuthorization ?? true,
+      softDeleteRetentionDays: props.softDeleteRetentionDays ?? 90,
+      purgeProtectionEnabled: props.purgeProtectionEnabled ?? true,
       tags: props.tags ?? {
         environment: scope.props.stage,
       },
