@@ -96,8 +96,9 @@ export class AzureKeyVaultManager {
       location: resourceGroup.location,
       resourceGroupName: resourceGroup.name,
       skuName: props.skuName || 'standard',
-      enableRbacAuthorization: props.enableRbacAuthorization || true,
-      softDeleteRetentionDays: props.softDeleteRetentionDays || 90,
+      enableRbacAuthorization: props.enableRbacAuthorization ?? true,
+      softDeleteRetentionDays: props.softDeleteRetentionDays ?? 90,
+      purgeProtectionEnabled: props.purgeProtectionEnabled ?? true,
       tags: props.tags ?? {
         environment: scope.props.stage,
       },
