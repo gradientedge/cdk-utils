@@ -27,4 +27,5 @@ export interface FunctionAppFlexConsumptionProps {
   storageAccountConnectionStringName?: string
   storageConnectionString: string
   sourceCodeHash: string
+  minTlsVersion?: string
 }

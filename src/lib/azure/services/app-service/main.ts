@@ -88,6 +88,7 @@ export class AzureAppServiceManager {
         ...props.siteConfig,
         alwaysOn: props.siteConfig.alwaysOn ?? true,
         applicationStack: props.siteConfig.applicationStack ?? { nodeVersion: '22-lts' },
+        minimumTlsVersion: props.siteConfig.minimumTlsVersion ?? '1.3',
       },
       tags: props.tags ?? {
         environment: scope.props.stage,

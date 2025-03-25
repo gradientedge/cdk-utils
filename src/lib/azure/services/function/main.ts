@@ -156,6 +156,7 @@ export class AzureFunctionManager {
               },
             ]),
             connectionStrings: props.connectionStrings,
+            minTlsVersion: props.minTlsVersion ?? '1.3',
           },
         },
       },
