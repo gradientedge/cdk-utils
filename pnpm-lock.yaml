@@ -18,8 +18,8 @@ importers:
         specifier: ^3.734.0
         version: 3.734.0
       '@cdktf/provider-aws':
-        specifier: ^19.50.0
-        version: 19.52.0(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2)
+        specifier: ^19.58.0
+        version: 19.58.0(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2)
       '@cdktf/provider-azurerm':
         specifier: ^13.23.0
         version: 13.23.0(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2)
@@ -549,8 +549,8 @@ packages:
   '@bcoe/v8-coverage@0.2.3':
     resolution: {integrity: sha512-0hYQ8SB4Db5zvZB4axdMHGwEaQjkZzFjQiN9LVYvIFB2nSUHW9tYpxWriPrWDASIxiaXax83REcLxuSdnGPZtw==}
 
-  '@cdktf/provider-aws@19.52.0':
-    resolution: {integrity: sha512-bWRqGPYkamQQbDmfAgPFStjrDJMwOT8agJLcVler98Vzzyq03iOZMxdA7EKU/mEn/WYqoiIxTQSKpRgynrkQNw==}
+  '@cdktf/provider-aws@19.58.0':
+    resolution: {integrity: sha512-2bBt5++4u8qhrjOLVrgbVLQWe8jvP1gpTHqsZiobW6K56JigDAbPuL/N4/twIzjKT3UwVFdUkvWvRIByIjiNKg==}
     engines: {node: '>= 18.12.0'}
     peerDependencies:
       cdktf: ^0.20.0
@@ -5319,7 +5319,7 @@ snapshots:
 
   '@bcoe/v8-coverage@0.2.3': {}
 
-  '@cdktf/provider-aws@19.52.0(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2)':
+  '@cdktf/provider-aws@19.58.0(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2)':
     dependencies:
       cdktf: 0.20.11(constructs@10.4.2)
       constructs: 10.4.2
