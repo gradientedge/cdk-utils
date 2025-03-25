@@ -156,6 +156,7 @@ describe('TestAzureLinuxWebAppConstruct', () => {
         application_stack: {
           node_version: '22-lts',
         },
+        minimum_tls_version: '1.3',
       },
       tags: {
         environment: 'dev',

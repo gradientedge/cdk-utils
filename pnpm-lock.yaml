@@ -21,8 +21,8 @@ importers:
         specifier: ^19.50.0
         version: 19.52.0(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2)
       '@cdktf/provider-azurerm':
-        specifier: ^13.22.0
-        version: 13.22.0(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2)
+        specifier: ^13.23.0
+        version: 13.23.0(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2)
       '@cdktf/provider-cloudflare':
         specifier: ^11.29.0
         version: 11.30.0(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2)
@@ -556,8 +556,8 @@ packages:
       cdktf: ^0.20.0
       constructs: ^10.3.0
 
-  '@cdktf/provider-azurerm@13.22.0':
-    resolution: {integrity: sha512-Kwg/GERCksHpee9O3eESrpGGxfeRY4KgCgKk13zvbnbOjy730hmvlTHIpbgs2umNn6bmOi5Uokg4PQFHJ9zrsQ==}
+  '@cdktf/provider-azurerm@13.23.0':
+    resolution: {integrity: sha512-7JgNVWXEPZ62P2Qr25c7LiAvlGA3dZy5mZDRLHxO1kXJ0aMjO7fEJXcvUzHb5tTdOyMC5fabQb1r8oQntPfj5g==}
     engines: {node: '>= 18.12.0'}
     peerDependencies:
       cdktf: ^0.20.0
@@ -5324,7 +5324,7 @@ snapshots:
       cdktf: 0.20.11(constructs@10.4.2)
       constructs: 10.4.2
 
-  '@cdktf/provider-azurerm@13.22.0(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2)':
+  '@cdktf/provider-azurerm@13.23.0(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2)':
     dependencies:
       cdktf: 0.20.11(constructs@10.4.2)
       constructs: 10.4.2
