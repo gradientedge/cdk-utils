@@ -135,6 +135,7 @@ export class EksManager {
       clusterName: scope.resourceNameFormatter.format(props.clusterName, scope.props.resourceNameOptions?.eks),
       defaultCapacity: props.appCapacity,
       defaultCapacityInstance: InstanceType.of(InstanceClass.T3, InstanceSize.LARGE),
+      kubectlLayer: props.kubectlLayer,
       version: KubernetesVersion.V1_27,
       vpc,
     })
