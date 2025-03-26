@@ -50,6 +50,7 @@ export class AzureCosmosDbManager {
       tags: props.tags ?? {
         environment: scope.props.stage,
       },
+      publicNetworkAccessEnabled: props.publicNetworkAccessEnabled ?? false,
       identity: props.identity || {
         type: 'SystemAssigned',
       },

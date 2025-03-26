@@ -52,6 +52,8 @@ export class AzureStorageManager {
         .format(props.name, scope.props.resourceNameOptions?.storageAccount)
         .replace(/\W/g, '')
         .toLowerCase(),
+      allowNestedItemsToBePublic: props.allowNestedItemsToBePublic ?? false,
+      publicNetworkAccessEnabled: props.publicNetworkAccessEnabled ?? false,
       resourceGroupName: resourceGroup.name,
       tags: props.tags ?? {
         environment: scope.props.stage,
