@@ -109,7 +109,7 @@ export class CloudFrontManager {
       priceClass: props.priceClass ?? PriceClass.PRICE_CLASS_ALL,
       viewerCertificate: ViewerCertificate.fromAcmCertificate(certificate, {
         aliases: aliases,
-        securityPolicy: SecurityPolicyProtocol.TLS_V1_1_2016,
+        securityPolicy: SecurityPolicyProtocol.TLS_V1_2_2021,
         sslMethod: SSLMethod.SNI,
       }),
     })
