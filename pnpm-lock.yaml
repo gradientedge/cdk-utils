@@ -24,8 +24,8 @@ importers:
         specifier: ^13.23.0
         version: 13.23.0(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2)
       '@cdktf/provider-cloudflare':
-        specifier: ^11.29.0
-        version: 11.30.0(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2)
+        specifier: ^12.2.0
+        version: 12.2.0(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2)
       '@types/lodash':
         specifier: ^4.17.16
         version: 4.17.16
@@ -567,8 +567,8 @@ packages:
       cdktf: ^0.20.0
       constructs: ^10.3.0
 
-  '@cdktf/provider-cloudflare@11.30.0':
-    resolution: {integrity: sha512-5i3LSaHROsBZsHL5KkfzZ0aM6e8gB6ZNN5eTD4V7OdPNYZEXpz+Bvm2NrC7uz/SQ4yJuz4TCdtc0VHLiQSZ6UQ==}
+  '@cdktf/provider-cloudflare@12.2.0':
+    resolution: {integrity: sha512-YXGESFkMJGoifEXuEeOiDK6xBqhu6XHj2izqlHH3VjiXvNv3inPKyiiHQ2cV0b+z28BCM2UiaVRVUVLKjAEuAg==}
     engines: {node: '>= 18.12.0'}
     peerDependencies:
       cdktf: ^0.20.0
@@ -5319,7 +5319,7 @@ snapshots:
       cdktf: 0.20.11(constructs@10.4.2)
       constructs: 10.4.2
 
-  '@cdktf/provider-cloudflare@11.30.0(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2)':
+  '@cdktf/provider-cloudflare@12.2.0(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2)':
     dependencies:
       cdktf: 0.20.11(constructs@10.4.2)
       constructs: 10.4.2
