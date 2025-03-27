@@ -176,6 +176,8 @@ export class AzureApiManagementManager {
       ignoreMissingProperty: true,
       ignoreCasing: true,
       schemaValidationEnabled: false,
+
+      lifecycle: props.lifecycle,
     })
 
     if (applicationInsightsKey) {
@@ -209,8 +211,8 @@ export class AzureApiManagementManager {
     const apiManagementBackend = new ApiManagementBackend(scope, `${id}-am-be`, {
       ...props,
       name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.apiManagementBackend),
-      description: props.description || `Backend for ${props.name}-${scope.props.stage}`,
-      protocol: props.protocol || 'http',
+      description: props.description ?? `Backend for ${props.name}-${scope.props.stage}`,
+      protocol: props.protocol ?? 'http',
     })
 
     createAzureTfOutput(`${id}-apiManagementBackendName`, scope, apiManagementBackend.name)
@@ -233,9 +235,9 @@ export class AzureApiManagementManager {
     const apiManagementApi = new ApiManagementApi(scope, `${id}-am-api`, {
       ...props,
       name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.apiManagementApi),
-      displayName: props.displayName || props.name,
-      revision: props.revision || '1',
-      protocols: props.protocols || ['https'],
+      displayName: props.displayName ?? props.name,
+      revision: props.revision ?? '1',
+      protocols: props.protocols ?? ['https'],
     })
 
     createAzureTfOutput(`${id}-apiManagementApiName`, scope, apiManagementApi.name)

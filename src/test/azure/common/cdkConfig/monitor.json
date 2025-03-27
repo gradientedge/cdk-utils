@@ -1,0 +1,17 @@
+{
+  "testMonitorDiagnosticSetting": {
+    "name": "test-monitor-diagnostic-setting",
+    "targetResourceId": "testTargetId",
+    "storageAccountId": "testStorageAccountId",
+    "enabledLog": [
+      {
+        "categoryGroup": "allLogs"
+      }
+    ],
+    "metric": [
+      {
+        "category": "AllMetrics"
+      }
+    ]
+  }
+}
