@@ -72,7 +72,7 @@ export class AzureFunctionManager {
     const functionAppFunction = new FunctionAppFunction(scope, `${id}-fc`, {
       ...props,
       name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.functionAppFunction),
-      configJson: JSON.stringify(props.configJson || {}),
+      configJson: JSON.stringify(props.configJson ?? {}),
     })
 
     createAzureTfOutput(`${id}-functionName`, scope, functionAppFunction.name)
@@ -110,32 +110,32 @@ export class AzureFunctionManager {
       parentId: resourceGroup.id,
 
       body: {
-        kind: props.kind || 'functionapp,linux',
+        kind: props.kind ?? 'functionapp,linux',
 
         properties: {
           serverFarmId: props.appServicePlanId,
-          httpsOnly: props.httpsOnly || true,
+          httpsOnly: props.httpsOnly ?? true,
 
           functionAppConfig: {
             deployment: {
               storage: {
-                type: props.deploymentStorageType || 'blobContainer',
+                type: props.deploymentStorageType ?? 'blobContainer',
                 value: `${props.blobEndpoint}${props.containerName}`,
                 authentication: {
-                  type: props.deploymentAuthenticationType || 'StorageAccountConnectionString',
+                  type: props.deploymentAuthenticationType ?? 'StorageAccountConnectionString',
                   storageAccountConnectionStringName:
-                    props.storageAccountConnectionStringName || 'DEPLOYMENT_STORAGE_CONNECTION_STRING',
+                    props.storageAccountConnectionStringName ?? 'DEPLOYMENT_STORAGE_CONNECTION_STRING',
                 },
               },
             },
             runtime: {
-              name: props.runtime || 'node',
-              version: props.runtimeVersion || '20',
+              name: props.runtime ?? 'node',
+              version: props.runtimeVersion ?? '20',
             },
             scaleAndConcurrency: {
               alwaysReady: props.alwaysReady,
-              instanceMemoryMB: props.instanceMemory || 2048,
-              maximumInstanceCount: props.maximumInstanceCount || 40,
+              instanceMemoryMB: props.instanceMemory ?? 2048,
+              maximumInstanceCount: props.maximumInstanceCount ?? 40,
               triggers: {},
             },
           },

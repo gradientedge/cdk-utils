@@ -45,7 +45,7 @@ export class AzureKeyVaultManager {
       name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.keyVault),
       location: resourceGroup.location,
       resourceGroupName: resourceGroup.name,
-      skuName: props.skuName || 'standard',
+      skuName: props.skuName ?? 'standard',
       enableRbacAuthorization: props.enableRbacAuthorization ?? true,
       softDeleteRetentionDays: props.softDeleteRetentionDays ?? 90,
       purgeProtectionEnabled: props.purgeProtectionEnabled ?? true,

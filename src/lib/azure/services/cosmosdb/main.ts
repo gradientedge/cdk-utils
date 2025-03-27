@@ -50,7 +50,7 @@ export class AzureCosmosDbManager {
       tags: props.tags ?? {
         environment: scope.props.stage,
       },
-      identity: props.identity || {
+      identity: props.identity ?? {
         type: 'SystemAssigned',
       },
     })

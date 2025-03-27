@@ -54,9 +54,9 @@ export class AzureServicebusManager {
       resourceGroupName: resourceGroup.name,
       location: resourceGroup.location,
       identity: {
-        type: props.identity?.type || 'SystemAssigned',
+        type: props.identity?.type ?? 'SystemAssigned',
       },
-      sku: props.sku || 'Standard',
+      sku: props.sku ?? 'Standard',
       tags: props.tags ?? {
         environment: scope.props.stage,
       },
@@ -128,7 +128,7 @@ export class AzureServicebusManager {
     const servicebusSubscription = new ServicebusSubscription(scope, `${id}-ss`, {
       ...props,
       name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.serviceBusSubscription),
-      maxDeliveryCount: props.maxDeliveryCount || 1,
+      maxDeliveryCount: props.maxDeliveryCount ?? 1,
     })
 
     createAzureTfOutput(`${id}-servicebusSubscriptionName`, scope, servicebusSubscription.name)
