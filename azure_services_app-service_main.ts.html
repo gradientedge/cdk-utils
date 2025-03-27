@@ -131,7 +131,7 @@ export class AzureAppServiceManager {
       resourceGroupName: resourceGroup.name,
       httpsOnly: props.httpsOnly ?? true,
 
-      identity: props.identity || {
+      identity: props.identity ?? {
         type: 'SystemAssigned',
       },
       siteConfig: {

@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>azure/services/key-vault/main.ts - Documentation</title>
+    <title>azure/services/monitor/main.ts - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -38,7 +38,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">azure/services/key-vault/main.ts</h1>
+    <h1 class="page-title">azure/services/monitor/main.ts</h1>
     
 
     
@@ -48,11 +48,10 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group'
-import { KeyVault } from '@cdktf/provider-azurerm/lib/key-vault'
+            <pre class="prettyprint source linenums"><code>import { MonitorDiagnosticSetting } from '@cdktf/provider-azurerm/lib/monitor-diagnostic-setting'
 import { CommonAzureConstruct } from '../../common'
 import { createAzureTfOutput } from '../../utils'
-import { KeyVaultProps } from './types'
+import { MonitorDiagnosticSettingProps } from './types'
 
 /**
  * @classdesc Provides operations on Azure Key Vault
@@ -66,49 +65,40 @@ import { KeyVaultProps } from './types'
  *   constructor(parent: Construct, id: string, props: CommonAzureStackProps) {
  *     super(parent, id, props)
  *     this.props = props
- *     this.keyVaultManager.createKeyVault('MyKeyVault', this, props)
+ *     this.monitorManager.createMonitor('MyMonitor', this, props)
  *   }
  * }
  * ```
  */
-export class AzureKeyVaultManager {
+export class AzureMonitorManager {
   /**
-   * @summary Method to create a new key vault
+   * @summary Method to create a new monitor diagnostic setting
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props key vault properties
-   * @see [CDKTF Key Vault Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/keyVault.typescript.md}
+   * @param props monitor diagnostics settings properties
+   * @see [CDKTF Monitor Diagnostics Settings Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/monitorDiagnosticSetting.typescript.md}
    */
-  public createKeyVault(id: string, scope: CommonAzureConstruct, props: KeyVaultProps) {
+  public createMonitorDiagnosticSettings(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: MonitorDiagnosticSettingProps
+  ) {
     if (!props) throw `Props undefined for ${id}`
 
-    const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-kv-rg`, {
-      name: scope.props.resourceGroupName
-        ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-        : `${props.resourceGroupName}`,
-    })
-
-    if (!resourceGroup) throw `Resource group undefined for ${id}`
-
-    const keyVault = new KeyVault(scope, `${id}-kv`, {
+    const monitorDiagnosticSetting = new MonitorDiagnosticSetting(scope, `${id}-ds`, {
       ...props,
-      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.keyVault),
-      location: resourceGroup.location,
-      resourceGroupName: resourceGroup.name,
-      skuName: props.skuName ?? 'standard',
-      enableRbacAuthorization: props.enableRbacAuthorization ?? true,
-      softDeleteRetentionDays: props.softDeleteRetentionDays ?? 90,
-      purgeProtectionEnabled: props.purgeProtectionEnabled ?? true,
-      tags: props.tags ?? {
-        environment: scope.props.stage,
-      },
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.monitorDiagnosticSetting),
     })
 
-    createAzureTfOutput(`${id}-keyVaultName`, scope, keyVault.name)
-    createAzureTfOutput(`${id}-keyVaultFriendlyUniqueId`, scope, keyVault.friendlyUniqueId)
-    createAzureTfOutput(`${id}-keyVaultId`, scope, keyVault.id)
+    createAzureTfOutput(`${id}-monitorDiagnosticSettingName`, scope, monitorDiagnosticSetting.name)
+    createAzureTfOutput(
+      `${id}-monitorDiagnosticSettingFriendlyUniqueId`,
+      scope,
+      monitorDiagnosticSetting.friendlyUniqueId
+    )
+    createAzureTfOutput(`${id}-monitorDiagnosticSettingId`, scope, monitorDiagnosticSetting.id)
 
-    return keyVault
+    return monitorDiagnosticSetting
   }
 }
 </code></pre>

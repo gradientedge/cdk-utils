@@ -94,7 +94,7 @@ export class AzureApplicationInsightsManager {
       ...props,
       name: scope.resourceNameFormatter.format(props.name ?? '', scope.props.resourceNameOptions?.applicationInsights),
       resourceGroupName: resourceGroup.name,
-      applicationType: props.applicationType || 'web',
+      applicationType: props.applicationType ?? 'web',
       tags: props.tags ?? {
         environment: scope.props.stage,
       },
