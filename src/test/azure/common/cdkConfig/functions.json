@@ -5,5 +5,13 @@
   "testFunction": {
     "name": "test-function",
     "functionAppName": "test-function-app"
+  },
+  "testFunctionAppFlexConsumption": {
+    "name": "test-function-app-flex-consumption",
+    "sourceCodeHash": "testHash",
+    "deploySource": "src/test/azure/common/nodejs/lib",
+    "siteConfig": {
+      "http2Enabled": true
+    }
   }
 }

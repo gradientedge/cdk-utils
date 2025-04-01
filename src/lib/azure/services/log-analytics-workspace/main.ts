@@ -45,6 +45,8 @@ export class AzureLogAnalyticsWorkspaceManager {
       name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.logAnalyticsWorkspace),
       location: resourceGroup.location,
       resourceGroupName: resourceGroup.name,
+      sku: props.sku ?? 'PerGB2018',
+      retentionInDays: props.retentionInDays ?? 30,
       tags: props.tags ?? {
         environment: scope.props.stage,
       },

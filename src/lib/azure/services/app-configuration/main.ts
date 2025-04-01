@@ -44,6 +44,9 @@ export class AzureAppConfigurationManager {
       ...props,
       name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.appConfiguration),
       resourceGroupName: resourceGroup.name,
+      identity: {
+        type: 'SystemAssigned',
+      },
       tags: props.tags ?? {
         environment: scope.props.stage,
       },
