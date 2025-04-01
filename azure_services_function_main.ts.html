@@ -51,7 +51,7 @@
             <pre class="prettyprint source linenums"><code>import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group'
 import { LinuxFunctionApp } from '@cdktf/provider-azurerm/lib/linux-function-app'
 import { FunctionAppFunction } from '@cdktf/provider-azurerm/lib/function-app-function'
-import { Resource } from '../../.gen/providers/azapi/resource'
+import { FunctionAppFlexConsumption } from '@cdktf/provider-azurerm/lib/function-app-flex-consumption'
 import { LocalExec, Provider } from 'cdktf-local-exec'
 import { CommonAzureConstruct } from '../../common'
 import { createAzureTfOutput } from '../../utils'
@@ -153,69 +153,27 @@ export class AzureFunctionManager {
 
     if (!resourceGroup) throw `Resource group undefined for ${id}`
 
-    const functionApp = new Resource(scope, `${id}-fa`, {
-      type: 'Microsoft.Web/sites@2024-04-01',
+    const functionApp = new FunctionAppFlexConsumption(scope, `${id}-fc`, {
+      ...props,
       name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.functionApp),
       location: resourceGroup.location,
-      parentId: resourceGroup.id,
-
-      body: {
-        kind: props.kind ?? 'functionapp,linux',
-
-        properties: {
-          serverFarmId: props.appServicePlanId,
-          httpsOnly: props.httpsOnly ?? true,
-
-          functionAppConfig: {
-            deployment: {
-              storage: {
-                type: props.deploymentStorageType ?? 'blobContainer',
-                value: `${props.blobEndpoint}${props.containerName}`,
-                authentication: {
-                  type: props.deploymentAuthenticationType ?? 'StorageAccountConnectionString',
-                  storageAccountConnectionStringName:
-                    props.storageAccountConnectionStringName ?? 'DEPLOYMENT_STORAGE_CONNECTION_STRING',
-                },
-              },
-            },
-            runtime: {
-              name: props.runtime ?? 'node',
-              version: props.runtimeVersion ?? '20',
-            },
-            scaleAndConcurrency: {
-              alwaysReady: props.alwaysReady,
-              instanceMemoryMB: props.instanceMemory ?? 2048,
-              maximumInstanceCount: props.maximumInstanceCount ?? 40,
-              triggers: {},
-            },
-          },
-
-          siteConfig: {
-            appSettings: props.appSettings.concat([
-              {
-                name: 'FUNCTIONS_EXTENSION_VERSION',
-                value: '~4',
-              },
-              {
-                name: 'AzureWebJobsStorage',
-                value: props.storageConnectionString,
-              },
-              {
-                name: 'DEPLOYMENT_STORAGE_CONNECTION_STRING',
-                value: props.storageConnectionString,
-              },
-            ]),
-            connectionStrings: props.connectionStrings,
-            minTlsVersion: props.minTlsVersion ?? '1.3',
-          },
-        },
+      resourceGroupName: resourceGroup.name,
+      runtimeName: props.runtimeName ?? 'node',
+      runtimeVersion: props.runtimeVersion ?? '20',
+      storageAuthenticationType: props.storageAuthenticationType ?? 'StorageAccountConnectionString',
+      storageContainerType: props.storageContainerType ?? 'blobContainer',
+      maximumInstanceCount: props.maximumInstanceCount ?? 40,
+      instanceMemoryInMb: props.instanceMemoryInMb ?? 2048,
+      siteConfig: {
+        http2Enabled: props.siteConfig.http2Enabled ?? true,
+        ...props.siteConfig,
       },
-
-      identity: [{ type: 'SystemAssigned' }],
-
-      ignoreMissingProperty: true,
-      ignoreCasing: true,
-      schemaValidationEnabled: false,
+      identity: props.identity ?? {
+        type: 'SystemAssigned',
+      },
+      tags: props.tags ?? {
+        environment: scope.props.stage,
+      },
     })
 
     new Provider(scope, `${id}-local-exec-provider`)
