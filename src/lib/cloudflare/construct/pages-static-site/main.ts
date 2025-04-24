@@ -4,8 +4,12 @@ import { DataAzurermKeyVault } from '@cdktf/provider-azurerm/lib/data-azurerm-ke
 import { DataAzurermKeyVaultSecret } from '@cdktf/provider-azurerm/lib/data-azurerm-key-vault-secret'
 import { DataCloudflareZone } from '@cdktf/provider-cloudflare/lib/data-cloudflare-zone'
 import { PagesDomain } from '@cdktf/provider-cloudflare/lib/pages-domain'
-import { PagesProject } from '@cdktf/provider-cloudflare/lib/pages-project'
-import { Record } from '@cdktf/provider-cloudflare/lib/record'
+import {
+  PagesProject,
+  PagesProjectDeploymentConfigsPreviewEnvVars,
+  PagesProjectDeploymentConfigsProductionEnvVars,
+} from '@cdktf/provider-cloudflare/lib/pages-project'
+import { DnsRecord } from '@cdktf/provider-cloudflare/lib/dns-record'
 import { Zone } from '@cdktf/provider-cloudflare/lib/zone'
 import { Fn } from 'cdktf'
 import { Construct } from 'constructs'
@@ -31,14 +35,14 @@ export class CloudflarePagesStaticSite extends CommonCloudflareConstruct {
   declare props: CloudflarePagesStaticSiteProps
 
   /* static site resources */
-  sitePagesCnameRecord: Record
+  sitePagesCnameRecord: DnsRecord
   sitePagesDomain: PagesDomain
   sitePagesProject: PagesProject
   siteZone: DataCloudflareZone | Zone
-  sitePagesEnvironmentVariables: { [key: string]: string }
-  sitePagesPreviewEnvironmentVariables: { [key: string]: string }
-  sitePagesSecrets: { [key: string]: string }
-  sitePagesPreviewSecrets: { [key: string]: string }
+  sitePagesEnvironmentVariables: { [key: string]: PagesProjectDeploymentConfigsProductionEnvVars }
+  sitePagesPreviewEnvironmentVariables: { [key: string]: PagesProjectDeploymentConfigsPreviewEnvVars }
+  sitePagesSecrets: { [key: string]: PagesProjectDeploymentConfigsProductionEnvVars }
+  sitePagesPreviewSecrets: { [key: string]: PagesProjectDeploymentConfigsPreviewEnvVars }
   siteDeploymentDependsOn: any
 
   constructor(parent: Construct, id: string, props: CloudflarePagesStaticSiteProps) {
@@ -79,10 +83,10 @@ export class CloudflarePagesStaticSite extends CommonCloudflareConstruct {
       ...this.props.sitePagesProject,
       deploymentConfigs: {
         preview: {
-          secrets: this.sitePagesPreviewSecrets,
+          envVars: this.sitePagesPreviewSecrets,
         },
         production: {
-          secrets: this.sitePagesSecrets,
+          envVars: this.sitePagesSecrets,
         },
       },
     }
@@ -96,10 +100,10 @@ export class CloudflarePagesStaticSite extends CommonCloudflareConstruct {
       ...this.props.sitePagesProject,
       deploymentConfigs: {
         preview: {
-          environmentVariables: this.sitePagesPreviewEnvironmentVariables,
+          envVars: this.sitePagesPreviewEnvironmentVariables,
         },
         production: {
-          environmentVariables: this.sitePagesEnvironmentVariables,
+          envVars: this.sitePagesEnvironmentVariables,
         },
       },
     }
@@ -170,7 +174,7 @@ export class CloudflarePagesStaticSite extends CommonCloudflareConstruct {
   protected createDomain() {
     this.sitePagesDomain = this.pageManager.createPagesDomain(`${this.id}-site-domain`, this, {
       accountId: this.props.accountId,
-      domain: `${this.props.siteSubDomain}.${this.props.domainName}`,
+      name: `${this.props.siteSubDomain}.${this.props.domainName}`,
       projectName: this.sitePagesProject.name,
     })
   }
@@ -182,7 +186,10 @@ export class CloudflarePagesStaticSite extends CommonCloudflareConstruct {
     this.sitePagesCnameRecord = this.recordManager.createRecord(`${this.id}-site-record`, this, {
       ...this.props.siteCnameRecord,
       name: this.props.siteSubDomain,
-      value: `${this.sitePagesProject.name}.pages.dev`,
+      data: {
+        ...this.props.siteCnameRecord.data,
+        value: `${this.sitePagesProject.name}.pages.dev`,
+      },
     })
   }
 

@@ -99,13 +99,12 @@ class TestCommonConstruct extends CommonCloudflareConstruct {
     super(parent, name, props)
     const zone = this.zoneManager.createZone(`test-zone-${this.props.stage}`, this, this.props.testZone)
     this.zoneManager.createZoneCacheReserve(`test-zone-cache-reserve-${this.props.stage}`, this, {
-      enabled: true,
       zoneId: zone.id,
     })
     this.apiShieldManager.createApiShield(`test-api-shield-${this.props.stage}`, this, this.props.testApiShield)
     this.apiShieldManager.createApiShieldSchema(`test-api-shield-sch-${this.props.stage}`, this, {
       ...this.props.testApiShieldSchema,
-      source: fs.readFileSync('src/test/cloudflare/common/sample.json', { encoding: 'utf8' }),
+      file: fs.readFileSync('src/test/cloudflare/common/sample.json', { encoding: 'utf8' }),
     })
     this.apiShieldManager.createApiShieldSchemaValidationSettings(
       `test-api-shield-val-${this.props.stage}`,
@@ -175,7 +174,7 @@ describe('TestCloudflareApiShieldManager', () => {
       },
       testApiShieldSchDevApiShieldSchemaFriendlyUniqueId: { value: 'test-api-shield-sch-dev' },
       testApiShieldSchDevApiShieldSchemaId: {
-        value: '${cloudflare_api_shield_schema.test-api-shield-sch-dev.id}',
+        value: '${cloudflare_api_shield_schema.test-api-shield-sch-dev.schema_id}',
       },
       testApiShieldValDevApiShieldSchemaValidationSettingsFriendlyUniqueId: { value: 'test-api-shield-val-dev' },
       testApiShieldValDevApiShieldSchemaValidationSettingsId: {
@@ -183,7 +182,7 @@ describe('TestCloudflareApiShieldManager', () => {
       },
       testZoneDevZoneFriendlyUniqueId: { value: 'test-zone-dev' },
       testZoneDevZoneId: { value: '${cloudflare_zone.test-zone-dev.id}' },
-      testZoneDevZoneName: { value: '${cloudflare_zone.test-zone-dev.zone}' },
+      testZoneDevZoneName: { value: '${cloudflare_zone.test-zone-dev.name}' },
     })
   })
 })
@@ -191,8 +190,10 @@ describe('TestCloudflareApiShieldManager', () => {
 describe('TestCloudflareApiShieldManager', () => {
   test('provisions zone as expected', () => {
     expect(construct).toHaveResourceWithProperties(Zone, {
-      account_id: 'test-account',
-      zone: 'gradientedge.io',
+      account: {
+        id: 'test-account',
+      },
+      name: 'gradientedge.io',
     })
   })
 })
@@ -214,9 +215,9 @@ describe('TestCloudflareApiShieldManager', () => {
 describe('TestCloudflareApiShieldManager', () => {
   test('provisions api shield schema as expected', () => {
     expect(construct).toHaveResourceWithProperties(ApiShieldSchema, {
+      file: '{\n  "test": true,\n  "hello": "world"\n}\n',
       kind: 'openapi_v3',
       name: 'test-api-dev',
-      source: '{\n  "test": true,\n  "hello": "world"\n}\n',
       zone_id: '${data.cloudflare_zone.test-api-shield-sch-dev-data-zone-data-zone.id}',
     })
   })

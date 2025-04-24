@@ -1,3 +1,3 @@
-import { RecordConfig } from '@cdktf/provider-cloudflare/lib/record'
+import { DnsRecordConfig } from '@cdktf/provider-cloudflare/lib/dns-record'
 
-export interface RecordProps extends RecordConfig {}
+export interface DnsRecordProps extends DnsRecordConfig {}

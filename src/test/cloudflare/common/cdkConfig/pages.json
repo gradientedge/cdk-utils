@@ -2,11 +2,6 @@
   "testPageRule": {
     "actions": {
       "emailObfuscation": "on",
-      "minify": {
-        "css": "on",
-        "html": "off",
-        "js": "on"
-      },
       "ssl": "flexible"
     },
     "priority": 1,
@@ -26,43 +21,33 @@
       "preview": {
         "compatibility_date": "2023-11-23",
         "compatibility_flags": ["nodejs_compat"],
-        "environmentVariables": {
-          "TEST_ENV_VAR": "preview"
-        },
-        "secrets": {
-          "TEST_SECRET": "0987654321"
+        "envVars": {
+          "TEST_ENV_VAR": {
+            "type": "plain_text",
+            "value": "preview"
+          },
+          "TEST_SECRET": {
+            "type": "secret_text",
+            "value": "0987654321"
+          }
         }
       },
       "production": {
         "compatibility_date": "2023-11-23",
         "compatibility_flags": ["nodejs_compat"],
-        "environmentVariables": {
-          "TEST_ENV_VAR": "production"
-        },
-        "secrets": {
-          "TEST_SECRET": "1234567890"
+        "envVars": {
+          "TEST_ENV_VAR": {
+            "type": "plain_text",
+            "value": "production"
+          },
+          "TEST_SECRET": {
+            "type": "secret_text",
+            "value": "1234567890"
+          }
         }
       }
     },
     "name": "test-build-config-project",
     "productionBranch": "main"
-  },
-  "testPagesProjectGithub": {
-    "name": "test-github-project",
-    "productionBranch": "main",
-    "source": {
-      "config": {
-        "deploymentsEnabled": true,
-        "owner": "test",
-        "prCommentsEnabled": true,
-        "previewBranchExcludes": ["main", "production"],
-        "previewBranchIncludes": ["dev", "preview"],
-        "previewDeploymentSetting": "custom",
-        "productionBranch": "main",
-        "productionDeploymentEnabled": true,
-        "repoName": "test-github-project"
-      },
-      "type": "github"
-    }
   }
 }

@@ -34,7 +34,9 @@ export class CloudflareRuleSetManager {
 
     const zoneId = props.zoneId
       ? props.zoneId
-      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.id
+      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, {
+          filter: { account: { name: scope.props.domainName } },
+        })?.id
 
     const ruleSet = new Ruleset(scope, `${id}`, {
       ...props,

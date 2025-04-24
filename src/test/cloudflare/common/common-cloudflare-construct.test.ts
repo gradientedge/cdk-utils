@@ -44,7 +44,6 @@ class TestCommonConstruct extends CommonCloudflareConstruct {
     super(parent, name, props)
     const zone = this.zoneManager.createZone(`test-zone-${this.props.stage}`, this, this.props.testZone)
     this.zoneManager.createZoneCacheReserve(`test-zone-cache-reserve-${this.props.stage}`, this, {
-      enabled: true,
       zoneId: zone.id,
     })
   }
@@ -78,7 +77,7 @@ describe('TestCloudflareCommonConstruct', () => {
     expect(JSON.parse(construct).output).toMatchObject({
       testZoneDevZoneFriendlyUniqueId: { value: 'test-zone-dev' },
       testZoneDevZoneId: { value: '${cloudflare_zone.test-zone-dev.id}' },
-      testZoneDevZoneName: { value: '${cloudflare_zone.test-zone-dev.zone}' },
+      testZoneDevZoneName: { value: '${cloudflare_zone.test-zone-dev.name}' },
     })
   })
 })
@@ -86,8 +85,10 @@ describe('TestCloudflareCommonConstruct', () => {
 describe('TestCloudflareCommonConstruct', () => {
   test('provisions zone as expected', () => {
     expect(construct).toHaveResourceWithProperties(Zone, {
-      account_id: 'test-account',
-      zone: 'gradientedge.io',
+      account: {
+        id: 'test-account',
+      },
+      name: 'gradientedge.io',
     })
   })
 })

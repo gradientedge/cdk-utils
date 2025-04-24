@@ -1,4 +1,4 @@
-import { Record } from '@cdktf/provider-cloudflare/lib/record'
+import { DnsRecord } from '@cdktf/provider-cloudflare/lib/dns-record'
 import { Zone } from '@cdktf/provider-cloudflare/lib/zone'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
@@ -7,14 +7,14 @@ import {
   CommonCloudflareConstruct,
   CommonCloudflareStack,
   CommonCloudflareStackProps,
-  RecordProps,
+  DnsRecordProps,
   ZoneProps,
 } from '../../../lib'
 
 interface TestCloudflareStackProps extends CommonCloudflareStackProps {
   testZone: ZoneProps
-  testARecord: RecordProps
-  testCNameRecord: RecordProps
+  testARecord: DnsRecordProps
+  testCNameRecord: DnsRecordProps
   testAttribute?: string
 }
 
@@ -114,12 +114,12 @@ describe('TestCloudflareRecordManager', () => {
   test('provisions outputs as expected', () => {
     expect(JSON.parse(construct).output).toMatchObject({
       testArecordDevRecordFriendlyUniqueId: { value: 'test-arecord-dev' },
-      testArecordDevRecordId: { value: '${cloudflare_record.test-arecord-dev.id}' },
+      testArecordDevRecordId: { value: '${cloudflare_dns_record.test-arecord-dev.id}' },
       testCnamerecordDevRecordFriendlyUniqueId: { value: 'test-cnamerecord-dev' },
-      testCnamerecordDevRecordId: { value: '${cloudflare_record.test-cnamerecord-dev.id}' },
+      testCnamerecordDevRecordId: { value: '${cloudflare_dns_record.test-cnamerecord-dev.id}' },
       testZoneDevZoneFriendlyUniqueId: { value: 'test-zone-dev' },
       testZoneDevZoneId: { value: '${cloudflare_zone.test-zone-dev.id}' },
-      testZoneDevZoneName: { value: '${cloudflare_zone.test-zone-dev.zone}' },
+      testZoneDevZoneName: { value: '${cloudflare_zone.test-zone-dev.name}' },
     })
   })
 })
@@ -127,26 +127,28 @@ describe('TestCloudflareRecordManager', () => {
 describe('TestCloudflareRecordManager', () => {
   test('provisions zone as expected', () => {
     expect(construct).toHaveResourceWithProperties(Zone, {
-      account_id: 'test-account',
-      zone: 'gradientedge.io',
+      account: {
+        id: 'test-account',
+      },
+      name: 'gradientedge.io',
     })
   })
 })
 
 describe('TestCloudflareRecordManager', () => {
   test('provisions ARecord as expected', () => {
-    expect(construct).toHaveResourceWithProperties(Record, {
+    expect(construct).toHaveResourceWithProperties(DnsRecord, {
       name: 'testARecord',
       ttl: 300,
       type: 'A',
-      value: '192.0.2.1',
+      content: '192.0.2.1',
       zone_id: '${data.cloudflare_zone.test-arecord-dev-data-zone-data-zone.id}',
     })
-    expect(construct).toHaveResourceWithProperties(Record, {
+    expect(construct).toHaveResourceWithProperties(DnsRecord, {
       name: 'testCNameRecord',
       ttl: 300,
       type: 'CNAME',
-      value: 'example.gradientedge.io',
+      content: 'example.gradientedge.io',
       zone_id: '${data.cloudflare_zone.test-cnamerecord-dev-data-zone-data-zone.id}',
     })
   })

@@ -5,7 +5,8 @@ import { ZoneCacheVariants } from '@cdktf/provider-cloudflare/lib/zone-cache-var
 import { ZoneDnssec } from '@cdktf/provider-cloudflare/lib/zone-dnssec'
 import { ZoneHold } from '@cdktf/provider-cloudflare/lib/zone-hold'
 import { ZoneLockdown } from '@cdktf/provider-cloudflare/lib/zone-lockdown'
-import { ZoneSettingsOverride } from '@cdktf/provider-cloudflare/lib/zone-settings-override'
+import { ZoneSetting } from '@cdktf/provider-cloudflare/lib/zone-setting'
+import { ZoneDnsSettings } from '@cdktf/provider-cloudflare/lib/zone-dns-settings'
 import { CommonCloudflareConstruct } from '../../common'
 import { createCloudflareTfOutput } from '../../utils'
 import {
@@ -16,7 +17,7 @@ import {
   ZoneLockdownProps,
   ZoneOptions,
   ZoneProps,
-  ZoneSettingsOverrideProps,
+  ZoneSettingProps,
 } from './types'
 
 /**
@@ -49,11 +50,13 @@ export class CloudflareZoneManager {
 
     const zone = new Zone(scope, `${id}`, {
       ...props,
-      accountId: props.accountId ?? scope.props.accountId,
-      zone: props.zone ?? scope.props.domainName,
+      account: {
+        id: props.account.id ?? scope.props.accountId,
+      },
+      name: props.name ?? scope.props.domainName,
     })
 
-    createCloudflareTfOutput(`${id}-zoneName`, scope, zone.zone)
+    createCloudflareTfOutput(`${id}-zoneName`, scope, zone.name)
     createCloudflareTfOutput(`${id}-zoneFriendlyUniqueId`, scope, zone.friendlyUniqueId)
     createCloudflareTfOutput(`${id}-zoneId`, scope, zone.id)
 
@@ -62,9 +65,12 @@ export class CloudflareZoneManager {
 
   public resolveZone(id: string, scope: CommonCloudflareConstruct, options?: ZoneOptions) {
     const zone = new DataCloudflareZone(scope, `${id}-data-zone`, {
-      accountId: scope.props.accountId,
-      name: options?.name ?? scope.props.domainName,
-      zoneId: options?.id,
+      filter: {
+        account: {
+          name: options?.name ?? scope.props.domainName,
+        },
+      },
+      zoneId: options?.zoneId,
     })
 
     return zone
@@ -191,26 +197,49 @@ export class CloudflareZoneManager {
   }
 
   /**
-   * @summary Method to create a new zone settings override
+   * @summary Method to create new zone dns settings
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props zone settings override properties
-   * @see [CDKTF Zone Settings Override Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/zoneSettingsOverride.typescript.md}
+   * @param props zone dns settings properties
+   * @see [CDKTF Zone Dns Settings Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/dnsZoneSettings.typescript.md}
    */
-  public createZoneSettingsOverride(id: string, scope: CommonCloudflareConstruct, props: ZoneSettingsOverrideProps) {
+  public createZoneDnsSettings(id: string, scope: CommonCloudflareConstruct, props: ZoneSettingProps) {
     if (!props) throw `Props undefined for ${id}`
 
     const zoneId = props.zoneId
       ? props.zoneId
       : this.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.id
-    const zoneSettingsOverride = new ZoneSettingsOverride(scope, `${id}`, {
+    const zoneDnsSettings = new ZoneDnsSettings(scope, `${id}`, {
       ...props,
       zoneId,
     })
 
-    createCloudflareTfOutput(`${id}-zoneSettingsOverrideFriendlyUniqueId`, scope, zoneSettingsOverride.friendlyUniqueId)
-    createCloudflareTfOutput(`${id}-zoneSettingsOverrideId`, scope, zoneSettingsOverride.id)
+    createCloudflareTfOutput(`${id}-zoneDnsSettingsFriendlyUniqueId`, scope, zoneDnsSettings.friendlyUniqueId)
 
-    return zoneSettingsOverride
+    return zoneDnsSettings
+  }
+
+  /**
+   * @summary Method to create a new zone setting
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props zone setting properties
+   * @see [CDKTF Zone Setting Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/zoneSetting.typescript.md}
+   */
+  public createZoneSetting(id: string, scope: CommonCloudflareConstruct, props: ZoneSettingProps) {
+    if (!props) throw `Props undefined for ${id}`
+
+    const zoneId = props.zoneId
+      ? props.zoneId
+      : this.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.id
+    const zoneSetting = new ZoneSetting(scope, `${id}`, {
+      ...props,
+      zoneId,
+    })
+
+    createCloudflareTfOutput(`${id}-zoneSettingFriendlyUniqueId`, scope, zoneSetting.friendlyUniqueId)
+    createCloudflareTfOutput(`${id}-zoneSettingId`, scope, zoneSetting.id)
+
+    return zoneSetting
   }
 }

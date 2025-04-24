@@ -113,7 +113,7 @@ describe('TestCloudflareRuleSetManager', () => {
       testRuleSetDevRuleSetFriendlyUniqueId: { value: 'test-rule-set-dev' },
       testZoneDevZoneFriendlyUniqueId: { value: 'test-zone-dev' },
       testZoneDevZoneId: { value: '${cloudflare_zone.test-zone-dev.id}' },
-      testZoneDevZoneName: { value: '${cloudflare_zone.test-zone-dev.zone}' },
+      testZoneDevZoneName: { value: '${cloudflare_zone.test-zone-dev.name}' },
     })
   })
 })
@@ -121,8 +121,10 @@ describe('TestCloudflareRuleSetManager', () => {
 describe('TestCloudflareRuleSetManager', () => {
   test('provisions zone as expected', () => {
     expect(construct).toHaveResourceWithProperties(Zone, {
-      account_id: 'test-account',
-      zone: 'gradientedge.io',
+      account: {
+        id: 'test-account',
+      },
+      name: 'gradientedge.io',
     })
   })
 })

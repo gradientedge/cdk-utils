@@ -10,53 +10,42 @@
   },
   "testWorkerScript": {
     "accountId": "test-account",
-    "analyticsEngineBinding": [
+    "bindings": [
       {
         "dataset": "sample_dataset",
-        "name": "sample_dataset_binding"
-      }
-    ],
-    "kvNamespaceBinding": [
+        "name": "sample_dataset_binding",
+        "type": "analytics_engine"
+      },
       {
         "name": "sample_kv_namespace_binding",
-        "namespaceId": "sampleNamespaceId"
-      }
-    ],
-    "name": "test-script",
-    "plainTextBinding": [
+        "type": "kv_namespace"
+      },
       {
         "name": "sample_text_binding",
-        "text": "example"
-      }
-    ],
-    "r2BucketBinding": [
+        "text": "example",
+        "type": "plain_text"
+      },
       {
-        "bucket_name": "sample_bucket",
-        "name": "sample_bucket_binding"
-      }
-    ],
-    "secretTextBinding": [
+        "name": "sample_bucket_binding",
+        "type": "r2_bucket"
+      },
       {
         "name": "sample_secret_text_binding",
-        "text": "example"
-      }
-    ],
-    "serviceBinding": [
+        "text": "example",
+        "type": "secret_text"
+      },
       {
         "environment": "development",
         "name": "sample_service_binding",
-        "service": "sample_service"
+        "service": "sample_service",
+        "type": "service"
       }
     ],
-    "webassemblyBinding": [
-      {
-        "name": "sample_wasm_binding"
-      }
-    ]
+    "scriptName": "test-script"
   },
   "testWorkersKv": {
     "accountId": "test-account",
-    "key": "test",
+    "keyName": "test",
     "namespaceId": "test-namespace",
     "value": "test123"
   },
@@ -66,6 +55,13 @@
   },
   "testWorkerCronTrigger": {
     "accountId": "test-account",
-    "schedules": ["*/5 * * * *", "10 7 * * mon-fri"]
+    "schedules": [
+      {
+        "cron": "*/5 * * * *"
+      },
+      {
+        "cron": "10 7 * * mon-fri"
+      }
+    ]
   }
 }

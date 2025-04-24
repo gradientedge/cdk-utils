@@ -1,13 +1,11 @@
 {
   "testAccessApplication": {
-    "corsHeaders": [
-      {
-        "allowAllHeaders": true,
-        "allowCredentials": true,
-        "allowedOrigins": ["https://example.gradientedge.io"],
-        "maxAge": 10
-      }
-    ],
+    "corsHeaders": {
+      "allowAllHeaders": true,
+      "allowCredentials": true,
+      "allowedOrigins": ["https://example.gradientedge.io"],
+      "maxAge": 10
+    },
     "domain": "myapp",
     "name": "test-app",
     "sessionDuration": "24h",
@@ -20,7 +18,9 @@
   "testAccessGroup": {
     "include": [
       {
-        "email": ["test@gradientedge.io"]
+        "email": {
+          "email": "test@gradientedge.io"
+        }
       }
     ],
     "name": "test-group"
@@ -44,14 +44,17 @@
     "decision": "allow",
     "include": [
       {
-        "email": ["test@gradientedge.io"]
+        "email": {
+          "email": "test@gradientedge.io"
+        }
       }
     ],
     "name": "test-policy-props",
-    "precedence": "1",
     "require": [
       {
-        "email": ["test@gradientedge.io"]
+        "email": {
+          "email": "test@gradientedge.io"
+        }
       }
     ]
   },
@@ -76,23 +79,18 @@
     "notes": "Requests coming from Australia"
   },
   "testAccessSamlIdentityProvider": {
-    "config": [
-      {
-        "attributes": ["email", "username"],
-        "idp_public_cert": "MIIDpDCCAoygAwIBAgIGAV2ka+55MA0GCSqGSIb3DQEBCwUAMIGSMQswCQ...GF/Q2/MHadws97cZg\nuTnQyuOqPuHbnN83d/2l1NSYKCbHt24o",
-        "issuer_url": "jumpcloud",
-        "sign_request": false,
-        "sso_target_url": "https://sso.gradientedge.io/saml2/cloudflareaccess"
-      }
-    ],
+    "config": {
+      "attributes": ["email", "username"],
+      "idp_public_cert": "MIIDpDCCAoygAwIBAgIGAV2ka+55MA0GCSqGSIb3DQEBCwUAMIGSMQswCQ...GF/Q2/MHadws97cZg\nuTnQyuOqPuHbnN83d/2l1NSYKCbHt24o",
+      "issuer_url": "jumpcloud",
+      "sign_request": false,
+      "sso_target_url": "https://sso.gradientedge.io/saml2/cloudflareaccess"
+    },
     "name": "test-idp-saml",
     "type": "saml"
   },
   "testAccessServiceToken": {
-    "lifecycle": {
-      "createBeforeDestroy": true
-    },
-    "minDaysForRenewal": 30,
+    "duration": "300ms",
     "name": "test-service-token"
   },
   "testAccessTag": {
