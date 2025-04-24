@@ -7,4 +7,10 @@ export interface StorageAccountProps extends StorageAccountConfig {}
 
 export interface StorageContainerProps extends BaseAzureConfigProps, StorageContainerConfig {}
 
-export interface StorageBlobProps extends BaseAzureConfigProps, StorageBlobConfig {}
+export interface StorageBlobProps extends BaseAzureConfigProps, StorageBlobConfig {
+  /**
+   * Optional ISO date string representing the expiry date for the SAS token.
+   * Format: 'YYYY-MM-DD' (e.g., '2025-05-01')
+   */
+  sasExpiry?: string
+}
