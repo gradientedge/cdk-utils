@@ -132,13 +132,21 @@ export class AzureStorageManager {
   }
 
   /**
-   * @summary Generate a SAS token for an existing storage container
+   * @summary Generates a container-level SAS token for an existing Azure Storage container.
    *
-   * @param id - Scoped identifier for the SAS token resource
-   * @param scope - CDKTF construct scope
-   * @param props - Required information about the storage container and account
+   * @description
+   * This method creates a `DataAzurermStorageAccountBlobContainerSas` resource, allowing secure access
+   * to a container via a generated Shared Access Signature (SAS) token.
    *
-   * @returns The generated container-level SAS token resource
+   * @param id - Unique scoped identifier for the SAS token resource
+   * @param scope - CDKTF construct scope in which the resource will be created
+   * @param props - Container details and SAS options:
+   *   - storageAccountName: The name of the existing Azure Storage Account
+   *   - storageContainerName: The name of the container within the storage account
+   *   - resourceGroupName: The name of the resource group containing the storage account
+   *   - sasExpiry: Optional expiry date in the format 'YYYY-MM-DD'. Defaults to 7 days from current date if not provided.
+   *
+   * @returns A `DataAzurermStorageAccountBlobContainerSas` instance with the generated SAS token
    *
    * @see https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/storage_account_blob_container_sas
    */
