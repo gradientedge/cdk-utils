@@ -57,6 +57,7 @@ import { StorageContainer } from '@cdktf/provider-azurerm/lib/storage-container'
 import { CommonAzureConstruct } from '../../common'
 import { createAzureTfOutput } from '../../utils'
 import { StorageAccountProps, StorageBlobProps, StorageContainerProps } from './types'
+import { DataAzurermStorageAccountBlobContainerSas } from '@cdktf/provider-azurerm/lib/data-azurerm-storage-account-blob-container-sas'
 
 /**
  * @classdesc Provides operations on Azure Storage
@@ -178,6 +179,61 @@ export class AzureStorageManager {
     createAzureTfOutput(`${id}-storageBlobId`, scope, storageBlob.id)
 
     return storageBlob
+  }
+
+  /**
+   * @summary Generates a container-level SAS token for an existing Azure Storage container.
+   *
+   * @description
+   * This method creates a `DataAzurermStorageAccountBlobContainerSas` resource, allowing secure access
+   * to a container via a generated Shared Access Signature (SAS) token.
+   *
+   * @param id - Unique scoped identifier for the SAS token resource
+   * @param scope - CDKTF construct scope in which the resource will be created
+   * @param props - Container details and SAS options:
+   *   - storageAccountName: The name of the existing Azure Storage Account
+   *   - storageContainerName: The name of the container within the storage account
+   *   - resourceGroupName: The name of the resource group containing the storage account
+   *   - sasExpiry: Optional expiry date in the format 'YYYY-MM-DD'. Defaults to 7 days from current date if not provided.
+   *
+   * @returns A `DataAzurermStorageAccountBlobContainerSas` instance with the generated SAS token
+   *
+   * @see https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/storage_account_blob_container_sas
+   */
+  public generateContainerSasToken(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: {
+      storageAccountName: string
+      storageContainerName: string
+      resourceGroupName: string
+      sasExpiry?: string
+    }
+  ): DataAzurermStorageAccountBlobContainerSas {
+    const storageAccountLookup = new DataAzurermStorageAccount(scope, `${id}-lookup-sa`, {
+      name: props.storageAccountName,
+      resourceGroupName: props.resourceGroupName,
+    })
+
+    const containerSas = new DataAzurermStorageAccountBlobContainerSas(scope, `${id}-sas`, {
+      connectionString: storageAccountLookup.primaryConnectionString,
+      containerName: props.storageContainerName,
+      httpsOnly: true,
+      start: new Date().toISOString().split('T')[0],
+      expiry: props.sasExpiry ?? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      permissions: {
+        read: true,
+        add: false,
+        create: false,
+        delete: false,
+        list: false,
+        write: false,
+      },
+    })
+
+    createAzureTfOutput(`${id}-sas-token`, scope, containerSas.sas, 'output', true)
+
+    return containerSas
   }
 }
 </code></pre>

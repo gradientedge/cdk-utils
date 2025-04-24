@@ -91,7 +91,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_storage_main.ts.html">azure/services/storage/main.ts</a>, <a href="azure_services_storage_main.ts.html#line26">line 26</a>
+        <a href="azure_services_storage_main.ts.html">azure/services/storage/main.ts</a>, <a href="azure_services_storage_main.ts.html#line27">line 27</a>
     </li></ul></dd>
     
 
@@ -214,7 +214,7 @@ class CustomConstruct extends CommonAzureConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_storage_main.ts.html">azure/services/storage/main.ts</a>, <a href="azure_services_storage_main.ts.html#line34">line 34</a>
+        <a href="azure_services_storage_main.ts.html">azure/services/storage/main.ts</a>, <a href="azure_services_storage_main.ts.html#line35">line 35</a>
     </li></ul></dd>
     
 
@@ -388,7 +388,7 @@ class CustomConstruct extends CommonAzureConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_storage_main.ts.html">azure/services/storage/main.ts</a>, <a href="azure_services_storage_main.ts.html#line88">line 88</a>
+        <a href="azure_services_storage_main.ts.html">azure/services/storage/main.ts</a>, <a href="azure_services_storage_main.ts.html#line89">line 89</a>
     </li></ul></dd>
     
 
@@ -562,7 +562,7 @@ class CustomConstruct extends CommonAzureConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_storage_main.ts.html">azure/services/storage/main.ts</a>, <a href="azure_services_storage_main.ts.html#line69">line 69</a>
+        <a href="azure_services_storage_main.ts.html">azure/services/storage/main.ts</a>, <a href="azure_services_storage_main.ts.html#line70">line 70</a>
     </li></ul></dd>
     
 
@@ -710,6 +710,197 @@ class CustomConstruct extends CommonAzureConstruct {
 
 
 
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="generateContainerSasToken"><span class="type-signature"></span>generateContainerSasToken<span class="signature">(id, scope, props)</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Generates a container-level SAS token for an existing Azure Storage container.</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script><p>This method creates a <code>DataAzurermStorageAccountBlobContainerSas</code> resource, allowing secure access
+to a container via a generated Shared Access Signature (SAS) token.</p></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_services_storage_main.ts.html">azure/services/storage/main.ts</a>, <a href="azure_services_storage_main.ts.html#line138">line 138</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><a href="https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/storage_account_blob_container_sas">https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/storage_account_blob_container_sas</a></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="h5-parameters">Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Unique scoped identifier for the SAS token resource</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>scope</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>CDKTF construct scope in which the resource will be created</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>props</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Container details and SAS options:</p>
+<ul>
+<li>storageAccountName: The name of the existing Azure Storage Account</li>
+<li>storageContainerName: The name of the container within the storage account</li>
+<li>resourceGroupName: The name of the resource group containing the storage account</li>
+<li>sasExpiry: Optional expiry date in the format 'YYYY-MM-DD'. Defaults to 7 days from current date if not provided.</li>
+</ul></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5 class="h5-returns">Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>A <code>DataAzurermStorageAccountBlobContainerSas</code> instance with the generated SAS token</p>
+</div>
+
+
+
+    
 
 
 
