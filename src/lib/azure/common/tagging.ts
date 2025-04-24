@@ -1,4 +1,4 @@
-import { IAspect } from 'cdktf'
+import { IAspect, TerraformResource } from 'cdktf'
 import { IConstruct } from 'constructs'
 import { RESOURCES_TO_EXCLUDE_TAGS } from './constants'
 
@@ -12,7 +12,10 @@ function isTaggableConstruct(node: IConstruct): node is TaggableConstruct {
 }
 
 export class TagsAddingAspect implements IAspect {
-  constructor(private tagsToAdd: Record<string, string>) {}
+  constructor(
+    private tagsToAdd: Record<string, string>,
+    private tagsToIgnore: string[] = []
+  ) {}
 
   // This method is called on every Construct within the specified scope (resources, data sources, etc.).
   visit(node: IConstruct) {
@@ -29,5 +32,11 @@ export class TagsAddingAspect implements IAspect {
 
     const currentTags = node.tagsInput || {}
     node.tags = { ...this.tagsToAdd, ...currentTags }
+
+    // Add ignore_changes overrides for selected tags
+    if (node instanceof TerraformResource && this.tagsToIgnore.length > 0) {
+      const ignoreList = this.tagsToIgnore.map(tag => `tags["${tag}"]`)
+      node.addOverride('lifecycle.ignore_changes', ignoreList)
+    }
   }
 }
