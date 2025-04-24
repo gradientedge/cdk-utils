@@ -1,19 +1,23 @@
 {
   "testZone": {
-    "accountId": "test-account"
+    "account": {
+      "id": "test-account"
+    }
   },
   "testZoneCacheVariants": {
-    "avif": ["image/avif", "image/webp"],
-    "bmp": ["image/bmp", "image/webp"],
-    "gif": ["image/gif", "image/webp"],
-    "jp2": ["image/jp2", "image/webp"],
-    "jpeg": ["image/jpeg", "image/webp"],
-    "jpg": ["image/jpg", "image/webp"],
-    "jpg2": ["image/jpg2", "image/webp"],
-    "png": ["image/png", "image/webp"],
-    "tif": ["image/tif", "image/webp"],
-    "tiff": ["image/tiff", "image/webp"],
-    "webp": ["image/jpeg", "image/webp"]
+    "value": {
+      "avif": ["image/avif", "image/webp"],
+      "bmp": ["image/bmp", "image/webp"],
+      "gif": ["image/gif", "image/webp"],
+      "jp2": ["image/jp2", "image/webp"],
+      "jpeg": ["image/jpeg", "image/webp"],
+      "jpg": ["image/jpg", "image/webp"],
+      "jpg2": ["image/jpg2", "image/webp"],
+      "png": ["image/png", "image/webp"],
+      "tif": ["image/tif", "image/webp"],
+      "tiff": ["image/tiff", "image/webp"],
+      "webp": ["image/jpeg", "image/webp"]
+    }
   },
   "testZoneLockdown": {
     "configurations": {
@@ -23,23 +27,9 @@
     "paused": true,
     "urls": ["gradientedge.io/api/product*"]
   },
-  "testZoneSettingsOverride": {
-    "settings": {
-      "automaticHttpsRewrites": "on",
-      "brotli": "on",
-      "challengeTtl": 2700,
-      "minify": {
-        "css": "on",
-        "html": "off",
-        "js": "off"
-      },
-      "mirage": "on",
-      "opportunisticEncryption": "on",
-      "securityHeader": {
-        "enabled": true
-      },
-      "securityLevel": "high",
-      "waf": "on"
-    }
+  "testZoneSetting": {
+    "settingId": "always_online",
+    "id": "0rtt",
+    "value": "on"
   }
 }

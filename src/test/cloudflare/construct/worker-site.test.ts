@@ -1,8 +1,8 @@
 import { Ruleset } from '@cdktf/provider-cloudflare/lib/ruleset'
 import { Zone } from '@cdktf/provider-cloudflare/lib/zone'
-import { ZoneSettingsOverride } from '@cdktf/provider-cloudflare/lib/zone-settings-override'
-import { WorkerScript } from '@cdktf/provider-cloudflare/lib/worker-script'
-import { WorkerDomain } from '@cdktf/provider-cloudflare/lib/worker-domain'
+import { ZoneSetting } from '@cdktf/provider-cloudflare/lib/zone-setting'
+import { WorkersScript } from '@cdktf/provider-cloudflare/lib/workers-script'
+import { WorkersCustomDomain } from '@cdktf/provider-cloudflare/lib/workers-custom-domain'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
 import { Construct } from 'constructs'
@@ -50,7 +50,7 @@ class TestCommonStack extends CommonCloudflareStack {
       siteSubDomain: `test.app`,
       siteWorkerScript: this.node.tryGetContext('testWorkerScript'),
       siteZone: this.node.tryGetContext('testZone'),
-      siteZoneSettingsOverride: this.node.tryGetContext('testZoneSettingsOverride'),
+      siteZoneSetting: this.node.tryGetContext('testZoneSetting'),
       testAttribute: this.node.tryGetContext('testAttribute'),
     }
   }
@@ -117,7 +117,7 @@ describe('TestCloudflareWorkerSite', () => {
     expect(JSON.parse(construct).output).toMatchObject({
       testCommonStackZoneZoneFriendlyUniqueId: { value: 'test-common-stack-zone' },
       testCommonStackZoneZoneId: { value: '${cloudflare_zone.test-common-stack-zone.id}' },
-      testCommonStackZoneZoneName: { value: '${cloudflare_zone.test-common-stack-zone.zone}' },
+      testCommonStackZoneZoneName: { value: '${cloudflare_zone.test-common-stack-zone.name}' },
     })
   })
 })
@@ -125,28 +125,31 @@ describe('TestCloudflareWorkerSite', () => {
 describe('TestCloudflareWorkerSite', () => {
   test('provisions zone as expected', () => {
     expect(construct).toHaveResourceWithProperties(Zone, {
-      account_id: 'test-account',
-      zone: 'gradientedge.io',
+      account: {
+        id: 'test-account',
+      },
+      name: 'gradientedge.io',
     })
   })
 })
 
 describe('TestCloudflareWorkerSite', () => {
   test('provisions worker as expected', () => {
-    expect(construct).toHaveResourceWithProperties(WorkerScript, {
+    expect(construct).toHaveResourceWithProperties(WorkersScript, {
       account_id: 'test-account',
+      bindings: [],
       content: '${file("assets/test-common-stack-worker-content/DBA9E2ED0784B0A520C0C26867C9B2FF/sample.html")}',
-      name: 'test-script-dev',
+      script_name: 'test-script-dev',
     })
   })
 })
 
 describe('TestCloudflareWorkerSite', () => {
   test('provisions worker domain as expected', () => {
-    expect(construct).toHaveResourceWithProperties(WorkerDomain, {
+    expect(construct).toHaveResourceWithProperties(WorkersCustomDomain, {
       account_id: 'test-account',
       hostname: 'test.app.gradientedge.io',
-      service: '${cloudflare_worker_script.test-common-stack-worker-script.name}',
+      service: '${cloudflare_workers_script.test-common-stack-worker-script.script_name}',
       zone_id: '${data.cloudflare_zone.test-common-stack-worker-domain-data-zone-data-zone.id}',
     })
   })
@@ -166,25 +169,11 @@ describe('TestCloudflareWorkerSite', () => {
 
 describe('TestCloudflareWorkerSite', () => {
   test('provisions zone settings override as expected', () => {
-    expect(construct).toHaveResourceWithProperties(ZoneSettingsOverride, {
-      settings: {
-        automatic_https_rewrites: 'on',
-        brotli: 'on',
-        challenge_ttl: 2700,
-        minify: {
-          css: 'on',
-          html: 'off',
-          js: 'off',
-        },
-        mirage: 'on',
-        opportunistic_encryption: 'on',
-        security_header: {
-          enabled: true,
-        },
-        security_level: 'high',
-        waf: 'on',
-      },
-      zone_id: '${data.cloudflare_zone.test-common-stack-zone-settings-override-data-zone-data-zone.id}',
+    expect(construct).toHaveResourceWithProperties(ZoneSetting, {
+      id: '0rtt',
+      setting_id: 'always_online',
+      value: 'on',
+      zone_id: '${data.cloudflare_zone.test-common-stack-zone-setting-data-zone-data-zone.id}',
     })
   })
 })

@@ -1,29 +1,29 @@
-import { AccessApplication } from '@cdktf/provider-cloudflare/lib/access-application'
-import { AccessCaCertificate } from '@cdktf/provider-cloudflare/lib/access-ca-certificate'
-import { AccessCustomPage } from '@cdktf/provider-cloudflare/lib/access-custom-page'
-import { AccessGroup } from '@cdktf/provider-cloudflare/lib/access-group'
-import { AccessIdentityProvider } from '@cdktf/provider-cloudflare/lib/access-identity-provider'
-import { AccessMutualTlsCertificate } from '@cdktf/provider-cloudflare/lib/access-mutual-tls-certificate'
+import { ZeroTrustAccessApplication } from '@cdktf/provider-cloudflare/lib/zero-trust-access-application'
+import { ZeroTrustAccessShortLivedCertificate } from '@cdktf/provider-cloudflare/lib/zero-trust-access-short-lived-certificate'
+import { ZeroTrustAccessCustomPage } from '@cdktf/provider-cloudflare/lib/zero-trust-access-custom-page'
+import { ZeroTrustAccessGroup } from '@cdktf/provider-cloudflare/lib/zero-trust-access-group'
+import { ZeroTrustAccessIdentityProvider } from '@cdktf/provider-cloudflare/lib/zero-trust-access-identity-provider'
+import { ZeroTrustAccessMtlsCertificate } from '@cdktf/provider-cloudflare/lib/zero-trust-access-mtls-certificate'
+import { ZeroTrustOrganization } from '@cdktf/provider-cloudflare/lib/zero-trust-organization'
+import { ZeroTrustAccessPolicy } from '@cdktf/provider-cloudflare/lib/zero-trust-access-policy'
+import { AccessRule } from '@cdktf/provider-cloudflare/lib/access-rule'
+import { ZeroTrustAccessServiceToken } from '@cdktf/provider-cloudflare/lib/zero-trust-access-service-token'
+import { ZeroTrustAccessTag } from '@cdktf/provider-cloudflare/lib/zero-trust-access-tag'
 import { CommonCloudflareConstruct } from '../../common'
 import { createCloudflareTfOutput } from '../../utils'
 import {
-  AccessApplicationProps,
-  AccessCaCertificateProps,
-  AccessCustomPageProps,
-  AccessGroupProps,
-  AccessIdentityProviderProps,
-  AccessMutualTlsCertificateProps,
-  AccessOrganizationProps,
-  AccessPolicyProps,
+  ZeroTrustAccessApplicationProps,
+  ZeroTrustAccessShortLivedCertificateProps,
+  ZeroTrustAccessCustomPageProps,
+  ZeroTrustAccessGroupProps,
+  ZeroTrustAccessIdentityProviderProps,
+  ZeroTrustAccessMtlsCertificateProps,
+  ZeroTrustOrganizationProps,
+  ZeroTrustAccessPolicyProps,
   AccessRuleProps,
-  AccessServiceTokenProps,
-  AccessTagProps,
+  ZeroTrustAccessServiceTokenProps,
+  ZeroTrustAccessTagProps,
 } from './types'
-import { AccessOrganization } from '@cdktf/provider-cloudflare/lib/access-organization'
-import { AccessPolicy } from '@cdktf/provider-cloudflare/lib/access-policy'
-import { AccessRule } from '@cdktf/provider-cloudflare/lib/access-rule'
-import { AccessServiceToken } from '@cdktf/provider-cloudflare/lib/access-service-token'
-import { AccessTag } from '@cdktf/provider-cloudflare/lib/access-tag'
 
 /**
  * @classdesc Provides operations on Cloudflare Access
@@ -48,16 +48,16 @@ export class CloudflareAccessManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props access application properties
-   * @see [CDKTF Access Application Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/accessApplication.typescript.md}
+   * @see [CDKTF Access Application Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/zeroTrustAccessApplication.typescript.md}
    */
-  public createAccessApplication(id: string, scope: CommonCloudflareConstruct, props: AccessApplicationProps) {
+  public createAccessApplication(id: string, scope: CommonCloudflareConstruct, props: ZeroTrustAccessApplicationProps) {
     if (!props) throw `Props undefined for ${id}`
 
     const zoneId = props.zoneId
       ? props.zoneId
       : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.id
 
-    const accessApplication = new AccessApplication(scope, `${id}`, {
+    const accessApplication = new ZeroTrustAccessApplication(scope, `${id}`, {
       ...props,
       domain: `${props.domain}-${scope.props.domainName}`,
       name: `${props.name}-${scope.props.stage}`,
@@ -71,28 +71,36 @@ export class CloudflareAccessManager {
   }
 
   /**
-   * @summary Method to create a new Cloudflare Application Access CA Certificate
+   * @summary Method to create a new Cloudflare Application Access Short Lived Certificate
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props access ca certificate properties
-   * @see [CDKTF Access Ca Certificate Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/accessCaCertificate.typescript.md}
+   * @param props access short lived  certificate properties
+   * @see [CDKTF Access Short Lived Certificate Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/zeroTrustAccessShortLivedCertificate.typescript.md}
    */
-  public createAccessCaCertificate(id: string, scope: CommonCloudflareConstruct, props: AccessCaCertificateProps) {
+  public createAccessShortLivedCertificate(
+    id: string,
+    scope: CommonCloudflareConstruct,
+    props: ZeroTrustAccessShortLivedCertificateProps
+  ) {
     if (!props) throw `Props undefined for ${id}`
 
     const zoneId = props.zoneId
       ? props.zoneId
       : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.id
 
-    const accessCaCertificate = new AccessCaCertificate(scope, `${id}`, {
+    const accessShortLivedCertificate = new ZeroTrustAccessShortLivedCertificate(scope, `${id}`, {
       ...props,
       zoneId,
     })
 
-    createCloudflareTfOutput(`${id}-accessCaCertificateFriendlyUniqueId`, scope, accessCaCertificate.friendlyUniqueId)
-    createCloudflareTfOutput(`${id}-accessCaCertificateId`, scope, accessCaCertificate.id)
+    createCloudflareTfOutput(
+      `${id}-accessShortLivedCertificateFriendlyUniqueId`,
+      scope,
+      accessShortLivedCertificate.friendlyUniqueId
+    )
+    createCloudflareTfOutput(`${id}-accessShortLivedCertificateId`, scope, accessShortLivedCertificate.id)
 
-    return accessCaCertificate
+    return accessShortLivedCertificate
   }
 
   /**
@@ -100,19 +108,15 @@ export class CloudflareAccessManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props access custom page properties
-   * @see [CDKTF Access Custom Page Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/accessCustomPage.typescript.md}
+   * @see [CDKTF Access Custom Page Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/zeroTrustAccessCustomPage.typescript.md}
    */
-  public createAccessCustomPage(id: string, scope: CommonCloudflareConstruct, props: AccessCustomPageProps) {
+  public createAccessCustomPage(id: string, scope: CommonCloudflareConstruct, props: ZeroTrustAccessCustomPageProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    const zoneId = props.zoneId
-      ? props.zoneId
-      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.id
-
-    const accessCustomPage = new AccessCustomPage(scope, `${id}`, {
+    const accessCustomPage = new ZeroTrustAccessCustomPage(scope, `${id}`, {
       ...props,
+      accountId: props.accountId ?? scope.props.accountId,
       name: `${props.name}-${scope.props.stage}`,
-      zoneId,
     })
 
     createCloudflareTfOutput(`${id}-accessCustomPageFriendlyUniqueId`, scope, accessCustomPage.friendlyUniqueId)
@@ -126,16 +130,16 @@ export class CloudflareAccessManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props access group properties
-   * @see [CDKTF Access Group Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/accessGroup.typescript.md}
+   * @see [CDKTF Access Group Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/zeroTrustAccessGroup.typescript.md}
    */
-  public createAccessGroup(id: string, scope: CommonCloudflareConstruct, props: AccessGroupProps) {
+  public createAccessGroup(id: string, scope: CommonCloudflareConstruct, props: ZeroTrustAccessGroupProps) {
     if (!props) throw `Props undefined for ${id}`
 
     const zoneId = props.zoneId
       ? props.zoneId
       : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.id
 
-    const accessGroup = new AccessGroup(scope, `${id}`, {
+    const accessGroup = new ZeroTrustAccessGroup(scope, `${id}`, {
       ...props,
       name: `${props.name}-${scope.props.stage}`,
       zoneId,
@@ -152,12 +156,12 @@ export class CloudflareAccessManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props access identity provider properties
-   * @see [CDKTF Access Identity Provider Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/accessIdentityProvider.typescript.md}
+   * @see [CDKTF Access Identity Provider Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/zeroTrustAccessIdentityProvider.typescript.md}
    */
   public createAccessIdentityProvider(
     id: string,
     scope: CommonCloudflareConstruct,
-    props: AccessIdentityProviderProps
+    props: ZeroTrustAccessIdentityProviderProps
   ) {
     if (!props) throw `Props undefined for ${id}`
 
@@ -165,7 +169,7 @@ export class CloudflareAccessManager {
       ? props.zoneId
       : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.id
 
-    const accessIdentityProvider = new AccessIdentityProvider(scope, `${id}`, {
+    const accessIdentityProvider = new ZeroTrustAccessIdentityProvider(scope, `${id}`, {
       ...props,
       name: `${props.name}-${scope.props.stage}`,
       zoneId,
@@ -186,12 +190,12 @@ export class CloudflareAccessManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props access mutual tls certificate properties
-   * @see [CDKTF Access Mutual Tls Certificate Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/accessMutualTlsCertificate.typescript.md}
+   * @see [CDKTF Access Mutual Tls Certificate Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/zeroTrustAccessMtlsCertificate.typescript.md}
    */
   public createAccessMutualTlsCertificate(
     id: string,
     scope: CommonCloudflareConstruct,
-    props: AccessMutualTlsCertificateProps
+    props: ZeroTrustAccessMtlsCertificateProps
   ) {
     if (!props) throw `Props undefined for ${id}`
 
@@ -199,7 +203,7 @@ export class CloudflareAccessManager {
       ? props.zoneId
       : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.id
 
-    const accessMutualTlsCertificate = new AccessMutualTlsCertificate(scope, `${id}`, {
+    const accessMutualTlsCertificate = new ZeroTrustAccessMtlsCertificate(scope, `${id}`, {
       ...props,
       name: `${props.name}-${scope.props.stage}`,
       zoneId,
@@ -220,23 +224,22 @@ export class CloudflareAccessManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props access organisation properties
-   * @see [CDKTF Access Organisation Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/accessOrganization.typescript.md}
+   * @see [CDKTF Access Organisation Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/zeroTrustAccessOrganization.typescript.md}
    */
-  public createAccessOrganization(id: string, scope: CommonCloudflareConstruct, props: AccessOrganizationProps) {
+  public createAccessOrganization(id: string, scope: CommonCloudflareConstruct, props: ZeroTrustOrganizationProps) {
     if (!props) throw `Props undefined for ${id}`
 
     const zoneId = props.zoneId
       ? props.zoneId
       : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.id
 
-    const accessOrganization = new AccessOrganization(scope, `${id}`, {
+    const accessOrganization = new ZeroTrustOrganization(scope, `${id}`, {
       ...props,
       name: `${props.name}-${scope.props.stage}`,
       zoneId,
     })
 
     createCloudflareTfOutput(`${id}-accessOrganizationFriendlyUniqueId`, scope, accessOrganization.friendlyUniqueId)
-    createCloudflareTfOutput(`${id}-accessOrganizationId`, scope, accessOrganization.id)
 
     return accessOrganization
   }
@@ -246,19 +249,15 @@ export class CloudflareAccessManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props access policy properties
-   * @see [CDKTF Access Policy Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/accessPolicy.typescript.md}
+   * @see [CDKTF Access Policy Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/zeroTrustAccessPolicy.typescript.md}
    */
-  public createAccessPolicy(id: string, scope: CommonCloudflareConstruct, props: AccessPolicyProps) {
+  public createAccessPolicy(id: string, scope: CommonCloudflareConstruct, props: ZeroTrustAccessPolicyProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    const zoneId = props.zoneId
-      ? props.zoneId
-      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.id
-
-    const accessPolicy = new AccessPolicy(scope, `${id}`, {
+    const accessPolicy = new ZeroTrustAccessPolicy(scope, `${id}`, {
       ...props,
       name: `${props.name}-${scope.props.stage}`,
-      zoneId,
+      accountId: props.accountId ?? scope.props.accountId,
     })
 
     createCloudflareTfOutput(`${id}-accessPolicyFriendlyUniqueId`, scope, accessPolicy.friendlyUniqueId)
@@ -284,6 +283,7 @@ export class CloudflareAccessManager {
     const accessRule = new AccessRule(scope, `${id}`, {
       ...props,
       zoneId,
+      accountId: props.accountId ?? scope.props.accountId,
     })
 
     createCloudflareTfOutput(`${id}-accessRuleFriendlyUniqueId`, scope, accessRule.friendlyUniqueId)
@@ -297,18 +297,23 @@ export class CloudflareAccessManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props access service token properties
-   * @see [CDKTF Access Service Token Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/accessServiceToken.typescript.md}
+   * @see [CDKTF Access Service Token Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/zeroTrustAccessServiceToken.typescript.md}
    */
-  public createAccessServiceToken(id: string, scope: CommonCloudflareConstruct, props: AccessServiceTokenProps) {
+  public createAccessServiceToken(
+    id: string,
+    scope: CommonCloudflareConstruct,
+    props: ZeroTrustAccessServiceTokenProps
+  ) {
     if (!props) throw `Props undefined for ${id}`
 
     const zoneId = props.zoneId
       ? props.zoneId
       : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.id
 
-    const accessServiceToken = new AccessServiceToken(scope, `${id}`, {
+    const accessServiceToken = new ZeroTrustAccessServiceToken(scope, `${id}`, {
       ...props,
       name: `${props.name}-${scope.props.stage}`,
+      accountId: props.accountId ?? scope.props.accountId,
       zoneId,
     })
 
@@ -323,19 +328,15 @@ export class CloudflareAccessManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props access tag properties
-   * @see [CDKTF Access Tag Token Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/accessTag.typescript.md}
+   * @see [CDKTF Access Tag Token Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/zeroTrustAccessTag.typescript.md}
    */
-  public createAccessTag(id: string, scope: CommonCloudflareConstruct, props: AccessTagProps) {
+  public createAccessTag(id: string, scope: CommonCloudflareConstruct, props: ZeroTrustAccessTagProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    const zoneId = props.zoneId
-      ? props.zoneId
-      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.id
-
-    const accessTag = new AccessTag(scope, `${id}`, {
+    const accessTag = new ZeroTrustAccessTag(scope, `${id}`, {
       ...props,
       name: `${props.name}-${scope.props.stage}`,
-      zoneId,
+      accountId: props.accountId ?? scope.props.accountId,
     })
 
     createCloudflareTfOutput(`${id}-accessTagFriendlyUniqueId`, scope, accessTag.friendlyUniqueId)

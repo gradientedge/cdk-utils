@@ -77,7 +77,7 @@ export class CloudflareApiShieldManager {
     })
 
     createCloudflareTfOutput(`${id}-apiShieldSchemaFriendlyUniqueId`, scope, apiShieldSchema.friendlyUniqueId)
-    createCloudflareTfOutput(`${id}-apiShieldSchemaId`, scope, apiShieldSchema.id)
+    createCloudflareTfOutput(`${id}-apiShieldSchemaId`, scope, apiShieldSchema.schemaId)
 
     return apiShieldSchema
   }

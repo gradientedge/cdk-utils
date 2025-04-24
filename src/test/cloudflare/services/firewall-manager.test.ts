@@ -80,13 +80,14 @@ class TestCommonConstruct extends CommonCloudflareConstruct {
     super(parent, name, props)
     const zone = this.zoneManager.createZone(`test-zone-${this.props.stage}`, this, this.props.testZone)
     this.zoneManager.createZoneCacheReserve(`test-zone-cache-reserve-${this.props.stage}`, this, {
-      enabled: true,
       zoneId: zone.id,
     })
     const filter = this.filterManager.createApiShield(`test-filter-${this.props.stage}`, this, this.props.testFilter)
     this.firewallManager.createFirewallRule(`test-firewall-rule-${this.props.stage}`, this, {
       ...this.props.testFirewallRule,
-      filterId: filter.id,
+      filter: {
+        ...this.props.testFilter,
+      },
     })
   }
 }
@@ -130,7 +131,7 @@ describe('TestCloudflareFirewallManager', () => {
       testFirewallRuleDevFirewallRuleId: { value: '${cloudflare_firewall_rule.test-firewall-rule-dev.id}' },
       testZoneDevZoneFriendlyUniqueId: { value: 'test-zone-dev' },
       testZoneDevZoneId: { value: '${cloudflare_zone.test-zone-dev.id}' },
-      testZoneDevZoneName: { value: '${cloudflare_zone.test-zone-dev.zone}' },
+      testZoneDevZoneName: { value: '${cloudflare_zone.test-zone-dev.name}' },
     })
   })
 })
@@ -138,8 +139,10 @@ describe('TestCloudflareFirewallManager', () => {
 describe('TestCloudflareFirewallManager', () => {
   test('provisions zone as expected', () => {
     expect(construct).toHaveResourceWithProperties(Zone, {
-      account_id: 'test-account',
-      zone: 'gradientedge.io',
+      account: {
+        id: 'test-account',
+      },
+      name: 'gradientedge.io',
     })
   })
 })
@@ -147,10 +150,8 @@ describe('TestCloudflareFirewallManager', () => {
 describe('TestCloudflareFirewallManager', () => {
   test('provisions filter as expected', () => {
     expect(construct).toHaveResourceWithProperties(Filter, {
-      description: 'Site break-in attempts that are outside of the office',
       expression:
         '(http.request.uri.path ~ ".*wp-login.php" or http.request.uri.path ~ ".*xmlrpc.php") and ip.src ne 192.0.2.1',
-      paused: false,
       zone_id: '${data.cloudflare_zone.test-filter-dev-data-zone-data-zone.id}',
     })
   })
@@ -159,7 +160,12 @@ describe('TestCloudflareFirewallManager', () => {
 describe('TestCloudflareFirewallManager', () => {
   test('provisions firewall rule as expected', () => {
     expect(construct).toHaveResourceWithProperties(FirewallRule, {
-      filter_id: '${cloudflare_filter.test-filter-dev.id}',
+      filter: {
+        description: 'Site break-in attempts that are outside of the office',
+        expression:
+          '(http.request.uri.path ~ ".*wp-login.php" or http.request.uri.path ~ ".*xmlrpc.php") and ip.src ne 192.0.2.1',
+        paused: false,
+      },
       zone_id: '${data.cloudflare_zone.test-firewall-rule-dev-data-zone-data-zone.id}',
     })
   })

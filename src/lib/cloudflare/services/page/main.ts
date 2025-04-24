@@ -59,7 +59,7 @@ export class CloudflarePageManager {
     const pagesDomain = new PagesDomain(scope, `${id}`, {
       ...props,
       accountId: props.accountId ?? scope.props.accountId,
-      domain: props.domain ?? scope.props.domainName,
+      name: props.name ?? scope.props.domainName,
     })
 
     createCloudflareTfOutput(`${id}-pagesDomainFriendlyUniqueId`, scope, pagesDomain.friendlyUniqueId)

@@ -1,7 +1,7 @@
-import { Record } from '@cdktf/provider-cloudflare/lib/record'
+import { DnsRecord } from '@cdktf/provider-cloudflare/lib/dns-record'
 import { CommonCloudflareConstruct } from '../../common'
 import { createCloudflareTfOutput } from '../../utils'
-import { RecordProps } from './types'
+import { DnsRecordProps } from './types'
 
 /**
  * @classdesc Provides operations on Cloudflare Records
@@ -26,16 +26,16 @@ export class CloudflareRecordManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props record properties
-   * @see [CDKTF Record Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/record.typescript.md}
+   * @see [CDKTF Record Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/dnsRecord.typescript.md}
    */
-  public createRecord(id: string, scope: CommonCloudflareConstruct, props: RecordProps) {
+  public createRecord(id: string, scope: CommonCloudflareConstruct, props: DnsRecordProps) {
     if (!props) throw `Props undefined for ${id}`
 
     const zoneId = props.zoneId
       ? props.zoneId
       : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.id
 
-    const record = new Record(scope, `${id}`, {
+    const record = new DnsRecord(scope, `${id}`, {
       ...props,
       zoneId,
     })

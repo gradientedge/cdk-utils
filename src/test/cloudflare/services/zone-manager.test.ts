@@ -4,7 +4,7 @@ import { ZoneCacheVariants } from '@cdktf/provider-cloudflare/lib/zone-cache-var
 import { ZoneDnssec } from '@cdktf/provider-cloudflare/lib/zone-dnssec'
 import { ZoneHold } from '@cdktf/provider-cloudflare/lib/zone-hold'
 import { ZoneLockdown } from '@cdktf/provider-cloudflare/lib/zone-lockdown'
-import { ZoneSettingsOverride } from '@cdktf/provider-cloudflare/lib/zone-settings-override'
+import { ZoneSetting } from '@cdktf/provider-cloudflare/lib/zone-setting'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
 import { Construct } from 'constructs'
@@ -15,14 +15,14 @@ import {
   ZoneCacheVariantsProps,
   ZoneLockdownProps,
   ZoneProps,
-  ZoneSettingsOverrideProps,
+  ZoneSettingProps,
 } from '../../../lib'
 
 interface TestCloudflareStackProps extends CommonCloudflareStackProps {
   testZone: ZoneProps
   testZoneCacheVariants: ZoneCacheVariantsProps
   testZoneLockdown: ZoneLockdownProps
-  testZoneSettingsOverride: ZoneSettingsOverrideProps
+  testZoneSetting: ZoneSettingProps
   testAttribute?: string
 }
 
@@ -52,7 +52,7 @@ class TestCommonStack extends CommonCloudflareStack {
       testZone: this.node.tryGetContext('testZone'),
       testZoneCacheVariants: this.node.tryGetContext('testZoneCacheVariants'),
       testZoneLockdown: this.node.tryGetContext('testZoneLockdown'),
-      testZoneSettingsOverride: this.node.tryGetContext('testZoneSettingsOverride'),
+      testZoneSetting: this.node.tryGetContext('testZoneSetting'),
     }
   }
 }
@@ -71,7 +71,7 @@ class TestInvalidCommonStack extends CommonCloudflareStack {
       testAttribute: this.node.tryGetContext('testAttribute'),
       testZoneCacheVariants: this.node.tryGetContext('testZoneCacheVariants'),
       testZoneLockdown: this.node.tryGetContext('testZoneLockdown'),
-      testZoneSettingsOverride: this.node.tryGetContext('testZoneSettingsOverride'),
+      testZoneSetting: this.node.tryGetContext('testZoneSetting'),
     }
   }
 }
@@ -83,7 +83,6 @@ class TestCommonConstruct extends CommonCloudflareConstruct {
     super(parent, name, props)
     const zone = this.zoneManager.createZone(`test-zone-${this.props.stage}`, this, this.props.testZone)
     this.zoneManager.createZoneCacheReserve(`test-zone-cache-reserve-${this.props.stage}`, this, {
-      enabled: true,
       zoneId: zone.id,
     })
     this.zoneManager.createZoneCacheVariants(`test-zone-cache-variants-${this.props.stage}`, this, {
@@ -93,15 +92,10 @@ class TestCommonConstruct extends CommonCloudflareConstruct {
       zoneId: zone.id,
     })
     this.zoneManager.createZoneHold(`test-zone-hold-${this.props.stage}`, this, {
-      hold: true,
       zoneId: zone.id,
     })
     this.zoneManager.createZoneLockdown(`test-zone-lockdown-${this.props.stage}`, this, this.props.testZoneLockdown)
-    this.zoneManager.createZoneSettingsOverride(
-      `test-zone-settings-${this.props.stage}`,
-      this,
-      this.props.testZoneSettingsOverride
-    )
+    this.zoneManager.createZoneSetting(`test-zone-settings-${this.props.stage}`, this, this.props.testZoneSetting)
   }
 }
 
@@ -148,17 +142,13 @@ describe('TestCloudflareZoneManager', () => {
       },
       testZoneDevZoneFriendlyUniqueId: { value: 'test-zone-dev' },
       testZoneDevZoneId: { value: '${cloudflare_zone.test-zone-dev.id}' },
-      testZoneDevZoneName: { value: '${cloudflare_zone.test-zone-dev.zone}' },
+      testZoneDevZoneName: { value: '${cloudflare_zone.test-zone-dev.name}' },
       testZoneDnssecDevZoneDnssecFriendlyUniqueId: { value: 'test-zone-dnssec-dev' },
       testZoneDnssecDevZoneDnssecId: { value: '${cloudflare_zone_dnssec.test-zone-dnssec-dev.id}' },
       testZoneHoldDevZoneHoldFriendlyUniqueId: { value: 'test-zone-hold-dev' },
       testZoneHoldDevZoneHoldId: { value: '${cloudflare_zone_hold.test-zone-hold-dev.id}' },
       testZoneLockdownDevZoneLockdownFriendlyUniqueId: { value: 'test-zone-lockdown-dev' },
       testZoneLockdownDevZoneLockdownId: { value: '${cloudflare_zone_lockdown.test-zone-lockdown-dev.id}' },
-      testZoneSettingsDevZoneSettingsOverrideFriendlyUniqueId: { value: 'test-zone-settings-dev' },
-      testZoneSettingsDevZoneSettingsOverrideId: {
-        value: '${cloudflare_zone_settings_override.test-zone-settings-dev.id}',
-      },
     })
   })
 })
@@ -166,8 +156,10 @@ describe('TestCloudflareZoneManager', () => {
 describe('TestCloudflareZoneManager', () => {
   test('provisions zone as expected', () => {
     expect(construct).toHaveResourceWithProperties(Zone, {
-      account_id: 'test-account',
-      zone: 'gradientedge.io',
+      account: {
+        id: 'test-account',
+      },
+      name: 'gradientedge.io',
     })
   })
 })
@@ -175,7 +167,6 @@ describe('TestCloudflareZoneManager', () => {
 describe('TestCloudflareZoneManager', () => {
   test('provisions zone cache reserve as expected', () => {
     expect(construct).toHaveResourceWithProperties(ZoneCacheReserve, {
-      enabled: true,
       zone_id: '${cloudflare_zone.test-zone-dev.id}',
     })
   })
@@ -184,17 +175,19 @@ describe('TestCloudflareZoneManager', () => {
 describe('TestCloudflareZoneManager', () => {
   test('provisions zone cache variants as expected', () => {
     expect(construct).toHaveResourceWithProperties(ZoneCacheVariants, {
-      avif: ['image/avif', 'image/webp'],
-      bmp: ['image/bmp', 'image/webp'],
-      gif: ['image/gif', 'image/webp'],
-      jp2: ['image/jp2', 'image/webp'],
-      jpeg: ['image/jpeg', 'image/webp'],
-      jpg: ['image/jpg', 'image/webp'],
-      jpg2: ['image/jpg2', 'image/webp'],
-      png: ['image/png', 'image/webp'],
-      tif: ['image/tif', 'image/webp'],
-      tiff: ['image/tiff', 'image/webp'],
-      webp: ['image/jpeg', 'image/webp'],
+      value: {
+        avif: ['image/avif', 'image/webp'],
+        bmp: ['image/bmp', 'image/webp'],
+        gif: ['image/gif', 'image/webp'],
+        jp2: ['image/jp2', 'image/webp'],
+        jpeg: ['image/jpeg', 'image/webp'],
+        jpg: ['image/jpg', 'image/webp'],
+        jpg2: ['image/jpg2', 'image/webp'],
+        png: ['image/png', 'image/webp'],
+        tif: ['image/tif', 'image/webp'],
+        tiff: ['image/tiff', 'image/webp'],
+        webp: ['image/jpeg', 'image/webp'],
+      },
       zone_id: '${data.cloudflare_zone.test-zone-cache-variants-dev-data-zone-data-zone.id}',
     })
   })
@@ -211,7 +204,6 @@ describe('TestCloudflareZoneManager', () => {
 describe('TestCloudflareZoneManager', () => {
   test('provisions zone hold as expected', () => {
     expect(construct).toHaveResourceWithProperties(ZoneHold, {
-      hold: true,
       zone_id: '${cloudflare_zone.test-zone-dev.id}',
     })
   })
@@ -224,7 +216,6 @@ describe('TestCloudflareZoneManager', () => {
         target: 'ip_range',
         value: '192.0.2.0/24',
       },
-      paused: true,
       urls: ['gradientedge.io/api/product*'],
       zone_id: '${data.cloudflare_zone.test-zone-lockdown-dev-data-zone-data-zone.id}',
     })
@@ -233,24 +224,10 @@ describe('TestCloudflareZoneManager', () => {
 
 describe('TestCloudflareZoneManager', () => {
   test('provisions zone settings override as expected', () => {
-    expect(construct).toHaveResourceWithProperties(ZoneSettingsOverride, {
-      settings: {
-        automatic_https_rewrites: 'on',
-        brotli: 'on',
-        challenge_ttl: 2700,
-        minify: {
-          css: 'on',
-          html: 'off',
-          js: 'off',
-        },
-        mirage: 'on',
-        opportunistic_encryption: 'on',
-        security_header: {
-          enabled: true,
-        },
-        security_level: 'high',
-        waf: 'on',
-      },
+    expect(construct).toHaveResourceWithProperties(ZoneSetting, {
+      id: '0rtt',
+      setting_id: 'always_online',
+      value: 'on',
       zone_id: '${data.cloudflare_zone.test-zone-settings-dev-data-zone-data-zone.id}',
     })
   })

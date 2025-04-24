@@ -1,3 +1,5 @@
-import { ArgoConfig } from '@cdktf/provider-cloudflare/lib/argo'
+import { ArgoSmartRoutingConfig } from '@cdktf/provider-cloudflare/lib/argo-smart-routing'
+import { ArgoTieredCachingConfig } from '@cdktf/provider-cloudflare/lib/argo-tiered-caching'
 
-export interface ArgoProps extends ArgoConfig {}
+export interface ArgoSmartRoutingProps extends ArgoSmartRoutingConfig {}
+export interface ArgoTieredCachingProps extends ArgoTieredCachingConfig {}

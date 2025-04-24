@@ -3,11 +3,7 @@ import { DataAwsSecretsmanagerSecretVersion } from '@cdktf/provider-aws/lib/data
 import { DataAzurermKeyVault } from '@cdktf/provider-azurerm/lib/data-azurerm-key-vault'
 import { DataAzurermKeyVaultSecret } from '@cdktf/provider-azurerm/lib/data-azurerm-key-vault-secret'
 import { DataCloudflareZone } from '@cdktf/provider-cloudflare/lib/data-cloudflare-zone'
-import {
-  WorkerScript,
-  WorkerScriptPlainTextBinding,
-  WorkerScriptSecretTextBinding,
-} from '@cdktf/provider-cloudflare/lib/worker-script'
+import { WorkersScript, WorkersScriptBindings } from '@cdktf/provider-cloudflare/lib/workers-script'
 import { Zone } from '@cdktf/provider-cloudflare/lib/zone'
 import { Fn, TerraformAsset, AssetType } from 'cdktf'
 import { Construct } from 'constructs'
@@ -34,9 +30,9 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
 
   /* worker site resources */
   siteZone: DataCloudflareZone | Zone
-  siteWorkerScript: WorkerScript
-  workerPlainTextBindingEnvironmentVariables: WorkerScriptPlainTextBinding[]
-  workerSecretTextBindingEnvironmentVariables: WorkerScriptSecretTextBinding[]
+  siteWorkerScript: WorkersScript
+  workerPlainTextBindingEnvironmentVariables: WorkersScriptBindings[] = []
+  workerSecretTextBindingEnvironmentVariables: WorkersScriptBindings[] = []
 
   constructor(parent: Construct, id: string, props: CloudflareWorkerSiteProps) {
     super(parent, id, props)
@@ -53,7 +49,7 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
     this.createWorker()
     this.createWorkerDomain()
     this.createRuleset()
-    this.createZoneSettingsOverride()
+    this.createZoneSetting()
   }
 
   /**
@@ -73,8 +69,9 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
   protected resolveEnvironmentVariables() {
     this.props.siteWorkerScript = {
       ...this.props.siteWorkerScript,
-      plainTextBinding: this.workerPlainTextBindingEnvironmentVariables,
-      secretTextBinding: this.workerSecretTextBindingEnvironmentVariables,
+      bindings: this.workerPlainTextBindingEnvironmentVariables.concat(
+        this.workerSecretTextBindingEnvironmentVariables
+      ),
     }
   }
 
@@ -100,7 +97,7 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
     this.workerManager.createWorkerDomain(`${this.id}-worker-domain`, this, {
       ...this.props.siteWorkerDomain,
       hostname: `${this.props.siteSubDomain}.${this.props.domainName}`,
-      service: this.siteWorkerScript.name,
+      service: this.siteWorkerScript.scriptName,
     })
   }
 
@@ -168,12 +165,8 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
   /**
    * @summary Create zone settings override
    */
-  protected createZoneSettingsOverride() {
-    if (!this.props.siteZoneSettingsOverride) return
-    this.zoneManager.createZoneSettingsOverride(
-      `${this.id}-zone-settings-override`,
-      this,
-      this.props.siteZoneSettingsOverride
-    )
+  protected createZoneSetting() {
+    if (!this.props.siteZoneSetting) return
+    this.zoneManager.createZoneSetting(`${this.id}-zone-setting`, this, this.props.siteZoneSetting)
   }
 }

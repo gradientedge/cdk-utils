@@ -10,7 +10,7 @@ import {
 } from '../../../lib'
 import { PagesProject } from '@cdktf/provider-cloudflare/lib/pages-project'
 import { PagesDomain } from '@cdktf/provider-cloudflare/lib/pages-domain'
-import { Record } from '@cdktf/provider-cloudflare/lib/record'
+import { DnsRecord } from '@cdktf/provider-cloudflare/lib/dns-record'
 
 interface TestCloudflareStackProps extends CloudflarePagesStaticSiteProps {
   testAttribute?: string
@@ -121,10 +121,10 @@ describe('TestCloudflarePagesStaticSite', () => {
         value: '${cloudflare_pages_project.test-common-stack-site-project.id}',
       },
       testCommonStackSiteRecordRecordFriendlyUniqueId: { value: 'test-common-stack-site-record' },
-      testCommonStackSiteRecordRecordId: { value: '${cloudflare_record.test-common-stack-site-record.id}' },
+      testCommonStackSiteRecordRecordId: { value: '${cloudflare_dns_record.test-common-stack-site-record.id}' },
       testCommonStackZoneZoneFriendlyUniqueId: { value: 'test-common-stack-zone' },
       testCommonStackZoneZoneId: { value: '${cloudflare_zone.test-common-stack-zone.id}' },
-      testCommonStackZoneZoneName: { value: '${cloudflare_zone.test-common-stack-zone.zone}' },
+      testCommonStackZoneZoneName: { value: '${cloudflare_zone.test-common-stack-zone.name}' },
     })
   })
 })
@@ -132,8 +132,10 @@ describe('TestCloudflarePagesStaticSite', () => {
 describe('TestCloudflarePagesStaticSite', () => {
   test('provisions zone as expected', () => {
     expect(construct).toHaveResourceWithProperties(Zone, {
-      account_id: 'test-account',
-      zone: 'gradientedge.io',
+      account: {
+        id: 'test-account',
+      },
+      name: 'gradientedge.io',
     })
   })
 })
@@ -152,7 +154,7 @@ describe('TestCloudflarePagesStaticSite', () => {
   test('provisions pages domain as expected', () => {
     expect(construct).toHaveResourceWithProperties(PagesDomain, {
       account_id: '${var.accountId}',
-      domain: 'test.app.gradientedge.io',
+      name: 'test.app.gradientedge.io',
       project_name: '${cloudflare_pages_project.test-common-stack-site-project.name}',
     })
   })
@@ -160,11 +162,14 @@ describe('TestCloudflarePagesStaticSite', () => {
 
 describe('TestCloudflarePagesStaticSite', () => {
   test('provisions cname record as expected', () => {
-    expect(construct).toHaveResourceWithProperties(Record, {
+    expect(construct).toHaveResourceWithProperties(DnsRecord, {
+      content: 'example.gradientedge.io',
+      data: {
+        value: '${cloudflare_pages_project.test-common-stack-site-project.name}.pages.dev',
+      },
       name: 'test.app',
       ttl: 300,
       type: 'CNAME',
-      value: '${cloudflare_pages_project.test-common-stack-site-project.name}.pages.dev',
       zone_id: '${data.cloudflare_zone.test-common-stack-site-record-data-zone-data-zone.id}',
     })
   })

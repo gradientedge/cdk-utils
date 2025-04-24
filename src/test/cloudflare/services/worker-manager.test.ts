@@ -1,7 +1,7 @@
-import { WorkerCronTrigger } from '@cdktf/provider-cloudflare/lib/worker-cron-trigger'
-import { WorkerDomain } from '@cdktf/provider-cloudflare/lib/worker-domain'
-import { WorkerRoute } from '@cdktf/provider-cloudflare/lib/worker-route'
-import { WorkerScript, WorkerScriptWebassemblyBinding } from '@cdktf/provider-cloudflare/lib/worker-script'
+import { WorkersCronTrigger } from '@cdktf/provider-cloudflare/lib/workers-cron-trigger'
+import { WorkersCustomDomain } from '@cdktf/provider-cloudflare/lib/workers-custom-domain'
+import { WorkersRoute } from '@cdktf/provider-cloudflare/lib/workers-route'
+import { WorkersScript } from '@cdktf/provider-cloudflare/lib/workers-script'
 import { WorkersKv } from '@cdktf/provider-cloudflare/lib/workers-kv'
 import { WorkersKvNamespace } from '@cdktf/provider-cloudflare/lib/workers-kv-namespace'
 import { Zone } from '@cdktf/provider-cloudflare/lib/zone'
@@ -100,7 +100,6 @@ class TestCommonConstruct extends CommonCloudflareConstruct {
     super(parent, name, props)
     const zone = this.zoneManager.createZone(`test-zone-${this.props.stage}`, this, this.props.testZone)
     this.zoneManager.createZoneCacheReserve(`test-zone-cache-reserve-${this.props.stage}`, this, {
-      enabled: true,
       zoneId: zone.id,
     })
     this.workerManager.createWorkerDomain(`test-worker-domain-${this.props.stage}`, this, this.props.testWorkerDomain)
@@ -108,14 +107,6 @@ class TestCommonConstruct extends CommonCloudflareConstruct {
     const testScript = this.workerManager.createWorkerScript(`test-worker-script-${this.props.stage}`, this, {
       ...this.props.testWorkerScript,
       content: fs.readFileSync('src/test/cloudflare/common/sample.js', { encoding: 'utf8' }),
-      webassemblyBinding: (this.props.testWorkerScript.webassemblyBinding as WorkerScriptWebassemblyBinding[]).map(
-        (binding: WorkerScriptWebassemblyBinding) => {
-          return {
-            ...binding,
-            module: fs.readFileSync('src/test/cloudflare/common/sample.wasm', { encoding: 'base64' }),
-          }
-        }
-      ),
     })
     const workerKvNsId = this.workerManager.createWorkersKvNamespace(
       `test-workers-kv-ns-${this.props.stage}`,
@@ -168,14 +159,14 @@ describe('TestCloudflareWorkerManager', () => {
   test('provisions outputs as expected', () => {
     expect(JSON.parse(construct).output).toMatchObject({
       testWorkerDomainDevWorkerDomainFriendlyUniqueId: { value: 'test-worker-domain-dev' },
-      testWorkerDomainDevWorkerDomainId: { value: '${cloudflare_worker_domain.test-worker-domain-dev.id}' },
+      testWorkerDomainDevWorkerDomainId: { value: '${cloudflare_workers_custom_domain.test-worker-domain-dev.id}' },
       testWorkerRouteDevWorkerRouteFriendlyUniqueId: { value: 'test-worker-route-dev' },
-      testWorkerRouteDevWorkerRouteId: { value: '${cloudflare_worker_route.test-worker-route-dev.id}' },
+      testWorkerRouteDevWorkerRouteId: { value: '${cloudflare_workers_route.test-worker-route-dev.id}' },
       testWorkerScriptDevWorkerScriptFriendlyUniqueId: { value: 'test-worker-script-dev' },
-      testWorkerScriptDevWorkerScriptId: { value: '${cloudflare_worker_script.test-worker-script-dev.id}' },
+      testWorkerScriptDevWorkerScriptId: { value: '${cloudflare_workers_script.test-worker-script-dev.id}' },
       testWorkerTriggerDevWorkerCronTriggerFriendlyUniqueId: { value: 'test-worker-trigger-dev' },
       testWorkerTriggerDevWorkerCronTriggerId: {
-        value: '${cloudflare_worker_cron_trigger.test-worker-trigger-dev.id}',
+        value: '${cloudflare_workers_cron_trigger.test-worker-trigger-dev.id}',
       },
       testWorkersKvDevWorkersKvFriendlyUniqueId: { value: 'test-workers-kv-dev' },
       testWorkersKvDevWorkersKvId: { value: '${cloudflare_workers_kv.test-workers-kv-dev.id}' },
@@ -185,7 +176,7 @@ describe('TestCloudflareWorkerManager', () => {
       },
       testZoneDevZoneFriendlyUniqueId: { value: 'test-zone-dev' },
       testZoneDevZoneId: { value: '${cloudflare_zone.test-zone-dev.id}' },
-      testZoneDevZoneName: { value: '${cloudflare_zone.test-zone-dev.zone}' },
+      testZoneDevZoneName: { value: '${cloudflare_zone.test-zone-dev.name}' },
     })
   })
 })
@@ -193,15 +184,17 @@ describe('TestCloudflareWorkerManager', () => {
 describe('TestCloudflareWorkerManager', () => {
   test('provisions zone as expected', () => {
     expect(construct).toHaveResourceWithProperties(Zone, {
-      account_id: 'test-account',
-      zone: 'gradientedge.io',
+      account: {
+        id: 'test-account',
+      },
+      name: 'gradientedge.io',
     })
   })
 })
 
 describe('TestCloudflareWorkerManager', () => {
   test('provisions worker domain as expected', () => {
-    expect(construct).toHaveResourceWithProperties(WorkerDomain, {
+    expect(construct).toHaveResourceWithProperties(WorkersCustomDomain, {
       account_id: 'test-account',
       hostname: 'test.gradientedge.io',
       service: 'product-service',
@@ -212,7 +205,7 @@ describe('TestCloudflareWorkerManager', () => {
 
 describe('TestCloudflareWorkerManager', () => {
   test('provisions worker domain as expected', () => {
-    expect(construct).toHaveResourceWithProperties(WorkerRoute, {
+    expect(construct).toHaveResourceWithProperties(WorkersRoute, {
       pattern: 'gradientedge.io/*',
       zone_id: '${data.cloudflare_zone.test-worker-route-dev-data-zone-data-zone.id}',
     })
@@ -221,53 +214,42 @@ describe('TestCloudflareWorkerManager', () => {
 
 describe('TestCloudflareWorkerManager', () => {
   test('provisions worker script as expected', () => {
-    expect(construct).toHaveResourceWithProperties(WorkerScript, {
+    expect(construct).toHaveResourceWithProperties(WorkersScript, {
       account_id: 'test-account',
-      analytics_engine_binding: [
+      bindings: [
         {
           dataset: 'sample_dataset',
           name: 'sample_dataset_binding',
+          type: 'analytics_engine',
         },
-      ],
-      content:
-        'exports.handler = async function (event, context, callback) {\n  console.debug(`Event: ${JSON.stringify(event)}`)\n  console.debug(`Context: ${JSON.stringify(context)}`)\n  return callback(null, { statusCode: 200 })\n}\n',
-      kv_namespace_binding: [
         {
           name: 'sample_kv_namespace_binding',
-          namespace_id: 'sampleNamespaceId',
+          type: 'kv_namespace',
         },
-      ],
-      name: 'test-script-dev',
-      plain_text_binding: [
         {
           name: 'sample_text_binding',
           text: 'example',
+          type: 'plain_text',
         },
-      ],
-      r2_bucket_binding: [
         {
           name: 'sample_bucket_binding',
+          type: 'r2_bucket',
         },
-      ],
-      secret_text_binding: [
         {
           name: 'sample_secret_text_binding',
           text: 'example',
+          type: 'secret_text',
         },
-      ],
-      service_binding: [
         {
           environment: 'development',
           name: 'sample_service_binding',
           service: 'sample_service',
+          type: 'service',
         },
       ],
-      webassembly_binding: [
-        {
-          module: 'AGFzbQEAAAABBQFgAAF/AgwBAmpzA3RibAFwAAIDAwIAAAkIAQBBAAsCAAEKDAIEAEEqCwUAQdMACw==',
-          name: 'sample_wasm_binding',
-        },
-      ],
+      content:
+        'exports.handler = async function (event, context, callback) {\n  console.debug(`Event: ${JSON.stringify(event)}`)\n  console.debug(`Context: ${JSON.stringify(context)}`)\n  return callback(null, { statusCode: 200 })\n}\n',
+      script_name: 'test-script-dev',
     })
   })
 })
@@ -285,7 +267,7 @@ describe('TestCloudflareWorkerManager', () => {
   test('provisions workers kv as expected', () => {
     expect(construct).toHaveResourceWithProperties(WorkersKv, {
       account_id: 'test-account',
-      key: 'test',
+      key_name: 'test',
       namespace_id: '${cloudflare_workers_kv_namespace.test-workers-kv-ns-dev.id}',
       value: 'test123',
     })
@@ -294,9 +276,16 @@ describe('TestCloudflareWorkerManager', () => {
 
 describe('TestCloudflareWorkerManager', () => {
   test('provisions worker cron trigger as expected', () => {
-    expect(construct).toHaveResourceWithProperties(WorkerCronTrigger, {
+    expect(construct).toHaveResourceWithProperties(WorkersCronTrigger, {
       account_id: 'test-account',
-      schedules: ['*/5 * * * *', '10 7 * * mon-fri'],
+      schedules: [
+        {
+          cron: '*/5 * * * *',
+        },
+        {
+          cron: '10 7 * * mon-fri',
+        },
+      ],
     })
   })
 })

@@ -18,7 +18,6 @@ interface TestCloudflareStackProps extends CommonCloudflareStackProps {
   testZone: ZoneProps
   testPagesProject: PagesProjectProps
   testPagesProjectBuildConfig: PagesProjectProps
-  testPagesProjectGithub: PagesProjectProps
   testPagesDomain: PagesDomainProps
   testPageRule: PageRuleProps
   testAttribute?: string
@@ -51,7 +50,6 @@ class TestCommonStack extends CommonCloudflareStack {
       testPagesDomain: this.node.tryGetContext('testPagesDomain'),
       testPagesProject: this.node.tryGetContext('testPagesProject'),
       testPagesProjectBuildConfig: this.node.tryGetContext('testPagesProjectBuildConfig'),
-      testPagesProjectGithub: this.node.tryGetContext('testPagesProjectGithub'),
     }
   }
 }
@@ -82,11 +80,6 @@ class TestCommonConstruct extends CommonCloudflareConstruct {
       `test-pages-project-with-build-${this.props.stage}`,
       this,
       this.props.testPagesProjectBuildConfig
-    )
-    this.pageManager.createPagesProject(
-      `test-pages-project-with-gh-${this.props.stage}`,
-      this,
-      this.props.testPagesProjectGithub
     )
     this.pageManager.createPagesDomain(`test-pages-domain-${this.props.stage}`, this, {
       ...this.props.testPagesDomain,
@@ -139,10 +132,6 @@ describe('TestCloudflarePagesManager', () => {
       testPagesProjectWithBuildDevPagesProjectId: {
         value: '${cloudflare_pages_project.test-pages-project-with-build-dev.id}',
       },
-      testPagesProjectWithGhDevPagesProjectFriendlyUniqueId: { value: 'test-pages-project-with-gh-dev' },
-      testPagesProjectWithGhDevPagesProjectId: {
-        value: '${cloudflare_pages_project.test-pages-project-with-gh-dev.id}',
-      },
     })
   })
 })
@@ -163,43 +152,32 @@ describe('TestCloudflarePagesManager', () => {
       },
       deployment_configs: {
         preview: {
-          environment_variables: {
-            TEST_ENV_VAR: 'preview',
-          },
-          secrets: {
-            TEST_SECRET: '0987654321',
+          env_vars: {
+            TEST_ENV_VAR: {
+              type: 'plain_text',
+              value: 'preview',
+            },
+            TEST_SECRET: {
+              type: 'secret_text',
+              value: '0987654321',
+            },
           },
         },
         production: {
-          environment_variables: {
-            TEST_ENV_VAR: 'production',
-          },
-          secrets: {
-            TEST_SECRET: '1234567890',
+          env_vars: {
+            TEST_ENV_VAR: {
+              type: 'plain_text',
+              value: 'production',
+            },
+            TEST_SECRET: {
+              type: 'secret_text',
+              value: '1234567890',
+            },
           },
         },
       },
       name: 'test-build-config-project-dev',
       production_branch: 'main',
-    })
-    expect(construct).toHaveResourceWithProperties(PagesProject, {
-      account_id: '${var.accountId}',
-      name: 'test-github-project-dev',
-      production_branch: 'main',
-      source: {
-        config: {
-          deployments_enabled: true,
-          owner: 'test',
-          pr_comments_enabled: true,
-          preview_branch_excludes: ['main', 'production'],
-          preview_branch_includes: ['dev', 'preview'],
-          preview_deployment_setting: 'custom',
-          production_branch: 'main',
-          production_deployment_enabled: true,
-          repo_name: 'test-github-project',
-        },
-        type: 'github',
-      },
     })
   })
 })
@@ -208,7 +186,7 @@ describe('TestCloudflarePagesManager', () => {
   test('provisions pages domain as expected', () => {
     expect(construct).toHaveResourceWithProperties(PagesDomain, {
       account_id: '${var.accountId}',
-      domain: 'gradientedge.io',
+      name: 'gradientedge.io',
       project_name: 'test-pages-project-dev',
     })
   })
@@ -219,11 +197,6 @@ describe('TestCloudflarePagesManager', () => {
     expect(construct).toHaveResourceWithProperties(PageRule, {
       actions: {
         email_obfuscation: 'on',
-        minify: {
-          css: 'on',
-          html: 'off',
-          js: 'on',
-        },
         ssl: 'flexible',
       },
       priority: 1,
