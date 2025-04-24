@@ -7,6 +7,7 @@ import { StorageContainer } from '@cdktf/provider-azurerm/lib/storage-container'
 import { CommonAzureConstruct } from '../../common'
 import { createAzureTfOutput } from '../../utils'
 import { StorageAccountProps, StorageBlobProps, StorageContainerProps } from './types'
+import { DataAzurermStorageAccountBlobContainerSas } from '@cdktf/provider-azurerm/lib/data-azurerm-storage-account-blob-container-sas'
 
 /**
  * @classdesc Provides operations on Azure Storage
@@ -128,5 +129,52 @@ export class AzureStorageManager {
     createAzureTfOutput(`${id}-storageBlobId`, scope, storageBlob.id)
 
     return storageBlob
+  }
+
+  /**
+   * @summary Generate a SAS token for an existing storage container
+   *
+   * @param id - Scoped identifier for the SAS token resource
+   * @param scope - CDKTF construct scope
+   * @param props - Required information about the storage container and account
+   *
+   * @returns The generated container-level SAS token resource
+   *
+   * @see https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/storage_account_blob_container_sas
+   */
+  public generateContainerSasToken(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: {
+      storageAccountName: string
+      storageContainerName: string
+      resourceGroupName: string
+      sasExpiry?: string
+    }
+  ): DataAzurermStorageAccountBlobContainerSas {
+    const storageAccountLookup = new DataAzurermStorageAccount(scope, `${id}-lookup-sa`, {
+      name: props.storageAccountName,
+      resourceGroupName: props.resourceGroupName,
+    })
+
+    const containerSas = new DataAzurermStorageAccountBlobContainerSas(scope, `${id}-sas`, {
+      connectionString: storageAccountLookup.primaryConnectionString,
+      containerName: props.storageContainerName,
+      httpsOnly: true,
+      start: new Date().toISOString().split('T')[0],
+      expiry: props.sasExpiry ?? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      permissions: {
+        read: true,
+        add: false,
+        create: false,
+        delete: false,
+        list: false,
+        write: false,
+      },
+    })
+
+    createAzureTfOutput(`${id}-sas-token`, scope, containerSas.sas, 'output', true)
+
+    return containerSas
   }
 }

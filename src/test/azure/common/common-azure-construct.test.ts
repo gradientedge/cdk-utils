@@ -12,6 +12,7 @@ import {
   StorageBlobProps,
   StorageContainerProps,
 } from '../../../lib'
+import { DataAzurermStorageAccountBlobContainerSas } from '@cdktf/provider-azurerm/lib/data-azurerm-storage-account-blob-container-sas'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
   testStorageAccount: StorageAccountProps
@@ -66,6 +67,12 @@ class TestCommonConstruct extends CommonAzureConstruct {
       this.props.testStorageContainer
     )
     this.storageManager.createStorageBlob(`test-storage-blob-${this.props.stage}`, this, this.props.testStorageBlob)
+
+    this.storageManager.generateContainerSasToken(`test-container-sas-token-${this.props.stage}`, this, {
+      storageAccountName: this.props.testStorageAccount.name,
+      storageContainerName: this.props.testStorageContainer.name,
+      resourceGroupName: this.props.testStorageAccount.resourceGroupName ?? 'test-rg-dev',
+    })
   }
 }
 
@@ -181,6 +188,29 @@ describe('TestAzureCommonConstruct', () => {
       name: 'test-storage-blob-dev',
       storage_account_name: '${data.azurerm_storage_account.test-storage-blob-dev-sa.name}',
       storage_container_name: '${data.azurerm_storage_container.test-storage-blob-dev-sc.name}',
+    })
+  })
+})
+
+describe('TestAzureCommonConstruct', () => {
+  test('provisions SAS output as expected', () => {
+    expect(JSON.parse(construct).output).toHaveProperty('testContainerSasTokenDevSasToken')
+  })
+})
+
+describe('TestAzureCommonConstruct', () => {
+  test('provisions container SAS token as expected', () => {
+    expect(construct).toHaveDataSourceWithProperties(DataAzurermStorageAccountBlobContainerSas, {
+      container_name: 'test-storage-container',
+      https_only: true,
+      permissions: {
+        read: true,
+        add: false,
+        create: false,
+        delete: false,
+        list: false,
+        write: false,
+      },
     })
   })
 })
