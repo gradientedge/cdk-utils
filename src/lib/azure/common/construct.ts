@@ -1,7 +1,7 @@
 import { AzurermProvider } from '@cdktf/provider-azurerm/lib/provider'
 import { AzapiProvider } from '../.gen/providers/azapi/provider'
 import { DataAzurermClientConfig } from '@cdktf/provider-azurerm/lib/data-azurerm-client-config'
-import { AzurermBackend, TerraformStack } from 'cdktf'
+import { AzurermBackend, TerraformStack, TerraformVariable } from 'cdktf'
 import { Construct } from 'constructs'
 import { isDevStage, isPrdStage, isTestStage, isUatStage } from '../../common'
 import {
@@ -67,6 +67,8 @@ export class CommonAzureConstruct extends TerraformStack {
     this.storageManager = new AzureStorageManager()
 
     this.determineFullyQualifiedDomain()
+    this.determineLocation()
+    this.determineStage()
     this.determineRemoteBackend()
     this.determineTenantId()
 
@@ -81,6 +83,20 @@ export class CommonAzureConstruct extends TerraformStack {
     this.fullyQualifiedDomainName = this.props.subDomain
       ? `${this.props.subDomain}.${this.props.domainName}`
       : this.props.domainName
+  }
+
+  /**
+   * @summary Determine the location based on the cdktf.json context
+   */
+  protected determineLocation() {
+    this.props.location = new TerraformVariable(this, `location`, {}).stringValue
+  }
+
+  /**
+   * @summary Determine the stage based on the cdktf.json context
+   */
+  protected determineStage() {
+    this.props.stage = new TerraformVariable(this, `stage`, {}).stringValue
   }
 
   protected determineRemoteBackend() {

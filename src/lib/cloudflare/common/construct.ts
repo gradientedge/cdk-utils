@@ -57,6 +57,8 @@ export class CommonCloudflareConstruct extends TerraformStack {
     this.determineFullyQualifiedDomain()
     this.determineAccountId()
     this.determineApiToken()
+    this.determineRegion()
+    this.determineStage()
     this.determineRemoteBackend()
     new CloudflareProvider(this, `${this.id}-provider`, this.props)
   }
@@ -82,6 +84,20 @@ export class CommonCloudflareConstruct extends TerraformStack {
    */
   protected determineApiToken() {
     this.props.apiToken = new TerraformVariable(this, `apiToken`, {}).stringValue
+  }
+
+  /**
+   * @summary Determine the region based on the cdktf.json context
+   */
+  protected determineRegion() {
+    this.props.region = new TerraformVariable(this, `region`, {}).stringValue
+  }
+
+  /**
+   * @summary Determine the stage based on the cdktf.json context
+   */
+  protected determineStage() {
+    this.props.stage = new TerraformVariable(this, `stage`, {}).stringValue
   }
 
   protected determineRemoteBackend() {
