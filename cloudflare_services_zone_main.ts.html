@@ -116,9 +116,7 @@ export class CloudflareZoneManager {
   public resolveZone(id: string, scope: CommonCloudflareConstruct, options?: ZoneOptions) {
     const zone = new DataCloudflareZone(scope, `${id}-data-zone`, {
       filter: {
-        account: {
-          name: options?.name ?? scope.props.domainName,
-        },
+        name: options?.name ?? scope.props.domainName,
       },
       zoneId: options?.zoneId,
     })
