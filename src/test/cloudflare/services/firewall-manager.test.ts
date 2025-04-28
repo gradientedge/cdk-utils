@@ -152,7 +152,7 @@ describe('TestCloudflareFirewallManager', () => {
     expect(construct).toHaveResourceWithProperties(Filter, {
       expression:
         '(http.request.uri.path ~ ".*wp-login.php" or http.request.uri.path ~ ".*xmlrpc.php") and ip.src ne 192.0.2.1',
-      zone_id: '${data.cloudflare_zone.test-filter-dev-data-zone-data-zone.id}',
+      zone_id: '${data.cloudflare_zone.test-filter-dev-data-zone-data-zone.zone_id}',
     })
   })
 })
@@ -166,7 +166,7 @@ describe('TestCloudflareFirewallManager', () => {
           '(http.request.uri.path ~ ".*wp-login.php" or http.request.uri.path ~ ".*xmlrpc.php") and ip.src ne 192.0.2.1',
         paused: false,
       },
-      zone_id: '${data.cloudflare_zone.test-firewall-rule-dev-data-zone-data-zone.id}',
+      zone_id: '${data.cloudflare_zone.test-firewall-rule-dev-data-zone-data-zone.zone_id}',
     })
   })
 })

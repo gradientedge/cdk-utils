@@ -43,7 +43,7 @@ export class CloudflareApiShieldManager {
 
     const zoneId = props.zoneId
       ? props.zoneId
-      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.id
+      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.zoneId
 
     const apiShield = new ApiShield(scope, `${id}`, {
       ...props,
@@ -68,7 +68,7 @@ export class CloudflareApiShieldManager {
 
     const zoneId = props.zoneId
       ? props.zoneId
-      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.id
+      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.zoneId
 
     const apiShieldSchema = new ApiShieldSchema(scope, `${id}`, {
       ...props,
@@ -98,7 +98,7 @@ export class CloudflareApiShieldManager {
 
     const zoneId = props.zoneId
       ? props.zoneId
-      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.id
+      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.zoneId
 
     const apiShieldSchemaValidationSettings = new ApiShieldSchemaValidationSettings(scope, `${id}`, {
       ...props,
@@ -127,7 +127,7 @@ export class CloudflareApiShieldManager {
 
     const zoneId = props.zoneId
       ? props.zoneId
-      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.id
+      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.zoneId
 
     const apiShieldOperation = new ApiShieldOperation(scope, `${id}`, {
       ...props,
@@ -156,7 +156,7 @@ export class CloudflareApiShieldManager {
 
     const zoneId = props.zoneId
       ? props.zoneId
-      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.id
+      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.zoneId
 
     const apiShieldOperationSchemaValidationSettings = new ApiShieldOperationSchemaValidationSettings(scope, `${id}`, {
       ...props,

@@ -201,7 +201,7 @@ describe('TestCloudflarePagesManager', () => {
       },
       priority: 1,
       target: 'test.gradientedge.io/p/*',
-      zone_id: '${data.cloudflare_zone.test-page-rule-dev-data-zone-data-zone.id}',
+      zone_id: '${data.cloudflare_zone.test-page-rule-dev-data-zone-data-zone.zone_id}',
     })
   })
 })

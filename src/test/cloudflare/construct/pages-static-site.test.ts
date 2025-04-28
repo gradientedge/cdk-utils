@@ -170,7 +170,7 @@ describe('TestCloudflarePagesStaticSite', () => {
       name: 'test.app',
       ttl: 300,
       type: 'CNAME',
-      zone_id: '${data.cloudflare_zone.test-common-stack-site-record-data-zone-data-zone.id}',
+      zone_id: '${data.cloudflare_zone.test-common-stack-site-record-data-zone-data-zone.zone_id}',
     })
   })
 })

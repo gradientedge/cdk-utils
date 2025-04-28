@@ -133,7 +133,7 @@ describe('TestCloudflareRuleSetManager', () => {
   test('provisions Rule Set as expected', () => {
     expect(construct).toHaveResourceWithProperties(Ruleset, {
       name: 'testRuleSet',
-      zone_id: '${data.cloudflare_zone.test-rule-set-dev-data-zone-data-zone.id}',
+      zone_id: '${data.cloudflare_zone.test-rule-set-dev-data-zone-data-zone.zone_id}',
       rules: {
         action: 'set_cache_settings',
       },

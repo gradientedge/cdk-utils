@@ -55,7 +55,7 @@ export class CloudflareAccessManager {
 
     const zoneId = props.zoneId
       ? props.zoneId
-      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.id
+      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.zoneId
 
     const accessApplication = new ZeroTrustAccessApplication(scope, `${id}`, {
       ...props,
@@ -86,7 +86,7 @@ export class CloudflareAccessManager {
 
     const zoneId = props.zoneId
       ? props.zoneId
-      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.id
+      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.zoneId
 
     const accessShortLivedCertificate = new ZeroTrustAccessShortLivedCertificate(scope, `${id}`, {
       ...props,
@@ -137,7 +137,7 @@ export class CloudflareAccessManager {
 
     const zoneId = props.zoneId
       ? props.zoneId
-      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.id
+      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.zoneId
 
     const accessGroup = new ZeroTrustAccessGroup(scope, `${id}`, {
       ...props,
@@ -167,7 +167,7 @@ export class CloudflareAccessManager {
 
     const zoneId = props.zoneId
       ? props.zoneId
-      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.id
+      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.zoneId
 
     const accessIdentityProvider = new ZeroTrustAccessIdentityProvider(scope, `${id}`, {
       ...props,
@@ -201,7 +201,7 @@ export class CloudflareAccessManager {
 
     const zoneId = props.zoneId
       ? props.zoneId
-      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.id
+      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.zoneId
 
     const accessMutualTlsCertificate = new ZeroTrustAccessMtlsCertificate(scope, `${id}`, {
       ...props,
@@ -231,7 +231,7 @@ export class CloudflareAccessManager {
 
     const zoneId = props.zoneId
       ? props.zoneId
-      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.id
+      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.zoneId
 
     const accessOrganization = new ZeroTrustOrganization(scope, `${id}`, {
       ...props,
@@ -278,7 +278,7 @@ export class CloudflareAccessManager {
 
     const zoneId = props.zoneId
       ? props.zoneId
-      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.id
+      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.zoneId
 
     const accessRule = new AccessRule(scope, `${id}`, {
       ...props,
@@ -308,7 +308,7 @@ export class CloudflareAccessManager {
 
     const zoneId = props.zoneId
       ? props.zoneId
-      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.id
+      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.zoneId
 
     const accessServiceToken = new ZeroTrustAccessServiceToken(scope, `${id}`, {
       ...props,
