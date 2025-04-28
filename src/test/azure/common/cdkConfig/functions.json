@@ -12,6 +12,12 @@
     "deploySource": "src/test/azure/common/nodejs/lib",
     "siteConfig": {
       "http2Enabled": true
-    }
+    },
+    "alwaysReadyConfig": [
+      {
+        "name": "http",
+        "instanceCount": 10
+      }
+    ]
   }
 }
