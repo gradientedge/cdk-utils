@@ -60,7 +60,7 @@
     "@types/node": "^22.13.13",
     "@types/uuid": "^10.0.0",
     "app-root-path": "^3.1.0",
-    "aws-cdk-lib": "^2.185.0",
+    "aws-cdk-lib": "^2.192.0",
     "cdktf": "^0.20.11",
     "cdktf-local-exec": "^0.5.61",
     "constructs": "^10.4.2",
