@@ -45,7 +45,7 @@ export class CloudflareWorkerManager {
 
     const zoneId = props.zoneId
       ? props.zoneId
-      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.id
+      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.zoneId
 
     const workerDomain = new WorkersCustomDomain(scope, `${id}`, {
       ...props,
@@ -71,7 +71,7 @@ export class CloudflareWorkerManager {
 
     const zoneId = props.zoneId
       ? props.zoneId
-      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.id
+      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.zoneId
 
     const workerRoute = new WorkersRoute(scope, `${id}`, {
       ...props,

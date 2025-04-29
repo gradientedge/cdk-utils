@@ -198,7 +198,7 @@ describe('TestCloudflareWorkerManager', () => {
       account_id: 'test-account',
       hostname: 'test.gradientedge.io',
       service: 'product-service',
-      zone_id: '${data.cloudflare_zone.test-worker-domain-dev-data-zone-data-zone.id}',
+      zone_id: '${data.cloudflare_zone.test-worker-domain-dev-data-zone-data-zone.zone_id}',
     })
   })
 })
@@ -207,7 +207,7 @@ describe('TestCloudflareWorkerManager', () => {
   test('provisions worker domain as expected', () => {
     expect(construct).toHaveResourceWithProperties(WorkersRoute, {
       pattern: 'gradientedge.io/*',
-      zone_id: '${data.cloudflare_zone.test-worker-route-dev-data-zone-data-zone.id}',
+      zone_id: '${data.cloudflare_zone.test-worker-route-dev-data-zone-data-zone.zone_id}',
     })
   })
 })

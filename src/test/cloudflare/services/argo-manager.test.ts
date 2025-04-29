@@ -138,7 +138,7 @@ describe('TestCloudflareArgoManager', () => {
 describe('TestCloudflareArgoManager', () => {
   test('provisions argo as expected', () => {
     expect(construct).toHaveResourceWithProperties(ArgoSmartRouting, {
-      zone_id: '${data.cloudflare_zone.test-argo-dev-data-zone-data-zone.id}',
+      zone_id: '${data.cloudflare_zone.test-argo-dev-data-zone-data-zone.zone_id}',
     })
   })
 })

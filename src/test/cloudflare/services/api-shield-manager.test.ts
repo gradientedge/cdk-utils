@@ -207,7 +207,7 @@ describe('TestCloudflareApiShieldManager', () => {
           type: 'header',
         },
       ],
-      zone_id: '${data.cloudflare_zone.test-api-shield-dev-data-zone-data-zone.id}',
+      zone_id: '${data.cloudflare_zone.test-api-shield-dev-data-zone-data-zone.zone_id}',
     })
   })
 })
@@ -218,7 +218,7 @@ describe('TestCloudflareApiShieldManager', () => {
       file: '{\n  "test": true,\n  "hello": "world"\n}\n',
       kind: 'openapi_v3',
       name: 'test-api-dev',
-      zone_id: '${data.cloudflare_zone.test-api-shield-sch-dev-data-zone-data-zone.id}',
+      zone_id: '${data.cloudflare_zone.test-api-shield-sch-dev-data-zone-data-zone.zone_id}',
     })
   })
 })
@@ -228,7 +228,7 @@ describe('TestCloudflareApiShieldManager', () => {
     expect(construct).toHaveResourceWithProperties(ApiShieldSchemaValidationSettings, {
       validation_default_mitigation_action: 'log',
       validation_override_mitigation_action: 'none',
-      zone_id: '${data.cloudflare_zone.test-api-shield-val-dev-data-zone-data-zone.id}',
+      zone_id: '${data.cloudflare_zone.test-api-shield-val-dev-data-zone-data-zone.zone_id}',
     })
   })
 })
@@ -239,7 +239,7 @@ describe('TestCloudflareApiShieldManager', () => {
       endpoint: '/product',
       host: 'api.gradientedge.io',
       method: 'GET',
-      zone_id: '${data.cloudflare_zone.test-api-shield-op-dev-data-zone-data-zone.id}',
+      zone_id: '${data.cloudflare_zone.test-api-shield-op-dev-data-zone-data-zone.zone_id}',
     })
   })
 })
@@ -249,7 +249,7 @@ describe('TestCloudflareApiShieldManager', () => {
     expect(construct).toHaveResourceWithProperties(ApiShieldOperationSchemaValidationSettings, {
       mitigation_action: 'block',
       operation_id: '${cloudflare_api_shield_operation.test-api-shield-op-dev.id}',
-      zone_id: '${data.cloudflare_zone.test-api-shield-op-val-dev-data-zone-data-zone.id}',
+      zone_id: '${data.cloudflare_zone.test-api-shield-op-val-dev-data-zone-data-zone.zone_id}',
     })
   })
 })

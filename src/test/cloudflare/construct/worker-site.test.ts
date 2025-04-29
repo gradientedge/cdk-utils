@@ -150,7 +150,7 @@ describe('TestCloudflareWorkerSite', () => {
       account_id: 'test-account',
       hostname: 'test.app.gradientedge.io',
       service: '${cloudflare_workers_script.test-common-stack-worker-script.script_name}',
-      zone_id: '${data.cloudflare_zone.test-common-stack-worker-domain-data-zone-data-zone.id}',
+      zone_id: '${data.cloudflare_zone.test-common-stack-worker-domain-data-zone-data-zone.zone_id}',
     })
   })
 })
@@ -159,10 +159,10 @@ describe('TestCloudflareWorkerSite', () => {
   test('provisions Rule Set as expected', () => {
     expect(construct).toHaveResourceWithProperties(Ruleset, {
       name: 'testRuleSet',
-      zone_id: '${data.cloudflare_zone.test-common-stack-rule-data-zone-data-zone.id}',
       rules: {
         action: 'set_cache_settings',
       },
+      zone_id: '${data.cloudflare_zone.test-common-stack-rule-data-zone-data-zone.zone_id}',
     })
   })
 })

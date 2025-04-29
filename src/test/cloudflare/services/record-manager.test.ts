@@ -142,14 +142,14 @@ describe('TestCloudflareRecordManager', () => {
       ttl: 300,
       type: 'A',
       content: '192.0.2.1',
-      zone_id: '${data.cloudflare_zone.test-arecord-dev-data-zone-data-zone.id}',
+      zone_id: '${data.cloudflare_zone.test-arecord-dev-data-zone-data-zone.zone_id}',
     })
     expect(construct).toHaveResourceWithProperties(DnsRecord, {
       name: 'testCNameRecord',
       ttl: 300,
       type: 'CNAME',
       content: 'example.gradientedge.io',
-      zone_id: '${data.cloudflare_zone.test-cnamerecord-dev-data-zone-data-zone.id}',
+      zone_id: '${data.cloudflare_zone.test-cnamerecord-dev-data-zone-data-zone.zone_id}',
     })
   })
 })
