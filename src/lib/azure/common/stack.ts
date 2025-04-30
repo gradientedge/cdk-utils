@@ -104,7 +104,7 @@ export class CommonAzureStack extends TerraformStack {
    * - Primary use is to have layered config for each environment which is injected into the context
    */
   protected determineStageContexts() {
-    const stage = this.node.tryGetContext('stage')
+    const stage = process.env.STAGE ?? this.node.tryGetContext('stage')
     const stageContextPath = this.node.tryGetContext('stageContextPath') || 'cdkEnv'
     const stageContextFilePath = path.join(appRoot.path, stageContextPath, `${stage}.json`)
     const debug = this.node.tryGetContext('debug')
