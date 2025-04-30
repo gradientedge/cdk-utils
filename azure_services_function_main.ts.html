@@ -177,6 +177,19 @@ export class AzureFunctionManager {
     })
 
     new Provider(scope, `${id}-local-exec-provider`)
+
+    // Temporary workaround until https://github.com/hashicorp/terraform-provider-azurerm/pull/29023 is made available
+    new LocalExec(scope, `${id}-function-app-always-ready`, {
+      triggers: {
+        hash: props.sourceCodeHash,
+        alwaysReadyConfigName: props.alwaysReadyConfig[0].name,
+        alwaysReadyConfigInstanceCount: props.alwaysReadyConfig[0].instanceCount.toString(),
+      },
+      command: `
+        az functionapp scale config always-ready set --name "${functionApp.name}" --resource-group "${resourceGroup.name}" --settings "${props.alwaysReadyConfig[0].name}"="${props.alwaysReadyConfig[0].instanceCount}"
+      `,
+    })
+
     // Deploy function app zip package with up to 3 retry attempts.
     // This handles transient issues like HTTP 503s returned from the Azure Kudu deployment endpoint.
     new LocalExec(scope, `${id}-function-app-deploy`, {
@@ -184,20 +197,20 @@ export class AzureFunctionManager {
         hash: props.sourceCodeHash,
       },
       command: `
-    set -e
-    MAX_RETRIES=3
-    RETRY_COUNT=0
-    until az functionapp deployment source config-zip --resource-group "${resourceGroup.name}" --name "${functionApp.name}" --src "${props.deploySource}"; do
-      RETRY_COUNT=$((RETRY_COUNT+1))
-      echo "Deployment attempt $RETRY_COUNT failed. Retrying in 10 seconds..."
-      if [ "$RETRY_COUNT" -ge "$MAX_RETRIES" ]; then
-        echo "Deployment failed after $MAX_RETRIES attempts."
-        exit 1
-      fi
-      sleep 10
-    done
-    echo "Deployment succeeded."
-  `,
+        set -e
+        MAX_RETRIES=3
+        RETRY_COUNT=0
+        until az functionapp deployment source config-zip --resource-group "${resourceGroup.name}" --name "${functionApp.name}" --src "${props.deploySource}"; do
+          RETRY_COUNT=$((RETRY_COUNT+1))
+          echo "Deployment attempt $RETRY_COUNT failed. Retrying in 10 seconds..."
+          if [ "$RETRY_COUNT" -ge "$MAX_RETRIES" ]; then
+            echo "Deployment failed after $MAX_RETRIES attempts."
+            exit 1
+          fi
+          sleep 10
+        done
+        echo "Deployment succeeded."
+      `,
     })
 
     return functionApp
