@@ -9,4 +9,10 @@ export interface FunctionProps extends FunctionAppFunctionConfig {}
 export interface FunctionAppFlexConsumptionProps extends FunctionAppFlexConsumptionConfig {
   sourceCodeHash: string
   deploySource: string
+  alwaysReadyConfig: AlwaysReadyConfigProps[]
+}
+
+export interface AlwaysReadyConfigProps {
+  name: string
+  instanceCount: number
 }
