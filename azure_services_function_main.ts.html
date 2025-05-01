@@ -181,12 +181,18 @@ export class AzureFunctionManager {
     // Temporary workaround until https://github.com/hashicorp/terraform-provider-azurerm/pull/29023 is made available
     new LocalExec(scope, `${id}-function-app-always-ready`, {
       triggers: {
-        hash: props.sourceCodeHash,
-        alwaysReadyConfigName: props.alwaysReadyConfig[0].name,
-        alwaysReadyConfigInstanceCount: props.alwaysReadyConfig[0].instanceCount.toString(),
+        alwaysReadyConfig:
+          props.alwaysReadyConfig !== undefined
+            ? `${props.alwaysReadyConfig[0].name.toString()}:${props.alwaysReadyConfig[0].instanceCount.toString()}`
+            : 'undefined',
       },
       command: `
-        az functionapp scale config always-ready set --name "${functionApp.name}" --resource-group "${resourceGroup.name}" --settings "${props.alwaysReadyConfig[0].name}"="${props.alwaysReadyConfig[0].instanceCount}"
+        ALWAYS_READY_CONFIG="${props.alwaysReadyConfig !== undefined ? props.alwaysReadyConfig.toString() : 'undefined'}"
+        if [ "$ALWAYS_READY_CONFIG" == "undefined" ]; then
+          az functionapp scale config always-ready delete --name "${functionApp.name}" --resource-group "${resourceGroup.name}" --setting-names "http"
+        else
+           az functionapp scale config always-ready set --name "${functionApp.name}" --resource-group "${resourceGroup.name}" --settings "${props.alwaysReadyConfig === undefined ? '' : props.alwaysReadyConfig[0].name}"="${props.alwaysReadyConfig === undefined ? '' : props.alwaysReadyConfig[0].instanceCount}"
+        fi
       `,
     })
 
