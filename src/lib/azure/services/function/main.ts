@@ -129,6 +129,7 @@ export class AzureFunctionManager {
     new Provider(scope, `${id}-local-exec-provider`)
 
     // Temporary workaround until https://github.com/hashicorp/terraform-provider-azurerm/pull/29023 is made available
+    /*
     new LocalExec(scope, `${id}-function-app-always-ready`, {
       triggers: {
         alwaysReadyConfig:
@@ -145,6 +146,7 @@ export class AzureFunctionManager {
         fi
       `,
     })
+      */
 
     // Deploy function app zip package with up to 3 retry attempts.
     // This handles transient issues like HTTP 503s returned from the Azure Kudu deployment endpoint.
