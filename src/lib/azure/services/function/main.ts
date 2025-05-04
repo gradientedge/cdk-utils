@@ -138,7 +138,7 @@ export class AzureFunctionManager {
       },
       command: `
         ALWAYS_READY_CONFIG="${props.alwaysReadyConfig !== undefined ? props.alwaysReadyConfig.toString() : 'undefined'}"
-        if [ "$ALWAYS_READY_CONFIG" == "undefined" ]; then
+        if [ "$ALWAYS_READY_CONFIG" = "undefined" ]; then
           az functionapp scale config always-ready delete --name "${functionApp.name}" --resource-group "${resourceGroup.name}" --setting-names "http"
         else
            az functionapp scale config always-ready set --name "${functionApp.name}" --resource-group "${resourceGroup.name}" --settings "${props.alwaysReadyConfig === undefined ? '' : props.alwaysReadyConfig[0].name}"="${props.alwaysReadyConfig === undefined ? '' : props.alwaysReadyConfig[0].instanceCount}"
