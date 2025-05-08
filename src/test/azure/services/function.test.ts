@@ -159,7 +159,7 @@ describe('TestAzureFunctionConstruct', () => {
       name: 'test-function-app-flex-consumption-dev',
       resource_group_name: '${data.azurerm_resource_group.test-function-app-flex-consumption-dev-fa-rg.name}',
       runtime_name: 'node',
-      runtime_version: '20',
+      runtime_version: '22',
       site_config: {
         http2_enabled: true,
       },
