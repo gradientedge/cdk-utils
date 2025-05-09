@@ -109,7 +109,7 @@ export class AzureFunctionManager {
       location: resourceGroup.location,
       resourceGroupName: resourceGroup.name,
       runtimeName: props.runtimeName ?? 'node',
-      runtimeVersion: props.runtimeVersion ?? '20',
+      runtimeVersion: props.runtimeVersion ?? '22',
       storageAuthenticationType: props.storageAuthenticationType ?? 'StorageAccountConnectionString',
       storageContainerType: props.storageContainerType ?? 'blobContainer',
       maximumInstanceCount: props.maximumInstanceCount ?? 40,

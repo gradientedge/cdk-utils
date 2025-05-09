@@ -19,13 +19,13 @@ importers:
         version: 3.775.0
       '@cdktf/provider-aws':
         specifier: ^19.58.0
-        version: 19.58.0(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2)
+        version: 19.58.0(cdktf@0.20.12(constructs@10.4.2))(constructs@10.4.2)
       '@cdktf/provider-azurerm':
         specifier: ^13.23.0
-        version: 13.23.0(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2)
+        version: 13.23.0(cdktf@0.20.12(constructs@10.4.2))(constructs@10.4.2)
       '@cdktf/provider-cloudflare':
         specifier: ^12.3.0
-        version: 12.3.0(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2)
+        version: 12.3.0(cdktf@0.20.12(constructs@10.4.2))(constructs@10.4.2)
       '@types/lodash':
         specifier: ^4.17.16
         version: 4.17.16
@@ -42,11 +42,11 @@ importers:
         specifier: ^2.185.0
         version: 2.185.0(constructs@10.4.2)
       cdktf:
-        specifier: ^0.20.11
-        version: 0.20.11(constructs@10.4.2)
+        specifier: ^0.20.12
+        version: 0.20.12(constructs@10.4.2)
       cdktf-local-exec:
         specifier: ^0.5.61
-        version: 0.5.61(@cdktf/provider-null@10.0.1(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2))(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2)
+        version: 0.5.61(@cdktf/provider-null@10.0.1(cdktf@0.20.12(constructs@10.4.2))(constructs@10.4.2))(cdktf@0.20.12(constructs@10.4.2))(constructs@10.4.2)
       constructs:
         specifier: ^10.4.2
         version: 10.4.2
@@ -1574,8 +1574,8 @@ packages:
       cdktf: '>=0.20.0'
       constructs: '>=10.3.0'
 
-  cdktf@0.20.11:
-    resolution: {integrity: sha512-YoubhokJ8s60WNrP2+cpQinb0DdMXlaFFDnPPv2A/tcRkzkwO9dWuMiXhhA0XlBJ1qA5pibaonu9Cc4B9JgKuQ==}
+  cdktf@0.20.12:
+    resolution: {integrity: sha512-ZBg2gA3Uw0WvGFlgrY1uxo6QHWn+ZdHiDkZQyOsTBl68k62UlaV8K7RR51d0E/amQG/CjtKOJr5XPFFAcOq0VA==}
     peerDependencies:
       constructs: ^10.3.0
     bundledDependencies:
@@ -5309,24 +5309,24 @@ snapshots:
 
   '@bcoe/v8-coverage@0.2.3': {}
 
-  '@cdktf/provider-aws@19.58.0(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2)':
+  '@cdktf/provider-aws@19.58.0(cdktf@0.20.12(constructs@10.4.2))(constructs@10.4.2)':
     dependencies:
-      cdktf: 0.20.11(constructs@10.4.2)
+      cdktf: 0.20.12(constructs@10.4.2)
       constructs: 10.4.2
 
-  '@cdktf/provider-azurerm@13.23.0(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2)':
+  '@cdktf/provider-azurerm@13.23.0(cdktf@0.20.12(constructs@10.4.2))(constructs@10.4.2)':
     dependencies:
-      cdktf: 0.20.11(constructs@10.4.2)
+      cdktf: 0.20.12(constructs@10.4.2)
       constructs: 10.4.2
 
-  '@cdktf/provider-cloudflare@12.3.0(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2)':
+  '@cdktf/provider-cloudflare@12.3.0(cdktf@0.20.12(constructs@10.4.2))(constructs@10.4.2)':
     dependencies:
-      cdktf: 0.20.11(constructs@10.4.2)
+      cdktf: 0.20.12(constructs@10.4.2)
       constructs: 10.4.2
 
-  '@cdktf/provider-null@10.0.1(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2)':
+  '@cdktf/provider-null@10.0.1(cdktf@0.20.12(constructs@10.4.2))(constructs@10.4.2)':
     dependencies:
-      cdktf: 0.20.11(constructs@10.4.2)
+      cdktf: 0.20.12(constructs@10.4.2)
       constructs: 10.4.2
 
   '@colors/colors@1.5.0':
@@ -6651,13 +6651,13 @@ snapshots:
     dependencies:
       lodash: 4.17.21
 
-  cdktf-local-exec@0.5.61(@cdktf/provider-null@10.0.1(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2))(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2):
+  cdktf-local-exec@0.5.61(@cdktf/provider-null@10.0.1(cdktf@0.20.12(constructs@10.4.2))(constructs@10.4.2))(cdktf@0.20.12(constructs@10.4.2))(constructs@10.4.2):
     dependencies:
-      '@cdktf/provider-null': 10.0.1(cdktf@0.20.11(constructs@10.4.2))(constructs@10.4.2)
-      cdktf: 0.20.11(constructs@10.4.2)
+      '@cdktf/provider-null': 10.0.1(cdktf@0.20.12(constructs@10.4.2))(constructs@10.4.2)
+      cdktf: 0.20.12(constructs@10.4.2)
       constructs: 10.4.2
 
-  cdktf@0.20.11(constructs@10.4.2):
+  cdktf@0.20.12(constructs@10.4.2):
     dependencies:
       constructs: 10.4.2
 
