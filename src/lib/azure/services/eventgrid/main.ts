@@ -110,6 +110,10 @@ export class AzureEventgridManager {
       name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.eventGridEventSubscription),
       eventDeliverySchema: props.eventDeliverySchema ?? 'CloudEventSchemaV1_0',
       advancedFilteringOnArraysEnabled: props.advancedFilteringOnArraysEnabled ?? true,
+      retryPolicy: {
+        eventTimeToLive: 1440,
+        maxDeliveryAttempts: 7,
+      },
     })
 
     createAzureTfOutput(`${id}-eventgridSubscriptiontName`, scope, eventgridSubscription.name)
