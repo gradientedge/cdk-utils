@@ -186,6 +186,8 @@ describe('TestAzureServicebusConstruct', () => {
     expect(construct).toHaveResourceWithProperties(ServicebusQueue, {
       name: 'test-servicebus-queue-dev',
       namespace_id: '${azurerm_servicebus_namespace.test-servicebus-namespace-dev-sn.id}',
+      duplicate_detection_history_time_window: 'PT1M',
+      requires_duplicate_detection: true,
     })
   })
 })
