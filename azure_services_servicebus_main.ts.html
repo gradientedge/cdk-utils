@@ -156,6 +156,8 @@ export class AzureServicebusManager {
       ...props,
       name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.serviceBusQueue),
       namespaceId: props.namespaceId,
+      duplicateDetectionHistoryTimeWindow: props.duplicateDetectionHistoryTimeWindow ?? 'PT1M',
+      requiresDuplicateDetection: props.requiresDuplicateDetection ?? true,
     })
 
     createAzureTfOutput(`${id}-servicebusQueueName`, scope, servicebusQueue.name)
