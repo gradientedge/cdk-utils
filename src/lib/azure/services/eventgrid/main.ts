@@ -111,8 +111,8 @@ export class AzureEventgridManager {
       eventDeliverySchema: props.eventDeliverySchema ?? 'CloudEventSchemaV1_0',
       advancedFilteringOnArraysEnabled: props.advancedFilteringOnArraysEnabled ?? true,
       retryPolicy: {
-        eventTimeToLive: 1440,
-        maxDeliveryAttempts: 7,
+        eventTimeToLive: props.retryPolicy?.eventTimeToLive ?? 1440,
+        maxDeliveryAttempts: props.retryPolicy?.maxDeliveryAttempts ?? 7,
       },
     })
 
