@@ -188,6 +188,7 @@ describe('TestAzureServicebusConstruct', () => {
       namespace_id: '${azurerm_servicebus_namespace.test-servicebus-namespace-dev-sn.id}',
       duplicate_detection_history_time_window: 'PT1M',
       requires_duplicate_detection: true,
+      dead_lettering_on_message_expiration: true,
     })
   })
 })
