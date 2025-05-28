@@ -144,6 +144,8 @@ export class AzureStorageManager {
    *   - storageAccountName: The name of the existing Azure Storage Account
    *   - storageContainerName: The name of the container within the storage account
    *   - resourceGroupName: The name of the resource group containing the storage account
+   *   - sasStart: Optional start date in the format 'YYYY-MM-DD'. If not provided, defaults to today’s date.
+   *   To avoid diffs on every deploy, it is recommended to supply a fixed value.
    *   - sasExpiry: Optional expiry date in the format 'YYYY-MM-DD'. Defaults to 7 days from current date if not provided.
    *
    * @returns A `DataAzurermStorageAccountBlobContainerSas` instance with the generated SAS token
@@ -157,6 +159,7 @@ export class AzureStorageManager {
       storageAccountName: string
       storageContainerName: string
       resourceGroupName: string
+      sasStart?: string
       sasExpiry?: string
     }
   ): DataAzurermStorageAccountBlobContainerSas {
@@ -169,7 +172,7 @@ export class AzureStorageManager {
       connectionString: storageAccountLookup.primaryConnectionString,
       containerName: props.storageContainerName,
       httpsOnly: true,
-      start: new Date().toISOString().split('T')[0],
+      start: props.sasStart ?? new Date().toISOString().split('T')[0],
       expiry: props.sasExpiry ?? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
       permissions: {
         read: true,
