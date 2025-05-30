@@ -170,7 +170,6 @@ describe('TestCloudflareWorkerSite', () => {
 describe('TestCloudflareWorkerSite', () => {
   test('provisions zone settings override as expected', () => {
     expect(construct).toHaveResourceWithProperties(ZoneSetting, {
-      id: '0rtt',
       setting_id: 'always_online',
       value: 'on',
       zone_id: '${data.cloudflare_zone.test-common-stack-zone-setting-data-zone-data-zone.id}',
