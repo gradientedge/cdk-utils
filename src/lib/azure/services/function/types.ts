@@ -7,6 +7,7 @@ export interface FunctionAppProps extends LinuxFunctionAppConfig {}
 export interface FunctionProps extends FunctionAppFunctionConfig {}
 
 export interface FunctionAppFlexConsumptionProps extends FunctionAppFlexConsumptionConfig {
+  appConfigHash: string
   sourceCodeHash: string
   deploySource: string
 }

@@ -147,6 +147,8 @@ export class AzureFunctionManager {
           sleep 10
         done
         echo "Deployment succeeded."
+        echo "Updating app settings..."
+        az functionapp config appsettings set --name "${functionApp.name}" --resource-group "${resourceGroup.name}" --settings BUILD_COMMIT_ID="${process.env.BUILD_COMMIT_ID || ''}" BUILD_DATE="${process.env.BUILD_DATE || ''}" BUILD_NUMBER="${process.env.BUILD_NUMBER || ''}" APP_CONFIG_HASH="${props.appConfigHash}" SOURCE_CODE_HASH="${props.sourceCodeHash}"
       `,
     })
 
