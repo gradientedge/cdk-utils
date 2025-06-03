@@ -189,7 +189,7 @@ describe('TestAzureServicebusConstruct', () => {
       duplicate_detection_history_time_window: 'PT1M',
       requires_duplicate_detection: true,
       dead_lettering_on_message_expiration: true,
-      default_message_ttl: 'PT48H',
+      default_message_ttl: 'P2D',
     })
   })
 })

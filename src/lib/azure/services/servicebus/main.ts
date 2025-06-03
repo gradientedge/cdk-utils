@@ -109,7 +109,7 @@ export class AzureServicebusManager {
       duplicateDetectionHistoryTimeWindow: props.duplicateDetectionHistoryTimeWindow ?? 'PT1M',
       requiresDuplicateDetection: props.requiresDuplicateDetection ?? true,
       deadLetteringOnMessageExpiration: props.deadLetteringOnMessageExpiration ?? true,
-      defaultMessageTtl: props.defaultMessageTtl ?? 'PT48H',
+      defaultMessageTtl: props.defaultMessageTtl ?? 'P2D',
     })
 
     createAzureTfOutput(`${id}-servicebusQueueName`, scope, servicebusQueue.name)
