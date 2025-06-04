@@ -322,30 +322,47 @@ export class AzureApiManagementManager {
       )
       createAzureTfOutput(`${id}-${operation.displayName}-${operation.method}-apimOperationId`, scope, apimOperation.id)
 
-      if (props.policyXmlContent) {
-        const apimOperationPolicy = new ApiManagementApiOperationPolicy(
-          scope,
-          `${id}-apim-api-operation-policy-${operation.displayName}-${operation.method}`,
-          {
-            apiManagementName: apiManagementApi.apiManagementName,
-            resourceGroupName: apiManagementApi.resourceGroupName,
-            apiName: apiManagementApi.name,
-            operationId: apimOperation.operationId,
-            xmlContent: props.policyXmlContent,
-          }
-        )
+      const policyXmlContent = `&lt;policies>
+        &lt;inbound>
+          &lt;base />
+          ${operation.cacheInboundPolicy ?? ''}
+          ${props.commonInboundPolicyXml ?? ''}
+        &lt;/inbound>
+        &lt;backend>
+          &lt;base />
+        &lt;/backend>
+        &lt;outbound>
+          &lt;base />
+          ${operation.cacheOutboundPolicy ?? ''}
+          ${props.commonOutboundPolicyXml ?? ''}
+        &lt;/outbound>
+        &lt;on-error>
+            &lt;base />
+        &lt;/on-error>
+      &lt;/policies>`
 
-        createAzureTfOutput(
-          `${id}-${operation.displayName}-${operation.method}-apimOperationPolicyFriendlyUniqueId`,
-          scope,
-          apimOperationPolicy.friendlyUniqueId
-        )
-        createAzureTfOutput(
-          `${id}-${operation.displayName}-${operation.method}-apimOperationPolicyId`,
-          scope,
-          apimOperationPolicy.id
-        )
-      }
+      const apimOperationPolicy = new ApiManagementApiOperationPolicy(
+        scope,
+        `${id}-apim-api-operation-policy-${operation.displayName}-${operation.method}`,
+        {
+          apiManagementName: apiManagementApi.apiManagementName,
+          resourceGroupName: apiManagementApi.resourceGroupName,
+          apiName: apiManagementApi.name,
+          operationId: apimOperation.operationId,
+          xmlContent: policyXmlContent,
+        }
+      )
+
+      createAzureTfOutput(
+        `${id}-${operation.displayName}-${operation.method}-apimOperationPolicyFriendlyUniqueId`,
+        scope,
+        apimOperationPolicy.friendlyUniqueId
+      )
+      createAzureTfOutput(
+        `${id}-${operation.displayName}-${operation.method}-apimOperationPolicyId`,
+        scope,
+        apimOperationPolicy.id
+      )
     })
 
     return apiManagementApi
