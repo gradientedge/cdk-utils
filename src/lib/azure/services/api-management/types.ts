@@ -3,7 +3,6 @@ import { ApiManagementBackendConfig } from '@cdktf/provider-azurerm/lib/api-mana
 import { ApiManagementCustomDomainConfig } from '@cdktf/provider-azurerm/lib/api-management-custom-domain'
 import { ApiManagementApiConfig } from '@cdktf/provider-azurerm/lib/api-management-api'
 import { ApiManagementApiOperationConfig } from '@cdktf/provider-azurerm/lib/api-management-api-operation'
-import { ApiManagementApiOperationPolicyConfig } from '@cdktf/provider-azurerm/lib/api-management-api-operation-policy'
 
 export interface ApiManagementProps extends ApiManagementConfig {}
 
@@ -14,10 +13,16 @@ export interface ApiManagementBackendProps extends ApiManagementBackendConfig {
 export interface ApiManagementCustomDomainProps extends ApiManagementCustomDomainConfig {}
 
 export interface ApiManagementApiProps extends ApiManagementApiConfig {
-  operations: ApiManagementApiOperationConfig[]
-  policyXmlContent?: ApiManagementApiOperationPolicyConfig['xmlContent']
+  operations: ApiManagementApiOperationProps[]
+  commonInboundPolicyXml: string
+  commonOutboundPolicyXml: string
 }
 
 export interface ApiManagementV2Props extends ApiManagementConfig {
   body: any
+}
+
+export interface ApiManagementApiOperationProps extends ApiManagementApiOperationConfig {
+  cacheInboundPolicy: string
+  cacheOutboundPolicy: string
 }
