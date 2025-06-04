@@ -253,7 +253,7 @@ describe('TestAzureApiManagementConstruct', () => {
         '${azurerm_api_management_api_operation.test-api-management-dev-apim-api-operation-test-get.operation_id}',
       resource_group_name: '${azurerm_api_management_api.test-api-management-dev-am-api.resource_group_name}',
       xml_content:
-        '<policies>\n        <inbound>\n          <base />\n          <set-backend-service id="apim-generated-policy" backend-id="${azurerm_api_management_backend.test-api-management-dev-am-be.name}" />\n          \n        </inbound>\n        <backend>\n          <base />\n        </backend>\n        <outbound>\n          <base />\n          \n          \n        </outbound>\n        <on-error>\n            <base />\n        </on-error>\n      </policies>',
+        '<policies>\n        <inbound>\n          <base />\n          \n          <set-backend-service id="apim-generated-policy" backend-id="${azurerm_api_management_backend.test-api-management-dev-am-be.name}" />\n        </inbound>\n        <backend>\n          <base />\n        </backend>\n        <outbound>\n          <base />\n          \n          \n        </outbound>\n        <on-error>\n            <base />\n        </on-error>\n      </policies>',
     })
   })
 })
