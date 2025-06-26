@@ -362,7 +362,7 @@ export class AzureApiManagementManager {
               <!-- Allow admin to clear specific cache entries -->
               <choose>
                   <when condition="@((string)context.Variables["clearCache"] == "true")">
-                      <cache-remove-value key="@(context.Request.Url.Query.GetValueOrDefault("customCacheKey"))" />
+                      <cache-remove-value key="@((string)context.Variables["customCacheKey"])" />
                       <return-response>
                           <set-status code="200" reason="OK" />
                           <set-body>Cache entry removed successfully</set-body>
