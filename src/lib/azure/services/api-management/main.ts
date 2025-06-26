@@ -288,12 +288,9 @@ export class AzureApiManagementManager {
                   
                   // Full path construction (without query parameters)
                   string fullPath = context.Request.Url.Path.ToLower();
-                  
-                  // HTTP Method
-                  string method = context.Request.Method.ToUpper();
-                  
+                                    
                   // Construct final cache key (no Accept header needed for JSON-only APIs)
-                  return $"{apiName}:{apiVersion}:{method}:{fullPath}";
+                  return $"{apiName}:{apiVersion}:{fullPath}";
               }" />
               <set-variable name="bypassCache" value="@(context.Request.Headers.GetValueOrDefault("X-Bypass-Cache", "false").ToLower())" />
 
@@ -341,6 +338,35 @@ export class AzureApiManagementManager {
                       <set-header name="X-Apim-API-Name" exists-action="override">
                           <value>@(context.Api.Name)</value>
                       </set-header>
+                  </when>
+              </choose>`
+        }
+
+        if (operation.method === 'post') {
+          cacheInboundPolicy = `<!-- Generate a comprehensive custom cache key (without query params or Accept header) -->
+              <set-variable name="customCacheKey" value="@{
+                  // Instance identification
+                  
+                  // API identification
+                  string apiName = context.Api.Name.Replace(" ", "").ToLower();
+                  string apiVersion = context.Api.Version ?? "v1";
+                  
+                  // Full path construction (without query parameters)
+                  string fullPath = context.Request.Url.Path.ToLower();
+                                    
+                  // Construct final cache key (no Accept header needed for JSON-only APIs)
+                  return $"{apiName}:{apiVersion}:{fullPath}";
+              }" />
+              <set-variable name="clearCache" value="@(context.Request.Headers.GetValueOrDefault("X-Apim-Clear-Cache", "false").ToLower())" />
+
+              <!-- Allow admin to clear specific cache entries -->
+              <choose>
+                  <when condition="@((string)context.Variables["clearCache"] == "true")">
+                      <cache-remove-value key="@(context.Request.Url.Query.GetValueOrDefault("customCacheKey"))" />
+                      <return-response>
+                          <set-status code="200" reason="OK" />
+                          <set-body>Cache entry removed successfully</set-body>
+                      </return-response>
                   </when>
               </choose>`
         }
