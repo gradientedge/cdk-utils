@@ -2,7 +2,6 @@ import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azure
 import { LinuxFunctionApp } from '@cdktf/provider-azurerm/lib/linux-function-app'
 import { FunctionAppFunction } from '@cdktf/provider-azurerm/lib/function-app-function'
 import { FunctionAppFlexConsumption } from '@cdktf/provider-azurerm/lib/function-app-flex-consumption'
-import { LocalExec, Provider } from 'cdktf-local-exec'
 import { CommonAzureConstruct } from '../../common'
 import { createAzureTfOutput } from '../../utils'
 import { FunctionAppProps, FunctionProps, FunctionAppFlexConsumptionProps } from './types'
@@ -124,30 +123,6 @@ export class AzureFunctionManager {
       tags: props.tags ?? {
         environment: scope.props.stage,
       },
-    })
-
-    new Provider(scope, `${id}-local-exec-provider`)
-    // Deploy function app zip package with up to 3 retry attempts.
-    // This handles transient issues like HTTP 503s returned from the Azure Kudu deployment endpoint.
-    new LocalExec(scope, `${id}-function-app-deploy`, {
-      triggers: {
-        hash: props.sourceCodeHash,
-      },
-      command: `
-        set -e
-        MAX_RETRIES=3
-        RETRY_COUNT=0
-        until az functionapp deployment source config-zip --resource-group "${resourceGroup.name}" --name "${functionApp.name}" --src "${props.deploySource}"; do
-          RETRY_COUNT=$((RETRY_COUNT+1))
-          echo "Deployment attempt $RETRY_COUNT failed. Retrying in 10 seconds..."
-          if [ "$RETRY_COUNT" -ge "$MAX_RETRIES" ]; then
-            echo "Deployment failed after $MAX_RETRIES attempts."
-            exit 1
-          fi
-          sleep 10
-        done
-        echo "Deployment succeeded."
-      `,
     })
 
     return functionApp

@@ -1,5 +1,6 @@
 import { AzurermProvider } from '@cdktf/provider-azurerm/lib/provider'
 import { AzapiProvider } from '../.gen/providers/azapi/provider'
+import { Provider } from 'cdktf-local-exec'
 import { DataAzurermClientConfig } from '@cdktf/provider-azurerm/lib/data-azurerm-client-config'
 import { AzurermBackend, TerraformStack } from 'cdktf'
 import { Construct } from 'constructs'
@@ -72,6 +73,7 @@ export class CommonAzureConstruct extends TerraformStack {
 
     new AzapiProvider(this, `${this.id}-azapi-provider`, this.props)
     new AzurermProvider(this, `${this.id}-provider`, this.props)
+    new Provider(this, `${this.id}-local-exec-provider`)
   }
 
   /**
