@@ -8,6 +8,8 @@ export interface ApiManagementProps extends ApiManagementConfig {}
 
 export interface ApiManagementBackendProps extends ApiManagementBackendConfig {
   backendUrlPath?: string
+  apiManagementId: string
+  circuitBreaker: any
 }
 
 export interface ApiManagementCustomDomainProps extends ApiManagementCustomDomainConfig {}
