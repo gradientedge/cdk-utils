@@ -272,10 +272,110 @@ export class AzureApiManagementManager {
       )
       createAzureTfOutput(`${id}-${operation.displayName}-${operation.method}-apimOperationId`, scope, apimOperation.id)
 
+      // Define Caching Policy if enabled
+      let cacheInboundPolicy = ''
+      let cacheOutboundPolicy = ''
+
+      if (props.caching?.enabled === true) {
+        if (operation.method === 'get') {
+          cacheInboundPolicy = `<!-- Generate a comprehensive custom cache key (without query params or Accept header) -->
+              <set-variable name="customCacheKey" value="@{
+                  // Instance identification
+                  
+                  // API identification
+                  string apiName = context.Api.Name.Replace(" ", "").ToLower();
+                  string apiVersion = context.Api.Version ?? "v1";
+                  
+                  // Full path construction (without query parameters)
+                  string fullPath = context.Request.Url.Path.ToLower();
+                                    
+                  // Construct final cache key (no Accept header needed for JSON-only APIs)
+                  return $"{apiName}:{apiVersion}:{fullPath}";
+              }" />
+              <set-variable name="bypassCache" value="@(context.Request.Headers.GetValueOrDefault("X-Bypass-Cache", "false").ToLower())" />
+
+              <choose>
+                  <when condition="@((string)context.Variables["bypassCache"] != "true")">
+                      <!-- Attempt to retrieve cached response -->
+                      <cache-lookup-value key="@((string)context.Variables["customCacheKey"])" variable-name="cachedResponse" />
+
+                      <!-- If cache hit, return cached response -->
+                      <choose>
+                          <when condition="@(context.Variables.ContainsKey("cachedResponse"))">
+                              <return-response>
+                                  <set-status code="200" reason="OK" />
+                                  <set-header name="Content-Type" exists-action="override">
+                                      <value>application/json</value>
+                                  </set-header>
+                                  <set-header name="X-Apim-Cache-Status" exists-action="override">
+                                      <value>HIT</value>
+                                  </set-header>
+                                  <set-header name="X-Apim-Cache-Key" exists-action="override">
+                                      <value>@((string)context.Variables["customCacheKey"])</value>
+                                  </set-header>
+                                  <set-body>@((string)context.Variables["cachedResponse"])</set-body>
+                              </return-response>
+                          </when>
+                      </choose>
+                  </when>
+              </choose>`
+          cacheOutboundPolicy = `<choose>
+                  <when condition="@((string)context.Variables["bypassCache"] != "true")">
+                      <!-- Store the response body in cache -->
+                      <choose>
+                          <when condition="@(context.Response.StatusCode == 200)">
+                              <cache-store-value key="@((string)context.Variables["customCacheKey"])" value="@(context.Response.Body.As<string>(preserveContent: true))" duration="${props.caching.ttl ?? 900}" />
+                              <!-- Add cache status header -->
+                              <set-header name="X-Apim-Cache-Status" exists-action="override">
+                                  <value>MISS</value>
+                              </set-header>
+                          </when>
+                      </choose>
+                      <!-- Add debug headers -->
+                      <set-header name="X-Apim-Cache-Key" exists-action="override">
+                          <value>@((string)context.Variables["customCacheKey"])</value>
+                      </set-header>
+                      <set-header name="X-Apim-API-Name" exists-action="override">
+                          <value>@(context.Api.Name)</value>
+                      </set-header>
+                  </when>
+              </choose>`
+        }
+
+        if (operation.method === 'post') {
+          cacheInboundPolicy = `<!-- Generate a comprehensive custom cache key (without query params or Accept header) -->
+              <set-variable name="customCacheKey" value="@{
+                  // Instance identification
+                  
+                  // API identification
+                  string apiName = context.Api.Name.Replace(" ", "").ToLower();
+                  string apiVersion = context.Api.Version ?? "v1";
+                  
+                  // Full path construction (without query parameters)
+                  string fullPath = context.Request.Url.Path.ToLower();
+                                    
+                  // Construct final cache key (no Accept header needed for JSON-only APIs)
+                  return $"{apiName}:{apiVersion}:{fullPath}";
+              }" />
+              <set-variable name="clearCache" value="@(context.Request.Headers.GetValueOrDefault("X-Apim-Clear-Cache", "false").ToLower())" />
+
+              <!-- Allow admin to clear specific cache entries -->
+              <choose>
+                  <when condition="@((string)context.Variables["clearCache"] == "true")">
+                      <cache-remove-value key="@((string)context.Variables["customCacheKey"])" />
+                      <return-response>
+                          <set-status code="200" reason="OK" />
+                          <set-body>Cache entry removed successfully</set-body>
+                      </return-response>
+                  </when>
+              </choose>`
+        }
+      }
+
       const policyXmlContent = `<policies>
         <inbound>
           <base />
-          ${operation.cacheInboundPolicy ?? ''}
+          ${cacheInboundPolicy}
           ${props.commonInboundPolicyXml ?? ''}
         </inbound>
         <backend>
@@ -283,7 +383,7 @@ export class AzureApiManagementManager {
         </backend>
         <outbound>
           <base />
-          ${operation.cacheOutboundPolicy ?? ''}
+          ${cacheOutboundPolicy ?? ''}
           ${props.commonOutboundPolicyXml ?? ''}
         </outbound>
         <on-error>

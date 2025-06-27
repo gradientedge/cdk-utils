@@ -16,13 +16,16 @@ export interface ApiManagementApiProps extends ApiManagementApiConfig {
   operations: ApiManagementApiOperationProps[]
   commonInboundPolicyXml: string
   commonOutboundPolicyXml: string
+  caching?: ApiManagementApiCaching
 }
 
 export interface ApiManagementV2Props extends ApiManagementConfig {
   body: any
 }
 
-export interface ApiManagementApiOperationProps extends ApiManagementApiOperationConfig {
-  cacheInboundPolicy: string
-  cacheOutboundPolicy: string
+export interface ApiManagementApiOperationProps extends ApiManagementApiOperationConfig {}
+
+export interface ApiManagementApiCaching {
+  enabled: boolean
+  ttl?: number
 }
