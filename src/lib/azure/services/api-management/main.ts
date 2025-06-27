@@ -208,11 +208,39 @@ export class AzureApiManagementManager {
   public createApiManagementBackend(id: string, scope: CommonAzureConstruct, props: ApiManagementBackendProps) {
     if (!props) throw `Props undefined for ${id}`
 
+    //    Commenting as circuit breaker config is currently not supported
+    /*
     const apiManagementBackend = new ApiManagementBackend(scope, `${id}-am-be`, {
-      ...props,
+          ...props,
+          name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.apiManagementBackend),
+          description: props.description ?? `Backend for ${props.name}-${scope.props.stage}`,
+          protocol: props.protocol ?? 'http',
+        })
+*/
+
+    const apiManagementBackend = new Resource(scope, `${id}-am-be`, {
+      type: 'Microsoft.ApiManagement/service/backends@2024-06-01-preview',
       name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.apiManagementBackend),
-      description: props.description ?? `Backend for ${props.name}-${scope.props.stage}`,
-      protocol: props.protocol ?? 'http',
+      parentId: props.apiManagementId,
+
+      body: {
+        properties: {
+          circuitBreaker: props.circuitBreaker,
+          credentials: props.credentials,
+          description: props.description ?? `Backend for ${props.name}-${scope.props.stage}`,
+          url: props.url,
+          resourceId: props.resourceId,
+          protocol: props.protocol ?? 'http',
+        },
+      },
+
+      responseExportValues: ['*'],
+
+      ignoreMissingProperty: true,
+      ignoreCasing: true,
+      schemaValidationEnabled: false,
+
+      lifecycle: props.lifecycle,
     })
 
     createAzureTfOutput(`${id}-apiManagementBackendName`, scope, apiManagementBackend.name)
