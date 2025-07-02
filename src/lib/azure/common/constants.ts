@@ -6,4 +6,4 @@ export enum AzureRemoteBackend {
 /**
  * List of Azure resources that excludes tags
  */
-export const RESOURCES_TO_EXCLUDE_TAGS = new Set(['ApiManagementNamedValue'])
+export const RESOURCES_TO_EXCLUDE_TAGS = new Set(['ApiManagementNamedValue', 'Application'])

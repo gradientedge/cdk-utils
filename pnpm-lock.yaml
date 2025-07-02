@@ -19,13 +19,13 @@ importers:
         version: 3.804.0
       '@cdktf/provider-aws':
         specifier: ^19.63.0
-        version: 19.64.0(cdktf@0.20.12(constructs@10.4.2))(constructs@10.4.2)
+        version: 19.64.0(cdktf@0.21.0(constructs@10.4.2))(constructs@10.4.2)
       '@cdktf/provider-azurerm':
-        specifier: ^13.29.0
-        version: 13.29.0(cdktf@0.20.12(constructs@10.4.2))(constructs@10.4.2)
+        specifier: ^14.4.0
+        version: 14.4.0(cdktf@0.21.0(constructs@10.4.2))(constructs@10.4.2)
       '@cdktf/provider-cloudflare':
-        specifier: ^12.4.0
-        version: 12.5.0(cdktf@0.20.12(constructs@10.4.2))(constructs@10.4.2)
+        specifier: ^13.1.0
+        version: 13.1.0(cdktf@0.21.0(constructs@10.4.2))(constructs@10.4.2)
       '@types/lodash':
         specifier: ^4.17.16
         version: 4.17.16
@@ -42,11 +42,11 @@ importers:
         specifier: ^2.195.0
         version: 2.199.0(constructs@10.4.2)
       cdktf:
-        specifier: ^0.20.12
-        version: 0.20.12(constructs@10.4.2)
+        specifier: ^0.21.0
+        version: 0.21.0(constructs@10.4.2)
       cdktf-local-exec:
         specifier: ^0.5.71
-        version: 0.5.72(@cdktf/provider-null@10.0.1(cdktf@0.20.12(constructs@10.4.2))(constructs@10.4.2))(cdktf@0.20.12(constructs@10.4.2))(constructs@10.4.2)
+        version: 0.5.72(@cdktf/provider-null@10.0.1(cdktf@0.21.0(constructs@10.4.2))(constructs@10.4.2))(cdktf@0.21.0(constructs@10.4.2))(constructs@10.4.2)
       constructs:
         specifier: ^10.4.2
         version: 10.4.2
@@ -593,19 +593,19 @@ packages:
       cdktf: ^0.20.0
       constructs: ^10.3.0
 
-  '@cdktf/provider-azurerm@13.29.0':
-    resolution: {integrity: sha512-bd1XkxJqAdoZHEHlD8TXNWy0FOfXS7s/QcPI7ZUft4Y3lldwBC5/KB57XjFyJuL8ddZ3Me57/BiKQ//qqVTnnw==}
-    engines: {node: '>= 18.12.0'}
+  '@cdktf/provider-azurerm@14.4.0':
+    resolution: {integrity: sha512-XFDJfsvEj5Hf1mJvdRo+HZ3HpsFrrqPi5RI74AHgneEyqU/wKX+hgdgp9BsYm3SAnWG9mUbqT4li6HAecPrt+w==}
+    engines: {node: '>= 20.9.0'}
     peerDependencies:
-      cdktf: ^0.20.0
-      constructs: ^10.3.0
+      cdktf: ^0.21.0
+      constructs: ^10.4.2
 
-  '@cdktf/provider-cloudflare@12.5.0':
-    resolution: {integrity: sha512-loWQzAQzIOtaiTgem1yHg7OsijQxLNNrdhgsoXAb+B2fYPeYoi6PLzGv+hGjkraSr6ScaFbNdJSyLCn0aJBD9g==}
-    engines: {node: '>= 18.12.0'}
+  '@cdktf/provider-cloudflare@13.1.0':
+    resolution: {integrity: sha512-xRVyA3AUW6CbFwMsLusD0WI5im3Rmmkwn9a29Us7j59JW4LjGSb0/07ZW5ddknjWVXkBMp1jVYWtprP7vOF2Jw==}
+    engines: {node: '>= 20.9.0'}
     peerDependencies:
-      cdktf: ^0.20.0
-      constructs: ^10.3.0
+      cdktf: ^0.21.0
+      constructs: ^10.4.2
 
   '@cdktf/provider-null@10.0.1':
     resolution: {integrity: sha512-X176VQZFTNi1xSyUEoSb9CsFHfJ9EpcdzCx33UlZMGfQo/DRZC8NT1vHxCQU2TAaB1ZwmnhXEkW2FJO6pB6Pjg==}
@@ -1623,10 +1623,10 @@ packages:
       cdktf: '>=0.20.0'
       constructs: '>=10.3.0'
 
-  cdktf@0.20.12:
-    resolution: {integrity: sha512-ZBg2gA3Uw0WvGFlgrY1uxo6QHWn+ZdHiDkZQyOsTBl68k62UlaV8K7RR51d0E/amQG/CjtKOJr5XPFFAcOq0VA==}
+  cdktf@0.21.0:
+    resolution: {integrity: sha512-bdTOOyrFSXw0p5d7/3dye7ZWYzrUatyMjWEAAwTGoqghjygRj6Q55y1QZnSB021NRDzYZ3BhFGsOkpmIjQMzNQ==}
     peerDependencies:
-      constructs: ^10.3.0
+      constructs: ^10.4.2
     bundledDependencies:
       - archiver
       - json-stable-stringify
@@ -5407,24 +5407,24 @@ snapshots:
 
   '@bcoe/v8-coverage@0.2.3': {}
 
-  '@cdktf/provider-aws@19.64.0(cdktf@0.20.12(constructs@10.4.2))(constructs@10.4.2)':
+  '@cdktf/provider-aws@19.64.0(cdktf@0.21.0(constructs@10.4.2))(constructs@10.4.2)':
     dependencies:
-      cdktf: 0.20.12(constructs@10.4.2)
+      cdktf: 0.21.0(constructs@10.4.2)
       constructs: 10.4.2
 
-  '@cdktf/provider-azurerm@13.29.0(cdktf@0.20.12(constructs@10.4.2))(constructs@10.4.2)':
+  '@cdktf/provider-azurerm@14.4.0(cdktf@0.21.0(constructs@10.4.2))(constructs@10.4.2)':
     dependencies:
-      cdktf: 0.20.12(constructs@10.4.2)
+      cdktf: 0.21.0(constructs@10.4.2)
       constructs: 10.4.2
 
-  '@cdktf/provider-cloudflare@12.5.0(cdktf@0.20.12(constructs@10.4.2))(constructs@10.4.2)':
+  '@cdktf/provider-cloudflare@13.1.0(cdktf@0.21.0(constructs@10.4.2))(constructs@10.4.2)':
     dependencies:
-      cdktf: 0.20.12(constructs@10.4.2)
+      cdktf: 0.21.0(constructs@10.4.2)
       constructs: 10.4.2
 
-  '@cdktf/provider-null@10.0.1(cdktf@0.20.12(constructs@10.4.2))(constructs@10.4.2)':
+  '@cdktf/provider-null@10.0.1(cdktf@0.21.0(constructs@10.4.2))(constructs@10.4.2)':
     dependencies:
-      cdktf: 0.20.12(constructs@10.4.2)
+      cdktf: 0.21.0(constructs@10.4.2)
       constructs: 10.4.2
 
   '@colors/colors@1.5.0':
@@ -6769,13 +6769,13 @@ snapshots:
     dependencies:
       lodash: 4.17.21
 
-  cdktf-local-exec@0.5.72(@cdktf/provider-null@10.0.1(cdktf@0.20.12(constructs@10.4.2))(constructs@10.4.2))(cdktf@0.20.12(constructs@10.4.2))(constructs@10.4.2):
+  cdktf-local-exec@0.5.72(@cdktf/provider-null@10.0.1(cdktf@0.21.0(constructs@10.4.2))(constructs@10.4.2))(cdktf@0.21.0(constructs@10.4.2))(constructs@10.4.2):
     dependencies:
-      '@cdktf/provider-null': 10.0.1(cdktf@0.20.12(constructs@10.4.2))(constructs@10.4.2)
-      cdktf: 0.20.12(constructs@10.4.2)
+      '@cdktf/provider-null': 10.0.1(cdktf@0.21.0(constructs@10.4.2))(constructs@10.4.2)
+      cdktf: 0.21.0(constructs@10.4.2)
       constructs: 10.4.2
 
-  cdktf@0.20.12(constructs@10.4.2):
+  cdktf@0.21.0(constructs@10.4.2):
     dependencies:
       constructs: 10.4.2
 
