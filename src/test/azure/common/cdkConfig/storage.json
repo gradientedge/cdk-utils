@@ -10,5 +10,13 @@
     "name": "test-storage-blob",
     "storageAccountName": "test-storage-account",
     "storageContainerName": "test-storage-container"
+  },
+  "testStorageSASTokenPermissions": {
+    "add": true,
+    "create": true,
+    "delete": true,
+    "list": true,
+    "read": true,
+    "write": true
   }
 }
