@@ -4,10 +4,15 @@ import { DataAzurermStorageContainer } from '@cdktf/provider-azurerm/lib/data-az
 import { StorageAccount } from '@cdktf/provider-azurerm/lib/storage-account'
 import { StorageBlob } from '@cdktf/provider-azurerm/lib/storage-blob'
 import { StorageContainer } from '@cdktf/provider-azurerm/lib/storage-container'
+import { DataAzurermStorageAccountBlobContainerSas } from '@cdktf/provider-azurerm/lib/data-azurerm-storage-account-blob-container-sas'
 import { CommonAzureConstruct } from '../../common'
 import { createAzureTfOutput } from '../../utils'
-import { StorageAccountProps, StorageBlobProps, StorageContainerProps } from './types'
-import { DataAzurermStorageAccountBlobContainerSas } from '@cdktf/provider-azurerm/lib/data-azurerm-storage-account-blob-container-sas'
+import {
+  StorageAccountProps,
+  StorageBlobProps,
+  StorageContainerProps,
+  DataAzurermStorageAccountBlobContainerSasProps,
+} from './types'
 
 /**
  * @classdesc Provides operations on Azure Storage
@@ -143,7 +148,7 @@ export class AzureStorageManager {
    * @param props - Container details and SAS options:
    *   - storageAccountName: The name of the existing Azure Storage Account
    *   - storageContainerName: The name of the container within the storage account
-   *   - resourceGroupName: The name of the resource group containing the storage account
+   *   - storageAccountResourceGroupName: The name of the resource group containing the storage account
    *   - sasStart: Optional start date in the format 'YYYY-MM-DD'. If not provided, defaults to today’s date.
    *   To avoid diffs on every deploy, it is recommended to supply a fixed value.
    *   - sasExpiry: Optional expiry date in the format 'YYYY-MM-DD'. Defaults to 7 days from current date if not provided.
@@ -155,26 +160,17 @@ export class AzureStorageManager {
   public generateContainerSasToken(
     id: string,
     scope: CommonAzureConstruct,
-    props: {
-      storageAccountName: string
-      storageContainerName: string
-      resourceGroupName: string
-      sasStart?: string
-      sasExpiry?: string
-    }
-  ): DataAzurermStorageAccountBlobContainerSas {
-    const storageAccountLookup = new DataAzurermStorageAccount(scope, `${id}-lookup-sa`, {
-      name: props.storageAccountName,
-      resourceGroupName: props.resourceGroupName,
-    })
-
-    const containerSas = new DataAzurermStorageAccountBlobContainerSas(scope, `${id}-sas`, {
-      connectionString: storageAccountLookup.primaryConnectionString,
-      containerName: props.storageContainerName,
-      httpsOnly: true,
-      start: props.sasStart ?? new Date().toISOString().split('T')[0],
-      expiry: props.sasExpiry ?? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-      permissions: {
+    props: DataAzurermStorageAccountBlobContainerSasProps,
+    storageAccount: StorageAccount,
+    storageContainer?: StorageContainer
+  ) {
+    const containerSas = new DataAzurermStorageAccountBlobContainerSas(scope, `${id}-sc-sas`, {
+      connectionString: storageAccount.primaryConnectionString,
+      containerName: props.containerName ?? storageContainer?.name,
+      httpsOnly: props.httpsOnly ?? true,
+      start: props.start ?? new Date().toISOString().split('T')[0],
+      expiry: props.expiry ?? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+      permissions: props.permissions ?? {
         read: true,
         add: false,
         create: false,
