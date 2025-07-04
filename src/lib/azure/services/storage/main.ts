@@ -146,12 +146,11 @@ export class AzureStorageManager {
    * @param id - Unique scoped identifier for the SAS token resource
    * @param scope - CDKTF construct scope in which the resource will be created
    * @param props - SAS options:
+   *   - start: Optional start date in the format 'YYYY-MM-DD'. If not provided, defaults to today’s date.
+   *   To avoid diffs on every deploy, it is recommended to supply a fixed value.
+   *   - expiry: Optional expiry date in the format 'YYYY-MM-DD'. Defaults to 7 days from current date if not provided.
    * @param storageAccount
    * @param storageContainer
-
-  *   - sasStart: Optional start date in the format 'YYYY-MM-DD'. If not provided, defaults to today’s date.
-   *   To avoid diffs on every deploy, it is recommended to supply a fixed value.
-   *   - sasExpiry: Optional expiry date in the format 'YYYY-MM-DD'. Defaults to 7 days from current date if not provided.
    *
    * @returns A `DataAzurermStorageAccountBlobContainerSas` instance with the generated SAS token
    *
