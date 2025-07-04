@@ -7,7 +7,10 @@ import { StorageContainer } from '@cdktf/provider-azurerm/lib/storage-container'
 import { CommonAzureConstruct } from '../../common'
 import { createAzureTfOutput } from '../../utils'
 import { StorageAccountProps, StorageBlobProps, StorageContainerProps } from './types'
-import { DataAzurermStorageAccountBlobContainerSas } from '@cdktf/provider-azurerm/lib/data-azurerm-storage-account-blob-container-sas'
+import {
+  DataAzurermStorageAccountBlobContainerSas,
+  DataAzurermStorageAccountBlobContainerSasPermissions,
+} from '@cdktf/provider-azurerm/lib/data-azurerm-storage-account-blob-container-sas'
 
 /**
  * @classdesc Provides operations on Azure Storage
@@ -161,6 +164,7 @@ export class AzureStorageManager {
       resourceGroupName: string
       sasStart?: string
       sasExpiry?: string
+      permissions?: DataAzurermStorageAccountBlobContainerSasPermissions
     }
   ): DataAzurermStorageAccountBlobContainerSas {
     const storageAccountLookup = new DataAzurermStorageAccount(scope, `${id}-lookup-sa`, {
@@ -174,7 +178,7 @@ export class AzureStorageManager {
       httpsOnly: true,
       start: props.sasStart ?? new Date().toISOString().split('T')[0],
       expiry: props.sasExpiry ?? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-      permissions: {
+      permissions: props.permissions ?? {
         read: true,
         add: false,
         create: false,
