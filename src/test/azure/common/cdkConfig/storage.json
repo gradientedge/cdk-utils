@@ -12,6 +12,7 @@
     "storageContainerName": "test-storage-container"
   },
   "testContainerSas": {
+    "expiry": "2040-12-31",
     "permissions": { "add": true, "create": true, "delete": true, "list": true, "read": true, "write": true }
   }
 }

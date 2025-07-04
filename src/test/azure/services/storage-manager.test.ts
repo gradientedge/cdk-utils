@@ -208,7 +208,7 @@ describe('TestAzureCommonConstruct', () => {
     expect(construct).toHaveDataSourceWithProperties(DataAzurermStorageAccountBlobContainerSas, {
       connection_string: '${azurerm_storage_account.test-storage-account-dev-sa.primary_connection_string}',
       container_name: '${azurerm_storage_container.test-storage-container-dev-sc.name}',
-      expiry: expect.any(String),
+      expiry: '2040-12-31',
       https_only: true,
       permissions: {
         add: true,
