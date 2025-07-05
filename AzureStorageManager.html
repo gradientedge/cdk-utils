@@ -718,7 +718,7 @@ class CustomConstruct extends CommonAzureConstruct {
 
     
 
-    <h4 class="name" id="generateContainerSasToken"><span class="type-signature"></span>generateContainerSasToken<span class="signature">(id, scope, props)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="generateContainerSasToken"><span class="type-signature"></span>generateContainerSasToken<span class="signature">(id, scope, props, storageAccount, storageContainer)</span><span class="type-signature"></span></h4>
 
     
     <p class="summary usertext"><p>Generates a container-level SAS token for an existing Azure Storage container.</p></p>
@@ -737,7 +737,7 @@ to a container via a generated Shared Access Signature (SAS) token.</p></li></ul
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_storage_main.ts.html">azure/services/storage/main.ts</a>, <a href="azure_services_storage_main.ts.html#line140">line 140</a>
+        <a href="azure_services_storage_main.ts.html">azure/services/storage/main.ts</a>, <a href="azure_services_storage_main.ts.html#line139">line 139</a>
     </li></ul></dd>
     
 
@@ -863,15 +863,48 @@ to a container via a generated Shared Access Signature (SAS) token.</p></li></ul
 
             
 
-            <td class="description last"><p>Container details and SAS options:</p>
+            <td class="description last"><p>SAS options:</p>
 <ul>
-<li>storageAccountName: The name of the existing Azure Storage Account</li>
-<li>storageContainerName: The name of the container within the storage account</li>
-<li>resourceGroupName: The name of the resource group containing the storage account</li>
-<li>sasStart: Optional start date in the format 'YYYY-MM-DD'. If not provided, defaults to today’s date.
+<li>start: Optional start date in the format 'YYYY-MM-DD'. If not provided, defaults to today’s date.
 To avoid diffs on every deploy, it is recommended to supply a fixed value.</li>
-<li>sasExpiry: Optional expiry date in the format 'YYYY-MM-DD'. Defaults to 7 days from current date if not provided.</li>
+<li>expiry: Optional expiry date in the format 'YYYY-MM-DD'. Defaults to 7 days from current date if not provided.</li>
 </ul></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>storageAccount</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>storageContainer</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"></td>
         </tr>
 
     
