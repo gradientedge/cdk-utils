@@ -11,12 +11,15 @@ import {
   StorageAccountProps,
   StorageBlobProps,
   StorageContainerProps,
+  DataAzurermStorageAccountBlobContainerSasProps,
 } from '../../../lib'
+import { DataAzurermStorageAccountBlobContainerSas } from '@cdktf/provider-azurerm/lib/data-azurerm-storage-account-blob-container-sas'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
   testStorageAccount: StorageAccountProps
   testStorageContainer: StorageContainerProps
   testStorageBlob: StorageBlobProps
+  testContainerSas: DataAzurermStorageAccountBlobContainerSasProps
   testAttribute?: string
 }
 
@@ -46,6 +49,7 @@ class TestCommonStack extends CommonAzureStack {
       testStorageAccount: this.node.tryGetContext('testStorageAccount'),
       testStorageBlob: this.node.tryGetContext('testStorageBlob'),
       testStorageContainer: this.node.tryGetContext('testStorageContainer'),
+      testContainerSas: this.node.tryGetContext('testContainerSas'),
     }
   }
 }
@@ -55,17 +59,25 @@ class TestCommonConstruct extends CommonAzureConstruct {
 
   constructor(parent: Construct, name: string, props: TestAzureStackProps) {
     super(parent, name, props)
-    this.storageManager.createStorageAccount(
+    const storageAccount = this.storageManager.createStorageAccount(
       `test-storage-account-${this.props.stage}`,
       this,
       this.props.testStorageAccount
     )
-    this.storageManager.createStorageContainer(
+    const storageContainer = this.storageManager.createStorageContainer(
       `test-storage-container-${this.props.stage}`,
       this,
       this.props.testStorageContainer
     )
     this.storageManager.createStorageBlob(`test-storage-blob-${this.props.stage}`, this, this.props.testStorageBlob)
+
+    this.storageManager.generateContainerSasToken(
+      `test-container-sas-token-${this.props.stage}`,
+      this,
+      this.props.testContainerSas,
+      storageAccount,
+      storageContainer
+    )
   }
 }
 
@@ -181,6 +193,32 @@ describe('TestAzureCommonConstruct', () => {
       name: 'test-storage-blob-dev',
       storage_account_name: '${data.azurerm_storage_account.test-storage-blob-dev-sa.name}',
       storage_container_name: '${data.azurerm_storage_container.test-storage-blob-dev-sc.name}',
+    })
+  })
+})
+
+describe('TestAzureCommonConstruct', () => {
+  test('provisions SAS output as expected', () => {
+    expect(JSON.parse(construct).output).toHaveProperty('testContainerSasTokenDevSasToken')
+  })
+})
+
+describe('TestAzureCommonConstruct', () => {
+  test('provisions container SAS token as expected', () => {
+    expect(construct).toHaveDataSourceWithProperties(DataAzurermStorageAccountBlobContainerSas, {
+      connection_string: '${azurerm_storage_account.test-storage-account-dev-sa.primary_connection_string}',
+      container_name: '${azurerm_storage_container.test-storage-container-dev-sc.name}',
+      expiry: '2040-12-31',
+      https_only: true,
+      permissions: {
+        add: true,
+        create: true,
+        delete: true,
+        list: true,
+        read: true,
+        write: true,
+      },
+      start: expect.any(String),
     })
   })
 })
