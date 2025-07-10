@@ -29,5 +29,5 @@ export interface ApiManagementApiOperationProps extends ApiManagementApiOperatio
 
 export interface ApiManagementApiCaching {
   enabled: boolean
-  ttl?: number
+  ttlInSecs?: number
 }

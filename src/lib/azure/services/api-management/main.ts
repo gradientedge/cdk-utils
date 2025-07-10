@@ -352,7 +352,7 @@ export class AzureApiManagementManager {
                       <!-- Store the response body in cache -->
                       <choose>
                           <when condition="@(context.Response.StatusCode == 200)">
-                              <cache-store-value key="@((string)context.Variables["customCacheKey"])" value="@(context.Response.Body.As<string>(preserveContent: true))" duration="${props.caching.ttl ?? 900}" />
+                              <cache-store-value key="@((string)context.Variables["customCacheKey"])" value="@(context.Response.Body.As<string>(preserveContent: true))" duration="${props.caching.ttlInSecs ?? 900}" />
                               <!-- Add cache status header -->
                               <set-header name="X-Apim-Cache-Status" exists-action="override">
                                   <value>MISS</value>
