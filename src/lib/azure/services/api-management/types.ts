@@ -19,6 +19,7 @@ export interface ApiManagementApiProps extends ApiManagementApiConfig {
   commonInboundPolicyXml: string
   commonOutboundPolicyXml: string
   caching?: ApiManagementApiCaching
+  rateLimit?: ApiManagementApiRateLimit
 }
 
 export interface ApiManagementV2Props extends ApiManagementConfig {
@@ -30,4 +31,9 @@ export interface ApiManagementApiOperationProps extends ApiManagementApiOperatio
 export interface ApiManagementApiCaching {
   enabled: boolean
   ttlInSecs?: number
+}
+
+export interface ApiManagementApiRateLimit {
+  calls: number
+  renewalPeriodInSecs: number
 }

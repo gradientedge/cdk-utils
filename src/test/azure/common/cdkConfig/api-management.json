@@ -25,7 +25,11 @@
           }
         ]
       }
-    ]
+    ],
+    "rateLimit": {
+      "calls": 25,
+      "renewalPeriodInSecs": 1
+    }
   },
   "testApiManagementCustomDomain": {
     "gateway": [
