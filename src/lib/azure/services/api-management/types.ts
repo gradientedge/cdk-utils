@@ -35,5 +35,5 @@ export interface ApiManagementApiCaching {
 
 export interface ApiManagementApiRateLimit {
   calls: number
-  renewalPeriod: number
+  renewalPeriodInSecs: number
 }
