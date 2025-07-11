@@ -403,7 +403,7 @@ export class AzureApiManagementManager {
       // Inject rate limiting policy (if configured)
       let rateLimitPolicy = ''
       if (props.rateLimit && scope.props.subscriptionId) {
-        rateLimitPolicy = `<rate-limit-by-key calls="${props.rateLimit.calls}" renewal-period="${props.rateLimit.renewalPeriodInSecs}" counter-key="${scope.props.subscriptionId}"/>`
+        rateLimitPolicy = `<rate-limit-by-key calls="${props.rateLimit.calls}" renewal-period="${props.rateLimit.renewalPeriodInSecs}" counter-key="${scope.props.subscriptionId}-${apimOperation.operationId}"/>`
       }
       const policyXmlContent = `<policies>
         <inbound>
