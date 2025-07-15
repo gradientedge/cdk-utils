@@ -431,9 +431,12 @@ export class AzureApiManagementManager {
                   
                   // Full path construction (without query parameters)
                   string fullPath = context.Request.Url.Path.ToLower();
-                                    
+
+                  // Query arameters
+                  string query = context.Request.Url.Query.ToLower();
+
                   // Construct final cache key (no Accept header needed for JSON-only APIs)
-                  return $"{apiName}:{apiVersion}:{fullPath}";
+                  return $"{apiName}:{apiVersion}:{fullPath}:{query}";
               }" />
               &lt;set-variable name="clearCache" value="@(context.Request.Headers.GetValueOrDefault("X-Apim-Clear-Cache", "false").ToLower())" />
 
