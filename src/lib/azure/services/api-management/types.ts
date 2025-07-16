@@ -18,18 +18,16 @@ export interface ApiManagementApiProps extends ApiManagementApiConfig {
   operations: ApiManagementApiOperationProps[]
   commonInboundPolicyXml: string
   commonOutboundPolicyXml: string
-  caching?: ApiManagementApiCaching
   rateLimit?: ApiManagementApiRateLimit
 }
 
-export interface ApiManagementV2Props extends ApiManagementConfig {
-  body: any
+export interface ApiManagementApiOperationProps extends ApiManagementApiOperationConfig {
+  caching?: ApiManagementApiCaching
 }
 
-export interface ApiManagementApiOperationProps extends ApiManagementApiOperationConfig {}
-
 export interface ApiManagementApiCaching {
-  enabled: boolean
+  enableCacheSet?: boolean
+  enableCacheInvalidation?: boolean
   ttlInSecs?: number
 }
 

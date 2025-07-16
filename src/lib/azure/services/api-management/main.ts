@@ -4,7 +4,6 @@ import {
   DataAzurermApiManagementConfig,
 } from '@cdktf/provider-azurerm/lib/data-azurerm-api-management'
 import { ApiManagementCustomDomain } from '@cdktf/provider-azurerm/lib/api-management-custom-domain'
-import { ApiManagementBackend } from '@cdktf/provider-azurerm/lib/api-management-backend'
 import { ApiManagement } from '@cdktf/provider-azurerm/lib/api-management'
 import { ApiManagementApi } from '@cdktf/provider-azurerm/lib/api-management-api'
 import { ApiManagementApiOperation } from '@cdktf/provider-azurerm/lib/api-management-api-operation'
@@ -20,7 +19,6 @@ import {
   ApiManagementProps,
   ApiManagementBackendProps,
   ApiManagementApiProps,
-  ApiManagementV2Props,
   ApiManagementCustomDomainProps,
 } from './types'
 import _ from 'lodash'
@@ -118,82 +116,6 @@ export class AzureApiManagementManager {
         ? `${scope.props.resourceGroupName}-${scope.props.stage}`
         : `${props.resourceGroupName}`,
     })
-
-    return apiManagement
-  }
-
-  /**
-   * @summary Method to create a new api management
-   * @param id scoped id of the resource
-   * @param scope scope in which this resource is defined
-   * @param props api management properties
-   * @see [CDKTF Api management Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/apiManagement.typescript.md}
-   */
-  public createApiManagementv2(
-    id: string,
-    scope: CommonAzureConstruct,
-    props: ApiManagementV2Props,
-    applicationInsightsKey?: ApiManagementLoggerApplicationInsights['instrumentationKey']
-  ) {
-    if (!props) throw `Props undefined for ${id}`
-
-    const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-am-rg`, {
-      name: scope.props.resourceGroupName
-        ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-        : `${props.resourceGroupName}`,
-    })
-
-    if (!resourceGroup) throw `Resource group undefined for ${id}`
-
-    const apiManagement = new Resource(scope, `${id}-am`, {
-      type: 'Microsoft.ApiManagement/service@2024-05-01',
-      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.apiManagement),
-      location: resourceGroup.location,
-      parentId: resourceGroup.id,
-
-      body: {
-        properties: {
-          apiVersionConstraint: {
-            minApiVersion: '2019-12-01',
-          },
-          publisherName: props.publisherName,
-          publisherEmail: props.publisherEmail,
-        },
-        sku: {
-          capacity: 1,
-          name: props.skuName,
-        },
-      },
-
-      responseExportValues: ['*'],
-
-      identity: [
-        {
-          type: 'SystemAssigned',
-        },
-      ],
-
-      ignoreMissingProperty: true,
-      ignoreCasing: true,
-      schemaValidationEnabled: false,
-
-      lifecycle: props.lifecycle,
-    })
-
-    if (applicationInsightsKey) {
-      new ApiManagementLogger(scope, `${id}-am-logger`, {
-        name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.apiManagementLogger),
-        resourceGroupName: resourceGroup.name,
-        apiManagementName: apiManagement.name,
-        applicationInsights: {
-          instrumentationKey: applicationInsightsKey,
-        },
-      })
-    }
-
-    createAzureTfOutput(`${id}-apiManagementName`, scope, apiManagement.name)
-    createAzureTfOutput(`${id}-apiManagementFriendlyUniqueId`, scope, apiManagement.friendlyUniqueId)
-    createAzureTfOutput(`${id}-apiManagementId`, scope, apiManagement.id)
 
     return apiManagement
   }
@@ -301,12 +223,13 @@ export class AzureApiManagementManager {
       createAzureTfOutput(`${id}-${operation.displayName}-${operation.method}-apimOperationId`, scope, apimOperation.id)
 
       // Define Caching Policy if enabled
-      let cacheInboundPolicy = ''
-      let cacheOutboundPolicy = ''
+      let cacheSetVariablePolicy = ''
+      let cacheInvalidateInboundPolicy = ''
+      let cacheSetInboundPolicy = ''
+      let cacheSetOutboundPolicy = ''
 
-      if (props.caching?.enabled === true) {
-        if (operation.method === 'get') {
-          cacheInboundPolicy = `<!-- Generate a comprehensive custom cache key (without query params or Accept header) -->
+      if (operation.caching) {
+        cacheSetVariablePolicy = `<!-- Generate a comprehensive custom cache key (without query params or Accept header) -->
               <set-variable name="customCacheKey" value="@{
                   // Instance identification
                   
@@ -316,13 +239,16 @@ export class AzureApiManagementManager {
                   
                   // Full path construction (without query parameters)
                   string fullPath = context.Request.Url.Path.ToLower();
-                                    
-                  // Construct final cache key (no Accept header needed for JSON-only APIs)
-                  return $"{apiName}:{apiVersion}:{fullPath}";
-              }" />
-              <set-variable name="bypassCache" value="@(context.Request.Headers.GetValueOrDefault("X-Bypass-Cache", "false").ToLower())" />
 
-              <choose>
+                  // Query parameters
+                  string query = context.Request.Url.Query.ToLower();
+
+                  // Construct final cache key (no Accept header needed for JSON-only APIs)
+                  return $"{apiName}:{apiVersion}:{fullPath}:{query}";
+              }" />`
+
+        if (operation.caching.enableCacheSet) {
+          cacheSetInboundPolicy = `<choose>
                   <when condition="@((string)context.Variables["bypassCache"] != "true")">
                       <!-- Attempt to retrieve cached response -->
                       <cache-lookup-value key="@((string)context.Variables["customCacheKey"])" variable-name="cachedResponse" />
@@ -347,12 +273,12 @@ export class AzureApiManagementManager {
                       </choose>
                   </when>
               </choose>`
-          cacheOutboundPolicy = `<choose>
+          cacheSetOutboundPolicy = `<choose>
                   <when condition="@((string)context.Variables["bypassCache"] != "true")">
                       <!-- Store the response body in cache -->
                       <choose>
                           <when condition="@(context.Response.StatusCode == 200)">
-                              <cache-store-value key="@((string)context.Variables["customCacheKey"])" value="@(context.Response.Body.As<string>(preserveContent: true))" duration="${props.caching.ttlInSecs ?? 900}" />
+                              <cache-store-value key="@((string)context.Variables["customCacheKey"])" value="@(context.Response.Body.As<string>(preserveContent: true))" duration="${operation.caching.ttlInSecs ?? 900}" />
                               <!-- Add cache status header -->
                               <set-header name="X-Apim-Cache-Status" exists-action="override">
                                   <value>MISS</value>
@@ -370,26 +296,8 @@ export class AzureApiManagementManager {
               </choose>`
         }
 
-        if (operation.method === 'post') {
-          cacheInboundPolicy = `<!-- Generate a comprehensive custom cache key (without query params or Accept header) -->
-              <set-variable name="customCacheKey" value="@{
-                  // Instance identification
-                  
-                  // API identification
-                  string apiName = context.Api.Name.Replace(" ", "").ToLower();
-                  string apiVersion = context.Api.Version ?? "v1";
-                  
-                  // Full path construction (without query parameters)
-                  string fullPath = context.Request.Url.Path.ToLower();
-
-                  // Query arameters
-                  string query = context.Request.Url.Query.ToLower();
-
-                  // Construct final cache key (no Accept header needed for JSON-only APIs)
-                  return $"{apiName}:{apiVersion}:{fullPath}:{query}";
-              }" />
-              <set-variable name="clearCache" value="@(context.Request.Headers.GetValueOrDefault("X-Apim-Clear-Cache", "false").ToLower())" />
-
+        if (operation.caching.enableCacheInvalidation) {
+          cacheInvalidateInboundPolicy = `<set-variable name="clearCache" value="@(context.Request.Headers.GetValueOrDefault("X-Apim-Clear-Cache", "false").ToLower())" />
               <!-- Allow admin to clear specific cache entries -->
               <choose>
                   <when condition="@((string)context.Variables["clearCache"] == "true")">
@@ -408,11 +316,14 @@ export class AzureApiManagementManager {
       if (props.rateLimit && scope.props.subscriptionId) {
         rateLimitPolicy = `<rate-limit-by-key calls="${props.rateLimit.calls}" renewal-period="${props.rateLimit.renewalPeriodInSecs}" counter-key="${scope.props.subscriptionId}-${apimOperation.operationId}"/>`
       }
+
       const policyXmlContent = `<policies>
         <inbound>
           <base />
           ${rateLimitPolicy}
-          ${cacheInboundPolicy}
+          ${cacheSetVariablePolicy}
+          ${cacheInvalidateInboundPolicy}
+          ${cacheSetInboundPolicy}
           ${props.commonInboundPolicyXml ?? ''}
         </inbound>
         <backend>
@@ -420,7 +331,7 @@ export class AzureApiManagementManager {
         </backend>
         <outbound>
           <base />
-          ${cacheOutboundPolicy ?? ''}
+          ${cacheSetOutboundPolicy}
           ${props.commonOutboundPolicyXml ?? ''}
         </outbound>
         <on-error>
