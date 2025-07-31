@@ -291,11 +291,12 @@ export class AzureApiManagementManager {
                   string fullPath = context.Request.Url.Path.ToLower();
 
                   // Query parameters
-                  string query = context.Request.Url.Query.ToLower();
+                  string query = context.Request.Url.QueryString.ToLower();
 
                   // Construct final cache key (no Accept header needed for JSON-only APIs)
                   return $"{apiName}:{apiVersion}:{fullPath}:{query}";
-              }" />`
+              }" />
+              &lt;set-variable name="bypassCache" value="@(context.Request.Headers.GetValueOrDefault("X-Bypass-Cache", "false").ToLower())" />`
 
         if (operation.caching.enableCacheSet) {
           cacheSetInboundPolicy = `&lt;choose>
