@@ -146,6 +146,7 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
   protected createWorkerDomain() {
     this.workerManager.createWorkerDomain(`${this.id}-worker-domain`, this, {
       ...this.props.siteWorkerDomain,
+      environment: this.props.siteWorkerDomain.environment ?? 'production',
       hostname: `${this.props.siteSubDomain}.${this.props.domainName}`,
       service: this.siteWorkerScript.scriptName,
     })
@@ -157,15 +158,21 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
    * @param secretKey the secret key
    * @returns the secret value
    */
-  protected resolveSecretFromAWS(secretName: string, secretKey: string) {
+  protected resolveSecretFromAWS(secretName: string, secretKey: string, id?: string) {
     if (!this.awsProvider) {
       throw new Error(`Unable to resolve secret:${secretKey}. AWS provider not found`)
     }
-    const secret = new DataAwsSecretsmanagerSecret(this, `${this.id}-${secretName}-${secretKey}`, { name: secretName })
-    const secretVersion = new DataAwsSecretsmanagerSecretVersion(this, `${this.id}-${secretName}-${secretKey}-ver`, {
-      provider: this.awsProvider,
-      secretId: secret.id,
+    const secret = new DataAwsSecretsmanagerSecret(this, id ?? `${this.id}-${secretName}-${secretKey}`, {
+      name: secretName,
     })
+    const secretVersion = new DataAwsSecretsmanagerSecretVersion(
+      this,
+      id ? `${id}-ver` : `${this.id}-${secretName}-${secretKey}-ver`,
+      {
+        provider: this.awsProvider,
+        secretId: secret.id,
+      }
+    )
     if (!secretVersion) throw new Error(`Unable to resolve secret:${secretName}`)
     return Fn.lookup(Fn.jsondecode(secretVersion.secretString), secretKey)
   }
@@ -178,13 +185,13 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
    * @param secretKey the secret key
    * @returns the secret value
    */
-  protected resolveSecretFromAzure(resourceGroupName: string, keyVaultName: string, secretKey: string) {
+  protected resolveSecretFromAzure(resourceGroupName: string, keyVaultName: string, secretKey: string, id?: string) {
     if (!this.azurermProvider) {
       throw new Error(`Unable to resolve secret:${secretKey}. Azurerm provider not found`)
     }
     const keyVaultData = new DataAzurermKeyVault(
       this,
-      `${this.id}-${resourceGroupName}-${keyVaultName}-${secretKey}-vault`,
+      id ? `${id}-vault` : `${this.id}-${resourceGroupName}-${keyVaultName}-${secretKey}-vault`,
       {
         resourceGroupName: resourceGroupName,
         name: keyVaultName,
@@ -193,7 +200,7 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
     )
     const secretValueData = new DataAzurermKeyVaultSecret(
       this,
-      `${this.id}-${resourceGroupName}-${keyVaultName}-${secretKey}-secret`,
+      id ? `${id}-secret` : `${this.id}-${resourceGroupName}-${keyVaultName}-${secretKey}-secret`,
       {
         name: secretKey,
         keyVaultId: keyVaultData.id,
