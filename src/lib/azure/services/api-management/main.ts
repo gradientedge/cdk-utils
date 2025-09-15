@@ -246,7 +246,7 @@ export class AzureApiManagementManager {
                   // Construct final cache key (no Accept header needed for JSON-only APIs)
                   return $"{apiName}:{apiVersion}:{fullPath}:{query}";
               }" />
-              <set-variable name="bypassCache" value="@(context.Request.Headers.GetValueOrDefault("X-Bypass-Cache", "false").ToLower())" />`
+              <set-variable name="bypassCache" value="@(context.Request.Headers.GetValueOrDefault("X-Cache-Bypass", "false").ToLower())" />`
 
         if (operation.caching.enableCacheSet) {
           cacheSetInboundPolicy = `<choose>
