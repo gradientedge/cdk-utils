@@ -4,5 +4,12 @@
   },
   "testEventgridEventSubscription": {
     "name": "test-eventgrid-subscription"
+  },
+  "testEventgridSystemTopic": {
+    "name": "test-eventgrid-system-topic",
+    "topicType": "Microsoft.Storage.StorageAccounts"
+  },
+  "testEventgridSystemEventSubscription": {
+    "name": "test-eventgrid-system-subscription"
   }
 }
