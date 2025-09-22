@@ -55,9 +55,16 @@ import {
 } from '@cdktf/provider-azurerm/lib/data-azurerm-eventgrid-topic'
 import { EventgridTopic } from '@cdktf/provider-azurerm/lib/eventgrid-topic'
 import { EventgridEventSubscription } from '@cdktf/provider-azurerm/lib/eventgrid-event-subscription'
+import { EventgridSystemTopic } from '@cdktf/provider-azurerm/lib/eventgrid-system-topic'
+import { EventgridSystemTopicEventSubscription } from '@cdktf/provider-azurerm/lib/eventgrid-system-topic-event-subscription/index.js'
 import { CommonAzureConstruct } from '../../common'
 import { createAzureTfOutput } from '../../utils'
-import { EventgridTopicProps, EventgridEventSubscriptionProps } from './types'
+import {
+  EventgridTopicProps,
+  EventgridEventSubscriptionProps,
+  EventgridSystemTopicProps,
+  EventgridSystemTopicEventSubscriptionProps,
+} from './types'
 
 /**
  * @classdesc Provides operations on Azure Event Grid
@@ -171,6 +178,85 @@ export class AzureEventgridManager {
     createAzureTfOutput(`${id}-eventgridSubscriptionId`, scope, eventgridSubscription.id)
 
     return eventgridSubscription
+  }
+
+  /**
+   * @summary Method to create a new eventgrid system topic
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props eventgrid system topic properties
+   * @see [CDKTF Eventgrid System Topic Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/eventgridSystemTopic.typescript.md}
+   */
+  public createEventgridSystemTopic(id: string, scope: CommonAzureConstruct, props: EventgridSystemTopicProps) {
+    if (!props) throw `Props undefined for ${id}`
+
+    const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-est-rg`, {
+      name: scope.props.resourceGroupName
+        ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
+        : `${props.resourceGroupName}`,
+    })
+
+    if (!resourceGroup) throw `Resource group undefined for ${id}`
+
+    const eventgridSystemTopic = new EventgridSystemTopic(scope, `${id}-est`, {
+      ...props,
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.eventGridSystemTopic),
+      location: resourceGroup.location,
+      resourceGroupName: resourceGroup.name,
+      tags: props.tags ?? {
+        environment: scope.props.stage,
+      },
+    })
+
+    createAzureTfOutput(`${id}-eventgridSystemTopicName`, scope, eventgridSystemTopic.name)
+    createAzureTfOutput(`${id}-eventgridSystemTopicFriendlyUniqueId`, scope, eventgridSystemTopic.friendlyUniqueId)
+    createAzureTfOutput(`${id}-eventgridSystemTopicId`, scope, eventgridSystemTopic.id)
+
+    return eventgridSystemTopic
+  }
+
+  /**
+   * @summary Method to create a new eventgrid system topic subscription
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props eventgrid system topic subscription properties
+   * @see [CDKTF Eventgrid System Topic Subscription Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/eventgridSystemTopicEventSubscription.typescript.md}
+   */
+  public createEventgridSystemTopicEventSubscription(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: EventgridSystemTopicEventSubscriptionProps,
+    systemTopic: EventgridSystemTopic
+  ) {
+    if (!props) throw `Props undefined for ${id}`
+
+    const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-ests-rg`, {
+      name: scope.props.resourceGroupName
+        ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
+        : `${props.resourceGroupName}`,
+    })
+
+    if (!resourceGroup) throw `Resource group undefined for ${id}`
+
+    const eventgridSystemTopicSubscription = new EventgridSystemTopicEventSubscription(scope, `${id}-ests`, {
+      ...props,
+      name: scope.resourceNameFormatter.format(
+        props.name,
+        scope.props.resourceNameOptions?.eventGridSystemTopicEventSubscription
+      ),
+      systemTopic: systemTopic.name,
+      resourceGroupName: resourceGroup.name,
+    })
+
+    createAzureTfOutput(`${id}-eventgridSystemTopicEventSubscriptionName`, scope, eventgridSystemTopicSubscription.name)
+    createAzureTfOutput(
+      `${id}-eventgridSystemTopicEventSubscriptionFriendlyUniqueId`,
+      scope,
+      eventgridSystemTopicSubscription.friendlyUniqueId
+    )
+    createAzureTfOutput(`${id}-eventgridSystemTopicEventSubscriptionId`, scope, eventgridSystemTopicSubscription.id)
+
+    return eventgridSystemTopicSubscription
   }
 }
 </code></pre>
