@@ -1,5 +1,7 @@
 import { EventgridTopic } from '@cdktf/provider-azurerm/lib/eventgrid-topic'
 import { EventgridEventSubscription } from '@cdktf/provider-azurerm/lib/eventgrid-event-subscription'
+import { EventgridSystemTopic } from '@cdktf/provider-azurerm/lib/eventgrid-system-topic'
+import { EventgridSystemTopicEventSubscription } from '@cdktf/provider-azurerm/lib/eventgrid-system-topic-event-subscription/index.js'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
 import { Construct } from 'constructs'
@@ -9,11 +11,15 @@ import {
   CommonAzureStackProps,
   EventgridTopicProps,
   EventgridEventSubscriptionProps,
+  EventgridSystemTopicProps,
+  EventgridSystemTopicEventSubscriptionProps,
 } from '../../../lib'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
   testEventgridTopic: EventgridTopicProps
   testEventgridEventSubscription: EventgridEventSubscriptionProps
+  testEventgridSystemTopic: EventgridSystemTopicProps
+  testEventgridSystemEventSubscription: EventgridSystemTopicEventSubscriptionProps
   testAttribute?: string
 }
 
@@ -42,6 +48,8 @@ class TestCommonStack extends CommonAzureStack {
       testAttribute: this.node.tryGetContext('testAttribute'),
       testEventgridTopic: this.node.tryGetContext('testEventgridTopic'),
       testEventgridEventSubscription: this.node.tryGetContext('testEventgridEventSubscription'),
+      testEventgridSystemTopic: this.node.tryGetContext('testEventgridSystemTopic'),
+      testEventgridSystemEventSubscription: this.node.tryGetContext('testEventgridSystemEventSubscription'),
     }
   }
 }
@@ -71,6 +79,19 @@ class TestCommonConstruct extends CommonAzureConstruct {
       `test-eventgrid-subscription-${this.props.stage}`,
       this,
       this.props.testEventgridEventSubscription
+    )
+
+    const eventgridSystemTopic = this.eventgridManager.createEventgridSystemTopic(
+      `test-eventgrid-system-topic-${this.props.stage}`,
+      this,
+      this.props.testEventgridSystemTopic
+    )
+
+    this.eventgridManager.createEventgridSystemTopicEventSubscription(
+      `test-eventgrid-subscription-${this.props.stage}`,
+      this,
+      this.props.testEventgridSystemEventSubscription,
+      eventgridSystemTopic
     )
   }
 }
@@ -149,6 +170,27 @@ describe('TestAzureEventgridConstruct', () => {
   test('provisions eventgrid subscription as expected', () => {
     expect(construct).toHaveResourceWithProperties(EventgridEventSubscription, {
       name: 'test-eventgrid-subscription-dev',
+    })
+  })
+})
+
+describe('TestAzureEventgridConstruct', () => {
+  test('provisions eventgrid topic as expected', () => {
+    expect(construct).toHaveResourceWithProperties(EventgridSystemTopic, {
+      location: '${data.azurerm_resource_group.test-eventgrid-system-topic-dev-est-rg.location}',
+      name: 'test-eventgrid-system-topic-dev',
+      resource_group_name: '${data.azurerm_resource_group.test-eventgrid-system-topic-dev-est-rg.name}',
+      tags: {
+        environment: 'dev',
+      },
+    })
+  })
+})
+
+describe('TestAzureEventgridConstruct', () => {
+  test('provisions eventgrid subscription as expected', () => {
+    expect(construct).toHaveResourceWithProperties(EventgridSystemTopicEventSubscription, {
+      name: 'test-eventgrid-system-subscription-dev',
     })
   })
 })
