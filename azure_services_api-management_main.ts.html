@@ -323,28 +323,27 @@ export class AzureApiManagementManager {
                           &lt;/when>
                       &lt;/choose>
                   &lt;/when>
-              &lt;/choose>`
-          cacheSetOutboundPolicy = `&lt;choose>
-                  &lt;when condition="@((string)context.Variables["bypassCache"] != "true")">
-                      &lt;!-- Store the response body in cache -->
-                      &lt;choose>
-                          &lt;when condition="@(context.Response.StatusCode == 200)">
-                              &lt;cache-store-value key="@((string)context.Variables["customCacheKey"])" value="@(context.Response.Body.As&lt;string>(preserveContent: true))" duration="${operation.caching.ttlInSecs ?? 900}" />
-                              &lt;!-- Add cache status header -->
-                              &lt;set-header name="X-Apim-Cache-Status" exists-action="override">
-                                  &lt;value>MISS&lt;/value>
-                              &lt;/set-header>
-                          &lt;/when>
-                      &lt;/choose>
-                      &lt;!-- Add debug headers -->
-                      &lt;set-header name="X-Apim-Cache-Key" exists-action="override">
-                          &lt;value>@((string)context.Variables["customCacheKey"])&lt;/value>
-                      &lt;/set-header>
-                      &lt;set-header name="X-Apim-API-Name" exists-action="override">
-                          &lt;value>@(context.Api.Name)&lt;/value>
-                      &lt;/set-header>
+                  &lt;when condition="@((string)context.Variables["bypassCache"] == "true")">
+                      &lt;cache-remove-value key="@((string)context.Variables["customCacheKey"])" />
                   &lt;/when>
               &lt;/choose>`
+          cacheSetOutboundPolicy = `&lt;!-- Store the response body in cache -->
+              &lt;choose>
+                  &lt;when condition="@(context.Response.StatusCode == 200)">
+                      &lt;cache-store-value key="@((string)context.Variables["customCacheKey"])" value="@(context.Response.Body.As&lt;string>(preserveContent: true))" duration="${operation.caching.ttlInSecs ?? 900}" />
+                      &lt;!-- Add cache status header -->
+                      &lt;set-header name="X-Apim-Cache-Status" exists-action="override">
+                          &lt;value>MISS&lt;/value>
+                      &lt;/set-header>
+                  &lt;/when>
+              &lt;/choose>
+              &lt;!-- Add debug headers -->
+              &lt;set-header name="X-Apim-Cache-Key" exists-action="override">
+                  &lt;value>@((string)context.Variables["customCacheKey"])&lt;/value>
+              &lt;/set-header>
+              &lt;set-header name="X-Apim-API-Name" exists-action="override">
+                  &lt;value>@(context.Api.Name)&lt;/value>
+              &lt;/set-header>`
         }
 
         if (operation.caching.enableCacheInvalidation) {
