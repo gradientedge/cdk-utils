@@ -148,6 +148,7 @@ export class AzureAppServiceManager {
     createAzureTfOutput(`${id}-linuxWebAppName`, scope, linuxWebApp.name)
     createAzureTfOutput(`${id}-linuxWebAppFriendlyUniqueId`, scope, linuxWebApp.friendlyUniqueId)
     createAzureTfOutput(`${id}-linuxWebAppId`, scope, linuxWebApp.id)
+    createAzureTfOutput(`${id}-linuxWebAppDefaultHostname`, scope, linuxWebApp.defaultHostname)
 
     return linuxWebApp
   }
