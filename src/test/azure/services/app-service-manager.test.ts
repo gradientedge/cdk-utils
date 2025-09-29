@@ -127,6 +127,9 @@ describe('TestAzureAppServicePlanConstruct', () => {
       testLinuxWebAppDevLinuxWebAppName: {
         value: '${azurerm_linux_web_app.test-linux-web-app-dev-lwa.name}',
       },
+      testLinuxWebAppDevLinuxWebAppDefaultHostname: {
+        value: '${azurerm_linux_web_app.test-linux-web-app-dev-lwa.default_hostname}',
+      },
     })
   })
 })
