@@ -176,7 +176,7 @@ export class AzureEventgridManager {
     id: string,
     scope: CommonAzureConstruct,
     props: EventgridSystemTopicEventSubscriptionProps,
-    systemTopic: EventgridSystemTopic
+    systemTopic: EventgridSystemTopic | DataAzurermEventgridTopic
   ) {
     if (!props) throw `Props undefined for ${id}`
 
