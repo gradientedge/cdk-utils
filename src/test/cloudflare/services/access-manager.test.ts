@@ -313,7 +313,7 @@ describe('TestCloudflareAccessManager', () => {
           },
         },
       ],
-      name: 'test-group-dev',
+      name: 'test-group - DEV',
       zone_id: '${data.cloudflare_zone.test-access-grp-dev-data-zone-data-zone.zone_id}',
     })
   })

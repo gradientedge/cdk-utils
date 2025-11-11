@@ -3,6 +3,7 @@ import { ServicebusNamespace } from '@cdktf/provider-azurerm/lib/servicebus-name
 import { ServicebusTopic } from '@cdktf/provider-azurerm/lib/servicebus-topic'
 import { ServicebusSubscription } from '@cdktf/provider-azurerm/lib/servicebus-subscription'
 import { ServicebusQueue } from '@cdktf/provider-azurerm/lib/servicebus-queue'
+import { DataAzurermServicebusQueue } from '@cdktf/provider-azurerm/lib/data-azurerm-servicebus-queue'
 import { CommonAzureConstruct } from '../../common'
 import { createAzureTfOutput } from '../../utils'
 import {
@@ -10,6 +11,7 @@ import {
   ServicebusSubscriptionProps,
   ServicebusNamespaceProps,
   ServicebusQueueProps,
+  DataAzurermServicebusQueueProps,
 } from './types'
 
 /**
@@ -140,5 +142,28 @@ export class AzureServicebusManager {
     createAzureTfOutput(`${id}-servicebusSubscriptionId`, scope, servicebusSubscription.id)
 
     return servicebusSubscription
+  }
+
+  /**
+   * @summary Method to resolve a new servicebus queue
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props servicebus queue properties
+   * @see [CDKTF Servicebus Queue Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/servicebusQueue.typescript.md}
+   */
+  public resolveServicebusQueue(id: string, scope: CommonAzureConstruct, props: DataAzurermServicebusQueueProps) {
+    if (!props) throw `Props undefined for ${id}`
+
+    const servicebusQueue = new DataAzurermServicebusQueue(scope, `${id}-sq`, {
+      ...props,
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.serviceBusQueue),
+      namespaceId: props.namespaceId,
+    })
+
+    createAzureTfOutput(`${id}-servicebusQueueName`, scope, servicebusQueue.name)
+    createAzureTfOutput(`${id}-servicebusQueueFriendlyUniqueId`, scope, servicebusQueue.friendlyUniqueId)
+    createAzureTfOutput(`${id}-servicebusQueueId`, scope, servicebusQueue.id)
+
+    return servicebusQueue
   }
 }

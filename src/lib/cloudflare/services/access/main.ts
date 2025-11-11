@@ -141,7 +141,7 @@ export class CloudflareAccessManager {
 
     const accessGroup = new ZeroTrustAccessGroup(scope, `${id}`, {
       ...props,
-      name: `${props.name}-${scope.props.stage}`,
+      name: `${props.name} - ${scope.props.stage.toUpperCase()}`,
       zoneId,
     })
 

@@ -80,7 +80,7 @@ class TestCommonConstruct extends CommonAzureConstruct {
       namespaceId: namespace.id,
     })
 
-    this.servicebusManager.createServicebusQueue(`test-servicebus-topic-${this.props.stage}`, this, {
+    const serviceBus = this.servicebusManager.createServicebusQueue(`test-servicebus-queue-${this.props.stage}`, this, {
       ...this.props.testServicebusQueue,
       namespaceId: namespace.id,
     })
@@ -88,6 +88,11 @@ class TestCommonConstruct extends CommonAzureConstruct {
     this.servicebusManager.createServicebusSubscription(`test-servicebus-subscription-${this.props.stage}`, this, {
       ...this.props.testServicebusSubscription,
       topicId: topic.id,
+    })
+
+    this.servicebusManager.resolveServicebusQueue(`test-resolve-servicebus-queue-${this.props.stage}`, this, {
+      name: serviceBus.name,
+      namespaceId: serviceBus.namespaceId,
     })
   }
 }
