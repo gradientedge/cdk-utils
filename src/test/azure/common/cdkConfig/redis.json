@@ -1,0 +1,10 @@
+{
+  "testRedisCache": {
+    "name": "test-redis-cache",
+    "capacity": 2,
+    "family": "C",
+    "skuName": "Basic",
+    "nonSslPortEnabled": false,
+    "minimumTlsVersion": "1.2"
+  }
+}

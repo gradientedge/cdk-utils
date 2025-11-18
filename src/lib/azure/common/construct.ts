@@ -20,6 +20,7 @@ import {
   AzureDnsManager,
   AzureLogAnalyticsWorkspaceManager,
   AzureMonitorManager,
+  AzureRedisManager,
 } from '../services'
 import { CommonAzureStackProps } from './types'
 import { AzureRemoteBackend } from './constants'
@@ -40,6 +41,7 @@ export class CommonAzureConstruct extends TerraformStack {
   keyVaultManager: AzureKeyVaultManager
   logAnalyticsWorkspaceManager: AzureLogAnalyticsWorkspaceManager
   monitorManager: AzureMonitorManager
+  redisManager: AzureRedisManager
   resourceGroupManager: AzureResourceGroupManager
   resourceNameFormatter: AzureResourceNameFormatter
   servicebusManager: AzureServicebusManager
@@ -62,6 +64,7 @@ export class CommonAzureConstruct extends TerraformStack {
     this.keyVaultManager = new AzureKeyVaultManager()
     this.logAnalyticsWorkspaceManager = new AzureLogAnalyticsWorkspaceManager()
     this.monitorManager = new AzureMonitorManager()
+    this.redisManager = new AzureRedisManager()
     this.resourceGroupManager = new AzureResourceGroupManager()
     this.resourceNameFormatter = new AzureResourceNameFormatter(this, `${id}-rnf`, props)
     this.servicebusManager = new AzureServicebusManager()
