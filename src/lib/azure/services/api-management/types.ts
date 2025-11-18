@@ -3,6 +3,7 @@ import { ApiManagementBackendConfig } from '@cdktf/provider-azurerm/lib/api-mana
 import { ApiManagementCustomDomainConfig } from '@cdktf/provider-azurerm/lib/api-management-custom-domain'
 import { ApiManagementApiConfig } from '@cdktf/provider-azurerm/lib/api-management-api'
 import { ApiManagementApiOperationConfig } from '@cdktf/provider-azurerm/lib/api-management-api-operation'
+import { ApiManagementRedisCacheConfig } from '@cdktf/provider-azurerm/lib/api-management-redis-cache'
 
 export interface ApiManagementProps extends ApiManagementConfig {}
 
@@ -35,3 +36,5 @@ export interface ApiManagementApiRateLimit {
   calls: number
   renewalPeriodInSecs: number
 }
+
+export interface ApiManagementRedisCacheProps extends ApiManagementRedisCacheConfig {}
