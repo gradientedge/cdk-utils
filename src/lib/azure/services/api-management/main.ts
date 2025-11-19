@@ -266,7 +266,7 @@ export class AzureApiManagementManager {
           cacheSetInboundPolicy = `<choose>
                   <when condition="@((string)context.Variables["bypassCache"] != "true")">
                       <!-- Attempt to retrieve cached response -->
-                      <cache-lookup-value key="@((string)context.Variables["customCacheKey"])" variable-name="cachedResponse" caching-type="${operation.caching.cachingType || 'prefer-external'}"/>
+                      <cache-lookup-value key="@((string)context.Variables["customCacheKey"])" variable-name="cachedResponse" caching-type="${operation.caching.cachingType || 'prefer-external'}" />
 
                       <!-- If cache hit, return cached response -->
                       <choose>
@@ -315,7 +315,7 @@ export class AzureApiManagementManager {
               <!-- Allow admin to clear specific cache entries -->
               <choose>
                   <when condition="@((string)context.Variables["clearCache"] == "true")">
-                      <cache-remove-value key="@((string)context.Variables["customCacheKey"])" caching-type="${operation.caching.cachingType || 'prefer-external'}"/>
+                      <cache-remove-value key="@((string)context.Variables["customCacheKey"])" caching-type="${operation.caching.cachingType || 'prefer-external'}" />
                       <return-response>
                           <set-status code="200" reason="OK" />
                           <set-body>Cache entry removed successfully</set-body>
