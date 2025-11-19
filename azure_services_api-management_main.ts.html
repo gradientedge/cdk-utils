@@ -316,7 +316,7 @@ export class AzureApiManagementManager {
           cacheSetInboundPolicy = `&lt;choose>
                   &lt;when condition="@((string)context.Variables["bypassCache"] != "true")">
                       &lt;!-- Attempt to retrieve cached response -->
-                      &lt;cache-lookup-value key="@((string)context.Variables["customCacheKey"])" variable-name="cachedResponse" />
+                      &lt;cache-lookup-value key="@((string)context.Variables["customCacheKey"])" variable-name="cachedResponse" caching-type="${operation.caching.cachingType || 'prefer-external'}" />
 
                       &lt;!-- If cache hit, return cached response -->
                       &lt;choose>
@@ -338,13 +338,13 @@ export class AzureApiManagementManager {
                       &lt;/choose>
                   &lt;/when>
                   &lt;when condition="@((string)context.Variables["bypassCache"] == "true")">
-                      &lt;cache-remove-value key="@((string)context.Variables["customCacheKey"])" />
+                      &lt;cache-remove-value key="@((string)context.Variables["customCacheKey"])" caching-type="${operation.caching.cachingType || 'prefer-external'}" />
                   &lt;/when>
               &lt;/choose>`
           cacheSetOutboundPolicy = `&lt;!-- Store the response body in cache -->
               &lt;choose>
                   &lt;when condition="@(context.Response.StatusCode == 200)">
-                      &lt;cache-store-value key="@((string)context.Variables["customCacheKey"])" value="@(context.Response.Body.As&lt;string>(preserveContent: true))" duration="${operation.caching.ttlInSecs ?? 900}" />
+                      &lt;cache-store-value key="@((string)context.Variables["customCacheKey"])" value="@(context.Response.Body.As&lt;string>(preserveContent: true))" duration="${operation.caching.ttlInSecs ?? 900}" caching-type="${operation.caching.cachingType || 'prefer-external'}" />
                       &lt;!-- Add cache status header -->
                       &lt;set-header name="X-Apim-Cache-Status" exists-action="override">
                           &lt;value>MISS&lt;/value>
@@ -365,7 +365,7 @@ export class AzureApiManagementManager {
               &lt;!-- Allow admin to clear specific cache entries -->
               &lt;choose>
                   &lt;when condition="@((string)context.Variables["clearCache"] == "true")">
-                      &lt;cache-remove-value key="@((string)context.Variables["customCacheKey"])" />
+                      &lt;cache-remove-value key="@((string)context.Variables["customCacheKey"])" caching-type="${operation.caching.cachingType || 'prefer-external'}" />
                       &lt;return-response>
                           &lt;set-status code="200" reason="OK" />
                           &lt;set-body>Cache entry removed successfully&lt;/set-body>
