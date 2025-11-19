@@ -30,6 +30,7 @@ export interface ApiManagementApiCaching {
   enableCacheSet?: boolean
   enableCacheInvalidation?: boolean
   ttlInSecs?: number
+  cachingType?: string
 }
 
 export interface ApiManagementApiRateLimit {
