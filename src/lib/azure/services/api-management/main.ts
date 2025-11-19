@@ -288,7 +288,7 @@ export class AzureApiManagementManager {
                       </choose>
                   </when>
                   <when condition="@((string)context.Variables["bypassCache"] == "true")">
-                      <cache-remove-value key="@((string)context.Variables["customCacheKey"]) caching-type="${operation.caching.cachingType || 'prefer-external'}" />
+                      <cache-remove-value key="@((string)context.Variables["customCacheKey"])" caching-type="${operation.caching.cachingType || 'prefer-external'}" />
                   </when>
               </choose>`
           cacheSetOutboundPolicy = `<!-- Store the response body in cache -->
