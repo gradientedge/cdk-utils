@@ -62,9 +62,9 @@ import {
   ApiManagementLogger,
   ApiManagementLoggerApplicationInsights,
 } from '@cdktf/provider-azurerm/lib/api-management-logger'
+import { ApiManagementBackend } from '@cdktf/provider-azurerm/lib/api-management-backend'
 import { ApiManagementRedisCache } from '@cdktf/provider-azurerm/lib/api-management-redis-cache'
 import { RedisCache } from '@cdktf/provider-azurerm/lib/redis-cache'
-import { Resource } from '../../.gen/providers/azapi/resource'
 import { CommonAzureConstruct } from '../../common'
 import { createAzureTfOutput } from '../../utils'
 import {
@@ -72,7 +72,6 @@ import {
   ApiManagementBackendProps,
   ApiManagementApiProps,
   ApiManagementCustomDomainProps,
-  ApiManagementRedisCacheProps,
 } from './types'
 import _ from 'lodash'
 
@@ -194,39 +193,11 @@ export class AzureApiManagementManager {
   public createApiManagementBackend(id: string, scope: CommonAzureConstruct, props: ApiManagementBackendProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    //    Commenting as circuit breaker config is currently not supported
-    /*
     const apiManagementBackend = new ApiManagementBackend(scope, `${id}-am-be`, {
-          ...props,
-          name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.apiManagementBackend),
-          description: props.description ?? `Backend for ${props.name}-${scope.props.stage}`,
-          protocol: props.protocol ?? 'http',
-        })
-*/
-
-    const apiManagementBackend = new Resource(scope, `${id}-am-be`, {
-      type: 'Microsoft.ApiManagement/service/backends@2024-06-01-preview',
+      ...props,
       name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.apiManagementBackend),
-      parentId: props.apiManagementId,
-
-      body: {
-        properties: {
-          circuitBreaker: props.circuitBreaker,
-          credentials: props.credentials,
-          description: props.description ?? `Backend for ${props.name}-${scope.props.stage}`,
-          url: props.url,
-          resourceId: props.resourceId,
-          protocol: props.protocol ?? 'http',
-        },
-      },
-
-      responseExportValues: ['*'],
-
-      ignoreMissingProperty: true,
-      ignoreCasing: true,
-      schemaValidationEnabled: false,
-
-      lifecycle: props.lifecycle,
+      description: props.description ?? `Backend for ${props.name}-${scope.props.stage}`,
+      protocol: props.protocol ?? 'http',
     })
 
     createAzureTfOutput(`${id}-apiManagementBackendName`, scope, apiManagementBackend.name)
