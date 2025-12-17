@@ -1,8 +1,11 @@
-import { WorkersCustomDomain } from '@cdktf/provider-cloudflare/lib/workers-custom-domain'
-import { WorkersRoute } from '@cdktf/provider-cloudflare/lib/workers-route'
-import { WorkersScript } from '@cdktf/provider-cloudflare/lib/workers-script'
-import { CommonCloudflareConstruct } from '../../common'
-import { createCloudflareTfOutput } from '../../utils'
+import { WorkersCronTrigger } from '@cdktf/provider-cloudflare/lib/workers-cron-trigger/index.js'
+import { WorkersCustomDomain } from '@cdktf/provider-cloudflare/lib/workers-custom-domain/index.js'
+import { WorkersKvNamespace } from '@cdktf/provider-cloudflare/lib/workers-kv-namespace/index.js'
+import { WorkersKv } from '@cdktf/provider-cloudflare/lib/workers-kv/index.js'
+import { WorkersRoute } from '@cdktf/provider-cloudflare/lib/workers-route/index.js'
+import { WorkersScript } from '@cdktf/provider-cloudflare/lib/workers-script/index.js'
+import { CommonCloudflareConstruct } from '../../common/index.js'
+import { createCloudflareTfOutput } from '../../utils/index.js'
 import {
   WorkerCronTriggerProps,
   WorkerDomainProps,
@@ -10,10 +13,7 @@ import {
   WorkerScriptProps,
   WorkersKvNamespaceProps,
   WorkersKvProps,
-} from './types'
-import { WorkersKvNamespace } from '@cdktf/provider-cloudflare/lib/workers-kv-namespace'
-import { WorkersKv } from '@cdktf/provider-cloudflare/lib/workers-kv'
-import { WorkersCronTrigger } from '@cdktf/provider-cloudflare/lib/workers-cron-trigger'
+} from './types.js'
 
 /**
  * @classdesc Provides operations on Cloudflare Worker

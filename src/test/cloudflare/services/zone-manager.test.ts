@@ -1,10 +1,3 @@
-import { Zone } from '@cdktf/provider-cloudflare/lib/zone'
-import { ZoneCacheReserve } from '@cdktf/provider-cloudflare/lib/zone-cache-reserve'
-import { ZoneCacheVariants } from '@cdktf/provider-cloudflare/lib/zone-cache-variants'
-import { ZoneDnssec } from '@cdktf/provider-cloudflare/lib/zone-dnssec'
-import { ZoneHold } from '@cdktf/provider-cloudflare/lib/zone-hold'
-import { ZoneLockdown } from '@cdktf/provider-cloudflare/lib/zone-lockdown'
-import { ZoneSetting } from '@cdktf/provider-cloudflare/lib/zone-setting'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
 import { Construct } from 'constructs'
@@ -16,7 +9,7 @@ import {
   ZoneLockdownProps,
   ZoneProps,
   ZoneSettingProps,
-} from '../../../lib'
+} from '../../../lib/cloudflare/index.js'
 
 interface TestCloudflareStackProps extends CommonCloudflareStackProps {
   testZone: ZoneProps
@@ -124,8 +117,7 @@ describe('TestCloudflareZoneManager', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
     expect(construct).toBeDefined()
-    expect(stack).toBeValidTerraform()
-    expect(stack).toPlanSuccessfully()
+    expect(Testing.toBeValidTerraform(stack)).toBeTruthy()
   })
 })
 
@@ -155,79 +147,93 @@ describe('TestCloudflareZoneManager', () => {
 
 describe('TestCloudflareZoneManager', () => {
   test('provisions zone as expected', () => {
-    expect(construct).toHaveResourceWithProperties(Zone, {
-      account: {
-        id: 'test-account',
-      },
-      name: 'gradientedge.io',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'Zone', {
+        account: {
+          id: 'test-account',
+        },
+        name: 'gradientedge.io',
+      })
+    )
   })
 })
 
 describe('TestCloudflareZoneManager', () => {
   test('provisions zone cache reserve as expected', () => {
-    expect(construct).toHaveResourceWithProperties(ZoneCacheReserve, {
-      zone_id: '${cloudflare_zone.test-zone-dev.id}',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'ZoneCacheReserve', {
+        zone_id: '${cloudflare_zone.test-zone-dev.id}',
+      })
+    )
   })
 })
 
 describe('TestCloudflareZoneManager', () => {
   test('provisions zone cache variants as expected', () => {
-    expect(construct).toHaveResourceWithProperties(ZoneCacheVariants, {
-      value: {
-        avif: ['image/avif', 'image/webp'],
-        bmp: ['image/bmp', 'image/webp'],
-        gif: ['image/gif', 'image/webp'],
-        jp2: ['image/jp2', 'image/webp'],
-        jpeg: ['image/jpeg', 'image/webp'],
-        jpg: ['image/jpg', 'image/webp'],
-        jpg2: ['image/jpg2', 'image/webp'],
-        png: ['image/png', 'image/webp'],
-        tif: ['image/tif', 'image/webp'],
-        tiff: ['image/tiff', 'image/webp'],
-        webp: ['image/jpeg', 'image/webp'],
-      },
-      zone_id: '${data.cloudflare_zone.test-zone-cache-variants-dev-data-zone-data-zone.id}',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'ZoneCacheVariants', {
+        value: {
+          avif: ['image/avif', 'image/webp'],
+          bmp: ['image/bmp', 'image/webp'],
+          gif: ['image/gif', 'image/webp'],
+          jp2: ['image/jp2', 'image/webp'],
+          jpeg: ['image/jpeg', 'image/webp'],
+          jpg: ['image/jpg', 'image/webp'],
+          jpg2: ['image/jpg2', 'image/webp'],
+          png: ['image/png', 'image/webp'],
+          tif: ['image/tif', 'image/webp'],
+          tiff: ['image/tiff', 'image/webp'],
+          webp: ['image/jpeg', 'image/webp'],
+        },
+        zone_id: '${data.cloudflare_zone.test-zone-cache-variants-dev-data-zone-data-zone.id}',
+      })
+    )
   })
 })
 
 describe('TestCloudflareZoneManager', () => {
   test('provisions zone dnssec as expected', () => {
-    expect(construct).toHaveResourceWithProperties(ZoneDnssec, {
-      zone_id: '${cloudflare_zone.test-zone-dev.id}',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'ZoneDnssec', {
+        zone_id: '${cloudflare_zone.test-zone-dev.id}',
+      })
+    )
   })
 })
 
 describe('TestCloudflareZoneManager', () => {
   test('provisions zone hold as expected', () => {
-    expect(construct).toHaveResourceWithProperties(ZoneHold, {
-      zone_id: '${cloudflare_zone.test-zone-dev.id}',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'ZoneHold', {
+        zone_id: '${cloudflare_zone.test-zone-dev.id}',
+      })
+    )
   })
 })
 
 describe('TestCloudflareZoneManager', () => {
   test('provisions zone lockdown as expected', () => {
-    expect(construct).toHaveResourceWithProperties(ZoneLockdown, {
-      configurations: {
-        target: 'ip_range',
-        value: '192.0.2.0/24',
-      },
-      urls: ['gradientedge.io/api/product*'],
-      zone_id: '${data.cloudflare_zone.test-zone-lockdown-dev-data-zone-data-zone.id}',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'ZoneLockdown', {
+        configurations: {
+          target: 'ip_range',
+          value: '192.0.2.0/24',
+        },
+        urls: ['gradientedge.io/api/product*'],
+        zone_id: '${data.cloudflare_zone.test-zone-lockdown-dev-data-zone-data-zone.id}',
+      })
+    )
   })
 })
 
 describe('TestCloudflareZoneManager', () => {
   test('provisions zone settings override as expected', () => {
-    expect(construct).toHaveResourceWithProperties(ZoneSetting, {
-      setting_id: 'always_online',
-      value: 'on',
-      zone_id: '${data.cloudflare_zone.test-zone-settings-dev-data-zone-data-zone.id}',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'ZoneSetting', {
+        setting_id: 'always_online',
+        value: 'on',
+        zone_id: '${data.cloudflare_zone.test-zone-settings-dev-data-zone-data-zone.id}',
+      })
+    )
   })
 })

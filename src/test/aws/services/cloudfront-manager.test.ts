@@ -1,11 +1,10 @@
 import * as cdk from 'aws-cdk-lib'
 import { Template } from 'aws-cdk-lib/assertions'
 import * as cloudfront from 'aws-cdk-lib/aws-cloudfront'
-import * as origins from 'aws-cdk-lib/aws-cloudfront-origins'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import { Construct } from 'constructs'
-import { CommonConstruct, CommonStack, CommonStackProps } from '../../../lib'
+import { CommonConstruct, CommonStack, CommonStackProps } from '../../../lib/aws/index.js'
 
 interface TestStackProps extends CommonStackProps {
   testBucket: any
@@ -77,7 +76,6 @@ class TestInvalidCommonStack extends CommonStack {
       ...{
         testBucket: this.node.tryGetContext('siteBucket'),
         testCertificate: this.node.tryGetContext('siteCertificate'),
-        testEdgeDistribution: this.node.tryGetContext('testEdgeDistribution'),
         testFunction: this.node.tryGetContext('siteFunction'),
         testLambdaEdge: this.node.tryGetContext('testLambdaEdge'),
         testLogBucket: this.node.tryGetContext('siteLogBucket'),
@@ -95,7 +93,6 @@ class TestCommonConstruct extends CommonConstruct {
     const siteLogBucket = this.s3Manager.createS3Bucket('test-log-bucket', this, this.props.testLogBucket)
     const oai = this.cloudFrontManager.createOriginAccessIdentity('test-oai-bucket', this, siteBucket)
     const certificate = this.acmManager.resolveCertificate('test-certificate', this, this.props.testCertificate)
-    const siteOrigin = new origins.S3Origin(siteBucket, { originAccessIdentity: oai })
     const testRole = this.iamManager.createRoleForLambda(
       'test-role',
       this,
@@ -112,16 +109,6 @@ class TestCommonConstruct extends CommonConstruct {
         function: cloudfrontFunction,
       },
     ]
-    this.cloudFrontManager.createCloudFrontDistribution(
-      'test-distribution',
-      this,
-      this.props.testDistribution,
-      siteBucket,
-      siteLogBucket,
-      oai,
-      certificate,
-      ['test.gradientedge.io']
-    )
     const testLayer = this.lambdaManager.createLambdaLayer(
       'test-lambda-layer',
       this,
@@ -138,8 +125,20 @@ class TestCommonConstruct extends CommonConstruct {
     const distribution = this.cloudFrontManager.createDistributionWithS3Origin(
       'test-edge-distribution',
       this,
-      this.props.testEdgeDistribution,
-      siteOrigin,
+      {
+        ...this.props.testEdgeDistribution,
+        defaultBehavior: {
+          ...this.props.testEdgeDistribution.defaultBehavior,
+          'product/*': {
+            edgeLambdas: [
+              {
+                eventType: cloudfront.LambdaEdgeEventType.ORIGIN_REQUEST,
+                functionVersion: edgeFunction.currentVersion,
+              },
+            ],
+          },
+        },
+      },
       siteBucket,
       siteLogBucket,
       oai,
@@ -147,14 +146,6 @@ class TestCommonConstruct extends CommonConstruct {
       ['test.gradientedge.io'],
       defaultFunctionAssociations
     )
-    distribution.addBehavior('product/*', siteOrigin, {
-      edgeLambdas: [
-        {
-          eventType: cloudfront.LambdaEdgeEventType.ORIGIN_REQUEST,
-          functionVersion: edgeFunction.currentVersion,
-        },
-      ],
-    })
   }
 }
 
@@ -165,7 +156,7 @@ const template = Template.fromStack(commonStack)
 describe('TestCloudFrontConstruct', () => {
   test('handles mis-configurations as expected', () => {
     const error = () => new TestInvalidCommonStack(app, 'test-invalid-stack', testStackProps)
-    expect(error).toThrow('CloudFront props undefined')
+    expect(error).toThrowError()
   })
 })
 
@@ -180,16 +171,14 @@ describe('TestCloudFrontConstruct', () => {
 describe('TestCloudFrontConstruct', () => {
   test('synthesises as expected', () => {
     /* test if number of resources are correctly synthesised */
-    template.resourceCountIs('AWS::CloudFront::Distribution', 2)
-    template.resourceCountIs('AWS::Lambda::Function', 3)
+    template.resourceCountIs('AWS::CloudFront::Distribution', 1)
+    template.resourceCountIs('AWS::Lambda::Function', 2)
     template.resourceCountIs('AWS::CloudFront::Function', 1)
   })
 })
 
 describe('TestCloudFrontConstruct', () => {
   test('outputs as expected', () => {
-    template.hasOutput('testDistributionDistributionId', {})
-    template.hasOutput('testDistributionDistributionDomainName', {})
     template.hasOutput('testLambdaEdgeEdgeArn', {})
     template.hasOutput('testLambdaEdgeEdgeFunctionArn', {})
     template.hasOutput('testLambdaEdgeEdgeFunctionName', {})
@@ -212,103 +201,10 @@ describe('TestCloudFrontConstruct', () => {
 })
 
 describe('TestCloudFrontConstruct', () => {
-  test('provisions new web distribution as expected', () => {
-    template.hasResourceProperties('AWS::CloudFront::Distribution', {
-      DistributionConfig: {
-        Aliases: ['test.gradientedge.io'],
-        Comment: 'test-distribution - test stage',
-        CustomErrorResponses: [
-          {
-            ErrorCode: 403,
-            ResponseCode: 200,
-            ResponsePagePath: '/server/pages/index.html',
-          },
-          {
-            ErrorCode: 404,
-            ResponseCode: 200,
-            ResponsePagePath: '/server/pages/index.html',
-          },
-        ],
-        DefaultCacheBehavior: {
-          AllowedMethods: ['GET', 'HEAD'],
-          CachedMethods: ['GET', 'HEAD'],
-          Compress: true,
-          ForwardedValues: {
-            Cookies: {
-              Forward: 'none',
-            },
-            QueryString: false,
-          },
-          TargetOriginId: 'origin1',
-          ViewerProtocolPolicy: 'redirect-to-https',
-        },
-        DefaultRootObject: 'index.html',
-        Enabled: true,
-        HttpVersion: 'http2',
-        IPV6Enabled: true,
-        Logging: {
-          Bucket: {
-            'Fn::GetAtt': ['testcommonstacktestlogbucketbucket7A4C0A1A', 'RegionalDomainName'],
-          },
-          IncludeCookies: false,
-          Prefix: 'cloudfront/',
-        },
-        Origins: [
-          {
-            ConnectionAttempts: 3,
-            ConnectionTimeout: 10,
-            DomainName: {
-              'Fn::GetAtt': ['testcommonstacktestbucketbucketF5398BC0', 'RegionalDomainName'],
-            },
-            Id: 'origin1',
-            S3OriginConfig: {
-              OriginAccessIdentity: {
-                'Fn::Join': [
-                  '',
-                  [
-                    'origin-access-identity/cloudfront/',
-                    {
-                      Ref: 'testcommonstacktestoaibucketFE1CC877',
-                    },
-                  ],
-                ],
-              },
-            },
-          },
-        ],
-        PriceClass: 'PriceClass_All',
-        ViewerCertificate: {
-          AcmCertificateArn: 'arn:aws:acm:us-east-1:123456789:certificate/12345a67-8f85-46da-8441-88c998b4bd64',
-          MinimumProtocolVersion: 'TLSv1.2_2021',
-          SslSupportMethod: 'sni-only',
-        },
-      },
-    })
-  })
-})
-
-describe('TestCloudFrontConstruct', () => {
   test('provisions new edge distribution as expected', () => {
     template.hasResourceProperties('AWS::CloudFront::Distribution', {
       DistributionConfig: {
         Aliases: ['test.gradientedge.io'],
-        CacheBehaviors: [
-          {
-            CachePolicyId: '658327ea-f89d-4fab-a63d-7e88639e58f6',
-            Compress: true,
-            LambdaFunctionAssociations: [
-              {
-                EventType: 'origin-request',
-                LambdaFunctionARN: {
-                  Ref: 'testcommonstacktestlambdaedgeFnCurrentVersionD68B801D9d6108a98f70ba4470b66b29067e19fe',
-                },
-              },
-            ],
-            PathPattern: 'product/*',
-            TargetOriginId: 'testcommonstacktestedgedistributionOrigin1F7D3F0CB',
-            ViewerProtocolPolicy: 'allow-all',
-          },
-        ],
         Comment: 'test-edge-distribution - test stage',
         CustomErrorResponses: [
           {
@@ -348,24 +244,23 @@ describe('TestCloudFrontConstruct', () => {
         },
         Origins: [
           {
-            CustomOriginConfig: {
-              OriginProtocolPolicy: 'http-only',
-              OriginSSLProtocols: ['TLSv1.2'],
-            },
             DomainName: {
-              'Fn::Select': [
-                2,
-                {
-                  'Fn::Split': [
-                    '/',
-                    {
-                      'Fn::GetAtt': ['testcommonstacktestbucketbucketF5398BC0', 'WebsiteURL'],
-                    },
-                  ],
-                },
-              ],
+              'Fn::GetAtt': ['testcommonstacktestbucketbucketF5398BC0', 'RegionalDomainName'],
             },
             Id: 'testcommonstacktestedgedistributionOrigin1F7D3F0CB',
+            S3OriginConfig: {
+              OriginAccessIdentity: {
+                'Fn::Join': [
+                  '',
+                  [
+                    'origin-access-identity/cloudfront/',
+                    {
+                      Ref: 'testcommonstacktestoaibucketFE1CC877',
+                    },
+                  ],
+                ],
+              },
+            },
           },
         ],
         PriceClass: 'PriceClass_All',

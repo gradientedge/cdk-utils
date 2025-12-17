@@ -1,5 +1,5 @@
 import { Construct } from 'constructs'
-import { BaseProps } from './types'
+import { BaseProps } from './types.js'
 
 export abstract class BaseStack extends Construct {
   props: BaseProps

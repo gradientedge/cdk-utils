@@ -1,5 +1,4 @@
 import { CfnTrailProps } from 'aws-cdk-lib/aws-cloudtrail'
-import { ResourceNameFormatterProps } from '../../common'
 
 /**
  */

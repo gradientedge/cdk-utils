@@ -1,7 +1,7 @@
 import * as cdk from 'aws-cdk-lib'
 import { Template } from 'aws-cdk-lib/assertions'
 import { Construct } from 'constructs'
-import { ApplicationConfiguration, ApplicationConfigurationProps, CommonStack } from '../../../lib'
+import { ApplicationConfiguration, ApplicationConfigurationProps, CommonStack } from '../../../lib/aws/index.js'
 
 interface TestRestApiLambdaProps extends ApplicationConfigurationProps {}
 

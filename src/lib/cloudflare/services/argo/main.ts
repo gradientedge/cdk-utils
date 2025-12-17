@@ -1,9 +1,8 @@
-import { ArgoSmartRouting } from '@cdktf/provider-cloudflare/lib/argo-smart-routing'
-import { ArgoTieredCaching } from '@cdktf/provider-cloudflare/lib/argo-tiered-caching'
-import { CommonCloudflareConstruct } from '../../common'
-import { createCloudflareTfOutput } from '../../utils'
-import { ArgoSmartRoutingProps, ArgoTieredCachingProps } from './types'
-import { argoTieredCaching } from '@cdktf/provider-cloudflare'
+import { ArgoSmartRouting } from '@cdktf/provider-cloudflare/lib/argo-smart-routing/index.js'
+import { ArgoTieredCaching } from '@cdktf/provider-cloudflare/lib/argo-tiered-caching/index.js'
+import { CommonCloudflareConstruct } from '../../common/index.js'
+import { createCloudflareTfOutput } from '../../utils/index.js'
+import { ArgoSmartRoutingProps, ArgoTieredCachingProps } from './types.js'
 
 /**
  * @classdesc Provides operations on Cloudflare Argo

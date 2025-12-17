@@ -1,6 +1,6 @@
 import { LambdaRestApiProps as LambdaRestApigProps, RestApiProps } from 'aws-cdk-lib/aws-apigateway'
-import { ResourceNameFormatterProps } from '../../common'
-import { TagProps } from '../../types'
+import { ResourceNameFormatterProps } from '../../common/index.js'
+import { TagProps } from '../../types/index.js'
 
 /**
  */

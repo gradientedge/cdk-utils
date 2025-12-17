@@ -1,4 +1,3 @@
-import { Zone } from '@cdktf/provider-cloudflare/lib/zone'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
 import { Construct } from 'constructs'
@@ -8,8 +7,7 @@ import {
   CommonCloudflareStack,
   CommonCloudflareStackProps,
   ZoneProps,
-} from '../../../lib'
-import { ArgoSmartRouting } from '@cdktf/provider-cloudflare/lib/argo-smart-routing'
+} from '../../../lib/cloudflare/index.js'
 
 interface TestCloudflareStackProps extends CommonCloudflareStackProps {
   testZone: ZoneProps
@@ -105,8 +103,7 @@ describe('TestCloudflareArgoManager', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
     expect(construct).toBeDefined()
-    expect(stack).toBeValidTerraform()
-    expect(stack).toPlanSuccessfully()
+    expect(Testing.toBeValidTerraform(stack)).toBeTruthy()
   })
 })
 
@@ -126,19 +123,23 @@ describe('TestCloudflareArgoManager', () => {
 
 describe('TestCloudflareArgoManager', () => {
   test('provisions zone as expected', () => {
-    expect(construct).toHaveResourceWithProperties(Zone, {
-      account: {
-        id: 'test-account',
-      },
-      name: 'gradientedge.io',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'Zone', {
+        account: {
+          id: 'test-account',
+        },
+        name: 'gradientedge.io',
+      })
+    )
   })
 })
 
 describe('TestCloudflareArgoManager', () => {
   test('provisions argo as expected', () => {
-    expect(construct).toHaveResourceWithProperties(ArgoSmartRouting, {
-      zone_id: '${data.cloudflare_zone.test-argo-dev-data-zone-data-zone.zone_id}',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'ArgoSmartRouting', {
+        zone_id: '${data.cloudflare_zone.test-argo-dev-data-zone-data-zone.zone_id}',
+      })
+    )
   })
 })

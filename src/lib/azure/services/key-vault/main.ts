@@ -1,8 +1,8 @@
-import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group'
-import { KeyVault } from '@cdktf/provider-azurerm/lib/key-vault'
-import { CommonAzureConstruct } from '../../common'
-import { createAzureTfOutput } from '../../utils'
-import { KeyVaultProps } from './types'
+import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group/index.js'
+import { KeyVault } from '@cdktf/provider-azurerm/lib/key-vault/index.js'
+import { CommonAzureConstruct } from '../../common/index.js'
+import { createAzureTfOutput } from '../../utils/index.js'
+import { KeyVaultProps } from './types.js'
 
 /**
  * @classdesc Provides operations on Azure Key Vault

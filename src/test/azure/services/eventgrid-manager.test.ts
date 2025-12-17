@@ -1,7 +1,3 @@
-import { EventgridTopic } from '@cdktf/provider-azurerm/lib/eventgrid-topic'
-import { EventgridEventSubscription } from '@cdktf/provider-azurerm/lib/eventgrid-event-subscription'
-import { EventgridSystemTopic } from '@cdktf/provider-azurerm/lib/eventgrid-system-topic'
-import { EventgridSystemTopicEventSubscription } from '@cdktf/provider-azurerm/lib/eventgrid-system-topic-event-subscription/index.js'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
 import { Construct } from 'constructs'
@@ -9,11 +5,11 @@ import {
   CommonAzureConstruct,
   CommonAzureStack,
   CommonAzureStackProps,
-  EventgridTopicProps,
   EventgridEventSubscriptionProps,
-  EventgridSystemTopicProps,
   EventgridSystemTopicEventSubscriptionProps,
-} from '../../../lib'
+  EventgridSystemTopicProps,
+  EventgridTopicProps,
+} from '../../../lib/azure/index.js'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
   testEventgridTopic: EventgridTopicProps
@@ -102,8 +98,6 @@ const commonStack = new TestCommonStack(testingApp, 'test-common-stack', testSta
 const stack = Testing.fullSynth(commonStack)
 const construct = Testing.synth(commonStack.construct)
 
-console.log(expect(construct).toHaveResourceWithProperties(EventgridTopic, {}))
-
 describe('TestAzureEventgridConstruct', () => {
   test('handles mis-configurations as expected', () => {
     const error = () => new TestInvalidCommonStack(app, 'test-invalid-stack', testStackProps)
@@ -123,8 +117,7 @@ describe('TestAzureEventgridConstruct', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
     expect(construct).toBeDefined()
-    expect(stack).toBeValidTerraform()
-    expect(stack).toPlanSuccessfully()
+    expect(Testing.toBeValidTerraform(stack)).toBeTruthy()
   })
 })
 
@@ -155,42 +148,50 @@ describe('TestAzureEventgridConstruct', () => {
 
 describe('TestAzureEventgridConstruct', () => {
   test('provisions eventgrid topic as expected', () => {
-    expect(construct).toHaveResourceWithProperties(EventgridTopic, {
-      location: '${data.azurerm_resource_group.test-eventgrid-topic-dev-et-rg.location}',
-      name: 'test-eventgrid-topic-dev',
-      resource_group_name: '${data.azurerm_resource_group.test-eventgrid-topic-dev-et-rg.name}',
-      tags: {
-        environment: 'dev',
-      },
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'EventgridTopic', {
+        location: '${data.azurerm_resource_group.test-eventgrid-topic-dev-et-rg.location}',
+        name: 'test-eventgrid-topic-dev',
+        resource_group_name: '${data.azurerm_resource_group.test-eventgrid-topic-dev-et-rg.name}',
+        tags: {
+          environment: 'dev',
+        },
+      })
+    )
   })
 })
 
 describe('TestAzureEventgridConstruct', () => {
   test('provisions eventgrid subscription as expected', () => {
-    expect(construct).toHaveResourceWithProperties(EventgridEventSubscription, {
-      name: 'test-eventgrid-subscription-dev',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'EventgridEventSubscription', {
+        name: 'test-eventgrid-subscription-dev',
+      })
+    )
   })
 })
 
 describe('TestAzureEventgridConstruct', () => {
   test('provisions eventgrid topic as expected', () => {
-    expect(construct).toHaveResourceWithProperties(EventgridSystemTopic, {
-      location: '${data.azurerm_resource_group.test-eventgrid-system-topic-dev-est-rg.location}',
-      name: 'test-eventgrid-system-topic-dev',
-      resource_group_name: '${data.azurerm_resource_group.test-eventgrid-system-topic-dev-est-rg.name}',
-      tags: {
-        environment: 'dev',
-      },
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'EventgridSystemTopic', {
+        location: '${data.azurerm_resource_group.test-eventgrid-system-topic-dev-est-rg.location}',
+        name: 'test-eventgrid-system-topic-dev',
+        resource_group_name: '${data.azurerm_resource_group.test-eventgrid-system-topic-dev-est-rg.name}',
+        tags: {
+          environment: 'dev',
+        },
+      })
+    )
   })
 })
 
 describe('TestAzureEventgridConstruct', () => {
   test('provisions eventgrid subscription as expected', () => {
-    expect(construct).toHaveResourceWithProperties(EventgridSystemTopicEventSubscription, {
-      name: 'test-eventgrid-system-subscription-dev',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'EventgridSystemTopicEventSubscription', {
+        name: 'test-eventgrid-system-subscription-dev',
+      })
+    )
   })
 })

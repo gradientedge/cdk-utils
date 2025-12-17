@@ -1,8 +1,12 @@
-import { KeyVault } from '@cdktf/provider-azurerm/lib/key-vault'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
 import { Construct } from 'constructs'
-import { CommonAzureConstruct, CommonAzureStack, CommonAzureStackProps, KeyVaultProps } from '../../../lib'
+import {
+  CommonAzureConstruct,
+  CommonAzureStack,
+  CommonAzureStackProps,
+  KeyVaultProps,
+} from '../../../lib/azure/index.js'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
   testKeyVault: KeyVaultProps
@@ -81,8 +85,7 @@ describe('TestAzureKeyVaultConstruct', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
     expect(construct).toBeDefined()
-    expect(stack).toBeValidTerraform()
-    expect(stack).toPlanSuccessfully()
+    expect(Testing.toBeValidTerraform(stack)).toBeTruthy()
   })
 })
 
@@ -104,9 +107,11 @@ describe('TestAzureKeyVaultConstruct', () => {
 
 describe('TestAzureKeyVaultConstruct', () => {
   test('provisions key vault as expected', () => {
-    expect(construct).toHaveResourceWithProperties(KeyVault, {
-      name: 'test-key-vault-dev',
-      resource_group_name: '${data.azurerm_resource_group.test-key-vault-dev-kv-rg.name}',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'KeyVault', {
+        name: 'test-key-vault-dev',
+        resource_group_name: '${data.azurerm_resource_group.test-key-vault-dev-kv-rg.name}',
+      })
+    )
   })
 })

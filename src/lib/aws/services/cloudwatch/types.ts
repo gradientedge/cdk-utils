@@ -1,6 +1,6 @@
 import * as watch from 'aws-cdk-lib/aws-cloudwatch'
 import * as logs from 'aws-cdk-lib/aws-logs'
-import { TagProps } from '../../types'
+import { TagProps } from '../../types/index.js'
 
 /**
  */

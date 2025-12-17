@@ -1,5 +1,5 @@
-import { CommonStackProps } from '../../common'
-import { AcmProps, CloudfrontFunctionProps, DistributionProps, S3BucketProps } from '../../services'
+import { CommonStackProps } from '../../common/index.js'
+import { AcmProps, CloudfrontFunctionProps, DistributionProps, S3BucketProps } from '../../services/index.js'
 import { ISource } from 'aws-cdk-lib/aws-s3-deployment'
 
 /**

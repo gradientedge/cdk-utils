@@ -1,4 +1,3 @@
-import { CosmosdbAccount } from '@cdktf/provider-azurerm/lib/cosmosdb-account'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
 import { Construct } from 'constructs'
@@ -7,11 +6,9 @@ import {
   CommonAzureStack,
   CommonAzureStackProps,
   CosmosdbAccountProps,
-  CosmosdbSqlDatabaseProps,
   CosmosdbSqlContainerProps,
-} from '../../../lib'
-import { CosmosdbSqlDatabase } from '@cdktf/provider-azurerm/lib/cosmosdb-sql-database'
-import { CosmosdbSqlContainer } from '@cdktf/provider-azurerm/lib/cosmosdb-sql-container'
+  CosmosdbSqlDatabaseProps,
+} from '../../../lib/azure/index.js'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
   testCosmosDbAccount: CosmosdbAccountProps
@@ -91,8 +88,6 @@ const commonStack = new TestCommonStack(testingApp, 'test-common-stack', testSta
 const stack = Testing.fullSynth(commonStack)
 const construct = Testing.synth(commonStack.construct)
 
-console.log(expect(construct).toHaveResourceWithProperties(CosmosdbAccount, {}))
-
 describe('TestAzureCosmosDbConstruct', () => {
   test('handles mis-configurations as expected', () => {
     const error = () => new TestInvalidCommonStack(app, 'test-invalid-stack', testStackProps)
@@ -112,8 +107,7 @@ describe('TestAzureCosmosDbConstruct', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
     expect(construct).toBeDefined()
-    expect(stack).toBeValidTerraform()
-    expect(stack).toPlanSuccessfully()
+    expect(Testing.toBeValidTerraform(stack)).toBeTruthy()
   })
 })
 
@@ -135,62 +129,68 @@ describe('TestAzureCosmosDbConstruct', () => {
 
 describe('TestAzureCosmosDbConstruct', () => {
   test('provisions cosmosdb account as expected', () => {
-    expect(construct).toHaveResourceWithProperties(CosmosdbAccount, {
-      consistency_policy: {
-        consistency_level: 'Strong',
-      },
-      location: '${data.azurerm_resource_group.test-cosmosdb-account-dev-ca-rg.location}',
-      name: 'test-cosmosdb-account-dev',
-      offer_type: 'Standard',
-      resource_group_name: '${data.azurerm_resource_group.test-cosmosdb-account-dev-ca-rg.name}',
-      tags: {
-        environment: 'dev',
-      },
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'CosmosdbAccount', {
+        consistency_policy: {
+          consistency_level: 'Strong',
+        },
+        location: '${data.azurerm_resource_group.test-cosmosdb-account-dev-ca-rg.location}',
+        name: 'test-cosmosdb-account-dev',
+        offer_type: 'Standard',
+        resource_group_name: '${data.azurerm_resource_group.test-cosmosdb-account-dev-ca-rg.name}',
+        tags: {
+          environment: 'dev',
+        },
+      })
+    )
   })
 })
 
 describe('TestAzureCosmosDbConstruct', () => {
   test('provisions cosmosdb database as expected', () => {
-    expect(construct).toHaveResourceWithProperties(CosmosdbSqlDatabase, {
-      name: 'test-cosmosdb-database-dev',
-      resource_group_name: '${data.azurerm_resource_group.test-cosmosdb-database-dev-cd-rg.name}',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'CosmosdbSqlDatabase', {
+        name: 'test-cosmosdb-database-dev',
+        resource_group_name: '${data.azurerm_resource_group.test-cosmosdb-database-dev-cd-rg.name}',
+      })
+    )
   })
 })
 
 describe('TestAzureCosmosDbConstruct', () => {
   test('provisions cosmosdb container as expected', () => {
-    expect(construct).toHaveResourceWithProperties(CosmosdbSqlContainer, {
-      indexing_policy: {
-        composite_index: [
-          {
-            index: [
-              {
-                order: 'Ascending',
-                path: '/assetTypeAndKey',
-              },
-              {
-                order: 'Ascending',
-                path: '/assetType',
-              },
-            ],
-          },
-        ],
-        excluded_path: [
-          {
-            path: '/*',
-          },
-        ],
-        included_path: [
-          {
-            path: '/*',
-          },
-        ],
-      },
-      name: 'test-cosmosdb-container-dev',
-      partition_key_paths: ['/testPartitionKey'],
-      resource_group_name: '${data.azurerm_resource_group.test-cosmosdb-container-dev-cc-rg.name}',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'CosmosdbSqlContainer', {
+        indexing_policy: {
+          composite_index: [
+            {
+              index: [
+                {
+                  order: 'Ascending',
+                  path: '/assetTypeAndKey',
+                },
+                {
+                  order: 'Ascending',
+                  path: '/assetType',
+                },
+              ],
+            },
+          ],
+          excluded_path: [
+            {
+              path: '/*',
+            },
+          ],
+          included_path: [
+            {
+              path: '/*',
+            },
+          ],
+        },
+        name: 'test-cosmosdb-container-dev',
+        partition_key_paths: ['/testPartitionKey'],
+        resource_group_name: '${data.azurerm_resource_group.test-cosmosdb-container-dev-cc-rg.name}',
+      })
+    )
   })
 })

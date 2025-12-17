@@ -2,9 +2,9 @@ import { IFunction } from 'aws-cdk-lib/aws-lambda'
 import { Topic } from 'aws-cdk-lib/aws-sns'
 import { EmailSubscription, LambdaSubscription } from 'aws-cdk-lib/aws-sns-subscriptions'
 import _ from 'lodash'
-import { CommonConstruct } from '../../common'
-import { createCfnOutput } from '../../utils'
-import { SubscriptionProps } from './types'
+import { CommonConstruct } from '../../common/index.js'
+import { createCfnOutput } from '../../utils/index.js'
+import { SubscriptionProps } from './types.js'
 
 /**
  * @classdesc Provides operations on AWS Simple Notification Service.

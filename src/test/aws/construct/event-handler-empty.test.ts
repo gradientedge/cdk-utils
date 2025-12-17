@@ -3,7 +3,7 @@ import { Template } from 'aws-cdk-lib/assertions'
 import { IFunction } from 'aws-cdk-lib/aws-lambda'
 import { Succeed } from 'aws-cdk-lib/aws-stepfunctions'
 import { Construct } from 'constructs'
-import { CommonStack, EventHandler, EventHandlerProps } from '../../../lib'
+import { CommonStack, EventHandler, EventHandlerProps } from '../../../lib/aws/index.js'
 
 interface TestStackProps extends EventHandlerProps {
   testLambda: any

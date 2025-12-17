@@ -5,7 +5,6 @@ import {
   CfnProjectProps,
   CfnSegmentProps,
 } from 'aws-cdk-lib/aws-evidently'
-import { ResourceNameFormatterProps } from '../../common'
 
 /**
  */

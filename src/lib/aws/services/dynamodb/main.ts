@@ -1,9 +1,9 @@
 import { Tags } from 'aws-cdk-lib'
 import { Table, TableV2 } from 'aws-cdk-lib/aws-dynamodb'
 import _ from 'lodash'
-import { CommonConstruct } from '../../common'
-import { createCfnOutput } from '../../utils'
-import { TableProps, TablePropsV2 } from './types'
+import { CommonConstruct } from '../../common/index.js'
+import { createCfnOutput } from '../../utils/index.js'
+import { TableProps, TablePropsV2 } from './types.js'
 
 /**
  * @classdesc Provides operations on AWS DynamoDB

@@ -6,7 +6,7 @@ import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as sfn from 'aws-cdk-lib/aws-stepfunctions'
 import * as tasks from 'aws-cdk-lib/aws-stepfunctions-tasks'
 import { Construct } from 'constructs'
-import { CommonConstruct, CommonStack, CommonStackProps, TableProps } from '../../../lib'
+import { CommonConstruct, CommonStack, CommonStackProps, TableProps } from '../../../lib/aws/index.js'
 
 interface TestStackProps extends CommonStackProps {
   testAnotherLogGroup: any

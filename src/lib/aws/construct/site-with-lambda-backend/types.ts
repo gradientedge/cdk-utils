@@ -5,7 +5,7 @@ import {
   ResponseHeadersStrictTransportSecurity,
   ResponseSecurityHeadersBehavior,
 } from 'aws-cdk-lib/aws-cloudfront'
-import { CommonStackProps } from '../../common'
+import { CommonStackProps } from '../../common/index.js'
 import {
   AcmProps,
   CloudfrontFunctionProps,
@@ -13,8 +13,8 @@ import {
   LambdaProps,
   LogProps,
   S3BucketProps,
-} from '../../services'
-import { SiteWithLambdaBackendResponseHeaderPolicyType } from './constants'
+} from '../../services/index.js'
+import { SiteWithLambdaBackendResponseHeaderPolicyType } from './constants.js'
 
 /**
  */
@@ -43,8 +43,7 @@ export interface SiteWithLambdaBackendProps extends CommonStackProps {
   useExistingVpc: boolean
 }
 
-export interface SiteWithLambdaBackendResponseHeadersStrictTransportSecurity
-  extends ResponseHeadersStrictTransportSecurity {
+export interface SiteWithLambdaBackendResponseHeadersStrictTransportSecurity extends ResponseHeadersStrictTransportSecurity {
   accessControlMaxAgeInSeconds: number
 }
 

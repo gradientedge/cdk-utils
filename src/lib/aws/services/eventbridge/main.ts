@@ -7,8 +7,8 @@ import { CfnPipe } from 'aws-cdk-lib/aws-pipes'
 import { IQueue } from 'aws-cdk-lib/aws-sqs'
 import { IStateMachine } from 'aws-cdk-lib/aws-stepfunctions'
 import _ from 'lodash'
-import { CommonConstruct } from '../../common'
-import { createCfnOutput } from '../../utils'
+import { CommonConstruct } from '../../common/index.js'
+import { createCfnOutput } from '../../utils/index.js'
 import {
   DynamoDbToLambdaPipeProps,
   EventBusProps,
@@ -16,7 +16,7 @@ import {
   RuleProps,
   SqsToLambdaPipeProps,
   SqsToSfnPipeProps,
-} from './types'
+} from './types.js'
 
 /**
  * @classdesc Provides operations on AWS EventBridge.

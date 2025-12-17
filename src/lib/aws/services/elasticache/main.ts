@@ -1,9 +1,9 @@
 import { Tags } from 'aws-cdk-lib'
 import { CfnCacheCluster, CfnReplicationGroup, CfnSubnetGroup } from 'aws-cdk-lib/aws-elasticache'
 import _ from 'lodash'
-import { CommonConstruct } from '../../common'
-import { createCfnOutput } from '../../utils'
-import { ElastiCacheProps, ReplicatedElastiCacheProps } from './types'
+import { CommonConstruct } from '../../common/index.js'
+import { createCfnOutput } from '../../utils/index.js'
+import { ElastiCacheProps, ReplicatedElastiCacheProps } from './types.js'
 
 /**
  * @summary Provides operations on AWS ElastiCache Service.

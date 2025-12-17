@@ -1,8 +1,8 @@
-import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group'
-import { RedisCache } from '@cdktf/provider-azurerm/lib/redis-cache'
-import { CommonAzureConstruct } from '../../common'
-import { createAzureTfOutput } from '../../utils'
-import { RedisCacheProps } from './types'
+import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group/index.js'
+import { RedisCache } from '@cdktf/provider-azurerm/lib/redis-cache/index.js'
+import { CommonAzureConstruct } from '../../common/index.js'
+import { createAzureTfOutput } from '../../utils/index.js'
+import { RedisCacheProps } from './types.js'
 
 /**
  * @classdesc Provides operations on Azure Redis

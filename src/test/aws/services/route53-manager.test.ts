@@ -2,7 +2,7 @@ import * as cdk from 'aws-cdk-lib'
 import { Template } from 'aws-cdk-lib/assertions'
 import * as apig from 'aws-cdk-lib/aws-apigateway'
 import { Construct } from 'constructs'
-import { CommonConstruct, CommonStack, CommonStackProps } from '../../../lib'
+import { CommonConstruct, CommonStack, CommonStackProps } from '../../../lib/aws/index.js'
 
 interface TestStackProps extends CommonStackProps {
   testBucket: any
@@ -80,7 +80,7 @@ class TestCommonConstruct extends CommonConstruct {
     const siteBucket = this.s3Manager.createS3Bucket('test-bucket', this, this.props.testBucket)
     const siteLogBucket = this.s3Manager.createS3Bucket('test-log-bucket', this, this.props.testLogBucket)
     const oai = this.cloudFrontManager.createOriginAccessIdentity('test-oai-bucket', this, siteBucket)
-    const testDistribution = this.cloudFrontManager.createCloudFrontDistribution(
+    const testDistribution = this.cloudFrontManager.createDistributionWithS3Origin(
       'test-distribution',
       this,
       this.props.testDistribution,

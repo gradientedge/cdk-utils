@@ -1,5 +1,5 @@
-import { AcmProps, LambdaEnvironment, LambdaProps, LambdaRestApiProps } from '../../services'
-import { CommonStackProps } from '../../common'
+import { AcmProps, LambdaEnvironment, LambdaProps, LambdaRestApiProps } from '../../services/index.js'
+import { CommonStackProps } from '../../common/index.js'
 import { AssetCode } from 'aws-cdk-lib/aws-lambda'
 
 /**

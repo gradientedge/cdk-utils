@@ -1,27 +1,27 @@
 {
   "graphqlApi": {
     "functionName": "test-graphql-server",
-    "logRetention": 30,
+    "logRetentionInDays": 30,
     "memorySize": 1024,
     "timeoutInSecs": 300,
     "excludeLastModifiedTimestamp": true
   },
   "restApiLambda": {
     "functionName": "test-restapi-server",
-    "logRetention": 30,
+    "logRetentionInDays": 30,
     "memorySize": 1024,
     "timeoutInSecs": 300,
     "excludeLastModifiedTimestamp": true
   },
   "testApiDestinedLambda": {
     "functionName": "test-api-destined",
-    "logRetention": 7,
+    "logRetentionInDays": 7,
     "memorySize": 1024,
     "timeoutInSecs": 60
   },
   "testLambda": {
     "functionName": "test-lambda",
-    "logRetention": 7,
+    "logRetentionInDays": 7,
     "memorySize": 1024,
     "timeoutInSecs": 60,
     "logLevel": "info",
@@ -38,7 +38,7 @@
   },
   "testIamLambda": {
     "functionName": "test-iam-lambda",
-    "logRetention": 7,
+    "logRetentionInDays": 7,
     "memorySize": 1024,
     "timeoutInSecs": 60,
     "excludeLastModifiedTimestamp": true,
@@ -55,7 +55,7 @@
   },
   "testLambdaWithConcurrency": {
     "functionName": "test-lambda-concurrency",
-    "logRetention": 7,
+    "logRetentionInDays": 7,
     "memorySize": 1024,
     "lambdaAliases": [
       {
@@ -73,7 +73,7 @@
   },
   "testLambdaWithDlq": {
     "functionName": "test-lambda-with-error-handling",
-    "logRetention": 7,
+    "logRetentionInDays": 7,
     "memorySize": 1024,
     "timeoutInSecs": 60,
     "deadLetterQueueEnabled": true,
@@ -91,7 +91,7 @@
   },
   "testAnotherLambda": {
     "functionName": "test-another-lambda",
-    "logRetention": 7,
+    "logRetentionInDays": 7,
     "memorySize": 1024,
     "timeoutInSecs": 60
   },
@@ -99,7 +99,7 @@
     "functionName": "test-site-lambda",
     "excludeLastModifiedTimestamp": true,
     "handler": "run.sh",
-    "logRetention": 7,
+    "logRetentionInDays": 7,
     "memorySize": 1024,
     "timeoutInSecs": 60,
     "lambdaAliases": [
@@ -116,7 +116,7 @@
   },
   "testLambdaEdge": {
     "functionName": "test-lambda-edge",
-    "logRetention": 7,
+    "logRetentionInDays": 7,
     "memorySize": 1024,
     "timeoutInSecs": 60
   },

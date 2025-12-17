@@ -1,6 +1,6 @@
-import { LinuxFunctionAppConfig } from '@cdktf/provider-azurerm/lib/linux-function-app'
-import { FunctionAppFunctionConfig } from '@cdktf/provider-azurerm/lib/function-app-function'
-import { FunctionAppFlexConsumptionConfig } from '@cdktf/provider-azurerm/lib/function-app-flex-consumption'
+import { LinuxFunctionAppConfig } from '@cdktf/provider-azurerm/lib/linux-function-app/index.js'
+import { FunctionAppFunctionConfig } from '@cdktf/provider-azurerm/lib/function-app-function/index.js'
+import { FunctionAppFlexConsumptionConfig } from '@cdktf/provider-azurerm/lib/function-app-flex-consumption/index.js'
 
 export interface FunctionAppProps extends LinuxFunctionAppConfig {}
 

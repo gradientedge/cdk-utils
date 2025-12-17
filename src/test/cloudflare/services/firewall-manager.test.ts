@@ -1,6 +1,3 @@
-import { Filter } from '@cdktf/provider-cloudflare/lib/filter'
-import { FirewallRule } from '@cdktf/provider-cloudflare/lib/firewall-rule'
-import { Zone } from '@cdktf/provider-cloudflare/lib/zone'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
 import { Construct } from 'constructs'
@@ -10,8 +7,8 @@ import {
   CommonCloudflareStackProps,
   FilterProps,
   ZoneProps,
-} from '../../../lib'
-import { FirewallRuleProps } from '../../../lib/cloudflare/services/firewall'
+} from '../../../lib/cloudflare/index.js'
+import { FirewallRuleProps } from '../../../lib/cloudflare/services/firewall/index.js'
 
 interface TestCloudflareStackProps extends CommonCloudflareStackProps {
   testZone: ZoneProps
@@ -117,8 +114,7 @@ describe('TestCloudflareFirewallManager', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
     expect(construct).toBeDefined()
-    expect(stack).toBeValidTerraform()
-    expect(stack).toPlanSuccessfully()
+    expect(Testing.toBeValidTerraform(stack)).toBeTruthy()
   })
 })
 
@@ -138,35 +134,41 @@ describe('TestCloudflareFirewallManager', () => {
 
 describe('TestCloudflareFirewallManager', () => {
   test('provisions zone as expected', () => {
-    expect(construct).toHaveResourceWithProperties(Zone, {
-      account: {
-        id: 'test-account',
-      },
-      name: 'gradientedge.io',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'Zone', {
+        account: {
+          id: 'test-account',
+        },
+        name: 'gradientedge.io',
+      })
+    )
   })
 })
 
 describe('TestCloudflareFirewallManager', () => {
   test('provisions filter as expected', () => {
-    expect(construct).toHaveResourceWithProperties(Filter, {
-      expression:
-        '(http.request.uri.path ~ ".*wp-login.php" or http.request.uri.path ~ ".*xmlrpc.php") and ip.src ne 192.0.2.1',
-      zone_id: '${data.cloudflare_zone.test-filter-dev-data-zone-data-zone.zone_id}',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'Filter', {
+        expression:
+          '(http.request.uri.path ~ ".*wp-login.php" or http.request.uri.path ~ ".*xmlrpc.php") and ip.src ne 192.0.2.1',
+        zone_id: '${data.cloudflare_zone.test-filter-dev-data-zone-data-zone.zone_id}',
+      })
+    )
   })
 })
 
 describe('TestCloudflareFirewallManager', () => {
   test('provisions firewall rule as expected', () => {
-    expect(construct).toHaveResourceWithProperties(FirewallRule, {
-      filter: {
-        description: 'Site break-in attempts that are outside of the office',
-        expression:
-          '(http.request.uri.path ~ ".*wp-login.php" or http.request.uri.path ~ ".*xmlrpc.php") and ip.src ne 192.0.2.1',
-        paused: false,
-      },
-      zone_id: '${data.cloudflare_zone.test-firewall-rule-dev-data-zone-data-zone.zone_id}',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'FirewallRule', {
+        filter: {
+          description: 'Site break-in attempts that are outside of the office',
+          expression:
+            '(http.request.uri.path ~ ".*wp-login.php" or http.request.uri.path ~ ".*xmlrpc.php") and ip.src ne 192.0.2.1',
+          paused: false,
+        },
+        zone_id: '${data.cloudflare_zone.test-firewall-rule-dev-data-zone-data-zone.zone_id}',
+      })
+    )
   })
 })

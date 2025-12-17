@@ -6,12 +6,11 @@ import {
   IFunction,
   OriginAccessIdentity,
 } from 'aws-cdk-lib/aws-cloudfront'
-import { S3Origin } from 'aws-cdk-lib/aws-cloudfront-origins'
 import { ARecord, IHostedZone } from 'aws-cdk-lib/aws-route53'
 import { IBucket } from 'aws-cdk-lib/aws-s3'
 import { Construct } from 'constructs'
-import { CommonConstruct } from '../../common'
-import { StaticSiteProps } from './types'
+import { CommonConstruct } from '../../common/index.js'
+import { StaticSiteProps } from './types.js'
 
 /**
  * @classdesc Provides a construct to create and deploy a s3 hosted static site
@@ -38,7 +37,6 @@ export class StaticSite extends CommonConstruct {
   siteCertificate: ICertificate
   siteARecord: ARecord
   siteBucket: IBucket
-  siteOrigin: S3Origin
   siteDistribution: IDistribution
   siteLogBucket: IBucket
   siteOriginAccessIdentity: OriginAccessIdentity
@@ -60,7 +58,6 @@ export class StaticSite extends CommonConstruct {
     this.resolveCertificate()
     this.createSiteLogBucket()
     this.createSiteBucket()
-    this.createSiteOrigin()
     this.createSiteCloudfrontFunction()
     this.resolveSiteFunctionAssociations()
     this.createSiteOriginAccessIdentity()
@@ -118,10 +115,6 @@ export class StaticSite extends CommonConstruct {
     this.siteBucket = this.s3Manager.createS3Bucket(`${this.id}-site`, this, this.props.siteBucket)
   }
 
-  protected createSiteOrigin() {
-    this.siteOrigin = new S3Origin(this.siteBucket)
-  }
-
   /**
    * @summary Method to create a site cloudfront function
    */
@@ -164,7 +157,6 @@ export class StaticSite extends CommonConstruct {
       `${this.id}-distribution`,
       this,
       this.props.siteDistribution,
-      this.siteOrigin,
       this.siteBucket,
       this.siteLogBucket,
       this.siteOriginAccessIdentity,

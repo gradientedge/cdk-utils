@@ -1,9 +1,9 @@
-import { ApiManagementConfig } from '@cdktf/provider-azurerm/lib/api-management'
-import { ApiManagementBackendConfig } from '@cdktf/provider-azurerm/lib/api-management-backend'
-import { ApiManagementCustomDomainConfig } from '@cdktf/provider-azurerm/lib/api-management-custom-domain'
-import { ApiManagementApiConfig } from '@cdktf/provider-azurerm/lib/api-management-api'
-import { ApiManagementApiOperationConfig } from '@cdktf/provider-azurerm/lib/api-management-api-operation'
-import { ApiManagementRedisCacheConfig } from '@cdktf/provider-azurerm/lib/api-management-redis-cache'
+import { ApiManagementConfig } from '@cdktf/provider-azurerm/lib/api-management/index.js'
+import { ApiManagementBackendConfig } from '@cdktf/provider-azurerm/lib/api-management-backend/index.js'
+import { ApiManagementCustomDomainConfig } from '@cdktf/provider-azurerm/lib/api-management-custom-domain/index.js'
+import { ApiManagementApiConfig } from '@cdktf/provider-azurerm/lib/api-management-api/index.js'
+import { ApiManagementApiOperationConfig } from '@cdktf/provider-azurerm/lib/api-management-api-operation/index.js'
+import { ApiManagementRedisCacheConfig } from '@cdktf/provider-azurerm/lib/api-management-redis-cache/index.js'
 
 export interface ApiManagementProps extends ApiManagementConfig {}
 

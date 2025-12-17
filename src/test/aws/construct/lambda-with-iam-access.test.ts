@@ -3,7 +3,7 @@ import { Template } from 'aws-cdk-lib/assertions'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import { SecretProps } from 'aws-cdk-lib/aws-secretsmanager'
 import { Construct } from 'constructs'
-import { CommonStack, LambdaWithIamAccess, LambdaWithIamAccessProps } from '../../../lib'
+import { CommonStack, LambdaWithIamAccess, LambdaWithIamAccessProps } from '../../../lib/aws/index.js'
 
 interface TestStackProps extends LambdaWithIamAccessProps {
   lambda: any

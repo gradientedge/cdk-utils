@@ -1,5 +1,4 @@
 import { CfnCacheClusterProps, CfnReplicationGroupProps } from 'aws-cdk-lib/aws-elasticache'
-import { ResourceNameFormatterProps } from '../../common'
 
 /**
  */

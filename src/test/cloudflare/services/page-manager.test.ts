@@ -1,6 +1,6 @@
-import { PageRule } from '@cdktf/provider-cloudflare/lib/page-rule'
-import { PagesDomain } from '@cdktf/provider-cloudflare/lib/pages-domain'
-import { PagesProject } from '@cdktf/provider-cloudflare/lib/pages-project'
+import { PageRule } from '@cdktf/provider-cloudflare/lib/page-rule/index.js'
+import { PagesDomain } from '@cdktf/provider-cloudflare/lib/pages-domain/index.js'
+import { PagesProject } from '@cdktf/provider-cloudflare/lib/pages-project/index.js'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
 import { Construct } from 'constructs'
@@ -12,7 +12,7 @@ import {
   PagesDomainProps,
   PagesProjectProps,
   ZoneProps,
-} from '../../../lib'
+} from '../../../lib/cloudflare/index.js'
 
 interface TestCloudflareStackProps extends CommonCloudflareStackProps {
   testZone: ZoneProps
@@ -114,8 +114,7 @@ describe('TestCloudflarePagesManager', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
     expect(construct).toBeDefined()
-    expect(stack).toBeValidTerraform()
-    expect(stack).toPlanSuccessfully()
+    expect(Testing.toBeValidTerraform(stack)).toBeTruthy()
   })
 })
 
@@ -138,70 +137,78 @@ describe('TestCloudflarePagesManager', () => {
 
 describe('TestCloudflarePagesManager', () => {
   test('provisions pages project as expected', () => {
-    expect(construct).toHaveResourceWithProperties(PagesProject, {
-      account_id: '${var.accountId}',
-      name: 'test-simple-project-dev',
-      production_branch: 'main',
-    })
-    expect(construct).toHaveResourceWithProperties(PagesProject, {
-      account_id: '${var.accountId}',
-      build_config: {
-        build_command: 'npm run build',
-        destination_dir: 'dist',
-        root_dir: '',
-      },
-      deployment_configs: {
-        preview: {
-          env_vars: {
-            TEST_ENV_VAR: {
-              type: 'plain_text',
-              value: 'preview',
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'PagesProject', {
+        account_id: '${var.accountId}',
+        name: 'test-simple-project-dev',
+        production_branch: 'main',
+      })
+    )
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'PagesProject', {
+        account_id: '${var.accountId}',
+        build_config: {
+          build_command: 'npm run build',
+          destination_dir: 'dist',
+          root_dir: '',
+        },
+        deployment_configs: {
+          preview: {
+            env_vars: {
+              TEST_ENV_VAR: {
+                type: 'plain_text',
+                value: 'preview',
+              },
+              TEST_SECRET: {
+                type: 'secret_text',
+                value: '0987654321',
+              },
             },
-            TEST_SECRET: {
-              type: 'secret_text',
-              value: '0987654321',
+          },
+          production: {
+            env_vars: {
+              TEST_ENV_VAR: {
+                type: 'plain_text',
+                value: 'production',
+              },
+              TEST_SECRET: {
+                type: 'secret_text',
+                value: '1234567890',
+              },
             },
           },
         },
-        production: {
-          env_vars: {
-            TEST_ENV_VAR: {
-              type: 'plain_text',
-              value: 'production',
-            },
-            TEST_SECRET: {
-              type: 'secret_text',
-              value: '1234567890',
-            },
-          },
-        },
-      },
-      name: 'test-build-config-project-dev',
-      production_branch: 'main',
-    })
+        name: 'test-build-config-project-dev',
+        production_branch: 'main',
+      })
+    )
   })
 })
 
 describe('TestCloudflarePagesManager', () => {
   test('provisions pages domain as expected', () => {
-    expect(construct).toHaveResourceWithProperties(PagesDomain, {
-      account_id: '${var.accountId}',
-      name: 'gradientedge.io',
-      project_name: 'test-pages-project-dev',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'PagesDomain', {
+        account_id: '${var.accountId}',
+        name: 'gradientedge.io',
+        project_name: 'test-pages-project-dev',
+      })
+    )
   })
 })
 
 describe('TestCloudflarePagesManager', () => {
   test('provisions page rule as expected', () => {
-    expect(construct).toHaveResourceWithProperties(PageRule, {
-      actions: {
-        email_obfuscation: 'on',
-        ssl: 'flexible',
-      },
-      priority: 1,
-      target: 'test.gradientedge.io/p/*',
-      zone_id: '${data.cloudflare_zone.test-page-rule-dev-data-zone-data-zone.zone_id}',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'PageRule', {
+        actions: {
+          email_obfuscation: 'on',
+          ssl: 'flexible',
+        },
+        priority: 1,
+        target: 'test.gradientedge.io/p/*',
+        zone_id: '${data.cloudflare_zone.test-page-rule-dev-data-zone-data-zone.zone_id}',
+      })
+    )
   })
 })

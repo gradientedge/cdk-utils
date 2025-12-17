@@ -3,7 +3,7 @@ import { Template } from 'aws-cdk-lib/assertions'
 import * as apig from 'aws-cdk-lib/aws-apigateway'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import { Construct } from 'constructs'
-import { CommonStack, RestApiLambdaWithCache, RestApiLambdaWithCacheProps } from '../../../lib'
+import { CommonStack, RestApiLambdaWithCache, RestApiLambdaWithCacheProps } from '../../../lib/aws/index.js'
 
 interface RestRestApiLambdaWithCacheProps extends RestApiLambdaWithCacheProps {
   testAttribute?: string

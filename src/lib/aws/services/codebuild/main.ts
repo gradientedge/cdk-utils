@@ -1,6 +1,6 @@
 import { Duration } from 'aws-cdk-lib'
 import { BuildSpec, ComputeType, LinuxBuildImage, Project } from 'aws-cdk-lib/aws-codebuild'
-import { CommonConstruct } from '../../common'
+import { CommonConstruct } from '../../common/index.js'
 
 /**
  * @classdesc Provides operations on AWS Code Build.

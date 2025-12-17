@@ -1,9 +1,9 @@
 import { Stack } from 'aws-cdk-lib'
 import { Certificate, CertificateValidation, ICertificate } from 'aws-cdk-lib/aws-certificatemanager'
 import { IHostedZone } from 'aws-cdk-lib/aws-route53'
-import { CommonConstruct } from '../../common'
-import { createCfnOutput } from '../../utils'
-import { AcmProps } from './types'
+import { CommonConstruct } from '../../common/index.js'
+import { createCfnOutput } from '../../utils/index.js'
+import { AcmProps } from './types.js'
 
 /**
  * @classdesc Provides operations on AWS Certificates.

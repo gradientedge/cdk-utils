@@ -2,8 +2,7 @@ import * as cdk from 'aws-cdk-lib'
 import { CustomResource } from 'aws-cdk-lib'
 import { Template } from 'aws-cdk-lib/assertions'
 import { Construct } from 'constructs'
-import * as common from '../../../lib'
-import { CommonStackProps } from '../../../lib'
+import { CommonConstruct, CommonStack, CommonStackProps } from '../../../lib/aws/index.js'
 
 interface TestStackProps extends CommonStackProps {
   testAttribute?: string
@@ -20,7 +19,7 @@ const testStackProps: TestStackProps = {
   stageContextPath: 'src/test/aws/common/cdkEnv',
 }
 
-class TestCommonStack extends common.CommonStack {
+class TestCommonStack extends CommonStack {
   declare props: TestStackProps
 
   constructor(parent: cdk.App, name: string, props: TestStackProps) {
@@ -39,7 +38,7 @@ class TestCommonStack extends common.CommonStack {
   }
 }
 
-class TestCommonConstruct extends common.CommonConstruct {
+class TestCommonConstruct extends CommonConstruct {
   declare props: TestStackProps
 
   constructor(parent: Construct, name: string, props: TestStackProps) {

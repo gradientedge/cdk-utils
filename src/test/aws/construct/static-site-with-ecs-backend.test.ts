@@ -2,7 +2,7 @@ import * as cdk from 'aws-cdk-lib'
 import { Template } from 'aws-cdk-lib/assertions'
 import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment'
 import { Construct } from 'constructs'
-import { CommonStack, SiteWithEcsBackend, SiteWithEcsBackendProps } from '../../../lib'
+import { CommonStack, SiteWithEcsBackend, SiteWithEcsBackendProps } from '../../../lib/aws/index.js'
 
 interface TestStackProps extends SiteWithEcsBackendProps {
   testAttribute?: string

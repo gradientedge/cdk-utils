@@ -1,9 +1,8 @@
-import { EdgeFunctionProps } from 'aws-cdk-lib/aws-cloudfront/lib/experimental'
+import { EdgeFunctionProps } from 'aws-cdk-lib/aws-cloudfront/lib/experimental/edge-function.js'
 import { AliasProps, FunctionProps } from 'aws-cdk-lib/aws-lambda'
 import { SqsEventSourceProps } from 'aws-cdk-lib/aws-lambda-event-sources'
-import { ResourceNameFormatterProps } from '../../common'
-import { TagProps } from '../../types'
-import { QueueProps } from '../simple-queue-service'
+import { TagProps } from '../../types/index.js'
+import { QueueProps } from '../simple-queue-service/index.js'
 
 /**
  */
@@ -20,6 +19,7 @@ export interface LambdaProps extends FunctionProps {
   excludeLastModifiedTimestamp?: boolean
   lambdaAliases?: LambdaAliasProps[]
   logLevel?: string
+  logRetentionInDays?: number
   redriveq?: QueueProps
   tags?: TagProps[]
   timeoutInSecs?: number

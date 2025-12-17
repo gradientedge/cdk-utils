@@ -1,8 +1,12 @@
-import { Zone } from '@cdktf/provider-cloudflare/lib/zone'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
 import { Construct } from 'constructs'
-import { CommonCloudflareConstruct, CommonCloudflareStack, CommonCloudflareStackProps, ZoneProps } from '../../../lib'
+import {
+  CommonCloudflareConstruct,
+  CommonCloudflareStack,
+  CommonCloudflareStackProps,
+  ZoneProps,
+} from '../../../lib/cloudflare/index.js'
 
 interface TestCloudflareStackProps extends CommonCloudflareStackProps {
   testZone: ZoneProps
@@ -67,8 +71,7 @@ describe('TestCloudflareCommonConstruct', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
     expect(construct).toBeDefined()
-    expect(stack).toBeValidTerraform()
-    expect(stack).toPlanSuccessfully()
+    expect(Testing.toBeValidTerraform(stack)).toBeTruthy()
   })
 })
 
@@ -84,11 +87,13 @@ describe('TestCloudflareCommonConstruct', () => {
 
 describe('TestCloudflareCommonConstruct', () => {
   test('provisions zone as expected', () => {
-    expect(construct).toHaveResourceWithProperties(Zone, {
-      account: {
-        id: 'test-account',
-      },
-      name: 'gradientedge.io',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'Zone', {
+        account: {
+          id: 'test-account',
+        },
+        name: 'gradientedge.io',
+      })
+    )
   })
 })

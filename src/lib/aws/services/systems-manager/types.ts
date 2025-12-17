@@ -1,5 +1,4 @@
 import { StringParameterProps } from 'aws-cdk-lib/aws-ssm'
-import { ResourceNameFormatterProps } from '../../common'
 
 /**
  */

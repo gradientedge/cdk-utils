@@ -1,7 +1,7 @@
-import { MonitorDiagnosticSetting } from '@cdktf/provider-azurerm/lib/monitor-diagnostic-setting'
-import { CommonAzureConstruct } from '../../common'
-import { createAzureTfOutput } from '../../utils'
-import { MonitorDiagnosticSettingProps } from './types'
+import { MonitorDiagnosticSetting } from '@cdktf/provider-azurerm/lib/monitor-diagnostic-setting/index.js'
+import { CommonAzureConstruct } from '../../common/index.js'
+import { createAzureTfOutput } from '../../utils/index.js'
+import { MonitorDiagnosticSettingProps } from './types.js'
 
 /**
  * @classdesc Provides operations on Azure Key Vault

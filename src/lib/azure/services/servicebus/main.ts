@@ -1,18 +1,18 @@
-import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group'
-import { ServicebusNamespace } from '@cdktf/provider-azurerm/lib/servicebus-namespace'
-import { ServicebusTopic } from '@cdktf/provider-azurerm/lib/servicebus-topic'
-import { ServicebusSubscription } from '@cdktf/provider-azurerm/lib/servicebus-subscription'
-import { ServicebusQueue } from '@cdktf/provider-azurerm/lib/servicebus-queue'
-import { DataAzurermServicebusQueue } from '@cdktf/provider-azurerm/lib/data-azurerm-servicebus-queue'
-import { CommonAzureConstruct } from '../../common'
-import { createAzureTfOutput } from '../../utils'
+import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group/index.js'
+import { DataAzurermServicebusQueue } from '@cdktf/provider-azurerm/lib/data-azurerm-servicebus-queue/index.js'
+import { ServicebusNamespace } from '@cdktf/provider-azurerm/lib/servicebus-namespace/index.js'
+import { ServicebusQueue } from '@cdktf/provider-azurerm/lib/servicebus-queue/index.js'
+import { ServicebusSubscription } from '@cdktf/provider-azurerm/lib/servicebus-subscription/index.js'
+import { ServicebusTopic } from '@cdktf/provider-azurerm/lib/servicebus-topic/index.js'
+import { CommonAzureConstruct } from '../../common/index.js'
+import { createAzureTfOutput } from '../../utils/index.js'
 import {
-  ServicebusTopicProps,
-  ServicebusSubscriptionProps,
+  DataAzurermServicebusQueueProps,
   ServicebusNamespaceProps,
   ServicebusQueueProps,
-  DataAzurermServicebusQueueProps,
-} from './types'
+  ServicebusSubscriptionProps,
+  ServicebusTopicProps,
+} from './types.js'
 
 /**
  * @classdesc Provides operations on Azure Servicebus

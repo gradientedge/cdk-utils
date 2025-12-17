@@ -1,7 +1,7 @@
 import { Key } from 'aws-cdk-lib/aws-kms'
-import { CommonConstruct } from '../../common'
-import { createCfnOutput } from '../../utils'
-import { KmsKeyProps } from './types'
+import { CommonConstruct } from '../../common/index.js'
+import { createCfnOutput } from '../../utils/index.js'
+import { KmsKeyProps } from './types.js'
 
 /**
  * @classdesc Provides operations on AWS KMS.

@@ -4,9 +4,9 @@ import { Effect, PolicyDocument, PolicyStatement, ServicePrincipal } from 'aws-c
 import { BlockPublicAccess, Bucket, BucketEncryption, CfnBucket, CfnBucketPolicy, IBucket } from 'aws-cdk-lib/aws-s3'
 import { BucketDeployment, ISource, ServerSideEncryption, Source } from 'aws-cdk-lib/aws-s3-deployment'
 import _ from 'lodash'
-import { CommonConstruct } from '../../common'
-import { createCfnOutput } from '../../utils'
-import { LifecycleRule, S3BucketProps } from './types'
+import { CommonConstruct } from '../../common/index.js'
+import { createCfnOutput } from '../../utils/index.js'
+import { LifecycleRule, S3BucketProps } from './types.js'
 
 /**
  * @classdesc Provides operations on AWS S3

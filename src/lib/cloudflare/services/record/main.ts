@@ -1,7 +1,7 @@
-import { DnsRecord } from '@cdktf/provider-cloudflare/lib/dns-record'
-import { CommonCloudflareConstruct } from '../../common'
-import { createCloudflareTfOutput } from '../../utils'
-import { DnsRecordProps } from './types'
+import { DnsRecord } from '@cdktf/provider-cloudflare/lib/dns-record/index.js'
+import { CommonCloudflareConstruct } from '../../common/index.js'
+import { createCloudflareTfOutput } from '../../utils/index.js'
+import { DnsRecordProps } from './types.js'
 
 /**
  * @classdesc Provides operations on Cloudflare Records

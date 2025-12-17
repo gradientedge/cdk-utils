@@ -1,8 +1,8 @@
-import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group'
-import { LogAnalyticsWorkspace } from '@cdktf/provider-azurerm/lib/log-analytics-workspace'
-import { CommonAzureConstruct } from '../../common'
-import { createAzureTfOutput } from '../../utils'
-import { LogAnalyticsWorkspaceProps } from './types'
+import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group/index.js'
+import { LogAnalyticsWorkspace } from '@cdktf/provider-azurerm/lib/log-analytics-workspace/index.js'
+import { CommonAzureConstruct } from '../../common/index.js'
+import { createAzureTfOutput } from '../../utils/index.js'
+import { LogAnalyticsWorkspaceProps } from './types.js'
 
 /**
  * @classdesc Provides operations on Azure Log Analytics Workspace

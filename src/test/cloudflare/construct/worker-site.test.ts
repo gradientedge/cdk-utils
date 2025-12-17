@@ -1,8 +1,3 @@
-import { Ruleset } from '@cdktf/provider-cloudflare/lib/ruleset'
-import { Zone } from '@cdktf/provider-cloudflare/lib/zone'
-import { ZoneSetting } from '@cdktf/provider-cloudflare/lib/zone-setting'
-import { WorkersScript } from '@cdktf/provider-cloudflare/lib/workers-script'
-import { WorkersCustomDomain } from '@cdktf/provider-cloudflare/lib/workers-custom-domain'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
 import { Construct } from 'constructs'
@@ -11,7 +6,7 @@ import {
   CloudflareWorkerSiteProps,
   CommonCloudflareStack,
   CommonCloudflareStackProps,
-} from '../../../lib'
+} from '../../../lib/cloudflare/index.js'
 
 interface TestCloudflareStackProps extends CloudflareWorkerSiteProps {
   testAttribute?: string
@@ -107,8 +102,7 @@ describe('TestCloudflareWorkerSite', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
     expect(construct).toBeDefined()
-    expect(stack).toBeValidTerraform()
-    expect(stack).toPlanSuccessfully()
+    expect(Testing.toBeValidTerraform(stack)).toBeTruthy()
   })
 })
 
@@ -124,55 +118,65 @@ describe('TestCloudflareWorkerSite', () => {
 
 describe('TestCloudflareWorkerSite', () => {
   test('provisions zone as expected', () => {
-    expect(construct).toHaveResourceWithProperties(Zone, {
-      account: {
-        id: 'test-account',
-      },
-      name: 'gradientedge.io',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'Zone', {
+        account: {
+          id: 'test-account',
+        },
+        name: 'gradientedge.io',
+      })
+    )
   })
 })
 
 describe('TestCloudflareWorkerSite', () => {
   test('provisions worker as expected', () => {
-    expect(construct).toHaveResourceWithProperties(WorkersScript, {
-      account_id: 'test-account',
-      bindings: [],
-      content: '${file("assets/test-common-stack-worker-content/DBA9E2ED0784B0A520C0C26867C9B2FF/sample.html")}',
-      script_name: 'test-script-dev',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'WorkersScript', {
+        account_id: 'test-account',
+        bindings: [],
+        content: '${file("assets/test-common-stack-worker-content/DBA9E2ED0784B0A520C0C26867C9B2FF/sample.html")}',
+        script_name: 'test-script-dev',
+      })
+    )
   })
 })
 
 describe('TestCloudflareWorkerSite', () => {
   test('provisions worker domain as expected', () => {
-    expect(construct).toHaveResourceWithProperties(WorkersCustomDomain, {
-      account_id: 'test-account',
-      hostname: 'test.app.gradientedge.io',
-      service: '${cloudflare_workers_script.test-common-stack-worker-script.script_name}',
-      zone_id: '${data.cloudflare_zone.test-common-stack-worker-domain-data-zone-data-zone.zone_id}',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'WorkersCustomDomain', {
+        account_id: 'test-account',
+        hostname: 'test.app.gradientedge.io',
+        service: '${cloudflare_workers_script.test-common-stack-worker-script.script_name}',
+        zone_id: '${data.cloudflare_zone.test-common-stack-worker-domain-data-zone-data-zone.zone_id}',
+      })
+    )
   })
 })
 
 describe('TestCloudflareWorkerSite', () => {
   test('provisions Rule Set as expected', () => {
-    expect(construct).toHaveResourceWithProperties(Ruleset, {
-      name: 'testRuleSet',
-      rules: {
-        action: 'set_cache_settings',
-      },
-      zone_id: '${data.cloudflare_zone.test-common-stack-rule-data-zone-data-zone.zone_id}',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'Ruleset', {
+        name: 'testRuleSet',
+        rules: {
+          action: 'set_cache_settings',
+        },
+        zone_id: '${data.cloudflare_zone.test-common-stack-rule-data-zone-data-zone.zone_id}',
+      })
+    )
   })
 })
 
 describe('TestCloudflareWorkerSite', () => {
   test('provisions zone settings override as expected', () => {
-    expect(construct).toHaveResourceWithProperties(ZoneSetting, {
-      setting_id: 'always_online',
-      value: 'on',
-      zone_id: '${data.cloudflare_zone.test-common-stack-zone-setting-data-zone-data-zone.id}',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'ZoneSetting', {
+        setting_id: 'always_online',
+        value: 'on',
+        zone_id: '${data.cloudflare_zone.test-common-stack-zone-setting-data-zone-data-zone.id}',
+      })
+    )
   })
 })

@@ -4,9 +4,9 @@ import { PolicyDocument, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam'
 import { Function } from 'aws-cdk-lib/aws-lambda'
 import { ISecret } from 'aws-cdk-lib/aws-secretsmanager'
 import { Construct } from 'constructs'
-import { CommonConstruct } from '../../common'
-import { ApiToLambdaTargetRestApi } from './api'
-import { ApiToLambdaTargetProps, ApiToLambdaTargetRestApiType } from './types'
+import { CommonConstruct } from '../../common/index.js'
+import { ApiToLambdaTargetRestApi } from './api.js'
+import { ApiToLambdaTargetProps, ApiToLambdaTargetRestApiType } from './types.js'
 
 /**
  */

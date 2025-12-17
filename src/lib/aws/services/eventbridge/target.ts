@@ -2,7 +2,7 @@ import { ArnFormat, Stack } from 'aws-cdk-lib'
 import { IRule, IRuleTarget, RuleTargetConfig, RuleTargetInput } from 'aws-cdk-lib/aws-events'
 import { TargetBaseProps, bindBaseTargetConfig } from 'aws-cdk-lib/aws-events-targets'
 import { ILogGroup } from 'aws-cdk-lib/aws-logs'
-import { CommonConstruct } from '../../common'
+import { CommonConstruct } from '../../common/index.js'
 
 /**
  * @classdesc Provides operations on AWS EventBridge Targets

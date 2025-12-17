@@ -4,7 +4,7 @@ import * as apig from 'aws-cdk-lib/aws-apigateway'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import { Construct } from 'constructs'
-import { CommonConstruct, CommonStack, CommonStackProps } from '../../../lib'
+import { CommonConstruct, CommonStack, CommonStackProps } from '../../../lib/aws/index.js'
 
 interface TestStackProps extends CommonStackProps {
   testLambda: any

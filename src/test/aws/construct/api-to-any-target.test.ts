@@ -1,7 +1,7 @@
 import * as cdk from 'aws-cdk-lib'
 import { Template } from 'aws-cdk-lib/assertions'
 import { Construct } from 'constructs'
-import { ApiToAnyTarget, ApiToAnyTargetProps, CommonStack } from '../../../lib'
+import { ApiToAnyTarget, ApiToAnyTargetProps, CommonStack } from '../../../lib/aws/index.js'
 
 interface TestStackProps extends ApiToAnyTargetProps {
   testLambda: any

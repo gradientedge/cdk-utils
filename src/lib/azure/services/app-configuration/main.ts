@@ -1,8 +1,8 @@
-import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group'
-import { AppConfiguration } from '@cdktf/provider-azurerm/lib/app-configuration'
-import { CommonAzureConstruct } from '../../common'
-import { createAzureTfOutput } from '../../utils'
-import { AppConfigurationProps } from './types'
+import { AppConfiguration } from '@cdktf/provider-azurerm/lib/app-configuration/index.js'
+import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group/index.js'
+import { CommonAzureConstruct } from '../../common/index.js'
+import { createAzureTfOutput } from '../../utils/index.js'
+import { AppConfigurationProps } from './types.js'
 
 /**
  * @classdesc Provides operations on Azure App Configuration

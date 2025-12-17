@@ -1,7 +1,7 @@
 import { CfnIPSet, CfnWebACL } from 'aws-cdk-lib/aws-wafv2'
-import { CommonConstruct } from '../../common'
-import { createCfnOutput } from '../../utils'
-import { WafIPSetProps, WafWebACLProps } from './types'
+import { CommonConstruct } from '../../common/index.js'
+import { createCfnOutput } from '../../utils/index.js'
+import { WafIPSetProps, WafWebACLProps } from './types.js'
 
 /**
  * @classdesc Provides operations on AWS WAF.

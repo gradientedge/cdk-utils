@@ -1,3 +1,3 @@
-export * from './api-destined-lambda'
-export * from './main'
-export * from './types'
+export * from './api-destined-lambda.js'
+export * from './main.js'
+export * from './types.js'

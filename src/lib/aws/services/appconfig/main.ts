@@ -6,11 +6,11 @@ import {
   DeploymentStrategy,
   RolloutStrategy,
 } from 'aws-cdk-lib/aws-appconfig'
-import { CommonConstruct } from '../../common'
-import { createCfnOutput } from '../../utils'
-import { Architecture } from '../constants'
-import { ArnsByRegionForArm64, ArnsByRegionForX86_64 } from './constants'
-import { AppConfigProps } from './types'
+import { CommonConstruct } from '../../common/index.js'
+import { createCfnOutput } from '../../utils/index.js'
+import { Architecture } from '../constants.js'
+import { ArnsByRegionForArm64, ArnsByRegionForX86_64 } from './constants.js'
+import { AppConfigProps } from './types.js'
 
 /**
  * @classdesc Provides operations on AWS

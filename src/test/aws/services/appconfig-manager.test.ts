@@ -1,7 +1,7 @@
 import * as cdk from 'aws-cdk-lib'
 import { Template } from 'aws-cdk-lib/assertions'
 import { Construct } from 'constructs'
-import { Architecture, CommonConstruct, CommonStack, CommonStackProps } from '../../../lib'
+import { Architecture, CommonConstruct, CommonStack, CommonStackProps } from '../../../lib/aws/index.js'
 
 interface TestStackProps extends CommonStackProps {
   app: any

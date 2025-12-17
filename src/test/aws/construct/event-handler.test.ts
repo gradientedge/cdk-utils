@@ -5,7 +5,7 @@ import { PolicyDocument } from 'aws-cdk-lib/aws-iam'
 import { AssetCode, IFunction } from 'aws-cdk-lib/aws-lambda'
 import { Chain, Succeed } from 'aws-cdk-lib/aws-stepfunctions'
 import { Construct } from 'constructs'
-import { CommonStack, EventHandler, EventHandlerProps } from '../../../lib'
+import { CommonStack, EventHandler, EventHandlerProps } from '../../../lib/aws/index.js'
 
 interface TestStackProps extends EventHandlerProps {
   testLambda: any

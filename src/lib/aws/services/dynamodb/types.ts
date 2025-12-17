@@ -1,6 +1,5 @@
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb'
-import { ResourceNameFormatterProps } from '../../common'
-import { TagProps } from '../../types'
+import { TagProps } from '../../types/index.js'
 
 /**
  */

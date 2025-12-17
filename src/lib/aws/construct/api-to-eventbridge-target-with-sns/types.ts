@@ -1,4 +1,4 @@
-import { LambdaEnvironment } from '../../services'
+import { LambdaEnvironment } from '../../services/index.js'
 import { EventBridgeDestination } from 'aws-cdk-lib/aws-lambda-destinations'
 import { AssetCode, IFunction, LayerVersion } from 'aws-cdk-lib/aws-lambda'
 import { PolicyDocument, Role } from 'aws-cdk-lib/aws-iam'

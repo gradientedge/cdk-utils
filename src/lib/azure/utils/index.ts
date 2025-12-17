@@ -1,6 +1,6 @@
 import { TerraformOutput } from 'cdktf'
 import _ from 'lodash'
-import { CommonAzureConstruct } from '../common'
+import { CommonAzureConstruct } from '../common/index.js'
 
 export const createAzureTfOutput = (
   id: string,
