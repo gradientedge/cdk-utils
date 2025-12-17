@@ -1,5 +1,5 @@
 import { Tags } from 'aws-cdk-lib'
-import { Table, TableV2 } from 'aws-cdk-lib/aws-dynamodb'
+import { BillingMode, Table, TableV2, TableEncryption } from 'aws-cdk-lib/aws-dynamodb'
 import _ from 'lodash'
 import { CommonConstruct } from '../../common/index.js'
 import { createCfnOutput } from '../../utils/index.js'
@@ -34,6 +34,8 @@ export class DynamodbManager {
 
     const table = new Table(scope, `${id}`, {
       ...props,
+      billingMode: props.billingMode ?? BillingMode.PAY_PER_REQUEST,
+      encryption: props.encryption ?? TableEncryption.AWS_MANAGED,
       tableName: scope.resourceNameFormatter.format(props.tableName, scope.props.resourceNameOptions?.table),
     })
 

@@ -29,14 +29,22 @@
       "type": "S"
     },
     "removalPolicy": "destroy",
-    "pointInTimeRecovery": true,
+    "pointInTimeRecoverySpecification": {
+      "pointInTimeRecoveryEnabled": true
+    },
     "timeToLiveAttribute": "expirationTime",
     "dynamoStream": "NEW_AND_OLD_IMAGES",
     "globalSecondaryIndexes": [
       {
         "indexName": "index",
-        "partitionKey": { "name": "id", "type": "S" },
-        "sortKey": { "name": "sort", "type": "S" }
+        "partitionKey": {
+          "name": "id",
+          "type": "S"
+        },
+        "sortKey": {
+          "name": "sort",
+          "type": "S"
+        }
       }
     ]
   }

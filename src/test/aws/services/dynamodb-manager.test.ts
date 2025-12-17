@@ -112,10 +112,6 @@ describe('TestDynamodbConstruct', () => {
           KeyType: 'HASH',
         },
       ],
-      ProvisionedThroughput: {
-        ReadCapacityUnits: 5,
-        WriteCapacityUnits: 5,
-      },
       TableName: 'cdktest-test-table-test',
     })
   })
