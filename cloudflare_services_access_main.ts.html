@@ -48,32 +48,32 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { ZeroTrustAccessApplication } from '@cdktf/provider-cloudflare/lib/zero-trust-access-application'
-import { ZeroTrustAccessShortLivedCertificate } from '@cdktf/provider-cloudflare/lib/zero-trust-access-short-lived-certificate'
-import { ZeroTrustAccessCustomPage } from '@cdktf/provider-cloudflare/lib/zero-trust-access-custom-page'
-import { ZeroTrustAccessGroup } from '@cdktf/provider-cloudflare/lib/zero-trust-access-group'
-import { ZeroTrustAccessIdentityProvider } from '@cdktf/provider-cloudflare/lib/zero-trust-access-identity-provider'
-import { ZeroTrustAccessMtlsCertificate } from '@cdktf/provider-cloudflare/lib/zero-trust-access-mtls-certificate'
-import { ZeroTrustOrganization } from '@cdktf/provider-cloudflare/lib/zero-trust-organization'
-import { ZeroTrustAccessPolicy } from '@cdktf/provider-cloudflare/lib/zero-trust-access-policy'
-import { AccessRule } from '@cdktf/provider-cloudflare/lib/access-rule'
-import { ZeroTrustAccessServiceToken } from '@cdktf/provider-cloudflare/lib/zero-trust-access-service-token'
-import { ZeroTrustAccessTag } from '@cdktf/provider-cloudflare/lib/zero-trust-access-tag'
-import { CommonCloudflareConstruct } from '../../common'
-import { createCloudflareTfOutput } from '../../utils'
+            <pre class="prettyprint source linenums"><code>import { AccessRule } from '@cdktf/provider-cloudflare/lib/access-rule/index.js'
+import { ZeroTrustAccessApplication } from '@cdktf/provider-cloudflare/lib/zero-trust-access-application/index.js'
+import { ZeroTrustAccessCustomPage } from '@cdktf/provider-cloudflare/lib/zero-trust-access-custom-page/index.js'
+import { ZeroTrustAccessGroup } from '@cdktf/provider-cloudflare/lib/zero-trust-access-group/index.js'
+import { ZeroTrustAccessIdentityProvider } from '@cdktf/provider-cloudflare/lib/zero-trust-access-identity-provider/index.js'
+import { ZeroTrustAccessMtlsCertificate } from '@cdktf/provider-cloudflare/lib/zero-trust-access-mtls-certificate/index.js'
+import { ZeroTrustAccessPolicy } from '@cdktf/provider-cloudflare/lib/zero-trust-access-policy/index.js'
+import { ZeroTrustAccessServiceToken } from '@cdktf/provider-cloudflare/lib/zero-trust-access-service-token/index.js'
+import { ZeroTrustAccessShortLivedCertificate } from '@cdktf/provider-cloudflare/lib/zero-trust-access-short-lived-certificate/index.js'
+import { ZeroTrustAccessTag } from '@cdktf/provider-cloudflare/lib/zero-trust-access-tag/index.js'
+import { ZeroTrustOrganization } from '@cdktf/provider-cloudflare/lib/zero-trust-organization/index.js'
+import { CommonCloudflareConstruct } from '../../common/index.js'
+import { createCloudflareTfOutput } from '../../utils/index.js'
 import {
+  AccessRuleProps,
   ZeroTrustAccessApplicationProps,
-  ZeroTrustAccessShortLivedCertificateProps,
   ZeroTrustAccessCustomPageProps,
   ZeroTrustAccessGroupProps,
   ZeroTrustAccessIdentityProviderProps,
   ZeroTrustAccessMtlsCertificateProps,
-  ZeroTrustOrganizationProps,
   ZeroTrustAccessPolicyProps,
-  AccessRuleProps,
   ZeroTrustAccessServiceTokenProps,
+  ZeroTrustAccessShortLivedCertificateProps,
   ZeroTrustAccessTagProps,
-} from './types'
+  ZeroTrustOrganizationProps,
+} from './types.js'
 
 /**
  * @classdesc Provides operations on Cloudflare Access

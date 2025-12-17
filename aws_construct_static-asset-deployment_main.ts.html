@@ -54,8 +54,8 @@ import { IDistribution, DistributionAttributes } from 'aws-cdk-lib/aws-cloudfron
 import { Construct } from 'constructs'
 import { BucketDeployment, Source, BucketDeploymentProps, ISource } from 'aws-cdk-lib/aws-s3-deployment'
 import _ from 'lodash'
-import { CommonConstruct } from '../../common'
-import { StaticAssetDeploymentProps } from './types'
+import { CommonConstruct } from '../../common/index.js'
+import { StaticAssetDeploymentProps } from './types.js'
 import appRoot from 'app-root-path'
 import path from 'path'
 

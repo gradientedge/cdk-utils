@@ -48,13 +48,13 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { PageRule } from '@cdktf/provider-cloudflare/lib/page-rule'
-import { PagesDomain } from '@cdktf/provider-cloudflare/lib/pages-domain'
-import { PagesProject } from '@cdktf/provider-cloudflare/lib/pages-project'
+            <pre class="prettyprint source linenums"><code>import { PageRule } from '@cdktf/provider-cloudflare/lib/page-rule/index.js'
+import { PagesDomain } from '@cdktf/provider-cloudflare/lib/pages-domain/index.js'
+import { PagesProject } from '@cdktf/provider-cloudflare/lib/pages-project/index.js'
 import { LocalExec, Provider } from 'cdktf-local-exec'
-import { CommonCloudflareConstruct } from '../../common'
-import { createCloudflareTfOutput } from '../../utils'
-import { PageRuleProps, PagesDomainProps, PagesProjectDeployProps, PagesProjectProps } from './types'
+import { CommonCloudflareConstruct } from '../../common/index.js'
+import { createCloudflareTfOutput } from '../../utils/index.js'
+import { PageRuleProps, PagesDomainProps, PagesProjectDeployProps, PagesProjectProps } from './types.js'
 
 /**
  * @classdesc Provides operations on Cloudflare Pages

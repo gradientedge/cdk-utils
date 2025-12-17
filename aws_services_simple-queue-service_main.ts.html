@@ -51,10 +51,10 @@
             <pre class="prettyprint source linenums"><code>import { Duration, RemovalPolicy, Tags } from 'aws-cdk-lib'
 import { IQueue, Queue } from 'aws-cdk-lib/aws-sqs'
 import _ from 'lodash'
-import { CommonConstruct } from '../../common'
-import { createCfnOutput } from '../../utils'
-import { LambdaProps } from '../lambda'
-import { QueueProps } from './types'
+import { CommonConstruct } from '../../common/index.js'
+import { createCfnOutput } from '../../utils/index.js'
+import { LambdaProps } from '../lambda/index.js'
+import { QueueProps } from './types.js'
 
 /**
  * @classdesc Provides operations on AWS Simple Queue Service.

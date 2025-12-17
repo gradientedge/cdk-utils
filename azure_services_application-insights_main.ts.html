@@ -48,11 +48,11 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group'
-import { ApplicationInsights } from '@cdktf/provider-azurerm/lib/application-insights'
-import { CommonAzureConstruct } from '../../common'
-import { createAzureTfOutput } from '../../utils'
-import { ApplicationInsightsProps } from './types'
+            <pre class="prettyprint source linenums"><code>import { ApplicationInsights } from '@cdktf/provider-azurerm/lib/application-insights/index.js'
+import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group/index.js'
+import { CommonAzureConstruct } from '../../common/index.js'
+import { createAzureTfOutput } from '../../utils/index.js'
+import { ApplicationInsightsProps } from './types.js'
 
 /**
  * @classdesc Provides operations on Azure Application Insights

@@ -65,9 +65,9 @@ import { ApplicationLoadBalancedFargateService } from 'aws-cdk-lib/aws-ecs-patte
 import { Role } from 'aws-cdk-lib/aws-iam'
 import { ILogGroup } from 'aws-cdk-lib/aws-logs'
 import _ from 'lodash'
-import { CommonConstruct } from '../../common'
-import { createCfnOutput } from '../../utils'
-import { EcsApplicationLoadBalancedFargateServiceProps, EcsClusterProps, EcsTaskProps } from './types'
+import { CommonConstruct } from '../../common/index.js'
+import { createCfnOutput } from '../../utils/index.js'
+import { EcsApplicationLoadBalancedFargateServiceProps, EcsClusterProps, EcsTaskProps } from './types.js'
 
 /**
  * @classdesc Provides operations on AWS Elastic Container Service.

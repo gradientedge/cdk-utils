@@ -48,33 +48,33 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { AzurermProvider } from '@cdktf/provider-azurerm/lib/provider'
-import { AzapiProvider } from '../.gen/providers/azapi/provider'
-import { Provider } from 'cdktf-local-exec'
-import { DataAzurermClientConfig } from '@cdktf/provider-azurerm/lib/data-azurerm-client-config'
+            <pre class="prettyprint source linenums"><code>import { DataAzurermClientConfig } from '@cdktf/provider-azurerm/lib/data-azurerm-client-config/index.js'
+import { AzurermProvider } from '@cdktf/provider-azurerm/lib/provider/index.js'
 import { AzurermBackend, TerraformStack } from 'cdktf'
+import { Provider } from 'cdktf-local-exec'
 import { Construct } from 'constructs'
-import { isDevStage, isPrdStage, isTestStage, isUatStage } from '../../common'
+import { isDevStage, isPrdStage, isTestStage, isUatStage } from '../../common/index.js'
+import { AzapiProvider } from '../.gen/providers/azapi/provider/index.js'
 import {
-  AzureStorageManager,
-  AzureKeyVaultManager,
   AzureApiManagementManager,
-  AzureFunctionManager,
-  AzureResourceGroupManager,
+  AzureAppConfigurationManager,
   AzureAppServiceManager,
   AzureApplicationInsightsManager,
-  AzureAppConfigurationManager,
   AzureCosmosDbManager,
-  AzureServicebusManager,
-  AzureEventgridManager,
   AzureDnsManager,
+  AzureEventgridManager,
+  AzureFunctionManager,
+  AzureKeyVaultManager,
   AzureLogAnalyticsWorkspaceManager,
   AzureMonitorManager,
   AzureRedisManager,
-} from '../services'
-import { CommonAzureStackProps } from './types'
-import { AzureRemoteBackend } from './constants'
-import { AzureResourceNameFormatter } from './resource-name-formatter'
+  AzureResourceGroupManager,
+  AzureServicebusManager,
+  AzureStorageManager,
+} from '../services/index.js'
+import { AzureRemoteBackend } from './constants.js'
+import { AzureResourceNameFormatter } from './resource-name-formatter.js'
+import { CommonAzureStackProps } from './types.js'
 
 export class CommonAzureConstruct extends TerraformStack {
   declare props: CommonAzureStackProps

@@ -49,15 +49,15 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>import fs from 'fs'
-import { CommonCloudflareConstruct } from './construct'
-import { CommonCloudflareStackProps } from './types'
+import { CommonCloudflareConstruct } from './construct.js'
+import { CommonCloudflareStackProps } from './types.js'
 
 import appRoot from 'app-root-path'
 import { TerraformStack } from 'cdktf'
 import { Construct } from 'constructs'
 import _ from 'lodash'
-import { isDevStage } from '../../common'
 import path from 'path'
+import { isDevStage } from '../../common/index.js'
 
 /**
  * @classdesc Common stack to use as a base for all higher level constructs.

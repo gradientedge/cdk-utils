@@ -56,9 +56,9 @@ import { AssetCode, IFunction, ILayerVersion, LayerVersion } from 'aws-cdk-lib/a
 import { CfnSecret, Secret } from 'aws-cdk-lib/aws-secretsmanager'
 import { Construct } from 'constructs'
 import _ from 'lodash'
-import { CommonConstruct } from '../../common'
-import { Architecture } from '../../services'
-import { LambdaWithIamAccessEnvironment, LambdaWithIamAccessProps } from './types'
+import { CommonConstruct } from '../../common/index.js'
+import { Architecture } from '../../services/index.js'
+import { LambdaWithIamAccessEnvironment, LambdaWithIamAccessProps } from './types.js'
 
 /**
  * @classdesc Provides a construct to create a lambda function with IAM access

@@ -48,23 +48,23 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group'
-import {
+            <pre class="prettyprint source linenums"><code>import {
   DataAzurermEventgridTopic,
   DataAzurermEventgridTopicConfig,
-} from '@cdktf/provider-azurerm/lib/data-azurerm-eventgrid-topic'
-import { EventgridTopic } from '@cdktf/provider-azurerm/lib/eventgrid-topic'
-import { EventgridEventSubscription } from '@cdktf/provider-azurerm/lib/eventgrid-event-subscription'
-import { EventgridSystemTopic } from '@cdktf/provider-azurerm/lib/eventgrid-system-topic'
+} from '@cdktf/provider-azurerm/lib/data-azurerm-eventgrid-topic/index.js'
+import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group/index.js'
+import { EventgridEventSubscription } from '@cdktf/provider-azurerm/lib/eventgrid-event-subscription/index.js'
 import { EventgridSystemTopicEventSubscription } from '@cdktf/provider-azurerm/lib/eventgrid-system-topic-event-subscription/index.js'
-import { CommonAzureConstruct } from '../../common'
-import { createAzureTfOutput } from '../../utils'
+import { EventgridSystemTopic } from '@cdktf/provider-azurerm/lib/eventgrid-system-topic/index.js'
+import { EventgridTopic } from '@cdktf/provider-azurerm/lib/eventgrid-topic/index.js'
+import { CommonAzureConstruct } from '../../common/index.js'
+import { createAzureTfOutput } from '../../utils/index.js'
 import {
-  EventgridTopicProps,
   EventgridEventSubscriptionProps,
-  EventgridSystemTopicProps,
   EventgridSystemTopicEventSubscriptionProps,
-} from './types'
+  EventgridSystemTopicProps,
+  EventgridTopicProps,
+} from './types.js'
 
 /**
  * @classdesc Provides operations on Azure Event Grid

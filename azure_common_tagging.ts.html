@@ -50,7 +50,7 @@
         <article>
             <pre class="prettyprint source linenums"><code>import { IAspect, TerraformResource } from 'cdktf'
 import { IConstruct } from 'constructs'
-import { RESOURCES_TO_EXCLUDE_TAGS } from './constants'
+import { RESOURCES_TO_EXCLUDE_TAGS } from './constants.js'
 
 type TaggableConstruct = IConstruct &amp; {
   tags?: { [key: string]: string } | string[]

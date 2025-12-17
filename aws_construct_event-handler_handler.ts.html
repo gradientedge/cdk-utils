@@ -55,7 +55,7 @@ import { IFunction } from 'aws-cdk-lib/aws-lambda'
 import { LogGroup } from 'aws-cdk-lib/aws-logs'
 import { Queue } from 'aws-cdk-lib/aws-sqs'
 import { Chain, Map, StateMachine } from 'aws-cdk-lib/aws-stepfunctions'
-import { EventHandlerType } from './types'
+import { EventHandlerType } from './types.js'
 
 export class Handler implements EventHandlerType {
   archive: Archive

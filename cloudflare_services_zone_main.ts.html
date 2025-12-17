@@ -48,17 +48,17 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { DataCloudflareZone } from '@cdktf/provider-cloudflare/lib/data-cloudflare-zone'
-import { Zone } from '@cdktf/provider-cloudflare/lib/zone'
-import { ZoneCacheReserve } from '@cdktf/provider-cloudflare/lib/zone-cache-reserve'
-import { ZoneCacheVariants } from '@cdktf/provider-cloudflare/lib/zone-cache-variants'
-import { ZoneDnssec } from '@cdktf/provider-cloudflare/lib/zone-dnssec'
-import { ZoneHold } from '@cdktf/provider-cloudflare/lib/zone-hold'
-import { ZoneLockdown } from '@cdktf/provider-cloudflare/lib/zone-lockdown'
-import { ZoneSetting } from '@cdktf/provider-cloudflare/lib/zone-setting'
-import { ZoneDnsSettings } from '@cdktf/provider-cloudflare/lib/zone-dns-settings'
-import { CommonCloudflareConstruct } from '../../common'
-import { createCloudflareTfOutput } from '../../utils'
+            <pre class="prettyprint source linenums"><code>import { DataCloudflareZone } from '@cdktf/provider-cloudflare/lib/data-cloudflare-zone/index.js'
+import { ZoneCacheReserve } from '@cdktf/provider-cloudflare/lib/zone-cache-reserve/index.js'
+import { ZoneCacheVariants } from '@cdktf/provider-cloudflare/lib/zone-cache-variants/index.js'
+import { ZoneDnsSettings } from '@cdktf/provider-cloudflare/lib/zone-dns-settings/index.js'
+import { ZoneDnssec } from '@cdktf/provider-cloudflare/lib/zone-dnssec/index.js'
+import { ZoneHold } from '@cdktf/provider-cloudflare/lib/zone-hold/index.js'
+import { ZoneLockdown } from '@cdktf/provider-cloudflare/lib/zone-lockdown/index.js'
+import { ZoneSetting } from '@cdktf/provider-cloudflare/lib/zone-setting/index.js'
+import { Zone } from '@cdktf/provider-cloudflare/lib/zone/index.js'
+import { CommonCloudflareConstruct } from '../../common/index.js'
+import { createCloudflareTfOutput } from '../../utils/index.js'
 import {
   ZoneCacheReserveProps,
   ZoneCacheVariantsProps,
@@ -68,7 +68,7 @@ import {
   ZoneOptions,
   ZoneProps,
   ZoneSettingProps,
-} from './types'
+} from './types.js'
 
 /**
  * @classdesc Provides operations on Cloudflare Zone

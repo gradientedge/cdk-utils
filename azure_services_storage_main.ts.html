@@ -48,21 +48,21 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group'
-import { DataAzurermStorageAccount } from '@cdktf/provider-azurerm/lib/data-azurerm-storage-account'
-import { DataAzurermStorageContainer } from '@cdktf/provider-azurerm/lib/data-azurerm-storage-container'
-import { StorageAccount } from '@cdktf/provider-azurerm/lib/storage-account'
-import { StorageBlob } from '@cdktf/provider-azurerm/lib/storage-blob'
-import { StorageContainer } from '@cdktf/provider-azurerm/lib/storage-container'
-import { DataAzurermStorageAccountBlobContainerSas } from '@cdktf/provider-azurerm/lib/data-azurerm-storage-account-blob-container-sas'
-import { CommonAzureConstruct } from '../../common'
-import { createAzureTfOutput } from '../../utils'
+            <pre class="prettyprint source linenums"><code>import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group/index.js'
+import { DataAzurermStorageAccountBlobContainerSas } from '@cdktf/provider-azurerm/lib/data-azurerm-storage-account-blob-container-sas/index.js'
+import { DataAzurermStorageAccount } from '@cdktf/provider-azurerm/lib/data-azurerm-storage-account/index.js'
+import { DataAzurermStorageContainer } from '@cdktf/provider-azurerm/lib/data-azurerm-storage-container/index.js'
+import { StorageAccount } from '@cdktf/provider-azurerm/lib/storage-account/index.js'
+import { StorageBlob } from '@cdktf/provider-azurerm/lib/storage-blob/index.js'
+import { StorageContainer } from '@cdktf/provider-azurerm/lib/storage-container/index.js'
+import { CommonAzureConstruct } from '../../common/index.js'
+import { createAzureTfOutput } from '../../utils/index.js'
 import {
+  DataAzurermStorageAccountBlobContainerSasProps,
   StorageAccountProps,
   StorageBlobProps,
   StorageContainerProps,
-  DataAzurermStorageAccountBlobContainerSasProps,
-} from './types'
+} from './types.js'
 
 /**
  * @classdesc Provides operations on Azure Storage

@@ -48,12 +48,12 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group'
-import { ServicePlan } from '@cdktf/provider-azurerm/lib/service-plan'
-import { LinuxWebApp } from '@cdktf/provider-azurerm/lib/linux-web-app'
-import { CommonAzureConstruct } from '../../common'
-import { createAzureTfOutput } from '../../utils'
-import { ServicePlanProps, LinuxWebAppProps } from './types'
+            <pre class="prettyprint source linenums"><code>import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group/index.js'
+import { LinuxWebApp } from '@cdktf/provider-azurerm/lib/linux-web-app/index.js'
+import { ServicePlan } from '@cdktf/provider-azurerm/lib/service-plan/index.js'
+import { CommonAzureConstruct } from '../../common/index.js'
+import { createAzureTfOutput } from '../../utils/index.js'
+import { LinuxWebAppProps, ServicePlanProps } from './types.js'
 
 /**
  * @classdesc Provides operations on Azure App Service

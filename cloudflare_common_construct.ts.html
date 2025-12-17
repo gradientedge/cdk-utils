@@ -48,12 +48,12 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { AwsProvider } from '@cdktf/provider-aws/lib/provider'
-import { CloudflareProvider } from '@cdktf/provider-cloudflare/lib/provider'
-import { AzurermProvider } from '@cdktf/provider-azurerm/lib/provider'
+            <pre class="prettyprint source linenums"><code>import { AwsProvider } from '@cdktf/provider-aws/lib/provider/index.js'
+import { CloudflareProvider } from '@cdktf/provider-cloudflare/lib/provider/index.js'
+import { AzurermProvider } from '@cdktf/provider-azurerm/lib/provider/index.js'
 import { AzurermBackend, S3Backend, TerraformStack, TerraformVariable } from 'cdktf'
 import { Construct } from 'constructs'
-import { isDevStage, isPrdStage, isTestStage, isUatStage } from '../../common'
+import { isDevStage, isPrdStage, isTestStage, isUatStage } from '../../common/index.js'
 import {
   CloudflareAccessManager,
   CloudflareApiShieldManager,
@@ -65,9 +65,9 @@ import {
   CloudflareRuleSetManager,
   CloudflareWorkerManager,
   CloudflareZoneManager,
-} from '../services'
-import { RemoteBackend } from './constants'
-import { CommonCloudflareStackProps } from './types'
+} from '../services/index.js'
+import { RemoteBackend } from './constants.js'
+import { CommonCloudflareStackProps } from './types.js'
 
 export class CommonCloudflareConstruct extends TerraformStack {
   declare props: CommonCloudflareStackProps

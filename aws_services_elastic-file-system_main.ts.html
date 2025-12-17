@@ -52,9 +52,9 @@
 import { ISecurityGroup, IVpc, SubnetSelection } from 'aws-cdk-lib/aws-ec2'
 import { FileSystem, LifecyclePolicy, OutOfInfrequentAccessPolicy, PerformanceMode } from 'aws-cdk-lib/aws-efs'
 import _ from 'lodash'
-import { CommonConstruct } from '../../common'
-import { createCfnOutput } from '../../utils'
-import { EfsAccessPointOptions, EfsFileSystemProps } from './types'
+import { CommonConstruct } from '../../common/index.js'
+import { createCfnOutput } from '../../utils/index.js'
+import { EfsAccessPointOptions, EfsFileSystemProps } from './types.js'
 
 export const DEFAULT_CREATE_ACL = {
   ownerGid: '1000',

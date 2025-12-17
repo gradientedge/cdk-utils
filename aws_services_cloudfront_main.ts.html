@@ -48,37 +48,34 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { Duration, Tags } from 'aws-cdk-lib'
+            <pre class="prettyprint source linenums"><code>import { Duration, RemovalPolicy, Tags } from 'aws-cdk-lib'
 import { ICertificate } from 'aws-cdk-lib/aws-certificatemanager'
 import * as cf from 'aws-cdk-lib/aws-cloudfront'
 import {
-  IDistribution,
-  DistributionAttributes,
-  CloudFrontWebDistribution,
   Distribution,
+  DistributionAttributes,
   Function,
   FunctionAssociation,
   FunctionCode,
   HttpVersion,
-  IResponseHeadersPolicy,
+  IDistribution,
+  IResponseHeadersPolicyRef,
   OriginAccessIdentity,
   PriceClass,
-  SSLMethod,
   SecurityPolicyProtocol,
-  ViewerCertificate,
 } from 'aws-cdk-lib/aws-cloudfront'
-import { HttpOrigin, S3Origin } from 'aws-cdk-lib/aws-cloudfront-origins'
+import { HttpOrigin, S3BucketOrigin } from 'aws-cdk-lib/aws-cloudfront-origins'
 import { ISecurityGroup, IVpc } from 'aws-cdk-lib/aws-ec2'
 import { IAccessPoint } from 'aws-cdk-lib/aws-efs'
 import { Role } from 'aws-cdk-lib/aws-iam'
 import { AssetCode, FileSystem, ILayerVersion } from 'aws-cdk-lib/aws-lambda'
 import { IBucket } from 'aws-cdk-lib/aws-s3'
 import { AwsCustomResource, AwsCustomResourcePolicy, PhysicalResourceId } from 'aws-cdk-lib/custom-resources'
-import { CommonConstruct, CommonStack } from '../../common'
-import { createCfnOutput } from '../../utils'
-import { LambdaEdgeProps } from '../lambda'
-import { CloudFrontProps, CloudfrontFunctionProps, DistributionProps } from './types'
 import _ from 'lodash'
+import { CommonConstruct, CommonStack } from '../../common/index.js'
+import { createCfnOutput } from '../../utils/index.js'
+import { LambdaEdgeProps } from '../lambda/index.js'
+import { CloudfrontFunctionProps, DistributionProps } from './types.js'
 
 /**
  * @classdesc Provides operations on AWS
@@ -114,74 +111,10 @@ export class CloudFrontManager {
   }
 
   /**
-   * @summary Method to create a cloudfront distribution
-   * @param id scoped id of the resource
-   * @param scope scope in which this resource is defined
-   * @param props distribution properties
-   * @param siteBucket
-   * @param logBucket
-   * @param oai
-   * @param certificate
-   * @param aliases
-   */
-  public createCloudFrontDistribution(
-    id: string,
-    scope: CommonConstruct,
-    props: CloudFrontProps,
-    siteBucket?: IBucket,
-    logBucket?: IBucket,
-    oai?: OriginAccessIdentity,
-    certificate?: ICertificate,
-    aliases?: string[]
-  ) {
-    if (!siteBucket) throw `SiteBucket not defined for ${id}`
-    if (!certificate) throw `Certificate not defined for ${id}`
-    if (!props) throw `CloudFront props undefined for ${id}`
-
-    const distribution = new CloudFrontWebDistribution(scope, `${id}`, {
-      ...props,
-      comment: `${id} - ${scope.props.stage} stage`,
-      enabled: props.enabled ?? true,
-      httpVersion: props.httpVersion ?? HttpVersion.HTTP2,
-      loggingConfig: {
-        bucket: logBucket,
-        prefix: 'cloudfront/',
-      },
-      originConfigs: [
-        {
-          behaviors: [{ isDefaultBehavior: true }],
-          s3OriginSource: {
-            originAccessIdentity: oai,
-            s3BucketSource: siteBucket,
-          },
-        },
-      ],
-      priceClass: props.priceClass ?? PriceClass.PRICE_CLASS_ALL,
-      viewerCertificate: ViewerCertificate.fromAcmCertificate(certificate, {
-        aliases: aliases,
-        securityPolicy: SecurityPolicyProtocol.TLS_V1_2_2021,
-        sslMethod: SSLMethod.SNI,
-      }),
-    })
-
-    if (props.tags &amp;&amp; !_.isEmpty(props.tags)) {
-      _.forEach(props.tags, tag => {
-        Tags.of(distribution).add(tag.key, tag.value)
-      })
-    }
-
-    createCfnOutput(`${id}-distributionId`, scope, distribution.distributionId)
-    createCfnOutput(`${id}-distributionDomainName`, scope, distribution.distributionDomainName)
-
-    return distribution
-  }
-
-  /**
    * Method to create a CloudFront distribution with S3 Origin
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props distribution properties
-   * @param origin
    * @param siteBucket
    * @param logBucket
    * @param oai
@@ -193,7 +126,6 @@ export class CloudFrontManager {
     id: string,
     scope: CommonConstruct,
     props: DistributionProps,
-    origin: S3Origin,
     siteBucket: IBucket,
     logBucket?: IBucket,
     oai?: OriginAccessIdentity,
@@ -208,7 +140,7 @@ export class CloudFrontManager {
       defaultBehavior: {
         ...props.defaultBehavior,
         functionAssociations: defaultFunctionAssociations ?? undefined,
-        origin,
+        origin: S3BucketOrigin.withOriginAccessIdentity(siteBucket, { originAccessIdentity: oai }),
       },
       domainNames: aliases,
       enableLogging: props.enableLogging ?? true,
@@ -254,7 +186,7 @@ export class CloudFrontManager {
     logBucket?: IBucket,
     certificate?: ICertificate,
     defaultFunctionAssociations?: FunctionAssociation[],
-    responseHeadersPolicy?: IResponseHeadersPolicy
+    responseHeadersPolicy?: IResponseHeadersPolicyRef
   ) {
     const distribution = new Distribution(scope, `${id}`, {
       additionalBehaviors: props.additionalBehaviors,
@@ -327,6 +259,10 @@ export class CloudFrontManager {
     if (!props) throw `EdgeFunction props undefined for ${id}`
     if (!props.functionName) throw `EdgeFunction functionName undefined for ${id}`
 
+    const functionName = scope.resourceNameFormatter.format(
+      props.functionName,
+      scope.props.resourceNameOptions?.cloudfront
+    )
     const edgeFunction = new cf.experimental.EdgeFunction(scope, `${id}`, {
       code: code,
       description: props.description,
@@ -334,10 +270,14 @@ export class CloudFrontManager {
         ...environment,
       },
       filesystem: accessPoint ? FileSystem.fromEfsAccessPoint(accessPoint, mountPath ?? '/mnt/msg') : undefined,
-      functionName: scope.resourceNameFormatter.format(props.functionName, scope.props.resourceNameOptions?.cloudfront),
+      functionName,
       handler: props.handler ?? 'index.handler',
       layers: layers,
-      logRetention: props.logRetention,
+      logGroup: scope.logManager.createLogGroup(`${id}-log-group`, scope, {
+        logGroupName: functionName,
+        removalPolicy: RemovalPolicy.DESTROY,
+        retention: scope.props.logRetention,
+      }),
       memorySize: props.memorySize,
       reservedConcurrentExecutions: props.reservedConcurrentExecutions,
       role: role,

@@ -48,14 +48,14 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group'
-import { DnsZone } from '@cdktf/provider-azurerm/lib/dns-zone'
-import { DnsARecord } from '@cdktf/provider-azurerm/lib/dns-a-record'
-import { DnsCnameRecord } from '@cdktf/provider-azurerm/lib/dns-cname-record'
-import { DnsTxtRecord } from '@cdktf/provider-azurerm/lib/dns-txt-record'
-import { CommonAzureConstruct } from '../../common'
-import { createAzureTfOutput } from '../../utils'
-import { DnsZoneProps, DnsARecordProps, DnsCnameRecordProps, DnsTxtRecordProps } from './types'
+            <pre class="prettyprint source linenums"><code>import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group/index.js'
+import { DnsARecord } from '@cdktf/provider-azurerm/lib/dns-a-record/index.js'
+import { DnsCnameRecord } from '@cdktf/provider-azurerm/lib/dns-cname-record/index.js'
+import { DnsTxtRecord } from '@cdktf/provider-azurerm/lib/dns-txt-record/index.js'
+import { DnsZone } from '@cdktf/provider-azurerm/lib/dns-zone/index.js'
+import { CommonAzureConstruct } from '../../common/index.js'
+import { createAzureTfOutput } from '../../utils/index.js'
+import { DnsARecordProps, DnsCnameRecordProps, DnsTxtRecordProps, DnsZoneProps } from './types.js'
 
 /**
  * @classdesc Provides operations on Azure DNS
