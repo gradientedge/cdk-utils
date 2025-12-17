@@ -24,7 +24,7 @@ jobs:
       - name: Checkout Code
         uses: actions/checkout@v5
       - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
       - name: Setup Environment
@@ -79,9 +79,9 @@ jobs:
       NODE_AUTH_TOKEN: ${{ secrets.GIT_TOKEN }}
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v5
       - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
       - name: Setup Environment
@@ -97,7 +97,7 @@ jobs:
             ./node_modules
             ./app/api-destined-function/node_modules
           key: ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-      - uses: actions/download-artifact@v5
+      - uses: actions/download-artifact@v6
         with:
           name: docs-artifact
           path: ./api-docs/
