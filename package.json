@@ -49,12 +49,8 @@
     "test": "npx rimraf coverage && npx vitest run --coverage",
     "test:watch": "npx vitest",
     "update:deps": "ncu -u --deep --reject react,react-dom",
-    "validate": "pnpm prettier && pnpm lint && pnpm test"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pnpm prettify && pnpm validate"
-    }
+    "validate": "pnpm prettier && pnpm lint && pnpm test",
+    "prepare": "husky"
   },
   "dependencies": {
     "@aws-sdk/client-secrets-manager": "^3.953.0",
