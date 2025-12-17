@@ -16,17 +16,22 @@ export class ResourceNameFormatter extends Construct {
    * @returns The formatted resource name
    */
   public format(resourceName: string, options?: ResourceNameFormatterProps) {
-    const resourceNameElements = []
+    const elements = []
+
     if (!options?.exclude) {
-      resourceNameElements.push(options?.globalPrefix ? this.props.globalPrefix : undefined)
-      resourceNameElements.push(options?.prefix ?? this.props.resourcePrefix)
+      if (options?.globalPrefix) elements.push(this.props.globalPrefix)
+      elements.push(options?.prefix ?? this.props.resourcePrefix)
     }
-    resourceNameElements.push(resourceName)
+
+    elements.push(resourceName)
+
     if (!options?.exclude) {
-      resourceNameElements.push(options?.suffix ?? this.props.resourceSuffix)
-      resourceNameElements.push(options?.globalSuffix ? this.props.globalSuffix : undefined)
+      elements.push(options?.suffix ?? this.props.resourceSuffix)
+      if (options?.globalSuffix) elements.push(this.props.globalSuffix)
     }
-    resourceNameElements.push(this.props.stage)
-    return resourceNameElements.filter(resourceNameElement => resourceNameElement != undefined).join('-')
+
+    elements.push(this.props.stage)
+
+    return elements.filter(Boolean).join('-')
   }
 }

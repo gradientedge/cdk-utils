@@ -40,11 +40,24 @@ export default [
       'complexity': ['warn', 10],
       'max-depth': ['warn', 4],
       'max-lines-per-function': ['warn', 50],
+      'max-params': ['warn', 4],
+      
+      // Code quality
+      'no-console': 'warn',
+      'no-debugger': 'error',
+      'no-duplicate-imports': 'error',
+      'prefer-const': 'error',
+      'no-var': 'error',
       
       // Security
       'no-eval': 'error',
       'no-implied-eval': 'error',
-      'no-new-func': 'error'
+      'no-new-func': 'error',
+      
+      // Best practices
+      'eqeqeq': ['error', 'always'],
+      'no-throw-literal': 'error',
+      'prefer-template': 'error'
     }
   }
 ];
