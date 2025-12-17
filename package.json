@@ -2,7 +2,14 @@
   "name": "@gradientedge/cdk-utils",
   "version": "0.0.0",
   "description": "Utilities for AWS CDK provisioning",
+  "type": "module",
   "main": "dist/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/index.d.ts"
+    }
+  },
   "engines": {
     "node": ">=16 <=22",
     "pnpm": "=10"

@@ -4,6 +4,20 @@
 import type { Config } from 'jest'
 
 const config: Config = {
+  preset: 'ts-jest/presets/default-esm',
+  extensionsToTreatAsEsm: ['.ts'],
+  transform: {
+    '^.+\\.ts$': [
+      'ts-jest',
+      {
+        useESM: true,
+      },
+    ],
+  },
+  moduleNameMapper: {
+    '^(\\.{1,2}/.*)\\.js$': '$1',
+  },
+  transformIgnorePatterns: ['node_modules/(?!(cdktf)/)'],
   automock: false,
   clearMocks: true,
   collectCoverage: true,
@@ -19,7 +33,6 @@ const config: Config = {
   coverageDirectory: './coverage/',
   coverageProvider: 'v8',
   moduleFileExtensions: ['js', 'ts'],
-  preset: 'ts-jest',
   reporters: [
     'default',
     [
@@ -37,9 +50,6 @@ const config: Config = {
   setupFilesAfterEnv: ['jest-extended', '<rootDir>/setup.js'],
   testEnvironment: 'node',
   testMatch: ['**/?(*.)+(spec|test).[t]s?(x)'],
-  transform: {
-    '^.+\\.(ts)$': 'ts-jest',
-  },
   verbose: true,
 }
 

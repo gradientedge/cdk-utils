@@ -1,2 +1,2 @@
-const cdktf = require('cdktf')
-cdktf.Testing.setupJest()
+const { Testing } = require('cdktf')
+Testing.setupJest()
