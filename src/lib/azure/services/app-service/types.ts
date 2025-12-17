@@ -1,5 +1,5 @@
-import { ServicePlanConfig } from '@cdktf/provider-azurerm/lib/service-plan'
-import { LinuxWebAppConfig } from '@cdktf/provider-azurerm/lib/linux-web-app'
+import { ServicePlanConfig } from '@cdktf/provider-azurerm/lib/service-plan/index.js'
+import { LinuxWebAppConfig } from '@cdktf/provider-azurerm/lib/linux-web-app/index.js'
 
 export interface ServicePlanProps extends ServicePlanConfig {}
 

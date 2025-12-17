@@ -1,6 +1,5 @@
 import { Construct } from 'constructs'
-import { AzureResourceNameFormatterProps } from './types'
-import { CommonAzureStackProps } from './types'
+import { AzureResourceNameFormatterProps, CommonAzureStackProps } from '../index.js'
 
 export class AzureResourceNameFormatter extends Construct {
   props: CommonAzureStackProps

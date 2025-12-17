@@ -1,7 +1,7 @@
 import * as cdk from 'aws-cdk-lib'
 import { Template } from 'aws-cdk-lib/assertions'
 import { Construct } from 'constructs'
-import { CommonConstruct, CommonStack, CommonStackProps, TableProps, TablePropsV2 } from '../../../lib'
+import { CommonConstruct, CommonStack, CommonStackProps, TableProps, TablePropsV2 } from '../../../lib/aws/index.js'
 
 interface TestStackProps extends CommonStackProps {
   testTable: TableProps
@@ -112,10 +112,6 @@ describe('TestDynamodbConstruct', () => {
           KeyType: 'HASH',
         },
       ],
-      ProvisionedThroughput: {
-        ReadCapacityUnits: 5,
-        WriteCapacityUnits: 5,
-      },
       TableName: 'cdktest-test-table-test',
     })
   })

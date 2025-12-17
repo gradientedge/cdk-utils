@@ -2,7 +2,7 @@ import { fromEnv, fromIni } from '@aws-sdk/credential-providers'
 import { AwsCredentialIdentityProvider } from '@aws-sdk/types'
 import { CfnOutput } from 'aws-cdk-lib'
 import _ from 'lodash'
-import { CommonConstruct } from '../common'
+import { CommonConstruct } from '../common/index.js'
 
 /**
  * @summary Helper method to add CloudFormation outputs from the construct

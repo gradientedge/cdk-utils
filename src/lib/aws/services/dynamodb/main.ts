@@ -1,9 +1,9 @@
 import { Tags } from 'aws-cdk-lib'
-import { Table, TableV2 } from 'aws-cdk-lib/aws-dynamodb'
+import { BillingMode, Table, TableV2, TableEncryption } from 'aws-cdk-lib/aws-dynamodb'
 import _ from 'lodash'
-import { CommonConstruct } from '../../common'
-import { createCfnOutput } from '../../utils'
-import { TableProps, TablePropsV2 } from './types'
+import { CommonConstruct } from '../../common/index.js'
+import { createCfnOutput } from '../../utils/index.js'
+import { TableProps, TablePropsV2 } from './types.js'
 
 /**
  * @classdesc Provides operations on AWS DynamoDB
@@ -34,6 +34,8 @@ export class DynamodbManager {
 
     const table = new Table(scope, `${id}`, {
       ...props,
+      billingMode: props.billingMode ?? BillingMode.PAY_PER_REQUEST,
+      encryption: props.encryption ?? TableEncryption.AWS_MANAGED,
       tableName: scope.resourceNameFormatter.format(props.tableName, scope.props.resourceNameOptions?.table),
     })
 

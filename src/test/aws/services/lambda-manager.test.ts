@@ -3,7 +3,7 @@ import { Template } from 'aws-cdk-lib/assertions'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import { Construct } from 'constructs'
-import { CommonConstruct, CommonStack, CommonStackProps } from '../../../lib'
+import { CommonConstruct, CommonStack, CommonStackProps } from '../../../lib/aws/index.js'
 
 interface TestStackProps extends CommonStackProps {
   testLambda: any
@@ -143,7 +143,7 @@ describe('TestLambdaConstruct', () => {
   test('synthesises as expected', () => {
     /* test if number of resources are correctly synthesised */
     template.resourceCountIs('AWS::Lambda::LayerVersion', 1)
-    template.resourceCountIs('AWS::Lambda::Function', 6)
+    template.resourceCountIs('AWS::Lambda::Function', 5)
     template.resourceCountIs('AWS::SQS::Queue', 2)
     template.resourceCountIs('AWS::Lambda::Alias', 2)
   })
@@ -175,7 +175,7 @@ describe('TestLambdaConstruct', () => {
 describe('TestLambdaConstruct', () => {
   test('provisions new layer as expected', () => {
     template.hasResourceProperties('AWS::Lambda::LayerVersion', {
-      CompatibleRuntimes: ['nodejs22.x'],
+      CompatibleRuntimes: ['nodejs24.x'],
       Description: 'test-lambda-layer',
       LayerName: 'cdktest-test-lambda-layer-test',
     })
@@ -192,7 +192,7 @@ describe('TestLambdaConstruct', () => {
       FunctionName: 'cdktest-test-lambda-test',
       Handler: 'index.lambda_handler',
       MemorySize: 1024,
-      Runtime: 'nodejs22.x',
+      Runtime: 'nodejs24.x',
       Tags: [
         {
           Key: 'testTagName1',
@@ -212,7 +212,7 @@ describe('TestLambdaConstruct', () => {
       FunctionName: 'cdktest-test-lambda-edge-test',
       Handler: 'index.handler',
       MemorySize: 1024,
-      Runtime: 'nodejs22.x',
+      Runtime: 'nodejs24.x',
       Timeout: 60,
     })
   })
@@ -236,7 +236,7 @@ describe('TestLambdaConstruct', () => {
       FunctionName: 'cdktest-test-lambda-concurrency-test',
       Handler: 'index.lambda_handler',
       MemorySize: 1024,
-      Runtime: 'nodejs22.x',
+      Runtime: 'nodejs24.x',
       Timeout: 60,
     })
   })

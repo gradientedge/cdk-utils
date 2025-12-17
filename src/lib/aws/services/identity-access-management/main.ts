@@ -13,8 +13,8 @@ import {
 import { CfnLogGroup } from 'aws-cdk-lib/aws-logs'
 import { IBucket } from 'aws-cdk-lib/aws-s3'
 import { Queue } from 'aws-cdk-lib/aws-sqs'
-import { CommonConstruct } from '../../common'
-import { createCfnOutput } from '../../utils'
+import { CommonConstruct } from '../../common/index.js'
+import { createCfnOutput } from '../../utils/index.js'
 
 /**
  * @classdesc Provides operations on AWS

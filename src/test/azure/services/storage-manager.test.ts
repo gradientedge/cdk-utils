@@ -1,6 +1,3 @@
-import { StorageAccount } from '@cdktf/provider-azurerm/lib/storage-account'
-import { StorageBlob } from '@cdktf/provider-azurerm/lib/storage-blob'
-import { StorageContainer } from '@cdktf/provider-azurerm/lib/storage-container'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
 import { Construct } from 'constructs'
@@ -8,12 +5,11 @@ import {
   CommonAzureConstruct,
   CommonAzureStack,
   CommonAzureStackProps,
+  DataAzurermStorageAccountBlobContainerSasProps,
   StorageAccountProps,
   StorageBlobProps,
   StorageContainerProps,
-  DataAzurermStorageAccountBlobContainerSasProps,
-} from '../../../lib'
-import { DataAzurermStorageAccountBlobContainerSas } from '@cdktf/provider-azurerm/lib/data-azurerm-storage-account-blob-container-sas'
+} from '../../../lib/azure/index.js'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
   testStorageAccount: StorageAccountProps
@@ -99,8 +95,7 @@ describe('TestAzureCommonConstruct', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
     expect(construct).toBeDefined()
-    expect(stack).toBeValidTerraform()
-    expect(stack).toPlanSuccessfully()
+    expect(Testing.toBeValidTerraform(stack)).toBeTruthy()
   })
 })
 
@@ -166,34 +161,40 @@ describe('TestAzureCommonConstruct', () => {
 
 describe('TestAzureCommonConstruct', () => {
   test('provisions storage account as expected', () => {
-    expect(construct).toHaveResourceWithProperties(StorageAccount, {
-      account_tier: 'Standard',
-      location: '${data.azurerm_resource_group.test-storage-account-dev-sa-rg.location}',
-      name: 'teststorageaccountdev',
-      resource_group_name: '${data.azurerm_resource_group.test-storage-account-dev-sa-rg.name}',
-      tags: {
-        environment: 'dev',
-      },
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'StorageAccount', {
+        account_tier: 'Standard',
+        location: '${data.azurerm_resource_group.test-storage-account-dev-sa-rg.location}',
+        name: 'teststorageaccountdev',
+        resource_group_name: '${data.azurerm_resource_group.test-storage-account-dev-sa-rg.name}',
+        tags: {
+          environment: 'dev',
+        },
+      })
+    )
   })
 })
 
 describe('TestAzureCommonConstruct', () => {
   test('provisions storage container as expected', () => {
-    expect(construct).toHaveResourceWithProperties(StorageContainer, {
-      name: 'test-storage-container-dev',
-      storage_account_name: 'test-storage-account',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'StorageContainer', {
+        name: 'test-storage-container-dev',
+        storage_account_name: 'test-storage-account',
+      })
+    )
   })
 })
 
 describe('TestAzureCommonConstruct', () => {
   test('provisions storage blob as expected', () => {
-    expect(construct).toHaveResourceWithProperties(StorageBlob, {
-      name: 'test-storage-blob-dev',
-      storage_account_name: '${data.azurerm_storage_account.test-storage-blob-dev-sa.name}',
-      storage_container_name: '${data.azurerm_storage_container.test-storage-blob-dev-sc.name}',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'StorageBlob', {
+        name: 'test-storage-blob-dev',
+        storage_account_name: '${data.azurerm_storage_account.test-storage-blob-dev-sa.name}',
+        storage_container_name: '${data.azurerm_storage_container.test-storage-blob-dev-sc.name}',
+      })
+    )
   })
 })
 
@@ -205,20 +206,22 @@ describe('TestAzureCommonConstruct', () => {
 
 describe('TestAzureCommonConstruct', () => {
   test('provisions container SAS token as expected', () => {
-    expect(construct).toHaveDataSourceWithProperties(DataAzurermStorageAccountBlobContainerSas, {
-      connection_string: '${azurerm_storage_account.test-storage-account-dev-sa.primary_connection_string}',
-      container_name: '${azurerm_storage_container.test-storage-container-dev-sc.name}',
-      expiry: '2040-12-31',
-      https_only: true,
-      permissions: {
-        add: true,
-        create: true,
-        delete: true,
-        list: true,
-        read: true,
-        write: true,
-      },
-      start: expect.any(String),
-    })
+    expect(
+      Testing.toHaveDataSourceWithProperties(construct, 'DataAzurermStorageAccountBlobContainerSas', {
+        connection_string: '${azurerm_storage_account.test-storage-account-dev-sa.primary_connection_string}',
+        container_name: '${azurerm_storage_container.test-storage-container-dev-sc.name}',
+        expiry: '2040-12-31',
+        https_only: true,
+        permissions: {
+          add: true,
+          create: true,
+          delete: true,
+          list: true,
+          read: true,
+          write: true,
+        },
+        start: expect.any(String),
+      })
+    )
   })
 })

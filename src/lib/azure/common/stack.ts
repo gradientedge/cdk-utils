@@ -1,13 +1,13 @@
-import fs from 'fs'
-import { CommonAzureConstruct } from './construct'
-import { CommonAzureStackProps } from './types'
-import { TagsAddingAspect } from './tagging'
 import appRoot from 'app-root-path'
 import { Aspects, TerraformStack } from 'cdktf'
 import { Construct } from 'constructs'
+import fs from 'fs'
 import _ from 'lodash'
-import { isDevStage } from '../../common'
 import path from 'path'
+import { isDevStage } from '../../common/index.js'
+import { CommonAzureConstruct } from './construct.js'
+import { TagsAddingAspect } from './tagging.js'
+import { CommonAzureStackProps } from './types.js'
 
 /**
  * @classdesc Common stack to use as a base for all higher level constructs.

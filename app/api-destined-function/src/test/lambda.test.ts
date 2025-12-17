@@ -1,4 +1,4 @@
-import { processEvent } from '../lib/lambda'
+import { processEvent } from '../lib/lambda.js'
 
 const validEvent = require('./testEvent.json')
 

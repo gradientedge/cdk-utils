@@ -1,9 +1,3 @@
-import { ApiShield } from '@cdktf/provider-cloudflare/lib/api-shield'
-import { ApiShieldOperation } from '@cdktf/provider-cloudflare/lib/api-shield-operation'
-import { ApiShieldOperationSchemaValidationSettings } from '@cdktf/provider-cloudflare/lib/api-shield-operation-schema-validation-settings'
-import { ApiShieldSchema } from '@cdktf/provider-cloudflare/lib/api-shield-schema'
-import { ApiShieldSchemaValidationSettings } from '@cdktf/provider-cloudflare/lib/api-shield-schema-validation-settings'
-import { Zone } from '@cdktf/provider-cloudflare/lib/zone'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
 import { Construct } from 'constructs'
@@ -18,7 +12,7 @@ import {
   CommonCloudflareStack,
   CommonCloudflareStackProps,
   ZoneProps,
-} from '../../../lib'
+} from '../../../lib/cloudflare/index.js'
 
 interface TestCloudflareStackProps extends CommonCloudflareStackProps {
   testZone: ZoneProps
@@ -152,8 +146,7 @@ describe('TestCloudflareApiShieldManager', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
     expect(construct).toBeDefined()
-    expect(stack).toBeValidTerraform()
-    expect(stack).toPlanSuccessfully()
+    expect(Testing.toBeValidTerraform(stack)).toBeTruthy()
   })
 })
 
@@ -189,67 +182,79 @@ describe('TestCloudflareApiShieldManager', () => {
 
 describe('TestCloudflareApiShieldManager', () => {
   test('provisions zone as expected', () => {
-    expect(construct).toHaveResourceWithProperties(Zone, {
-      account: {
-        id: 'test-account',
-      },
-      name: 'gradientedge.io',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'Zone', {
+        account: {
+          id: 'test-account',
+        },
+        name: 'gradientedge.io',
+      })
+    )
   })
 })
 
 describe('TestCloudflareApiShieldManager', () => {
   test('provisions api shield as expected', () => {
-    expect(construct).toHaveResourceWithProperties(ApiShield, {
-      auth_id_characteristics: [
-        {
-          name: 'test-api-shield',
-          type: 'header',
-        },
-      ],
-      zone_id: '${data.cloudflare_zone.test-api-shield-dev-data-zone-data-zone.zone_id}',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'ApiShield', {
+        auth_id_characteristics: [
+          {
+            name: 'test-api-shield',
+            type: 'header',
+          },
+        ],
+        zone_id: '${data.cloudflare_zone.test-api-shield-dev-data-zone-data-zone.zone_id}',
+      })
+    )
   })
 })
 
 describe('TestCloudflareApiShieldManager', () => {
   test('provisions api shield schema as expected', () => {
-    expect(construct).toHaveResourceWithProperties(ApiShieldSchema, {
-      file: '{\n  "test": true,\n  "hello": "world"\n}\n',
-      kind: 'openapi_v3',
-      name: 'test-api-dev',
-      zone_id: '${data.cloudflare_zone.test-api-shield-sch-dev-data-zone-data-zone.zone_id}',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'ApiShieldSchema', {
+        file: '{\n  "test": true,\n  "hello": "world"\n}\n',
+        kind: 'openapi_v3',
+        name: 'test-api-dev',
+        zone_id: '${data.cloudflare_zone.test-api-shield-sch-dev-data-zone-data-zone.zone_id}',
+      })
+    )
   })
 })
 
 describe('TestCloudflareApiShieldManager', () => {
   test('provisions api shield schema validation settings as expected', () => {
-    expect(construct).toHaveResourceWithProperties(ApiShieldSchemaValidationSettings, {
-      validation_default_mitigation_action: 'log',
-      validation_override_mitigation_action: 'none',
-      zone_id: '${data.cloudflare_zone.test-api-shield-val-dev-data-zone-data-zone.zone_id}',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'ApiShieldSchemaValidationSettings', {
+        validation_default_mitigation_action: 'log',
+        validation_override_mitigation_action: 'none',
+        zone_id: '${data.cloudflare_zone.test-api-shield-val-dev-data-zone-data-zone.zone_id}',
+      })
+    )
   })
 })
 
 describe('TestCloudflareApiShieldManager', () => {
   test('provisions api shield operation as expected', () => {
-    expect(construct).toHaveResourceWithProperties(ApiShieldOperation, {
-      endpoint: '/product',
-      host: 'api.gradientedge.io',
-      method: 'GET',
-      zone_id: '${data.cloudflare_zone.test-api-shield-op-dev-data-zone-data-zone.zone_id}',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'ApiShieldOperation', {
+        endpoint: '/product',
+        host: 'api.gradientedge.io',
+        method: 'GET',
+        zone_id: '${data.cloudflare_zone.test-api-shield-op-dev-data-zone-data-zone.zone_id}',
+      })
+    )
   })
 })
 
 describe('TestCloudflareApiShieldManager', () => {
   test('provisions api shield operation schema validation settings as expected', () => {
-    expect(construct).toHaveResourceWithProperties(ApiShieldOperationSchemaValidationSettings, {
-      mitigation_action: 'block',
-      operation_id: '${cloudflare_api_shield_operation.test-api-shield-op-dev.id}',
-      zone_id: '${data.cloudflare_zone.test-api-shield-op-val-dev-data-zone-data-zone.zone_id}',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'ApiShieldOperationSchemaValidationSettings', {
+        mitigation_action: 'block',
+        operation_id: '${cloudflare_api_shield_operation.test-api-shield-op-dev.id}',
+        zone_id: '${data.cloudflare_zone.test-api-shield-op-val-dev-data-zone-data-zone.zone_id}',
+      })
+    )
   })
 })

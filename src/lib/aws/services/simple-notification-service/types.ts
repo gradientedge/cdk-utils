@@ -1,5 +1,4 @@
 import { TopicProps } from 'aws-cdk-lib/aws-sns'
-import { ResourceNameFormatterProps } from '../../common'
 
 /**
  */

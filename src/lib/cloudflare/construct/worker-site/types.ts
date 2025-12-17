@@ -1,5 +1,11 @@
-import { CommonCloudflareStackProps } from '../../common'
-import { WorkerDomainProps, WorkerScriptProps, RulesetProps, ZoneProps, ZoneSettingProps } from '../../services'
+import { CommonCloudflareStackProps } from '../../common/index.js'
+import {
+  WorkerDomainProps,
+  WorkerScriptProps,
+  RulesetProps,
+  ZoneProps,
+  ZoneSettingProps,
+} from '../../services/index.js'
 
 export interface CloudflareWorkerSiteProps extends CommonCloudflareStackProps {
   siteSubDomain: string

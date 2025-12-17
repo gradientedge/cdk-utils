@@ -1,7 +1,7 @@
-import { FirewallRule } from '@cdktf/provider-cloudflare/lib/firewall-rule'
-import { CommonCloudflareConstruct } from '../../common'
-import { createCloudflareTfOutput } from '../../utils'
-import { FirewallRuleProps } from './types'
+import { FirewallRule } from '@cdktf/provider-cloudflare/lib/firewall-rule/index.js'
+import { CommonCloudflareConstruct } from '../../common/index.js'
+import { createCloudflareTfOutput } from '../../utils/index.js'
+import { FirewallRuleProps } from './types.js'
 
 /**
  * @classdesc Provides operations on Cloudflare Firewall Rules

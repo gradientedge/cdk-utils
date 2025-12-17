@@ -1,6 +1,5 @@
 import * as sqs from 'aws-cdk-lib/aws-sqs'
-import { ResourceNameFormatterProps } from '../../common'
-import { TagProps } from '../../types'
+import { TagProps } from '../../types/index.js'
 
 /**
  */

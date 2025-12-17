@@ -1,6 +1,5 @@
 import { AuthorizationConfig } from 'aws-cdk-lib/aws-ecs'
 import { AccessPointOptions, FileSystemProps } from 'aws-cdk-lib/aws-efs'
-import { ResourceNameFormatterProps } from '../../common'
 
 /**
  */

@@ -1,7 +1,7 @@
-import { ResourceGroup } from '@cdktf/provider-azurerm/lib/resource-group'
-import { CommonAzureConstruct } from '../../common'
-import { createAzureTfOutput } from '../../utils'
-import { ResourceGroupProps } from './types'
+import { ResourceGroup } from '@cdktf/provider-azurerm/lib/resource-group/index.js'
+import { CommonAzureConstruct } from '../../common/index.js'
+import { createAzureTfOutput } from '../../utils/index.js'
+import { ResourceGroupProps } from './types.js'
 
 /**
  * @classdesc Provides operations on Azure Resource Group

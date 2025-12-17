@@ -1,10 +1,3 @@
-import { WorkersCronTrigger } from '@cdktf/provider-cloudflare/lib/workers-cron-trigger'
-import { WorkersCustomDomain } from '@cdktf/provider-cloudflare/lib/workers-custom-domain'
-import { WorkersRoute } from '@cdktf/provider-cloudflare/lib/workers-route'
-import { WorkersScript } from '@cdktf/provider-cloudflare/lib/workers-script'
-import { WorkersKv } from '@cdktf/provider-cloudflare/lib/workers-kv'
-import { WorkersKvNamespace } from '@cdktf/provider-cloudflare/lib/workers-kv-namespace'
-import { Zone } from '@cdktf/provider-cloudflare/lib/zone'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
 import { Construct } from 'constructs'
@@ -20,7 +13,7 @@ import {
   WorkersKvNamespaceProps,
   WorkersKvProps,
   ZoneProps,
-} from '../../../lib'
+} from '../../../lib/cloudflare/index.js'
 
 interface TestCloudflareStackProps extends CommonCloudflareStackProps {
   testZone: ZoneProps
@@ -150,8 +143,7 @@ describe('TestCloudflareWorkerManager', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
     expect(construct).toBeDefined()
-    expect(stack).toBeValidTerraform()
-    expect(stack).toPlanSuccessfully()
+    expect(Testing.toBeValidTerraform(stack)).toBeTruthy()
   })
 })
 
@@ -183,109 +175,123 @@ describe('TestCloudflareWorkerManager', () => {
 
 describe('TestCloudflareWorkerManager', () => {
   test('provisions zone as expected', () => {
-    expect(construct).toHaveResourceWithProperties(Zone, {
-      account: {
-        id: 'test-account',
-      },
-      name: 'gradientedge.io',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'Zone', {
+        account: {
+          id: 'test-account',
+        },
+        name: 'gradientedge.io',
+      })
+    )
   })
 })
 
 describe('TestCloudflareWorkerManager', () => {
   test('provisions worker domain as expected', () => {
-    expect(construct).toHaveResourceWithProperties(WorkersCustomDomain, {
-      account_id: 'test-account',
-      hostname: 'test.gradientedge.io',
-      service: 'product-service',
-      zone_id: '${data.cloudflare_zone.test-worker-domain-dev-data-zone-data-zone.zone_id}',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'WorkersCustomDomain', {
+        account_id: 'test-account',
+        hostname: 'test.gradientedge.io',
+        service: 'product-service',
+        zone_id: '${data.cloudflare_zone.test-worker-domain-dev-data-zone-data-zone.zone_id}',
+      })
+    )
   })
 })
 
 describe('TestCloudflareWorkerManager', () => {
   test('provisions worker domain as expected', () => {
-    expect(construct).toHaveResourceWithProperties(WorkersRoute, {
-      pattern: 'gradientedge.io/*',
-      zone_id: '${data.cloudflare_zone.test-worker-route-dev-data-zone-data-zone.zone_id}',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'WorkersRoute', {
+        pattern: 'gradientedge.io/*',
+        zone_id: '${data.cloudflare_zone.test-worker-route-dev-data-zone-data-zone.zone_id}',
+      })
+    )
   })
 })
 
 describe('TestCloudflareWorkerManager', () => {
   test('provisions worker script as expected', () => {
-    expect(construct).toHaveResourceWithProperties(WorkersScript, {
-      account_id: 'test-account',
-      bindings: [
-        {
-          dataset: 'sample_dataset',
-          name: 'sample_dataset_binding',
-          type: 'analytics_engine',
-        },
-        {
-          name: 'sample_kv_namespace_binding',
-          type: 'kv_namespace',
-        },
-        {
-          name: 'sample_text_binding',
-          text: 'example',
-          type: 'plain_text',
-        },
-        {
-          name: 'sample_bucket_binding',
-          type: 'r2_bucket',
-        },
-        {
-          name: 'sample_secret_text_binding',
-          text: 'example',
-          type: 'secret_text',
-        },
-        {
-          environment: 'development',
-          name: 'sample_service_binding',
-          service: 'sample_service',
-          type: 'service',
-        },
-      ],
-      content:
-        'exports.handler = async function (event, context, callback) {\n  console.debug(`Event: ${JSON.stringify(event)}`)\n  console.debug(`Context: ${JSON.stringify(context)}`)\n  return callback(null, { statusCode: 200 })\n}\n',
-      script_name: 'test-script-dev',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'WorkersScript', {
+        account_id: 'test-account',
+        bindings: [
+          {
+            dataset: 'sample_dataset',
+            name: 'sample_dataset_binding',
+            type: 'analytics_engine',
+          },
+          {
+            name: 'sample_kv_namespace_binding',
+            type: 'kv_namespace',
+          },
+          {
+            name: 'sample_text_binding',
+            text: 'example',
+            type: 'plain_text',
+          },
+          {
+            name: 'sample_bucket_binding',
+            type: 'r2_bucket',
+          },
+          {
+            name: 'sample_secret_text_binding',
+            text: 'example',
+            type: 'secret_text',
+          },
+          {
+            environment: 'development',
+            name: 'sample_service_binding',
+            service: 'sample_service',
+            type: 'service',
+          },
+        ],
+        content:
+          'exports.handler = async function (event, context, callback) {\n  console.debug(`Event: ${JSON.stringify(event)}`)\n  console.debug(`Context: ${JSON.stringify(context)}`)\n  return callback(null, { statusCode: 200 })\n}\n',
+        script_name: 'test-script-dev',
+      })
+    )
   })
 })
 
 describe('TestCloudflareWorkerManager', () => {
   test('provisions workers kv namespace as expected', () => {
-    expect(construct).toHaveResourceWithProperties(WorkersKvNamespace, {
-      account_id: 'test-account',
-      title: 'test-namespace-dev',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'WorkersKvNamespace', {
+        account_id: 'test-account',
+        title: 'test-namespace-dev',
+      })
+    )
   })
 })
 
 describe('TestCloudflareWorkerManager', () => {
   test('provisions workers kv as expected', () => {
-    expect(construct).toHaveResourceWithProperties(WorkersKv, {
-      account_id: 'test-account',
-      key_name: 'test',
-      namespace_id: '${cloudflare_workers_kv_namespace.test-workers-kv-ns-dev.id}',
-      value: 'test123',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'WorkersKv', {
+        account_id: 'test-account',
+        key_name: 'test',
+        namespace_id: '${cloudflare_workers_kv_namespace.test-workers-kv-ns-dev.id}',
+        value: 'test123',
+      })
+    )
   })
 })
 
 describe('TestCloudflareWorkerManager', () => {
   test('provisions worker cron trigger as expected', () => {
-    expect(construct).toHaveResourceWithProperties(WorkersCronTrigger, {
-      account_id: 'test-account',
-      schedules: [
-        {
-          cron: '*/5 * * * *',
-        },
-        {
-          cron: '10 7 * * mon-fri',
-        },
-      ],
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'WorkersCronTrigger', {
+        account_id: 'test-account',
+        schedules: [
+          {
+            cron: '*/5 * * * *',
+          },
+          {
+            cron: '10 7 * * mon-fri',
+          },
+        ],
+      })
+    )
   })
 })

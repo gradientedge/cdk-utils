@@ -2,8 +2,8 @@ import { SqsQueue } from 'aws-cdk-lib/aws-events-targets'
 import { IQueue } from 'aws-cdk-lib/aws-sqs'
 import { Construct } from 'constructs'
 import _ from 'lodash'
-import { EventHandler } from '../event-handler'
-import { PipedEventHandlerProps } from './types'
+import { EventHandler } from '../event-handler/index.js'
+import { PipedEventHandlerProps } from './types.js'
 
 /**
  * @classdesc Provides a construct to create and deploy an EventBridge Piped Event Handler

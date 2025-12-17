@@ -1,4 +1,3 @@
-import { MonitorDiagnosticSetting } from '@cdktf/provider-azurerm/lib/monitor-diagnostic-setting'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
 import { Construct } from 'constructs'
@@ -7,7 +6,7 @@ import {
   CommonAzureStack,
   CommonAzureStackProps,
   MonitorDiagnosticSettingProps,
-} from '../../../lib'
+} from '../../../lib/azure/index.js'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
   testMonitorDiagnosticSetting: MonitorDiagnosticSettingProps
@@ -90,8 +89,7 @@ describe('TestAzureMonitorDiagnosticSettingConstruct', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
     expect(construct).toBeDefined()
-    expect(stack).toBeValidTerraform()
-    expect(stack).toPlanSuccessfully()
+    expect(Testing.toBeValidTerraform(stack)).toBeTruthy()
   })
 })
 
@@ -113,20 +111,22 @@ describe('TestAzureMonitorDiagnosticSettingConstruct', () => {
 
 describe('TestAzureMonitorDiagnosticSettingConstruct', () => {
   test('provisions monitor diagnostic settings as expected', () => {
-    expect(construct).toHaveResourceWithProperties(MonitorDiagnosticSetting, {
-      enabled_log: [
-        {
-          category_group: 'allLogs',
-        },
-      ],
-      metric: [
-        {
-          category: 'AllMetrics',
-        },
-      ],
-      name: 'test-monitor-diagnostic-setting-dev',
-      storage_account_id: 'testStorageAccountId',
-      target_resource_id: 'testTargetId',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'MonitorDiagnosticSetting', {
+        enabled_log: [
+          {
+            category_group: 'allLogs',
+          },
+        ],
+        metric: [
+          {
+            category: 'AllMetrics',
+          },
+        ],
+        name: 'test-monitor-diagnostic-setting-dev',
+        storage_account_id: 'testStorageAccountId',
+        target_resource_id: 'testTargetId',
+      })
+    )
   })
 })

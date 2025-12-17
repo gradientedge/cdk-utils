@@ -1,5 +1,4 @@
 import { CfnIPSetProps, CfnWebACLProps } from 'aws-cdk-lib/aws-wafv2'
-import { ResourceNameFormatterProps } from '../../common'
 
 /**
  */

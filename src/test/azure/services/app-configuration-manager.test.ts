@@ -1,8 +1,12 @@
-import { AppConfiguration } from '@cdktf/provider-azurerm/lib/app-configuration'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
 import { Construct } from 'constructs'
-import { CommonAzureConstruct, CommonAzureStack, CommonAzureStackProps, AppConfigurationProps } from '../../../lib'
+import {
+  AppConfigurationProps,
+  CommonAzureConstruct,
+  CommonAzureStack,
+  CommonAzureStackProps,
+} from '../../../lib/azure/index.js'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
   testAppConfiguration: AppConfigurationProps
@@ -69,8 +73,6 @@ const commonStack = new TestCommonStack(testingApp, 'test-common-stack', testSta
 const stack = Testing.fullSynth(commonStack)
 const construct = Testing.synth(commonStack.construct)
 
-console.log(expect(construct).toHaveResourceWithProperties(AppConfiguration, {}))
-
 describe('TestAzureAppConfigurationConstruct', () => {
   test('handles mis-configurations as expected', () => {
     const error = () => new TestInvalidCommonStack(app, 'test-invalid-stack', testStackProps)
@@ -90,8 +92,7 @@ describe('TestAzureAppConfigurationConstruct', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
     expect(construct).toBeDefined()
-    expect(stack).toBeValidTerraform()
-    expect(stack).toPlanSuccessfully()
+    expect(Testing.toBeValidTerraform(stack)).toBeTruthy()
   })
 })
 
@@ -113,12 +114,14 @@ describe('TestAzureAppConfigurationConstruct', () => {
 
 describe('TestAzureAppConfigurationConstruct', () => {
   test('provisions app configuration as expected', () => {
-    expect(construct).toHaveResourceWithProperties(AppConfiguration, {
-      name: 'test-app-configuration-dev',
-      resource_group_name: '${data.azurerm_resource_group.test-app-configuration-dev-ac-rg.name}',
-      tags: {
-        environment: 'dev',
-      },
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'AppConfiguration', {
+        name: 'test-app-configuration-dev',
+        resource_group_name: '${data.azurerm_resource_group.test-app-configuration-dev-ac-rg.name}',
+        tags: {
+          environment: 'dev',
+        },
+      })
+    )
   })
 })

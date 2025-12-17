@@ -1,17 +1,17 @@
-import { ApiShield } from '@cdktf/provider-cloudflare/lib/api-shield'
-import { ApiShieldOperation } from '@cdktf/provider-cloudflare/lib/api-shield-operation'
-import { ApiShieldOperationSchemaValidationSettings } from '@cdktf/provider-cloudflare/lib/api-shield-operation-schema-validation-settings'
-import { ApiShieldSchema } from '@cdktf/provider-cloudflare/lib/api-shield-schema'
-import { CommonCloudflareConstruct } from '../../common'
-import { createCloudflareTfOutput } from '../../utils'
+import { ApiShieldOperationSchemaValidationSettings } from '@cdktf/provider-cloudflare/lib/api-shield-operation-schema-validation-settings/index.js'
+import { ApiShieldOperation } from '@cdktf/provider-cloudflare/lib/api-shield-operation/index.js'
+import { ApiShieldSchemaValidationSettings } from '@cdktf/provider-cloudflare/lib/api-shield-schema-validation-settings/index.js'
+import { ApiShieldSchema } from '@cdktf/provider-cloudflare/lib/api-shield-schema/index.js'
+import { ApiShield } from '@cdktf/provider-cloudflare/lib/api-shield/index.js'
+import { CommonCloudflareConstruct } from '../../common/index.js'
+import { createCloudflareTfOutput } from '../../utils/index.js'
 import {
   ApiShieldOperationProps,
   ApiShieldOperationSchemaValidationSettingsProps,
   ApiShieldProps,
   ApiShieldSchemaProps,
   ApiShieldSchemaValidationSettingsProps,
-} from './types'
-import { ApiShieldSchemaValidationSettings } from '@cdktf/provider-cloudflare/lib/api-shield-schema-validation-settings'
+} from './types.js'
 
 /**
  * @classdesc Provides operations on Cloudflare Api Shield

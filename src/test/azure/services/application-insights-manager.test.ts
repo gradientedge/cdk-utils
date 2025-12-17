@@ -1,8 +1,13 @@
-import { ApplicationInsights } from '@cdktf/provider-azurerm/lib/application-insights'
+import { ApplicationInsights } from '@cdktf/provider-azurerm/lib/application-insights/index.js'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
 import { Construct } from 'constructs'
-import { CommonAzureConstruct, CommonAzureStack, CommonAzureStackProps, ApplicationInsightsProps } from '../../../lib'
+import {
+  ApplicationInsightsProps,
+  CommonAzureConstruct,
+  CommonAzureStack,
+  CommonAzureStackProps,
+} from '../../../lib/azure/index.js'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
   testApplicationInsights: ApplicationInsightsProps
@@ -69,8 +74,6 @@ const commonStack = new TestCommonStack(testingApp, 'test-common-stack', testSta
 const stack = Testing.fullSynth(commonStack)
 const construct = Testing.synth(commonStack.construct)
 
-console.log(expect(construct).toHaveResourceWithProperties(ApplicationInsights, {}))
-
 describe('TestAzureApplicationInsightsConstruct', () => {
   test('handles mis-configurations as expected', () => {
     const error = () => new TestInvalidCommonStack(app, 'test-invalid-stack', testStackProps)
@@ -90,8 +93,7 @@ describe('TestAzureApplicationInsightsConstruct', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
     expect(construct).toBeDefined()
-    expect(stack).toBeValidTerraform()
-    expect(stack).toPlanSuccessfully()
+    expect(Testing.toBeValidTerraform(stack)).toBeTruthy()
   })
 })
 
@@ -113,13 +115,15 @@ describe('TestAzureApplicationInsightsConstruct', () => {
 
 describe('TestAzureApplicationInsightsConstruct', () => {
   test('provisions application insights as expected', () => {
-    expect(construct).toHaveResourceWithProperties(ApplicationInsights, {
-      application_type: 'web',
-      name: 'test-application-insights-dev',
-      resource_group_name: '${data.azurerm_resource_group.test-application-insights-dev-ai-rg.name}',
-      tags: {
-        environment: 'dev',
-      },
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'ApplicationInsights', {
+        application_type: 'web',
+        name: 'test-application-insights-dev',
+        resource_group_name: '${data.azurerm_resource_group.test-application-insights-dev-ai-rg.name}',
+        tags: {
+          environment: 'dev',
+        },
+      })
+    )
   })
 })

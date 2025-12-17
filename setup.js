@@ -1,2 +1,3 @@
-const cdktf = require('cdktf')
-cdktf.Testing.setupJest()
+// CDKTF Testing setup for Vitest
+const { Testing } = require('cdktf')
+Testing.setupJest()

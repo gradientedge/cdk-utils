@@ -1,8 +1,12 @@
-import { ResourceGroup } from '@cdktf/provider-azurerm/lib/resource-group'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
 import { Construct } from 'constructs'
-import { CommonAzureConstruct, CommonAzureStack, CommonAzureStackProps, ResourceGroupProps } from '../../../lib'
+import {
+  CommonAzureConstruct,
+  CommonAzureStack,
+  CommonAzureStackProps,
+  ResourceGroupProps,
+} from '../../../lib/azure/index.js'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
   testResourceGroup: ResourceGroupProps
@@ -85,8 +89,7 @@ describe('TestAzureResourceGroupConstruct', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
     expect(construct).toBeDefined()
-    expect(stack).toBeValidTerraform()
-    expect(stack).toPlanSuccessfully()
+    expect(Testing.toBeValidTerraform(stack)).toBeTruthy()
   })
 })
 
@@ -108,11 +111,13 @@ describe('TestAzureResourceGroupConstruct', () => {
 
 describe('TestAzureResourceGroupConstruct', () => {
   test('provisions resource group as expected', () => {
-    expect(construct).toHaveResourceWithProperties(ResourceGroup, {
-      name: 'test-resource-group-dev',
-      tags: {
-        environment: 'dev',
-      },
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'ResourceGroup', {
+        name: 'test-resource-group-dev',
+        tags: {
+          environment: 'dev',
+        },
+      })
+    )
   })
 })

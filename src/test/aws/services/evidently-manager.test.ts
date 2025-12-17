@@ -10,7 +10,7 @@ import {
   EvidentlyLaunchProps,
   EvidentlyProjectProps,
   EvidentlySegmentProps,
-} from '../../../lib'
+} from '../../../lib/aws/index.js'
 
 interface TestStackProps extends CommonStackProps {
   testEvidentlyExperiment: EvidentlyExperimentProps

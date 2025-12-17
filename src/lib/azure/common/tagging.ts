@@ -1,6 +1,6 @@
 import { IAspect, TerraformResource } from 'cdktf'
 import { IConstruct } from 'constructs'
-import { RESOURCES_TO_EXCLUDE_TAGS } from './constants'
+import { RESOURCES_TO_EXCLUDE_TAGS } from './constants.js'
 
 type TaggableConstruct = IConstruct & {
   tags?: { [key: string]: string } | string[]

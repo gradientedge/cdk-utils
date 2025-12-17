@@ -1,20 +1,20 @@
-import { DataAwsSecretsmanagerSecret } from '@cdktf/provider-aws/lib/data-aws-secretsmanager-secret'
-import { DataAwsSecretsmanagerSecretVersion } from '@cdktf/provider-aws/lib/data-aws-secretsmanager-secret-version'
-import { DataAzurermKeyVault } from '@cdktf/provider-azurerm/lib/data-azurerm-key-vault'
-import { DataAzurermKeyVaultSecret } from '@cdktf/provider-azurerm/lib/data-azurerm-key-vault-secret'
-import { DataCloudflareZone } from '@cdktf/provider-cloudflare/lib/data-cloudflare-zone'
-import { PagesDomain } from '@cdktf/provider-cloudflare/lib/pages-domain'
+import { DataAwsSecretsmanagerSecretVersion } from '@cdktf/provider-aws/lib/data-aws-secretsmanager-secret-version/index.js'
+import { DataAwsSecretsmanagerSecret } from '@cdktf/provider-aws/lib/data-aws-secretsmanager-secret/index.js'
+import { DataAzurermKeyVaultSecret } from '@cdktf/provider-azurerm/lib/data-azurerm-key-vault-secret/index.js'
+import { DataAzurermKeyVault } from '@cdktf/provider-azurerm/lib/data-azurerm-key-vault/index.js'
+import { DataCloudflareZone } from '@cdktf/provider-cloudflare/lib/data-cloudflare-zone/index.js'
+import { DnsRecord } from '@cdktf/provider-cloudflare/lib/dns-record/index.js'
+import { PagesDomain } from '@cdktf/provider-cloudflare/lib/pages-domain/index.js'
 import {
   PagesProject,
   PagesProjectDeploymentConfigsPreviewEnvVars,
   PagesProjectDeploymentConfigsProductionEnvVars,
-} from '@cdktf/provider-cloudflare/lib/pages-project'
-import { DnsRecord } from '@cdktf/provider-cloudflare/lib/dns-record'
-import { Zone } from '@cdktf/provider-cloudflare/lib/zone'
+} from '@cdktf/provider-cloudflare/lib/pages-project/index.js'
+import { Zone } from '@cdktf/provider-cloudflare/lib/zone/index.js'
 import { Fn } from 'cdktf'
 import { Construct } from 'constructs'
-import { CommonCloudflareConstruct } from '../../common'
-import { CloudflarePagesStaticSiteProps } from './types'
+import { CommonCloudflareConstruct } from '../../common/index.js'
+import { CloudflarePagesStaticSiteProps } from './types.js'
 
 /**
  * @classdesc Provides a construct to create and deploy a cloudflare pages static site

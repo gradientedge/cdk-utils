@@ -3,7 +3,7 @@ import { Template } from 'aws-cdk-lib/assertions'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import { Construct } from 'constructs'
-import { ApiToLambdaTarget, ApiToLambdaTargetProps, CommonStack } from '../../../lib'
+import { ApiToLambdaTarget, ApiToLambdaTargetProps, CommonStack } from '../../../lib/aws/index.js'
 
 interface TestStackProps extends ApiToLambdaTargetProps {
   testLambda: any
@@ -254,7 +254,7 @@ describe('TestApiToLambdaTargetConstruct', () => {
       Role: {
         'Fn::GetAtt': ['testapitoebstacktestroleD9D398F5', 'Arn'],
       },
-      Runtime: 'nodejs22.x',
+      Runtime: 'nodejs24.x',
       Tags: [
         {
           Key: 'testTagName1',

@@ -1,5 +1,3 @@
-import { Ruleset } from '@cdktf/provider-cloudflare/lib/ruleset'
-import { Zone } from '@cdktf/provider-cloudflare/lib/zone'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
 import { Construct } from 'constructs'
@@ -9,7 +7,7 @@ import {
   CommonCloudflareStackProps,
   RulesetProps,
   ZoneProps,
-} from '../../../lib'
+} from '../../../lib/cloudflare/index.js'
 
 interface TestCloudflareStackProps extends CommonCloudflareStackProps {
   testZone: ZoneProps
@@ -102,8 +100,7 @@ describe('TestCloudflareRuleSetManager', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
     expect(construct).toBeDefined()
-    expect(stack).toBeValidTerraform()
-    expect(stack).toPlanSuccessfully()
+    expect(Testing.toBeValidTerraform(stack)).toBeTruthy()
   })
 })
 
@@ -120,23 +117,27 @@ describe('TestCloudflareRuleSetManager', () => {
 
 describe('TestCloudflareRuleSetManager', () => {
   test('provisions zone as expected', () => {
-    expect(construct).toHaveResourceWithProperties(Zone, {
-      account: {
-        id: 'test-account',
-      },
-      name: 'gradientedge.io',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'Zone', {
+        account: {
+          id: 'test-account',
+        },
+        name: 'gradientedge.io',
+      })
+    )
   })
 })
 
 describe('TestCloudflareRuleSetManager', () => {
   test('provisions Rule Set as expected', () => {
-    expect(construct).toHaveResourceWithProperties(Ruleset, {
-      name: 'testRuleSet',
-      zone_id: '${data.cloudflare_zone.test-rule-set-dev-data-zone-data-zone.zone_id}',
-      rules: {
-        action: 'set_cache_settings',
-      },
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'Ruleset', {
+        name: 'testRuleSet',
+        zone_id: '${data.cloudflare_zone.test-rule-set-dev-data-zone-data-zone.zone_id}',
+        rules: {
+          action: 'set_cache_settings',
+        },
+      })
+    )
   })
 })

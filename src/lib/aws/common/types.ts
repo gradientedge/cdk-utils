@@ -1,7 +1,7 @@
 import { StackProps } from 'aws-cdk-lib'
 import { Runtime, Tracing } from 'aws-cdk-lib/aws-lambda'
 import { RetentionDays } from 'aws-cdk-lib/aws-logs'
-import { BaseProps } from '../../common'
+import { BaseProps } from '../../common/index.js'
 
 /**
  */

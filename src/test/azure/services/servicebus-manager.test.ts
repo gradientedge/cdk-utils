@@ -1,5 +1,3 @@
-import { ServicebusTopic } from '@cdktf/provider-azurerm/lib/servicebus-topic'
-import { ServicebusSubscription } from '@cdktf/provider-azurerm/lib/servicebus-subscription'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
 import { Construct } from 'constructs'
@@ -7,13 +5,11 @@ import {
   CommonAzureConstruct,
   CommonAzureStack,
   CommonAzureStackProps,
+  ServicebusNamespaceProps,
+  ServicebusQueueProps,
   ServicebusSubscriptionProps,
   ServicebusTopicProps,
-  ServicebusQueueProps,
-  ServicebusNamespaceProps,
-} from '../../../lib'
-import { ServicebusNamespace } from '@cdktf/provider-azurerm/lib/servicebus-namespace'
-import { ServicebusQueue } from '@cdktf/provider-azurerm/lib/servicebus-queue'
+} from '../../../lib/azure/index.js'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
   testServicebusNamespace: ServicebusNamespaceProps
@@ -103,8 +99,6 @@ const commonStack = new TestCommonStack(testingApp, 'test-common-stack', testSta
 const stack = Testing.fullSynth(commonStack)
 const construct = Testing.synth(commonStack.construct)
 
-console.log(expect(construct).toHaveResourceWithProperties(ServicebusTopic, {}))
-
 describe('TestAzureServicebusConstruct', () => {
   test('handles mis-configurations as expected', () => {
     const error = () => new TestInvalidCommonStack(app, 'test-invalid-stack', testStackProps)
@@ -124,8 +118,7 @@ describe('TestAzureServicebusConstruct', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
     expect(construct).toBeDefined()
-    expect(stack).toBeValidTerraform()
-    expect(stack).toPlanSuccessfully()
+    expect(Testing.toBeValidTerraform(stack)).toBeTruthy()
   })
 })
 
@@ -162,49 +155,57 @@ describe('TestAzureServicebusConstruct', () => {
 
 describe('TestAzureServicebusConstruct', () => {
   test('provisions servicebus namespace as expected', () => {
-    expect(construct).toHaveResourceWithProperties(ServicebusNamespace, {
-      identity: {
-        type: 'SystemAssigned',
-      },
-      location: '${data.azurerm_resource_group.test-servicebus-namespace-dev-sn-rg.location}',
-      name: 'test-servicebus-namespace-dev',
-      resource_group_name: '${data.azurerm_resource_group.test-servicebus-namespace-dev-sn-rg.name}',
-      sku: 'Standard',
-      tags: {
-        environment: 'dev',
-      },
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'ServicebusNamespace', {
+        identity: {
+          type: 'SystemAssigned',
+        },
+        location: '${data.azurerm_resource_group.test-servicebus-namespace-dev-sn-rg.location}',
+        name: 'test-servicebus-namespace-dev',
+        resource_group_name: '${data.azurerm_resource_group.test-servicebus-namespace-dev-sn-rg.name}',
+        sku: 'Standard',
+        tags: {
+          environment: 'dev',
+        },
+      })
+    )
   })
 })
 
 describe('TestAzureServicebusConstruct', () => {
   test('provisions servicebus topic as expected', () => {
-    expect(construct).toHaveResourceWithProperties(ServicebusTopic, {
-      name: 'test-servicebus-topic-dev',
-      namespace_id: '${azurerm_servicebus_namespace.test-servicebus-namespace-dev-sn.id}',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'ServicebusTopic', {
+        name: 'test-servicebus-topic-dev',
+        namespace_id: '${azurerm_servicebus_namespace.test-servicebus-namespace-dev-sn.id}',
+      })
+    )
   })
 })
 
 describe('TestAzureServicebusConstruct', () => {
   test('provisions servicebus queue as expected', () => {
-    expect(construct).toHaveResourceWithProperties(ServicebusQueue, {
-      name: 'test-servicebus-queue-dev',
-      namespace_id: '${azurerm_servicebus_namespace.test-servicebus-namespace-dev-sn.id}',
-      duplicate_detection_history_time_window: 'PT1M',
-      requires_duplicate_detection: true,
-      dead_lettering_on_message_expiration: true,
-      default_message_ttl: 'P2D',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'ServicebusQueue', {
+        name: 'test-servicebus-queue-dev',
+        namespace_id: '${azurerm_servicebus_namespace.test-servicebus-namespace-dev-sn.id}',
+        duplicate_detection_history_time_window: 'PT1M',
+        requires_duplicate_detection: true,
+        dead_lettering_on_message_expiration: true,
+        default_message_ttl: 'P2D',
+      })
+    )
   })
 })
 
 describe('TestAzureServicebusConstruct', () => {
   test('provisions servicebus subscription as expected', () => {
-    expect(construct).toHaveResourceWithProperties(ServicebusSubscription, {
-      max_delivery_count: 1,
-      name: 'test-servicebus-subscription-dev',
-      topic_id: '${azurerm_servicebus_topic.test-servicebus-topic-dev-st.id}',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'ServicebusSubscription', {
+        max_delivery_count: 1,
+        name: 'test-servicebus-subscription-dev',
+        topic_id: '${azurerm_servicebus_topic.test-servicebus-topic-dev-st.id}',
+      })
+    )
   })
 })

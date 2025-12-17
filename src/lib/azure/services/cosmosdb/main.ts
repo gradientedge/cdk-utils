@@ -1,10 +1,10 @@
-import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group'
-import { CosmosdbAccount } from '@cdktf/provider-azurerm/lib/cosmosdb-account'
-import { CosmosdbSqlDatabase } from '@cdktf/provider-azurerm/lib/cosmosdb-sql-database'
-import { CosmosdbSqlContainer } from '@cdktf/provider-azurerm/lib/cosmosdb-sql-container'
-import { CommonAzureConstruct } from '../../common'
-import { createAzureTfOutput } from '../../utils'
-import { CosmosdbAccountProps, CosmosdbSqlContainerProps, CosmosdbSqlDatabaseProps } from './types'
+import { CosmosdbAccount } from '@cdktf/provider-azurerm/lib/cosmosdb-account/index.js'
+import { CosmosdbSqlContainer } from '@cdktf/provider-azurerm/lib/cosmosdb-sql-container/index.js'
+import { CosmosdbSqlDatabase } from '@cdktf/provider-azurerm/lib/cosmosdb-sql-database/index.js'
+import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group/index.js'
+import { CommonAzureConstruct } from '../../common/index.js'
+import { createAzureTfOutput } from '../../utils/index.js'
+import { CosmosdbAccountProps, CosmosdbSqlContainerProps, CosmosdbSqlDatabaseProps } from './types.js'
 
 /**
  * @classdesc Provides operations on Azure CosmosDB

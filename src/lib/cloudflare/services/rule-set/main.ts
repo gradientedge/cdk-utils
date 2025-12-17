@@ -1,8 +1,7 @@
-import { Filter } from '@cdktf/provider-cloudflare/lib/filter'
-import { CommonCloudflareConstruct } from '../../common'
-import { createCloudflareTfOutput } from '../../utils'
-import { RulesetProps } from './types'
-import { Ruleset } from '@cdktf/provider-cloudflare/lib/ruleset'
+import { Ruleset } from '@cdktf/provider-cloudflare/lib/ruleset/index.js'
+import { CommonCloudflareConstruct } from '../../common/index.js'
+import { createCloudflareTfOutput } from '../../utils/index.js'
+import { RulesetProps } from './types.js'
 
 /**
  * @classdesc Provides operations on Cloudflare Rule Sets

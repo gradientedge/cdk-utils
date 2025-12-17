@@ -1,4 +1,4 @@
-import { CommonStackProps } from '../../common'
+import { CommonStackProps } from '../../common/index.js'
 import {
   AcmProps,
   CloudfrontFunctionProps,
@@ -10,7 +10,7 @@ import {
   HealthCheck,
   LogProps,
   S3BucketProps,
-} from '../../services'
+} from '../../services/index.js'
 import { VpcProps } from 'aws-cdk-lib/aws-ec2'
 import {
   OriginRequestPolicyProps,
@@ -19,7 +19,7 @@ import {
   ResponseHeadersPolicyProps,
   CachePolicyProps,
 } from 'aws-cdk-lib/aws-cloudfront'
-import { SiteResponseHeaderPolicyType } from './constants'
+import { SiteResponseHeaderPolicyType } from './constants.js'
 
 /**
  */

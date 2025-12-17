@@ -1,5 +1,4 @@
 import { KeyProps } from 'aws-cdk-lib/aws-kms'
-import { ResourceNameFormatterProps } from '../../common'
 
 /**
  */

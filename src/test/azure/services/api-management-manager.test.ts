@@ -1,21 +1,16 @@
-import { ApiManagement } from '@cdktf/provider-azurerm/lib/api-management'
-import { ApiManagementApi } from '@cdktf/provider-azurerm/lib/api-management-api'
-import { ApiManagementBackend } from '@cdktf/provider-azurerm/lib/api-management-backend'
-import { ApiManagementApiOperation } from '@cdktf/provider-azurerm/lib/api-management-api-operation'
-import { ApiManagementApiOperationPolicy } from '@cdktf/provider-azurerm/lib/api-management-api-operation-policy'
+import { ApiManagement } from '@cdktf/provider-azurerm/lib/api-management/index.js'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
 import { Construct } from 'constructs'
 import {
+  ApiManagementApiProps,
+  ApiManagementBackendProps,
+  ApiManagementCustomDomainProps,
+  ApiManagementProps,
   CommonAzureConstruct,
   CommonAzureStack,
   CommonAzureStackProps,
-  ApiManagementProps,
-  ApiManagementBackendProps,
-  ApiManagementApiProps,
-  ApiManagementCustomDomainProps,
-} from '../../../lib'
-import { ApiManagementCustomDomain } from '@cdktf/provider-azurerm/lib/api-management-custom-domain'
+} from '../../../lib/azure/index.js'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
   testApiManagement: ApiManagementProps
@@ -114,12 +109,6 @@ const commonStack = new TestCommonStack(testingApp, 'test-common-stack', testSta
 const stack = Testing.fullSynth(commonStack)
 const construct = Testing.synth(commonStack.construct)
 
-console.log(expect(construct).toHaveResourceWithProperties(ApiManagement, {}))
-console.log(expect(construct).toHaveResourceWithProperties(ApiManagementApi, {}))
-console.log(expect(construct).toHaveResourceWithProperties(ApiManagementBackend, {}))
-console.log(expect(construct).toHaveResourceWithProperties(ApiManagementApiOperation, {}))
-console.log(expect(construct).toHaveResourceWithProperties(ApiManagementApiOperationPolicy, {}))
-
 describe('TestAzureApiManagementConstruct', () => {
   test('handles mis-configurations as expected', () => {
     const error = () => new TestInvalidCommonStack(app, 'test-invalid-stack', testStackProps)
@@ -139,8 +128,7 @@ describe('TestAzureApiManagementConstruct', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
     expect(construct).toBeDefined()
-    expect(stack).toBeValidTerraform()
-    expect(stack).toPlanSuccessfully()
+    expect(Testing.toBeValidTerraform(stack)).toBeTruthy()
   })
 })
 
@@ -178,98 +166,112 @@ describe('TestAzureApiManagementConstruct', () => {
 
 describe('TestAzureApiManagementConstruct', () => {
   test('provisions api management as expected', () => {
-    expect(construct).toHaveResourceWithProperties(ApiManagement, {
-      name: 'test-api-management-dev',
-      resource_group_name: '${data.azurerm_resource_group.test-api-management-dev-am-rg.name}',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'ApiManagement', {
+        name: 'test-api-management-dev',
+        resource_group_name: '${data.azurerm_resource_group.test-api-management-dev-am-rg.name}',
+      })
+    )
   })
 })
 
 describe('TestAzureApiManagementConstruct', () => {
   test('provisions api management api as expected', () => {
-    expect(construct).toHaveResourceWithProperties(ApiManagementApi, {
-      api_management_name: '${azurerm_api_management.test-api-management-dev-am.name}',
-      display_name: 'test-api-management-api',
-      name: 'test-api-management-api-dev',
-      protocols: ['https'],
-      resource_group_name: '${azurerm_api_management.test-api-management-dev-am.resource_group_name}',
-      revision: '1',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'ApiManagementApi', {
+        api_management_name: '${azurerm_api_management.test-api-management-dev-am.name}',
+        display_name: 'test-api-management-api',
+        name: 'test-api-management-api-dev',
+        protocols: ['https'],
+        resource_group_name: '${azurerm_api_management.test-api-management-dev-am.resource_group_name}',
+        revision: '1',
+      })
+    )
   })
 })
 
 describe('TestAzureApiManagementConstruct', () => {
   test('provisions api management backend as expected', () => {
-    expect(construct).toHaveResourceWithProperties(ApiManagementBackend, {
-      api_management_name: '${azurerm_api_management.test-api-management-dev-am.name}',
-      description: 'Backend for test-api-management-backend-dev',
-      name: 'test-api-management-backend-dev',
-      protocol: 'http',
-      resource_group_name: '${azurerm_api_management.test-api-management-dev-am.resource_group_name}',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'ApiManagementBackend', {
+        api_management_name: '${azurerm_api_management.test-api-management-dev-am.name}',
+        description: 'Backend for test-api-management-backend-dev',
+        name: 'test-api-management-backend-dev',
+        protocol: 'http',
+        resource_group_name: '${azurerm_api_management.test-api-management-dev-am.resource_group_name}',
+      })
+    )
   })
 })
 
 describe('TestAzureApiManagementConstruct', () => {
   test('provisions api management api operation as expected', () => {
-    expect(construct).toHaveResourceWithProperties(ApiManagementApiOperation, {
-      api_management_name: '${azurerm_api_management_api.test-api-management-dev-am-api.api_management_name}',
-      api_name: '${azurerm_api_management_api.test-api-management-dev-am-api.name}',
-      display_name: 'test',
-      method: 'GET',
-      operation_id: 'test-get',
-      resource_group_name: '${azurerm_api_management_api.test-api-management-dev-am-api.resource_group_name}',
-      url_template: '/test',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'ApiManagementApiOperation', {
+        api_management_name: '${azurerm_api_management_api.test-api-management-dev-am-api.api_management_name}',
+        api_name: '${azurerm_api_management_api.test-api-management-dev-am-api.name}',
+        display_name: 'test',
+        method: 'GET',
+        operation_id: 'test-get',
+        resource_group_name: '${azurerm_api_management_api.test-api-management-dev-am-api.resource_group_name}',
+        url_template: '/test',
+      })
+    )
   })
 })
 
 describe('TestAzureApiManagementConstruct', () => {
   test('provisions api management api operation as expected', () => {
-    expect(construct).toHaveResourceWithProperties(ApiManagementApiOperation, {
-      api_management_name: '${azurerm_api_management_api.test-api-management-dev-am-api.api_management_name}',
-      api_name: '${azurerm_api_management_api.test-api-management-dev-am-api.name}',
-      display_name: 'test',
-      method: 'POST',
-      operation_id: 'test-post',
-      resource_group_name: '${azurerm_api_management_api.test-api-management-dev-am-api.resource_group_name}',
-      template_parameter: [
-        {
-          name: 'path',
-          required: true,
-          type: '',
-        },
-      ],
-      url_template: '/test/{*path}',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'ApiManagementApiOperation', {
+        api_management_name: '${azurerm_api_management_api.test-api-management-dev-am-api.api_management_name}',
+        api_name: '${azurerm_api_management_api.test-api-management-dev-am-api.name}',
+        display_name: 'test',
+        method: 'POST',
+        operation_id: 'test-post',
+        resource_group_name: '${azurerm_api_management_api.test-api-management-dev-am-api.resource_group_name}',
+        template_parameter: [
+          {
+            name: 'path',
+            required: true,
+            type: '',
+          },
+        ],
+        url_template: '/test/{*path}',
+      })
+    )
   })
 })
 
 describe('TestAzureApiManagementConstruct', () => {
   test('provisions api management api operation as expected', () => {
-    expect(construct).toHaveResourceWithProperties(ApiManagementApiOperationPolicy, {
-      api_management_name: '${azurerm_api_management_api.test-api-management-dev-am-api.api_management_name}',
-      api_name: '${azurerm_api_management_api.test-api-management-dev-am-api.name}',
-      operation_id:
-        '${azurerm_api_management_api_operation.test-api-management-dev-apim-api-operation-test-get.operation_id}',
-      resource_group_name: '${azurerm_api_management_api.test-api-management-dev-am-api.resource_group_name}',
-      xml_content:
-        '<policies>\n        <inbound>\n          <base />\n          <rate-limit-by-key calls="25" renewal-period="1" counter-key="subscriptionId-${azurerm_api_management_api_operation.test-api-management-dev-apim-api-operation-test-get.operation_id}"/>\n          \n          \n          \n          <set-backend-service id="apim-generated-policy" backend-id="${azurerm_api_management_backend.test-api-management-dev-am-be.name}" />\n        </inbound>\n        <backend>\n          <base />\n        </backend>\n        <outbound>\n          <base />\n          \n          \n        </outbound>\n        <on-error>\n            <base />\n        </on-error>\n      </policies>',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'ApiManagementApiOperationPolicy', {
+        api_management_name: '${azurerm_api_management_api.test-api-management-dev-am-api.api_management_name}',
+        api_name: '${azurerm_api_management_api.test-api-management-dev-am-api.name}',
+        operation_id:
+          '${azurerm_api_management_api_operation.test-api-management-dev-apim-api-operation-test-get.operation_id}',
+        resource_group_name: '${azurerm_api_management_api.test-api-management-dev-am-api.resource_group_name}',
+        xml_content:
+          '<policies>\n        <inbound>\n          <base />\n          <rate-limit-by-key calls="25" renewal-period="1" counter-key="subscriptionId-${azurerm_api_management_api_operation.test-api-management-dev-apim-api-operation-test-get.operation_id}"/>\n          \n          \n          \n          <set-backend-service id="apim-generated-policy" backend-id="${azurerm_api_management_backend.test-api-management-dev-am-be.name}" />\n        </inbound>\n        <backend>\n          <base />\n        </backend>\n        <outbound>\n          <base />\n          \n          \n        </outbound>\n        <on-error>\n            <base />\n        </on-error>\n      </policies>',
+      })
+    )
   })
 })
 
 describe('TestAzureApiManagementConstruct', () => {
   test('provisions api management custom domain as expected', () => {
-    expect(construct).toHaveResourceWithProperties(ApiManagementCustomDomain, {
-      api_management_id: '${azurerm_api_management.test-api-management-dev-am.id}',
-      gateway: [
-        {
-          host_name: 'test-hostname',
-          key_vault_id: 'test-keyVault-id',
-          negotiate_client_certificate: false,
-        },
-      ],
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'ApiManagementCustomDomain', {
+        api_management_id: '${azurerm_api_management.test-api-management-dev-am.id}',
+        gateway: [
+          {
+            host_name: 'test-hostname',
+            key_vault_id: 'test-keyVault-id',
+            negotiate_client_certificate: false,
+          },
+        ],
+      })
+    )
   })
 })

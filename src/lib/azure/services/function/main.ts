@@ -1,10 +1,10 @@
-import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group'
-import { LinuxFunctionApp } from '@cdktf/provider-azurerm/lib/linux-function-app'
-import { FunctionAppFunction } from '@cdktf/provider-azurerm/lib/function-app-function'
-import { FunctionAppFlexConsumption } from '@cdktf/provider-azurerm/lib/function-app-flex-consumption'
-import { CommonAzureConstruct } from '../../common'
-import { createAzureTfOutput } from '../../utils'
-import { FunctionAppProps, FunctionProps, FunctionAppFlexConsumptionProps } from './types'
+import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group/index.js'
+import { FunctionAppFlexConsumption } from '@cdktf/provider-azurerm/lib/function-app-flex-consumption/index.js'
+import { FunctionAppFunction } from '@cdktf/provider-azurerm/lib/function-app-function/index.js'
+import { LinuxFunctionApp } from '@cdktf/provider-azurerm/lib/linux-function-app/index.js'
+import { CommonAzureConstruct } from '../../common/index.js'
+import { createAzureTfOutput } from '../../utils/index.js'
+import { FunctionAppFlexConsumptionProps, FunctionAppProps, FunctionProps } from './types.js'
 
 /**
  * @classdesc Provides operations on Azure Functions

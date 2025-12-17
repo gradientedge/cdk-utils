@@ -1,3 +1,3 @@
-export * from './main'
-export * from './target'
-export * from './types'
+export * from './main.js'
+export * from './target.js'
+export * from './types.js'

@@ -11,7 +11,7 @@ import {
 import { ICertificate } from 'aws-cdk-lib/aws-certificatemanager'
 import { LogGroup } from 'aws-cdk-lib/aws-logs'
 import { IHostedZone } from 'aws-cdk-lib/aws-route53'
-import { ApiToAnyTargetRestApiType } from './types'
+import { ApiToAnyTargetRestApiType } from './types.js'
 
 export class ApiToAnyTargetRestApi implements ApiToAnyTargetRestApiType {
   accessLogGroup: LogGroup

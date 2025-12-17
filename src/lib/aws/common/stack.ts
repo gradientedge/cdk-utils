@@ -3,12 +3,12 @@ import { Runtime } from 'aws-cdk-lib/aws-lambda'
 import fs from 'fs'
 import path from 'path'
 
-import { CommonConstruct } from './construct'
-import { CommonStackProps } from './types'
+import { CommonConstruct } from './construct.js'
+import { CommonStackProps } from './types.js'
 
 import appRoot from 'app-root-path'
 import _ from 'lodash'
-import { isDevStage } from '../../common'
+import { isDevStage } from '../../common/index.js'
 
 /**
  * @classdesc Common stack to use as a base for all higher level constructs.
@@ -23,7 +23,7 @@ import { isDevStage } from '../../common'
  * }
  */
 export class CommonStack extends Stack {
-  public static NODEJS_RUNTIME = Runtime.NODEJS_22_X
+  public static NODEJS_RUNTIME = Runtime.NODEJS_24_X
 
   construct: CommonConstruct
   props: CommonStackProps

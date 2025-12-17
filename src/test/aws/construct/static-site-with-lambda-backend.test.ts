@@ -1,8 +1,8 @@
 import * as cdk from 'aws-cdk-lib'
 import { Template } from 'aws-cdk-lib/assertions'
-import { Construct } from 'constructs'
-import { CommonStack, SiteWithLambdaBackend, SiteWithLambdaBackendProps } from '../../../lib'
 import { AssetCode } from 'aws-cdk-lib/aws-lambda'
+import { Construct } from 'constructs'
+import { CommonStack, SiteWithLambdaBackend, SiteWithLambdaBackendProps } from '../../../lib/aws/index.js'
 
 interface TestStackProps extends SiteWithLambdaBackendProps {
   testAttribute?: string
@@ -124,7 +124,7 @@ describe('SiteWithLambdaBackend', () => {
     template.resourceCountIs('AWS::ApplicationAutoScaling::ScalableTarget', 1)
     template.resourceCountIs('AWS::ApplicationAutoScaling::ScalingPolicy', 1)
     template.resourceCountIs('AWS::Lambda::Url', 1)
-    template.resourceCountIs('AWS::Lambda::Permission', 2)
+    template.resourceCountIs('AWS::Lambda::Permission', 4)
   })
 })
 

@@ -1,5 +1,4 @@
 import { ClusterProps } from 'aws-cdk-lib/aws-eks'
-import { ResourceNameFormatterProps } from '../../common'
 
 /**
  */

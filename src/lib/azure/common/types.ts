@@ -1,7 +1,7 @@
-import { AzurermProviderConfig } from '@cdktf/provider-azurerm/lib/provider'
-import { BaseProps } from '../../common'
-import { AzureRemoteBackend } from './constants'
+import { AzurermProviderConfig } from '@cdktf/provider-azurerm/lib/provider/index.js'
 import { AzurermBackendConfig } from 'cdktf'
+import { BaseProps } from '../../common/index.js'
+import { AzureRemoteBackend } from './constants.js'
 
 /**
  */

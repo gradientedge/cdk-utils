@@ -1,7 +1,7 @@
-import { Filter } from '@cdktf/provider-cloudflare/lib/filter'
-import { CommonCloudflareConstruct } from '../../common'
-import { createCloudflareTfOutput } from '../../utils'
-import { FilterProps } from './types'
+import { Filter } from '@cdktf/provider-cloudflare/lib/filter/index.js'
+import { CommonCloudflareConstruct } from '../../common/index.js'
+import { createCloudflareTfOutput } from '../../utils/index.js'
+import { FilterProps } from './types.js'
 
 /**
  * @classdesc Provides operations on Cloudflare Filters

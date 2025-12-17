@@ -1,2 +1,2 @@
-export * from './pages-static-site'
-export * from './worker-site'
+export * from './pages-static-site/index.js'
+export * from './worker-site/index.js'

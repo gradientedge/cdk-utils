@@ -1,2 +1,2 @@
-export * from './print-template'
-export * from './write-template'
+export * from './print-template.js'
+export * from './write-template.js'

@@ -1,9 +1,9 @@
 import _ from 'lodash'
 
-export * from './construct'
-export * from './stack'
-export * from './types'
-export * from './utils'
+export * from './construct.js'
+export * from './stack.js'
+export * from './types.js'
+export * from './utils.js'
 
 export const applyMixins = (derivedCtor: any, constructors: any[]) => {
   _.forEach(constructors, baseConstructor => {

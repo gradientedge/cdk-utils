@@ -1,8 +1,12 @@
-import { RedisCache } from '@cdktf/provider-azurerm/lib/redis-cache'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
 import { Construct } from 'constructs'
-import { CommonAzureConstruct, CommonAzureStack, CommonAzureStackProps, RedisCacheProps } from '../../../lib'
+import {
+  CommonAzureConstruct,
+  CommonAzureStack,
+  CommonAzureStackProps,
+  RedisCacheProps,
+} from '../../../lib/azure/index.js'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
   testRedisCache: RedisCacheProps
@@ -81,8 +85,7 @@ describe('TestAzureRedisConstruct', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
     expect(construct).toBeDefined()
-    expect(stack).toBeValidTerraform()
-    expect(stack).toPlanSuccessfully()
+    expect(Testing.toBeValidTerraform(stack)).toBeTruthy()
   })
 })
 
@@ -104,18 +107,20 @@ describe('TestAzureRedisConstruct', () => {
 
 describe('TestAzureRedisConstruct', () => {
   test('provisions redis cache as expected', () => {
-    expect(construct).toHaveResourceWithProperties(RedisCache, {
-      capacity: 2,
-      family: 'C',
-      location: '${data.azurerm_resource_group.test-redis-cache-dev-rc-rg.location}',
-      minimum_tls_version: '1.2',
-      name: 'test-redis-cache-dev',
-      non_ssl_port_enabled: false,
-      resource_group_name: '${data.azurerm_resource_group.test-redis-cache-dev-rc-rg.name}',
-      sku_name: 'Basic',
-      tags: {
-        environment: 'dev',
-      },
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'RedisCache', {
+        capacity: 2,
+        family: 'C',
+        location: '${data.azurerm_resource_group.test-redis-cache-dev-rc-rg.location}',
+        minimum_tls_version: '1.2',
+        name: 'test-redis-cache-dev',
+        non_ssl_port_enabled: false,
+        resource_group_name: '${data.azurerm_resource_group.test-redis-cache-dev-rc-rg.name}',
+        sku_name: 'Basic',
+        tags: {
+          environment: 'dev',
+        },
+      })
+    )
   })
 })

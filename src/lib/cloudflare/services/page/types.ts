@@ -1,6 +1,6 @@
-import { PageRuleConfig } from '@cdktf/provider-cloudflare/lib/page-rule'
-import { PagesDomainConfig } from '@cdktf/provider-cloudflare/lib/pages-domain'
-import { PagesProjectConfig } from '@cdktf/provider-cloudflare/lib/pages-project'
+import { PageRuleConfig } from '@cdktf/provider-cloudflare/lib/page-rule/index.js'
+import { PagesDomainConfig } from '@cdktf/provider-cloudflare/lib/pages-domain/index.js'
+import { PagesProjectConfig } from '@cdktf/provider-cloudflare/lib/pages-project/index.js'
 
 export interface PagesProjectProps extends PagesProjectConfig {}
 export interface PagesDomainProps extends PagesDomainConfig {}

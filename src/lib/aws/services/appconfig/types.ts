@@ -2,11 +2,9 @@ import {
   CfnApplicationProps,
   CfnConfigurationProfileProps,
   CfnDeploymentProps,
-  CfnDeploymentStrategyProps,
   CfnEnvironmentProps,
   DeploymentStrategyProps,
 } from 'aws-cdk-lib/aws-appconfig'
-import { ResourceNameFormatterProps } from '../../common'
 
 /**
  *

@@ -1,16 +1,5 @@
-import {
-  DistributionProps as CfDistributionProps,
-  CloudFrontWebDistributionProps,
-  FunctionProps,
-} from 'aws-cdk-lib/aws-cloudfront'
-import { ResourceNameFormatterProps } from '../../common'
-import { TagProps } from '../../types'
-
-/**
- */
-export interface CloudFrontProps extends CloudFrontWebDistributionProps {
-  tags?: TagProps[]
-}
+import { DistributionProps as CfDistributionProps, FunctionProps } from 'aws-cdk-lib/aws-cloudfront'
+import { TagProps } from '../../types/index.js'
 
 /**
  */

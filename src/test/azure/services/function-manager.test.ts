@@ -1,6 +1,3 @@
-import { LinuxFunctionApp } from '@cdktf/provider-azurerm/lib/linux-function-app'
-import { FunctionAppFunction } from '@cdktf/provider-azurerm/lib/function-app-function'
-import { FunctionAppFlexConsumption } from '@cdktf/provider-azurerm/lib/function-app-flex-consumption'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
 import { Construct } from 'constructs'
@@ -8,10 +5,10 @@ import {
   CommonAzureConstruct,
   CommonAzureStack,
   CommonAzureStackProps,
+  FunctionAppFlexConsumptionProps,
   FunctionAppProps,
   FunctionProps,
-  FunctionAppFlexConsumptionProps,
-} from '../../../lib'
+} from '../../../lib/azure/index.js'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
   testFunctionApp: FunctionAppProps
@@ -100,8 +97,7 @@ describe('TestAzureFunctionAppConstruct', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
     expect(construct).toBeDefined()
-    expect(stack).toBeValidTerraform()
-    expect(stack).toPlanSuccessfully()
+    expect(Testing.toBeValidTerraform(stack)).toBeTruthy()
   })
 })
 
@@ -132,42 +128,48 @@ describe('TestAzureFunctionAppConstruct', () => {
 
 describe('TestAzureFunctionAppConstruct', () => {
   test('provisions function app as expected', () => {
-    expect(construct).toHaveResourceWithProperties(LinuxFunctionApp, {
-      name: 'test-function-app-dev',
-      resource_group_name: '${data.azurerm_resource_group.test-function-app-dev-fa-rg.name}',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'LinuxFunctionApp', {
+        name: 'test-function-app-dev',
+        resource_group_name: '${data.azurerm_resource_group.test-function-app-dev-fa-rg.name}',
+      })
+    )
   })
 })
 
 describe('TestAzureFunctionConstruct', () => {
   test('provisions function as expected', () => {
-    expect(construct).toHaveResourceWithProperties(FunctionAppFunction, {
-      name: 'test-function-dev',
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'FunctionAppFunction', {
+        name: 'test-function-dev',
+      })
+    )
   })
 })
 
 describe('TestAzureFunctionConstruct', () => {
   test('provisions function as expected', () => {
-    expect(construct).toHaveResourceWithProperties(FunctionAppFlexConsumption, {
-      identity: {
-        type: 'SystemAssigned',
-      },
-      instance_memory_in_mb: 2048,
-      location: '${data.azurerm_resource_group.test-function-app-flex-consumption-dev-fa-rg.location}',
-      maximum_instance_count: 40,
-      name: 'test-function-app-flex-consumption-dev',
-      resource_group_name: '${data.azurerm_resource_group.test-function-app-flex-consumption-dev-fa-rg.name}',
-      runtime_name: 'node',
-      runtime_version: '22',
-      site_config: {
-        http2_enabled: true,
-      },
-      storage_authentication_type: 'StorageAccountConnectionString',
-      storage_container_type: 'blobContainer',
-      tags: {
-        environment: 'dev',
-      },
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'FunctionAppFlexConsumption', {
+        identity: {
+          type: 'SystemAssigned',
+        },
+        instance_memory_in_mb: 2048,
+        location: '${data.azurerm_resource_group.test-function-app-flex-consumption-dev-fa-rg.location}',
+        maximum_instance_count: 40,
+        name: 'test-function-app-flex-consumption-dev',
+        resource_group_name: '${data.azurerm_resource_group.test-function-app-flex-consumption-dev-fa-rg.name}',
+        runtime_name: 'node',
+        runtime_version: '22',
+        site_config: {
+          http2_enabled: true,
+        },
+        storage_authentication_type: 'StorageAccountConnectionString',
+        storage_container_type: 'blobContainer',
+        tags: {
+          environment: 'dev',
+        },
+      })
+    )
   })
 })

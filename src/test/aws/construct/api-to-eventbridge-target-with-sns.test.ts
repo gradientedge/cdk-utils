@@ -2,7 +2,7 @@ import * as cdk from 'aws-cdk-lib'
 import { Template } from 'aws-cdk-lib/assertions'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import { Construct } from 'constructs'
-import { ApiToEventBridgeTargetProps, ApiToEventBridgeTargetWithSns, CommonStack } from '../../../lib'
+import { ApiToEventBridgeTargetProps, ApiToEventBridgeTargetWithSns, CommonStack } from '../../../lib/aws/index.js'
 
 interface TestStackProps extends ApiToEventBridgeTargetProps {}
 
@@ -230,7 +230,7 @@ describe('TestApiToEventBridgeTargetWithSnsConstruct', () => {
       FunctionName: 'cdktest-test-api-destined-test',
       Handler: 'lambda.handler',
       MemorySize: 1024,
-      Runtime: 'nodejs22.x',
+      Runtime: 'nodejs24.x',
       Timeout: 60,
     })
   })

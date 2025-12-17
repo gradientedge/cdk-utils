@@ -1,6 +1,6 @@
 import { CfnOutput } from 'aws-cdk-lib'
 import { Construct } from 'constructs'
-import { isDevStage, isPrdStage, isTestStage, isUatStage } from '../../common'
+import { isDevStage, isPrdStage, isTestStage, isUatStage } from '../../common/index.js'
 import {
   AcmManager,
   ApiManager,
@@ -31,10 +31,10 @@ import {
   SsmManager,
   VpcManager,
   WafManager,
-} from '../services'
-import { createCfnOutput } from '../utils'
-import { ResourceNameFormatter } from './resource-name-formatter'
-import { CommonStackProps } from './types'
+} from '../services/index.js'
+import { createCfnOutput } from '../utils/index.js'
+import { ResourceNameFormatter } from './resource-name-formatter.js'
+import { CommonStackProps } from './types.js'
 
 /**
  * @subcategory Construct

@@ -2,10 +2,11 @@
   "name": "@gradientedge/cdk-utils-api-destined-function",
   "version": "0.0.0-SNAPSHOT",
   "description": "Application for API Destined Function",
+  "type": "module",
   "main": "dist/index.js",
   "license": "UNLICENSED",
   "engines": {
-    "node": ">=16 <=22"
+    "node": ">=22 <=24"
   },
   "repository": {
     "type": "git",
@@ -16,11 +17,11 @@
     "test": "npx jest --ci --runInBand --passWithNoTests"
   },
   "dependencies": {
-    "@types/uuid": "^10.0.0",
-    "uuid": "^11.1.0"
+    "@types/uuid": "^11.0.0",
+    "uuid": "^13.0.0"
   },
   "devDependencies": {
     "mkdirp": "^3.0.1",
-    "rimraf": "^6.0.1"
+    "rimraf": "^6.1.2"
   }
 }

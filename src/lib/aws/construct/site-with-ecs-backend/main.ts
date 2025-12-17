@@ -33,8 +33,8 @@ import { IHostedZone } from 'aws-cdk-lib/aws-route53'
 import { IBucket } from 'aws-cdk-lib/aws-s3'
 import { Construct } from 'constructs'
 import _ from 'lodash'
-import { CommonConstruct } from '../../common'
-import { SiteCachePolicyProps, SiteResponseHeadersPolicyProps, SiteWithEcsBackendProps } from './types'
+import { CommonConstruct } from '../../common/index.js'
+import { SiteCachePolicyProps, SiteResponseHeadersPolicyProps, SiteWithEcsBackendProps } from './types.js'
 
 /**
  * @classdesc Provides a construct to create and deploy a site hosted with an clustered ECS/ELB backend

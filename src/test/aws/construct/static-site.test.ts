@@ -2,7 +2,7 @@ import * as cdk from 'aws-cdk-lib'
 import { Template } from 'aws-cdk-lib/assertions'
 import * as s3deploy from 'aws-cdk-lib/aws-s3-deployment'
 import { Construct } from 'constructs'
-import { CommonStack, StaticSite, StaticSiteProps } from '../../../lib'
+import { CommonStack, StaticSite, StaticSiteProps } from '../../../lib/aws/index.js'
 
 interface TestStackProps extends StaticSiteProps {
   testAttribute?: string
@@ -230,24 +230,23 @@ describe.each<TestTuple>([
           },
           Origins: [
             {
-              CustomOriginConfig: {
-                OriginProtocolPolicy: 'http-only',
-                OriginSSLProtocols: ['TLSv1.2'],
-              },
               DomainName: {
-                'Fn::Select': [
-                  2,
-                  {
-                    'Fn::Split': [
-                      '/',
-                      {
-                        'Fn::GetAtt': ['teststaticsitestackteststaticsitesitebucketDBC08543', 'WebsiteURL'],
-                      },
-                    ],
-                  },
-                ],
+                'Fn::GetAtt': ['teststaticsitestackteststaticsitesitebucketDBC08543', 'RegionalDomainName'],
               },
               Id: 'teststaticsitestackteststaticsitedistributionOrigin17FDFDB75',
+              S3OriginConfig: {
+                OriginAccessIdentity: {
+                  'Fn::Join': [
+                    '',
+                    [
+                      'origin-access-identity/cloudfront/',
+                      {
+                        Ref: 'teststaticsitestackteststaticsitedistributionOrigin1S3Origin81498726',
+                      },
+                    ],
+                  ],
+                },
+              },
             },
           ],
           PriceClass: 'PriceClass_All',
@@ -268,6 +267,16 @@ describe.each<TestTuple>([
             SslSupportMethod: 'sni-only',
           },
         },
+        Tags: [
+          {
+            Key: 'testTagName1',
+            Value: 'testTagValue1',
+          },
+          {
+            Key: 'testTagName2',
+            Value: 'testTagValue2',
+          },
+        ],
       })
     })
   })

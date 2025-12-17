@@ -1,6 +1,6 @@
 import { TerraformOutput } from 'cdktf'
 import _ from 'lodash'
-import { CommonCloudflareConstruct } from '../common'
+import { CommonCloudflareConstruct } from '../common/index.js'
 
 export const createCloudflareTfOutput = (
   id: string,

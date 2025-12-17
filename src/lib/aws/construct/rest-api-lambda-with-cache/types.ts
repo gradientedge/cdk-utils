@@ -1,5 +1,5 @@
-import { RestApiLambdaProps } from '../rest-api-lambda'
-import { ReplicatedElastiCacheProps, VpcProps } from '../../services'
+import { RestApiLambdaProps } from '../rest-api-lambda/index.js'
+import { ReplicatedElastiCacheProps, VpcProps } from '../../services/index.js'
 
 /**
  */

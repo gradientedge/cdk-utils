@@ -10,8 +10,8 @@ import {
   RolloutStrategy,
 } from 'aws-cdk-lib/aws-appconfig'
 import { Construct } from 'constructs'
-import { CommonConstruct } from '../../common'
-import { ApplicationConfigurationProps } from './types'
+import { CommonConstruct } from '../../common/index.js'
+import { ApplicationConfigurationProps } from './types.js'
 
 export class ApplicationConfiguration extends CommonConstruct {
   declare props: ApplicationConfigurationProps

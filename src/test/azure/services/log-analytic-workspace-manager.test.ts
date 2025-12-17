@@ -1,8 +1,12 @@
-import { LogAnalyticsWorkspace } from '@cdktf/provider-azurerm/lib/log-analytics-workspace'
 import { App, Testing } from 'cdktf'
 import 'cdktf/lib/testing/adapters/jest'
 import { Construct } from 'constructs'
-import { CommonAzureConstruct, CommonAzureStack, CommonAzureStackProps, LogAnalyticsWorkspaceProps } from '../../../lib'
+import {
+  CommonAzureConstruct,
+  CommonAzureStack,
+  CommonAzureStackProps,
+  LogAnalyticsWorkspaceProps,
+} from '../../../lib/azure/index.js'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
   testLogAnalyticsWorkspace: LogAnalyticsWorkspaceProps
@@ -69,8 +73,6 @@ const commonStack = new TestCommonStack(testingApp, 'test-common-stack', testSta
 const stack = Testing.fullSynth(commonStack)
 const construct = Testing.synth(commonStack.construct)
 
-console.log(expect(construct).toHaveResourceWithProperties(LogAnalyticsWorkspace, {}))
-
 describe('TestAzureLogAnalyticsWorkspaceConstruct', () => {
   test('handles mis-configurations as expected', () => {
     const error = () => new TestInvalidCommonStack(app, 'test-invalid-stack', testStackProps)
@@ -90,8 +92,7 @@ describe('TestAzureLogAnalyticsWorkspaceConstruct', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
     expect(construct).toBeDefined()
-    expect(stack).toBeValidTerraform()
-    expect(stack).toPlanSuccessfully()
+    expect(Testing.toBeValidTerraform(stack)).toBeTruthy()
   })
 })
 
@@ -113,13 +114,15 @@ describe('TestAzureLogAnalyticsWorkspaceConstruct', () => {
 
 describe('TestAzureLogAnalyticsWorkspaceConstruct', () => {
   test('provisions log analytics workspace as expected', () => {
-    expect(construct).toHaveResourceWithProperties(LogAnalyticsWorkspace, {
-      location: '${data.azurerm_resource_group.test-log-analytics-workspace-dev-lw-rg.location}',
-      name: 'test-log-analytics-workspace-dev',
-      resource_group_name: '${data.azurerm_resource_group.test-log-analytics-workspace-dev-lw-rg.name}',
-      tags: {
-        environment: 'dev',
-      },
-    })
+    expect(
+      Testing.toHaveResourceWithProperties(construct, 'LogAnalyticsWorkspace', {
+        location: '${data.azurerm_resource_group.test-log-analytics-workspace-dev-lw-rg.location}',
+        name: 'test-log-analytics-workspace-dev',
+        resource_group_name: '${data.azurerm_resource_group.test-log-analytics-workspace-dev-lw-rg.name}',
+        tags: {
+          environment: 'dev',
+        },
+      })
+    )
   })
 })

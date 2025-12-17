@@ -18,7 +18,6 @@ import {
   SqsSendMessageProps,
   StepFunctionsStartExecutionProps,
 } from 'aws-cdk-lib/aws-stepfunctions-tasks'
-import { ResourceNameFormatterProps } from '../../common'
 
 /**
  */

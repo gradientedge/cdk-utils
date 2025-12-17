@@ -14,7 +14,7 @@ import { Role } from 'aws-cdk-lib/aws-iam'
 import { IFunction } from 'aws-cdk-lib/aws-lambda'
 import { IHostedZone } from 'aws-cdk-lib/aws-route53'
 import { Topic } from 'aws-cdk-lib/aws-sns'
-import { ApiToLambdaTargetRestApiType } from './types'
+import { ApiToLambdaTargetRestApiType } from './types.js'
 
 /**
  * @classdesc Provides a construct to contain api resources for ApiToLambdaTarget

@@ -1,5 +1,5 @@
-import { CommonCloudflareStackProps } from '../../common'
-import { PagesProjectProps, DnsRecordProps, ZoneProps } from '../../services'
+import { CommonCloudflareStackProps } from '../../common/index.js'
+import { PagesProjectProps, DnsRecordProps, ZoneProps } from '../../services/index.js'
 
 export interface CloudflarePagesStaticSiteProps extends CommonCloudflareStackProps {
   siteAssetDir: string

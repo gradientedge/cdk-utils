@@ -4,8 +4,15 @@ import { PolicyDocument, Role } from 'aws-cdk-lib/aws-iam'
 import { LogGroup } from 'aws-cdk-lib/aws-logs'
 import { Queue } from 'aws-cdk-lib/aws-sqs'
 import { Chain, Map, StateMachine } from 'aws-cdk-lib/aws-stepfunctions'
-import { CommonStackProps } from '../../common'
-import { EventRuleProps, LogProps, QueueProps, SfnMapProps, SfnStateMachineProps, VpcProps } from '../../services'
+import { CommonStackProps } from '../../common/index.js'
+import {
+  EventRuleProps,
+  LogProps,
+  QueueProps,
+  SfnMapProps,
+  SfnStateMachineProps,
+  VpcProps,
+} from '../../services/index.js'
 
 export interface EventHandlerProps extends CommonStackProps {
   eventBusName: string

@@ -1,4 +1,5 @@
 import { Duration, RemovalPolicy, Tags } from 'aws-cdk-lib'
+import { experimental } from 'aws-cdk-lib/aws-cloudfront'
 import { ISecurityGroup, IVpc, SubnetSelection } from 'aws-cdk-lib/aws-ec2'
 import { IAccessPoint } from 'aws-cdk-lib/aws-efs'
 import { CfnRole, Role } from 'aws-cdk-lib/aws-iam'
@@ -15,13 +16,11 @@ import {
   LayerVersion,
 } from 'aws-cdk-lib/aws-lambda'
 import { SqsEventSource } from 'aws-cdk-lib/aws-lambda-event-sources'
-import { LogGroup } from 'aws-cdk-lib/aws-logs'
 import _ from 'lodash'
-import { CommonConstruct, CommonStack } from '../../common'
-import { createCfnOutput } from '../../utils'
-import { CloudFrontManager } from '../cloudfront'
-import { SsmManager } from '../systems-manager'
-import { LambdaAliasProps, LambdaEdgeProps, LambdaProps } from './types'
+import { CommonConstruct, CommonStack } from '../../common/index.js'
+import { createCfnOutput } from '../../utils/index.js'
+import { CloudFrontManager } from '../cloudfront/index.js'
+import { LambdaAliasProps, LambdaEdgeProps, LambdaProps } from './types.js'
 
 /**
  * @classdesc Provides operations on AWS Lambda
@@ -121,10 +120,8 @@ export class LambdaManager {
       deadLetterQueue = scope.sqsManager.createDeadLetterQueueForLambda(`${id}-dlq`, scope, props, redriveQueue)
     }
 
-    const { logRetention, ...lambdaProps } = props
-
     const lambdaFunction = new Function(scope, `${id}`, {
-      ...lambdaProps,
+      ...props,
       allowPublicSubnet: !!vpc,
       architecture: props.architecture ?? Architecture.ARM_64,
       code,
@@ -142,7 +139,7 @@ export class LambdaManager {
       logGroup: scope.logManager.createLogGroup(`${id}-log-group`, scope, {
         logGroupName: functionName,
         removalPolicy: RemovalPolicy.DESTROY,
-        retention: scope.props.logRetention ?? logRetention,
+        retention: scope.props.logRetention ?? props.logRetentionInDays,
       }),
       reservedConcurrentExecutions:
         props.reservedConcurrentExecutions ?? scope.props.defaultReservedLambdaConcurrentExecutions,
@@ -218,7 +215,7 @@ export class LambdaManager {
     securityGroups?: ISecurityGroup[],
     accessPoint?: IAccessPoint,
     mountPath?: string
-  ) {
+  ): experimental.EdgeFunction {
     return new CloudFrontManager().createEdgeFunction(
       id,
       scope,
@@ -275,10 +272,8 @@ export class LambdaManager {
       deadLetterQueue = scope.sqsManager.createDeadLetterQueueForLambda(`${id}-dlq`, scope, props, redriveQueue)
     }
 
-    const { logRetention, ...lambdaProps } = props
-
     const lambdaFunction = new DockerImageFunction(scope, `${id}`, {
-      ...lambdaProps,
+      ...props,
       allowPublicSubnet: !!vpc,
       architecture: props.architecture ?? Architecture.ARM_64,
       code,
@@ -294,7 +289,7 @@ export class LambdaManager {
       logGroup: scope.logManager.createLogGroup(`${id}-log-group`, scope, {
         logGroupName: functionName,
         removalPolicy: RemovalPolicy.DESTROY,
-        retention: scope.props.logRetention ?? logRetention,
+        retention: scope.props.logRetention ?? props.logRetentionInDays,
       }),
       role: role instanceof Role ? role : undefined,
       securityGroups: securityGroups,

@@ -18,8 +18,8 @@ import { AssetCode } from 'aws-cdk-lib/aws-lambda'
 import { LogGroup } from 'aws-cdk-lib/aws-logs'
 import { IHostedZone } from 'aws-cdk-lib/aws-route53'
 import { ITopic } from 'aws-cdk-lib/aws-sns'
-import { CommonStackProps } from '../../common'
-import { AcmProps, EventRuleProps, LambdaProps, LogProps, RestApigProps } from '../../services'
+import { CommonStackProps } from '../../common/index.js'
+import { AcmProps, EventRuleProps, LambdaProps, LogProps, RestApigProps } from '../../services/index.js'
 
 /**
  */
