@@ -23,7 +23,7 @@ import { isDevStage } from '../../common/index.js'
  * }
  */
 export class CommonStack extends Stack {
-  public static NODEJS_RUNTIME = Runtime.NODEJS_22_X
+  public static NODEJS_RUNTIME = Runtime.NODEJS_24_X
 
   construct: CommonConstruct
   props: CommonStackProps

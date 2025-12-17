@@ -175,7 +175,7 @@ describe('TestLambdaConstruct', () => {
 describe('TestLambdaConstruct', () => {
   test('provisions new layer as expected', () => {
     template.hasResourceProperties('AWS::Lambda::LayerVersion', {
-      CompatibleRuntimes: ['nodejs22.x'],
+      CompatibleRuntimes: ['nodejs24.x'],
       Description: 'test-lambda-layer',
       LayerName: 'cdktest-test-lambda-layer-test',
     })
@@ -192,7 +192,7 @@ describe('TestLambdaConstruct', () => {
       FunctionName: 'cdktest-test-lambda-test',
       Handler: 'index.lambda_handler',
       MemorySize: 1024,
-      Runtime: 'nodejs22.x',
+      Runtime: 'nodejs24.x',
       Tags: [
         {
           Key: 'testTagName1',
@@ -212,7 +212,7 @@ describe('TestLambdaConstruct', () => {
       FunctionName: 'cdktest-test-lambda-edge-test',
       Handler: 'index.handler',
       MemorySize: 1024,
-      Runtime: 'nodejs22.x',
+      Runtime: 'nodejs24.x',
       Timeout: 60,
     })
   })
@@ -236,7 +236,7 @@ describe('TestLambdaConstruct', () => {
       FunctionName: 'cdktest-test-lambda-concurrency-test',
       Handler: 'index.lambda_handler',
       MemorySize: 1024,
-      Runtime: 'nodejs22.x',
+      Runtime: 'nodejs24.x',
       Timeout: 60,
     })
   })

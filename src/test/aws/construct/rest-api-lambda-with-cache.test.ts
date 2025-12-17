@@ -234,7 +234,7 @@ describe('TestRestApiWithCacheLambdaConstruct', () => {
       FunctionName: 'cdktest-test-restapi-server-test',
       Handler: 'index.handler',
       MemorySize: 1024,
-      Runtime: 'nodejs22.x',
+      Runtime: 'nodejs24.x',
       Timeout: 300,
     })
   })
