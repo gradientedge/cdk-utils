@@ -48,6 +48,8 @@
     "prettify": "npx prettier --cache --write \"**/*.{ts,json,md}\"",
     "test": "npx rimraf coverage && npx vitest run --coverage",
     "test:watch": "npx vitest",
+    "test:coverage": "npx vitest run --coverage --reporter=verbose",
+    "test:coverage:open": "npx vitest run --coverage && open coverage/index.html",
     "update:deps": "ncu -u --deep --reject react,react-dom",
     "validate": "pnpm prettier && pnpm lint && pnpm test",
     "prepare": "husky"

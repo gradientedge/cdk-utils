@@ -8,7 +8,16 @@ export default defineConfig({
     include: ['**/?(*.)+(spec|test).[t]s?(x)'],
     coverage: {
       provider: 'v8',
-      reporter: ['text', 'json', 'html', 'lcov'],
+      reporter: ['text', 'text-summary', 'json', 'html', 'lcov', 'clover'],
+      reportOnFailure: true,
+      thresholds: {
+        global: {
+          branches: 80,
+          functions: 80,
+          lines: 80,
+          statements: 80,
+        },
+      },
       exclude: [
         '**/*.d.ts',
         '**/*.js',
