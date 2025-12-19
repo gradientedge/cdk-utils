@@ -16,7 +16,7 @@
     "type": "forbidden"
   },
   "testAccessGroup": {
-    "include": [
+    "includes": [
       {
         "email": {
           "email": "test@gradientedge.io"
@@ -42,7 +42,7 @@
   },
   "testAccessPolicy": {
     "decision": "allow",
-    "include": [
+    "includes": [
       {
         "email": {
           "email": "test@gradientedge.io"
@@ -50,7 +50,7 @@
       }
     ],
     "name": "test-policy-props",
-    "require": [
+    "requires": [
       {
         "email": {
           "email": "test@gradientedge.io"
