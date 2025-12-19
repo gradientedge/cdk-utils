@@ -1,6 +1,5 @@
-import { Filter } from '@cdktf/provider-cloudflare/lib/filter/index.js'
+import * as cloudflare from '@pulumi/cloudflare'
 import { CommonCloudflareConstruct } from '../../common/index.js'
-import { createCloudflareTfOutput } from '../../utils/index.js'
 import { FilterProps } from './types.js'
 
 /**
@@ -26,23 +25,17 @@ export class CloudflareFilterManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props filter properties
-   * @see [CDKTF Filter Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/filter.typescript.md}
+   * @see [Pulumi Cloudflare Filter]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/filter/}
    */
   public createApiShield(id: string, scope: CommonCloudflareConstruct, props: FilterProps) {
     if (!props) throw `Props undefined for ${id}`
 
     const zoneId = props.zoneId
       ? props.zoneId
-      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.zoneId
-
-    const filter = new Filter(scope, `${id}`, {
+      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })?.id
+    return new cloudflare.Filter(`${id}`, {
       ...props,
       zoneId,
     })
-
-    createCloudflareTfOutput(`${id}-filterFriendlyUniqueId`, scope, filter.friendlyUniqueId)
-    createCloudflareTfOutput(`${id}-filterId`, scope, filter.id)
-
-    return filter
   }
 }

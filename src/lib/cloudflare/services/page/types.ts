@@ -1,10 +1,8 @@
-import { PageRuleConfig } from '@cdktf/provider-cloudflare/lib/page-rule/index.js'
-import { PagesDomainConfig } from '@cdktf/provider-cloudflare/lib/pages-domain/index.js'
-import { PagesProjectConfig } from '@cdktf/provider-cloudflare/lib/pages-project/index.js'
+import { PageRuleArgs, PagesDomainArgs, PagesProjectArgs } from '@pulumi/cloudflare'
 
-export interface PagesProjectProps extends PagesProjectConfig {}
-export interface PagesDomainProps extends PagesDomainConfig {}
-export interface PageRuleProps extends PageRuleConfig {}
+export interface PagesProjectProps extends PagesProjectArgs {}
+export interface PagesDomainProps extends PagesDomainArgs {}
+export interface PageRuleProps extends PageRuleArgs {}
 export interface PagesProjectDeployProps {
   branch: string
   directory: string

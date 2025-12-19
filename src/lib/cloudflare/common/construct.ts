@@ -1,8 +1,5 @@
-import { AwsProvider } from '@cdktf/provider-aws/lib/provider/index.js'
-import { CloudflareProvider } from '@cdktf/provider-cloudflare/lib/provider/index.js'
-import { AzurermProvider } from '@cdktf/provider-azurerm/lib/provider/index.js'
-import { AzurermBackend, S3Backend, TerraformStack, TerraformVariable } from 'cdktf'
-import { Construct } from 'constructs'
+import { Provider as CloudflareProvider } from '@pulumi/cloudflare'
+import { ComponentResource, ComponentResourceOptions, Config } from '@pulumi/pulumi'
 import { isDevStage, isPrdStage, isTestStage, isUatStage } from '../../common/index.js'
 import {
   CloudflareAccessManager,
@@ -16,12 +13,13 @@ import {
   CloudflareWorkerManager,
   CloudflareZoneManager,
 } from '../services/index.js'
-import { RemoteBackend } from './constants.js'
 import { CommonCloudflareStackProps } from './types.js'
 
-export class CommonCloudflareConstruct extends TerraformStack {
+export class CommonCloudflareConstruct extends ComponentResource {
   declare props: CommonCloudflareStackProps
+  declare options?: ComponentResourceOptions
   id: string
+  config: Config
   fullyQualifiedDomainName: string
   accessManager: CloudflareAccessManager
   apiShieldManager: CloudflareApiShieldManager
@@ -33,15 +31,13 @@ export class CommonCloudflareConstruct extends TerraformStack {
   ruleSetManager: CloudflareRuleSetManager
   workerManager: CloudflareWorkerManager
   zoneManager: CloudflareZoneManager
-  awsProvider: AwsProvider
-  s3Backend: S3Backend
-  azurermProvider: AzurermProvider
-  azurermBackend: AzurermBackend
+  provider: CloudflareProvider
 
-  constructor(scope: Construct, id: string, props: CommonCloudflareStackProps) {
-    super(scope, id)
+  constructor(name: string, props: CommonCloudflareStackProps, options?: ComponentResourceOptions) {
+    super(`custom:cloudflare:Construct:${name}`, name, props, options)
     this.props = props
-    this.id = id
+    this.options = options
+    this.id = name
 
     this.accessManager = new CloudflareAccessManager()
     this.apiShieldManager = new CloudflareApiShieldManager()
@@ -54,11 +50,10 @@ export class CommonCloudflareConstruct extends TerraformStack {
     this.workerManager = new CloudflareWorkerManager()
     this.zoneManager = new CloudflareZoneManager()
 
+    /* initialise config */
+    this.config = new Config()
     this.determineFullyQualifiedDomain()
-    this.determineAccountId()
-    this.determineApiToken()
-    this.determineRemoteBackend()
-    new CloudflareProvider(this, `${this.id}-provider`, this.props)
+    this.provider = new CloudflareProvider(`${this.id}-provider`, this.props, options)
   }
 
   /**
@@ -68,58 +63,6 @@ export class CommonCloudflareConstruct extends TerraformStack {
     this.fullyQualifiedDomainName = this.props.subDomain
       ? `${this.props.subDomain}.${this.props.domainName}`
       : this.props.domainName
-  }
-
-  /**
-   * @summary Determine the account id based on the cdktf.json context
-   */
-  protected determineAccountId() {
-    this.props.accountId = new TerraformVariable(this, `accountId`, {}).stringValue
-  }
-
-  /**
-   * @summary Determine the api token based on the cdktf.json context
-   */
-  protected determineApiToken() {
-    this.props.apiToken = new TerraformVariable(this, `apiToken`, {}).stringValue
-  }
-
-  protected determineRemoteBackend() {
-    const debug = this.node.tryGetContext('debug')
-
-    switch (this.props.remoteBackend?.type) {
-      case RemoteBackend.s3:
-        this.awsProvider = new AwsProvider(this, `${this.id}-aws-provider`, {
-          profile: process.env.AWS_PROFILE,
-          region: this.props.remoteBackend.region,
-        })
-        this.s3Backend = new S3Backend(this, {
-          bucket: this.props.remoteBackend.bucketName,
-          dynamodbTable: this.props.remoteBackend.tableName,
-          key: `${this.id}`,
-          profile: process.env.AWS_PROFILE,
-          region: this.props.remoteBackend.region,
-        })
-        break
-      case RemoteBackend.azurerm:
-        this.azurermProvider = new AzurermProvider(this, `${this.id}-azurerm-provider`, {
-          features: [{}],
-          subscriptionId: this.props.remoteBackend.subscriptionId,
-        })
-        this.azurermBackend = new AzurermBackend(this, {
-          storageAccountName: this.props.remoteBackend.storageAccountName,
-          containerName: this.props.remoteBackend.containerName,
-          key: `${this.id}`,
-          subscriptionId: this.props.remoteBackend.subscriptionId,
-          resourceGroupName: this.props.remoteBackend.resourceGroupName,
-        })
-        break
-      case RemoteBackend.local:
-        if (debug) console.debug(`Using local backend for ${this.id}`)
-        break
-      default:
-        break
-    }
   }
 
   /**

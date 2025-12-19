@@ -1,23 +1,25 @@
-import { AccessRuleConfig } from '@cdktf/provider-cloudflare/lib/access-rule/index.js'
-import { ZeroTrustAccessApplicationConfig } from '@cdktf/provider-cloudflare/lib/zero-trust-access-application/index.js'
-import { ZeroTrustAccessCustomPageConfig } from '@cdktf/provider-cloudflare/lib/zero-trust-access-custom-page/index.js'
-import { ZeroTrustAccessGroupConfig } from '@cdktf/provider-cloudflare/lib/zero-trust-access-group/index.js'
-import { ZeroTrustAccessIdentityProviderConfig } from '@cdktf/provider-cloudflare/lib/zero-trust-access-identity-provider/index.js'
-import { ZeroTrustAccessMtlsCertificateConfig } from '@cdktf/provider-cloudflare/lib/zero-trust-access-mtls-certificate/index.js'
-import { ZeroTrustAccessPolicyConfig } from '@cdktf/provider-cloudflare/lib/zero-trust-access-policy/index.js'
-import { ZeroTrustAccessServiceTokenConfig } from '@cdktf/provider-cloudflare/lib/zero-trust-access-service-token/index.js'
-import { ZeroTrustAccessShortLivedCertificateConfig } from '@cdktf/provider-cloudflare/lib/zero-trust-access-short-lived-certificate/index.js'
-import { ZeroTrustAccessTagConfig } from '@cdktf/provider-cloudflare/lib/zero-trust-access-tag/index.js'
-import { ZeroTrustOrganizationConfig } from '@cdktf/provider-cloudflare/lib/zero-trust-organization/index.js'
+import {
+  AccessRuleArgs,
+  ZeroTrustAccessApplicationArgs,
+  ZeroTrustAccessCustomPageArgs,
+  ZeroTrustAccessGroupArgs,
+  ZeroTrustAccessIdentityProviderArgs,
+  ZeroTrustAccessMtlsCertificateArgs,
+  ZeroTrustAccessPolicyArgs,
+  ZeroTrustAccessServiceTokenArgs,
+  ZeroTrustAccessShortLivedCertificateArgs,
+  ZeroTrustAccessTagArgs,
+  ZeroTrustOrganizationArgs,
+} from '@pulumi/cloudflare'
 
-export interface ZeroTrustAccessApplicationProps extends ZeroTrustAccessApplicationConfig {}
-export interface ZeroTrustAccessShortLivedCertificateProps extends ZeroTrustAccessShortLivedCertificateConfig {}
-export interface ZeroTrustAccessCustomPageProps extends ZeroTrustAccessCustomPageConfig {}
-export interface ZeroTrustAccessGroupProps extends ZeroTrustAccessGroupConfig {}
-export interface ZeroTrustAccessIdentityProviderProps extends ZeroTrustAccessIdentityProviderConfig {}
-export interface ZeroTrustAccessMtlsCertificateProps extends ZeroTrustAccessMtlsCertificateConfig {}
-export interface ZeroTrustOrganizationProps extends ZeroTrustOrganizationConfig {}
-export interface ZeroTrustAccessPolicyProps extends ZeroTrustAccessPolicyConfig {}
-export interface AccessRuleProps extends AccessRuleConfig {}
-export interface ZeroTrustAccessServiceTokenProps extends ZeroTrustAccessServiceTokenConfig {}
-export interface ZeroTrustAccessTagProps extends ZeroTrustAccessTagConfig {}
+export interface ZeroTrustAccessApplicationProps extends ZeroTrustAccessApplicationArgs {}
+export interface ZeroTrustAccessShortLivedCertificateProps extends ZeroTrustAccessShortLivedCertificateArgs {}
+export interface ZeroTrustAccessCustomPageProps extends ZeroTrustAccessCustomPageArgs {}
+export interface ZeroTrustAccessGroupProps extends ZeroTrustAccessGroupArgs {}
+export interface ZeroTrustAccessIdentityProviderProps extends ZeroTrustAccessIdentityProviderArgs {}
+export interface ZeroTrustAccessMtlsCertificateProps extends ZeroTrustAccessMtlsCertificateArgs {}
+export interface ZeroTrustOrganizationProps extends ZeroTrustOrganizationArgs {}
+export interface ZeroTrustAccessPolicyProps extends ZeroTrustAccessPolicyArgs {}
+export interface AccessRuleProps extends AccessRuleArgs {}
+export interface ZeroTrustAccessServiceTokenProps extends ZeroTrustAccessServiceTokenArgs {}
+export interface ZeroTrustAccessTagProps extends ZeroTrustAccessTagArgs {}

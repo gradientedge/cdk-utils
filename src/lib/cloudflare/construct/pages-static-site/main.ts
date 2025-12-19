@@ -1,18 +1,12 @@
-import { DataAwsSecretsmanagerSecretVersion } from '@cdktf/provider-aws/lib/data-aws-secretsmanager-secret-version/index.js'
-import { DataAwsSecretsmanagerSecret } from '@cdktf/provider-aws/lib/data-aws-secretsmanager-secret/index.js'
-import { DataAzurermKeyVaultSecret } from '@cdktf/provider-azurerm/lib/data-azurerm-key-vault-secret/index.js'
-import { DataAzurermKeyVault } from '@cdktf/provider-azurerm/lib/data-azurerm-key-vault/index.js'
-import { DataCloudflareZone } from '@cdktf/provider-cloudflare/lib/data-cloudflare-zone/index.js'
-import { DnsRecord } from '@cdktf/provider-cloudflare/lib/dns-record/index.js'
-import { PagesDomain } from '@cdktf/provider-cloudflare/lib/pages-domain/index.js'
 import {
-  PagesProject,
   PagesProjectDeploymentConfigsPreviewEnvVars,
   PagesProjectDeploymentConfigsProductionEnvVars,
 } from '@cdktf/provider-cloudflare/lib/pages-project/index.js'
-import { Zone } from '@cdktf/provider-cloudflare/lib/zone/index.js'
-import { Fn } from 'cdktf'
-import { Construct } from 'constructs'
+import * as aws from '@pulumi/aws'
+import * as azure from '@pulumi/azure-native'
+import { DnsRecord, PagesDomain, PagesProject, Zone } from '@pulumi/cloudflare'
+import { ComponentResourceOptions } from '@pulumi/pulumi'
+import * as std from '@pulumi/std'
 import { CommonCloudflareConstruct } from '../../common/index.js'
 import { CloudflarePagesStaticSiteProps } from './types.js'
 
@@ -38,16 +32,17 @@ export class CloudflarePagesStaticSite extends CommonCloudflareConstruct {
   sitePagesCnameRecord: DnsRecord
   sitePagesDomain: PagesDomain
   sitePagesProject: PagesProject
-  siteZone: DataCloudflareZone | Zone
+  siteZone: Zone
   sitePagesEnvironmentVariables: { [key: string]: PagesProjectDeploymentConfigsProductionEnvVars }
   sitePagesPreviewEnvironmentVariables: { [key: string]: PagesProjectDeploymentConfigsPreviewEnvVars }
   sitePagesSecrets: { [key: string]: PagesProjectDeploymentConfigsProductionEnvVars }
   sitePagesPreviewSecrets: { [key: string]: PagesProjectDeploymentConfigsPreviewEnvVars }
   siteDeploymentDependsOn: any
 
-  constructor(parent: Construct, id: string, props: CloudflarePagesStaticSiteProps) {
-    super(parent, id, props)
+  constructor(id: string, props: CloudflarePagesStaticSiteProps, options?: ComponentResourceOptions) {
+    super(id, props)
     this.props = props
+    this.options = options
     this.id = id
   }
 
@@ -115,15 +110,12 @@ export class CloudflarePagesStaticSite extends CommonCloudflareConstruct {
    * @param secretKey the secret key
    * @returns the secret value
    */
-  protected resolveSecretFromAWS(secretName: string, secretKey: string) {
-    if (!this.awsProvider) return
-    const secret = new DataAwsSecretsmanagerSecret(this, `${this.id}-${secretName}-${secretKey}`, { name: secretName })
-    const secretVersion = new DataAwsSecretsmanagerSecretVersion(this, `${this.id}-${secretName}-${secretKey}-ver`, {
-      provider: this.awsProvider,
-      secretId: secret.id,
-    })
+  protected async resolveSecretFromAWS(secretName: string, secretKey: string) {
+    if (this.config.require('secretsProvider') !== 'aws') return
+    const secret = await aws.secretsmanager.getSecret({ name: secretName })
+    const secretVersion = await aws.secretsmanager.getSecretVersion({ secretId: secret.id })
     if (!secretVersion) throw new Error(`Unable to resolve secret:${secretName}`)
-    return Fn.lookup(Fn.jsondecode(secretVersion.secretString), secretKey)
+    return await std.jsondecode({ input: secretVersion.secretString })
   }
 
   /**
@@ -134,27 +126,15 @@ export class CloudflarePagesStaticSite extends CommonCloudflareConstruct {
    * @param secretKey the secret key
    * @returns the secret value
    */
-  protected resolveSecretFromAzure(resourceGroupName: string, keyVaultName: string, secretKey: string) {
-    const keyVaultData = new DataAzurermKeyVault(
-      this,
-      `${this.id}-${resourceGroupName}-${keyVaultName}-${secretKey}-vault`,
-      {
-        resourceGroupName: resourceGroupName,
-        name: keyVaultName,
-        provider: this.azurermProvider,
-      }
-    )
-    const secretValueData = new DataAzurermKeyVaultSecret(
-      this,
-      `${this.id}-${resourceGroupName}-${keyVaultName}-${secretKey}-secret`,
-      {
-        name: secretKey,
-        keyVaultId: keyVaultData.id,
-        provider: this.azurermProvider,
-      }
-    )
+  protected async resolveSecretFromAzure(resourceGroupName: string, keyVaultName: string, secretKey: string) {
+    if (this.config.require('secretsProvider') !== 'azure') return
+    const secretValueData = await azure.keyvault.getSecret({
+      resourceGroupName,
+      secretName: secretKey,
+      vaultName: keyVaultName,
+    })
     if (!secretValueData) throw new Error(`Unable to resolve secret:${secretKey}`)
-    return secretValueData.value
+    return secretValueData.properties?.value
   }
 
   /**
@@ -201,7 +181,7 @@ export class CloudflarePagesStaticSite extends CommonCloudflareConstruct {
       branch: this.props.siteBranch ?? 'main',
       directory: this.props.siteAssetDir,
       message: this.props.siteDeployMessage,
-      projectName: this.sitePagesProject.name,
+      projectName: String(this.sitePagesProject.name),
       dependsOn: this.siteDeploymentDependsOn,
     })
   }

@@ -1,12 +1,9 @@
-import { DataAwsSecretsmanagerSecretVersion } from '@cdktf/provider-aws/lib/data-aws-secretsmanager-secret-version/index.js'
-import { DataAwsSecretsmanagerSecret } from '@cdktf/provider-aws/lib/data-aws-secretsmanager-secret/index.js'
-import { DataAzurermKeyVaultSecret } from '@cdktf/provider-azurerm/lib/data-azurerm-key-vault-secret/index.js'
-import { DataAzurermKeyVault } from '@cdktf/provider-azurerm/lib/data-azurerm-key-vault/index.js'
-import { DataCloudflareZone } from '@cdktf/provider-cloudflare/lib/data-cloudflare-zone/index.js'
-import { WorkersScript, WorkersScriptBindings } from '@cdktf/provider-cloudflare/lib/workers-script/index.js'
-import { Zone } from '@cdktf/provider-cloudflare/lib/zone/index.js'
-import { AssetType, Fn, TerraformAsset } from 'cdktf'
-import { Construct } from 'constructs'
+import { WorkersScriptBindings } from '@cdktf/provider-cloudflare/lib/workers-script/index.js'
+import * as aws from '@pulumi/aws'
+import * as azure from '@pulumi/azure-native'
+import { WorkersScript, Zone } from '@pulumi/cloudflare'
+import { ComponentResourceOptions } from '@pulumi/pulumi'
+import * as std from '@pulumi/std'
 import { CommonCloudflareConstruct } from '../../common/index.js'
 import { CloudflareWorkerSiteProps } from './types.js'
 
@@ -29,14 +26,15 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
   declare props: CloudflareWorkerSiteProps
 
   /* worker site resources */
-  siteZone: DataCloudflareZone | Zone
+  siteZone: Zone
   siteWorkerScript: WorkersScript
   workerPlainTextBindingEnvironmentVariables: WorkersScriptBindings[] = []
   workerSecretTextBindingEnvironmentVariables: WorkersScriptBindings[] = []
 
-  constructor(parent: Construct, id: string, props: CloudflareWorkerSiteProps) {
-    super(parent, id, props)
+  constructor(id: string, props: CloudflareWorkerSiteProps, options?: ComponentResourceOptions) {
+    super(id, props)
     this.props = props
+    this.options = options
     this.id = id
   }
 
@@ -78,15 +76,14 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
   /**
    * @summary Create the worker
    */
-  protected createWorker() {
-    const workerContent = new TerraformAsset(this, `${this.id}-worker-content`, {
-      path: this.props.siteWorkerAsset,
-      type: AssetType.FILE,
+  protected async createWorker() {
+    const workerContent = std.file({
+      input: this.props.siteWorkerAsset,
     })
 
     this.siteWorkerScript = this.workerManager.createWorkerScript(`${this.id}-worker-script`, this, {
       ...this.props.siteWorkerScript,
-      content: Fn.file(workerContent.path),
+      content: (await workerContent).result,
     })
   }
 
@@ -108,23 +105,12 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
    * @param secretKey the secret key
    * @returns the secret value
    */
-  protected resolveSecretFromAWS(secretName: string, secretKey: string, id?: string) {
-    if (!this.awsProvider) {
-      throw new Error(`Unable to resolve secret:${secretKey}. AWS provider not found`)
-    }
-    const secret = new DataAwsSecretsmanagerSecret(this, id ?? `${this.id}-${secretName}-${secretKey}`, {
-      name: secretName,
-    })
-    const secretVersion = new DataAwsSecretsmanagerSecretVersion(
-      this,
-      id ? `${id}-ver` : `${this.id}-${secretName}-${secretKey}-ver`,
-      {
-        provider: this.awsProvider,
-        secretId: secret.id,
-      }
-    )
+  protected async resolveSecretFromAWS(secretName: string, secretKey: string) {
+    if (this.config.require('secretsProvider') !== 'aws') return
+    const secret = await aws.secretsmanager.getSecret({ name: secretName })
+    const secretVersion = await aws.secretsmanager.getSecretVersion({ secretId: secret.id })
     if (!secretVersion) throw new Error(`Unable to resolve secret:${secretName}`)
-    return Fn.lookup(Fn.jsondecode(secretVersion.secretString), secretKey)
+    return await std.jsondecode({ input: secretVersion.secretString })
   }
 
   /**
@@ -135,30 +121,15 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
    * @param secretKey the secret key
    * @returns the secret value
    */
-  protected resolveSecretFromAzure(resourceGroupName: string, keyVaultName: string, secretKey: string, id?: string) {
-    if (!this.azurermProvider) {
-      throw new Error(`Unable to resolve secret:${secretKey}. Azurerm provider not found`)
-    }
-    const keyVaultData = new DataAzurermKeyVault(
-      this,
-      id ? `${id}-vault` : `${this.id}-${resourceGroupName}-${keyVaultName}-${secretKey}-vault`,
-      {
-        resourceGroupName: resourceGroupName,
-        name: keyVaultName,
-        provider: this.azurermProvider,
-      }
-    )
-    const secretValueData = new DataAzurermKeyVaultSecret(
-      this,
-      id ? `${id}-secret` : `${this.id}-${resourceGroupName}-${keyVaultName}-${secretKey}-secret`,
-      {
-        name: secretKey,
-        keyVaultId: keyVaultData.id,
-        provider: this.azurermProvider,
-      }
-    )
+  protected async resolveSecretFromAzure(resourceGroupName: string, keyVaultName: string, secretKey: string) {
+    if (this.config.require('secretsProvider') !== 'azure') return
+    const secretValueData = await azure.keyvault.getSecret({
+      resourceGroupName,
+      secretName: secretKey,
+      vaultName: keyVaultName,
+    })
     if (!secretValueData) throw new Error(`Unable to resolve secret:${secretKey}`)
-    return secretValueData.value
+    return secretValueData.properties?.value
   }
 
   /**

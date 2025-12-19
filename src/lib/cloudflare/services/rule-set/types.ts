@@ -1,3 +1,3 @@
-import { RulesetConfig } from '@cdktf/provider-cloudflare/lib/ruleset/index.js'
+import * as cloudflare from '@pulumi/cloudflare'
 
-export interface RulesetProps extends RulesetConfig {}
+export interface RulesetProps extends cloudflare.RulesetArgs {}

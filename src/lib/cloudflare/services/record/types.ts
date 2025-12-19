@@ -1,3 +1,3 @@
-import { DnsRecordConfig } from '@cdktf/provider-cloudflare/lib/dns-record/index.js'
+import { DnsRecordArgs } from '@pulumi/cloudflare'
 
-export interface DnsRecordProps extends DnsRecordConfig {}
+export interface DnsRecordProps extends DnsRecordArgs {}
