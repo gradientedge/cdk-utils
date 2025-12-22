@@ -15,8 +15,8 @@ importers:
         specifier: ^3.953.0
         version: 3.953.0
       '@aws-sdk/types':
-        specifier: ^3.953.0
-        version: 3.953.0
+        specifier: ^3.956.0
+        version: 3.956.0
       '@cdktf/provider-aws':
         specifier: ^21.22.1
         version: 21.22.1(cdktf@0.21.0(constructs@10.4.4))(constructs@10.4.4)
@@ -337,6 +337,10 @@ packages:
 
   '@aws-sdk/types@3.953.0':
     resolution: {integrity: sha512-M9Iwg9kTyqTErI0vOTVVpcnTHWzS3VplQppy8MuL02EE+mJ0BIwpWfsaAPQW+/XnVpdNpWZTsHcNE29f1+hR8g==}
+    engines: {node: '>=18.0.0'}
+
+  '@aws-sdk/types@3.956.0':
+    resolution: {integrity: sha512-DMRU/p9wAlAJxEjegnLwduCA8YP2pcT/sIJ+17KSF38c5cC6CbBhykwbZLECTo+zYzoFrOqeLbqE6paH8Gx3ug==}
     engines: {node: '>=18.0.0'}
 
   '@aws-sdk/util-endpoints@3.953.0':
@@ -1342,6 +1346,10 @@ packages:
 
   '@smithy/types@4.10.0':
     resolution: {integrity: sha512-K9mY7V/f3Ul+/Gz4LJANZ3vJ/yiBIwCyxe0sPT4vNJK63Srvd+Yk1IzP0t+nE7XFSpIGtzR71yljtnqpUTYFlQ==}
+    engines: {node: '>=18.0.0'}
+
+  '@smithy/types@4.11.0':
+    resolution: {integrity: sha512-mlrmL0DRDVe3mNrjTcVcZEgkFmufITfUAPBEA+AHYiIeYyJebso/He1qLbP3PssRe22KUzLRpQSdBPbXdgZ2VA==}
     engines: {node: '>=18.0.0'}
 
   '@smithy/url-parser@4.2.6':
@@ -4806,7 +4814,7 @@ snapshots:
       '@aws-crypto/sha256-js': 5.2.0
       '@aws-crypto/supports-web-crypto': 5.2.0
       '@aws-crypto/util': 5.2.0
-      '@aws-sdk/types': 3.953.0
+      '@aws-sdk/types': 3.956.0
       '@aws-sdk/util-locate-window': 3.873.0
       '@smithy/util-utf8': 2.3.0
       tslib: 2.8.1
@@ -4814,7 +4822,7 @@ snapshots:
   '@aws-crypto/sha256-js@5.2.0':
     dependencies:
       '@aws-crypto/util': 5.2.0
-      '@aws-sdk/types': 3.953.0
+      '@aws-sdk/types': 3.956.0
       tslib: 2.8.1
 
   '@aws-crypto/supports-web-crypto@5.2.0':
@@ -4823,7 +4831,7 @@ snapshots:
 
   '@aws-crypto/util@5.2.0':
     dependencies:
-      '@aws-sdk/types': 3.953.0
+      '@aws-sdk/types': 3.956.0
       '@smithy/util-utf8': 2.3.0
       tslib: 2.8.1
 
@@ -4943,7 +4951,7 @@ snapshots:
       '@smithy/node-http-handler': 4.4.6
       '@smithy/protocol-http': 5.3.6
       '@smithy/smithy-client': 4.10.1
-      '@smithy/types': 4.10.0
+      '@smithy/types': 4.11.0
       '@smithy/url-parser': 4.2.6
       '@smithy/util-base64': 4.3.0
       '@smithy/util-body-length-browser': 4.2.0
@@ -5202,7 +5210,7 @@ snapshots:
       '@aws-sdk/types': 3.953.0
       '@smithy/property-provider': 4.2.6
       '@smithy/shared-ini-file-loader': 4.4.1
-      '@smithy/types': 4.10.0
+      '@smithy/types': 4.11.0
       tslib: 2.8.1
     transitivePeerDependencies:
       - aws-crt
@@ -5210,6 +5218,11 @@ snapshots:
   '@aws-sdk/types@3.953.0':
     dependencies:
       '@smithy/types': 4.10.0
+      tslib: 2.8.1
+
+  '@aws-sdk/types@3.956.0':
+    dependencies:
+      '@smithy/types': 4.11.0
       tslib: 2.8.1
 
   '@aws-sdk/util-endpoints@3.953.0':
@@ -5241,7 +5254,7 @@ snapshots:
 
   '@aws-sdk/xml-builder@3.953.0':
     dependencies:
-      '@smithy/types': 4.10.0
+      '@smithy/types': 4.11.0
       fast-xml-parser: 5.2.5
       tslib: 2.8.1
 
@@ -6075,7 +6088,7 @@ snapshots:
 
   '@smithy/abort-controller@4.2.6':
     dependencies:
-      '@smithy/types': 4.10.0
+      '@smithy/types': 4.11.0
       tslib: 2.8.1
 
   '@smithy/config-resolver@4.4.4':
@@ -6203,29 +6216,29 @@ snapshots:
 
   '@smithy/querystring-builder@4.2.6':
     dependencies:
-      '@smithy/types': 4.10.0
+      '@smithy/types': 4.11.0
       '@smithy/util-uri-escape': 4.2.0
       tslib: 2.8.1
 
   '@smithy/querystring-parser@4.2.6':
     dependencies:
-      '@smithy/types': 4.10.0
+      '@smithy/types': 4.11.0
       tslib: 2.8.1
 
   '@smithy/service-error-classification@4.2.6':
     dependencies:
-      '@smithy/types': 4.10.0
+      '@smithy/types': 4.11.0
 
   '@smithy/shared-ini-file-loader@4.4.1':
     dependencies:
-      '@smithy/types': 4.10.0
+      '@smithy/types': 4.11.0
       tslib: 2.8.1
 
   '@smithy/signature-v4@5.3.6':
     dependencies:
       '@smithy/is-array-buffer': 4.2.0
       '@smithy/protocol-http': 5.3.6
-      '@smithy/types': 4.10.0
+      '@smithy/types': 4.11.0
       '@smithy/util-hex-encoding': 4.2.0
       '@smithy/util-middleware': 4.2.6
       '@smithy/util-uri-escape': 4.2.0
@@ -6243,6 +6256,10 @@ snapshots:
       tslib: 2.8.1
 
   '@smithy/types@4.10.0':
+    dependencies:
+      tslib: 2.8.1
+
+  '@smithy/types@4.11.0':
     dependencies:
       tslib: 2.8.1
 
@@ -6322,7 +6339,7 @@ snapshots:
     dependencies:
       '@smithy/fetch-http-handler': 5.3.7
       '@smithy/node-http-handler': 4.4.6
-      '@smithy/types': 4.10.0
+      '@smithy/types': 4.11.0
       '@smithy/util-base64': 4.3.0
       '@smithy/util-buffer-from': 4.2.0
       '@smithy/util-hex-encoding': 4.2.0
