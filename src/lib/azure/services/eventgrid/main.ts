@@ -80,18 +80,12 @@ export class AzureEventgridManager {
   public resolveEventgridTopic(id: string, scope: CommonAzureConstruct, props: DataAzurermEventgridTopicConfig) {
     if (!props) throw `Props undefined for ${id}`
 
-    const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-et-rg`, {
-      name: scope.props.resourceGroupName
-        ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-        : `${props.resourceGroupName}`,
-    })
-
-    if (!resourceGroup) throw `Resource group undefined for ${id}`
-
     const eventgridTopic = new DataAzurermEventgridTopic(scope, `${id}-et`, {
       ...props,
       name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.eventGridTopic),
-      resourceGroupName: resourceGroup.name,
+      resourceGroupName: scope.props.resourceGroupName
+        ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
+        : `${props.resourceGroupName}`,
     })
 
     createAzureTfOutput(`${id}-eventgridTopicName`, scope, eventgridTopic.name)
