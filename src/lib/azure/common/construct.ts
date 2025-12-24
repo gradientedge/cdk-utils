@@ -4,7 +4,6 @@ import { AzurermBackend, TerraformStack } from 'cdktf'
 import { Provider } from 'cdktf-local-exec'
 import { Construct } from 'constructs'
 import { isDevStage, isPrdStage, isTestStage, isUatStage } from '../../common/index.js'
-import { AzapiProvider } from '../.gen/providers/azapi/provider/index.js'
 import {
   AzureApiManagementManager,
   AzureAppConfigurationManager,
@@ -74,7 +73,6 @@ export class CommonAzureConstruct extends TerraformStack {
     this.determineRemoteBackend()
     this.determineTenantId()
 
-    new AzapiProvider(this, `${this.id}-azapi-provider`, this.props)
     new AzurermProvider(this, `${this.id}-provider`, this.props)
     new Provider(this, `${this.id}-local-exec-provider`)
   }
