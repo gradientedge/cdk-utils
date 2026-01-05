@@ -97,7 +97,7 @@ jobs:
             ./node_modules
             ./app/api-destined-function/node_modules
           key: ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-${{ hashFiles('**/pnpm-lock.yaml') }}
-      - uses: actions/download-artifact@v6
+      - uses: actions/download-artifact@v7
         with:
           name: docs-artifact
           path: ./api-docs/
