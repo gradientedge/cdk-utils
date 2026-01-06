@@ -1,7 +1,7 @@
-import { WorkersScriptBindings } from '@cdktf/provider-cloudflare/lib/workers-script/index.js'
 import * as aws from '@pulumi/aws'
 import * as azure from '@pulumi/azure-native'
 import { WorkersScript, Zone } from '@pulumi/cloudflare'
+import { WorkersScriptBinding } from '@pulumi/cloudflare/types/input.js'
 import { ComponentResourceOptions } from '@pulumi/pulumi'
 import * as std from '@pulumi/std'
 import { CommonCloudflareConstruct } from '../../common/index.js'
@@ -28,8 +28,8 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
   /* worker site resources */
   siteZone: Zone
   siteWorkerScript: WorkersScript
-  workerPlainTextBindingEnvironmentVariables: WorkersScriptBindings[] = []
-  workerSecretTextBindingEnvironmentVariables: WorkersScriptBindings[] = []
+  workerPlainTextBindingEnvironmentVariables: WorkersScriptBinding[] = []
+  workerSecretTextBindingEnvironmentVariables: WorkersScriptBinding[] = []
 
   constructor(id: string, props: CloudflareWorkerSiteProps, options?: ComponentResourceOptions) {
     super(id, props)

@@ -1,10 +1,10 @@
-import {
-  PagesProjectDeploymentConfigsPreviewEnvVars,
-  PagesProjectDeploymentConfigsProductionEnvVars,
-} from '@cdktf/provider-cloudflare/lib/pages-project/index.js'
 import * as aws from '@pulumi/aws'
 import * as azure from '@pulumi/azure-native'
 import { DnsRecord, PagesDomain, PagesProject, Zone } from '@pulumi/cloudflare'
+import {
+  PagesProjectDeploymentConfigsPreviewEnvVars,
+  PagesProjectDeploymentConfigsProductionEnvVars,
+} from '@pulumi/cloudflare/types/input.js'
 import { ComponentResourceOptions } from '@pulumi/pulumi'
 import * as std from '@pulumi/std'
 import { CommonCloudflareConstruct } from '../../common/index.js'

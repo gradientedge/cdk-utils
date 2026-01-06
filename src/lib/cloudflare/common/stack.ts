@@ -33,7 +33,7 @@ export class CommonCloudflareStack extends ComponentResource {
   }
 
   /**
-   * @summary Method to determine the core CDK construct properties injected via context cdktf.json
+   * @summary Method to determine the core CDK construct properties injected via context
    * @param props The stack properties
    * @returns The stack properties
    */
@@ -63,14 +63,13 @@ export class CommonCloudflareStack extends ComponentResource {
   }
 
   /**
-   * @summary Method to determine extra cdk contexts apart from the main cdktf.json
+   * @summary Method to determine extra cdk contexts apart from the main context
    * - Sets the properties from the extra contexts into cdk node context
    * - Primary use is to have layered config in separate files to enable easier maintenance and readability
    */
   protected determineExtraContexts(props: CommonCloudflareStackProps) {
     if (!props.extraContexts) {
-      if (props.debug)
-        console.debug(`No additional contexts provided. Using default context properties from cdktf.json`)
+      if (props.debug) console.debug(`No additional contexts provided. Using default context properties`)
       return {}
     }
 
@@ -95,7 +94,7 @@ export class CommonCloudflareStack extends ComponentResource {
   }
 
   /**
-   * @summary Method to determine extra cdk stage contexts apart from the main cdktf.json
+   * @summary Method to determine extra cdk stage contexts apart from the main context
    * - Sets the properties from the extra stage contexts into cdk node context
    * - Primary use is to have layered config for each environment which is injected into the context
    */
