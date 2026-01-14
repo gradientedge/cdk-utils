@@ -5,11 +5,11 @@ import {
   CommonAzureConstruct,
   CommonAzureStack,
   CommonAzureStackProps,
-  RedisCacheProps,
+  ManagedRedisProps,
 } from '../../../lib/azure/index.js'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
-  testRedisCache: RedisCacheProps
+  testRedisCache: ManagedRedisProps
   testAttribute?: string
 }
 
@@ -56,7 +56,7 @@ class TestCommonConstruct extends CommonAzureConstruct {
 
   constructor(parent: Construct, name: string, props: TestAzureStackProps) {
     super(parent, name, props)
-    this.redisManager.createRedisCache(`test-redis-cache-${this.props.stage}`, this, this.props.testRedisCache)
+    this.redisManager.createManagedRedis(`test-redis-cache-${this.props.stage}`, this, this.props.testRedisCache)
   }
 }
 
@@ -92,23 +92,23 @@ describe('TestAzureRedisConstruct', () => {
 describe('TestAzureRedisConstruct', () => {
   test('provisions outputs as expected', () => {
     expect(JSON.parse(construct).output).toMatchObject({
-      testRedisCacheDevRedisCacheFriendlyUniqueId: {
+      testRedisCacheDevManagedRedisFriendlyUniqueId: {
         value: 'test-redis-cache-dev-rc',
       },
-      testRedisCacheDevRedisCacheId: {
-        value: '${azurerm_redis_cache.test-redis-cache-dev-rc.id}',
+      testRedisCacheDevManagedRedisId: {
+        value: '${azurerm_managed_redis.test-redis-cache-dev-rc.id}',
       },
-      testRedisCacheDevRedisCacheName: {
-        value: '${azurerm_redis_cache.test-redis-cache-dev-rc.name}',
+      testRedisCacheDevManagedRedisName: {
+        value: '${azurerm_managed_redis.test-redis-cache-dev-rc.name}',
       },
     })
   })
 })
 
 describe('TestAzureRedisConstruct', () => {
-  test('provisions redis cache as expected', () => {
+  test('provisions managed redis as expected', () => {
     expect(
-      Testing.toHaveResourceWithProperties(construct, 'RedisCache', {
+      Testing.toHaveResourceWithProperties(construct, 'ManagedRedis', {
         capacity: 2,
         family: 'C',
         location: '${data.azurerm_resource_group.test-redis-cache-dev-rc-rg.location}',

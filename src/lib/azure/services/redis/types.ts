@@ -1,3 +1,3 @@
-import { RedisCacheConfig } from '@cdktf/provider-azurerm/lib/redis-cache/index.js'
+import { ManagedRedisConfig } from '@cdktf/provider-azurerm/lib/managed-redis/index.js'
 
-export interface RedisCacheProps extends RedisCacheConfig {}
+export interface ManagedRedisProps extends ManagedRedisConfig {}
