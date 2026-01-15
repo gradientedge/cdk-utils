@@ -1,6 +1,19 @@
 {
+  "testWorkerCronTrigger": {
+    "accountId": "test-account",
+    "schedules": [
+      {
+        "cron": "*/5 * * * *"
+      },
+      {
+        "cron": "10 7 * * mon-fri"
+      }
+    ],
+    "scriptName": "test-script"
+  },
   "testWorkerDomain": {
     "accountId": "test-account",
+    "environment": "development",
     "hostname": "test.gradientedge.io",
     "service": "product-service"
   },
@@ -52,16 +65,5 @@
   "testWorkersKvNamespace": {
     "accountId": "test-account",
     "title": "test-namespace"
-  },
-  "testWorkerCronTrigger": {
-    "accountId": "test-account",
-    "schedules": [
-      {
-        "cron": "*/5 * * * *"
-      },
-      {
-        "cron": "10 7 * * mon-fri"
-      }
-    ]
   }
 }

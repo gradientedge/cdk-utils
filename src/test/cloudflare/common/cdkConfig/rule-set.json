@@ -1,6 +1,8 @@
 {
   "testRuleSet": {
+    "kind": "custom",
     "name": "testRuleSet",
+    "phase": "http*ratelimit",
     "rules": {
       "action": "set_cache_settings"
     }

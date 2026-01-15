@@ -14,7 +14,7 @@ import { FilterProps } from './types.js'
  *   constructor(parent: Construct, id: string, props: CommonCloudflareStackProps) {
  *     super(parent, id, props)
  *     this.props = props
- *     this.filterManager.createApiShield('MyFilter', this, props)
+ *     this.filterManager.createFilter('MyFilter', this, props)
  *   }
  * }
  * ```
@@ -27,7 +27,7 @@ export class CloudflareFilterManager {
    * @param props filter properties
    * @see [Pulumi Cloudflare Filter]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/filter/}
    */
-  public createApiShield(id: string, scope: CommonCloudflareConstruct, props: FilterProps) {
+  public createFilter(id: string, scope: CommonCloudflareConstruct, props: FilterProps) {
     if (!props) throw `Props undefined for ${id}`
 
     const zoneId = props.zoneId

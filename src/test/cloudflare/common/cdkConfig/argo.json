@@ -1,6 +1,5 @@
 {
   "testArgo": {
-    "tieredCaching": "on",
-    "smartRouting": "on"
+    "value": "on"
   }
 }
