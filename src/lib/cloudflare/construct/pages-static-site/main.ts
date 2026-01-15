@@ -110,12 +110,12 @@ export class CloudflarePagesStaticSite extends CommonCloudflareConstruct {
    * @param secretKey the secret key
    * @returns the secret value
    */
-  protected async resolveSecretFromAWS(secretName: string, secretKey: string) {
+  protected resolveSecretFromAWS(secretName: string, secretKey: string) {
     if (this.config.require('secretsProvider') !== 'aws') return
-    const secret = await aws.secretsmanager.getSecret({ name: secretName })
-    const secretVersion = await aws.secretsmanager.getSecretVersion({ secretId: secret.id })
+    const secret = aws.secretsmanager.getSecretOutput({ name: secretName })
+    const secretVersion = aws.secretsmanager.getSecretVersionOutput({ secretId: secret.id })
     if (!secretVersion) throw new Error(`Unable to resolve secret:${secretName}`)
-    return await std.jsondecode({ input: secretVersion.secretString })
+    return std.jsondecodeOutput({ input: secretVersion.secretString })
   }
 
   /**
@@ -126,9 +126,9 @@ export class CloudflarePagesStaticSite extends CommonCloudflareConstruct {
    * @param secretKey the secret key
    * @returns the secret value
    */
-  protected async resolveSecretFromAzure(resourceGroupName: string, keyVaultName: string, secretKey: string) {
+  protected resolveSecretFromAzure(resourceGroupName: string, keyVaultName: string, secretKey: string) {
     if (this.config.require('secretsProvider') !== 'azure') return
-    const secretValueData = await azure.keyvault.getSecret({
+    const secretValueData = azure.keyvault.getSecretOutput({
       resourceGroupName,
       secretName: secretKey,
       vaultName: keyVaultName,

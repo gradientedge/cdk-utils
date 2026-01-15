@@ -37,8 +37,8 @@
     "src/test/cloudflare/services/argo-manager.test.ts",
     "src/test/cloudflare/services/api-shield-manager.test.ts",
     "src/test/cloudflare/services/access-manager.pulumi.test.ts1",
-    "src/test/cloudflare/construct/worker-site.test.ts1",
-    "src/test/cloudflare/construct/pages-static-site.test.ts1",
-    "src/test/cloudflare/common/common-cloudflare-construct.test.ts1"
+    "src/test/cloudflare/construct/worker-site.test.ts",
+    "src/test/cloudflare/construct/pages-static-site.test.ts",
+    "src/test/cloudflare/common/common-cloudflare-construct.test.ts"
   ]
 }

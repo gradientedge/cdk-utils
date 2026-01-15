@@ -1,4 +1,14 @@
 {
+  "siteZone": {
+    "account": {
+      "id": "test-account"
+    }
+  },
+  "siteZoneSetting": {
+    "id": "0rtt",
+    "settingId": "always_online",
+    "value": "on"
+  },
   "testZone": {
     "account": {
       "id": "test-account"
@@ -28,8 +38,8 @@
     "urls": ["gradientedge.io/api/product*"]
   },
   "testZoneSetting": {
-    "settingId": "always_online",
     "id": "0rtt",
+    "settingId": "always_online",
     "value": "on"
   }
 }

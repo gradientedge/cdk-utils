@@ -1,27 +1,21 @@
-import { Ruleset, Zone } from '@pulumi/cloudflare'
+import { Zone, ZoneCacheReserve } from '@pulumi/cloudflare'
 import * as pulumi from '@pulumi/pulumi'
 import {
   CommonCloudflareConstruct,
   CommonCloudflareStack,
   CommonCloudflareStackProps,
-  RulesetProps,
   ZoneProps,
 } from '../../../lib/cloudflare/index.js'
 
 interface TestCloudflareStackProps extends CommonCloudflareStackProps {
   testZone: ZoneProps
-  testRuleSet: RulesetProps
   testAttribute?: string
 }
 
 const testStackProps: any = {
   accountId: '123456789012',
   domainName: 'gradientedge.io',
-  extraContexts: [
-    'src/test/cloudflare/common/config/dummy.json',
-    'src/test/cloudflare/common/config/rule-set.json',
-    'src/test/cloudflare/common/config/zone.json',
-  ],
+  extraContexts: ['src/test/cloudflare/common/config/dummy.json', 'src/test/cloudflare/common/config/zone.json'],
   features: {},
   name: 'test-common-stack',
   skipStageForARecords: false,
@@ -39,31 +33,21 @@ class TestCommonCloudflareStack extends CommonCloudflareStack {
   }
 }
 
-class TestInvalidCommonCloudflareStack extends CommonCloudflareStack {
-  declare props: TestCloudflareStackProps
-
-  constructor(name: string, props: TestCloudflareStackProps) {
-    super(name, testStackProps)
-    this.construct = new TestCommonConstruct(props.name, this.props)
-  }
-
-  protected determineConstructProps(props: CommonCloudflareStackProps) {
-    return {
-      ...super.determineConstructProps(props),
-      testRuleSet: undefined,
-    }
-  }
-}
-
 class TestCommonConstruct extends CommonCloudflareConstruct {
   declare props: TestCloudflareStackProps
   zone: Zone
-  ruleSet: Ruleset
+  zoneCacheReserve: ZoneCacheReserve
 
   constructor(name: string, props: TestCloudflareStackProps) {
     super(name, props)
     this.zone = this.zoneManager.createZone(`test-zone-${this.props.stage}`, this, this.props.testZone)
-    this.ruleSet = this.ruleSetManager.createRuleSet(`test-rule-set-${this.props.stage}`, this, this.props.testRuleSet)
+    this.zoneCacheReserve = this.zoneManager.createZoneCacheReserve(
+      `test-zone-cache-reserve-${this.props.stage}`,
+      this,
+      {
+        zoneId: this.zone.id,
+      }
+    )
   }
 }
 
@@ -81,13 +65,7 @@ pulumi.runtime.setMocks({
 
 let stack = new TestCommonCloudflareStack('test-stack', testStackProps)
 
-describe('TestCloudflareRuleSetManager', () => {
-  test('handles mis-configurations as expected', () => {
-    expect(() => new TestInvalidCommonCloudflareStack('test-stack', testStackProps)).toThrow()
-  })
-})
-
-describe('TestCloudflareRuleSetManager', () => {
+describe('TestCloudflareCommonConstruct', () => {
   expect(stack.construct.zone).toBeDefined()
   test('provisions zone as expected', () => {
     pulumi
@@ -101,23 +79,21 @@ describe('TestCloudflareRuleSetManager', () => {
   })
 })
 
-describe('TestCloudflareRuleSetManager', () => {
-  expect(stack.construct.ruleSet).toBeDefined()
-  test('provisions ruleset as expected', () => {
+describe('TestCloudflareCommonConstruct', () => {
+  expect(stack.construct.zoneCacheReserve).toBeDefined()
+  test('provisions zone cache reserve as expected', () => {
     pulumi
       .all([
-        stack.construct.ruleSet.id,
-        stack.construct.ruleSet.urn,
-        stack.construct.ruleSet.name,
-        stack.construct.ruleSet.rules,
+        stack.construct.zoneCacheReserve.id,
+        stack.construct.zoneCacheReserve.urn,
+        stack.construct.zoneCacheReserve.zoneId,
       ])
-      .apply(([id, urn, name, rules]) => {
-        expect(id).toEqual('test-rule-set-dev-id')
-        expect(urn).toEqual('urn:pulumi:stack::project::cloudflare:index/ruleset:Ruleset::test-rule-set-dev')
-        expect(name).toEqual('testRuleSet')
-        expect(rules).toEqual({
-          action: 'set_cache_settings',
-        })
+      .apply(([id, urn, zoneId]) => {
+        expect(id).toEqual('test-zone-cache-reserve-dev-id')
+        expect(urn).toEqual(
+          'urn:pulumi:stack::project::cloudflare:index/zoneCacheReserve:ZoneCacheReserve::test-zone-cache-reserve-dev'
+        )
+        expect(zoneId).toEqual('test-zone-dev-id')
       })
   })
 })

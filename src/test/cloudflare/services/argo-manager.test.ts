@@ -18,15 +18,15 @@ const testStackProps: any = {
   accountId: '123456789012',
   domainName: 'gradientedge.io',
   extraContexts: [
-    'src/test/cloudflare/common/cdkConfig/dummy.json',
-    'src/test/cloudflare/common/cdkConfig/argo.json',
-    'src/test/cloudflare/common/cdkConfig/zone.json',
+    'src/test/cloudflare/common/config/dummy.json',
+    'src/test/cloudflare/common/config/argo.json',
+    'src/test/cloudflare/common/config/zone.json',
   ],
   features: {},
   name: 'test-common-stack',
   skipStageForARecords: false,
   stage: 'dev',
-  stageContextPath: 'src/test/aws/common/cdkEnv',
+  stageContextPath: 'src/test/cloudflare/common/env',
 }
 
 class TestCommonCloudflareStack extends CommonCloudflareStack {

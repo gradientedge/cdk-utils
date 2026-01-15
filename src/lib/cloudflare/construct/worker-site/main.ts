@@ -1,9 +1,10 @@
 import * as aws from '@pulumi/aws'
 import * as azure from '@pulumi/azure-native'
-import { WorkersScript, Zone } from '@pulumi/cloudflare'
+import { Ruleset, WorkersCustomDomain, WorkersScript, Zone, ZoneSetting } from '@pulumi/cloudflare'
 import { WorkersScriptBinding } from '@pulumi/cloudflare/types/input.js'
 import { ComponentResourceOptions } from '@pulumi/pulumi'
 import * as std from '@pulumi/std'
+import fs from 'fs'
 import { CommonCloudflareConstruct } from '../../common/index.js'
 import { CloudflareWorkerSiteProps } from './types.js'
 
@@ -28,6 +29,9 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
   /* worker site resources */
   siteZone: Zone
   siteWorkerScript: WorkersScript
+  siteWorkerDomain: WorkersCustomDomain
+  siteRuleSet: Ruleset
+  siteZoneSetting: ZoneSetting
   workerPlainTextBindingEnvironmentVariables: WorkersScriptBinding[] = []
   workerSecretTextBindingEnvironmentVariables: WorkersScriptBinding[] = []
 
@@ -76,14 +80,11 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
   /**
    * @summary Create the worker
    */
-  protected async createWorker() {
-    const workerContent = std.file({
-      input: this.props.siteWorkerAsset,
-    })
-
+  protected createWorker() {
+    const workerContent = fs.readFileSync(this.props.siteWorkerAsset, 'utf-8')
     this.siteWorkerScript = this.workerManager.createWorkerScript(`${this.id}-worker-script`, this, {
       ...this.props.siteWorkerScript,
-      content: (await workerContent).result,
+      content: workerContent,
     })
   }
 
@@ -91,7 +92,7 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
    * @summary Create the worker domain
    */
   protected createWorkerDomain() {
-    this.workerManager.createWorkerDomain(`${this.id}-worker-domain`, this, {
+    this.siteWorkerDomain = this.workerManager.createWorkerDomain(`${this.id}-worker-domain`, this, {
       ...this.props.siteWorkerDomain,
       environment: this.props.siteWorkerDomain.environment ?? 'production',
       hostname: `${this.props.siteSubDomain}.${this.props.domainName}`,
@@ -105,12 +106,12 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
    * @param secretKey the secret key
    * @returns the secret value
    */
-  protected async resolveSecretFromAWS(secretName: string, secretKey: string) {
+  protected resolveSecretFromAWS(secretName: string, secretKey: string) {
     if (this.config.require('secretsProvider') !== 'aws') return
-    const secret = await aws.secretsmanager.getSecret({ name: secretName })
-    const secretVersion = await aws.secretsmanager.getSecretVersion({ secretId: secret.id })
+    const secret = aws.secretsmanager.getSecretOutput({ name: secretName })
+    const secretVersion = aws.secretsmanager.getSecretVersionOutput({ secretId: secret.id })
     if (!secretVersion) throw new Error(`Unable to resolve secret:${secretName}`)
-    return await std.jsondecode({ input: secretVersion.secretString })
+    return std.jsondecodeOutput({ input: secretVersion.secretString })
   }
 
   /**
@@ -121,9 +122,9 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
    * @param secretKey the secret key
    * @returns the secret value
    */
-  protected async resolveSecretFromAzure(resourceGroupName: string, keyVaultName: string, secretKey: string) {
+  protected resolveSecretFromAzure(resourceGroupName: string, keyVaultName: string, secretKey: string) {
     if (this.config.require('secretsProvider') !== 'azure') return
-    const secretValueData = await azure.keyvault.getSecret({
+    const secretValueData = azure.keyvault.getSecretOutput({
       resourceGroupName,
       secretName: secretKey,
       vaultName: keyVaultName,
@@ -137,7 +138,7 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
    */
   protected createRuleset() {
     if (!this.props.siteRuleSet) return
-    this.ruleSetManager.createRuleSet(`${this.id}-rule`, this, this.props.siteRuleSet)
+    this.siteRuleSet = this.ruleSetManager.createRuleSet(`${this.id}-rule`, this, this.props.siteRuleSet)
   }
 
   /**
@@ -145,6 +146,10 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
    */
   protected createZoneSetting() {
     if (!this.props.siteZoneSetting) return
-    this.zoneManager.createZoneSetting(`${this.id}-zone-setting`, this, this.props.siteZoneSetting)
+    this.siteZoneSetting = this.zoneManager.createZoneSetting(
+      `${this.id}-zone-setting`,
+      this,
+      this.props.siteZoneSetting
+    )
   }
 }

@@ -1,0 +1,20 @@
+{
+  "siteCnameRecord": {
+    "content": "example.gradientedge.io",
+    "name": "testCNameRecord",
+    "ttl": 300,
+    "type": "CNAME"
+  },
+  "testARecord": {
+    "content": "192.0.2.1",
+    "name": "testARecord",
+    "ttl": 300,
+    "type": "A"
+  },
+  "testCNameRecord": {
+    "content": "example.gradientedge.io",
+    "name": "testCNameRecord",
+    "ttl": 300,
+    "type": "CNAME"
+  }
+}
