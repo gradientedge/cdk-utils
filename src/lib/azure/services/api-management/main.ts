@@ -14,7 +14,7 @@ import {
   DataAzurermApiManagementConfig,
 } from '@cdktf/provider-azurerm/lib/data-azurerm-api-management/index.js'
 import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group/index.js'
-import { RedisCache } from '@cdktf/provider-azurerm/lib/redis-cache/index.js'
+import { ManagedRedis } from '@cdktf/provider-azurerm/lib/managed-redis/index.js'
 import _ from 'lodash'
 import { CommonAzureConstruct } from '../../common/index.js'
 import { createAzureTfOutput } from '../../utils/index.js'
@@ -55,7 +55,7 @@ export class AzureApiManagementManager {
     scope: CommonAzureConstruct,
     props: ApiManagementProps,
     applicationInsightsKey?: ApiManagementLoggerApplicationInsights['instrumentationKey'],
-    externalRedisCache?: RedisCache
+    externalRedisCache?: ManagedRedis
   ) {
     if (!props) throw `Props undefined for ${id}`
 
@@ -91,7 +91,7 @@ export class AzureApiManagementManager {
       new ApiManagementRedisCache(scope, `${id}-am-redis-cache`, {
         name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.apiManagementRedisCache),
         apiManagementId: apiManagement.id,
-        connectionString: externalRedisCache.primaryConnectionString,
+        connectionString: `${externalRedisCache.name}:10000,password=${externalRedisCache.defaultDatabase.primaryAccessKey},ssl=True,abortConnect=False`,
         cacheLocation: externalRedisCache.location,
         redisCacheId: externalRedisCache.id,
       })
