@@ -145,7 +145,7 @@ class CustomConstruct extends CommonAzureConstruct {
   constructor(parent: Construct, id: string, props: CommonAzureStackProps) {
     super(parent, id, props)
     this.props = props
-    this.redisManager.createRedis('MyRedisCache', this, props)
+    this.redisManager.createRedis('MyManagedRedis', this, props)
   }
 }
 ```</code></pre>
@@ -196,7 +196,7 @@ class CustomConstruct extends CommonAzureConstruct {
 
     
 
-    <h4 class="name" id="createRedisCache"><span class="type-signature"></span>createRedisCache<span class="signature">(id, scope, props)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="createManagedRedis"><span class="type-signature"></span>createManagedRedis<span class="signature">(id, scope, props)</span><span class="type-signature"></span></h4>
 
     
     <p class="summary usertext"><p>Method to create a new redis cache</p></p>
@@ -248,7 +248,7 @@ class CustomConstruct extends CommonAzureConstruct {
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><p><a href="https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/redisCache.typescript.md">CDKTF Redis Cache Module</a></p></li>
+            <li><p><a href="https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/managedRedis.typescript.md">CDKTF Redis Cache Module</a></p></li>
         </ul>
     </dd>
     
