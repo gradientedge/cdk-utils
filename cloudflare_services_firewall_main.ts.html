@@ -48,9 +48,8 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { FirewallRule } from '@cdktf/provider-cloudflare/lib/firewall-rule/index.js'
+            <pre class="prettyprint source linenums"><code>import * as cloudflare from '@pulumi/cloudflare'
 import { CommonCloudflareConstruct } from '../../common/index.js'
-import { createCloudflareTfOutput } from '../../utils/index.js'
 import { FirewallRuleProps } from './types.js'
 
 /**
@@ -76,24 +75,18 @@ export class CloudflareFirewallManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props firewall rule properties
-   * @see [CDKTF Firewall Rule Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/firewallRule.typescript.md}
+   * @see [Pulumi Cloudflare Firewall Rule]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/firewallrule/}
    */
   public createFirewallRule(id: string, scope: CommonCloudflareConstruct, props: FirewallRuleProps) {
     if (!props) throw `Props undefined for ${id}`
 
     const zoneId = props.zoneId
       ? props.zoneId
-      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.zoneId
-
-    const firewallRule = new FirewallRule(scope, `${id}`, {
+      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })?.id
+    return new cloudflare.FirewallRule(`${id}`, {
       ...props,
       zoneId,
     })
-
-    createCloudflareTfOutput(`${id}-firewallRuleFriendlyUniqueId`, scope, firewallRule.friendlyUniqueId)
-    createCloudflareTfOutput(`${id}-firewallRuleId`, scope, firewallRule.id)
-
-    return firewallRule
   }
 }
 </code></pre>

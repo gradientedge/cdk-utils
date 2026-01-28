@@ -48,14 +48,8 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { WorkersCronTrigger } from '@cdktf/provider-cloudflare/lib/workers-cron-trigger/index.js'
-import { WorkersCustomDomain } from '@cdktf/provider-cloudflare/lib/workers-custom-domain/index.js'
-import { WorkersKvNamespace } from '@cdktf/provider-cloudflare/lib/workers-kv-namespace/index.js'
-import { WorkersKv } from '@cdktf/provider-cloudflare/lib/workers-kv/index.js'
-import { WorkersRoute } from '@cdktf/provider-cloudflare/lib/workers-route/index.js'
-import { WorkersScript } from '@cdktf/provider-cloudflare/lib/workers-script/index.js'
+            <pre class="prettyprint source linenums"><code>import * as cloudflare from '@pulumi/cloudflare'
 import { CommonCloudflareConstruct } from '../../common/index.js'
-import { createCloudflareTfOutput } from '../../utils/index.js'
 import {
   WorkerCronTriggerProps,
   WorkerDomainProps,
@@ -88,25 +82,19 @@ export class CloudflareWorkerManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props worker domain properties
-   * @see [CDKTF Worker Domain Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/workersCustomDomain.typescript.md}
+   * @see [Pulumi Worker Domain]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/workercustomdomain/}
    */
   public createWorkerDomain(id: string, scope: CommonCloudflareConstruct, props: WorkerDomainProps) {
     if (!props) throw `Props undefined for ${id}`
 
     const zoneId = props.zoneId
       ? props.zoneId
-      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.zoneId
-
-    const workerDomain = new WorkersCustomDomain(scope, `${id}`, {
+      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })?.id
+    return new cloudflare.WorkersCustomDomain(id, {
       ...props,
       accountId: props.accountId ?? scope.props.accountId,
       zoneId,
     })
-
-    createCloudflareTfOutput(`${id}-workerDomainFriendlyUniqueId`, scope, workerDomain.friendlyUniqueId)
-    createCloudflareTfOutput(`${id}-workerDomainId`, scope, workerDomain.id)
-
-    return workerDomain
   }
 
   /**
@@ -114,25 +102,20 @@ export class CloudflareWorkerManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props worker route properties
-   * @see [CDKTF Worker Route Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/workersRoute.typescript.md}
+   * @see [Pulumi Worker Route]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/workerroute/}
    */
   public createWorkerRoute(id: string, scope: CommonCloudflareConstruct, props: WorkerRouteProps) {
     if (!props) throw `Props undefined for ${id}`
 
     const zoneId = props.zoneId
       ? props.zoneId
-      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.zoneId
+      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })?.id
 
-    const workerRoute = new WorkersRoute(scope, `${id}`, {
+    return new cloudflare.WorkersRoute(id, {
       ...props,
       script: `${props.script}-${scope.props.stage}`,
       zoneId,
     })
-
-    createCloudflareTfOutput(`${id}-workerRouteFriendlyUniqueId`, scope, workerRoute.friendlyUniqueId)
-    createCloudflareTfOutput(`${id}-workerRouteId`, scope, workerRoute.id)
-
-    return workerRoute
   }
 
   /**
@@ -140,21 +123,16 @@ export class CloudflareWorkerManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props worker script properties
-   * @see [CDKTF Worker Script Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/workersScript.typescript.md}
+   * @see [Pulumi Worker Script]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/workerscript/}
    */
   public createWorkerScript(id: string, scope: CommonCloudflareConstruct, props: WorkerScriptProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    const workerScript = new WorkersScript(scope, `${id}`, {
+    return new cloudflare.WorkersScript(id, {
       ...props,
       accountId: props.accountId ?? scope.props.accountId,
       scriptName: `${props.scriptName}-${scope.props.stage}`,
     })
-
-    createCloudflareTfOutput(`${id}-workerScriptFriendlyUniqueId`, scope, workerScript.friendlyUniqueId)
-    createCloudflareTfOutput(`${id}-workerScriptId`, scope, workerScript.id)
-
-    return workerScript
   }
 
   /**
@@ -162,21 +140,16 @@ export class CloudflareWorkerManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props workers kv namespace properties
-   * @see [CDKTF Workers KV Namespace Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/workersKvNamespace.typescript.md}
+   * @see [Pulumi Workers KV Namespace]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/workerskvnamespace/}
    */
   public createWorkersKvNamespace(id: string, scope: CommonCloudflareConstruct, props: WorkersKvNamespaceProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    const workersKvNamespace = new WorkersKvNamespace(scope, `${id}`, {
+    return new cloudflare.WorkersKvNamespace(id, {
       ...props,
       accountId: props.accountId ?? scope.props.accountId,
       title: scope.isProductionStage() ? props.title : `${props.title}-${scope.props.stage}`,
     })
-
-    createCloudflareTfOutput(`${id}-workersKvNamespaceFriendlyUniqueId`, scope, workersKvNamespace.friendlyUniqueId)
-    createCloudflareTfOutput(`${id}-workersKvNamespaceId`, scope, workersKvNamespace.id)
-
-    return workersKvNamespace
   }
 
   /**
@@ -184,20 +157,15 @@ export class CloudflareWorkerManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props workers kv properties
-   * @see [CDKTF Workers KV Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/workersKv.typescript.md}
+   * @see [Pulumi Workers KV]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/workerskv/}
    */
   public createWorkersKv(id: string, scope: CommonCloudflareConstruct, props: WorkersKvProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    const workersKv = new WorkersKv(scope, `${id}`, {
+    return new cloudflare.WorkersKv(id, {
       ...props,
       accountId: props.accountId ?? scope.props.accountId,
     })
-
-    createCloudflareTfOutput(`${id}-workersKvFriendlyUniqueId`, scope, workersKv.friendlyUniqueId)
-    createCloudflareTfOutput(`${id}-workersKvId`, scope, workersKv.id)
-
-    return workersKv
   }
 
   /**
@@ -205,20 +173,15 @@ export class CloudflareWorkerManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props workers cron trigger properties
-   * @see [CDKTF Workers Cron Trigger Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/workersCronTrigger.typescript.md}
+   * @see [Pulumi Workers Cron Trigger]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/workercrontrigger/}
    */
   public createWorkerCronTrigger(id: string, scope: CommonCloudflareConstruct, props: WorkerCronTriggerProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    const workerCronTrigger = new WorkersCronTrigger(scope, `${id}`, {
+    return new cloudflare.WorkersCronTrigger(id, {
       ...props,
       accountId: props.accountId ?? scope.props.accountId,
     })
-
-    createCloudflareTfOutput(`${id}-workerCronTriggerFriendlyUniqueId`, scope, workerCronTrigger.friendlyUniqueId)
-    createCloudflareTfOutput(`${id}-workerCronTriggerId`, scope, workerCronTrigger.id)
-
-    return workerCronTrigger
   }
 }
 </code></pre>

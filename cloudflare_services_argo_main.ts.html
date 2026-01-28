@@ -48,10 +48,8 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { ArgoSmartRouting } from '@cdktf/provider-cloudflare/lib/argo-smart-routing/index.js'
-import { ArgoTieredCaching } from '@cdktf/provider-cloudflare/lib/argo-tiered-caching/index.js'
+            <pre class="prettyprint source linenums"><code>import * as cloudflare from '@pulumi/cloudflare'
 import { CommonCloudflareConstruct } from '../../common/index.js'
-import { createCloudflareTfOutput } from '../../utils/index.js'
 import { ArgoSmartRoutingProps, ArgoTieredCachingProps } from './types.js'
 
 /**
@@ -73,53 +71,41 @@ import { ArgoSmartRoutingProps, ArgoTieredCachingProps } from './types.js'
  */
 export class CloudflareArgoManager {
   /**
-   * @summary Method to create a new Cloudflare Argo
+   * @summary Method to create a new Cloudflare Argo Smart Routing
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props argo properties
-   * @see [CDKTF Argo Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/argoSmartRouting.typescript.md}
+   * @see [Pulumi Cloudflare ArgoSmartRouting]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/argosmartrouting/}
    */
   public createArgoSmartRouting(id: string, scope: CommonCloudflareConstruct, props: ArgoSmartRoutingProps) {
     if (!props) throw `Props undefined for ${id}`
 
     const zoneId = props.zoneId
       ? props.zoneId
-      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.zoneId
-
-    const argoSmartRouting = new ArgoSmartRouting(scope, `${id}`, {
+      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })?.id
+    return new cloudflare.ArgoSmartRouting(`${id}`, {
       ...props,
       zoneId,
     })
-
-    createCloudflareTfOutput(`${id}-argoSmartRoutingFriendlyUniqueId`, scope, argoSmartRouting.friendlyUniqueId)
-    createCloudflareTfOutput(`${id}-argoSmartRoutingId`, scope, argoSmartRouting.id)
-
-    return argoSmartRouting
   }
 
   /**
-   * @summary Method to create a new Cloudflare Argo
+   * @summary Method to create a new Cloudflare Argo Tiered Caching
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props argo properties
-   * @see [CDKTF Argo Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/argoTieredCaching.typescript.md}
+   * @see [Pulumi Cloudflare ArgoTieredCaching]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/argotieredcaching/}
    */
   public createArgoTieredCaching(id: string, scope: CommonCloudflareConstruct, props: ArgoTieredCachingProps) {
     if (!props) throw `Props undefined for ${id}`
 
     const zoneId = props.zoneId
       ? props.zoneId
-      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.zoneId
-
-    const argoTieredCaching = new ArgoTieredCaching(scope, `${id}`, {
+      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })?.id
+    return new cloudflare.ArgoTieredCaching(`${id}`, {
       ...props,
       zoneId,
     })
-
-    createCloudflareTfOutput(`${id}-argoTieredCachingFriendlyUniqueId`, scope, argoTieredCaching.friendlyUniqueId)
-    createCloudflareTfOutput(`${id}-argoTieredCachingId`, scope, argoTieredCaching.id)
-
-    return argoTieredCaching
   }
 }
 </code></pre>

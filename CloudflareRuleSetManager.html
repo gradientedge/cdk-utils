@@ -91,7 +91,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="cloudflare_services_rule-set_main.ts.html">cloudflare/services/rule-set/main.ts</a>, <a href="cloudflare_services_rule-set_main.ts.html#line21">line 21</a>
+        <a href="cloudflare_services_rule-set_main.ts.html">cloudflare/services/rule-set/main.ts</a>, <a href="cloudflare_services_rule-set_main.ts.html#line20">line 20</a>
     </li></ul></dd>
     
 
@@ -139,11 +139,11 @@
     <h5 class="h5-examples">Example</h5>
     
     <pre class="prettyprint"><code>```
-import { CommonCloudflareConstruct, CommonCloudflareConstruct } from '@gradientedge/cdk-utils'
+import { CommonCloudflareConstruct } from '@gradientedge/cdk-utils'
 
 class CustomConstruct extends CommonCloudflareConstruct {
-  constructor(parent: Construct, id: string, props: CommonCloudflareStackProps) {
-    super(parent, id, props)
+  constructor(parent: pulumi.ComponentResource, name: string, props: CommonCloudflareStackProps) {
+    super(parent, name, props)
     this.props = props
     this.ruleSetManager.createRuleSet('MyRule', this, props)
   }
@@ -214,7 +214,7 @@ class CustomConstruct extends CommonCloudflareConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="cloudflare_services_rule-set_main.ts.html">cloudflare/services/rule-set/main.ts</a>, <a href="cloudflare_services_rule-set_main.ts.html#line29">line 29</a>
+        <a href="cloudflare_services_rule-set_main.ts.html">cloudflare/services/rule-set/main.ts</a>, <a href="cloudflare_services_rule-set_main.ts.html#line28">line 28</a>
     </li></ul></dd>
     
 
@@ -248,7 +248,7 @@ class CustomConstruct extends CommonCloudflareConstruct {
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><p><a href="https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/ruleset.typescript.md">CDKTF Ruleset Module</a></p></li>
+            <li><p><a href="https://www.pulumi.com/registry/packages/cloudflare/api-docs/ruleset/">Pulumi Cloudflare Ruleset</a></p></li>
         </ul>
     </dd>
     

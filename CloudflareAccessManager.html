@@ -58,8 +58,8 @@
         
             <div class="class-description usertext"><p>Provides operations on Cloudflare Access</p>
 <ul>
-<li>A new instance of this class is injected into <a href="CommonCloudflareConstruct.html">CommonCloudflareConstruct</a> constructor.</li>
-<li>If a custom construct extends <a href="CommonCloudflareConstruct.html">CommonCloudflareConstruct</a>, an instance is available within the context.</li>
+<li>A new instance of this class is injected into CommonCloudflareComponent constructor.</li>
+<li>If a custom component extends CommonCloudflareComponent, an instance is available within the context.</li>
 </ul></div>
         
     
@@ -91,7 +91,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="cloudflare_services_access_main.ts.html">cloudflare/services/access/main.ts</a>, <a href="cloudflare_services_access_main.ts.html#line31">line 31</a>
+        <a href="cloudflare_services_access_main.ts.html">cloudflare/services/access/main.ts</a>, <a href="cloudflare_services_access_main.ts.html#line19">line 19</a>
     </li></ul></dd>
     
 
@@ -139,13 +139,12 @@
     <h5 class="h5-examples">Example</h5>
     
     <pre class="prettyprint"><code>```
-import { CommonCloudflareConstruct, CommonCloudflareConstruct } from '@gradientedge/cdk-utils'
+import { CommonCloudflareComponent, CloudflareAccessManager } from '@gradientedge/cdk-utils'
 
-class CustomConstruct extends CommonCloudflareConstruct {
-  constructor(parent: Construct, id: string, props: CommonCloudflareStackProps) {
-    super(parent, id, props)
-    this.props = props
-    this.accessManager.createApiShield('MyAppAccess', this, props)
+class CustomComponent extends CommonCloudflareComponent {
+  constructor(name: string, args: any, opts?: pulumi.ComponentResourceOptions) {
+    super(name, args, opts)
+    this.accessManager.createAccessApplication('MyAppAccess', this, props)
   }
 }
 ```</code></pre>
@@ -214,7 +213,7 @@ class CustomConstruct extends CommonCloudflareConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="cloudflare_services_access_main.ts.html">cloudflare/services/access/main.ts</a>, <a href="cloudflare_services_access_main.ts.html#line39">line 39</a>
+        <a href="cloudflare_services_access_main.ts.html">cloudflare/services/access/main.ts</a>, <a href="cloudflare_services_access_main.ts.html#line27">line 27</a>
     </li></ul></dd>
     
 
@@ -248,7 +247,7 @@ class CustomConstruct extends CommonCloudflareConstruct {
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><p><a href="https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/zeroTrustAccessApplication.typescript.md">CDKTF Access Application Module</a></p></li>
+            <li><p><a href="https://www.pulumi.com/registry/packages/cloudflare/api-docs/zerotrustaccessapplication/">Pulumi Cloudflare Access Application</a></p></li>
         </ul>
     </dd>
     
@@ -388,7 +387,7 @@ class CustomConstruct extends CommonCloudflareConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="cloudflare_services_access_main.ts.html">cloudflare/services/access/main.ts</a>, <a href="cloudflare_services_access_main.ts.html#line83">line 83</a>
+        <a href="cloudflare_services_access_main.ts.html">cloudflare/services/access/main.ts</a>, <a href="cloudflare_services_access_main.ts.html#line69">line 69</a>
     </li></ul></dd>
     
 
@@ -422,7 +421,7 @@ class CustomConstruct extends CommonCloudflareConstruct {
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><p><a href="https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/zeroTrustAccessCustomPage.typescript.md">CDKTF Access Custom Page Module</a></p></li>
+            <li><p><a href="https://www.pulumi.com/registry/packages/cloudflare/api-docs/zerotrustaccesscustompage/">Pulumi Cloudflare Access Custom Page</a></p></li>
         </ul>
     </dd>
     
@@ -562,7 +561,7 @@ class CustomConstruct extends CommonCloudflareConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="cloudflare_services_access_main.ts.html">cloudflare/services/access/main.ts</a>, <a href="cloudflare_services_access_main.ts.html#line102">line 102</a>
+        <a href="cloudflare_services_access_main.ts.html">cloudflare/services/access/main.ts</a>, <a href="cloudflare_services_access_main.ts.html#line85">line 85</a>
     </li></ul></dd>
     
 
@@ -596,7 +595,7 @@ class CustomConstruct extends CommonCloudflareConstruct {
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><p><a href="https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/zeroTrustAccessGroup.typescript.md">CDKTF Access Group Module</a></p></li>
+            <li><p><a href="https://www.pulumi.com/registry/packages/cloudflare/api-docs/zerotrustaccessgroup/">Pulumi Cloudflare Access Group</a></p></li>
         </ul>
     </dd>
     
@@ -736,7 +735,7 @@ class CustomConstruct extends CommonCloudflareConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="cloudflare_services_access_main.ts.html">cloudflare/services/access/main.ts</a>, <a href="cloudflare_services_access_main.ts.html#line124">line 124</a>
+        <a href="cloudflare_services_access_main.ts.html">cloudflare/services/access/main.ts</a>, <a href="cloudflare_services_access_main.ts.html#line106">line 106</a>
     </li></ul></dd>
     
 
@@ -770,7 +769,7 @@ class CustomConstruct extends CommonCloudflareConstruct {
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><p><a href="https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/zeroTrustAccessIdentityProvider.typescript.md">CDKTF Access Identity Provider Module</a></p></li>
+            <li><p><a href="https://www.pulumi.com/registry/packages/cloudflare/api-docs/zerotrustaccessidentityprovider/">Pulumi Cloudflare Access Identity Provider</a></p></li>
         </ul>
     </dd>
     
@@ -910,7 +909,7 @@ class CustomConstruct extends CommonCloudflareConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="cloudflare_services_access_main.ts.html">cloudflare/services/access/main.ts</a>, <a href="cloudflare_services_access_main.ts.html#line146">line 146</a>
+        <a href="cloudflare_services_access_main.ts.html">cloudflare/services/access/main.ts</a>, <a href="cloudflare_services_access_main.ts.html#line128">line 128</a>
     </li></ul></dd>
     
 
@@ -944,7 +943,7 @@ class CustomConstruct extends CommonCloudflareConstruct {
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><p><a href="https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/zeroTrustAccessMtlsCertificate.typescript.md">CDKTF Access Mutual Tls Certificate Module</a></p></li>
+            <li><p><a href="https://www.pulumi.com/registry/packages/cloudflare/api-docs/zerotrustaccessmtlscertificate/">Pulumi Cloudflare Access Mutual Tls Certificate</a></p></li>
         </ul>
     </dd>
     
@@ -1084,7 +1083,7 @@ class CustomConstruct extends CommonCloudflareConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="cloudflare_services_access_main.ts.html">cloudflare/services/access/main.ts</a>, <a href="cloudflare_services_access_main.ts.html#line168">line 168</a>
+        <a href="cloudflare_services_access_main.ts.html">cloudflare/services/access/main.ts</a>, <a href="cloudflare_services_access_main.ts.html#line149">line 149</a>
     </li></ul></dd>
     
 
@@ -1118,7 +1117,7 @@ class CustomConstruct extends CommonCloudflareConstruct {
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><p><a href="https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/zeroTrustAccessOrganization.typescript.md">CDKTF Access Organisation Module</a></p></li>
+            <li><p><a href="https://www.pulumi.com/registry/packages/cloudflare/api-docs/zerotrustorganization/">Pulumi Cloudflare Zero Trust Organization</a></p></li>
         </ul>
     </dd>
     
@@ -1258,7 +1257,7 @@ class CustomConstruct extends CommonCloudflareConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="cloudflare_services_access_main.ts.html">cloudflare/services/access/main.ts</a>, <a href="cloudflare_services_access_main.ts.html#line189">line 189</a>
+        <a href="cloudflare_services_access_main.ts.html">cloudflare/services/access/main.ts</a>, <a href="cloudflare_services_access_main.ts.html#line170">line 170</a>
     </li></ul></dd>
     
 
@@ -1292,7 +1291,7 @@ class CustomConstruct extends CommonCloudflareConstruct {
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><p><a href="https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/zeroTrustAccessPolicy.typescript.md">CDKTF Access Policy Module</a></p></li>
+            <li><p><a href="https://www.pulumi.com/registry/packages/cloudflare/api-docs/zerotrustaccesspolicy/">Pulumi Cloudflare Access Policy</a></p></li>
         </ul>
     </dd>
     
@@ -1432,7 +1431,7 @@ class CustomConstruct extends CommonCloudflareConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="cloudflare_services_access_main.ts.html">cloudflare/services/access/main.ts</a>, <a href="cloudflare_services_access_main.ts.html#line208">line 208</a>
+        <a href="cloudflare_services_access_main.ts.html">cloudflare/services/access/main.ts</a>, <a href="cloudflare_services_access_main.ts.html#line186">line 186</a>
     </li></ul></dd>
     
 
@@ -1466,7 +1465,7 @@ class CustomConstruct extends CommonCloudflareConstruct {
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><p><a href="https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/accessRule.typescript.md">CDKTF Access Rule Module</a></p></li>
+            <li><p><a href="https://www.pulumi.com/registry/packages/cloudflare/api-docs/accessrule/">Pulumi Cloudflare Access Rule</a></p></li>
         </ul>
     </dd>
     
@@ -1606,7 +1605,7 @@ class CustomConstruct extends CommonCloudflareConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="cloudflare_services_access_main.ts.html">cloudflare/services/access/main.ts</a>, <a href="cloudflare_services_access_main.ts.html#line230">line 230</a>
+        <a href="cloudflare_services_access_main.ts.html">cloudflare/services/access/main.ts</a>, <a href="cloudflare_services_access_main.ts.html#line207">line 207</a>
     </li></ul></dd>
     
 
@@ -1640,7 +1639,7 @@ class CustomConstruct extends CommonCloudflareConstruct {
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><p><a href="https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/zeroTrustAccessServiceToken.typescript.md">CDKTF Access Service Token Module</a></p></li>
+            <li><p><a href="https://www.pulumi.com/registry/packages/cloudflare/api-docs/zerotrustaccessservicetoken/">Pulumi Cloudflare Access Service Token</a></p></li>
         </ul>
     </dd>
     
@@ -1780,7 +1779,7 @@ class CustomConstruct extends CommonCloudflareConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="cloudflare_services_access_main.ts.html">cloudflare/services/access/main.ts</a>, <a href="cloudflare_services_access_main.ts.html#line62">line 62</a>
+        <a href="cloudflare_services_access_main.ts.html">cloudflare/services/access/main.ts</a>, <a href="cloudflare_services_access_main.ts.html#line49">line 49</a>
     </li></ul></dd>
     
 
@@ -1814,7 +1813,7 @@ class CustomConstruct extends CommonCloudflareConstruct {
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><p><a href="https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/zeroTrustAccessShortLivedCertificate.typescript.md">CDKTF Access Short Lived Certificate Module</a></p></li>
+            <li><p><a href="https://www.pulumi.com/registry/packages/cloudflare/api-docs/zerotrustaccessshortlivedcertificate/">Pulumi Cloudflare Access Short Lived Certificate</a></p></li>
         </ul>
     </dd>
     
@@ -1906,7 +1905,7 @@ class CustomConstruct extends CommonCloudflareConstruct {
 
             
 
-            <td class="description last"><p>access short lived  certificate properties</p></td>
+            <td class="description last"><p>access short lived certificate properties</p></td>
         </tr>
 
     
@@ -1954,7 +1953,7 @@ class CustomConstruct extends CommonCloudflareConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="cloudflare_services_access_main.ts.html">cloudflare/services/access/main.ts</a>, <a href="cloudflare_services_access_main.ts.html#line253">line 253</a>
+        <a href="cloudflare_services_access_main.ts.html">cloudflare/services/access/main.ts</a>, <a href="cloudflare_services_access_main.ts.html#line229">line 229</a>
     </li></ul></dd>
     
 
@@ -1988,7 +1987,7 @@ class CustomConstruct extends CommonCloudflareConstruct {
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><p><a href="https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/zeroTrustAccessTag.typescript.md">CDKTF Access Tag Token Module</a></p></li>
+            <li><p><a href="https://www.pulumi.com/registry/packages/cloudflare/api-docs/zerotrustaccesstag/">Pulumi Cloudflare Access Tag</a></p></li>
         </ul>
     </dd>
     
