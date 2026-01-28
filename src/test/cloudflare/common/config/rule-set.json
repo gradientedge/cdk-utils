@@ -1,0 +1,18 @@
+{
+  "siteRuleSet": {
+    "kind": "custom",
+    "name": "testRuleSet",
+    "phase": "http*ratelimit",
+    "rules": {
+      "action": "set_cache_settings"
+    }
+  },
+  "testRuleSet": {
+    "kind": "custom",
+    "name": "testRuleSet",
+    "phase": "http*ratelimit",
+    "rules": {
+      "action": "set_cache_settings"
+    }
+  }
+}

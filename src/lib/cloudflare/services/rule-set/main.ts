@@ -1,6 +1,5 @@
-import { Ruleset } from '@cdktf/provider-cloudflare/lib/ruleset/index.js'
+import * as cloudflare from '@pulumi/cloudflare'
 import { CommonCloudflareConstruct } from '../../common/index.js'
-import { createCloudflareTfOutput } from '../../utils/index.js'
 import { RulesetProps } from './types.js'
 
 /**
@@ -9,11 +8,11 @@ import { RulesetProps } from './types.js'
  * - If a custom construct extends {@link CommonCloudflareConstruct}, an instance is available within the context.
  * @example
  * ```
- * import { CommonCloudflareConstruct, CommonCloudflareConstruct } from '@gradientedge/cdk-utils'
+ * import { CommonCloudflareConstruct } from '@gradientedge/cdk-utils'
  *
  * class CustomConstruct extends CommonCloudflareConstruct {
- *   constructor(parent: Construct, id: string, props: CommonCloudflareStackProps) {
- *     super(parent, id, props)
+ *   constructor(parent: pulumi.ComponentResource, name: string, props: CommonCloudflareStackProps) {
+ *     super(parent, name, props)
  *     this.props = props
  *     this.ruleSetManager.createRuleSet('MyRule', this, props)
  *   }
@@ -26,22 +25,18 @@ export class CloudflareRuleSetManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props rule set properties
-   * @see [CDKTF Ruleset Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/ruleset.typescript.md}
+   * @see [Pulumi Cloudflare Ruleset]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/ruleset/}
    */
   public createRuleSet(id: string, scope: CommonCloudflareConstruct, props: RulesetProps) {
     if (!props) throw `Props undefined for ${id}`
 
     const zoneId = props.zoneId
       ? props.zoneId
-      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.zoneId
-
-    const ruleSet = new Ruleset(scope, `${id}`, {
+      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })?.id
+    const ruleSet = new cloudflare.Ruleset(`${id}`, {
       ...props,
       zoneId,
     })
-
-    createCloudflareTfOutput(`${id}-ruleSetFriendlyUniqueId`, scope, ruleSet.friendlyUniqueId)
-    createCloudflareTfOutput(`${id}-ruleSetId`, scope, ruleSet.id)
 
     return ruleSet
   }

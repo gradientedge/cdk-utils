@@ -1,10 +1,5 @@
-import { ApiShieldOperationSchemaValidationSettings } from '@cdktf/provider-cloudflare/lib/api-shield-operation-schema-validation-settings/index.js'
-import { ApiShieldOperation } from '@cdktf/provider-cloudflare/lib/api-shield-operation/index.js'
-import { ApiShieldSchemaValidationSettings } from '@cdktf/provider-cloudflare/lib/api-shield-schema-validation-settings/index.js'
-import { ApiShieldSchema } from '@cdktf/provider-cloudflare/lib/api-shield-schema/index.js'
-import { ApiShield } from '@cdktf/provider-cloudflare/lib/api-shield/index.js'
+import * as cloudflare from '@pulumi/cloudflare'
 import { CommonCloudflareConstruct } from '../../common/index.js'
-import { createCloudflareTfOutput } from '../../utils/index.js'
 import {
   ApiShieldOperationProps,
   ApiShieldOperationSchemaValidationSettingsProps,
@@ -36,24 +31,18 @@ export class CloudflareApiShieldManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props api shield properties
-   * @see [CDKTF API Shield Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/apiShield.typescript.md}
+   * @see [Pulumi API Shield]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/apishield/}
    */
   public createApiShield(id: string, scope: CommonCloudflareConstruct, props: ApiShieldProps) {
     if (!props) throw `Props undefined for ${id}`
 
     const zoneId = props.zoneId
       ? props.zoneId
-      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.zoneId
-
-    const apiShield = new ApiShield(scope, `${id}`, {
+      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })?.id
+    return new cloudflare.ApiShield(`${id}`, {
       ...props,
       zoneId,
     })
-
-    createCloudflareTfOutput(`${id}-apiShieldFriendlyUniqueId`, scope, apiShield.friendlyUniqueId)
-    createCloudflareTfOutput(`${id}-apiShieldId`, scope, apiShield.id)
-
-    return apiShield
   }
 
   /**
@@ -61,25 +50,19 @@ export class CloudflareApiShieldManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props api shield schema properties
-   * @see [CDKTF API Shield Schema Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/apiShieldSchema.typescript.md}
+   * @see [Pulumi API Shield Schema]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/apishieldschema/}
    */
   public createApiShieldSchema(id: string, scope: CommonCloudflareConstruct, props: ApiShieldSchemaProps) {
     if (!props) throw `Props undefined for ${id}`
 
     const zoneId = props.zoneId
       ? props.zoneId
-      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.zoneId
-
-    const apiShieldSchema = new ApiShieldSchema(scope, `${id}`, {
+      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })?.id
+    return new cloudflare.ApiShieldSchema(`${id}`, {
       ...props,
       name: `${props.name}-${scope.props.stage}`,
       zoneId,
     })
-
-    createCloudflareTfOutput(`${id}-apiShieldSchemaFriendlyUniqueId`, scope, apiShieldSchema.friendlyUniqueId)
-    createCloudflareTfOutput(`${id}-apiShieldSchemaId`, scope, apiShieldSchema.schemaId)
-
-    return apiShieldSchema
   }
 
   /**
@@ -87,7 +70,7 @@ export class CloudflareApiShieldManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props api shield schema validation settings properties
-   * @see [CDKTF API Shield Schema Validation Settings Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/apiShieldSchema.typescript.md}
+   * @see [Pulumi API Shield Schema Validation Settings]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/apishieldschemavalidationsettings/}
    */
   public createApiShieldSchemaValidationSettings(
     id: string,
@@ -98,21 +81,11 @@ export class CloudflareApiShieldManager {
 
     const zoneId = props.zoneId
       ? props.zoneId
-      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.zoneId
-
-    const apiShieldSchemaValidationSettings = new ApiShieldSchemaValidationSettings(scope, `${id}`, {
+      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })?.id
+    return new cloudflare.ApiShieldSchemaValidationSettings(`${id}`, {
       ...props,
       zoneId,
     })
-
-    createCloudflareTfOutput(
-      `${id}-apiShieldSchemaValidationSettingsFriendlyUniqueId`,
-      scope,
-      apiShieldSchemaValidationSettings.friendlyUniqueId
-    )
-    createCloudflareTfOutput(`${id}-apiShieldSchemaValidationSettingsId`, scope, apiShieldSchemaValidationSettings.id)
-
-    return apiShieldSchemaValidationSettings
   }
 
   /**
@@ -120,24 +93,18 @@ export class CloudflareApiShieldManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props api shield operation properties
-   * @see [CDKTF API Shield Operation Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/apiShieldOperation.typescript.md}
+   * @see [Pulumi API Shield Operation]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/apishieldoperation/}
    */
   public createApiShieldOperation(id: string, scope: CommonCloudflareConstruct, props: ApiShieldOperationProps) {
     if (!props) throw `Props undefined for ${id}`
 
     const zoneId = props.zoneId
       ? props.zoneId
-      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.zoneId
-
-    const apiShieldOperation = new ApiShieldOperation(scope, `${id}`, {
+      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })?.id
+    return new cloudflare.ApiShieldOperation(`${id}`, {
       ...props,
       zoneId,
     })
-
-    createCloudflareTfOutput(`${id}-apiShieldOperationFriendlyUniqueId`, scope, apiShieldOperation.friendlyUniqueId)
-    createCloudflareTfOutput(`${id}-apiShieldOperationId`, scope, apiShieldOperation.id)
-
-    return apiShieldOperation
   }
 
   /**
@@ -145,7 +112,7 @@ export class CloudflareApiShieldManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props api shield operation schema validation settings properties
-   * @see [CDKTF API Shield Operation Schema Validation Settings Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/apiShieldOperationSchemaValidationSettings.typescript.md}
+   * @see [Pulumi API Shield Operation Schema Validation Settings]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/apishieldoperationschemavalidationsettings/}
    */
   public createApiShieldOperationSchemaValidationSettings(
     id: string,
@@ -156,24 +123,10 @@ export class CloudflareApiShieldManager {
 
     const zoneId = props.zoneId
       ? props.zoneId
-      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.zoneId
-
-    const apiShieldOperationSchemaValidationSettings = new ApiShieldOperationSchemaValidationSettings(scope, `${id}`, {
+      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })?.id
+    return new cloudflare.ApiShieldOperationSchemaValidationSettings(`${id}`, {
       ...props,
       zoneId,
     })
-
-    createCloudflareTfOutput(
-      `${id}-apiShieldOperationSchemaValidationSettingsFriendlyUniqueId`,
-      scope,
-      apiShieldOperationSchemaValidationSettings.friendlyUniqueId
-    )
-    createCloudflareTfOutput(
-      `${id}-apiShieldOperationSchemaValidationSettingsId`,
-      scope,
-      apiShieldOperationSchemaValidationSettings.id
-    )
-
-    return apiShieldOperationSchemaValidationSettings
   }
 }

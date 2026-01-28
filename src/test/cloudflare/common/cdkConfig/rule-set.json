@@ -1,8 +1,0 @@
-{
-  "testRuleSet": {
-    "name": "testRuleSet",
-    "rules": {
-      "action": "set_cache_settings"
-    }
-  }
-}

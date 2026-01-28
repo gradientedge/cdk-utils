@@ -1,4 +1,7 @@
+import { ComponentResourceOptions } from '@pulumi/pulumi'
+
 export interface BaseProps {
+  debug?: boolean
   domainName: string
   extraContexts?: string[]
   name: string
@@ -7,3 +10,5 @@ export interface BaseProps {
   stageContextPath?: string
   subDomain?: string
 }
+
+export interface BaseOptions extends ComponentResourceOptions {}

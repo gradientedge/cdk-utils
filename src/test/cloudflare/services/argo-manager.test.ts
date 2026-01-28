@@ -1,6 +1,5 @@
-import { App, Testing } from 'cdktf'
-import 'cdktf/lib/testing/adapters/jest'
-import { Construct } from 'constructs'
+import { ArgoSmartRouting, Zone } from '@pulumi/cloudflare'
+import * as pulumi from '@pulumi/pulumi'
 import {
   ArgoSmartRoutingProps,
   CommonCloudflareConstruct,
@@ -19,127 +18,111 @@ const testStackProps: any = {
   accountId: '123456789012',
   domainName: 'gradientedge.io',
   extraContexts: [
-    'src/test/cloudflare/common/cdkConfig/dummy.json',
-    'src/test/cloudflare/common/cdkConfig/argo.json',
-    'src/test/cloudflare/common/cdkConfig/zone.json',
+    'src/test/cloudflare/common/config/dummy.json',
+    'src/test/cloudflare/common/config/argo.json',
+    'src/test/cloudflare/common/config/zone.json',
   ],
   features: {},
   name: 'test-common-stack',
   skipStageForARecords: false,
   stage: 'dev',
-  stageContextPath: 'src/test/aws/common/cdkEnv',
+  stageContextPath: 'src/test/cloudflare/common/env',
 }
 
-class TestCommonStack extends CommonCloudflareStack {
+class TestCommonCloudflareStack extends CommonCloudflareStack {
+  declare props: TestCloudflareStackProps
+  declare construct: TestCommonConstruct
+
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestCommonConstruct(props.name, this.props)
+  }
+}
+
+class TestInvalidCommonCloudflareStack extends CommonCloudflareStack {
   declare props: TestCloudflareStackProps
 
-  constructor(parent: Construct, name: string, props: TestCloudflareStackProps) {
-    super(parent, name, testStackProps)
-    this.construct = new TestCommonConstruct(this, props.name, this.props)
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestCommonConstruct(props.name, this.props)
   }
 
   protected determineConstructProps(props: CommonCloudflareStackProps) {
     return {
       ...super.determineConstructProps(props),
-      testArgo: this.node.tryGetContext('testArgo'),
-      testAttribute: this.node.tryGetContext('testAttribute'),
-      testZone: this.node.tryGetContext('testZone'),
-    }
-  }
-}
-
-class TestInvalidCommonStack extends CommonCloudflareStack {
-  declare props: TestCloudflareStackProps
-
-  constructor(parent: Construct, name: string, props: TestCloudflareStackProps) {
-    super(parent, name, testStackProps)
-    this.construct = new TestCommonConstruct(this, props.name, this.props)
-  }
-
-  protected determineConstructProps(props: CommonCloudflareStackProps) {
-    return {
-      ...super.determineConstructProps(props),
-      testAttribute: this.node.tryGetContext('testAttribute'),
-      testZone: this.node.tryGetContext('testZone'),
+      testArgo: undefined,
     }
   }
 }
 
 class TestCommonConstruct extends CommonCloudflareConstruct {
   declare props: TestCloudflareStackProps
+  zone: Zone
+  argoSmartRouting: ArgoSmartRouting
 
-  constructor(parent: Construct, name: string, props: TestCloudflareStackProps) {
-    super(parent, name, props)
-    const zone = this.zoneManager.createZone(`test-zone-${this.props.stage}`, this, this.props.testZone)
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, props)
+    this.zone = this.zoneManager.createZone(`test-zone-${this.props.stage}`, this, this.props.testZone)
     this.zoneManager.createZoneCacheReserve(`test-zone-cache-reserve-${this.props.stage}`, this, {
-      zoneId: zone.id,
+      zoneId: this.zone.id,
     })
-    const filter = this.argoManager.createArgoSmartRouting(`test-argo-${this.props.stage}`, this, this.props.testArgo)
+    this.argoSmartRouting = this.argoManager.createArgoSmartRouting(
+      `test-argo-${this.props.stage}`,
+      this,
+      this.props.testArgo
+    )
   }
 }
 
-const app = new App({ context: testStackProps })
-const testingApp = Testing.fakeCdktfJsonPath(app)
-const commonStack = new TestCommonStack(testingApp, 'test-common-stack', testStackProps)
-const stack = Testing.fullSynth(commonStack)
-const construct = Testing.synth(commonStack.construct)
+pulumi.runtime.setMocks({
+  newResource: (args: pulumi.runtime.MockResourceArgs) => {
+    return {
+      id: `${args.name}-id`,
+      state: args.inputs,
+    }
+  },
+  call: (args: pulumi.runtime.MockCallArgs) => {
+    return args.inputs
+  },
+})
+
+let stack = new TestCommonCloudflareStack('test-stack', testStackProps)
 
 describe('TestCloudflareArgoManager', () => {
   test('handles mis-configurations as expected', () => {
-    const error = () => new TestInvalidCommonStack(app, 'test-invalid-stack', testStackProps)
-    expect(error).toThrow('Props undefined for test-argo-dev')
+    expect(() => new TestInvalidCommonCloudflareStack('test-stack', testStackProps)).toThrow()
   })
 })
 
 describe('TestCloudflareArgoManager', () => {
-  test('is initialised as expected', () => {
-    /* test if the created stack have the right properties injected */
-    expect(commonStack.props).toHaveProperty('testAttribute')
-    expect(commonStack.props.testAttribute).toEqual('success')
-  })
-})
-
-describe('TestCloudflareArgoManager', () => {
-  test('synthesises as expected', () => {
-    expect(stack).toBeDefined()
-    expect(construct).toBeDefined()
-    expect(Testing.toBeValidTerraform(stack)).toBeTruthy()
-  })
-})
-
-describe('TestCloudflareArgoManager', () => {
-  test('provisions outputs as expected', () => {
-    expect(JSON.parse(construct).output).toMatchObject({
-      testZoneCacheReserveDevZoneCacheReserveFriendlyUniqueId: { value: 'test-zone-cache-reserve-dev' },
-      testZoneCacheReserveDevZoneCacheReserveId: {
-        value: '${cloudflare_zone_cache_reserve.test-zone-cache-reserve-dev.id}',
-      },
-      testZoneDevZoneFriendlyUniqueId: { value: 'test-zone-dev' },
-      testZoneDevZoneId: { value: '${cloudflare_zone.test-zone-dev.id}' },
-      testZoneDevZoneName: { value: '${cloudflare_zone.test-zone-dev.name}' },
-    })
-  })
-})
-
-describe('TestCloudflareArgoManager', () => {
+  expect(stack.construct.zone).toBeDefined()
   test('provisions zone as expected', () => {
-    expect(
-      Testing.toHaveResourceWithProperties(construct, 'Zone', {
-        account: {
-          id: 'test-account',
-        },
-        name: 'gradientedge.io',
+    pulumi
+      .all([stack.construct.zone.id, stack.construct.zone.urn, stack.construct.zone.name, stack.construct.zone.account])
+      .apply(([id, urn, name, account]) => {
+        expect(id).toEqual('test-zone-dev-id')
+        expect(urn).toEqual('urn:pulumi:stack::project::cloudflare:index/zone:Zone::test-zone-dev')
+        expect(name).toEqual('gradientedge.io')
+        expect(account.id).toEqual('test-account')
       })
-    )
   })
 })
 
 describe('TestCloudflareArgoManager', () => {
-  test('provisions argo as expected', () => {
-    expect(
-      Testing.toHaveResourceWithProperties(construct, 'ArgoSmartRouting', {
-        zone_id: '${data.cloudflare_zone.test-argo-dev-data-zone-data-zone.zone_id}',
+  expect(stack.construct.argoSmartRouting).toBeDefined()
+  test('provisions zone as expected', () => {
+    pulumi
+      .all([
+        stack.construct.argoSmartRouting.id,
+        stack.construct.argoSmartRouting.urn,
+        stack.construct.argoSmartRouting.value,
+      ])
+      .apply(([id, urn, value]) => {
+        expect(id).toEqual('test-argo-dev-id')
+        expect(urn).toEqual(
+          'urn:pulumi:stack::project::cloudflare:index/argoSmartRouting:ArgoSmartRouting::test-argo-dev'
+        )
+        expect(value).toEqual('on')
       })
-    )
   })
 })

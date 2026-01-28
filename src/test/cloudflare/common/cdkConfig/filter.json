@@ -1,7 +1,0 @@
-{
-  "testFilter": {
-    "description": "Site break-in attempts that are outside of the office",
-    "expression": "(http.request.uri.path ~ \".*wp-login.php\" or http.request.uri.path ~ \".*xmlrpc.php\") and ip.src ne 192.0.2.1",
-    "paused": false
-  }
-}

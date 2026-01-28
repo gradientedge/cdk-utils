@@ -1,6 +1,5 @@
-import { DnsRecord } from '@cdktf/provider-cloudflare/lib/dns-record/index.js'
+import * as cloudflare from '@pulumi/cloudflare'
 import { CommonCloudflareConstruct } from '../../common/index.js'
-import { createCloudflareTfOutput } from '../../utils/index.js'
 import { DnsRecordProps } from './types.js'
 
 /**
@@ -26,23 +25,17 @@ export class CloudflareRecordManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props record properties
-   * @see [CDKTF Record Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/dnsRecord.typescript.md}
+   * @see [Pulumi Cloudflare Record]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/record/}
    */
   public createRecord(id: string, scope: CommonCloudflareConstruct, props: DnsRecordProps) {
     if (!props) throw `Props undefined for ${id}`
 
     const zoneId = props.zoneId
       ? props.zoneId
-      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.zoneId
-
-    const record = new DnsRecord(scope, `${id}`, {
+      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })?.id
+    return new cloudflare.DnsRecord(id, {
       ...props,
       zoneId,
     })
-
-    createCloudflareTfOutput(`${id}-recordFriendlyUniqueId`, scope, record.friendlyUniqueId)
-    createCloudflareTfOutput(`${id}-recordId`, scope, record.id)
-
-    return record
   }
 }

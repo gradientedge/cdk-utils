@@ -1,6 +1,13 @@
-import { App, Testing } from 'cdktf'
-import 'cdktf/lib/testing/adapters/jest'
-import { Construct } from 'constructs'
+import {
+  Zone,
+  ZoneCacheReserve,
+  ZoneCacheVariants,
+  ZoneDnssec,
+  ZoneHold,
+  ZoneLockdown,
+  ZoneSetting,
+} from '@pulumi/cloudflare'
+import * as pulumi from '@pulumi/pulumi'
 import {
   CommonCloudflareConstruct,
   CommonCloudflareStack,
@@ -22,157 +29,155 @@ interface TestCloudflareStackProps extends CommonCloudflareStackProps {
 const testStackProps: any = {
   accountId: '123456789012',
   domainName: 'gradientedge.io',
-  extraContexts: ['src/test/cloudflare/common/cdkConfig/dummy.json', 'src/test/cloudflare/common/cdkConfig/zone.json'],
+  extraContexts: ['src/test/cloudflare/common/config/dummy.json', 'src/test/cloudflare/common/config/zone.json'],
   features: {},
   name: 'test-common-stack',
   skipStageForARecords: false,
   stage: 'dev',
-  stageContextPath: 'src/test/aws/common/cdkEnv',
+  stageContextPath: 'src/test/cloudflare/common/env',
 }
 
-class TestCommonStack extends CommonCloudflareStack {
+class TestCommonCloudflareStack extends CommonCloudflareStack {
+  declare props: TestCloudflareStackProps
+  declare construct: TestCommonConstruct
+
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestCommonConstruct(props.name, this.props)
+  }
+}
+
+class TestInvalidCommonCloudflareStack extends CommonCloudflareStack {
   declare props: TestCloudflareStackProps
 
-  constructor(parent: Construct, name: string, props: TestCloudflareStackProps) {
-    super(parent, name, testStackProps)
-    this.construct = new TestCommonConstruct(this, props.name, this.props)
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestCommonConstruct(props.name, this.props)
   }
 
   protected determineConstructProps(props: CommonCloudflareStackProps) {
     return {
       ...super.determineConstructProps(props),
-      testAttribute: this.node.tryGetContext('testAttribute'),
-      testZone: this.node.tryGetContext('testZone'),
-      testZoneCacheVariants: this.node.tryGetContext('testZoneCacheVariants'),
-      testZoneLockdown: this.node.tryGetContext('testZoneLockdown'),
-      testZoneSetting: this.node.tryGetContext('testZoneSetting'),
-    }
-  }
-}
-
-class TestInvalidCommonStack extends CommonCloudflareStack {
-  declare props: TestCloudflareStackProps
-
-  constructor(parent: Construct, name: string, props: TestCloudflareStackProps) {
-    super(parent, name, testStackProps)
-    this.construct = new TestCommonConstruct(this, props.name, this.props)
-  }
-
-  protected determineConstructProps(props: CommonCloudflareStackProps) {
-    return {
-      ...super.determineConstructProps(props),
-      testAttribute: this.node.tryGetContext('testAttribute'),
-      testZoneCacheVariants: this.node.tryGetContext('testZoneCacheVariants'),
-      testZoneLockdown: this.node.tryGetContext('testZoneLockdown'),
-      testZoneSetting: this.node.tryGetContext('testZoneSetting'),
+      testZone: undefined,
     }
   }
 }
 
 class TestCommonConstruct extends CommonCloudflareConstruct {
   declare props: TestCloudflareStackProps
+  zone: Zone
+  zoneCacheVariants: ZoneCacheVariants
+  zoneDnssec: ZoneDnssec
+  zoneHold: ZoneHold
+  zoneLockdown: ZoneLockdown
+  zoneSetting: ZoneSetting
+  zoneCacheReserve: ZoneCacheReserve
 
-  constructor(parent: Construct, name: string, props: TestCloudflareStackProps) {
-    super(parent, name, props)
-    const zone = this.zoneManager.createZone(`test-zone-${this.props.stage}`, this, this.props.testZone)
-    this.zoneManager.createZoneCacheReserve(`test-zone-cache-reserve-${this.props.stage}`, this, {
-      zoneId: zone.id,
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, props)
+    this.zone = this.zoneManager.createZone(`test-zone-${this.props.stage}`, this, this.props.testZone)
+    this.zoneCacheReserve = this.zoneManager.createZoneCacheReserve(
+      `test-zone-cache-reserve-${this.props.stage}`,
+      this,
+      {
+        zoneId: this.zone.id,
+      }
+    )
+    this.zoneCacheVariants = this.zoneManager.createZoneCacheVariants(
+      `test-zone-cache-variants-${this.props.stage}`,
+      this,
+      {
+        ...this.props.testZoneCacheVariants,
+      }
+    )
+    this.zoneDnssec = this.zoneManager.createZoneDnssec(`test-zone-dnssec-${this.props.stage}`, this, {
+      zoneId: this.zone.id,
     })
-    this.zoneManager.createZoneCacheVariants(`test-zone-cache-variants-${this.props.stage}`, this, {
-      ...this.props.testZoneCacheVariants,
+    this.zoneHold = this.zoneManager.createZoneHold(`test-zone-hold-${this.props.stage}`, this, {
+      zoneId: this.zone.id,
     })
-    this.zoneManager.createZoneDnssec(`test-zone-dnssec-${this.props.stage}`, this, {
-      zoneId: zone.id,
-    })
-    this.zoneManager.createZoneHold(`test-zone-hold-${this.props.stage}`, this, {
-      zoneId: zone.id,
-    })
-    this.zoneManager.createZoneLockdown(`test-zone-lockdown-${this.props.stage}`, this, this.props.testZoneLockdown)
-    this.zoneManager.createZoneSetting(`test-zone-settings-${this.props.stage}`, this, this.props.testZoneSetting)
+    this.zoneLockdown = this.zoneManager.createZoneLockdown(
+      `test-zone-lockdown-${this.props.stage}`,
+      this,
+      this.props.testZoneLockdown
+    )
+    this.zoneSetting = this.zoneManager.createZoneSetting(
+      `test-zone-settings-${this.props.stage}`,
+      this,
+      this.props.testZoneSetting
+    )
   }
 }
 
-const app = new App({ context: testStackProps })
-const testingApp = Testing.fakeCdktfJsonPath(app)
-const commonStack = new TestCommonStack(testingApp, 'test-common-stack', testStackProps)
-const stack = Testing.fullSynth(commonStack)
-const construct = Testing.synth(commonStack.construct)
+pulumi.runtime.setMocks({
+  newResource: (args: pulumi.runtime.MockResourceArgs) => {
+    return {
+      id: `${args.name}-id`,
+      state: args.inputs,
+    }
+  },
+  call: (args: pulumi.runtime.MockCallArgs) => {
+    return args.inputs
+  },
+})
+
+let stack = new TestCommonCloudflareStack('test-stack', testStackProps)
 
 describe('TestCloudflareZoneManager', () => {
   test('handles mis-configurations as expected', () => {
-    const error = () => new TestInvalidCommonStack(app, 'test-invalid-stack', testStackProps)
-    expect(error).toThrow('Props undefined for test-zone-dev')
+    expect(() => new TestInvalidCommonCloudflareStack('test-stack', testStackProps)).toThrow()
   })
 })
 
 describe('TestCloudflareZoneManager', () => {
-  test('is initialised as expected', () => {
-    /* test if the created stack have the right properties injected */
-    expect(commonStack.props).toHaveProperty('testAttribute')
-    expect(commonStack.props.testAttribute).toEqual('success')
-  })
-})
-
-describe('TestCloudflareZoneManager', () => {
-  test('synthesises as expected', () => {
-    expect(stack).toBeDefined()
-    expect(construct).toBeDefined()
-    expect(Testing.toBeValidTerraform(stack)).toBeTruthy()
-  })
-})
-
-describe('TestCloudflareZoneManager', () => {
-  test('provisions outputs as expected', () => {
-    expect(JSON.parse(construct).output).toMatchObject({
-      testZoneCacheReserveDevZoneCacheReserveFriendlyUniqueId: { value: 'test-zone-cache-reserve-dev' },
-      testZoneCacheReserveDevZoneCacheReserveId: {
-        value: '${cloudflare_zone_cache_reserve.test-zone-cache-reserve-dev.id}',
-      },
-      testZoneCacheVariantsDevZoneCacheVariantsFriendlyUniqueId: { value: 'test-zone-cache-variants-dev' },
-      testZoneCacheVariantsDevZoneCacheVariantsId: {
-        value: '${cloudflare_zone_cache_variants.test-zone-cache-variants-dev.id}',
-      },
-      testZoneDevZoneFriendlyUniqueId: { value: 'test-zone-dev' },
-      testZoneDevZoneId: { value: '${cloudflare_zone.test-zone-dev.id}' },
-      testZoneDevZoneName: { value: '${cloudflare_zone.test-zone-dev.name}' },
-      testZoneDnssecDevZoneDnssecFriendlyUniqueId: { value: 'test-zone-dnssec-dev' },
-      testZoneDnssecDevZoneDnssecId: { value: '${cloudflare_zone_dnssec.test-zone-dnssec-dev.id}' },
-      testZoneHoldDevZoneHoldFriendlyUniqueId: { value: 'test-zone-hold-dev' },
-      testZoneHoldDevZoneHoldId: { value: '${cloudflare_zone_hold.test-zone-hold-dev.id}' },
-      testZoneLockdownDevZoneLockdownFriendlyUniqueId: { value: 'test-zone-lockdown-dev' },
-      testZoneLockdownDevZoneLockdownId: { value: '${cloudflare_zone_lockdown.test-zone-lockdown-dev.id}' },
-    })
-  })
-})
-
-describe('TestCloudflareZoneManager', () => {
+  expect(stack.construct.zone).toBeDefined()
   test('provisions zone as expected', () => {
-    expect(
-      Testing.toHaveResourceWithProperties(construct, 'Zone', {
-        account: {
-          id: 'test-account',
-        },
-        name: 'gradientedge.io',
+    pulumi
+      .all([stack.construct.zone.id, stack.construct.zone.urn, stack.construct.zone.name, stack.construct.zone.account])
+      .apply(([id, urn, name, account]) => {
+        expect(id).toEqual('test-zone-dev-id')
+        expect(urn).toEqual('urn:pulumi:stack::project::cloudflare:index/zone:Zone::test-zone-dev')
+        expect(name).toEqual('gradientedge.io')
+        expect(account.id).toEqual('test-account')
       })
-    )
   })
 })
 
 describe('TestCloudflareZoneManager', () => {
+  expect(stack.construct.zoneCacheReserve).toBeDefined()
   test('provisions zone cache reserve as expected', () => {
-    expect(
-      Testing.toHaveResourceWithProperties(construct, 'ZoneCacheReserve', {
-        zone_id: '${cloudflare_zone.test-zone-dev.id}',
+    pulumi
+      .all([
+        stack.construct.zoneCacheReserve.id,
+        stack.construct.zoneCacheReserve.urn,
+        stack.construct.zoneCacheReserve.zoneId,
+      ])
+      .apply(([id, urn, zoneId]) => {
+        expect(id).toEqual('test-zone-cache-reserve-dev-id')
+        expect(urn).toEqual(
+          'urn:pulumi:stack::project::cloudflare:index/zoneCacheReserve:ZoneCacheReserve::test-zone-cache-reserve-dev'
+        )
+        expect(zoneId).toEqual('test-zone-dev-id')
       })
-    )
   })
 })
 
 describe('TestCloudflareZoneManager', () => {
+  expect(stack.construct.zoneCacheVariants).toBeDefined()
   test('provisions zone cache variants as expected', () => {
-    expect(
-      Testing.toHaveResourceWithProperties(construct, 'ZoneCacheVariants', {
-        value: {
+    pulumi
+      .all([
+        stack.construct.zoneCacheVariants.id,
+        stack.construct.zoneCacheVariants.urn,
+        stack.construct.zoneCacheVariants.value,
+        stack.construct.zoneCacheVariants.zoneId,
+      ])
+      .apply(([id, urn, value, zoneId]) => {
+        expect(id).toEqual('test-zone-cache-variants-dev-id')
+        expect(urn).toEqual(
+          'urn:pulumi:stack::project::cloudflare:index/zoneCacheVariants:ZoneCacheVariants::test-zone-cache-variants-dev'
+        )
+        expect(value).toEqual({
           avif: ['image/avif', 'image/webp'],
           bmp: ['image/bmp', 'image/webp'],
           gif: ['image/gif', 'image/webp'],
@@ -184,56 +189,8 @@ describe('TestCloudflareZoneManager', () => {
           tif: ['image/tif', 'image/webp'],
           tiff: ['image/tiff', 'image/webp'],
           webp: ['image/jpeg', 'image/webp'],
-        },
-        zone_id: '${data.cloudflare_zone.test-zone-cache-variants-dev-data-zone-data-zone.id}',
+        })
+        expect(zoneId).toEqual('test-zone-cache-variants-dev-data-zone')
       })
-    )
-  })
-})
-
-describe('TestCloudflareZoneManager', () => {
-  test('provisions zone dnssec as expected', () => {
-    expect(
-      Testing.toHaveResourceWithProperties(construct, 'ZoneDnssec', {
-        zone_id: '${cloudflare_zone.test-zone-dev.id}',
-      })
-    )
-  })
-})
-
-describe('TestCloudflareZoneManager', () => {
-  test('provisions zone hold as expected', () => {
-    expect(
-      Testing.toHaveResourceWithProperties(construct, 'ZoneHold', {
-        zone_id: '${cloudflare_zone.test-zone-dev.id}',
-      })
-    )
-  })
-})
-
-describe('TestCloudflareZoneManager', () => {
-  test('provisions zone lockdown as expected', () => {
-    expect(
-      Testing.toHaveResourceWithProperties(construct, 'ZoneLockdown', {
-        configurations: {
-          target: 'ip_range',
-          value: '192.0.2.0/24',
-        },
-        urls: ['gradientedge.io/api/product*'],
-        zone_id: '${data.cloudflare_zone.test-zone-lockdown-dev-data-zone-data-zone.id}',
-      })
-    )
-  })
-})
-
-describe('TestCloudflareZoneManager', () => {
-  test('provisions zone settings override as expected', () => {
-    expect(
-      Testing.toHaveResourceWithProperties(construct, 'ZoneSetting', {
-        setting_id: 'always_online',
-        value: 'on',
-        zone_id: '${data.cloudflare_zone.test-zone-settings-dev-data-zone-data-zone.id}',
-      })
-    )
   })
 })

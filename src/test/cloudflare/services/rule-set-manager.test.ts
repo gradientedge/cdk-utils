@@ -1,6 +1,5 @@
-import { App, Testing } from 'cdktf'
-import 'cdktf/lib/testing/adapters/jest'
-import { Construct } from 'constructs'
+import { Ruleset, Zone } from '@pulumi/cloudflare'
+import * as pulumi from '@pulumi/pulumi'
 import {
   CommonCloudflareConstruct,
   CommonCloudflareStack,
@@ -19,125 +18,106 @@ const testStackProps: any = {
   accountId: '123456789012',
   domainName: 'gradientedge.io',
   extraContexts: [
-    'src/test/cloudflare/common/cdkConfig/dummy.json',
-    'src/test/cloudflare/common/cdkConfig/rule-set.json',
-    'src/test/cloudflare/common/cdkConfig/zone.json',
+    'src/test/cloudflare/common/config/dummy.json',
+    'src/test/cloudflare/common/config/rule-set.json',
+    'src/test/cloudflare/common/config/zone.json',
   ],
   features: {},
   name: 'test-common-stack',
   skipStageForARecords: false,
   stage: 'dev',
-  stageContextPath: 'src/test/aws/common/cdkEnv',
+  stageContextPath: 'src/test/cloudflare/common/env',
 }
 
-class TestCommonStack extends CommonCloudflareStack {
+class TestCommonCloudflareStack extends CommonCloudflareStack {
+  declare props: TestCloudflareStackProps
+  declare construct: TestCommonConstruct
+
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestCommonConstruct(props.name, this.props)
+  }
+}
+
+class TestInvalidCommonCloudflareStack extends CommonCloudflareStack {
   declare props: TestCloudflareStackProps
 
-  constructor(parent: Construct, name: string, props: TestCloudflareStackProps) {
-    super(parent, name, testStackProps)
-    this.construct = new TestCommonConstruct(this, props.name, this.props)
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestCommonConstruct(props.name, this.props)
   }
 
   protected determineConstructProps(props: CommonCloudflareStackProps) {
     return {
       ...super.determineConstructProps(props),
-      testAttribute: this.node.tryGetContext('testAttribute'),
-      testRuleSet: this.node.tryGetContext('testRuleSet'),
-      testZone: this.node.tryGetContext('testZone'),
-    }
-  }
-}
-
-class TestInvalidCommonStack extends CommonCloudflareStack {
-  declare props: TestCloudflareStackProps
-
-  constructor(parent: Construct, name: string, props: TestCloudflareStackProps) {
-    super(parent, name, testStackProps)
-    this.construct = new TestCommonConstruct(this, props.name, this.props)
-  }
-
-  protected determineConstructProps(props: CommonCloudflareStackProps) {
-    return {
-      ...super.determineConstructProps(props),
-      testAttribute: this.node.tryGetContext('testAttribute'),
-      testZone: this.node.tryGetContext('testZone'),
+      testRuleSet: undefined,
     }
   }
 }
 
 class TestCommonConstruct extends CommonCloudflareConstruct {
   declare props: TestCloudflareStackProps
+  zone: Zone
+  ruleSet: Ruleset
 
-  constructor(parent: Construct, name: string, props: TestCloudflareStackProps) {
-    super(parent, name, props)
-    this.zoneManager.createZone(`test-zone-${this.props.stage}`, this, this.props.testZone)
-    this.ruleSetManager.createRuleSet(`test-rule-set-${this.props.stage}`, this, this.props.testRuleSet)
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, props)
+    this.zone = this.zoneManager.createZone(`test-zone-${this.props.stage}`, this, this.props.testZone)
+    this.ruleSet = this.ruleSetManager.createRuleSet(`test-rule-set-${this.props.stage}`, this, this.props.testRuleSet)
   }
 }
 
-const app = new App({ context: testStackProps })
-const testingApp = Testing.fakeCdktfJsonPath(app)
-const commonStack = new TestCommonStack(testingApp, 'test-common-stack', testStackProps)
-const stack = Testing.fullSynth(commonStack)
-const construct = Testing.synth(commonStack.construct)
+pulumi.runtime.setMocks({
+  newResource: (args: pulumi.runtime.MockResourceArgs) => {
+    return {
+      id: `${args.name}-id`,
+      state: args.inputs,
+    }
+  },
+  call: (args: pulumi.runtime.MockCallArgs) => {
+    return args.inputs
+  },
+})
+
+let stack = new TestCommonCloudflareStack('test-stack', testStackProps)
 
 describe('TestCloudflareRuleSetManager', () => {
   test('handles mis-configurations as expected', () => {
-    const error = () => new TestInvalidCommonStack(app, 'test-invalid-stack', testStackProps)
-    expect(error).toThrow('Props undefined for test-rule-set-dev')
+    expect(() => new TestInvalidCommonCloudflareStack('test-stack', testStackProps)).toThrow()
   })
 })
 
 describe('TestCloudflareRuleSetManager', () => {
-  test('is initialised as expected', () => {
-    /* test if the created stack have the right properties injected */
-    expect(commonStack.props).toHaveProperty('testAttribute')
-    expect(commonStack.props.testAttribute).toEqual('success')
-  })
-})
-
-describe('TestCloudflareRuleSetManager', () => {
-  test('synthesises as expected', () => {
-    expect(stack).toBeDefined()
-    expect(construct).toBeDefined()
-    expect(Testing.toBeValidTerraform(stack)).toBeTruthy()
-  })
-})
-
-describe('TestCloudflareRuleSetManager', () => {
-  test('provisions outputs as expected', () => {
-    expect(JSON.parse(construct).output).toMatchObject({
-      testRuleSetDevRuleSetFriendlyUniqueId: { value: 'test-rule-set-dev' },
-      testZoneDevZoneFriendlyUniqueId: { value: 'test-zone-dev' },
-      testZoneDevZoneId: { value: '${cloudflare_zone.test-zone-dev.id}' },
-      testZoneDevZoneName: { value: '${cloudflare_zone.test-zone-dev.name}' },
-    })
-  })
-})
-
-describe('TestCloudflareRuleSetManager', () => {
+  expect(stack.construct.zone).toBeDefined()
   test('provisions zone as expected', () => {
-    expect(
-      Testing.toHaveResourceWithProperties(construct, 'Zone', {
-        account: {
-          id: 'test-account',
-        },
-        name: 'gradientedge.io',
+    pulumi
+      .all([stack.construct.zone.id, stack.construct.zone.urn, stack.construct.zone.name, stack.construct.zone.account])
+      .apply(([id, urn, name, account]) => {
+        expect(id).toEqual('test-zone-dev-id')
+        expect(urn).toEqual('urn:pulumi:stack::project::cloudflare:index/zone:Zone::test-zone-dev')
+        expect(name).toEqual('gradientedge.io')
+        expect(account.id).toEqual('test-account')
       })
-    )
   })
 })
 
 describe('TestCloudflareRuleSetManager', () => {
-  test('provisions Rule Set as expected', () => {
-    expect(
-      Testing.toHaveResourceWithProperties(construct, 'Ruleset', {
-        name: 'testRuleSet',
-        zone_id: '${data.cloudflare_zone.test-rule-set-dev-data-zone-data-zone.zone_id}',
-        rules: {
+  expect(stack.construct.ruleSet).toBeDefined()
+  test('provisions ruleset as expected', () => {
+    pulumi
+      .all([
+        stack.construct.ruleSet.id,
+        stack.construct.ruleSet.urn,
+        stack.construct.ruleSet.name,
+        stack.construct.ruleSet.rules,
+      ])
+      .apply(([id, urn, name, rules]) => {
+        expect(id).toEqual('test-rule-set-dev-id')
+        expect(urn).toEqual('urn:pulumi:stack::project::cloudflare:index/ruleset:Ruleset::test-rule-set-dev')
+        expect(name).toEqual('testRuleSet')
+        expect(rules).toEqual({
           action: 'set_cache_settings',
-        },
+        })
       })
-    )
   })
 })

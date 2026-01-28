@@ -1,3 +1,3 @@
-import { FilterConfig } from '@cdktf/provider-cloudflare/lib/filter/index.js'
+import { FilterArgs } from '@pulumi/cloudflare'
 
-export interface FilterProps extends FilterConfig {}
+export interface FilterProps extends FilterArgs {}

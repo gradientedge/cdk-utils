@@ -1,9 +1,6 @@
-import { PageRule } from '@cdktf/provider-cloudflare/lib/page-rule/index.js'
-import { PagesDomain } from '@cdktf/provider-cloudflare/lib/pages-domain/index.js'
-import { PagesProject } from '@cdktf/provider-cloudflare/lib/pages-project/index.js'
-import { LocalExec, Provider } from 'cdktf-local-exec'
+import * as cloudflare from '@pulumi/cloudflare'
+import { local } from '@pulumi/command'
 import { CommonCloudflareConstruct } from '../../common/index.js'
-import { createCloudflareTfOutput } from '../../utils/index.js'
 import { PageRuleProps, PagesDomainProps, PagesProjectDeployProps, PagesProjectProps } from './types.js'
 
 /**
@@ -29,21 +26,16 @@ export class CloudflarePageManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props pages project properties
-   * @see [CDKTF Pages Project Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/pagesProject.typescript.md}
+   * @see [Pulumi Cloudflare Pages Project]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/pagesproject/}
    */
   public createPagesProject(id: string, scope: CommonCloudflareConstruct, props: PagesProjectProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    const pagesProject = new PagesProject(scope, `${id}`, {
+    return new cloudflare.PagesProject(`${id}`, {
       ...props,
       accountId: props.accountId ?? scope.props.accountId,
       name: `${props.name}-${scope.props.stage}`,
     })
-
-    createCloudflareTfOutput(`${id}-pagesProjectFriendlyUniqueId`, scope, pagesProject.friendlyUniqueId)
-    createCloudflareTfOutput(`${id}-pagesProjectId`, scope, pagesProject.id)
-
-    return pagesProject
   }
 
   /**
@@ -51,21 +43,16 @@ export class CloudflarePageManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props pages domain properties
-   * @see [CDKTF Pages Domain Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/pagesDomain.typescript.md}
+   * @see [Pulumi Cloudflare Pages Domain]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/pagesdomain/}
    */
   public createPagesDomain(id: string, scope: CommonCloudflareConstruct, props: PagesDomainProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    const pagesDomain = new PagesDomain(scope, `${id}`, {
+    return new cloudflare.PagesDomain(`${id}`, {
       ...props,
       accountId: props.accountId ?? scope.props.accountId,
       name: props.name ?? scope.props.domainName,
     })
-
-    createCloudflareTfOutput(`${id}-pagesDomainFriendlyUniqueId`, scope, pagesDomain.friendlyUniqueId)
-    createCloudflareTfOutput(`${id}-pagesDomainId`, scope, pagesDomain.id)
-
-    return pagesDomain
   }
 
   /**
@@ -73,37 +60,33 @@ export class CloudflarePageManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props page rule properties
-   * @see [CDKTF Page Rule Module]{@link https://github.com/cdktf/cdktf-provider-cloudflare/blob/main/docs/pageRule.typescript.md}
+   * @see [Pulumi Cloudflare Page Rule]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/pagerule/}
    */
   public createPageRule(id: string, scope: CommonCloudflareConstruct, props: PageRuleProps) {
     if (!props) throw `Props undefined for ${id}`
 
     const zoneId = props.zoneId
       ? props.zoneId
-      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { name: scope.props.domainName })?.zoneId
-
-    const pageRule = new PageRule(scope, `${id}`, {
+      : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })?.id
+    return new cloudflare.PageRule(`${id}`, {
       ...props,
       zoneId,
     })
-
-    createCloudflareTfOutput(`${id}-pageRuleFriendlyUniqueId`, scope, pageRule.friendlyUniqueId)
-    createCloudflareTfOutput(`${id}-pageRuleId`, scope, pageRule.id)
-
-    return pageRule
   }
 
   public deployPagesProject(id: string, scope: CommonCloudflareConstruct, props: PagesProjectDeployProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    new Provider(scope, `${id}`)
     const message = process.env.BUILD_NUMBER ?? props.message
-    const deployment = new LocalExec(scope, `${id}-deploy-${new Date().toISOString()}`, {
-      command: `CLOUDFLARE_ACCOUNT_ID=${scope.props.accountId} CLOUDFLARE_API_TOKEN=${scope.props.apiToken} npx wrangler pages deploy ${props.directory} --project-name=${props.projectName} --branch=${props.branch} --commit-message=${message}`,
-      cwd: '',
-      dependsOn: props.dependsOn,
-    })
-
-    return deployment
+    return new local.Command(
+      `${id}-deploy-${new Date().toISOString()}`,
+      {
+        create: `CLOUDFLARE_ACCOUNT_ID=${scope.props.accountId} CLOUDFLARE_API_TOKEN=${scope.props.apiToken} npx wrangler pages deploy ${props.directory} --project-name=${props.projectName} --branch=${props.branch} --commit-message=${message}`,
+        dir: '',
+      },
+      {
+        dependsOn: props.dependsOn,
+      }
+    )
   }
 }

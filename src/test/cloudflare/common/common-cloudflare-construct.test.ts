@@ -1,6 +1,5 @@
-import { App, Testing } from 'cdktf'
-import 'cdktf/lib/testing/adapters/jest'
-import { Construct } from 'constructs'
+import { Zone, ZoneCacheReserve } from '@pulumi/cloudflare'
+import * as pulumi from '@pulumi/pulumi'
 import {
   CommonCloudflareConstruct,
   CommonCloudflareStack,
@@ -16,84 +15,85 @@ interface TestCloudflareStackProps extends CommonCloudflareStackProps {
 const testStackProps: any = {
   accountId: '123456789012',
   domainName: 'gradientedge.io',
-  extraContexts: ['src/test/cloudflare/common/cdkConfig/dummy.json', 'src/test/cloudflare/common/cdkConfig/zone.json'],
+  extraContexts: ['src/test/cloudflare/common/config/dummy.json', 'src/test/cloudflare/common/config/zone.json'],
   features: {},
   name: 'test-common-stack',
   skipStageForARecords: false,
   stage: 'dev',
-  stageContextPath: 'src/test/aws/common/cdkEnv',
+  stageContextPath: 'src/test/cloudflare/common/env',
 }
 
-class TestCommonStack extends CommonCloudflareStack {
+class TestCommonCloudflareStack extends CommonCloudflareStack {
   declare props: TestCloudflareStackProps
+  declare construct: TestCommonConstruct
 
-  constructor(parent: Construct, name: string, props: TestCloudflareStackProps) {
-    super(parent, name, testStackProps)
-    this.construct = new TestCommonConstruct(this, props.name, this.props)
-  }
-
-  protected determineConstructProps(props: CommonCloudflareStackProps) {
-    return {
-      ...super.determineConstructProps(props),
-      testAttribute: this.node.tryGetContext('testAttribute'),
-      testZone: this.node.tryGetContext('testZone'),
-    }
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestCommonConstruct(props.name, this.props)
   }
 }
 
 class TestCommonConstruct extends CommonCloudflareConstruct {
   declare props: TestCloudflareStackProps
+  zone: Zone
+  zoneCacheReserve: ZoneCacheReserve
 
-  constructor(parent: Construct, name: string, props: TestCloudflareStackProps) {
-    super(parent, name, props)
-    const zone = this.zoneManager.createZone(`test-zone-${this.props.stage}`, this, this.props.testZone)
-    this.zoneManager.createZoneCacheReserve(`test-zone-cache-reserve-${this.props.stage}`, this, {
-      zoneId: zone.id,
-    })
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, props)
+    this.zone = this.zoneManager.createZone(`test-zone-${this.props.stage}`, this, this.props.testZone)
+    this.zoneCacheReserve = this.zoneManager.createZoneCacheReserve(
+      `test-zone-cache-reserve-${this.props.stage}`,
+      this,
+      {
+        zoneId: this.zone.id,
+      }
+    )
   }
 }
 
-const app = new App({ context: testStackProps })
-const testingApp = Testing.fakeCdktfJsonPath(app)
-const commonStack = new TestCommonStack(testingApp, 'test-common-stack', testStackProps)
-const stack = Testing.fullSynth(commonStack)
-const construct = Testing.synth(commonStack.construct)
-
-describe('TestCloudflareCommonConstruct', () => {
-  test('is initialised as expected', () => {
-    /* test if the created stack have the right properties injected */
-    expect(commonStack.props).toHaveProperty('testAttribute')
-    expect(commonStack.props.testAttribute).toEqual('success')
-  })
+pulumi.runtime.setMocks({
+  newResource: (args: pulumi.runtime.MockResourceArgs) => {
+    return {
+      id: `${args.name}-id`,
+      state: args.inputs,
+    }
+  },
+  call: (args: pulumi.runtime.MockCallArgs) => {
+    return args.inputs
+  },
 })
 
-describe('TestCloudflareCommonConstruct', () => {
-  test('synthesises as expected', () => {
-    expect(stack).toBeDefined()
-    expect(construct).toBeDefined()
-    expect(Testing.toBeValidTerraform(stack)).toBeTruthy()
-  })
-})
+let stack = new TestCommonCloudflareStack('test-stack', testStackProps)
 
 describe('TestCloudflareCommonConstruct', () => {
-  test('provisions outputs as expected', () => {
-    expect(JSON.parse(construct).output).toMatchObject({
-      testZoneDevZoneFriendlyUniqueId: { value: 'test-zone-dev' },
-      testZoneDevZoneId: { value: '${cloudflare_zone.test-zone-dev.id}' },
-      testZoneDevZoneName: { value: '${cloudflare_zone.test-zone-dev.name}' },
-    })
-  })
-})
-
-describe('TestCloudflareCommonConstruct', () => {
+  expect(stack.construct.zone).toBeDefined()
   test('provisions zone as expected', () => {
-    expect(
-      Testing.toHaveResourceWithProperties(construct, 'Zone', {
-        account: {
-          id: 'test-account',
-        },
-        name: 'gradientedge.io',
+    pulumi
+      .all([stack.construct.zone.id, stack.construct.zone.urn, stack.construct.zone.name, stack.construct.zone.account])
+      .apply(([id, urn, name, account]) => {
+        expect(id).toEqual('test-zone-dev-id')
+        expect(urn).toEqual('urn:pulumi:stack::project::cloudflare:index/zone:Zone::test-zone-dev')
+        expect(name).toEqual('gradientedge.io')
+        expect(account.id).toEqual('test-account')
       })
-    )
+  })
+})
+
+describe('TestCloudflareCommonConstruct', () => {
+  expect(stack.construct.zoneCacheReserve).toBeDefined()
+  test('provisions zone cache reserve as expected', () => {
+    pulumi
+      .all([
+        stack.construct.zoneCacheReserve.id,
+        stack.construct.zoneCacheReserve.urn,
+        stack.construct.zoneCacheReserve.zoneId,
+      ])
+      .apply(([id, urn, zoneId]) => {
+        expect(id).toEqual('test-zone-cache-reserve-dev-id')
+        expect(urn).toEqual(
+          'urn:pulumi:stack::project::cloudflare:index/zoneCacheReserve:ZoneCacheReserve::test-zone-cache-reserve-dev'
+        )
+        expect(zoneId).toEqual('test-zone-dev-id')
+      })
   })
 })

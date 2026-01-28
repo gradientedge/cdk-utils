@@ -1,4 +1,8 @@
 {
+  "sitePagesProject": {
+    "name": "test-simple-project",
+    "productionBranch": "main"
+  },
   "testPageRule": {
     "actions": {
       "emailObfuscation": "on",

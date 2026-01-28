@@ -1,13 +1,11 @@
-import fs from 'fs'
-import { CommonCloudflareConstruct } from './construct.js'
-import { CommonCloudflareStackProps } from './types.js'
-
+import { ComponentResource, ComponentResourceOptions, Config } from '@pulumi/pulumi'
 import appRoot from 'app-root-path'
-import { TerraformStack } from 'cdktf'
-import { Construct } from 'constructs'
+import fs from 'fs'
 import _ from 'lodash'
 import path from 'path'
 import { isDevStage } from '../../common/index.js'
+import { CommonCloudflareConstruct } from './construct.js'
+import { CommonCloudflareStackProps } from './types.js'
 
 /**
  * @classdesc Common stack to use as a base for all higher level constructs.
@@ -21,57 +19,62 @@ import { isDevStage } from '../../common/index.js'
  *   }
  * }
  */
-export class CommonCloudflareStack extends TerraformStack {
+export class CommonCloudflareStack extends ComponentResource {
   construct: CommonCloudflareConstruct
   props: CommonCloudflareStackProps
+  config: Config
 
-  constructor(parent: Construct, name: string, props: CommonCloudflareStackProps) {
-    super(parent, name)
+  constructor(name: string, props: CommonCloudflareStackProps, options?: ComponentResourceOptions) {
+    super(`custom:cloudflare:Stack:${name}`, name, props, options)
 
-    /* determine extra cdk contexts */
-    this.determineExtraContexts()
-
-    /* determine extra cdk stage contexts */
-    this.determineStageContexts()
-
+    /* initialise config */
+    this.config = new Config()
     this.props = this.determineConstructProps(props)
   }
 
   /**
-   * @summary Method to determine the core CDK construct properties injected via context cdktf.json
+   * @summary Method to determine the core CDK construct properties injected via context
    * @param props The stack properties
    * @returns The stack properties
    */
   protected determineConstructProps(props: CommonCloudflareStackProps) {
-    const stage = this.node.tryGetContext('stage')
+    let projectProps: CommonCloudflareStackProps = props
+    if (!projectProps) {
+      const projectPropsPath = path.join(appRoot.path, 'pulumi.json')
+      if (!fs.existsSync(projectPropsPath)) throw `Context properties unavailable in path:${projectPropsPath}`
+
+      const projectPropsBuffer = fs.readFileSync(projectPropsPath)
+      projectProps = JSON.parse(projectPropsBuffer.toString('utf-8'))
+    }
+
     return {
-      accountId: this.node.tryGetContext('accountId'),
-      apiToken: this.node.tryGetContext('apiToken'),
-      domainName: this.node.tryGetContext('domainName'),
-      extraContexts: this.node.tryGetContext('extraContexts'),
-      features: this.node.tryGetContext('features'),
-      name: this.node.tryGetContext('resourceGroupName'),
-      skipStageForARecords: this.node.tryGetContext('skipStageForARecords'),
-      stage: stage,
-      subDomain: this.node.tryGetContext('subDomain'),
+      accountId: projectProps.accountId,
+      apiToken: projectProps.apiToken,
+      domainName: projectProps.domainName,
+      extraContexts: projectProps.extraContexts,
+      name: projectProps.resourceGroupName ?? projectProps.name,
+      skipStageForARecords: projectProps.skipStageForARecords,
+      stage: projectProps.stage,
+      stageContextPath: projectProps.stageContextPath,
+      subDomain: projectProps.subDomain,
+      ...this.determineExtraContexts(props),
+      ...this.determineStageContexts(props),
     }
   }
 
   /**
-   * @summary Method to determine extra cdk contexts apart from the main cdktf.json
+   * @summary Method to determine extra cdk contexts apart from the main context
    * - Sets the properties from the extra contexts into cdk node context
    * - Primary use is to have layered config in separate files to enable easier maintenance and readability
    */
-  protected determineExtraContexts() {
-    const extraContexts = this.node.tryGetContext('extraContexts')
-    const debug = this.node.tryGetContext('debug')
-
-    if (!extraContexts) {
-      if (debug) console.debug(`No additional contexts provided. Using default context properties from cdktf.json`)
-      return
+  protected determineExtraContexts(props: CommonCloudflareStackProps) {
+    if (!props.extraContexts) {
+      if (props.debug) console.debug(`No additional contexts provided. Using default context properties`)
+      return {}
     }
 
-    _.forEach(extraContexts, (context: string) => {
+    let extraContextProps: Record<string, any> = {}
+    _.forEach(props.extraContexts, (context: string) => {
       const extraContextPath = path.join(appRoot.path, context)
 
       /* scenario where extra context is configured in cdk.json but absent in file system */
@@ -79,65 +82,51 @@ export class CommonCloudflareStack extends TerraformStack {
 
       /* read the extra properties */
       const extraContextPropsBuffer = fs.readFileSync(extraContextPath)
-      if (debug) console.debug(`Adding additional contexts provided in ${extraContextPath}`)
+      if (props.debug) console.debug(`Adding additional contexts provided in ${extraContextPath}`)
 
       /* parse as JSON properties */
-      const extraContextProps = JSON.parse(extraContextPropsBuffer.toString('utf-8'))
-
-      /* set each of the property into the cdk node context */
-      _.keys(extraContextProps).forEach((propKey: any) => {
-        this.node.setContext(propKey, extraContextProps[propKey])
-      })
+      extraContextProps = {
+        ...extraContextProps,
+        ...JSON.parse(extraContextPropsBuffer.toString('utf-8')),
+      }
     })
+    return extraContextProps
   }
 
   /**
-   * @summary Method to determine extra cdk stage contexts apart from the main cdktf.json
+   * @summary Method to determine extra cdk stage contexts apart from the main context
    * - Sets the properties from the extra stage contexts into cdk node context
    * - Primary use is to have layered config for each environment which is injected into the context
    */
-  protected determineStageContexts() {
-    const stage = process.env.STAGE ?? this.node.tryGetContext('stage')
-    const stageContextPath = this.node.tryGetContext('stageContextPath') || 'cdkEnv'
-    const stageContextFilePath = path.join(appRoot.path, stageContextPath, `${stage}.json`)
-    const debug = this.node.tryGetContext('debug')
+  protected determineStageContexts(props: CommonCloudflareStackProps) {
+    const stageContextFilePath = path.join(appRoot.path, props.stageContextPath ?? 'cdkEnv', `${props.stage}.json`)
 
-    if (isDevStage(stage)) {
-      if (debug) console.debug(`Development stage. Using default stage context properties`)
+    if (isDevStage(props.stage)) {
+      if (props.debug) console.debug(`Development stage. Using default stage context properties`)
     }
 
     /* alert default context usage when extra stage config is missing */
     if (!fs.existsSync(stageContextFilePath)) {
-      if (debug) console.debug(`Stage specific context properties unavailable in path:${stageContextFilePath}`)
-      if (debug) console.debug(`Using default stage context properties for ${stage} stage`)
-      return
+      if (props.debug) console.debug(`Stage specific context properties unavailable in path:${stageContextFilePath}`)
+      if (props.debug) console.debug(`Using default stage context properties for ${props.stage} stage`)
+      return {}
     }
 
     /* read the extra properties */
     const stageContextPropsBuffer = fs.readFileSync(stageContextFilePath)
-    if (debug) console.debug(`Adding additional stage contexts provided in ${stageContextFilePath}`)
+    if (props.debug) console.debug(`Adding additional stage contexts provided in ${stageContextFilePath}`)
 
     /* parse as JSON properties */
-    const stageContextProps = JSON.parse(stageContextPropsBuffer.toString('utf-8'))
-
-    /* set each of the property into the cdk node context */
-    _.keys(stageContextProps).forEach((propKey: any) => {
-      /* handle object, array properties */
-      if (typeof stageContextProps[propKey] === 'object' && !Array.isArray(stageContextProps[propKey])) {
-        this.node.setContext(propKey, _.merge(this.node.tryGetContext(propKey), stageContextProps[propKey]))
-      } else {
-        /* handle all other primitive properties */
-        this.node.setContext(propKey, stageContextProps[propKey])
-      }
-    })
+    return JSON.parse(stageContextPropsBuffer.toString('utf-8'))
   }
 
   /**
    * @summary Determine the fully qualified domain name based on domainName & subDomain
    */
   protected fullyQualifiedDomain() {
-    const domainName = this.node.tryGetContext('domainName')
-    const subDomain = this.node.tryGetContext('subDomain')
+    const domainName = this.props.domainName
+    const subDomain = this.props.subDomain
+
     return subDomain ? `${subDomain}.${domainName}` : domainName
   }
 }

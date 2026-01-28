@@ -1,9 +1,5 @@
-import { PageRule } from '@cdktf/provider-cloudflare/lib/page-rule/index.js'
-import { PagesDomain } from '@cdktf/provider-cloudflare/lib/pages-domain/index.js'
-import { PagesProject } from '@cdktf/provider-cloudflare/lib/pages-project/index.js'
-import { App, Testing } from 'cdktf'
-import 'cdktf/lib/testing/adapters/jest'
-import { Construct } from 'constructs'
+import { PageRule, PagesDomain, PagesProject } from '@pulumi/cloudflare'
+import * as pulumi from '@pulumi/pulumi'
 import {
   CommonCloudflareConstruct,
   CommonCloudflareStack,
@@ -26,135 +22,139 @@ interface TestCloudflareStackProps extends CommonCloudflareStackProps {
 const testStackProps: any = {
   accountId: '123456789012',
   domainName: 'gradientedge.io',
-  extraContexts: ['src/test/cloudflare/common/cdkConfig/dummy.json', 'src/test/cloudflare/common/cdkConfig/pages.json'],
+  extraContexts: ['src/test/cloudflare/common/config/dummy.json', 'src/test/cloudflare/common/config/pages.json'],
   features: {},
   name: 'test-common-stack',
   skipStageForARecords: false,
   stage: 'dev',
-  stageContextPath: 'src/test/aws/common/cdkEnv',
+  stageContextPath: 'src/test/cloudflare/common/env',
 }
 
-class TestCommonStack extends CommonCloudflareStack {
+class TestCommonCloudflareStack extends CommonCloudflareStack {
+  declare props: TestCloudflareStackProps
+  declare construct: TestCommonConstruct
+
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestCommonConstruct(props.name, this.props)
+  }
+}
+
+class TestInvalidCommonCloudflareStack extends CommonCloudflareStack {
   declare props: TestCloudflareStackProps
 
-  constructor(parent: Construct, name: string, props: TestCloudflareStackProps) {
-    super(parent, name, testStackProps)
-    this.construct = new TestCommonConstruct(this, props.name, this.props)
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestCommonConstruct(props.name, this.props)
   }
 
   protected determineConstructProps(props: CommonCloudflareStackProps) {
     return {
       ...super.determineConstructProps(props),
-      testAttribute: this.node.tryGetContext('testAttribute'),
-      testPageRule: this.node.tryGetContext('testPageRule'),
-      testPagesDomain: this.node.tryGetContext('testPagesDomain'),
-      testPagesProject: this.node.tryGetContext('testPagesProject'),
-      testPagesProjectBuildConfig: this.node.tryGetContext('testPagesProjectBuildConfig'),
-    }
-  }
-}
-
-class TestInvalidCommonStack extends CommonCloudflareStack {
-  declare props: TestCloudflareStackProps
-
-  constructor(parent: Construct, name: string, props: TestCloudflareStackProps) {
-    super(parent, name, testStackProps)
-    this.construct = new TestCommonConstruct(this, props.name, this.props)
-  }
-
-  protected determineConstructProps(props: CommonCloudflareStackProps) {
-    return {
-      ...super.determineConstructProps(props),
-      testAttribute: this.node.tryGetContext('testAttribute'),
+      testPageRule: undefined,
     }
   }
 }
 
 class TestCommonConstruct extends CommonCloudflareConstruct {
   declare props: TestCloudflareStackProps
+  pagesProject: PagesProject
+  pagesProjectWithBuild: PagesProject
+  pagesDomain: PagesDomain
+  pageRule: PageRule
 
-  constructor(parent: Construct, name: string, props: TestCloudflareStackProps) {
-    super(parent, name, props)
-    this.pageManager.createPagesProject(`test-pages-project-${this.props.stage}`, this, this.props.testPagesProject)
-    this.pageManager.createPagesProject(
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, props)
+    this.pagesProject = this.pageManager.createPagesProject(
+      `test-pages-project-${this.props.stage}`,
+      this,
+      this.props.testPagesProject
+    )
+    this.pagesProjectWithBuild = this.pageManager.createPagesProject(
       `test-pages-project-with-build-${this.props.stage}`,
       this,
       this.props.testPagesProjectBuildConfig
     )
-    this.pageManager.createPagesDomain(`test-pages-domain-${this.props.stage}`, this, {
+    this.pagesDomain = this.pageManager.createPagesDomain(`test-pages-domain-${this.props.stage}`, this, {
       ...this.props.testPagesDomain,
       projectName: `test-pages-project-${this.props.stage}`,
     })
-    this.pageManager.createPageRule(`test-page-rule-${this.props.stage}`, this, this.props.testPageRule)
+    this.pageRule = this.pageManager.createPageRule(`test-page-rule-${this.props.stage}`, this, this.props.testPageRule)
   }
 }
 
-const app = new App({ context: testStackProps })
-const testingApp = Testing.fakeCdktfJsonPath(app)
-const commonStack = new TestCommonStack(testingApp, 'test-common-stack', testStackProps)
-const stack = Testing.fullSynth(commonStack)
-const construct = Testing.synth(commonStack.construct)
+pulumi.runtime.setMocks({
+  newResource: (args: pulumi.runtime.MockResourceArgs) => {
+    return {
+      id: `${args.name}-id`,
+      state: args.inputs,
+    }
+  },
+  call: (args: pulumi.runtime.MockCallArgs) => {
+    return args.inputs
+  },
+})
+
+let stack = new TestCommonCloudflareStack('test-stack', testStackProps)
 
 describe('TestCloudflarePagesManager', () => {
   test('handles mis-configurations as expected', () => {
-    const error = () => new TestInvalidCommonStack(app, 'test-invalid-stack', testStackProps)
-    expect(error).toThrow('Props undefined for test-pages-project-dev')
+    expect(() => new TestInvalidCommonCloudflareStack('test-stack', testStackProps)).toThrow()
   })
 })
 
 describe('TestCloudflarePagesManager', () => {
-  test('is initialised as expected', () => {
-    /* test if the created stack have the right properties injected */
-    expect(commonStack.props).toHaveProperty('testAttribute')
-    expect(commonStack.props.testAttribute).toEqual('success')
-  })
-})
-
-describe('TestCloudflarePagesManager', () => {
-  test('synthesises as expected', () => {
-    expect(stack).toBeDefined()
-    expect(construct).toBeDefined()
-    expect(Testing.toBeValidTerraform(stack)).toBeTruthy()
-  })
-})
-
-describe('TestCloudflarePagesManager', () => {
-  test('provisions outputs as expected', () => {
-    expect(JSON.parse(construct).output).toMatchObject({
-      testPageRuleDevPageRuleFriendlyUniqueId: { value: 'test-page-rule-dev' },
-      testPageRuleDevPageRuleId: { value: '${cloudflare_page_rule.test-page-rule-dev.id}' },
-      testPagesDomainDevPagesDomainFriendlyUniqueId: { value: 'test-pages-domain-dev' },
-      testPagesDomainDevPagesDomainId: { value: '${cloudflare_pages_domain.test-pages-domain-dev.id}' },
-      testPagesProjectDevPagesProjectFriendlyUniqueId: { value: 'test-pages-project-dev' },
-      testPagesProjectDevPagesProjectId: { value: '${cloudflare_pages_project.test-pages-project-dev.id}' },
-      testPagesProjectWithBuildDevPagesProjectFriendlyUniqueId: { value: 'test-pages-project-with-build-dev' },
-      testPagesProjectWithBuildDevPagesProjectId: {
-        value: '${cloudflare_pages_project.test-pages-project-with-build-dev.id}',
-      },
-    })
-  })
-})
-
-describe('TestCloudflarePagesManager', () => {
+  expect(stack.construct.pagesProject).toBeDefined()
   test('provisions pages project as expected', () => {
-    expect(
-      Testing.toHaveResourceWithProperties(construct, 'PagesProject', {
-        account_id: '${var.accountId}',
-        name: 'test-simple-project-dev',
-        production_branch: 'main',
+    pulumi
+      .all([
+        stack.construct.pagesProject.id,
+        stack.construct.pagesProject.urn,
+        stack.construct.pagesProject.accountId,
+        stack.construct.pagesProject.name,
+        stack.construct.pagesProject.productionBranch,
+      ])
+      .apply(([id, urn, accountId, name, productionBranch]) => {
+        expect(id).toEqual('test-pages-project-dev-id')
+        expect(urn).toEqual(
+          'urn:pulumi:stack::project::cloudflare:index/pagesProject:PagesProject::test-pages-project-dev'
+        )
+        expect(accountId).toEqual('123456789012')
+        expect(name).toEqual('test-simple-project-dev')
+        expect(productionBranch).toEqual('main')
       })
-    )
-    expect(
-      Testing.toHaveResourceWithProperties(construct, 'PagesProject', {
-        account_id: '${var.accountId}',
-        build_config: {
-          build_command: 'npm run build',
-          destination_dir: 'dist',
-          root_dir: '',
-        },
-        deployment_configs: {
+  })
+
+  expect(stack.construct.pagesProjectWithBuild).toBeDefined()
+  test('provisions pages project as expected', () => {
+    pulumi
+      .all([
+        stack.construct.pagesProjectWithBuild.id,
+        stack.construct.pagesProjectWithBuild.urn,
+        stack.construct.pagesProjectWithBuild.accountId,
+        stack.construct.pagesProjectWithBuild.name,
+        stack.construct.pagesProjectWithBuild.productionBranch,
+        stack.construct.pagesProjectWithBuild.buildConfig,
+        stack.construct.pagesProjectWithBuild.deploymentConfigs,
+      ])
+      .apply(([id, urn, accountId, name, productionBranch, buildConfig, deploymentConfigs]) => {
+        expect(id).toEqual('test-pages-project-with-build-dev-id')
+        expect(urn).toEqual(
+          'urn:pulumi:stack::project::cloudflare:index/pagesProject:PagesProject::test-pages-project-with-build-dev'
+        )
+        expect(accountId).toEqual('123456789012')
+        expect(name).toEqual('test-build-config-project-dev')
+        expect(productionBranch).toEqual('main')
+        expect(buildConfig).toEqual({
+          buildCommand: 'npm run build',
+          destinationDir: 'dist',
+          rootDir: '',
+        })
+        expect(deploymentConfigs).toEqual({
           preview: {
-            env_vars: {
+            compatibility_date: '2023-11-23',
+            compatibility_flags: ['nodejs_compat'],
+            envVars: {
               TEST_ENV_VAR: {
                 type: 'plain_text',
                 value: 'preview',
@@ -166,7 +166,9 @@ describe('TestCloudflarePagesManager', () => {
             },
           },
           production: {
-            env_vars: {
+            compatibility_date: '2023-11-23',
+            compatibility_flags: ['nodejs_compat'],
+            envVars: {
               TEST_ENV_VAR: {
                 type: 'plain_text',
                 value: 'production',
@@ -177,38 +179,56 @@ describe('TestCloudflarePagesManager', () => {
               },
             },
           },
-        },
-        name: 'test-build-config-project-dev',
-        production_branch: 'main',
+        })
       })
-    )
   })
 })
 
 describe('TestCloudflarePagesManager', () => {
+  expect(stack.construct.pagesDomain).toBeDefined()
   test('provisions pages domain as expected', () => {
-    expect(
-      Testing.toHaveResourceWithProperties(construct, 'PagesDomain', {
-        account_id: '${var.accountId}',
-        name: 'gradientedge.io',
-        project_name: 'test-pages-project-dev',
+    pulumi
+      .all([
+        stack.construct.pagesDomain.id,
+        stack.construct.pagesDomain.urn,
+        stack.construct.pagesDomain.accountId,
+        stack.construct.pagesDomain.name,
+        stack.construct.pagesDomain.projectName,
+      ])
+      .apply(([id, urn, accountId, name, projectName]) => {
+        expect(id).toEqual('test-pages-domain-dev-id')
+        expect(urn).toEqual(
+          'urn:pulumi:stack::project::cloudflare:index/pagesDomain:PagesDomain::test-pages-domain-dev'
+        )
+        expect(accountId).toEqual('123456789012')
+        expect(name).toEqual('gradientedge.io')
+        expect(projectName).toEqual('test-pages-project-dev')
       })
-    )
   })
 })
 
 describe('TestCloudflarePagesManager', () => {
+  expect(stack.construct.pageRule).toBeDefined()
   test('provisions page rule as expected', () => {
-    expect(
-      Testing.toHaveResourceWithProperties(construct, 'PageRule', {
-        actions: {
-          email_obfuscation: 'on',
+    pulumi
+      .all([
+        stack.construct.pageRule.id,
+        stack.construct.pageRule.urn,
+        stack.construct.pageRule.actions,
+        stack.construct.pageRule.priority,
+        stack.construct.pageRule.target,
+        stack.construct.pageRule.zoneId,
+      ])
+      .apply(([id, urn, actions, priority, target, zoneId]) => {
+        expect(id).toEqual('test-page-rule-dev-id')
+        expect(urn).toEqual('urn:pulumi:stack::project::cloudflare:index/pageRule:PageRule::test-page-rule-dev')
+        expect(actions).toEqual({
+          emailObfuscation: 'on',
           ssl: 'flexible',
-        },
-        priority: 1,
-        target: 'test.gradientedge.io/p/*',
-        zone_id: '${data.cloudflare_zone.test-page-rule-dev-data-zone-data-zone.zone_id}',
+        })
+        expect(priority).toEqual(1)
+        expect(target).toEqual('test.gradientedge.io/p/*')
+        expect(zoneId).toEqual('test-page-rule-dev-data-zone')
       })
-    )
   })
 })

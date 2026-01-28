@@ -1,6 +1,60 @@
 {
+  "siteWorkerDomain": {
+    "accountId": "test-account",
+    "environment": "development",
+    "hostname": "test.gradientedge.io",
+    "service": "product-service"
+  },
+  "siteWorkerScript": {
+    "accountId": "test-account",
+    "bindings": [
+      {
+        "dataset": "sample_dataset",
+        "name": "sample_dataset_binding",
+        "type": "analytics_engine"
+      },
+      {
+        "name": "sample_kv_namespace_binding",
+        "type": "kv_namespace"
+      },
+      {
+        "name": "sample_text_binding",
+        "text": "example",
+        "type": "plain_text"
+      },
+      {
+        "name": "sample_bucket_binding",
+        "type": "r2_bucket"
+      },
+      {
+        "name": "sample_secret_text_binding",
+        "text": "example",
+        "type": "secret_text"
+      },
+      {
+        "environment": "development",
+        "name": "sample_service_binding",
+        "service": "sample_service",
+        "type": "service"
+      }
+    ],
+    "scriptName": "test-script"
+  },
+  "testWorkerCronTrigger": {
+    "accountId": "test-account",
+    "schedules": [
+      {
+        "cron": "*/5 * * * *"
+      },
+      {
+        "cron": "10 7 * * mon-fri"
+      }
+    ],
+    "scriptName": "test-script"
+  },
   "testWorkerDomain": {
     "accountId": "test-account",
+    "environment": "development",
     "hostname": "test.gradientedge.io",
     "service": "product-service"
   },
@@ -52,16 +106,5 @@
   "testWorkersKvNamespace": {
     "accountId": "test-account",
     "title": "test-namespace"
-  },
-  "testWorkerCronTrigger": {
-    "accountId": "test-account",
-    "schedules": [
-      {
-        "cron": "*/5 * * * *"
-      },
-      {
-        "cron": "10 7 * * mon-fri"
-      }
-    ]
   }
 }
