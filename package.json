@@ -75,7 +75,7 @@
     "cdktf": "^0.21.0",
     "cdktf-local-exec": "^0.6.28",
     "constructs": "^10.4.4",
-    "lodash": "^4.17.21",
+    "lodash": "^4.17.23",
     "moment": "^2.30.1",
     "nconf": "^0.13.0",
     "pluralize": "^8.0.0",
