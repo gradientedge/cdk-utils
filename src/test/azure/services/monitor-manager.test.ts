@@ -1,6 +1,5 @@
-import { App, Testing } from 'cdktf'
-import 'cdktf/lib/testing/adapters/jest'
-import { Construct } from 'constructs'
+import { DiagnosticSetting } from '@pulumi/azure-native/monitor/index.js'
+import * as pulumi from '@pulumi/pulumi'
 import {
   CommonAzureConstruct,
   CommonAzureStack,
@@ -17,46 +16,47 @@ const testStackProps: any = {
   domainName: 'gradientedge.io',
   extraContexts: ['src/test/azure/common/cdkConfig/dummy.json', 'src/test/azure/common/cdkConfig/monitor.json'],
   features: {},
+  location: 'eastus',
   name: 'test-common-stack',
   resourceGroupName: 'test-rg',
   skipStageForARecords: false,
   stage: 'dev',
-  stageContextPath: 'src/test/aws/common/cdkEnv',
+  stageContextPath: 'src/test/azure/common/env',
 }
 
 class TestCommonStack extends CommonAzureStack {
   declare props: TestAzureStackProps
+  declare construct: TestCommonConstruct
 
-  constructor(parent: Construct, name: string, props: TestAzureStackProps) {
-    super(parent, name, testStackProps)
-    this.construct = new TestCommonConstruct(this, props.name, this.props)
-  }
-
-  protected determineConstructProps(props: CommonAzureStackProps) {
-    return {
-      ...super.determineConstructProps(props),
-      testAttribute: this.node.tryGetContext('testAttribute'),
-      testMonitorDiagnosticSetting: this.node.tryGetContext('testMonitorDiagnosticSetting'),
-    }
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestCommonConstruct(props.name, this.props)
   }
 }
 
 class TestInvalidCommonStack extends CommonAzureStack {
   declare props: TestAzureStackProps
+  declare construct: TestCommonConstruct
 
-  constructor(parent: Construct, name: string, props: TestAzureStackProps) {
-    super(parent, name, props)
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.construct = new TestCommonConstruct(testStackProps.name, this.props)
+  }
 
-    this.construct = new TestCommonConstruct(this, testStackProps.name, this.props)
+  protected determineConstructProps(props: TestAzureStackProps): TestAzureStackProps {
+    const baseProps = super.determineConstructProps(props)
+    // Override the test property to undefined to trigger validation error
+    return { ...baseProps, testMonitorDiagnosticSetting: undefined }
   }
 }
 
 class TestCommonConstruct extends CommonAzureConstruct {
   declare props: TestAzureStackProps
+  monitorDiagnosticSetting: DiagnosticSetting
 
-  constructor(parent: Construct, name: string, props: TestAzureStackProps) {
-    super(parent, name, props)
-    this.monitorManager.createMonitorDiagnosticSettings(
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.monitorDiagnosticSetting = this.monitorManager.createMonitorDiagnosticSettings(
       `test-monitor-diagnostic-setting-${this.props.stage}`,
       this,
       this.props.testMonitorDiagnosticSetting
@@ -64,69 +64,70 @@ class TestCommonConstruct extends CommonAzureConstruct {
   }
 }
 
-const app = new App({ context: testStackProps })
-const testingApp = Testing.fakeCdktfJsonPath(app)
-const commonStack = new TestCommonStack(testingApp, 'test-common-stack', testStackProps)
-const stack = Testing.fullSynth(commonStack)
-const construct = Testing.synth(commonStack.construct)
+pulumi.runtime.setMocks({
+  newResource: (args: pulumi.runtime.MockResourceArgs) => {
+    let name
 
-describe('TestAzureMonitorDiagnosticSettingConstruct', () => {
+    if (args.type === 'azure-native:monitor:DiagnosticSetting') {
+      name = args.inputs.name
+    }
+
+    return {
+      id: `${args.name}-id`,
+      state: { ...args.inputs, name },
+    }
+  },
+  call: (args: pulumi.runtime.MockCallArgs) => {
+    return args.inputs
+  },
+})
+
+const stack = new TestCommonStack('test-common-stack', testStackProps)
+
+describe('TestAzureMonitorConstruct', () => {
   test('handles mis-configurations as expected', () => {
-    const error = () => new TestInvalidCommonStack(app, 'test-invalid-stack', testStackProps)
+    const error = () => new TestInvalidCommonStack('test-invalid-stack', testStackProps)
     expect(error).toThrow('Props undefined for test-monitor-diagnostic-setting-dev')
   })
 })
 
-describe('TestAzureMonitorDiagnosticSettingConstruct', () => {
+describe('TestAzureMonitorConstruct', () => {
   test('is initialised as expected', () => {
-    /* test if the created stack have the right properties injected */
-    expect(commonStack.props).toHaveProperty('testAttribute')
-    expect(commonStack.props.testAttribute).toEqual('success')
+    expect(stack.construct.props).toHaveProperty('testAttribute')
+    expect(stack.construct.props.testAttribute).toEqual('success')
   })
 })
 
-describe('TestAzureMonitorDiagnosticSettingConstruct', () => {
+describe('TestAzureMonitorConstruct', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
-    expect(construct).toBeDefined()
-    expect(Testing.toBeValidTerraform(stack)).toBeTruthy()
+    expect(stack.construct).toBeDefined()
+    expect(stack.construct.monitorDiagnosticSetting).toBeDefined()
   })
 })
 
-describe('TestAzureMonitorDiagnosticSettingConstruct', () => {
-  test('provisions outputs as expected', () => {
-    expect(JSON.parse(construct).output).toMatchObject({
-      testMonitorDiagnosticSettingDevMonitorDiagnosticSettingFriendlyUniqueId: {
-        value: 'test-monitor-diagnostic-setting-dev-ds',
-      },
-      testMonitorDiagnosticSettingDevMonitorDiagnosticSettingId: {
-        value: '${azurerm_monitor_diagnostic_setting.test-monitor-diagnostic-setting-dev-ds.id}',
-      },
-      testMonitorDiagnosticSettingDevMonitorDiagnosticSettingName: {
-        value: '${azurerm_monitor_diagnostic_setting.test-monitor-diagnostic-setting-dev-ds.name}',
-      },
-    })
-  })
-})
-
-describe('TestAzureMonitorDiagnosticSettingConstruct', () => {
+describe('TestAzureMonitorConstruct', () => {
   test('provisions monitor diagnostic settings as expected', () => {
-    expect(
-      Testing.toHaveResourceWithProperties(construct, 'MonitorDiagnosticSetting', {
-        enabled_log: [
-          {
-            category_group: 'allLogs',
-          },
-        ],
-        metric: [
-          {
-            category: 'AllMetrics',
-          },
-        ],
-        name: 'test-monitor-diagnostic-setting-dev',
-        storage_account_id: 'testStorageAccountId',
-        target_resource_id: 'testTargetId',
+    pulumi
+      .all([
+        stack.construct.monitorDiagnosticSetting.id,
+        stack.construct.monitorDiagnosticSetting.urn,
+        stack.construct.monitorDiagnosticSetting.name,
+        stack.construct.monitorDiagnosticSetting.logs,
+        stack.construct.monitorDiagnosticSetting.metrics,
+        stack.construct.monitorDiagnosticSetting.storageAccountId,
+      ])
+      .apply(([id, urn, name, logs, metrics, storageAccountId]) => {
+        expect(id).toEqual('test-monitor-diagnostic-setting-dev-ds-id')
+        expect(urn).toEqual(
+          'urn:pulumi:stack::project::custom:azure:Construct:test-common-stack$azure-native:monitor:DiagnosticSetting::test-monitor-diagnostic-setting-dev-ds'
+        )
+        expect(name).toEqual('test-monitor-diagnostic-setting-dev')
+        expect(logs).toEqual([{ categoryGroup: 'allLogs', enabled: true }])
+        expect(metrics).toEqual([{ category: 'AllMetrics', enabled: true }])
+        expect(storageAccountId).toEqual(
+          '/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.Storage/storageAccounts/testsa'
+        )
       })
-    )
   })
 })

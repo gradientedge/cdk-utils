@@ -1,3 +1,3 @@
-import { ResourceGroupConfig } from '@cdktf/provider-azurerm/lib/resource-group/index.js'
+import { ResourceGroupArgs } from '@pulumi/azure-native/resources/index.js'
 
-export interface ResourceGroupProps extends ResourceGroupConfig {}
+export interface ResourceGroupProps extends ResourceGroupArgs {}

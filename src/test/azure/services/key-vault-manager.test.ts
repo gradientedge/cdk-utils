@@ -1,6 +1,5 @@
-import { App, Testing } from 'cdktf'
-import 'cdktf/lib/testing/adapters/jest'
-import { Construct } from 'constructs'
+import { Vault } from '@pulumi/azure-native/keyvault/index.js'
+import * as pulumi from '@pulumi/pulumi'
 import {
   CommonAzureConstruct,
   CommonAzureStack,
@@ -17,101 +16,127 @@ const testStackProps: any = {
   domainName: 'gradientedge.io',
   extraContexts: ['src/test/azure/common/cdkConfig/dummy.json', 'src/test/azure/common/cdkConfig/key-vault.json'],
   features: {},
+  location: 'eastus',
   name: 'test-common-stack',
   resourceGroupName: 'test-rg',
   skipStageForARecords: false,
   stage: 'dev',
-  stageContextPath: 'src/test/aws/common/cdkEnv',
+  stageContextPath: 'src/test/azure/common/env',
 }
 
 class TestCommonStack extends CommonAzureStack {
   declare props: TestAzureStackProps
+  declare construct: TestCommonConstruct
 
-  constructor(parent: Construct, name: string, props: TestAzureStackProps) {
-    super(parent, name, testStackProps)
-    this.construct = new TestCommonConstruct(this, props.name, this.props)
-  }
-
-  protected determineConstructProps(props: CommonAzureStackProps) {
-    return {
-      ...super.determineConstructProps(props),
-      testAttribute: this.node.tryGetContext('testAttribute'),
-      testKeyVault: this.node.tryGetContext('testKeyVault'),
-    }
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestCommonConstruct(props.name, this.props)
   }
 }
 
 class TestInvalidCommonStack extends CommonAzureStack {
   declare props: TestAzureStackProps
+  declare construct: TestCommonConstruct
 
-  constructor(parent: Construct, name: string, props: TestAzureStackProps) {
-    super(parent, name, props)
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.construct = new TestCommonConstruct(testStackProps.name, this.props)
+  }
 
-    this.construct = new TestCommonConstruct(this, testStackProps.name, this.props)
+  protected determineConstructProps(props: TestAzureStackProps): TestAzureStackProps {
+    const baseProps = super.determineConstructProps(props)
+    // Override the test property to undefined to trigger validation error
+    return { ...baseProps, testKeyVault: undefined }
   }
 }
 
 class TestCommonConstruct extends CommonAzureConstruct {
   declare props: TestAzureStackProps
+  keyVault: Vault
 
-  constructor(parent: Construct, name: string, props: TestAzureStackProps) {
-    super(parent, name, props)
-    this.keyVaultManager.createKeyVault(`test-key-vault-${this.props.stage}`, this, this.props.testKeyVault)
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.keyVault = this.keyVaultManager.createKeyVault(
+      `test-key-vault-${this.props.stage}`,
+      this,
+      this.props.testKeyVault
+    )
   }
 }
 
-const app = new App({ context: testStackProps })
-const testingApp = Testing.fakeCdktfJsonPath(app)
-const commonStack = new TestCommonStack(testingApp, 'test-common-stack', testStackProps)
-const stack = Testing.fullSynth(commonStack)
-const construct = Testing.synth(commonStack.construct)
+pulumi.runtime.setMocks({
+  newResource: (args: pulumi.runtime.MockResourceArgs) => {
+    let name
+
+    if (args.type === 'azure-native:keyvault:Vault') {
+      name = args.inputs.vaultName
+    }
+
+    return {
+      id: `${args.name}-id`,
+      state: { ...args.inputs, name },
+    }
+  },
+  call: (args: pulumi.runtime.MockCallArgs) => {
+    return args.inputs
+  },
+})
+
+const stack = new TestCommonStack('test-common-stack', testStackProps)
 
 describe('TestAzureKeyVaultConstruct', () => {
   test('handles mis-configurations as expected', () => {
-    const error = () => new TestInvalidCommonStack(app, 'test-invalid-stack', testStackProps)
+    const error = () => new TestInvalidCommonStack('test-invalid-stack', testStackProps)
     expect(error).toThrow('Props undefined for test-key-vault-dev')
   })
 })
 
 describe('TestAzureKeyVaultConstruct', () => {
   test('is initialised as expected', () => {
-    /* test if the created stack have the right properties injected */
-    expect(commonStack.props).toHaveProperty('testAttribute')
-    expect(commonStack.props.testAttribute).toEqual('success')
+    expect(stack.construct.props).toHaveProperty('testAttribute')
+    expect(stack.construct.props.testAttribute).toEqual('success')
   })
 })
 
 describe('TestAzureKeyVaultConstruct', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
-    expect(construct).toBeDefined()
-    expect(Testing.toBeValidTerraform(stack)).toBeTruthy()
-  })
-})
-
-describe('TestAzureKeyVaultConstruct', () => {
-  test('provisions outputs as expected', () => {
-    expect(JSON.parse(construct).output).toMatchObject({
-      testKeyVaultDevKeyVaultFriendlyUniqueId: {
-        value: 'test-key-vault-dev-kv',
-      },
-      testKeyVaultDevKeyVaultId: {
-        value: '${azurerm_key_vault.test-key-vault-dev-kv.id}',
-      },
-      testKeyVaultDevKeyVaultName: {
-        value: '${azurerm_key_vault.test-key-vault-dev-kv.name}',
-      },
-    })
+    expect(stack.construct).toBeDefined()
+    expect(stack.construct.keyVault).toBeDefined()
   })
 })
 
 describe('TestAzureKeyVaultConstruct', () => {
   test('provisions key vault as expected', () => {
-    expect(
-      Testing.toHaveResourceWithProperties(construct, 'KeyVault', {
-        name: 'test-key-vault-dev',
-        resource_group_name: '${data.azurerm_resource_group.test-key-vault-dev-kv-rg.name}',
+    pulumi
+      .all([
+        stack.construct.keyVault.id,
+        stack.construct.keyVault.urn,
+        stack.construct.keyVault.name,
+        stack.construct.keyVault.location,
+        stack.construct.keyVault.properties,
+        stack.construct.keyVault.tags,
+      ])
+      .apply(([id, urn, name, location, properties, tags]) => {
+        expect(id).toEqual('test-key-vault-dev-kv-id')
+        expect(urn).toEqual(
+          'urn:pulumi:stack::project::custom:azure:Construct:test-common-stack$azure-native:keyvault:Vault::test-key-vault-dev-kv'
+        )
+        expect(name).toEqual('test-key-vault-dev')
+        expect(location).toEqual('eastus')
+        expect(properties).toEqual({
+          enablePurgeProtection: true,
+          enableRbacAuthorization: true,
+          enableSoftDelete: true,
+          enabledForDeployment: false,
+          enabledForDiskEncryption: false,
+          enabledForTemplateDeployment: false,
+          publicNetworkAccess: 'enabled',
+          sku: { family: 'A', name: 'standard' },
+          softDeleteRetentionInDays: 90,
+          tenantId: '00000000-0000-0000-0000-000000000000',
+        })
+        expect(tags?.environment).toEqual('dev')
       })
-    )
   })
 })

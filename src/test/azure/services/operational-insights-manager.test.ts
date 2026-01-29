@@ -1,23 +1,20 @@
-import { Component } from '@pulumi/azure-native/applicationinsights/index.js'
 import * as pulumi from '@pulumi/pulumi'
 import {
-  ApplicationInsightsProps,
   CommonAzureConstruct,
   CommonAzureStack,
   CommonAzureStackProps,
+  WorkspaceProps,
 } from '../../../lib/azure/index.js'
+import { Workspace } from '@pulumi/azure-native/operationalinsights/index.js'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
-  testApplicationInsights: ApplicationInsightsProps
+  testWorkspace: WorkspaceProps
   testAttribute?: string
 }
 
 const testStackProps: any = {
   domainName: 'gradientedge.io',
-  extraContexts: [
-    'src/test/azure/common/cdkConfig/dummy.json',
-    'src/test/azure/common/cdkConfig/application-insights.json',
-  ],
+  extraContexts: ['src/test/azure/common/cdkConfig/dummy.json', 'src/test/azure/common/cdkConfig/workspace.json'],
   features: {},
   location: 'eastus',
   name: 'test-common-stack',
@@ -49,31 +46,30 @@ class TestInvalidCommonStack extends CommonAzureStack {
   protected determineConstructProps(props: TestAzureStackProps): TestAzureStackProps {
     const baseProps = super.determineConstructProps(props)
     // Override the test property to undefined to trigger validation error
-    return { ...baseProps, testApplicationInsights: undefined }
+    return { ...baseProps, testWorkspace: undefined }
   }
 }
 
 class TestCommonConstruct extends CommonAzureConstruct {
   declare props: TestAzureStackProps
-  applicationInsights: Component
+  workspace: Workspace
 
   constructor(name: string, props: TestAzureStackProps) {
     super(name, props)
-    this.applicationInsights = this.applicationInsightsManager.createComponent(
-      `test-application-insights-${this.props.stage}`,
+    this.workspace = this.operationalInsightsManager.createWorkspace(
+      `test-workspace-${this.props.stage}`,
       this,
-      this.props.testApplicationInsights
+      this.props.testWorkspace
     )
   }
 }
 
 pulumi.runtime.setMocks({
   newResource: (args: pulumi.runtime.MockResourceArgs) => {
-    let name = args.inputs.name
+    let name
 
-    // Return different names based on resource type
-    if (args.type === 'azure-native:insights:Component') {
-      name = args.inputs.resourceName
+    if (args.type === 'azure-native:operationalinsights:Workspace') {
+      name = args.inputs.workspaceName
     }
 
     return {
@@ -88,47 +84,45 @@ pulumi.runtime.setMocks({
 
 const stack = new TestCommonStack('test-common-stack', testStackProps)
 
-describe('TestAzureApplicationInsightsConstruct', () => {
+describe('TestOperationalInsightsConstruct', () => {
   test('handles mis-configurations as expected', () => {
     const error = () => new TestInvalidCommonStack('test-invalid-stack', testStackProps)
-    expect(error).toThrow('Props undefined for test-application-insights-dev')
+    expect(error).toThrow('Props undefined for test-workspace-dev')
   })
 })
 
-describe('TestAzureApplicationInsightsConstruct', () => {
+describe('TestOperationalInsightsConstruct', () => {
   test('is initialised as expected', () => {
     expect(stack.construct.props).toHaveProperty('testAttribute')
     expect(stack.construct.props.testAttribute).toEqual('success')
   })
 })
 
-describe('TestAzureApplicationInsightsConstruct', () => {
+describe('TestOperationalInsightsConstruct', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
     expect(stack.construct).toBeDefined()
-    expect(stack.construct.applicationInsights).toBeDefined()
+    expect(stack.construct.workspace).toBeDefined()
   })
 })
 
-describe('TestAzureApplicationInsightsConstruct', () => {
-  test('provisions application insights as expected', () => {
+describe('TestOperationalInsightsConstruct', () => {
+  test('provisions workspace as expected', () => {
     pulumi
       .all([
-        stack.construct.applicationInsights.id,
-        stack.construct.applicationInsights.urn,
-        stack.construct.applicationInsights.name,
-        stack.construct.applicationInsights.location,
-        stack.construct.applicationInsights.applicationType,
-        stack.construct.applicationInsights.tags,
+        stack.construct.workspace.id,
+        stack.construct.workspace.urn,
+        stack.construct.workspace.name,
+        stack.construct.workspace.location,
+        stack.construct.workspace.tags,
       ])
-      .apply(([id, urn, name, location, applicationType, tags]) => {
-        expect(id).toEqual('test-application-insights-dev-ai-id')
+      .apply(([id, urn, name, location, tags]) => {
+        expect(id).toEqual('test-workspace-dev-lw-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::custom:azure:Construct:test-common-stack$azure-native:applicationinsights:Component::test-application-insights-dev-ai'
+          'urn:pulumi:stack::project::custom:azure:Construct:test-common-stack$azure-native:operationalinsights:Workspace::test-workspace-dev-lw'
         )
-        // expect(name).toEqual('test-application-insights-dev')
+        expect(name).toEqual('test-workspace-dev')
         expect(location).toEqual('eastus')
-        expect(applicationType).toEqual('web')
         expect(tags?.environment).toEqual('dev')
       })
   })

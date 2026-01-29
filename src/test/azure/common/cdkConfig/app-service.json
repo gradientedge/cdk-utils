@@ -1,11 +1,19 @@
 {
   "testAppServicePlan": {
-    "name": "test-app-service-plan"
+    "name": "test-app-service-plan",
+    "resourceGroupName": "test-rg-dev",
+    "sku": {
+      "name": "B1",
+      "tier": "Basic"
+    }
   },
   "testLinuxWebApp": {
     "name": "test-linux-web-app",
+    "resourceGroupName": "test-rg-dev",
+    "serverFarmId": "/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.Web/serverfarms/test-app-service-plan-dev",
     "enabled": true,
     "httpsOnly": true,
+    "kind": "app,linux",
     "siteConfig": {
       "alwaysOn": true
     }

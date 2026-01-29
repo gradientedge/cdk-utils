@@ -1,3 +1,5 @@
-import { KeyVaultConfig } from '@cdktf/provider-azurerm/lib/key-vault/index.js'
+import { VaultArgs } from '@pulumi/azure-native/keyvault/index.js'
 
-export interface KeyVaultProps extends KeyVaultConfig {}
+export interface KeyVaultProps extends VaultArgs {
+  name?: string
+}

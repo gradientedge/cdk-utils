@@ -1,11 +1,11 @@
-import { AzurermProviderConfig } from '@cdktf/provider-azurerm/lib/provider/index.js'
-import { AzurermBackendConfig } from 'cdktf'
 import { BaseProps } from '../../common/index.js'
 import { AzureRemoteBackend } from './constants.js'
 
 /**
+ * @interface CommonAzureStackProps
+ * @description Common properties for Azure stack configuration using Pulumi
  */
-export interface CommonAzureStackProps extends BaseProps, AzurermProviderConfig {
+export interface CommonAzureStackProps extends BaseProps {
   resourceGroupName?: string
   remoteBackend?: AzureRemoteBackendProps
   globalPrefix?: string
@@ -15,10 +15,27 @@ export interface CommonAzureStackProps extends BaseProps, AzurermProviderConfig 
   resourceNameOptions?: { [key: string]: AzureResourceNameFormatterProps }
   location?: string
   defaultTags?: { [key: string]: string }
+
+  // Azure Provider properties for Pulumi
+  subscriptionId?: string
+  tenantId?: string
+  clientId?: string
+  clientSecret?: string
+  environment?: string
+  useOidc?: boolean
+  oidcRequestToken?: string
+  oidcRequestUrl?: string
+  useMsi?: boolean
+  msiEndpoint?: string
 }
 
-export interface AzureRemoteBackendProps extends AzurermBackendConfig {
+export interface AzureRemoteBackendProps {
   type: AzureRemoteBackend
+  storageAccountName?: string
+  containerName?: string
+  resourceGroupName?: string
+  subscriptionId?: string
+  key?: string
 }
 
 export interface AzureResourceNameFormatterProps {

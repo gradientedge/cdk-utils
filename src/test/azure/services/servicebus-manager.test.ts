@@ -1,6 +1,5 @@
-import { App, Testing } from 'cdktf'
-import 'cdktf/lib/testing/adapters/jest'
-import { Construct } from 'constructs'
+import { Namespace, Queue, Subscription, Topic } from '@pulumi/azure-native/servicebus/index.js'
+import * as pulumi from '@pulumi/pulumi'
 import {
   CommonAzureConstruct,
   CommonAzureStack,
@@ -23,189 +22,227 @@ const testStackProps: any = {
   domainName: 'gradientedge.io',
   extraContexts: ['src/test/azure/common/cdkConfig/dummy.json', 'src/test/azure/common/cdkConfig/servicebus.json'],
   features: {},
+  location: 'eastus',
   name: 'test-common-stack',
   resourceGroupName: 'test-rg',
   skipStageForARecords: false,
   stage: 'dev',
-  stageContextPath: 'src/test/aws/common/cdkEnv',
+  stageContextPath: 'src/test/azure/common/env',
 }
 
 class TestCommonStack extends CommonAzureStack {
   declare props: TestAzureStackProps
+  declare construct: TestCommonConstruct
 
-  constructor(parent: Construct, name: string, props: TestAzureStackProps) {
-    super(parent, name, testStackProps)
-    this.construct = new TestCommonConstruct(this, props.name, this.props)
-  }
-
-  protected determineConstructProps(props: CommonAzureStackProps) {
-    return {
-      ...super.determineConstructProps(props),
-      testAttribute: this.node.tryGetContext('testAttribute'),
-      testServicebusNamespace: this.node.tryGetContext('testServicebusNamespace'),
-      testServicebusTopic: this.node.tryGetContext('testServicebusTopic'),
-      testServicebusQueue: this.node.tryGetContext('testServicebusQueue'),
-      testServicebusSubscription: this.node.tryGetContext('testServicebusSubscription'),
-    }
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestCommonConstruct(props.name, this.props)
   }
 }
 
 class TestInvalidCommonStack extends CommonAzureStack {
   declare props: TestAzureStackProps
+  declare construct: TestCommonConstruct
 
-  constructor(parent: Construct, name: string, props: TestAzureStackProps) {
-    super(parent, name, props)
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.construct = new TestCommonConstruct(testStackProps.name, this.props)
+  }
 
-    this.construct = new TestCommonConstruct(this, testStackProps.name, this.props)
+  protected determineConstructProps(props: TestAzureStackProps): TestAzureStackProps {
+    const baseProps = super.determineConstructProps(props)
+    // Override the test property to undefined to trigger validation error
+    return { ...baseProps, testServicebusNamespace: undefined }
   }
 }
 
 class TestCommonConstruct extends CommonAzureConstruct {
   declare props: TestAzureStackProps
+  servicebusNamespace: Namespace
+  servicebusTopic: Topic
+  servicebusQueue: Queue
+  servicebusSubscription: Subscription
+  resolvedServicebusQueue: any
 
-  constructor(parent: Construct, name: string, props: TestAzureStackProps) {
-    super(parent, name, props)
-    const namespace = this.servicebusManager.createServicebusNamespace(
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.servicebusNamespace = this.servicebusManager.createServicebusNamespace(
       `test-servicebus-namespace-${this.props.stage}`,
       this,
       this.props.testServicebusNamespace
     )
 
-    const topic = this.servicebusManager.createServicebusTopic(`test-servicebus-topic-${this.props.stage}`, this, {
-      ...this.props.testServicebusTopic,
-      namespaceId: namespace.id,
-    })
+    this.servicebusTopic = this.servicebusManager.createServicebusTopic(
+      `test-servicebus-topic-${this.props.stage}`,
+      this,
+      this.props.testServicebusTopic
+    )
 
-    const serviceBus = this.servicebusManager.createServicebusQueue(`test-servicebus-queue-${this.props.stage}`, this, {
-      ...this.props.testServicebusQueue,
-      namespaceId: namespace.id,
-    })
+    this.servicebusQueue = this.servicebusManager.createServicebusQueue(
+      `test-servicebus-queue-${this.props.stage}`,
+      this,
+      this.props.testServicebusQueue
+    )
 
-    this.servicebusManager.createServicebusSubscription(`test-servicebus-subscription-${this.props.stage}`, this, {
-      ...this.props.testServicebusSubscription,
-      topicId: topic.id,
-    })
+    this.servicebusSubscription = this.servicebusManager.createServicebusSubscription(
+      `test-servicebus-subscription-${this.props.stage}`,
+      this,
+      this.props.testServicebusSubscription
+    )
 
-    this.servicebusManager.resolveServicebusQueue(`test-resolve-servicebus-queue-${this.props.stage}`, this, {
-      name: serviceBus.name,
-      namespaceId: serviceBus.namespaceId,
-    })
+    this.resolvedServicebusQueue = this.servicebusManager.resolveServicebusQueue(
+      `test-resolve-servicebus-queue-${this.props.stage}`,
+      this,
+      {
+        queueName: 'test-servicebus-queue',
+        namespaceName: 'test-servicebus-namespace-dev',
+        resourceGroupName: 'test-rg-dev',
+      }
+    )
   }
 }
 
-const app = new App({ context: testStackProps })
-const testingApp = Testing.fakeCdktfJsonPath(app)
-const commonStack = new TestCommonStack(testingApp, 'test-common-stack', testStackProps)
-const stack = Testing.fullSynth(commonStack)
-const construct = Testing.synth(commonStack.construct)
+pulumi.runtime.setMocks({
+  newResource: (args: pulumi.runtime.MockResourceArgs) => {
+    let name
+
+    // Return different names based on resource type
+    if (args.type === 'azure-native:servicebus:Namespace') {
+      name = args.inputs.namespaceName
+    } else if (args.type === 'azure-native:servicebus:Topic') {
+      name = args.inputs.topicName
+    } else if (args.type === 'azure-native:servicebus:Queue') {
+      name = args.inputs.queueName
+    } else if (args.type === 'azure-native:servicebus:Subscription') {
+      name = args.inputs.subscriptionName
+    }
+
+    return {
+      id: `${args.name}-id`,
+      state: { ...args.inputs, name },
+    }
+  },
+  call: (args: pulumi.runtime.MockCallArgs) => {
+    // Mock Service Bus connection string retrieval
+    if (args.token === 'azure-native:servicebus:listNamespaceKeys') {
+      return {
+        primaryConnectionString: 'mock-servicebus-connection-string',
+        secondaryConnectionString: 'mock-servicebus-secondary-connection-string',
+      }
+    }
+    return args.inputs
+  },
+})
+
+const stack = new TestCommonStack('test-common-stack', testStackProps)
 
 describe('TestAzureServicebusConstruct', () => {
   test('handles mis-configurations as expected', () => {
-    const error = () => new TestInvalidCommonStack(app, 'test-invalid-stack', testStackProps)
+    const error = () => new TestInvalidCommonStack('test-invalid-stack', testStackProps)
     expect(error).toThrow('Props undefined for test-servicebus-namespace-dev')
   })
 })
 
 describe('TestAzureServicebusConstruct', () => {
   test('is initialised as expected', () => {
-    /* test if the created stack have the right properties injected */
-    expect(commonStack.props).toHaveProperty('testAttribute')
-    expect(commonStack.props.testAttribute).toEqual('success')
+    expect(stack.construct.props).toHaveProperty('testAttribute')
+    expect(stack.construct.props.testAttribute).toEqual('success')
   })
 })
 
 describe('TestAzureServicebusConstruct', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
-    expect(construct).toBeDefined()
-    expect(Testing.toBeValidTerraform(stack)).toBeTruthy()
-  })
-})
-
-describe('TestAzureServicebusConstruct', () => {
-  test('provisions outputs as expected', () => {
-    expect(JSON.parse(construct).output).toMatchObject({
-      testServicebusSubscriptionDevServicebusSubscriptionFriendlyUniqueId: {
-        value: 'test-servicebus-subscription-dev-ss',
-      },
-      testServicebusSubscriptionDevServicebusSubscriptionId: {
-        value: '${azurerm_servicebus_subscription.test-servicebus-subscription-dev-ss.id}',
-      },
-      testServicebusTopicDevServicebusTopicFriendlyUniqueId: {
-        value: 'test-servicebus-topic-dev-st',
-      },
-      testServicebusNamespaceDevServicebusNamespaceFriendlyUniqueId: {
-        value: 'test-servicebus-namespace-dev-sn',
-      },
-      testServicebusTopicDevServicebusTopicId: {
-        value: '${azurerm_servicebus_topic.test-servicebus-topic-dev-st.id}',
-      },
-      testServicebusNamespaceDevServicebusNamespaceId: {
-        value: '${azurerm_servicebus_namespace.test-servicebus-namespace-dev-sn.id}',
-      },
-      testServicebusTopicDevServicebusTopicName: {
-        value: '${azurerm_servicebus_topic.test-servicebus-topic-dev-st.name}',
-      },
-      testServicebusNamespaceDevServicebusNamespaceName: {
-        value: '${azurerm_servicebus_namespace.test-servicebus-namespace-dev-sn.name}',
-      },
-    })
+    expect(stack.construct).toBeDefined()
+    expect(stack.construct.servicebusNamespace).toBeDefined()
+    expect(stack.construct.servicebusTopic).toBeDefined()
+    expect(stack.construct.servicebusQueue).toBeDefined()
+    expect(stack.construct.servicebusSubscription).toBeDefined()
   })
 })
 
 describe('TestAzureServicebusConstruct', () => {
   test('provisions servicebus namespace as expected', () => {
-    expect(
-      Testing.toHaveResourceWithProperties(construct, 'ServicebusNamespace', {
-        identity: {
-          type: 'SystemAssigned',
-        },
-        location: '${data.azurerm_resource_group.test-servicebus-namespace-dev-sn-rg.location}',
-        name: 'test-servicebus-namespace-dev',
-        resource_group_name: '${data.azurerm_resource_group.test-servicebus-namespace-dev-sn-rg.name}',
-        sku: 'Standard',
-        tags: {
-          environment: 'dev',
-        },
+    pulumi
+      .all([
+        stack.construct.servicebusNamespace.id,
+        stack.construct.servicebusNamespace.urn,
+        stack.construct.servicebusNamespace.name,
+        stack.construct.servicebusNamespace.location,
+        stack.construct.servicebusNamespace.sku,
+        stack.construct.servicebusNamespace.identity,
+        stack.construct.servicebusNamespace.tags,
+      ])
+      .apply(([id, urn, name, location, sku, identity, tags]) => {
+        expect(id).toEqual('test-servicebus-namespace-dev-sn-id')
+        expect(urn).toEqual(
+          'urn:pulumi:stack::project::custom:azure:Construct:test-common-stack$azure-native:servicebus:Namespace::test-servicebus-namespace-dev-sn'
+        )
+        expect(name).toEqual('test-servicebus-namespace-dev')
+        expect(location).toEqual('eastus')
+        expect(sku).toEqual({ name: 'Standard' })
+        expect(identity).toEqual({ type: 'SystemAssigned' })
+        expect(tags?.environment).toEqual('dev')
       })
-    )
   })
 })
 
 describe('TestAzureServicebusConstruct', () => {
   test('provisions servicebus topic as expected', () => {
-    expect(
-      Testing.toHaveResourceWithProperties(construct, 'ServicebusTopic', {
-        name: 'test-servicebus-topic-dev',
-        namespace_id: '${azurerm_servicebus_namespace.test-servicebus-namespace-dev-sn.id}',
+    pulumi
+      .all([
+        stack.construct.servicebusTopic.id,
+        stack.construct.servicebusTopic.urn,
+        stack.construct.servicebusTopic.name,
+      ])
+      .apply(([id, urn, name]) => {
+        expect(id).toEqual('test-servicebus-topic-dev-st-id')
+        expect(urn).toEqual(
+          'urn:pulumi:stack::project::custom:azure:Construct:test-common-stack$azure-native:servicebus:Topic::test-servicebus-topic-dev-st'
+        )
+        expect(name).toEqual('test-servicebus-topic-dev')
       })
-    )
   })
 })
 
 describe('TestAzureServicebusConstruct', () => {
   test('provisions servicebus queue as expected', () => {
-    expect(
-      Testing.toHaveResourceWithProperties(construct, 'ServicebusQueue', {
-        name: 'test-servicebus-queue-dev',
-        namespace_id: '${azurerm_servicebus_namespace.test-servicebus-namespace-dev-sn.id}',
-        duplicate_detection_history_time_window: 'PT1M',
-        requires_duplicate_detection: true,
-        dead_lettering_on_message_expiration: true,
-        default_message_ttl: 'P2D',
+    pulumi
+      .all([
+        stack.construct.servicebusQueue.id,
+        stack.construct.servicebusQueue.urn,
+        stack.construct.servicebusQueue.name,
+        stack.construct.servicebusQueue.requiresDuplicateDetection,
+        stack.construct.servicebusQueue.deadLetteringOnMessageExpiration,
+      ])
+      .apply(([id, urn, name, requiresDuplicateDetection, deadLetteringOnMessageExpiration]) => {
+        expect(id).toEqual('test-servicebus-queue-dev-sq-id')
+        expect(urn).toEqual(
+          'urn:pulumi:stack::project::custom:azure:Construct:test-common-stack$azure-native:servicebus:Queue::test-servicebus-queue-dev-sq'
+        )
+        expect(name).toEqual('test-servicebus-queue-dev')
+        expect(requiresDuplicateDetection).toEqual(true)
+        expect(deadLetteringOnMessageExpiration).toEqual(true)
       })
-    )
   })
 })
 
 describe('TestAzureServicebusConstruct', () => {
   test('provisions servicebus subscription as expected', () => {
-    expect(
-      Testing.toHaveResourceWithProperties(construct, 'ServicebusSubscription', {
-        max_delivery_count: 1,
-        name: 'test-servicebus-subscription-dev',
-        topic_id: '${azurerm_servicebus_topic.test-servicebus-topic-dev-st.id}',
+    pulumi
+      .all([
+        stack.construct.servicebusSubscription.id,
+        stack.construct.servicebusSubscription.urn,
+        stack.construct.servicebusSubscription.name,
+        stack.construct.servicebusSubscription.maxDeliveryCount,
+      ])
+      .apply(([id, urn, name, maxDeliveryCount]) => {
+        expect(id).toEqual('test-servicebus-subscription-dev-ss-id')
+        expect(urn).toEqual(
+          'urn:pulumi:stack::project::custom:azure:Construct:test-common-stack$azure-native:servicebus:Subscription::test-servicebus-subscription-dev-ss'
+        )
+        expect(name).toEqual('test-servicebus-subscription-dev')
+        expect(maxDeliveryCount).toEqual(1)
       })
-    )
   })
 })

@@ -62,6 +62,7 @@
     "@cdktf/provider-azurerm": "^14.23.1",
     "@cdktf/provider-cloudflare": "^13.9.1",
     "@pulumi/aws": "^7.16.0",
+    "@pulumi/azure": "^6.31.0",
     "@pulumi/azure-native": "^3.12.1",
     "@pulumi/cloudflare": "^6.13.0",
     "@pulumi/command": "^1.1.3",

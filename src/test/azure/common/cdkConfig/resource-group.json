@@ -1,5 +1,6 @@
 {
   "testResourceGroup": {
-    "name": "test-resource-group"
+    "resourceGroupName": "test-resource-group",
+    "location": "eastus"
   }
 }

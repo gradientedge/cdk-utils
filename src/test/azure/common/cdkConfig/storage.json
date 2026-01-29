@@ -1,18 +1,21 @@
 {
-  "testStorageAccount": {
-    "name": "test-storage-account"
-  },
-  "testStorageContainer": {
-    "name": "test-storage-container",
-    "storageAccountName": "test-storage-account"
-  },
-  "testStorageBlob": {
-    "name": "test-storage-blob",
-    "storageAccountName": "test-storage-account",
-    "storageContainerName": "test-storage-container"
-  },
   "testContainerSas": {
     "expiry": "2040-12-31",
-    "permissions": { "add": true, "create": true, "delete": true, "list": true, "read": true, "write": true }
+    "permissions": "w"
+  },
+  "testStorageAccount": {
+    "accountName": "test-storage-account",
+    "resourceGroupName": "test-resource-group"
+  },
+  "testStorageBlob": {
+    "accountName": "test-storage-account",
+    "blobName": "test-storage-blob",
+    "containerName": "test-storage-container",
+    "resourceGroupName": "test-resource-group"
+  },
+  "testStorageContainer": {
+    "accountName": "test-storage-account",
+    "containerName": "test-storage-container",
+    "resourceGroupName": "test-resource-group"
   }
 }

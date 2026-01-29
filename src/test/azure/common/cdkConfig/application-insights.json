@@ -1,5 +1,8 @@
 {
   "testApplicationInsights": {
-    "name": "test-application-insights"
+    "resourceName": "test-application-insights",
+    "resourceGroupName": "test-rg-dev",
+    "applicationType": "web",
+    "location": "eastus"
   }
 }

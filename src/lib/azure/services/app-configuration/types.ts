@@ -1,3 +1,3 @@
-import { AppConfigurationConfig } from '@cdktf/provider-azurerm/lib/app-configuration/index.js'
+import { ConfigurationStoreArgs } from '@pulumi/azure-native/appconfiguration/index.js'
 
-export interface AppConfigurationProps extends AppConfigurationConfig {}
+export interface AppConfigurationProps extends ConfigurationStoreArgs {}

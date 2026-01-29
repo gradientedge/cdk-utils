@@ -1,11 +1,15 @@
-import { Construct } from 'constructs'
 import { AzureResourceNameFormatterProps, CommonAzureStackProps } from '../index.js'
 
-export class AzureResourceNameFormatter extends Construct {
+/**
+ * @classdesc Formats Azure resource names according to naming conventions
+ * - Applies global/resource prefixes and suffixes
+ * - Automatically appends stage to resource names
+ * - Supports per-resource customization via options
+ */
+export class AzureResourceNameFormatter {
   props: CommonAzureStackProps
 
-  constructor(parent: Construct, id: string, props: CommonAzureStackProps) {
-    super(parent, id)
+  constructor(props: CommonAzureStackProps) {
     this.props = props
   }
 
@@ -15,7 +19,7 @@ export class AzureResourceNameFormatter extends Construct {
    * @param options Options to control the formatting of the resource name
    * @returns The formatted Azure-compliant resource name
    */
-  public format(resourceName: string, options?: AzureResourceNameFormatterProps) {
+  public format(resourceName: string | undefined, options?: AzureResourceNameFormatterProps): string {
     const azureResourceNameElements = []
 
     if (!options?.exclude) {
@@ -23,7 +27,7 @@ export class AzureResourceNameFormatter extends Construct {
       azureResourceNameElements.push(options?.prefix ?? this.props.resourcePrefix)
     }
 
-    azureResourceNameElements.push(resourceName)
+    azureResourceNameElements.push(resourceName || '')
 
     if (!options?.exclude) {
       azureResourceNameElements.push(options?.suffix ?? this.props.resourceSuffix)

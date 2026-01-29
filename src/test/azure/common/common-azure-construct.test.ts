@@ -1,6 +1,5 @@
-import { App, Testing } from 'cdktf'
-import 'cdktf/lib/testing/adapters/jest'
-import { Construct } from 'constructs'
+import { Blob, BlobContainer, StorageAccount } from '@pulumi/azure-native/storage/index.js'
+import * as pulumi from '@pulumi/pulumi'
 import {
   CommonAzureConstruct,
   CommonAzureStack,
@@ -25,164 +24,111 @@ const testStackProps: any = {
   resourceGroupName: 'test-rg',
   skipStageForARecords: false,
   stage: 'dev',
-  stageContextPath: 'src/test/aws/common/cdkEnv',
+  stageContextPath: 'src/test/azure/common/pulumiEnv',
 }
 
 class TestCommonStack extends CommonAzureStack {
   declare props: TestAzureStackProps
+  declare construct: TestCommonConstruct
 
-  constructor(parent: Construct, name: string, props: TestAzureStackProps) {
-    super(parent, name, testStackProps)
-    this.construct = new TestCommonConstruct(this, props.name, this.props)
-  }
-
-  protected determineConstructProps(props: CommonAzureStackProps) {
-    return {
-      ...super.determineConstructProps(props),
-      testAttribute: this.node.tryGetContext('testAttribute'),
-      testStorageAccount: this.node.tryGetContext('testStorageAccount'),
-      testStorageBlob: this.node.tryGetContext('testStorageBlob'),
-      testStorageContainer: this.node.tryGetContext('testStorageContainer'),
-    }
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestCommonConstruct(props.name, this.props)
   }
 }
 
 class TestCommonConstruct extends CommonAzureConstruct {
   declare props: TestAzureStackProps
+  storageAccount: StorageAccount
+  storageContainer: BlobContainer
+  storageBlob: Blob
 
-  constructor(parent: Construct, name: string, props: TestAzureStackProps) {
-    super(parent, name, props)
-    this.storageManager.createStorageAccount(
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.storageAccount = this.storageManager.createStorageAccount(
       `test-storage-account-${this.props.stage}`,
       this,
       this.props.testStorageAccount
     )
-    this.storageManager.createStorageContainer(
+    this.storageContainer = this.storageManager.createStorageContainer(
       `test-storage-container-${this.props.stage}`,
       this,
       this.props.testStorageContainer
     )
-    this.storageManager.createStorageBlob(`test-storage-blob-${this.props.stage}`, this, this.props.testStorageBlob)
+    this.storageBlob = this.storageManager.createStorageBlob(
+      `test-storage-blob-${this.props.stage}`,
+      this,
+      this.props.testStorageBlob
+    )
   }
 }
 
-const app = new App({ context: testStackProps })
-const testingApp = Testing.fakeCdktfJsonPath(app)
-const commonStack = new TestCommonStack(testingApp, 'test-common-stack', testStackProps)
-const stack = Testing.fullSynth(commonStack)
-const construct = Testing.synth(commonStack.construct)
+pulumi.runtime.setMocks({
+  newResource: (args: pulumi.runtime.MockResourceArgs) => {
+    let name
+
+    // Return different names based on resource type
+    if (args.type === 'azure-native:storage:StorageAccount') {
+      name = args.inputs.accountName
+    } else if (args.type === 'azure-native:storage:BlobContainer') {
+      name = args.inputs.containerName
+    } else if (args.type === 'azure-native:storage:Blob') {
+      name = args.inputs.blobName
+    }
+
+    return {
+      id: `${args.name}-id`,
+      state: { ...args.inputs, name },
+    }
+  },
+  call: (args: pulumi.runtime.MockCallArgs) => {
+    return args.inputs
+  },
+})
+
+const stack = new TestCommonStack('test-common-stack', testStackProps)
 
 describe('TestAzureCommonConstruct', () => {
   test('is initialised as expected', () => {
-    /* test if the created stack have the right properties injected */
-    expect(commonStack.props).toHaveProperty('testAttribute')
-    expect(commonStack.props.testAttribute).toEqual('success')
+    expect(stack.construct.props).toHaveProperty('testAttribute')
+    expect(stack.construct.props.testAttribute).toEqual('success')
   })
 })
 
 describe('TestAzureCommonConstruct', () => {
-  test('synthesises as expected', () => {
-    expect(stack).toBeDefined()
-    expect(construct).toBeDefined()
-    expect(Testing.toBeValidTerraform(stack)).toBeTruthy()
-  })
-})
-
-describe('TestAzureCommonConstruct', () => {
-  test('provisions outputs as expected', () => {
-    expect(JSON.parse(construct).output).toMatchObject({
-      testStorageAccountDevStorageAccountFriendlyUniqueId: {
-        value: 'test-storage-account-dev-sa',
-      },
-      testStorageAccountDevStorageAccountId: {
-        value: '${azurerm_storage_account.test-storage-account-dev-sa.id}',
-      },
-      testStorageAccountDevStorageAccountName: {
-        value: '${azurerm_storage_account.test-storage-account-dev-sa.name}',
-      },
-      testStorageBlobDevStorageBlobFriendlyUniqueId: {
-        value: 'test-storage-blob-dev-sb',
-      },
-      testStorageBlobDevStorageBlobId: {
-        value: '${azurerm_storage_blob.test-storage-blob-dev-sb.id}',
-      },
-      testStorageBlobDevStorageBlobName: {
-        value: '${azurerm_storage_blob.test-storage-blob-dev-sb.name}',
-      },
-      testStorageContainerDevStorageContainerFriendlyUniqueId: {
-        value: 'test-storage-container-dev-sc',
-      },
-      testStorageContainerDevStorageContainerId: {
-        value: '${azurerm_storage_container.test-storage-container-dev-sc.id}',
-      },
-      testStorageContainerDevStorageContainerName: {
-        value: '${azurerm_storage_container.test-storage-container-dev-sc.name}',
-      },
-    })
-  })
-})
-
-describe('TestAzureCommonConstruct', () => {
-  test('provisions data as expected', () => {
-    expect(JSON.parse(construct).data).toMatchObject({
-      azurerm_resource_group: {
-        'test-storage-account-dev-sa-rg': {
-          name: 'test-rg-dev',
-        },
-        'test-storage-blob-dev-sb-rg': {
-          name: 'test-rg-dev',
-        },
-      },
-      azurerm_storage_account: {
-        'test-storage-blob-dev-sa': {
-          name: 'test-storage-account-dev',
-          resource_group_name: '${data.azurerm_resource_group.test-storage-blob-dev-sb-rg.name}',
-        },
-      },
-      azurerm_storage_container: {
-        'test-storage-blob-dev-sc': {
-          name: 'test-storage-container-dev',
-        },
-      },
-    })
-  })
-})
-
-describe('TestAzureCommonConstruct', () => {
+  expect(stack.construct.storageAccount).toBeDefined()
   test('provisions storage account as expected', () => {
-    expect(
-      Testing.toHaveResourceWithProperties(construct, 'StorageAccount', {
-        account_tier: 'Standard',
-        location: '${data.azurerm_resource_group.test-storage-account-dev-sa-rg.location}',
-        name: 'teststorageaccountdev',
-        resource_group_name: '${data.azurerm_resource_group.test-storage-account-dev-sa-rg.name}',
-        tags: {
-          environment: 'dev',
-        },
+    pulumi
+      .all([
+        stack.construct.storageAccount.id,
+        stack.construct.storageAccount.name,
+        stack.construct.storageAccount.location,
+        stack.construct.storageAccount.tags,
+      ])
+      .apply(([id, name, location, tags]) => {
+        expect(id).toEqual('test-storage-account-dev-sa-id')
+        expect(name).toBeDefined()
+        expect(tags?.environment).toEqual('dev')
       })
-    )
   })
 })
 
 describe('TestAzureCommonConstruct', () => {
+  expect(stack.construct.storageContainer).toBeDefined()
   test('provisions storage container as expected', () => {
-    expect(
-      Testing.toHaveResourceWithProperties(construct, 'StorageContainer', {
-        name: 'test-storage-container-dev',
-        storage_account_name: 'test-storage-account',
-      })
-    )
+    pulumi.all([stack.construct.storageContainer.id, stack.construct.storageContainer.name]).apply(([id, name]) => {
+      expect(id).toEqual('test-storage-container-dev-sc-id')
+      expect(name).toBeDefined()
+    })
   })
 })
 
 describe('TestAzureCommonConstruct', () => {
+  expect(stack.construct.storageBlob).toBeDefined()
   test('provisions storage blob as expected', () => {
-    expect(
-      Testing.toHaveResourceWithProperties(construct, 'StorageBlob', {
-        name: 'test-storage-blob-dev',
-        storage_account_name: '${data.azurerm_storage_account.test-storage-blob-dev-sa.name}',
-        storage_container_name: '${data.azurerm_storage_container.test-storage-blob-dev-sc.name}',
-      })
-    )
+    pulumi.all([stack.construct.storageBlob.id, stack.construct.storageBlob.name]).apply(([id, name]) => {
+      expect(id).toEqual('test-storage-blob-dev-sb-id')
+      expect(name).toBeDefined()
+    })
   })
 })

@@ -1,17 +1,38 @@
 {
   "testCosmosDbAccount": {
-    "name": "test-cosmosdb-account",
-    "offerType": "Standard",
+    "accountName": "test-cosmosdb-account",
+    "resourceGroupName": "test-rg-dev",
+    "databaseAccountOfferType": "Standard",
     "consistencyPolicy": {
-      "consistencyLevel": "Strong"
-    }
+      "defaultConsistencyLevel": "Strong"
+    },
+    "locations": [
+      {
+        "locationName": "eastus",
+        "failoverPriority": 0
+      }
+    ]
   },
   "testCosmosDbDatabase": {
-    "name": "test-cosmosdb-database"
+    "databaseName": "test-cosmosdb-database",
+    "accountName": "test-cosmosdb-account-dev",
+    "resourceGroupName": "test-rg-dev",
+    "resource": {
+      "id": "test-cosmosdb-database"
+    }
   },
   "testCosmosDbContainer": {
-    "name": "test-cosmosdb-container",
-    "partitionKeyPaths": ["/testPartitionKey"],
+    "containerName": "test-cosmosdb-container",
+    "accountName": "test-cosmosdb-account-dev",
+    "databaseName": "test-cosmosdb-database-dev",
+    "resourceGroupName": "test-rg-dev",
+    "resource": {
+      "id": "test-cosmosdb-container",
+      "partitionKey": {
+        "paths": ["/testPartitionKey"],
+        "kind": "Hash"
+      }
+    },
     "indexingPolicy": {
       "includedPath": [
         {

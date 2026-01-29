@@ -1,15 +1,34 @@
 {
   "testEventgridTopic": {
-    "name": "test-eventgrid-topic"
+    "topicName": "test-eventgrid-topic",
+    "resourceGroupName": "test-rg-dev",
+    "location": "eastus"
   },
   "testEventgridEventSubscription": {
-    "name": "test-eventgrid-subscription"
+    "eventSubscriptionName": "test-eventgrid-subscription",
+    "scope": "/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.EventGrid/topics/test-eventgrid-topic-dev",
+    "destination": {
+      "endpointType": "WebHook",
+      "properties": {
+        "endpointUrl": "https://test.example.com/webhook"
+      }
+    }
   },
   "testEventgridSystemTopic": {
-    "name": "test-eventgrid-system-topic",
-    "topicType": "Microsoft.Storage.StorageAccounts"
+    "systemTopicName": "test-eventgrid-system-topic",
+    "resourceGroupName": "test-rg-dev",
+    "location": "eastus",
+    "topicType": "Microsoft.Storage.StorageAccounts",
+    "source": "/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.Storage/storageAccounts/testsa"
   },
   "testEventgridSystemEventSubscription": {
-    "name": "test-eventgrid-system-subscription"
+    "eventSubscriptionName": "test-eventgrid-system-subscription",
+    "scope": "/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.EventGrid/systemTopics/test-eventgrid-system-topic-dev",
+    "destination": {
+      "endpointType": "WebHook",
+      "properties": {
+        "endpointUrl": "https://test.example.com/webhook"
+      }
+    }
   }
 }

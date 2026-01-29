@@ -1,3 +1,3 @@
-import { MonitorDiagnosticSettingConfig } from '@cdktf/provider-azurerm/lib/monitor-diagnostic-setting/index.js'
+import { DiagnosticSettingArgs } from '@pulumi/azure-native/monitor/index.js'
 
-export interface MonitorDiagnosticSettingProps extends MonitorDiagnosticSettingConfig {}
+export interface MonitorDiagnosticSettingProps extends DiagnosticSettingArgs {}

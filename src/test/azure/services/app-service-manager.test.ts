@@ -1,6 +1,5 @@
-import { App, Testing } from 'cdktf'
-import 'cdktf/lib/testing/adapters/jest'
-import { Construct } from 'constructs'
+import { AppServicePlan, WebApp } from '@pulumi/azure-native/web/index.js'
+import * as pulumi from '@pulumi/pulumi'
 import {
   CommonAzureConstruct,
   CommonAzureStack,
@@ -19,150 +18,158 @@ const testStackProps: any = {
   domainName: 'gradientedge.io',
   extraContexts: ['src/test/azure/common/cdkConfig/dummy.json', 'src/test/azure/common/cdkConfig/app-service.json'],
   features: {},
+  location: 'eastus',
   name: 'test-common-stack',
   resourceGroupName: 'test-rg',
   skipStageForARecords: false,
   stage: 'dev',
-  stageContextPath: 'src/test/aws/common/cdkEnv',
+  stageContextPath: 'src/test/azure/common/env',
 }
 
 class TestCommonStack extends CommonAzureStack {
   declare props: TestAzureStackProps
+  declare construct: TestCommonConstruct
 
-  constructor(parent: Construct, name: string, props: TestAzureStackProps) {
-    super(parent, name, testStackProps)
-    this.construct = new TestCommonConstruct(this, props.name, this.props)
-  }
-
-  protected determineConstructProps(props: CommonAzureStackProps) {
-    return {
-      ...super.determineConstructProps(props),
-      testAttribute: this.node.tryGetContext('testAttribute'),
-      testAppServicePlan: this.node.tryGetContext('testAppServicePlan'),
-      testLinuxWebApp: this.node.tryGetContext('testLinuxWebApp'),
-    }
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestCommonConstruct(props.name, this.props)
   }
 }
 
 class TestInvalidCommonStack extends CommonAzureStack {
   declare props: TestAzureStackProps
+  declare construct: TestCommonConstruct
 
-  constructor(parent: Construct, name: string, props: TestAzureStackProps) {
-    super(parent, name, props)
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.construct = new TestCommonConstruct(testStackProps.name, this.props)
+  }
 
-    this.construct = new TestCommonConstruct(this, testStackProps.name, this.props)
+  protected determineConstructProps(props: TestAzureStackProps): TestAzureStackProps {
+    const baseProps = super.determineConstructProps(props)
+    // Override the test property to undefined to trigger validation error
+    return { ...baseProps, testAppServicePlan: undefined }
   }
 }
 
 class TestCommonConstruct extends CommonAzureConstruct {
   declare props: TestAzureStackProps
+  appServicePlan: AppServicePlan
+  linuxWebApp: WebApp
 
-  constructor(parent: Construct, name: string, props: TestAzureStackProps) {
-    super(parent, name, props)
-    const appServicePlan = this.appServiceManager.createAppServicePlan(
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.appServicePlan = this.appServiceManager.createAppServicePlan(
       `test-app-service-plan-${this.props.stage}`,
       this,
       this.props.testAppServicePlan
     )
 
-    this.appServiceManager.createLinuxWebApp(`test-linux-web-app-${this.props.stage}`, this, {
+    this.linuxWebApp = this.appServiceManager.createLinuxWebApp(`test-linux-web-app-${this.props.stage}`, this, {
       ...this.props.testLinuxWebApp,
-      servicePlanId: appServicePlan.id,
     })
   }
 }
 
-const app = new App({ context: testStackProps })
-const testingApp = Testing.fakeCdktfJsonPath(app)
-const commonStack = new TestCommonStack(testingApp, 'test-common-stack', testStackProps)
-const stack = Testing.fullSynth(commonStack)
-const construct = Testing.synth(commonStack.construct)
+pulumi.runtime.setMocks({
+  newResource: (args: pulumi.runtime.MockResourceArgs) => {
+    let name
 
-describe('TestAzureAppServicePlanConstruct', () => {
+    // Return different names based on resource type
+    if (args.type === 'azure-native:web:AppServicePlan') {
+      name = args.inputs.name
+    } else if (args.type === 'azure-native:web:WebApp') {
+      name = args.inputs.name
+    }
+
+    return {
+      id: `${args.name}-id`,
+      state: { ...args.inputs, name },
+    }
+  },
+  call: (args: pulumi.runtime.MockCallArgs) => {
+    return args.inputs
+  },
+})
+
+const stack = new TestCommonStack('test-common-stack', testStackProps)
+
+describe('TestAzureAppServiceConstruct', () => {
   test('handles mis-configurations as expected', () => {
-    const error = () => new TestInvalidCommonStack(app, 'test-invalid-stack', testStackProps)
+    const error = () => new TestInvalidCommonStack('test-invalid-stack', testStackProps)
     expect(error).toThrow('Props undefined for test-app-service-plan-dev')
   })
 })
 
-describe('TestAzureAppServicePlanConstruct', () => {
+describe('TestAzureAppServiceConstruct', () => {
   test('is initialised as expected', () => {
-    /* test if the created stack have the right properties injected */
-    expect(commonStack.props).toHaveProperty('testAttribute')
-    expect(commonStack.props.testAttribute).toEqual('success')
+    expect(stack.construct.props).toHaveProperty('testAttribute')
+    expect(stack.construct.props.testAttribute).toEqual('success')
   })
 })
 
-describe('TestAzureAppServicePlanConstruct', () => {
+describe('TestAzureAppServiceConstruct', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
-    expect(construct).toBeDefined()
-    expect(Testing.toBeValidTerraform(stack)).toBeTruthy()
+    expect(stack.construct).toBeDefined()
+    expect(stack.construct.appServicePlan).toBeDefined()
+    expect(stack.construct.linuxWebApp).toBeDefined()
   })
 })
 
-describe('TestAzureAppServicePlanConstruct', () => {
-  test('provisions outputs as expected', () => {
-    expect(JSON.parse(construct).output).toMatchObject({
-      testAppServicePlanDevAppServicePlanFriendlyUniqueId: {
-        value: 'test-app-service-plan-dev-as',
-      },
-      testAppServicePlanDevAppServicePlanId: {
-        value: '${azurerm_service_plan.test-app-service-plan-dev-as.id}',
-      },
-      testAppServicePlanDevAppServicePlanName: {
-        value: '${azurerm_service_plan.test-app-service-plan-dev-as.name}',
-      },
-      testLinuxWebAppDevLinuxWebAppFriendlyUniqueId: {
-        value: 'test-linux-web-app-dev-lwa',
-      },
-      testLinuxWebAppDevLinuxWebAppId: {
-        value: '${azurerm_linux_web_app.test-linux-web-app-dev-lwa.id}',
-      },
-      testLinuxWebAppDevLinuxWebAppName: {
-        value: '${azurerm_linux_web_app.test-linux-web-app-dev-lwa.name}',
-      },
-      testLinuxWebAppDevLinuxWebAppDefaultHostname: {
-        value: '${azurerm_linux_web_app.test-linux-web-app-dev-lwa.default_hostname}',
-      },
-    })
-  })
-})
-
-describe('TestAzureAppServicePlanConstruct', () => {
+describe('TestAzureAppServiceConstruct', () => {
   test('provisions app service plan as expected', () => {
-    expect(
-      Testing.toHaveResourceWithProperties(construct, 'ServicePlan', {
-        name: 'test-app-service-plan-dev',
-        resource_group_name: '${data.azurerm_resource_group.test-app-service-plan-dev-as-rg.name}',
-        tags: {
-          environment: 'dev',
-        },
+    pulumi
+      .all([
+        stack.construct.appServicePlan.id,
+        stack.construct.appServicePlan.urn,
+        stack.construct.appServicePlan.name,
+        stack.construct.appServicePlan.location,
+        stack.construct.appServicePlan.sku,
+        stack.construct.appServicePlan.tags,
+      ])
+      .apply(([id, urn, name, location, sku, tags]) => {
+        expect(id).toEqual('test-app-service-plan-dev-as-id')
+        expect(urn).toEqual(
+          'urn:pulumi:stack::project::custom:azure:Construct:test-common-stack$azure-native:web:AppServicePlan::test-app-service-plan-dev-as'
+        )
+        expect(name).toEqual('test-app-service-plan-dev')
+        expect(location).toEqual('eastus')
+        expect(sku).toEqual({ name: 'B1', tier: 'Basic' })
+        expect(tags?.environment).toEqual('dev')
       })
-    )
   })
 })
 
 describe('TestAzureLinuxWebAppConstruct', () => {
   test('provisions linux web app as expected', () => {
-    expect(
-      Testing.toHaveResourceWithProperties(construct, 'LinuxWebApp', {
-        enabled: true,
-        https_only: true,
-        name: 'test-linux-web-app-dev',
-        resource_group_name: '${data.azurerm_resource_group.test-linux-web-app-dev-as-rg.name}',
-        service_plan_id: '${azurerm_service_plan.test-app-service-plan-dev-as.id}',
-        site_config: {
-          always_on: true,
-          application_stack: {
-            node_version: '22-lts',
-          },
-          minimum_tls_version: '1.3',
-        },
-        tags: {
-          environment: 'dev',
-        },
+    pulumi
+      .all([
+        stack.construct.linuxWebApp.id,
+        stack.construct.linuxWebApp.urn,
+        stack.construct.linuxWebApp.name,
+        stack.construct.linuxWebApp.location,
+        stack.construct.linuxWebApp.enabled,
+        stack.construct.linuxWebApp.httpsOnly,
+        stack.construct.linuxWebApp.siteConfig,
+        stack.construct.linuxWebApp.tags,
+      ])
+      .apply(([id, urn, name, location, enabled, httpsOnly, siteConfig, tags]) => {
+        expect(id).toEqual('test-linux-web-app-dev-lwa-id')
+        expect(urn).toEqual(
+          'urn:pulumi:stack::project::custom:azure:Construct:test-common-stack$azure-native:web:WebApp::test-linux-web-app-dev-lwa'
+        )
+        expect(name).toEqual('test-linux-web-app-dev')
+        expect(location).toEqual('eastus')
+        expect(enabled).toEqual(true)
+        expect(httpsOnly).toEqual(true)
+        expect(siteConfig).toEqual({
+          alwaysOn: true,
+          http20Enabled: true,
+          localMySqlEnabled: false,
+          netFrameworkVersion: 'v4.6',
+        })
+        expect(tags?.environment).toEqual('dev')
       })
-    )
   })
 })

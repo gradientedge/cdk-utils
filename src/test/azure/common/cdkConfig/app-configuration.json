@@ -1,5 +1,9 @@
 {
   "testAppConfiguration": {
-    "name": "test-app-configuration"
+    "configStoreName": "test-app-configuration",
+    "resourceGroupName": "test-rg-dev",
+    "sku": {
+      "name": "Standard"
+    }
   }
 }
