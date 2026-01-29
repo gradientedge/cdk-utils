@@ -56,7 +56,7 @@
         
         </h2>
         
-            <div class="class-description usertext"><p>Provides operations on Azure Event Grid</p>
+            <div class="class-description usertext"><p>Provides operations on Azure Event Grid using Pulumi</p>
 <ul>
 <li>A new instance of this class is injected into <a href="CommonAzureConstruct.html">CommonAzureConstruct</a> constructor.</li>
 <li>If a custom construct extends <a href="CommonAzureConstruct.html">CommonAzureConstruct</a>, an instance is available within the context.</li>
@@ -91,7 +91,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_eventgrid_main.ts.html">azure/services/eventgrid/main.ts</a>, <a href="azure_services_eventgrid_main.ts.html#line26">line 26</a>
+        <a href="azure_services_eventgrid_main.ts.html">azure/services/eventgrid/main.ts</a>, <a href="azure_services_eventgrid_main.ts.html#line20">line 20</a>
     </li></ul></dd>
     
 
@@ -138,14 +138,14 @@
 
     <h5 class="h5-examples">Example</h5>
     
-    <pre class="prettyprint"><code>```
+    <pre class="prettyprint"><code>```typescript
 import { CommonAzureConstruct, CommonAzureStackProps } from '@gradientedge/cdk-utils'
 
 class CustomConstruct extends CommonAzureConstruct {
-  constructor(parent: Construct, id: string, props: CommonAzureStackProps) {
-    super(parent, id, props)
+  constructor(name: string, props: CommonAzureStackProps) {
+    super(name, props)
     this.props = props
-    this.EventGridManager.createEventGrid('MyEventGrid', this, props)
+    this.EventGridManager.createEventgridTopic('MyEventGrid', this, props)
   }
 }
 ```</code></pre>
@@ -214,7 +214,7 @@ class CustomConstruct extends CommonAzureConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_eventgrid_main.ts.html">azure/services/eventgrid/main.ts</a>, <a href="azure_services_eventgrid_main.ts.html#line89">line 89</a>
+        <a href="azure_services_eventgrid_main.ts.html">azure/services/eventgrid/main.ts</a>, <a href="azure_services_eventgrid_main.ts.html#line71">line 71</a>
     </li></ul></dd>
     
 
@@ -248,7 +248,7 @@ class CustomConstruct extends CommonAzureConstruct {
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><p><a href="https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/eventgridEventSubscription.typescript.md">CDKTF Eventgrid Subscription Container Module</a></p></li>
+            <li><p><a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/eventsubscription/">Pulumi Azure Native Event Grid Event Subscription</a></p></li>
         </ul>
     </dd>
     
@@ -340,7 +340,7 @@ class CustomConstruct extends CommonAzureConstruct {
 
             
 
-            <td class="description last"><p>eventgrid subsription properties</p></td>
+            <td class="description last"><p>eventgrid subscription properties</p></td>
         </tr>
 
     
@@ -388,7 +388,7 @@ class CustomConstruct extends CommonAzureConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_eventgrid_main.ts.html">azure/services/eventgrid/main.ts</a>, <a href="azure_services_eventgrid_main.ts.html#line114">line 114</a>
+        <a href="azure_services_eventgrid_main.ts.html">azure/services/eventgrid/main.ts</a>, <a href="azure_services_eventgrid_main.ts.html#line91">line 91</a>
     </li></ul></dd>
     
 
@@ -422,7 +422,7 @@ class CustomConstruct extends CommonAzureConstruct {
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><p><a href="https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/eventgridSystemTopic.typescript.md">CDKTF Eventgrid System Topic Module</a></p></li>
+            <li><p><a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/systemtopic/">Pulumi Azure Native Event Grid System Topic</a></p></li>
         </ul>
     </dd>
     
@@ -544,7 +544,7 @@ class CustomConstruct extends CommonAzureConstruct {
 
     
 
-    <h4 class="name" id="createEventgridSystemTopicEventSubscription"><span class="type-signature"></span>createEventgridSystemTopicEventSubscription<span class="signature">(id, scope, props)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="createEventgridSystemTopicEventSubscription"><span class="type-signature"></span>createEventgridSystemTopicEventSubscription<span class="signature">(id, scope, props, systemTopic)</span><span class="type-signature"></span></h4>
 
     
     <p class="summary usertext"><p>Method to create a new eventgrid system topic subscription</p></p>
@@ -562,7 +562,7 @@ class CustomConstruct extends CommonAzureConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_eventgrid_main.ts.html">azure/services/eventgrid/main.ts</a>, <a href="azure_services_eventgrid_main.ts.html#line145">line 145</a>
+        <a href="azure_services_eventgrid_main.ts.html">azure/services/eventgrid/main.ts</a>, <a href="azure_services_eventgrid_main.ts.html#line118">line 118</a>
     </li></ul></dd>
     
 
@@ -596,7 +596,7 @@ class CustomConstruct extends CommonAzureConstruct {
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><p><a href="https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/eventgridSystemTopicEventSubscription.typescript.md">CDKTF Eventgrid System Topic Subscription Module</a></p></li>
+            <li><p><a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/systemtopiceventsubscription/">Pulumi Azure Native Event Grid System Topic Event Subscription</a></p></li>
         </ul>
     </dd>
     
@@ -692,6 +692,24 @@ class CustomConstruct extends CommonAzureConstruct {
         </tr>
 
     
+
+        <tr>
+            
+                <td class="name"><code>systemTopic</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The system topic to attach this subscription to</p></td>
+        </tr>
+
+    
     </tbody>
 </table>
 
@@ -736,7 +754,7 @@ class CustomConstruct extends CommonAzureConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_eventgrid_main.ts.html">azure/services/eventgrid/main.ts</a>, <a href="azure_services_eventgrid_main.ts.html#line34">line 34</a>
+        <a href="azure_services_eventgrid_main.ts.html">azure/services/eventgrid/main.ts</a>, <a href="azure_services_eventgrid_main.ts.html#line28">line 28</a>
     </li></ul></dd>
     
 
@@ -770,7 +788,7 @@ class CustomConstruct extends CommonAzureConstruct {
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><p><a href="https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/eventgridTopic.typescript.md">CDKTF Eventgrid Topic Module</a></p></li>
+            <li><p><a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/topic/">Pulumi Azure Native Event Grid Topic</a></p></li>
         </ul>
     </dd>
     
@@ -910,7 +928,7 @@ class CustomConstruct extends CommonAzureConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_eventgrid_main.ts.html">azure/services/eventgrid/main.ts</a>, <a href="azure_services_eventgrid_main.ts.html#line66">line 66</a>
+        <a href="azure_services_eventgrid_main.ts.html">azure/services/eventgrid/main.ts</a>, <a href="azure_services_eventgrid_main.ts.html#line54">line 54</a>
     </li></ul></dd>
     
 
@@ -944,7 +962,7 @@ class CustomConstruct extends CommonAzureConstruct {
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><p><a href="https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/eventgridTopic.typescript.md">CDKTF Eventgrid Topic Module</a></p></li>
+            <li><p><a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/topic/">Pulumi Azure Native Event Grid Topic Lookup</a></p></li>
         </ul>
     </dd>
     

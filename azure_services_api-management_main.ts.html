@@ -48,44 +48,42 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { ApiManagementApiOperationPolicy } from '@cdktf/provider-azurerm/lib/api-management-api-operation-policy/index.js'
-import { ApiManagementApiOperation } from '@cdktf/provider-azurerm/lib/api-management-api-operation/index.js'
-import { ApiManagementApi } from '@cdktf/provider-azurerm/lib/api-management-api/index.js'
-import { ApiManagementBackend } from '@cdktf/provider-azurerm/lib/api-management-backend/index.js'
-import { ApiManagementCustomDomain } from '@cdktf/provider-azurerm/lib/api-management-custom-domain/index.js'
-import {
-  ApiManagementLogger,
-  ApiManagementLoggerApplicationInsights,
-} from '@cdktf/provider-azurerm/lib/api-management-logger/index.js'
-import { ApiManagementRedisCache } from '@cdktf/provider-azurerm/lib/api-management-redis-cache/index.js'
-import { ApiManagement } from '@cdktf/provider-azurerm/lib/api-management/index.js'
-import {
-  DataAzurermApiManagement,
-  DataAzurermApiManagementConfig,
-} from '@cdktf/provider-azurerm/lib/data-azurerm-api-management/index.js'
-import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group/index.js'
-import { ManagedRedis } from '@cdktf/provider-azurerm/lib/managed-redis/index.js'
+            <pre class="prettyprint source linenums"><code>import {
+  Api,
+  ApiManagementService,
+  ApiOperation,
+  ApiOperationPolicy,
+  Backend,
+  BackendProtocol,
+  Cache,
+  getApiManagementServiceOutput,
+  Logger,
+  LoggerType,
+  PolicyContentFormat,
+  Protocol,
+} from '@pulumi/azure-native/apimanagement/index.js'
+import * as redis from '@pulumi/azure-native/redis/index.js'
 import _ from 'lodash'
 import { CommonAzureConstruct } from '../../common/index.js'
-import { createAzureTfOutput } from '../../utils/index.js'
 import {
   ApiManagementApiProps,
   ApiManagementBackendProps,
   ApiManagementCustomDomainProps,
   ApiManagementProps,
+  ResolveApiManagementProps,
 } from './types.js'
 
 /**
- * @classdesc Provides operations on Azure Api Management
+ * @classdesc Provides operations on Azure API Management using Pulumi
  * - A new instance of this class is injected into {@link CommonAzureConstruct} constructor.
  * - If a custom construct extends {@link CommonAzureConstruct}, an instance is available within the context.
  * @example
- * ```
+ * ```typescript
  * import { CommonAzureConstruct, CommonAzureStackProps } from '@gradientedge/cdk-utils'
  *
  * class CustomConstruct extends CommonAzureConstruct {
- *   constructor(parent: Construct, id: string, props: CommonAzureStackProps) {
- *     super(parent, id, props)
+ *   constructor(name: string, props: CommonAzureStackProps) {
+ *     super(name, props)
  *     this.props = props
  *     this.apiManagementManager.createApiManagement('MyApiManagement', this, props)
  *   }
@@ -94,168 +92,185 @@ import {
  */
 export class AzureApiManagementManager {
   /**
-   * @summary Method to create a new api management
+   * @summary Method to create a new API Management service
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props api management properties
-   * @see [CDKTF Api management Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/apiManagement.typescript.md}
+   * @param props API Management properties
+   * @param applicationInsightsKey Optional Application Insights instrumentation key for logging
+   * @param externalRedisCache Optional external Redis cache for API Management caching
+   * @see [Pulumi Azure Native API Management]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/apimanagement/apimanagementservice/}
    */
-  public createApiManagement(
+  public createApiManagementService(
     id: string,
     scope: CommonAzureConstruct,
     props: ApiManagementProps,
-    applicationInsightsKey?: ApiManagementLoggerApplicationInsights['instrumentationKey'],
-    externalRedisCache?: ManagedRedis
+    applicationInsightsKey?: string,
+    externalRedisCache?: redis.Redis
   ) {
     if (!props) throw `Props undefined for ${id}`
 
-    const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-am-rg`, {
-      name: scope.props.resourceGroupName
-        ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-        : `${props.resourceGroupName}`,
-    })
+    // Get resource group name
+    const resourceGroupName = scope.props.resourceGroupName
+      ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
+      : props.resourceGroupName
 
-    if (!resourceGroup) throw `Resource group undefined for ${id}`
+    if (!resourceGroupName) throw `Resource group name undefined for ${id}`
 
-    const apiManagement = new ApiManagement(scope, `${id}-am`, {
-      ...props,
-      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.apiManagement),
-      resourceGroupName: resourceGroup.name,
-      tags: props.tags ?? {
-        environment: scope.props.stage,
-      },
-    })
-
-    if (applicationInsightsKey) {
-      new ApiManagementLogger(scope, `${id}-am-logger`, {
-        name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.apiManagementLogger),
-        resourceGroupName: resourceGroup.name,
-        apiManagementName: apiManagement.name,
-        applicationInsights: {
-          instrumentationKey: applicationInsightsKey,
+    const apiManagementService = new ApiManagementService(
+      `${id}-am`,
+      {
+        ...props,
+        serviceName: scope.resourceNameFormatter.format(
+          props.serviceName?.toString(),
+          scope.props.resourceNameOptions?.apiManagement
+        ),
+        resourceGroupName: resourceGroupName,
+        location: props.location ?? scope.props.location,
+        publisherEmail: props.publisherEmail ?? 'noreply@example.com',
+        publisherName: props.publisherName ?? 'Default Publisher',
+        tags: props.tags ?? {
+          environment: scope.props.stage,
         },
-      })
+      },
+      { parent: scope }
+    )
+
+    // Create logger if Application Insights key is provided
+    if (applicationInsightsKey) {
+      new Logger(
+        `${id}-am-logger`,
+        {
+          loggerId: scope.resourceNameFormatter.format(
+            props.serviceName?.toString(),
+            scope.props.resourceNameOptions?.apiManagementLogger
+          ),
+          resourceGroupName: resourceGroupName,
+          serviceName: apiManagementService.name,
+          loggerType: LoggerType.ApplicationInsights,
+          credentials: {
+            instrumentationKey: applicationInsightsKey,
+          },
+        },
+        { parent: scope }
+      )
     }
 
+    // Create Redis cache connection if external Redis is provided
     if (externalRedisCache) {
-      new ApiManagementRedisCache(scope, `${id}-am-redis-cache`, {
-        name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.apiManagementRedisCache),
-        apiManagementId: apiManagement.id,
-        connectionString: `${externalRedisCache.name}:10000,password=${externalRedisCache.defaultDatabase.primaryAccessKey},ssl=True,abortConnect=False`,
-        cacheLocation: externalRedisCache.location,
-        redisCacheId: externalRedisCache.id,
-      })
+      new Cache(
+        `${id}-am-redis-cache`,
+        {
+          cacheId: scope.resourceNameFormatter.format(
+            props.serviceName?.toString(),
+            scope.props.resourceNameOptions?.apiManagementRedisCache
+          ),
+          serviceName: apiManagementService.name,
+          resourceGroupName: resourceGroupName,
+          connectionString: externalRedisCache.hostName.apply(
+            hostName =>
+              `${hostName}:10000,password=${externalRedisCache.accessKeys.apply(k => k?.primaryKey)},ssl=True,abortConnect=False`
+          ),
+          useFromLocation: externalRedisCache.location,
+          resourceId: externalRedisCache.id,
+        },
+        { parent: scope }
+      )
     }
 
-    createAzureTfOutput(`${id}-apiManagementName`, scope, apiManagement.name)
-    createAzureTfOutput(`${id}-apiManagementFriendlyUniqueId`, scope, apiManagement.friendlyUniqueId)
-    createAzureTfOutput(`${id}-apiManagementId`, scope, apiManagement.id)
-
-    return apiManagement
+    return apiManagementService
   }
 
   /**
-   * @summary Method to resolve an api management
+   * @summary Method to resolve an existing API Management service
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props api management properties
-   * @see [CDKTF Api management Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/apiManagement.typescript.md}
+   * @param props API Management lookup properties
+   * @see [Pulumi Azure Native API Management Lookup]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/apimanagement/apimanagementservice/}
    */
-  public resolveApiManagement(id: string, scope: CommonAzureConstruct, props: DataAzurermApiManagementConfig) {
+  public resolveApiManagementService(id: string, scope: CommonAzureConstruct, props: ResolveApiManagementProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-am-rg`, {
-      name: scope.props.resourceGroupName
-        ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-        : `${props.resourceGroupName}`,
-    })
-
-    if (!resourceGroup) throw `Resource group undefined for ${id}`
-
-    const apiManagement = new DataAzurermApiManagement(scope, `${id}-am`, {
-      ...props,
-      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.dataAzurermApiManagement),
-      resourceGroupName: scope.props.resourceGroupName
-        ? `${scope.props.resourceGroupName}-${scope.props.stage}`
-        : `${props.resourceGroupName}`,
-    })
-
-    return apiManagement
+    return getApiManagementServiceOutput(
+      {
+        serviceName: scope.resourceNameFormatter.format(
+          props.serviceName?.toString(),
+          scope.props.resourceNameOptions?.dataAzurermApiManagement
+        ),
+        resourceGroupName: scope.props.resourceGroupName
+          ? `${scope.props.resourceGroupName}-${scope.props.stage}`
+          : props.resourceGroupName,
+      },
+      { parent: scope }
+    )
   }
 
   /**
-   * @summary Method to create a new api management backend
+   * @summary Method to create a new API Management backend
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props api management backend properties
-   * @see [CDKTF Api management Backend Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/ApiManagementBackend.typescript.md}
+   * @param props API Management backend properties
+   * @see [Pulumi Azure Native API Management Backend]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/apimanagement/backend/}
    */
-  public createApiManagementBackend(id: string, scope: CommonAzureConstruct, props: ApiManagementBackendProps) {
+  public createBackend(id: string, scope: CommonAzureConstruct, props: ApiManagementBackendProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    const apiManagementBackend = new ApiManagementBackend(scope, `${id}-am-be`, {
-      ...props,
-      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.apiManagementBackend),
-      description: props.description ?? `Backend for ${props.name}-${scope.props.stage}`,
-      protocol: props.protocol ?? 'http',
-    })
-
-    createAzureTfOutput(`${id}-apiManagementBackendName`, scope, apiManagementBackend.name)
-    createAzureTfOutput(`${id}-apiManagementBackendFriendlyUniqueId`, scope, apiManagementBackend.friendlyUniqueId)
-    createAzureTfOutput(`${id}-apiManagementBackendId`, scope, apiManagementBackend.id)
-
-    return apiManagementBackend
+    return new Backend(
+      `${id}-am-be`,
+      {
+        ...props,
+        backendId: scope.resourceNameFormatter.format(
+          props.backendId?.toString(),
+          scope.props.resourceNameOptions?.apiManagementBackend
+        ),
+        description: props.description ?? `Backend for ${(props as any).name || id}-${scope.props.stage}`,
+        protocol: props.protocol ?? BackendProtocol.Http,
+      },
+      { parent: scope }
+    )
   }
 
   /**
-   * @summary Method to create a new api management api
+   * @summary Method to create a new API Management API with operations and policies
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props api management api properties
-   * @see [CDKTF Api management Api Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/ApiManagementApi.typescript.md}
+   * @param props API Management API properties
+   * @see [Pulumi Azure Native API Management API]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/apimanagement/api/}
    */
-  public createApiManagementApi(id: string, scope: CommonAzureConstruct, props: ApiManagementApiProps) {
+  public createApi(id: string, scope: CommonAzureConstruct, props: ApiManagementApiProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    const apiManagementApi = new ApiManagementApi(scope, `${id}-am-api`, {
-      ...props,
-      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.apiManagementApi),
-      displayName: props.displayName ?? props.name,
-      revision: props.revision ?? '1',
-      protocols: props.protocols ?? ['https'],
-    })
+    const api = new Api(
+      `${id}-am-api`,
+      {
+        ...props,
+        apiId: scope.resourceNameFormatter.format(
+          props.apiId?.toString(),
+          scope.props.resourceNameOptions?.apiManagementApi
+        ),
+        displayName: props.displayName ?? props.apiId,
+        apiRevision: props.apiRevision ?? '1',
+        protocols: props.protocols ?? [Protocol.Https],
+      },
+      { parent: scope }
+    )
 
-    createAzureTfOutput(`${id}-apiManagementApiName`, scope, apiManagementApi.name)
-    createAzureTfOutput(`${id}-apiManagementApiFriendlyUniqueId`, scope, apiManagementApi.friendlyUniqueId)
-    createAzureTfOutput(`${id}-apiManagementApiId`, scope, apiManagementApi.id)
-
+    // Create operations and policies
     _.forEach(props.operations, operation => {
-      const apimOperation = new ApiManagementApiOperation(
-        scope,
+      const operationId = `${operation.displayName}-${operation.method}`
+      const apimOperation = new ApiOperation(
         `${id}-apim-api-operation-${operation.displayName}-${operation.method}`,
         {
-          operationId: `${operation.displayName}-${operation.method}`,
-          method: operation.method.toUpperCase(),
-          apiManagementName: apiManagementApi.apiManagementName,
-          resourceGroupName: apiManagementApi.resourceGroupName,
-          apiName: apiManagementApi.name,
+          operationId: operationId,
+          method: (operation.method as string)?.toUpperCase() || 'GET',
+          serviceName: props.serviceName!,
+          resourceGroupName: props.resourceGroupName!,
+          apiId: api.name,
           displayName: operation.displayName,
           urlTemplate: operation.urlTemplate,
-          templateParameter: operation.templateParameter,
-        }
+          templateParameters: operation.templateParameters,
+        },
+        { parent: scope }
       )
-
-      createAzureTfOutput(
-        `${id}-${operation.displayName}-${operation.method}-apimOperationOperationId`,
-        scope,
-        apimOperation.operationId
-      )
-      createAzureTfOutput(
-        `${id}-${operation.displayName}-${operation.method}-apimOperationFriendlyUniqueId`,
-        scope,
-        apimOperation.friendlyUniqueId
-      )
-      createAzureTfOutput(`${id}-${operation.displayName}-${operation.method}-apimOperationId`, scope, apimOperation.id)
 
       // Define Caching Policy if enabled
       let cacheSetVariablePolicy = ''
@@ -267,11 +282,11 @@ export class AzureApiManagementManager {
         cacheSetVariablePolicy = `&lt;!-- Generate a comprehensive custom cache key (without query params or Accept header) -->
               &lt;set-variable name="customCacheKey" value="@{
                   // Instance identification
-                  
+
                   // API identification
                   string apiName = context.Api.Name.Replace(" ", "").ToLower();
                   string apiVersion = context.Api.Version ?? "v1";
-                  
+
                   // Full path construction (without query parameters)
                   string fullPath = context.Request.Url.Path.ToLower();
 
@@ -349,7 +364,7 @@ export class AzureApiManagementManager {
       // Inject rate limiting policy (if configured)
       let rateLimitPolicy = ''
       if (props.rateLimit &amp;&amp; scope.props.subscriptionId) {
-        rateLimitPolicy = `&lt;rate-limit-by-key calls="${props.rateLimit.calls}" renewal-period="${props.rateLimit.renewalPeriodInSecs}" counter-key="${scope.props.subscriptionId}-${apimOperation.operationId}"/>`
+        rateLimitPolicy = `&lt;rate-limit-by-key calls="${props.rateLimit.calls}" renewal-period="${props.rateLimit.renewalPeriodInSecs}" counter-key="${scope.props.subscriptionId}-${operationId}"/>`
       }
 
       const policyXmlContent = `&lt;policies>
@@ -374,39 +389,31 @@ export class AzureApiManagementManager {
         &lt;/on-error>
       &lt;/policies>`
 
-      const apimOperationPolicy = new ApiManagementApiOperationPolicy(
-        scope,
+      new ApiOperationPolicy(
         `${id}-apim-api-operation-policy-${operation.displayName}-${operation.method}`,
         {
-          apiManagementName: apiManagementApi.apiManagementName,
-          resourceGroupName: apiManagementApi.resourceGroupName,
-          apiName: apiManagementApi.name,
-          operationId: apimOperation.operationId,
-          xmlContent: policyXmlContent,
-        }
-      )
-
-      createAzureTfOutput(
-        `${id}-${operation.displayName}-${operation.method}-apimOperationPolicyFriendlyUniqueId`,
-        scope,
-        apimOperationPolicy.friendlyUniqueId
-      )
-      createAzureTfOutput(
-        `${id}-${operation.displayName}-${operation.method}-apimOperationPolicyId`,
-        scope,
-        apimOperationPolicy.id
+          serviceName: props.serviceName!,
+          resourceGroupName: props.resourceGroupName!,
+          apiId: api.name,
+          operationId: operationId,
+          policyId: 'policy',
+          value: policyXmlContent,
+          format: PolicyContentFormat.Xml,
+        },
+        { parent: scope }
       )
     })
 
-    return apiManagementApi
+    return api
   }
 
   /**
-   * @summary Method to create a new api management custom domain
+   * @summary Method to create a new API Management custom domain
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props api management custom domain properties
-   * @see [CDKTF Api management Custom Domain Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/createApiManagementCustomDomain.typescript.md}
+   * @param props API Management custom domain properties
+   * @note In Pulumi Azure Native, custom domains are configured as part of the API Management service resource,
+   * not as a separate resource. Use the hostnameConfigurations property when creating the service.
    */
   public createApiManagementCustomDomain(
     id: string,
@@ -415,16 +422,12 @@ export class AzureApiManagementManager {
   ) {
     if (!props) throw `Props undefined for ${id}`
 
-    const apiManagementCustomDomain = new ApiManagementCustomDomain(scope, `${id}-am-cd`, props)
-
-    createAzureTfOutput(
-      `${id}-apiManagementCustomDomainFriendlyUniqueId`,
-      scope,
-      apiManagementCustomDomain.friendlyUniqueId
+    // Note: In Pulumi Azure Native, custom domains are part of the ApiManagementService
+    // This method is provided for API compatibility but should be configured
+    // via the hostnameConfigurations property of ApiManagementService instead
+    throw new Error(
+      'Custom domains should be configured via the hostnameConfigurations property of ApiManagementService in Pulumi Azure Native'
     )
-    createAzureTfOutput(`${id}-apiManagementCustomDomainId`, scope, apiManagementCustomDomain.id)
-
-    return apiManagementCustomDomain
   }
 }
 </code></pre>

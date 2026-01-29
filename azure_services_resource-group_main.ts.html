@@ -48,22 +48,21 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { ResourceGroup } from '@cdktf/provider-azurerm/lib/resource-group/index.js'
+            <pre class="prettyprint source linenums"><code>import { ResourceGroup } from '@pulumi/azure-native/resources/index.js'
 import { CommonAzureConstruct } from '../../common/index.js'
-import { createAzureTfOutput } from '../../utils/index.js'
 import { ResourceGroupProps } from './types.js'
 
 /**
- * @classdesc Provides operations on Azure Resource Group
+ * @classdesc Provides operations on Azure Resource Group using Pulumi
  * - A new instance of this class is injected into {@link CommonAzureConstruct} constructor.
  * - If a custom construct extends {@link CommonAzureConstruct}, an instance is available within the context.
  * @example
- * ```
+ * ```typescript
  * import { CommonAzureConstruct, CommonAzureStackProps } from '@gradientedge/cdk-utils'
  *
  * class CustomConstruct extends CommonAzureConstruct {
- *   constructor(parent: Construct, id: string, props: CommonAzureStackProps) {
- *     super(parent, id, props)
+ *   constructor(name: string, props: CommonAzureStackProps) {
+ *     super(name, props)
  *     this.props = props
  *     this.resourceGroupManager.createResourceGroup('MyResourceGroup', this, props)
  *   }
@@ -76,25 +75,26 @@ export class AzureResourceGroupManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props resource group properties
-   * @see [CDKTF Resource Group Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/resourceGroup.typescript.md}
+   * @see [Pulumi Azure Native Resource Group]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/resources/resourcegroup/}
    */
   public createResourceGroup(id: string, scope: CommonAzureConstruct, props: ResourceGroupProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    const resourceGroup = new ResourceGroup(scope, `${id}-rg`, {
-      ...props,
-      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.resourceGroup),
-      location: props.location,
-      tags: props.tags ?? {
-        environment: scope.props.stage,
+    return new ResourceGroup(
+      `${id}-rg`,
+      {
+        ...props,
+        resourceGroupName: scope.resourceNameFormatter.format(
+          props.resourceGroupName?.toString(),
+          scope.props.resourceNameOptions?.resourceGroup
+        ),
+        location: props.location,
+        tags: props.tags ?? {
+          environment: scope.props.stage,
+        },
       },
-    })
-
-    createAzureTfOutput(`${id}-resourceGroupName`, scope, resourceGroup.name)
-    createAzureTfOutput(`${id}-resourceGroupFriendlyUniqueId`, scope, resourceGroup.friendlyUniqueId)
-    createAzureTfOutput(`${id}-resourceGroupId`, scope, resourceGroup.id)
-
-    return resourceGroup
+      { parent: scope }
+    )
   }
 }
 </code></pre>

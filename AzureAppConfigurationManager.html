@@ -56,7 +56,7 @@
         
         </h2>
         
-            <div class="class-description usertext"><p>Provides operations on Azure App Configuration</p>
+            <div class="class-description usertext"><p>Provides operations on Azure App Configuration using Pulumi</p>
 <ul>
 <li>A new instance of this class is injected into <a href="CommonAzureConstruct.html">CommonAzureConstruct</a> constructor.</li>
 <li>If a custom construct extends <a href="CommonAzureConstruct.html">CommonAzureConstruct</a>, an instance is available within the context.</li>
@@ -91,7 +91,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_app-configuration_main.ts.html">azure/services/app-configuration/main.ts</a>, <a href="azure_services_app-configuration_main.ts.html#line22">line 22</a>
+        <a href="azure_services_app-configuration_main.ts.html">azure/services/app-configuration/main.ts</a>, <a href="azure_services_app-configuration_main.ts.html#line20">line 20</a>
     </li></ul></dd>
     
 
@@ -138,12 +138,12 @@
 
     <h5 class="h5-examples">Example</h5>
     
-    <pre class="prettyprint"><code>```
+    <pre class="prettyprint"><code>```typescript
 import { CommonAzureConstruct, CommonAzureStackProps } from '@gradientedge/cdk-utils'
 
 class CustomConstruct extends CommonAzureConstruct {
-  constructor(parent: Construct, id: string, props: CommonAzureStackProps) {
-    super(parent, id, props)
+  constructor(name: string, props: CommonAzureStackProps) {
+    super(name, props)
     this.props = props
     this.appConfigurationManager.createAppConfiguration('MyAppConfiguration', this, props)
   }
@@ -196,7 +196,7 @@ class CustomConstruct extends CommonAzureConstruct {
 
     
 
-    <h4 class="name" id="createAppConfiguration"><span class="type-signature"></span>createAppConfiguration<span class="signature">(id, scope, props)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="createConfigurationStore"><span class="type-signature"></span>createConfigurationStore<span class="signature">(id, scope, props)</span><span class="type-signature"></span></h4>
 
     
     <p class="summary usertext"><p>Method to create a new app configuration</p></p>
@@ -214,7 +214,7 @@ class CustomConstruct extends CommonAzureConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_app-configuration_main.ts.html">azure/services/app-configuration/main.ts</a>, <a href="azure_services_app-configuration_main.ts.html#line30">line 30</a>
+        <a href="azure_services_app-configuration_main.ts.html">azure/services/app-configuration/main.ts</a>, <a href="azure_services_app-configuration_main.ts.html#line28">line 28</a>
     </li></ul></dd>
     
 
@@ -248,7 +248,7 @@ class CustomConstruct extends CommonAzureConstruct {
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><p><a href="https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/appConfiguration.typescript.md">CDKTF App Configuration plan Module</a></p></li>
+            <li><p><a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/appconfiguration/configurationstore/">Pulumi Azure Native App Configuration</a></p></li>
         </ul>
     </dd>
     

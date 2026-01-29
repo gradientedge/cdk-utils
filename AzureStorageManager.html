@@ -56,7 +56,7 @@
         
         </h2>
         
-            <div class="class-description usertext"><p>Provides operations on Azure Storage</p>
+            <div class="class-description usertext"><p>Provides operations on Azure Storage using Pulumi</p>
 <ul>
 <li>A new instance of this class is injected into <a href="CommonAzureConstruct.html">CommonAzureConstruct</a> constructor.</li>
 <li>If a custom construct extends <a href="CommonAzureConstruct.html">CommonAzureConstruct</a>, an instance is available within the context.</li>
@@ -91,7 +91,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_storage_main.ts.html">azure/services/storage/main.ts</a>, <a href="azure_services_storage_main.ts.html#line27">line 27</a>
+        <a href="azure_services_storage_main.ts.html">azure/services/storage/main.ts</a>, <a href="azure_services_storage_main.ts.html#line22">line 22</a>
     </li></ul></dd>
     
 
@@ -138,12 +138,12 @@
 
     <h5 class="h5-examples">Example</h5>
     
-    <pre class="prettyprint"><code>```
+    <pre class="prettyprint"><code>```typescript
 import { CommonAzureConstruct, CommonAzureStackProps } from '@gradientedge/cdk-utils'
 
 class CustomConstruct extends CommonAzureConstruct {
-  constructor(parent: Construct, id: string, props: CommonAzureStackProps) {
-    super(parent, id, props)
+  constructor(name: string, props: CommonAzureStackProps) {
+    super(name, props)
     this.props = props
     this.storageManager.createStorageAccount('MyAccount', this, props)
   }
@@ -214,7 +214,7 @@ class CustomConstruct extends CommonAzureConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_storage_main.ts.html">azure/services/storage/main.ts</a>, <a href="azure_services_storage_main.ts.html#line35">line 35</a>
+        <a href="azure_services_storage_main.ts.html">azure/services/storage/main.ts</a>, <a href="azure_services_storage_main.ts.html#line30">line 30</a>
     </li></ul></dd>
     
 
@@ -248,7 +248,7 @@ class CustomConstruct extends CommonAzureConstruct {
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><p><a href="https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/storageAccount.typescript.md">CDKTF Storage Account Module</a></p></li>
+            <li><p><a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/storage/storageaccount/">Pulumi Azure Native Storage Account</a></p></li>
         </ul>
     </dd>
     
@@ -388,7 +388,7 @@ class CustomConstruct extends CommonAzureConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_storage_main.ts.html">azure/services/storage/main.ts</a>, <a href="azure_services_storage_main.ts.html#line89">line 89</a>
+        <a href="azure_services_storage_main.ts.html">azure/services/storage/main.ts</a>, <a href="azure_services_storage_main.ts.html#line80">line 80</a>
     </li></ul></dd>
     
 
@@ -422,7 +422,7 @@ class CustomConstruct extends CommonAzureConstruct {
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><p><a href="https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/storageBlob.typescript.md">CDKTF Storage Blob Module</a></p></li>
+            <li><p><a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/storage/blob/">Pulumi Azure Native Blob</a></p></li>
         </ul>
     </dd>
     
@@ -547,7 +547,7 @@ class CustomConstruct extends CommonAzureConstruct {
     <h4 class="name" id="createStorageContainer"><span class="type-signature"></span>createStorageContainer<span class="signature">(id, scope, props)</span><span class="type-signature"></span></h4>
 
     
-    <p class="summary usertext"><p>Method to create a new storage container</p></p>
+    <p class="summary usertext"><p>Method to create a new storage container (blob container)</p></p>
     
 
 
@@ -562,7 +562,7 @@ class CustomConstruct extends CommonAzureConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_storage_main.ts.html">azure/services/storage/main.ts</a>, <a href="azure_services_storage_main.ts.html#line70">line 70</a>
+        <a href="azure_services_storage_main.ts.html">azure/services/storage/main.ts</a>, <a href="azure_services_storage_main.ts.html#line60">line 60</a>
     </li></ul></dd>
     
 
@@ -596,7 +596,7 @@ class CustomConstruct extends CommonAzureConstruct {
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><p><a href="https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/storageContainer.typescript.md">CDKTF Storage Container Module</a></p></li>
+            <li><p><a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/storage/blobcontainer/">Pulumi Azure Native Blob Container</a></p></li>
         </ul>
     </dd>
     
@@ -730,14 +730,14 @@ class CustomConstruct extends CommonAzureConstruct {
 <dl class="details">
     
     <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script><p>This method creates a <code>DataAzurermStorageAccountBlobContainerSas</code> resource, allowing secure access
-to a container via a generated Shared Access Signature (SAS) token.</p></li></ul></dd>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script><p>This method generates a Shared Access Signature (SAS) token for secure container access.
+The token is generated using Pulumi's listStorageAccountSAS function.</p></li></ul></dd>
     
 
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_storage_main.ts.html">azure/services/storage/main.ts</a>, <a href="azure_services_storage_main.ts.html#line139">line 139</a>
+        <a href="azure_services_storage_main.ts.html">azure/services/storage/main.ts</a>, <a href="azure_services_storage_main.ts.html#line120">line 120</a>
     </li></ul></dd>
     
 
@@ -771,7 +771,7 @@ to a container via a generated Shared Access Signature (SAS) token.</p></li></ul
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><a href="https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/storage_account_blob_container_sas">https://registry.terraform.io/providers/hashicorp/azurerm/latest/docs/data-sources/storage_account_blob_container_sas</a></li>
+            <li><a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/storage/liststorageaccountsas/">https://www.pulumi.com/registry/packages/azure-native/api-docs/storage/liststorageaccountsas/</a></li>
         </ul>
     </dd>
     
@@ -845,7 +845,7 @@ to a container via a generated Shared Access Signature (SAS) token.</p></li></ul
 
             
 
-            <td class="description last"><p>CDKTF construct scope in which the resource will be created</p></td>
+            <td class="description last"><p>Pulumi construct scope</p></td>
         </tr>
 
     
@@ -865,9 +865,8 @@ to a container via a generated Shared Access Signature (SAS) token.</p></li></ul
 
             <td class="description last"><p>SAS options:</p>
 <ul>
-<li>start: Optional start date in the format 'YYYY-MM-DD'. If not provided, defaults to today’s date.
-To avoid diffs on every deploy, it is recommended to supply a fixed value.</li>
-<li>expiry: Optional expiry date in the format 'YYYY-MM-DD'. Defaults to 7 days from current date if not provided.</li>
+<li>start: Optional start date in the format 'YYYY-MM-DD'. Defaults to today's date.</li>
+<li>expiry: Optional expiry date in the format 'YYYY-MM-DD'. Defaults to 7 days from current date.</li>
 </ul></td>
         </tr>
 
@@ -886,7 +885,7 @@ To avoid diffs on every deploy, it is recommended to supply a fixed value.</li>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>The storage account resource</p></td>
         </tr>
 
     
@@ -904,7 +903,7 @@ To avoid diffs on every deploy, it is recommended to supply a fixed value.</li>
 
             
 
-            <td class="description last"></td>
+            <td class="description last"><p>Optional blob container resource</p></td>
         </tr>
 
     
@@ -930,7 +929,7 @@ To avoid diffs on every deploy, it is recommended to supply a fixed value.</li>
 
         
 <div class="param-desc">
-    <p>A <code>DataAzurermStorageAccountBlobContainerSas</code> instance with the generated SAS token</p>
+    <p>A Pulumi Output containing the SAS token</p>
 </div>
 
 

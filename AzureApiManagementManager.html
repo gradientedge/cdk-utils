@@ -56,7 +56,7 @@
         
         </h2>
         
-            <div class="class-description usertext"><p>Provides operations on Azure Api Management</p>
+            <div class="class-description usertext"><p>Provides operations on Azure API Management using Pulumi</p>
 <ul>
 <li>A new instance of this class is injected into <a href="CommonAzureConstruct.html">CommonAzureConstruct</a> constructor.</li>
 <li>If a custom construct extends <a href="CommonAzureConstruct.html">CommonAzureConstruct</a>, an instance is available within the context.</li>
@@ -91,7 +91,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_api-management_main.ts.html">azure/services/api-management/main.ts</a>, <a href="azure_services_api-management_main.ts.html#line31">line 31</a>
+        <a href="azure_services_api-management_main.ts.html">azure/services/api-management/main.ts</a>, <a href="azure_services_api-management_main.ts.html#line21">line 21</a>
     </li></ul></dd>
     
 
@@ -138,12 +138,12 @@
 
     <h5 class="h5-examples">Example</h5>
     
-    <pre class="prettyprint"><code>```
+    <pre class="prettyprint"><code>```typescript
 import { CommonAzureConstruct, CommonAzureStackProps } from '@gradientedge/cdk-utils'
 
 class CustomConstruct extends CommonAzureConstruct {
-  constructor(parent: Construct, id: string, props: CommonAzureStackProps) {
-    super(parent, id, props)
+  constructor(name: string, props: CommonAzureStackProps) {
+    super(name, props)
     this.props = props
     this.apiManagementManager.createApiManagement('MyApiManagement', this, props)
   }
@@ -196,10 +196,10 @@ class CustomConstruct extends CommonAzureConstruct {
 
     
 
-    <h4 class="name" id="createApiManagement"><span class="type-signature"></span>createApiManagement<span class="signature">(id, scope, props)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="createApi"><span class="type-signature"></span>createApi<span class="signature">(id, scope, props)</span><span class="type-signature"></span></h4>
 
     
-    <p class="summary usertext"><p>Method to create a new api management</p></p>
+    <p class="summary usertext"><p>Method to create a new API Management API with operations and policies</p></p>
     
 
 
@@ -214,7 +214,7 @@ class CustomConstruct extends CommonAzureConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_api-management_main.ts.html">azure/services/api-management/main.ts</a>, <a href="azure_services_api-management_main.ts.html#line39">line 39</a>
+        <a href="azure_services_api-management_main.ts.html">azure/services/api-management/main.ts</a>, <a href="azure_services_api-management_main.ts.html#line117">line 117</a>
     </li></ul></dd>
     
 
@@ -248,7 +248,7 @@ class CustomConstruct extends CommonAzureConstruct {
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><p><a href="https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/apiManagement.typescript.md">CDKTF Api management Module</a></p></li>
+            <li><p><a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/apimanagement/api/">Pulumi Azure Native API Management API</a></p></li>
         </ul>
     </dd>
     
@@ -340,355 +340,7 @@ class CustomConstruct extends CommonAzureConstruct {
 
             
 
-            <td class="description last"><p>api management properties</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="createApiManagementApi"><span class="type-signature"></span>createApiManagementApi<span class="signature">(id, scope, props)</span><span class="type-signature"></span></h4>
-
-    
-    <p class="summary usertext"><p>Method to create a new api management api</p></p>
-    
-
-
-
-
-<dl class="details">
-    
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_api-management_main.ts.html">azure/services/api-management/main.ts</a>, <a href="azure_services_api-management_main.ts.html#line135">line 135</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><p><a href="https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/ApiManagementApi.typescript.md">CDKTF Api management Api Module</a></p></li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <h5 class="h5-parameters">Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>id</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>scoped id of the resource</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>scope</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>scope in which this resource is defined</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>props</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>api management api properties</p></td>
-        </tr>
-
-    
-    </tbody>
-</table>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        
-            
-
-    
-
-    <h4 class="name" id="createApiManagementBackend"><span class="type-signature"></span>createApiManagementBackend<span class="signature">(id, scope, props)</span><span class="type-signature"></span></h4>
-
-    
-    <p class="summary usertext"><p>Method to create a new api management backend</p></p>
-    
-
-
-
-
-<dl class="details">
-    
-    <dt class="tag-description">Description:</dt>
-    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
-    
-
-    
-    <dt class="tag-source">Source:</dt>
-    <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_api-management_main.ts.html">azure/services/api-management/main.ts</a>, <a href="azure_services_api-management_main.ts.html#line114">line 114</a>
-    </li></ul></dd>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><p><a href="https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/ApiManagementBackend.typescript.md">CDKTF Api management Backend Module</a></p></li>
-        </ul>
-    </dd>
-    
-
-    
-</dl>
-
-
-
-
-
-
-
-
-
-
-
-
-
-    <h5 class="h5-parameters">Parameters:</h5>
-    
-
-<table class="params">
-    <thead>
-    <tr>
-        
-        <th>Name</th>
-        
-
-        <th>Type</th>
-
-        
-
-        
-
-        <th class="last">Description</th>
-    </tr>
-    </thead>
-
-    <tbody>
-    
-
-        <tr>
-            
-                <td class="name"><code>id</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>scoped id of the resource</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>scope</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>scope in which this resource is defined</p></td>
-        </tr>
-
-    
-
-        <tr>
-            
-                <td class="name"><code>props</code></td>
-            
-
-            <td class="type">
-            
-            </td>
-
-            
-
-            
-
-            <td class="description last"><p>api management backend properties</p></td>
+            <td class="description last"><p>API Management API properties</p></td>
         </tr>
 
     
@@ -721,7 +373,7 @@ class CustomConstruct extends CommonAzureConstruct {
     <h4 class="name" id="createApiManagementCustomDomain"><span class="type-signature"></span>createApiManagementCustomDomain<span class="signature">(id, scope, props)</span><span class="type-signature"></span></h4>
 
     
-    <p class="summary usertext"><p>Method to create a new api management custom domain</p></p>
+    <p class="summary usertext"><p>Method to create a new API Management custom domain</p></p>
     
 
 
@@ -736,7 +388,7 @@ class CustomConstruct extends CommonAzureConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_api-management_main.ts.html">azure/services/api-management/main.ts</a>, <a href="azure_services_api-management_main.ts.html#line292">line 292</a>
+        <a href="azure_services_api-management_main.ts.html">azure/services/api-management/main.ts</a>, <a href="azure_services_api-management_main.ts.html#line271">line 271</a>
     </li></ul></dd>
     
 
@@ -766,13 +418,6 @@ class CustomConstruct extends CommonAzureConstruct {
 
     
 
-    
-    <dt class="tag-see">See:</dt>
-    <dd class="tag-see">
-        <ul>
-            <li><p><a href="https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/createApiManagementCustomDomain.typescript.md">CDKTF Api management Custom Domain Module</a></p></li>
-        </ul>
-    </dd>
     
 
     
@@ -862,7 +507,7 @@ class CustomConstruct extends CommonAzureConstruct {
 
             
 
-            <td class="description last"><p>api management custom domain properties</p></td>
+            <td class="description last"><p>API Management custom domain properties</p></td>
         </tr>
 
     
@@ -892,10 +537,10 @@ class CustomConstruct extends CommonAzureConstruct {
 
     
 
-    <h4 class="name" id="resolveApiManagement"><span class="type-signature"></span>resolveApiManagement<span class="signature">(id, scope, props)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="createApiManagementService"><span class="type-signature"></span>createApiManagementService<span class="signature">(id, scope, props, applicationInsightsKey, externalRedisCache)</span><span class="type-signature"></span></h4>
 
     
-    <p class="summary usertext"><p>Method to resolve an api management</p></p>
+    <p class="summary usertext"><p>Method to create a new API Management service</p></p>
     
 
 
@@ -910,7 +555,7 @@ class CustomConstruct extends CommonAzureConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_api-management_main.ts.html">azure/services/api-management/main.ts</a>, <a href="azure_services_api-management_main.ts.html#line88">line 88</a>
+        <a href="azure_services_api-management_main.ts.html">azure/services/api-management/main.ts</a>, <a href="azure_services_api-management_main.ts.html#line31">line 31</a>
     </li></ul></dd>
     
 
@@ -944,7 +589,7 @@ class CustomConstruct extends CommonAzureConstruct {
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><p><a href="https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/apiManagement.typescript.md">CDKTF Api management Module</a></p></li>
+            <li><p><a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/apimanagement/apimanagementservice/">Pulumi Azure Native API Management</a></p></li>
         </ul>
     </dd>
     
@@ -1036,7 +681,391 @@ class CustomConstruct extends CommonAzureConstruct {
 
             
 
-            <td class="description last"><p>api management properties</p></td>
+            <td class="description last"><p>API Management properties</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>applicationInsightsKey</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Optional Application Insights instrumentation key for logging</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>externalRedisCache</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Optional external Redis cache for API Management caching</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="createBackend"><span class="type-signature"></span>createBackend<span class="signature">(id, scope, props)</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to create a new API Management backend</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_services_api-management_main.ts.html">azure/services/api-management/main.ts</a>, <a href="azure_services_api-management_main.ts.html#line100">line 100</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><p><a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/apimanagement/backend/">Pulumi Azure Native API Management Backend</a></p></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="h5-parameters">Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>scoped id of the resource</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>scope</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>scope in which this resource is defined</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>props</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>API Management backend properties</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="resolveApiManagementService"><span class="type-signature"></span>resolveApiManagementService<span class="signature">(id, scope, props)</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to resolve an existing API Management service</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_services_api-management_main.ts.html">azure/services/api-management/main.ts</a>, <a href="azure_services_api-management_main.ts.html#line83">line 83</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><p><a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/apimanagement/apimanagementservice/">Pulumi Azure Native API Management Lookup</a></p></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="h5-parameters">Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>scoped id of the resource</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>scope</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>scope in which this resource is defined</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>props</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>API Management lookup properties</p></td>
         </tr>
 
     

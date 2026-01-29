@@ -149,7 +149,7 @@ export class CommonCloudflareStack extends ComponentResource {
    * - Primary use is to have layered config for each environment which is injected into the context
    */
   protected determineStageContexts(props: CommonCloudflareStackProps) {
-    const stageContextFilePath = path.join(appRoot.path, props.stageContextPath ?? 'cdkEnv', `${props.stage}.json`)
+    const stageContextFilePath = path.join(appRoot.path, props.stageContextPath ?? 'env', `${props.stage}.json`)
 
     if (isDevStage(props.stage)) {
       if (props.debug) console.debug(`Development stage. Using default stage context properties`)

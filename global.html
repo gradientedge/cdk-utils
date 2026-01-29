@@ -480,7 +480,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_common_constants.ts.html">azure/common/constants.ts</a>, <a href="azure_common_constants.ts.html#line10">line 10</a>
+        <a href="azure_common_constants.ts.html">azure/common/constants.ts</a>, <a href="azure_common_constants.ts.html#line11">line 11</a>
     </li></ul></dd>
     
 
@@ -943,6 +943,172 @@
 
     
 
+    <h4 class="name" id="applyTags"><span class="type-signature"></span>applyTags<span class="signature">(props, defaultTags)</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Helper function to apply tags to a specific resource's properties</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_common_tagging.ts.html">azure/common/tagging.ts</a>, <a href="azure_common_tagging.ts.html#line71">line 71</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="h5-examples">Example</h5>
+    
+    <pre class="prettyprint"><code>```typescript
+const resourceGroupProps = applyTags(props, { environment: 'dev' })
+```</code></pre>
+
+
+
+
+    <h5 class="h5-parameters">Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>props</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The resource properties</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>defaultTags</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The default tags to merge with existing tags</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5 class="h5-returns">Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>The properties with merged tags</p>
+</div>
+
+
+
+    
+
+
+
+        
+            
+
+    
+
     <h4 class="name" id="createCfnOutput"><span class="type-signature"></span>createCfnOutput<span class="signature">(id, scope, value, description, overrideId)</span><span class="type-signature"></span></h4>
 
     
@@ -1241,6 +1407,147 @@
 
     
 
+    <h4 class="name" id="isTaggableResource"><span class="type-signature"></span>isTaggableResource<span class="signature">(resourceType)</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Check if a resource type is taggable</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_common_tagging.ts.html">azure/common/tagging.ts</a>, <a href="azure_common_tagging.ts.html#line9">line 9</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="h5-parameters">Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>resourceType</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The Pulumi resource type (e.g., 'azure-native:resources:ResourceGroup')</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<h5 class="h5-returns">Returns:</h5>
+
+        
+<div class="param-desc">
+    <p>True if the resource supports tags, false otherwise</p>
+</div>
+
+
+
+    
+
+
+
+        
+            
+
+    
+
     <h4 class="name" id="redirectError"><span class="type-signature"></span>redirectError<span class="signature">(error)</span><span class="type-signature"></span></h4>
 
     
@@ -1470,6 +1777,162 @@
             
 
             <td class="description last"></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="registerTagTransformation"><span class="type-signature"></span>registerTagTransformation<span class="signature">(defaultTags, tagsToIgnore)</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Register a stack transformation to automatically apply tags to Azure resources</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_common_tagging.ts.html">azure/common/tagging.ts</a>, <a href="azure_common_tagging.ts.html#line28">line 28</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="h5-examples">Example</h5>
+    
+    <pre class="prettyprint"><code>```typescript
+registerTagTransformation({ environment: 'production', team: 'platform' })
+```</code></pre>
+
+
+
+
+    <h5 class="h5-parameters">Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>defaultTags</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>The default tags to apply to all resources</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>tagsToIgnore</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Optional list of tag keys to ignore in lifecycle management</p></td>
         </tr>
 
     

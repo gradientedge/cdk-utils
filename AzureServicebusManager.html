@@ -56,7 +56,7 @@
         
         </h2>
         
-            <div class="class-description usertext"><p>Provides operations on Azure Servicebus</p>
+            <div class="class-description usertext"><p>Provides operations on Azure Servicebus using Pulumi</p>
 <ul>
 <li>A new instance of this class is injected into <a href="CommonAzureConstruct.html">CommonAzureConstruct</a> constructor.</li>
 <li>If a custom construct extends <a href="CommonAzureConstruct.html">CommonAzureConstruct</a>, an instance is available within the context.</li>
@@ -91,7 +91,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_servicebus_main.ts.html">azure/services/servicebus/main.ts</a>, <a href="azure_services_servicebus_main.ts.html#line26">line 26</a>
+        <a href="azure_services_servicebus_main.ts.html">azure/services/servicebus/main.ts</a>, <a href="azure_services_servicebus_main.ts.html#line20">line 20</a>
     </li></ul></dd>
     
 
@@ -138,12 +138,12 @@
 
     <h5 class="h5-examples">Example</h5>
     
-    <pre class="prettyprint"><code>```
+    <pre class="prettyprint"><code>```typescript
 import { CommonAzureConstruct, CommonAzureStackProps } from '@gradientedge/cdk-utils'
 
 class CustomConstruct extends CommonAzureConstruct {
-  constructor(parent: Construct, id: string, props: CommonAzureStackProps) {
-    super(parent, id, props)
+  constructor(name: string, props: CommonAzureStackProps) {
+    super(name, props)
     this.props = props
     this.ServicebusManager.createServicebusTopic('MyServicebusTopic', this, props)
   }
@@ -214,7 +214,7 @@ class CustomConstruct extends CommonAzureConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_servicebus_main.ts.html">azure/services/servicebus/main.ts</a>, <a href="azure_services_servicebus_main.ts.html#line34">line 34</a>
+        <a href="azure_services_servicebus_main.ts.html">azure/services/servicebus/main.ts</a>, <a href="azure_services_servicebus_main.ts.html#line28">line 28</a>
     </li></ul></dd>
     
 
@@ -248,7 +248,7 @@ class CustomConstruct extends CommonAzureConstruct {
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><p><a href="https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/servicebusNamespace.typescript.md">CDKTF Servicebus Namespace Module</a></p></li>
+            <li><p><a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/servicebus/namespace/">Pulumi Azure Native Service Bus Namespace</a></p></li>
         </ul>
     </dd>
     
@@ -388,7 +388,7 @@ class CustomConstruct extends CommonAzureConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_servicebus_main.ts.html">azure/services/servicebus/main.ts</a>, <a href="azure_services_servicebus_main.ts.html#line89">line 89</a>
+        <a href="azure_services_servicebus_main.ts.html">azure/services/servicebus/main.ts</a>, <a href="azure_services_servicebus_main.ts.html#line77">line 77</a>
     </li></ul></dd>
     
 
@@ -422,7 +422,7 @@ class CustomConstruct extends CommonAzureConstruct {
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><p><a href="https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/servicebusQueue.typescript.md">CDKTF Servicebus Queue Module</a></p></li>
+            <li><p><a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/servicebus/queue/">Pulumi Azure Native Service Bus Queue</a></p></li>
         </ul>
     </dd>
     
@@ -562,7 +562,7 @@ class CustomConstruct extends CommonAzureConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_servicebus_main.ts.html">azure/services/servicebus/main.ts</a>, <a href="azure_services_servicebus_main.ts.html#line113">line 113</a>
+        <a href="azure_services_servicebus_main.ts.html">azure/services/servicebus/main.ts</a>, <a href="azure_services_servicebus_main.ts.html#line98">line 98</a>
     </li></ul></dd>
     
 
@@ -596,7 +596,7 @@ class CustomConstruct extends CommonAzureConstruct {
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><p><a href="https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/servicebusSubscription.typescript.md">CDKTF Servicebus Subscription Module</a></p></li>
+            <li><p><a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/servicebus/subscription/">Pulumi Azure Native Service Bus Subscription</a></p></li>
         </ul>
     </dd>
     
@@ -736,7 +736,7 @@ class CustomConstruct extends CommonAzureConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_servicebus_main.ts.html">azure/services/servicebus/main.ts</a>, <a href="azure_services_servicebus_main.ts.html#line69">line 69</a>
+        <a href="azure_services_servicebus_main.ts.html">azure/services/servicebus/main.ts</a>, <a href="azure_services_servicebus_main.ts.html#line60">line 60</a>
     </li></ul></dd>
     
 
@@ -770,7 +770,7 @@ class CustomConstruct extends CommonAzureConstruct {
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><p><a href="https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/servicebusTopic.typescript.md">CDKTF Servicebus Topic Module</a></p></li>
+            <li><p><a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/servicebus/topic/">Pulumi Azure Native Service Bus Topic</a></p></li>
         </ul>
     </dd>
     
@@ -895,7 +895,7 @@ class CustomConstruct extends CommonAzureConstruct {
     <h4 class="name" id="resolveServicebusQueue"><span class="type-signature"></span>resolveServicebusQueue<span class="signature">(id, scope, props)</span><span class="type-signature"></span></h4>
 
     
-    <p class="summary usertext"><p>Method to resolve a new servicebus queue</p></p>
+    <p class="summary usertext"><p>Method to resolve an existing servicebus queue</p></p>
     
 
 
@@ -910,7 +910,7 @@ class CustomConstruct extends CommonAzureConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_servicebus_main.ts.html">azure/services/servicebus/main.ts</a>, <a href="azure_services_servicebus_main.ts.html#line133">line 133</a>
+        <a href="azure_services_servicebus_main.ts.html">azure/services/servicebus/main.ts</a>, <a href="azure_services_servicebus_main.ts.html#line114">line 114</a>
     </li></ul></dd>
     
 
@@ -944,7 +944,7 @@ class CustomConstruct extends CommonAzureConstruct {
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><p><a href="https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/servicebusQueue.typescript.md">CDKTF Servicebus Queue Module</a></p></li>
+            <li><p><a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/servicebus/queue/">Pulumi Azure Native Service Bus Queue Lookup</a></p></li>
         </ul>
     </dd>
     
@@ -1036,7 +1036,7 @@ class CustomConstruct extends CommonAzureConstruct {
 
             
 
-            <td class="description last"><p>servicebus queue properties</p></td>
+            <td class="description last"><p>servicebus queue properties for lookup</p></td>
         </tr>
 
     

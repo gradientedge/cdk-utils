@@ -48,27 +48,28 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { CosmosdbAccount } from '@cdktf/provider-azurerm/lib/cosmosdb-account/index.js'
-import { CosmosdbSqlContainer } from '@cdktf/provider-azurerm/lib/cosmosdb-sql-container/index.js'
-import { CosmosdbSqlDatabase } from '@cdktf/provider-azurerm/lib/cosmosdb-sql-database/index.js'
-import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group/index.js'
+            <pre class="prettyprint source linenums"><code>import {
+  DatabaseAccount,
+  ResourceIdentityType,
+  SqlResourceSqlContainer,
+  SqlResourceSqlDatabase,
+} from '@pulumi/azure-native/cosmosdb/index.js'
 import { CommonAzureConstruct } from '../../common/index.js'
-import { createAzureTfOutput } from '../../utils/index.js'
 import { CosmosdbAccountProps, CosmosdbSqlContainerProps, CosmosdbSqlDatabaseProps } from './types.js'
 
 /**
- * @classdesc Provides operations on Azure CosmosDB
+ * @classdesc Provides operations on Azure CosmosDB using Pulumi
  * - A new instance of this class is injected into {@link CommonAzureConstruct} constructor.
  * - If a custom construct extends {@link CommonAzureConstruct}, an instance is available within the context.
  * @example
- * ```
+ * ```typescript
  * import { CommonAzureConstruct, CommonAzureStackProps } from '@gradientedge/cdk-utils'
  *
  * class CustomConstruct extends CommonAzureConstruct {
- *   constructor(parent: Construct, id: string, props: CommonAzureStackProps) {
- *     super(parent, id, props)
+ *   constructor(name: string, props: CommonAzureStackProps) {
+ *     super(name, props)
  *     this.props = props
- *     this.CosmosDbManager.createCosmosAccount('MyCosmosDb', this, props)
+ *     this.CosmosDbManager.createCosmosDbAccount('MyCosmosDb', this, props)
  *   }
  * }
  * ```
@@ -79,68 +80,68 @@ export class AzureCosmosDbManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props cosmosdb account properties
-   * @see [CDKTF CosmosDb Account Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/cosmosdbAccount.typescript.md}
+   * @see [Pulumi Azure Native CosmosDB Account]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/documentdb/databaseaccount/}
    */
   public createCosmosDbAccount(id: string, scope: CommonAzureConstruct, props: CosmosdbAccountProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-ca-rg`, {
-      name: scope.props.resourceGroupName
-        ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-        : `${props.resourceGroupName}`,
-    })
+    // Get resource group name
+    const resourceGroupName = scope.props.resourceGroupName
+      ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
+      : props.resourceGroupName
 
-    if (!resourceGroup) throw `Resource group undefined for ${id}`
+    if (!resourceGroupName) throw `Resource group name undefined for ${id}`
 
-    const cosmosdbAccount = new CosmosdbAccount(scope, `${id}-ca`, {
-      ...props,
-      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.cosmosDbAccount),
-      location: resourceGroup.location,
-      resourceGroupName: resourceGroup.name,
-      tags: props.tags ?? {
-        environment: scope.props.stage,
+    return new DatabaseAccount(
+      `${id}-ca`,
+      {
+        ...props,
+        accountName: scope.resourceNameFormatter.format(
+          props.accountName?.toString(),
+          scope.props.resourceNameOptions?.cosmosDbAccount
+        ),
+        location: props.location ?? scope.props.location,
+        resourceGroupName: resourceGroupName,
+        tags: props.tags ?? {
+          environment: scope.props.stage,
+        },
+        identity: props.identity ?? {
+          type: ResourceIdentityType.SystemAssigned,
+        },
       },
-      identity: props.identity ?? {
-        type: 'SystemAssigned',
-      },
-    })
-
-    createAzureTfOutput(`${id}-cosmosdbAccountName`, scope, cosmosdbAccount.name)
-    createAzureTfOutput(`${id}-cosmosdbAccountFriendlyUniqueId`, scope, cosmosdbAccount.friendlyUniqueId)
-    createAzureTfOutput(`${id}-cosmosdbAccountId`, scope, cosmosdbAccount.id)
-
-    return cosmosdbAccount
+      { parent: scope }
+    )
   }
 
   /**
    * @summary Method to create a new cosmosdb database
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props cosmosdb container properties
-   * @see [CDKTF CosmosDb Container Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/cosmosdbSqlContainer.typescript.md}
+   * @param props cosmosdb database properties
+   * @see [Pulumi Azure Native CosmosDB SQL Database]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/documentdb/sqlresourcesqldatabase/}
    */
   public createCosmosDbDatabase(id: string, scope: CommonAzureConstruct, props: CosmosdbSqlDatabaseProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-cd-rg`, {
-      name: scope.props.resourceGroupName
-        ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-        : `${props.resourceGroupName}`,
-    })
+    // Get resource group name
+    const resourceGroupName = scope.props.resourceGroupName
+      ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
+      : props.resourceGroupName
 
-    if (!resourceGroup) throw `Resource group undefined for ${id}`
+    if (!resourceGroupName) throw `Resource group name undefined for ${id}`
 
-    const cosmosdbDatatbase = new CosmosdbSqlDatabase(scope, `${id}-cd`, {
-      ...props,
-      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.cosmosDbSqlDatabase),
-      resourceGroupName: resourceGroup.name,
-    })
-
-    createAzureTfOutput(`${id}-cosmosdbDatatbasetName`, scope, cosmosdbDatatbase.name)
-    createAzureTfOutput(`${id}-cosmosdbDatatbaseFriendlyUniqueId`, scope, cosmosdbDatatbase.friendlyUniqueId)
-    createAzureTfOutput(`${id}-cosmosdbDatatbaseId`, scope, cosmosdbDatatbase.id)
-
-    return cosmosdbDatatbase
+    return new SqlResourceSqlDatabase(
+      `${id}-cd`,
+      {
+        ...props,
+        databaseName: scope.resourceNameFormatter.format(
+          props.databaseName?.toString(),
+          scope.props.resourceNameOptions?.cosmosDbSqlDatabase
+        ),
+        resourceGroupName: resourceGroupName,
+      },
+      { parent: scope }
+    )
   }
 
   /**
@@ -148,30 +149,30 @@ export class AzureCosmosDbManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props cosmosdb container properties
-   * @see [CDKTF CosmosDb Container Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/cosmosdbSqlContainer.typescript.md}
+   * @see [Pulumi Azure Native CosmosDB SQL Container]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/documentdb/sqlresourcesqlcontainer/}
    */
   public createCosmosDbContainer(id: string, scope: CommonAzureConstruct, props: CosmosdbSqlContainerProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-cc-rg`, {
-      name: scope.props.resourceGroupName
-        ? `${scope.props.resourceGroupName}-${scope.props.stage}`
-        : `${props.resourceGroupName}`,
-    })
+    // Get resource group name
+    const resourceGroupName = scope.props.resourceGroupName
+      ? `${scope.props.resourceGroupName}-${scope.props.stage}`
+      : props.resourceGroupName
 
-    if (!resourceGroup) throw `Resource group undefined for ${id}`
+    if (!resourceGroupName) throw `Resource group name undefined for ${id}`
 
-    const cosmosdbContainer = new CosmosdbSqlContainer(scope, `${id}-cc`, {
-      ...props,
-      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.cosmosDbSqlContainer),
-      resourceGroupName: resourceGroup.name,
-    })
-
-    createAzureTfOutput(`${id}-cosmosdbContainertName`, scope, cosmosdbContainer.name)
-    createAzureTfOutput(`${id}-cosmosdbContainerFriendlyUniqueId`, scope, cosmosdbContainer.friendlyUniqueId)
-    createAzureTfOutput(`${id}-cosmosdbContainerId`, scope, cosmosdbContainer.id)
-
-    return cosmosdbContainer
+    return new SqlResourceSqlContainer(
+      `${id}-cc`,
+      {
+        ...props,
+        containerName: scope.resourceNameFormatter.format(
+          props.containerName?.toString(),
+          scope.props.resourceNameOptions?.cosmosDbSqlContainer
+        ),
+        resourceGroupName: resourceGroupName,
+      },
+      { parent: scope }
+    )
   }
 }
 </code></pre>

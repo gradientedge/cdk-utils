@@ -48,46 +48,95 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { IAspect, TerraformResource } from 'cdktf'
-import { IConstruct } from 'constructs'
+            <pre class="prettyprint source linenums"><code>import * as pulumi from '@pulumi/pulumi'
 import { RESOURCES_TO_EXCLUDE_TAGS } from './constants.js'
 
-type TaggableConstruct = IConstruct &amp; {
-  tags?: { [key: string]: string } | string[]
-  tagsInput?: { [key: string]: string } | string[]
+/**
+ * @summary Check if a resource type is taggable
+ * @param resourceType The Pulumi resource type (e.g., 'azure-native:resources:ResourceGroup')
+ * @returns True if the resource supports tags, false otherwise
+ */
+export function isTaggableResource(resourceType: string): boolean {
+  // Extract the resource name from the type (e.g., 'ResourceGroup' from 'azure-native:resources:ResourceGroup')
+  const resourceName = resourceType.split(':').pop() || ''
+
+  // Check if this resource is in the exclusion list
+  if (RESOURCES_TO_EXCLUDE_TAGS.has(resourceName)) {
+    return false
+  }
+
+  // Most Azure resources support tags, but we can add more specific checks here if needed
+  return true
 }
 
-function isTaggableConstruct(node: IConstruct): node is TaggableConstruct {
-  return 'tags' in node &amp;&amp; 'tagsInput' in node
+/**
+ * @summary Register a stack transformation to automatically apply tags to Azure resources
+ * @param defaultTags The default tags to apply to all resources
+ * @param tagsToIgnore Optional list of tag keys to ignore in lifecycle management
+ * @example
+ * ```typescript
+ * registerTagTransformation({ environment: 'production', team: 'platform' })
+ * ```
+ */
+export function registerTagTransformation(defaultTags: Record&lt;string, string>, tagsToIgnore: string[] = []): void {
+  pulumi.runtime.registerStackTransformation((args: pulumi.ResourceTransformationArgs) => {
+    // Only process taggable resources
+    if (!isTaggableResource(args.type)) {
+      return undefined
+    }
+
+    // Check if the resource has a tags property
+    if (!args.props || typeof args.props !== 'object') {
+      return undefined
+    }
+
+    // Merge default tags with resource-specific tags (resource tags take precedence)
+    const currentTags = (args.props as any).tags || {}
+    const mergedTags = { ...defaultTags, ...currentTags }
+
+    // Apply the merged tags
+    const newProps = {
+      ...args.props,
+      tags: mergedTags,
+    }
+
+    // Handle tag ignores via Pulumi's ignoreChanges option
+    let newOpts = args.opts
+    if (tagsToIgnore.length > 0) {
+      const ignoreChanges = tagsToIgnore.map(tag => `tags.${tag}`)
+      newOpts = {
+        ...args.opts,
+        ignoreChanges: [...(args.opts?.ignoreChanges || []), ...ignoreChanges],
+      }
+    }
+
+    return {
+      props: newProps,
+      opts: newOpts,
+    }
+  })
 }
 
-export class TagsAddingAspect implements IAspect {
-  constructor(
-    private tagsToAdd: Record&lt;string, string>,
-    private tagsToIgnore: string[] = []
-  ) {}
-
-  // This method is called on every Construct within the specified scope (resources, data sources, etc.).
-  visit(node: IConstruct) {
-    // We need to take the input value to not create a circular reference
-    if (!isTaggableConstruct(node)) {
-      return
-    }
-
-    // Determine if the resource excludes `tags`
-    if (RESOURCES_TO_EXCLUDE_TAGS.has(node.constructor.name)) {
-      node.tags = undefined // Completely remove tags for this resource
-      return
-    }
-
-    const currentTags = node.tagsInput || {}
-    node.tags = { ...this.tagsToAdd, ...currentTags }
-
-    // Add ignore_changes overrides for selected tags
-    if (node instanceof TerraformResource &amp;&amp; this.tagsToIgnore.length > 0) {
-      const ignoreList = this.tagsToIgnore.map(tag => `tags["${tag}"]`)
-      node.addOverride('lifecycle.ignore_changes', ignoreList)
-    }
+/**
+ * @summary Helper function to apply tags to a specific resource's properties
+ * @param props The resource properties
+ * @param defaultTags The default tags to merge with existing tags
+ * @returns The properties with merged tags
+ * @example
+ * ```typescript
+ * const resourceGroupProps = applyTags(props, { environment: 'dev' })
+ * ```
+ */
+export function applyTags&lt;T extends { tags?: Record&lt;string, string> }>(
+  props: T,
+  defaultTags: Record&lt;string, string>
+): T {
+  return {
+    ...props,
+    tags: {
+      ...defaultTags,
+      ...(props.tags || {}),
+    },
   }
 }
 </code></pre>

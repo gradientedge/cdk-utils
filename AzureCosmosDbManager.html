@@ -56,7 +56,7 @@
         
         </h2>
         
-            <div class="class-description usertext"><p>Provides operations on Azure CosmosDB</p>
+            <div class="class-description usertext"><p>Provides operations on Azure CosmosDB using Pulumi</p>
 <ul>
 <li>A new instance of this class is injected into <a href="CommonAzureConstruct.html">CommonAzureConstruct</a> constructor.</li>
 <li>If a custom construct extends <a href="CommonAzureConstruct.html">CommonAzureConstruct</a>, an instance is available within the context.</li>
@@ -91,7 +91,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_cosmosdb_main.ts.html">azure/services/cosmosdb/main.ts</a>, <a href="azure_services_cosmosdb_main.ts.html#line24">line 24</a>
+        <a href="azure_services_cosmosdb_main.ts.html">azure/services/cosmosdb/main.ts</a>, <a href="azure_services_cosmosdb_main.ts.html#line20">line 20</a>
     </li></ul></dd>
     
 
@@ -138,14 +138,14 @@
 
     <h5 class="h5-examples">Example</h5>
     
-    <pre class="prettyprint"><code>```
+    <pre class="prettyprint"><code>```typescript
 import { CommonAzureConstruct, CommonAzureStackProps } from '@gradientedge/cdk-utils'
 
 class CustomConstruct extends CommonAzureConstruct {
-  constructor(parent: Construct, id: string, props: CommonAzureStackProps) {
-    super(parent, id, props)
+  constructor(name: string, props: CommonAzureStackProps) {
+    super(name, props)
     this.props = props
-    this.CosmosDbManager.createCosmosAccount('MyCosmosDb', this, props)
+    this.CosmosDbManager.createCosmosDbAccount('MyCosmosDb', this, props)
   }
 }
 ```</code></pre>
@@ -214,7 +214,7 @@ class CustomConstruct extends CommonAzureConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_cosmosdb_main.ts.html">azure/services/cosmosdb/main.ts</a>, <a href="azure_services_cosmosdb_main.ts.html#line32">line 32</a>
+        <a href="azure_services_cosmosdb_main.ts.html">azure/services/cosmosdb/main.ts</a>, <a href="azure_services_cosmosdb_main.ts.html#line28">line 28</a>
     </li></ul></dd>
     
 
@@ -248,7 +248,7 @@ class CustomConstruct extends CommonAzureConstruct {
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><p><a href="https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/cosmosdbAccount.typescript.md">CDKTF CosmosDb Account Module</a></p></li>
+            <li><p><a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/documentdb/databaseaccount/">Pulumi Azure Native CosmosDB Account</a></p></li>
         </ul>
     </dd>
     
@@ -388,7 +388,7 @@ class CustomConstruct extends CommonAzureConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_cosmosdb_main.ts.html">azure/services/cosmosdb/main.ts</a>, <a href="azure_services_cosmosdb_main.ts.html#line93">line 93</a>
+        <a href="azure_services_cosmosdb_main.ts.html">azure/services/cosmosdb/main.ts</a>, <a href="azure_services_cosmosdb_main.ts.html#line79">line 79</a>
     </li></ul></dd>
     
 
@@ -422,7 +422,7 @@ class CustomConstruct extends CommonAzureConstruct {
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><p><a href="https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/cosmosdbSqlContainer.typescript.md">CDKTF CosmosDb Container Module</a></p></li>
+            <li><p><a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/documentdb/sqlresourcesqlcontainer/">Pulumi Azure Native CosmosDB SQL Container</a></p></li>
         </ul>
     </dd>
     
@@ -562,7 +562,7 @@ class CustomConstruct extends CommonAzureConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_cosmosdb_main.ts.html">azure/services/cosmosdb/main.ts</a>, <a href="azure_services_cosmosdb_main.ts.html#line66">line 66</a>
+        <a href="azure_services_cosmosdb_main.ts.html">azure/services/cosmosdb/main.ts</a>, <a href="azure_services_cosmosdb_main.ts.html#line57">line 57</a>
     </li></ul></dd>
     
 
@@ -596,7 +596,7 @@ class CustomConstruct extends CommonAzureConstruct {
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><p><a href="https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/cosmosdbSqlContainer.typescript.md">CDKTF CosmosDb Container Module</a></p></li>
+            <li><p><a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/documentdb/sqlresourcesqldatabase/">Pulumi Azure Native CosmosDB SQL Database</a></p></li>
         </ul>
     </dd>
     
@@ -688,7 +688,7 @@ class CustomConstruct extends CommonAzureConstruct {
 
             
 
-            <td class="description last"><p>cosmosdb container properties</p></td>
+            <td class="description last"><p>cosmosdb database properties</p></td>
         </tr>
 
     
