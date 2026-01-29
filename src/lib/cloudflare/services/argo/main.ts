@@ -1,4 +1,4 @@
-import * as cloudflare from '@pulumi/cloudflare'
+import { ArgoSmartRouting, ArgoTieredCaching } from '@pulumi/cloudflare'
 import { CommonCloudflareConstruct } from '../../common/index.js'
 import { ArgoSmartRoutingProps, ArgoTieredCachingProps } from './types.js'
 
@@ -33,10 +33,14 @@ export class CloudflareArgoManager {
     const zoneId = props.zoneId
       ? props.zoneId
       : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })?.id
-    return new cloudflare.ArgoSmartRouting(`${id}`, {
-      ...props,
-      zoneId,
-    })
+    return new ArgoSmartRouting(
+      `${id}`,
+      {
+        ...props,
+        zoneId,
+      },
+      { parent: scope }
+    )
   }
 
   /**
@@ -52,9 +56,13 @@ export class CloudflareArgoManager {
     const zoneId = props.zoneId
       ? props.zoneId
       : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })?.id
-    return new cloudflare.ArgoTieredCaching(`${id}`, {
-      ...props,
-      zoneId,
-    })
+    return new ArgoTieredCaching(
+      `${id}`,
+      {
+        ...props,
+        zoneId,
+      },
+      { parent: scope }
+    )
   }
 }

@@ -117,7 +117,7 @@ describe('TestCloudflarePagesManager', () => {
       .apply(([id, urn, accountId, name, productionBranch]) => {
         expect(id).toEqual('test-pages-project-dev-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::cloudflare:index/pagesProject:PagesProject::test-pages-project-dev'
+          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/pagesProject:PagesProject::test-pages-project-dev'
         )
         expect(accountId).toEqual('123456789012')
         expect(name).toEqual('test-simple-project-dev')
@@ -140,7 +140,7 @@ describe('TestCloudflarePagesManager', () => {
       .apply(([id, urn, accountId, name, productionBranch, buildConfig, deploymentConfigs]) => {
         expect(id).toEqual('test-pages-project-with-build-dev-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::cloudflare:index/pagesProject:PagesProject::test-pages-project-with-build-dev'
+          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/pagesProject:PagesProject::test-pages-project-with-build-dev'
         )
         expect(accountId).toEqual('123456789012')
         expect(name).toEqual('test-build-config-project-dev')
@@ -198,7 +198,7 @@ describe('TestCloudflarePagesManager', () => {
       .apply(([id, urn, accountId, name, projectName]) => {
         expect(id).toEqual('test-pages-domain-dev-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::cloudflare:index/pagesDomain:PagesDomain::test-pages-domain-dev'
+          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/pagesDomain:PagesDomain::test-pages-domain-dev'
         )
         expect(accountId).toEqual('123456789012')
         expect(name).toEqual('gradientedge.io')
@@ -221,7 +221,9 @@ describe('TestCloudflarePagesManager', () => {
       ])
       .apply(([id, urn, actions, priority, target, zoneId]) => {
         expect(id).toEqual('test-page-rule-dev-id')
-        expect(urn).toEqual('urn:pulumi:stack::project::cloudflare:index/pageRule:PageRule::test-page-rule-dev')
+        expect(urn).toEqual(
+          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/pageRule:PageRule::test-page-rule-dev'
+        )
         expect(actions).toEqual({
           emailObfuscation: 'on',
           ssl: 'flexible',

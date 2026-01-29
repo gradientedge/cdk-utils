@@ -1,4 +1,4 @@
-import * as cloudflare from '@pulumi/cloudflare'
+import { DnsRecord } from '@pulumi/cloudflare'
 import { CommonCloudflareConstruct } from '../../common/index.js'
 import { DnsRecordProps } from './types.js'
 
@@ -33,9 +33,13 @@ export class CloudflareRecordManager {
     const zoneId = props.zoneId
       ? props.zoneId
       : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })?.id
-    return new cloudflare.DnsRecord(id, {
-      ...props,
-      zoneId,
-    })
+    return new DnsRecord(
+      id,
+      {
+        ...props,
+        zoneId,
+      },
+      { parent: scope }
+    )
   }
 }

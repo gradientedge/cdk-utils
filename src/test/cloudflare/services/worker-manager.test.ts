@@ -154,7 +154,9 @@ describe('TestCloudflareWorkerManager', () => {
       .all([stack.construct.zone.id, stack.construct.zone.urn, stack.construct.zone.name, stack.construct.zone.account])
       .apply(([id, urn, name, account]) => {
         expect(id).toEqual('test-zone-dev-id')
-        expect(urn).toEqual('urn:pulumi:stack::project::cloudflare:index/zone:Zone::test-zone-dev')
+        expect(urn).toEqual(
+          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/zone:Zone::test-zone-dev'
+        )
         expect(name).toEqual('gradientedge.io')
         expect(account.id).toEqual('test-account')
       })
@@ -176,7 +178,7 @@ describe('TestCloudflareWorkerManager', () => {
       .apply(([id, urn, accountId, hostname, service, zoneId]) => {
         expect(id).toEqual('test-worker-domain-dev-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::cloudflare:index/workersCustomDomain:WorkersCustomDomain::test-worker-domain-dev'
+          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/workersCustomDomain:WorkersCustomDomain::test-worker-domain-dev'
         )
         expect(accountId).toEqual('test-account')
         expect(hostname).toEqual('test.gradientedge.io')

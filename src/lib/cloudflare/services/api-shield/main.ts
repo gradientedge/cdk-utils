@@ -1,4 +1,10 @@
-import * as cloudflare from '@pulumi/cloudflare'
+import {
+  ApiShield,
+  ApiShieldOperation,
+  ApiShieldOperationSchemaValidationSettings,
+  ApiShieldSchema,
+  ApiShieldSchemaValidationSettings,
+} from '@pulumi/cloudflare'
 import { CommonCloudflareConstruct } from '../../common/index.js'
 import {
   ApiShieldOperationProps,
@@ -39,10 +45,14 @@ export class CloudflareApiShieldManager {
     const zoneId = props.zoneId
       ? props.zoneId
       : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })?.id
-    return new cloudflare.ApiShield(`${id}`, {
-      ...props,
-      zoneId,
-    })
+    return new ApiShield(
+      `${id}`,
+      {
+        ...props,
+        zoneId,
+      },
+      { parent: scope }
+    )
   }
 
   /**
@@ -58,11 +68,15 @@ export class CloudflareApiShieldManager {
     const zoneId = props.zoneId
       ? props.zoneId
       : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })?.id
-    return new cloudflare.ApiShieldSchema(`${id}`, {
-      ...props,
-      name: `${props.name}-${scope.props.stage}`,
-      zoneId,
-    })
+    return new ApiShieldSchema(
+      `${id}`,
+      {
+        ...props,
+        name: `${props.name}-${scope.props.stage}`,
+        zoneId,
+      },
+      { parent: scope }
+    )
   }
 
   /**
@@ -82,10 +96,14 @@ export class CloudflareApiShieldManager {
     const zoneId = props.zoneId
       ? props.zoneId
       : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })?.id
-    return new cloudflare.ApiShieldSchemaValidationSettings(`${id}`, {
-      ...props,
-      zoneId,
-    })
+    return new ApiShieldSchemaValidationSettings(
+      `${id}`,
+      {
+        ...props,
+        zoneId,
+      },
+      { parent: scope }
+    )
   }
 
   /**
@@ -101,10 +119,14 @@ export class CloudflareApiShieldManager {
     const zoneId = props.zoneId
       ? props.zoneId
       : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })?.id
-    return new cloudflare.ApiShieldOperation(`${id}`, {
-      ...props,
-      zoneId,
-    })
+    return new ApiShieldOperation(
+      `${id}`,
+      {
+        ...props,
+        zoneId,
+      },
+      { parent: scope }
+    )
   }
 
   /**
@@ -124,9 +146,13 @@ export class CloudflareApiShieldManager {
     const zoneId = props.zoneId
       ? props.zoneId
       : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })?.id
-    return new cloudflare.ApiShieldOperationSchemaValidationSettings(`${id}`, {
-      ...props,
-      zoneId,
-    })
+    return new ApiShieldOperationSchemaValidationSettings(
+      `${id}`,
+      {
+        ...props,
+        zoneId,
+      },
+      { parent: scope }
+    )
   }
 }

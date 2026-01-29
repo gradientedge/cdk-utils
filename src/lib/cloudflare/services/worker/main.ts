@@ -1,4 +1,11 @@
-import * as cloudflare from '@pulumi/cloudflare'
+import {
+  WorkersCronTrigger,
+  WorkersCustomDomain,
+  WorkersKv,
+  WorkersKvNamespace,
+  WorkersRoute,
+  WorkersScript,
+} from '@pulumi/cloudflare'
 import { CommonCloudflareConstruct } from '../../common/index.js'
 import {
   WorkerCronTriggerProps,
@@ -40,11 +47,15 @@ export class CloudflareWorkerManager {
     const zoneId = props.zoneId
       ? props.zoneId
       : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })?.id
-    return new cloudflare.WorkersCustomDomain(id, {
-      ...props,
-      accountId: props.accountId ?? scope.props.accountId,
-      zoneId,
-    })
+    return new WorkersCustomDomain(
+      id,
+      {
+        ...props,
+        accountId: props.accountId ?? scope.props.accountId,
+        zoneId,
+      },
+      { parent: scope }
+    )
   }
 
   /**
@@ -61,11 +72,15 @@ export class CloudflareWorkerManager {
       ? props.zoneId
       : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })?.id
 
-    return new cloudflare.WorkersRoute(id, {
-      ...props,
-      script: `${props.script}-${scope.props.stage}`,
-      zoneId,
-    })
+    return new WorkersRoute(
+      id,
+      {
+        ...props,
+        script: `${props.script}-${scope.props.stage}`,
+        zoneId,
+      },
+      { parent: scope }
+    )
   }
 
   /**
@@ -78,11 +93,15 @@ export class CloudflareWorkerManager {
   public createWorkerScript(id: string, scope: CommonCloudflareConstruct, props: WorkerScriptProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    return new cloudflare.WorkersScript(id, {
-      ...props,
-      accountId: props.accountId ?? scope.props.accountId,
-      scriptName: `${props.scriptName}-${scope.props.stage}`,
-    })
+    return new WorkersScript(
+      id,
+      {
+        ...props,
+        accountId: props.accountId ?? scope.props.accountId,
+        scriptName: `${props.scriptName}-${scope.props.stage}`,
+      },
+      { parent: scope }
+    )
   }
 
   /**
@@ -95,11 +114,15 @@ export class CloudflareWorkerManager {
   public createWorkersKvNamespace(id: string, scope: CommonCloudflareConstruct, props: WorkersKvNamespaceProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    return new cloudflare.WorkersKvNamespace(id, {
-      ...props,
-      accountId: props.accountId ?? scope.props.accountId,
-      title: scope.isProductionStage() ? props.title : `${props.title}-${scope.props.stage}`,
-    })
+    return new WorkersKvNamespace(
+      id,
+      {
+        ...props,
+        accountId: props.accountId ?? scope.props.accountId,
+        title: scope.isProductionStage() ? props.title : `${props.title}-${scope.props.stage}`,
+      },
+      { parent: scope }
+    )
   }
 
   /**
@@ -112,10 +135,14 @@ export class CloudflareWorkerManager {
   public createWorkersKv(id: string, scope: CommonCloudflareConstruct, props: WorkersKvProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    return new cloudflare.WorkersKv(id, {
-      ...props,
-      accountId: props.accountId ?? scope.props.accountId,
-    })
+    return new WorkersKv(
+      id,
+      {
+        ...props,
+        accountId: props.accountId ?? scope.props.accountId,
+      },
+      { parent: scope }
+    )
   }
 
   /**
@@ -128,9 +155,13 @@ export class CloudflareWorkerManager {
   public createWorkerCronTrigger(id: string, scope: CommonCloudflareConstruct, props: WorkerCronTriggerProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    return new cloudflare.WorkersCronTrigger(id, {
-      ...props,
-      accountId: props.accountId ?? scope.props.accountId,
-    })
+    return new WorkersCronTrigger(
+      id,
+      {
+        ...props,
+        accountId: props.accountId ?? scope.props.accountId,
+      },
+      { parent: scope }
+    )
   }
 }

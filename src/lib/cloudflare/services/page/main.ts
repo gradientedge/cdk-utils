@@ -1,4 +1,4 @@
-import * as cloudflare from '@pulumi/cloudflare'
+import { PageRule, PagesDomain, PagesProject } from '@pulumi/cloudflare'
 import { local } from '@pulumi/command'
 import { CommonCloudflareConstruct } from '../../common/index.js'
 import { PageRuleProps, PagesDomainProps, PagesProjectDeployProps, PagesProjectProps } from './types.js'
@@ -31,11 +31,15 @@ export class CloudflarePageManager {
   public createPagesProject(id: string, scope: CommonCloudflareConstruct, props: PagesProjectProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    return new cloudflare.PagesProject(`${id}`, {
-      ...props,
-      accountId: props.accountId ?? scope.props.accountId,
-      name: `${props.name}-${scope.props.stage}`,
-    })
+    return new PagesProject(
+      `${id}`,
+      {
+        ...props,
+        accountId: props.accountId ?? scope.props.accountId,
+        name: `${props.name}-${scope.props.stage}`,
+      },
+      { parent: scope }
+    )
   }
 
   /**
@@ -48,11 +52,15 @@ export class CloudflarePageManager {
   public createPagesDomain(id: string, scope: CommonCloudflareConstruct, props: PagesDomainProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    return new cloudflare.PagesDomain(`${id}`, {
-      ...props,
-      accountId: props.accountId ?? scope.props.accountId,
-      name: props.name ?? scope.props.domainName,
-    })
+    return new PagesDomain(
+      `${id}`,
+      {
+        ...props,
+        accountId: props.accountId ?? scope.props.accountId,
+        name: props.name ?? scope.props.domainName,
+      },
+      { parent: scope }
+    )
   }
 
   /**
@@ -68,10 +76,14 @@ export class CloudflarePageManager {
     const zoneId = props.zoneId
       ? props.zoneId
       : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })?.id
-    return new cloudflare.PageRule(`${id}`, {
-      ...props,
-      zoneId,
-    })
+    return new PageRule(
+      `${id}`,
+      {
+        ...props,
+        zoneId,
+      },
+      { parent: scope }
+    )
   }
 
   public deployPagesProject(id: string, scope: CommonCloudflareConstruct, props: PagesProjectDeployProps) {

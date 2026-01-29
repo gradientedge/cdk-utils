@@ -1,4 +1,4 @@
-import * as cloudflare from '@pulumi/cloudflare'
+import { FirewallRule } from '@pulumi/cloudflare'
 import { CommonCloudflareConstruct } from '../../common/index.js'
 import { FirewallRuleProps } from './types.js'
 
@@ -33,9 +33,13 @@ export class CloudflareFirewallManager {
     const zoneId = props.zoneId
       ? props.zoneId
       : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })?.id
-    return new cloudflare.FirewallRule(`${id}`, {
-      ...props,
-      zoneId,
-    })
+    return new FirewallRule(
+      `${id}`,
+      {
+        ...props,
+        zoneId,
+      },
+      { parent: scope }
+    )
   }
 }
