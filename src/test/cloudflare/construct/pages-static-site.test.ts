@@ -100,7 +100,9 @@ describe('TestCloudflarePagesStaticSite', () => {
       ])
       .apply(([id, urn, name, account]) => {
         expect(id).toEqual('test-common-stack-zone-id')
-        expect(urn).toEqual('urn:pulumi:stack::project::cloudflare:index/zone:Zone::test-common-stack-zone')
+        expect(urn).toEqual(
+          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/zone:Zone::test-common-stack-zone'
+        )
         expect(name).toEqual('gradientedge.io')
         expect(account.id).toEqual('test-account')
       })
@@ -121,7 +123,7 @@ describe('TestCloudflarePagesStaticSite', () => {
       .apply(([id, urn, accountId, name, productionBranch]) => {
         expect(id).toEqual('test-common-stack-site-project-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::cloudflare:index/pagesProject:PagesProject::test-common-stack-site-project'
+          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/pagesProject:PagesProject::test-common-stack-site-project'
         )
         expect(accountId).toEqual('123456789012')
         expect(name).toEqual('test-simple-project-dev')
@@ -144,7 +146,7 @@ describe('TestCloudflarePagesStaticSite', () => {
       .apply(([id, urn, accountId, name, projectName]) => {
         expect(id).toEqual('test-common-stack-site-domain-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::cloudflare:index/pagesDomain:PagesDomain::test-common-stack-site-domain'
+          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/pagesDomain:PagesDomain::test-common-stack-site-domain'
         )
         expect(accountId).toEqual('123456789012')
         expect(name).toEqual('test.app.gradientedge.io')
@@ -169,7 +171,7 @@ describe('TestCloudflarePagesStaticSite', () => {
       .apply(([id, urn, name, ttl, type, content, zoneId]) => {
         expect(id).toEqual('test-common-stack-site-record-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::cloudflare:index/dnsRecord:DnsRecord::test-common-stack-site-record'
+          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/dnsRecord:DnsRecord::test-common-stack-site-record'
         )
         expect(name).toEqual('test.app')
         expect(ttl).toEqual(300)

@@ -1,4 +1,4 @@
-import * as cloudflare from '@pulumi/cloudflare'
+import { Filter } from '@pulumi/cloudflare'
 import { CommonCloudflareConstruct } from '../../common/index.js'
 import { FilterProps } from './types.js'
 
@@ -33,9 +33,13 @@ export class CloudflareFilterManager {
     const zoneId = props.zoneId
       ? props.zoneId
       : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })?.id
-    return new cloudflare.Filter(`${id}`, {
-      ...props,
-      zoneId,
-    })
+    return new Filter(
+      `${id}`,
+      {
+        ...props,
+        zoneId,
+      },
+      { parent: scope }
+    )
   }
 }

@@ -1,4 +1,4 @@
-import * as cloudflare from '@pulumi/cloudflare'
+import { Ruleset } from '@pulumi/cloudflare'
 import { CommonCloudflareConstruct } from '../../common/index.js'
 import { RulesetProps } from './types.js'
 
@@ -25,7 +25,7 @@ export class CloudflareRuleSetManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props rule set properties
-   * @see [Pulumi Cloudflare Ruleset]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/ruleset/}
+   * @see [Pulumi Cloudflare Ruleset]{@link https://www.pulumi.com/registry/packages//api-docs/ruleset/}
    */
   public createRuleSet(id: string, scope: CommonCloudflareConstruct, props: RulesetProps) {
     if (!props) throw `Props undefined for ${id}`
@@ -33,11 +33,13 @@ export class CloudflareRuleSetManager {
     const zoneId = props.zoneId
       ? props.zoneId
       : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })?.id
-    const ruleSet = new cloudflare.Ruleset(`${id}`, {
-      ...props,
-      zoneId,
-    })
-
-    return ruleSet
+    return new Ruleset(
+      `${id}`,
+      {
+        ...props,
+        zoneId,
+      },
+      { parent: scope }
+    )
   }
 }

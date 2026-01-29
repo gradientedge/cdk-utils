@@ -101,7 +101,9 @@ describe('TestCloudflareArgoManager', () => {
       .all([stack.construct.zone.id, stack.construct.zone.urn, stack.construct.zone.name, stack.construct.zone.account])
       .apply(([id, urn, name, account]) => {
         expect(id).toEqual('test-zone-dev-id')
-        expect(urn).toEqual('urn:pulumi:stack::project::cloudflare:index/zone:Zone::test-zone-dev')
+        expect(urn).toEqual(
+          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/zone:Zone::test-zone-dev'
+        )
         expect(name).toEqual('gradientedge.io')
         expect(account.id).toEqual('test-account')
       })
@@ -120,7 +122,7 @@ describe('TestCloudflareArgoManager', () => {
       .apply(([id, urn, value]) => {
         expect(id).toEqual('test-argo-dev-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::cloudflare:index/argoSmartRouting:ArgoSmartRouting::test-argo-dev'
+          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/argoSmartRouting:ArgoSmartRouting::test-argo-dev'
         )
         expect(value).toEqual('on')
       })

@@ -101,7 +101,9 @@ describe('TestCloudflareRecordManager', () => {
       .all([stack.construct.zone.id, stack.construct.zone.urn, stack.construct.zone.name, stack.construct.zone.account])
       .apply(([id, urn, name, account]) => {
         expect(id).toEqual('test-zone-dev-id')
-        expect(urn).toEqual('urn:pulumi:stack::project::cloudflare:index/zone:Zone::test-zone-dev')
+        expect(urn).toEqual(
+          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/zone:Zone::test-zone-dev'
+        )
         expect(name).toEqual('gradientedge.io')
         expect(account.id).toEqual('test-account')
       })
@@ -123,7 +125,9 @@ describe('TestCloudflareRecordManager', () => {
       ])
       .apply(([id, urn, name, ttl, type, content, zoneId]) => {
         expect(id).toEqual('test-arecord-dev-id')
-        expect(urn).toEqual('urn:pulumi:stack::project::cloudflare:index/dnsRecord:DnsRecord::test-arecord-dev')
+        expect(urn).toEqual(
+          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/dnsRecord:DnsRecord::test-arecord-dev'
+        )
         expect(name).toEqual('testARecord')
         expect(ttl).toEqual(300)
         expect(type).toEqual('A')
@@ -146,7 +150,9 @@ describe('TestCloudflareRecordManager', () => {
       ])
       .apply(([id, urn, name, ttl, type, content, zoneId]) => {
         expect(id).toEqual('test-cnamerecord-dev-id')
-        expect(urn).toEqual('urn:pulumi:stack::project::cloudflare:index/dnsRecord:DnsRecord::test-cnamerecord-dev')
+        expect(urn).toEqual(
+          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/dnsRecord:DnsRecord::test-cnamerecord-dev'
+        )
         expect(name).toEqual('testCNameRecord')
         expect(ttl).toEqual(300)
         expect(type).toEqual('CNAME')

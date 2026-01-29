@@ -223,7 +223,9 @@ describe('TestCloudflareAccessManager', () => {
       .all([stack.construct.zone.id, stack.construct.zone.urn, stack.construct.zone.name, stack.construct.zone.account])
       .apply(([id, urn, name, account]) => {
         expect(id).toEqual('test-zone-dev-id')
-        expect(urn).toEqual('urn:pulumi:stack::project::cloudflare:index/zone:Zone::test-zone-dev')
+        expect(urn).toEqual(
+          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/zone:Zone::test-zone-dev'
+        )
         expect(name).toEqual('gradientedge.io')
         expect(account.id).toEqual('test-account')
       })
@@ -247,7 +249,7 @@ describe('TestCloudflareAccessManager', () => {
       .apply(([id, urn, name, domain, sessionDuration, type, zoneId, corsHeaders]) => {
         expect(id).toEqual('test-access-app-dev-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::cloudflare:index/zeroTrustAccessApplication:ZeroTrustAccessApplication::test-access-app-dev'
+          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/zeroTrustAccessApplication:ZeroTrustAccessApplication::test-access-app-dev'
         )
         expect(name).toEqual('test-app-dev')
         expect(domain).toEqual('myapp-gradientedge.io')
@@ -278,7 +280,7 @@ describe('TestCloudflareAccessManager', () => {
       .apply(([id, urn, accountId, appId, zoneId]) => {
         expect(id).toEqual('test-access-ca-cert-dev-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::cloudflare:index/zeroTrustAccessShortLivedCertificate:ZeroTrustAccessShortLivedCertificate::test-access-ca-cert-dev'
+          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/zeroTrustAccessShortLivedCertificate:ZeroTrustAccessShortLivedCertificate::test-access-ca-cert-dev'
         )
         expect(appId).toEqual('test-access-app-dev-id')
         expect(zoneId).toEqual('test-access-ca-cert-dev-data-zone')
@@ -300,7 +302,7 @@ describe('TestCloudflareAccessManager', () => {
       .apply(([id, urn, name, type, customHtml]) => {
         expect(id).toEqual('test-access-custom-page-dev-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::cloudflare:index/zeroTrustAccessCustomPage:ZeroTrustAccessCustomPage::test-access-custom-page-dev'
+          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/zeroTrustAccessCustomPage:ZeroTrustAccessCustomPage::test-access-custom-page-dev'
         )
         expect(name).toEqual('403-dev')
         expect(type).toEqual('forbidden')
@@ -325,7 +327,7 @@ describe('TestCloudflareAccessManager', () => {
       .apply(([id, urn, name, zoneId, includes]) => {
         expect(id).toEqual('test-access-grp-dev-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::cloudflare:index/zeroTrustAccessGroup:ZeroTrustAccessGroup::test-access-grp-dev'
+          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/zeroTrustAccessGroup:ZeroTrustAccessGroup::test-access-grp-dev'
         )
         expect(includes).toEqual([
           {
@@ -354,7 +356,7 @@ describe('TestCloudflareAccessManager', () => {
       .apply(([id, urn, name, type, zoneId]) => {
         expect(id).toEqual('test-access-idp-otp-dev-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::cloudflare:index/zeroTrustAccessIdentityProvider:ZeroTrustAccessIdentityProvider::test-access-idp-otp-dev'
+          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/zeroTrustAccessIdentityProvider:ZeroTrustAccessIdentityProvider::test-access-idp-otp-dev'
         )
         expect(name).toEqual('test-idp-otp-dev')
         expect(type).toEqual('onetimepin')
@@ -377,7 +379,7 @@ describe('TestCloudflareAccessManager', () => {
       .apply(([id, urn, name, type, zoneId]) => {
         expect(id).toEqual('test-access-idp-saml-dev-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::cloudflare:index/zeroTrustAccessIdentityProvider:ZeroTrustAccessIdentityProvider::test-access-idp-saml-dev'
+          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/zeroTrustAccessIdentityProvider:ZeroTrustAccessIdentityProvider::test-access-idp-saml-dev'
         )
         expect(name).toEqual('test-idp-saml-dev')
         expect(type).toEqual('saml')
@@ -401,7 +403,7 @@ describe('TestCloudflareAccessManager', () => {
       .apply(([id, urn, name, zoneId, associatedHostnames, certificate]) => {
         expect(id).toEqual('test-access-mtls-dev-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::cloudflare:index/zeroTrustAccessMtlsCertificate:ZeroTrustAccessMtlsCertificate::test-access-mtls-dev'
+          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/zeroTrustAccessMtlsCertificate:ZeroTrustAccessMtlsCertificate::test-access-mtls-dev'
         )
         expect(name).toEqual('test-mtls-cert-dev')
         expect(zoneId).toEqual('test-access-mtls-dev-data-zone')
@@ -431,7 +433,7 @@ describe('TestCloudflareAccessManager', () => {
         ([id, urn, name, zoneId, authDomain, autoRedirectToIdentity, isUiReadOnly, userSeatExpirationInactiveTime]) => {
           expect(id).toEqual('test-access-org-dev-id')
           expect(urn).toEqual(
-            'urn:pulumi:stack::project::cloudflare:index/zeroTrustOrganization:ZeroTrustOrganization::test-access-org-dev'
+            'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/zeroTrustOrganization:ZeroTrustOrganization::test-access-org-dev'
           )
           expect(name).toEqual('test-org-dev')
           expect(zoneId).toEqual('test-access-org-dev-data-zone')
@@ -459,7 +461,7 @@ describe('TestCloudflareAccessManager', () => {
       .apply(([id, urn, name, decision, includes, requires]) => {
         expect(id).toEqual('test-access-policy-dev-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::cloudflare:index/zeroTrustAccessPolicy:ZeroTrustAccessPolicy::test-access-policy-dev'
+          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/zeroTrustAccessPolicy:ZeroTrustAccessPolicy::test-access-policy-dev'
         )
         expect(name).toEqual('test-policy-props-dev')
         expect(decision).toEqual('allow')
@@ -495,7 +497,7 @@ describe('TestCloudflareAccessManager', () => {
       .apply(([id, urn, mode, zoneId, notes]) => {
         expect(id).toEqual('test-access-rule-ch-dev-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::cloudflare:index/accessRule:AccessRule::test-access-rule-ch-dev'
+          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/accessRule:AccessRule::test-access-rule-ch-dev'
         )
         expect(mode).toEqual('challenge')
         expect(zoneId).toEqual('test-access-rule-ch-dev-data-zone')
@@ -515,7 +517,7 @@ describe('TestCloudflareAccessManager', () => {
       .apply(([id, urn, mode, zoneId, notes]) => {
         expect(id).toEqual('test-access-rule-wl-dev-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::cloudflare:index/accessRule:AccessRule::test-access-rule-wl-dev'
+          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/accessRule:AccessRule::test-access-rule-wl-dev'
         )
         expect(mode).toEqual('whitelist')
         expect(zoneId).toEqual('test-access-rule-wl-dev-data-zone')
@@ -538,7 +540,7 @@ describe('TestCloudflareAccessManager', () => {
       .apply(([id, urn, name, zoneId, duration]) => {
         expect(id).toEqual('test-access-ser-token-dev-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::cloudflare:index/zeroTrustAccessServiceToken:ZeroTrustAccessServiceToken::test-access-ser-token-dev'
+          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/zeroTrustAccessServiceToken:ZeroTrustAccessServiceToken::test-access-ser-token-dev'
         )
         expect(name).toEqual('test-service-token-dev')
         expect(zoneId).toEqual('test-access-ser-token-dev-data-zone')
@@ -555,7 +557,7 @@ describe('TestCloudflareAccessManager', () => {
       .apply(([id, urn, name]) => {
         expect(id).toEqual('test-access-tag-dev-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::cloudflare:index/zeroTrustAccessTag:ZeroTrustAccessTag::test-access-tag-dev'
+          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/zeroTrustAccessTag:ZeroTrustAccessTag::test-access-tag-dev'
         )
         expect(name).toEqual('test-tag-dev')
       })

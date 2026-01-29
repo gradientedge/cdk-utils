@@ -72,7 +72,9 @@ describe('TestCloudflareCommonConstruct', () => {
       .all([stack.construct.zone.id, stack.construct.zone.urn, stack.construct.zone.name, stack.construct.zone.account])
       .apply(([id, urn, name, account]) => {
         expect(id).toEqual('test-zone-dev-id')
-        expect(urn).toEqual('urn:pulumi:stack::project::cloudflare:index/zone:Zone::test-zone-dev')
+        expect(urn).toEqual(
+          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/zone:Zone::test-zone-dev'
+        )
         expect(name).toEqual('gradientedge.io')
         expect(account.id).toEqual('test-account')
       })
@@ -91,7 +93,7 @@ describe('TestCloudflareCommonConstruct', () => {
       .apply(([id, urn, zoneId]) => {
         expect(id).toEqual('test-zone-cache-reserve-dev-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::cloudflare:index/zoneCacheReserve:ZoneCacheReserve::test-zone-cache-reserve-dev'
+          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/zoneCacheReserve:ZoneCacheReserve::test-zone-cache-reserve-dev'
         )
         expect(zoneId).toEqual('test-zone-dev-id')
       })

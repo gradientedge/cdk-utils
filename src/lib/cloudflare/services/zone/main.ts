@@ -1,4 +1,12 @@
-import * as cloudflare from '@pulumi/cloudflare'
+import {
+  Zone,
+  ZoneCacheReserve,
+  ZoneCacheVariants,
+  ZoneDnssec,
+  ZoneHold,
+  ZoneLockdown,
+  ZoneSetting,
+} from '@pulumi/cloudflare'
 import * as pulumi from '@pulumi/pulumi'
 import { CommonCloudflareConstruct } from '../../common/index.js'
 import {
@@ -39,16 +47,20 @@ export class CloudflareZoneManager {
   public createZone(id: string, scope: CommonCloudflareConstruct, props: ZoneProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    return new cloudflare.Zone(id, {
-      ...props,
-      account: props.account ?? scope.props.accountId,
-      name: scope.props.domainName,
-    })
+    return new Zone(
+      id,
+      {
+        ...props,
+        account: props.account ?? scope.props.accountId,
+        name: scope.props.domainName,
+      },
+      { parent: scope }
+    )
   }
 
   public resolveZone(id: string, scope: CommonCloudflareConstruct, options?: GetZoneProps) {
     const name = options?.filter?.name ?? scope.props.domainName
-    return cloudflare.Zone.get(name, id)
+    return Zone.get(name, id)
   }
 
   /**
@@ -63,10 +75,14 @@ export class CloudflareZoneManager {
     const zoneId =
       props.zoneId ??
       pulumi.output(this.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })).id
-    return new cloudflare.ZoneCacheReserve(id, {
-      ...props,
-      zoneId,
-    })
+    return new ZoneCacheReserve(
+      id,
+      {
+        ...props,
+        zoneId,
+      },
+      { parent: scope }
+    )
   }
 
   /**
@@ -81,10 +97,14 @@ export class CloudflareZoneManager {
     const zoneId =
       props.zoneId ??
       pulumi.output(this.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })).id
-    return new cloudflare.ZoneCacheVariants(id, {
-      ...props,
-      zoneId,
-    })
+    return new ZoneCacheVariants(
+      id,
+      {
+        ...props,
+        zoneId,
+      },
+      { parent: scope }
+    )
   }
 
   /**
@@ -99,10 +119,14 @@ export class CloudflareZoneManager {
     const zoneId =
       props.zoneId ??
       pulumi.output(this.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })).id
-    return new cloudflare.ZoneDnssec(id, {
-      ...props,
-      zoneId,
-    })
+    return new ZoneDnssec(
+      id,
+      {
+        ...props,
+        zoneId,
+      },
+      { parent: scope }
+    )
   }
 
   /**
@@ -117,10 +141,14 @@ export class CloudflareZoneManager {
     const zoneId =
       props.zoneId ??
       pulumi.output(this.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })).id
-    return new cloudflare.ZoneHold(id, {
-      ...props,
-      zoneId,
-    })
+    return new ZoneHold(
+      id,
+      {
+        ...props,
+        zoneId,
+      },
+      { parent: scope }
+    )
   }
 
   /**
@@ -135,10 +163,14 @@ export class CloudflareZoneManager {
     const zoneId =
       props.zoneId ??
       pulumi.output(this.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })).id
-    return new cloudflare.ZoneLockdown(id, {
-      ...props,
-      zoneId,
-    })
+    return new ZoneLockdown(
+      id,
+      {
+        ...props,
+        zoneId,
+      },
+      { parent: scope }
+    )
   }
 
   /**
@@ -153,10 +185,14 @@ export class CloudflareZoneManager {
     const zoneId =
       props.zoneId ??
       pulumi.output(this.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })).id
-    const zoneDnsSettings = new cloudflare.ZoneSetting(id, {
-      ...props,
-      zoneId,
-    })
+    const zoneDnsSettings = new ZoneSetting(
+      id,
+      {
+        ...props,
+        zoneId,
+      },
+      { parent: scope }
+    )
 
     return zoneDnsSettings
   }
@@ -173,9 +209,13 @@ export class CloudflareZoneManager {
     const zoneId =
       props.zoneId ??
       pulumi.output(this.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })).id
-    return new cloudflare.ZoneSetting(id, {
-      ...props,
-      zoneId,
-    })
+    return new ZoneSetting(
+      id,
+      {
+        ...props,
+        zoneId,
+      },
+      { parent: scope }
+    )
   }
 }

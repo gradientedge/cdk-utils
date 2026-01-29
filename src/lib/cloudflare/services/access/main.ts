@@ -1,4 +1,16 @@
-import * as cloudflare from '@pulumi/cloudflare'
+import {
+  AccessRule,
+  ZeroTrustAccessApplication,
+  ZeroTrustAccessCustomPage,
+  ZeroTrustAccessGroup,
+  ZeroTrustAccessIdentityProvider,
+  ZeroTrustAccessMtlsCertificate,
+  ZeroTrustAccessPolicy,
+  ZeroTrustAccessServiceToken,
+  ZeroTrustAccessShortLivedCertificate,
+  ZeroTrustAccessTag,
+  ZeroTrustOrganization,
+} from '@pulumi/cloudflare'
 import { CommonCloudflareConstruct } from '../../common/construct.js'
 import {
   AccessRuleProps,
@@ -47,12 +59,16 @@ export class CloudflareAccessManager {
           filter: { name: scope.props.domainName },
         })?.id
 
-    return new cloudflare.ZeroTrustAccessApplication(`${id}`, {
-      ...props,
-      domain: `${props.domain}-${scope.props.domainName}`,
-      name: `${props.name}-${scope.props.stage}`,
-      zoneId,
-    })
+    return new ZeroTrustAccessApplication(
+      `${id}`,
+      {
+        ...props,
+        domain: `${props.domain}-${scope.props.domainName}`,
+        name: `${props.name}-${scope.props.stage}`,
+        zoneId,
+      },
+      { parent: scope }
+    )
   }
 
   /**
@@ -75,10 +91,14 @@ export class CloudflareAccessManager {
           filter: { name: scope.props.domainName },
         })?.id
 
-    return new cloudflare.ZeroTrustAccessShortLivedCertificate(`${id}`, {
-      ...props,
-      zoneId,
-    })
+    return new ZeroTrustAccessShortLivedCertificate(
+      `${id}`,
+      {
+        ...props,
+        zoneId,
+      },
+      { parent: scope }
+    )
   }
 
   /**
@@ -91,11 +111,15 @@ export class CloudflareAccessManager {
   public createAccessCustomPage(id: string, scope: CommonCloudflareConstruct, props: ZeroTrustAccessCustomPageProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    return new cloudflare.ZeroTrustAccessCustomPage(`${id}`, {
-      ...props,
-      accountId: props.accountId ?? scope.props.accountId,
-      name: `${props.name}-${scope.props.stage}`,
-    })
+    return new ZeroTrustAccessCustomPage(
+      `${id}`,
+      {
+        ...props,
+        accountId: props.accountId ?? scope.props.accountId,
+        name: `${props.name}-${scope.props.stage}`,
+      },
+      { parent: scope }
+    )
   }
 
   /**
@@ -114,11 +138,15 @@ export class CloudflareAccessManager {
           filter: { name: scope.props.domainName },
         })?.id
 
-    return new cloudflare.ZeroTrustAccessGroup(`${id}`, {
-      ...props,
-      name: `${props.name} - ${scope.props.stage.toUpperCase()}`,
-      zoneId,
-    })
+    return new ZeroTrustAccessGroup(
+      `${id}`,
+      {
+        ...props,
+        name: `${props.name} - ${scope.props.stage.toUpperCase()}`,
+        zoneId,
+      },
+      { parent: scope }
+    )
   }
 
   /**
@@ -141,12 +169,16 @@ export class CloudflareAccessManager {
           filter: { name: scope.props.domainName },
         })?.id
 
-    return new cloudflare.ZeroTrustAccessIdentityProvider(`${id}`, {
-      ...props,
-      config: props.config ?? {},
-      name: `${props.name}-${scope.props.stage}`,
-      zoneId,
-    })
+    return new ZeroTrustAccessIdentityProvider(
+      `${id}`,
+      {
+        ...props,
+        config: props.config ?? {},
+        name: `${props.name}-${scope.props.stage}`,
+        zoneId,
+      },
+      { parent: scope }
+    )
   }
 
   /**
@@ -169,11 +201,15 @@ export class CloudflareAccessManager {
           filter: { name: scope.props.domainName },
         })?.id
 
-    return new cloudflare.ZeroTrustAccessMtlsCertificate(`${id}`, {
-      ...props,
-      name: `${props.name}-${scope.props.stage}`,
-      zoneId,
-    })
+    return new ZeroTrustAccessMtlsCertificate(
+      `${id}`,
+      {
+        ...props,
+        name: `${props.name}-${scope.props.stage}`,
+        zoneId,
+      },
+      { parent: scope }
+    )
   }
 
   /**
@@ -192,11 +228,15 @@ export class CloudflareAccessManager {
           filter: { name: scope.props.domainName },
         })?.id
 
-    return new cloudflare.ZeroTrustOrganization(`${id}`, {
-      ...props,
-      name: `${props.name}-${scope.props.stage}`,
-      zoneId,
-    })
+    return new ZeroTrustOrganization(
+      `${id}`,
+      {
+        ...props,
+        name: `${props.name}-${scope.props.stage}`,
+        zoneId,
+      },
+      { parent: scope }
+    )
   }
 
   /**
@@ -209,11 +249,15 @@ export class CloudflareAccessManager {
   public createAccessPolicy(id: string, scope: CommonCloudflareConstruct, props: ZeroTrustAccessPolicyProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    return new cloudflare.ZeroTrustAccessPolicy(`${id}`, {
-      ...props,
-      name: `${props.name}-${scope.props.stage}`,
-      accountId: props.accountId ?? scope.props.accountId,
-    })
+    return new ZeroTrustAccessPolicy(
+      `${id}`,
+      {
+        ...props,
+        name: `${props.name}-${scope.props.stage}`,
+        accountId: props.accountId ?? scope.props.accountId,
+      },
+      { parent: scope }
+    )
   }
 
   /**
@@ -232,11 +276,15 @@ export class CloudflareAccessManager {
           filter: { name: scope.props.domainName },
         })?.id
 
-    return new cloudflare.AccessRule(`${id}`, {
-      ...props,
-      zoneId,
-      accountId: props.accountId ?? scope.props.accountId,
-    })
+    return new AccessRule(
+      `${id}`,
+      {
+        ...props,
+        zoneId,
+        accountId: props.accountId ?? scope.props.accountId,
+      },
+      { parent: scope }
+    )
   }
 
   /**
@@ -259,12 +307,16 @@ export class CloudflareAccessManager {
           filter: { name: scope.props.domainName },
         })?.id
 
-    return new cloudflare.ZeroTrustAccessServiceToken(`${id}`, {
-      ...props,
-      name: `${props.name}-${scope.props.stage}`,
-      accountId: props.accountId ?? scope.props.accountId,
-      zoneId,
-    })
+    return new ZeroTrustAccessServiceToken(
+      `${id}`,
+      {
+        ...props,
+        name: `${props.name}-${scope.props.stage}`,
+        accountId: props.accountId ?? scope.props.accountId,
+        zoneId,
+      },
+      { parent: scope }
+    )
   }
 
   /**
@@ -277,10 +329,14 @@ export class CloudflareAccessManager {
   public createAccessTag(id: string, scope: CommonCloudflareConstruct, props: ZeroTrustAccessTagProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    return new cloudflare.ZeroTrustAccessTag(`${id}`, {
-      ...props,
-      name: `${props.name}-${scope.props.stage}`,
-      accountId: props.accountId ?? scope.props.accountId,
-    })
+    return new ZeroTrustAccessTag(
+      `${id}`,
+      {
+        ...props,
+        name: `${props.name}-${scope.props.stage}`,
+        accountId: props.accountId ?? scope.props.accountId,
+      },
+      { parent: scope }
+    )
   }
 }
