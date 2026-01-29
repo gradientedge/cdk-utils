@@ -1,21 +1,20 @@
-import { MonitorDiagnosticSetting } from '@cdktf/provider-azurerm/lib/monitor-diagnostic-setting/index.js'
+import { DiagnosticSetting } from '@pulumi/azure-native/monitor/index.js'
 import { CommonAzureConstruct } from '../../common/index.js'
-import { createAzureTfOutput } from '../../utils/index.js'
 import { MonitorDiagnosticSettingProps } from './types.js'
 
 /**
- * @classdesc Provides operations on Azure Key Vault
+ * @classdesc Provides operations on Azure Monitor using Pulumi
  * - A new instance of this class is injected into {@link CommonAzureConstruct} constructor.
  * - If a custom construct extends {@link CommonAzureConstruct}, an instance is available within the context.
  * @example
- * ```
+ * ```typescript
  * import { CommonAzureConstruct, CommonAzureStackProps } from '@gradientedge/cdk-utils'
  *
  * class CustomConstruct extends CommonAzureConstruct {
- *   constructor(parent: Construct, id: string, props: CommonAzureStackProps) {
- *     super(parent, id, props)
+ *   constructor(name: string, props: CommonAzureStackProps) {
+ *     super(name, props)
  *     this.props = props
- *     this.monitorManager.createMonitor('MyMonitor', this, props)
+ *     this.monitorManager.createMonitorDiagnosticSettings('MyMonitor', this, props)
  *   }
  * }
  * ```
@@ -26,7 +25,7 @@ export class AzureMonitorManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props monitor diagnostics settings properties
-   * @see [CDKTF Monitor Diagnostics Settings Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/monitorDiagnosticSetting.typescript.md}
+   * @see [Pulumi Azure Native Monitor Diagnostic Settings]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/insights/diagnosticsetting/}
    */
   public createMonitorDiagnosticSettings(
     id: string,
@@ -35,19 +34,16 @@ export class AzureMonitorManager {
   ) {
     if (!props) throw `Props undefined for ${id}`
 
-    const monitorDiagnosticSetting = new MonitorDiagnosticSetting(scope, `${id}-ds`, {
-      ...props,
-      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.monitorDiagnosticSetting),
-    })
-
-    createAzureTfOutput(`${id}-monitorDiagnosticSettingName`, scope, monitorDiagnosticSetting.name)
-    createAzureTfOutput(
-      `${id}-monitorDiagnosticSettingFriendlyUniqueId`,
-      scope,
-      monitorDiagnosticSetting.friendlyUniqueId
+    return new DiagnosticSetting(
+      `${id}-ds`,
+      {
+        ...props,
+        name: scope.resourceNameFormatter.format(
+          props.name?.toString(),
+          scope.props.resourceNameOptions?.monitorDiagnosticSetting
+        ),
+      },
+      { parent: scope }
     )
-    createAzureTfOutput(`${id}-monitorDiagnosticSettingId`, scope, monitorDiagnosticSetting.id)
-
-    return monitorDiagnosticSetting
   }
 }

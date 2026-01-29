@@ -1,28 +1,44 @@
-import { ApiManagementConfig } from '@cdktf/provider-azurerm/lib/api-management/index.js'
-import { ApiManagementBackendConfig } from '@cdktf/provider-azurerm/lib/api-management-backend/index.js'
-import { ApiManagementCustomDomainConfig } from '@cdktf/provider-azurerm/lib/api-management-custom-domain/index.js'
-import { ApiManagementApiConfig } from '@cdktf/provider-azurerm/lib/api-management-api/index.js'
-import { ApiManagementApiOperationConfig } from '@cdktf/provider-azurerm/lib/api-management-api-operation/index.js'
-import { ApiManagementRedisCacheConfig } from '@cdktf/provider-azurerm/lib/api-management-redis-cache/index.js'
+import {
+  ApiArgs,
+  ApiManagementServiceArgs,
+  ApiOperationArgs,
+  BackendArgs,
+  GetApiManagementServiceOutputArgs,
+} from '@pulumi/azure-native/apimanagement/index.js'
 
-export interface ApiManagementProps extends ApiManagementConfig {}
+export interface ApiManagementProps extends ApiManagementServiceArgs {}
 
-export interface ApiManagementBackendProps extends ApiManagementBackendConfig {
+export interface ApiManagementBackendProps extends BackendArgs {
   backendUrlPath?: string
-  apiManagementId: string
-  circuitBreaker: any
+  apiManagementId?: string
+  circuitBreaker?: any
 }
 
-export interface ApiManagementCustomDomainProps extends ApiManagementCustomDomainConfig {}
+export interface ApiManagementCustomDomainProps {
+  apiManagementId: string
+  gateway?: Array<{
+    hostName: string
+    certificateId?: string
+    negotiateClientCertificate?: boolean
+  }>
+  developerPortal?: Array<{
+    hostName: string
+    certificateId?: string
+  }>
+  management?: Array<{
+    hostName: string
+    certificateId?: string
+  }>
+}
 
-export interface ApiManagementApiProps extends ApiManagementApiConfig {
+export interface ApiManagementApiProps extends ApiArgs {
   operations: ApiManagementApiOperationProps[]
-  commonInboundPolicyXml: string
-  commonOutboundPolicyXml: string
+  commonInboundPolicyXml?: string
+  commonOutboundPolicyXml?: string
   rateLimit?: ApiManagementApiRateLimit
 }
 
-export interface ApiManagementApiOperationProps extends ApiManagementApiOperationConfig {
+export interface ApiManagementApiOperationProps extends ApiOperationArgs {
   caching?: ApiManagementApiCaching
 }
 
@@ -38,4 +54,11 @@ export interface ApiManagementApiRateLimit {
   renewalPeriodInSecs: number
 }
 
-export interface ApiManagementRedisCacheProps extends ApiManagementRedisCacheConfig {}
+export interface ApiManagementRedisCacheProps {
+  apiManagementId: string
+  connectionString: string
+  cacheLocation: string
+  redisCacheId: string
+}
+
+export interface ResolveApiManagementProps extends GetApiManagementServiceOutputArgs {}

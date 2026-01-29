@@ -1,16 +1,18 @@
 {
   "testMonitorDiagnosticSetting": {
     "name": "test-monitor-diagnostic-setting",
-    "targetResourceId": "testTargetId",
-    "storageAccountId": "testStorageAccountId",
-    "enabledLog": [
+    "resourceUri": "/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.Storage/storageAccounts/testsa",
+    "storageAccountId": "/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.Storage/storageAccounts/testsa",
+    "logs": [
       {
-        "categoryGroup": "allLogs"
+        "categoryGroup": "allLogs",
+        "enabled": true
       }
     ],
-    "metric": [
+    "metrics": [
       {
-        "category": "AllMetrics"
+        "category": "AllMetrics",
+        "enabled": true
       }
     ]
   }

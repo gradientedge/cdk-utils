@@ -1,15 +1,26 @@
 {
   "testServicebusNamespace": {
-    "name": "test-servicebus-namespace"
+    "namespaceName": "test-servicebus-namespace",
+    "resourceGroupName": "test-rg-dev",
+    "sku": {
+      "name": "Standard"
+    }
   },
   "testServicebusQueue": {
-    "name": "test-servicebus-queue"
+    "queueName": "test-servicebus-queue",
+    "namespaceName": "test-servicebus-namespace-dev",
+    "resourceGroupName": "test-rg-dev"
   },
   "testServicebusTopic": {
-    "name": "test-servicebus-topic"
+    "topicName": "test-servicebus-topic",
+    "namespaceName": "test-servicebus-namespace-dev",
+    "resourceGroupName": "test-rg-dev"
   },
   "testServicebusSubscription": {
-    "name": "test-servicebus-subscription",
+    "subscriptionName": "test-servicebus-subscription",
+    "namespaceName": "test-servicebus-namespace-dev",
+    "topicName": "test-servicebus-topic-dev",
+    "resourceGroupName": "test-rg-dev",
     "maxDeliveryCount": 1
   }
 }

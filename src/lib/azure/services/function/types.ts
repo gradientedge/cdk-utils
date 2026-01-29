@@ -1,9 +1,24 @@
-import { LinuxFunctionAppConfig } from '@cdktf/provider-azurerm/lib/linux-function-app/index.js'
-import { FunctionAppFunctionConfig } from '@cdktf/provider-azurerm/lib/function-app-function/index.js'
-import { FunctionAppFlexConsumptionConfig } from '@cdktf/provider-azurerm/lib/function-app-flex-consumption/index.js'
+import { WebAppArgs } from '@pulumi/azure-native/web/index.js'
 
-export interface FunctionAppProps extends LinuxFunctionAppConfig {}
+export interface FunctionAppProps extends WebAppArgs {
+  name?: string
+}
 
-export interface FunctionProps extends FunctionAppFunctionConfig {}
+export interface FunctionProps {
+  name: string
+  functionAppId: string
+  language?: string
+  configJson?: any
+  testData?: string
+  enabled?: boolean
+}
 
-export interface FunctionAppFlexConsumptionProps extends FunctionAppFlexConsumptionConfig {}
+export interface FunctionAppFlexConsumptionProps extends WebAppArgs {
+  name?: string
+  runtimeName?: string
+  runtimeVersion?: string
+  storageAuthenticationType?: string
+  storageContainerType?: string
+  maximumInstanceCount?: number
+  instanceMemoryInMb?: number
+}

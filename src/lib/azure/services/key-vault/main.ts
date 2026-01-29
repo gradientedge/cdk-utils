@@ -1,20 +1,18 @@
-import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group/index.js'
-import { KeyVault } from '@cdktf/provider-azurerm/lib/key-vault/index.js'
+import { SkuFamily, SkuName, Vault } from '@pulumi/azure-native/keyvault/index.js'
 import { CommonAzureConstruct } from '../../common/index.js'
-import { createAzureTfOutput } from '../../utils/index.js'
 import { KeyVaultProps } from './types.js'
 
 /**
- * @classdesc Provides operations on Azure Key Vault
+ * @classdesc Provides operations on Azure Key Vault using Pulumi
  * - A new instance of this class is injected into {@link CommonAzureConstruct} constructor.
  * - If a custom construct extends {@link CommonAzureConstruct}, an instance is available within the context.
  * @example
- * ```
+ * ```typescript
  * import { CommonAzureConstruct, CommonAzureStackProps } from '@gradientedge/cdk-utils'
  *
  * class CustomConstruct extends CommonAzureConstruct {
- *   constructor(parent: Construct, id: string, props: CommonAzureStackProps) {
- *     super(parent, id, props)
+ *   constructor(name: string, props: CommonAzureStackProps) {
+ *     super(name, props)
  *     this.props = props
  *     this.keyVaultManager.createKeyVault('MyKeyVault', this, props)
  *   }
@@ -27,37 +25,45 @@ export class AzureKeyVaultManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props key vault properties
-   * @see [CDKTF Key Vault Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/keyVault.typescript.md}
+   * @see [Pulumi Azure Native Key Vault]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/keyvault/vault/}
    */
   public createKeyVault(id: string, scope: CommonAzureConstruct, props: KeyVaultProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-kv-rg`, {
-      name: scope.props.resourceGroupName
-        ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-        : `${props.resourceGroupName}`,
-    })
+    // Get resource group name
+    const resourceGroupName = scope.props.resourceGroupName
+      ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
+      : props.resourceGroupName
 
-    if (!resourceGroup) throw `Resource group undefined for ${id}`
+    if (!resourceGroupName) throw `Resource group name undefined for ${id}`
 
-    const keyVault = new KeyVault(scope, `${id}-kv`, {
-      ...props,
-      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.keyVault),
-      location: resourceGroup.location,
-      resourceGroupName: resourceGroup.name,
-      skuName: props.skuName ?? 'standard',
-      rbacAuthorizationEnabled: props.rbacAuthorizationEnabled ?? true,
-      softDeleteRetentionDays: props.softDeleteRetentionDays ?? 90,
-      purgeProtectionEnabled: props.purgeProtectionEnabled ?? true,
-      tags: props.tags ?? {
-        environment: scope.props.stage,
+    return new Vault(
+      `${id}-kv`,
+      {
+        ...props,
+        vaultName: scope.resourceNameFormatter.format(
+          props.vaultName?.toString(),
+          scope.props.resourceNameOptions?.keyVault
+        ),
+        location: props.location ?? scope.props.location,
+        resourceGroupName: resourceGroupName,
+        properties: {
+          ...(props.properties as any),
+          sku: (props.properties as any)?.sku ?? {
+            family: SkuFamily.A,
+            name: SkuName.Standard,
+          },
+          tenantId: (props.properties as any)?.tenantId ?? scope.props.tenantId ?? '',
+          enableRbacAuthorization: (props.properties as any)?.enableRbacAuthorization ?? true,
+          enableSoftDelete: (props.properties as any)?.enableSoftDelete ?? true,
+          softDeleteRetentionInDays: (props.properties as any)?.softDeleteRetentionInDays ?? 90,
+          enablePurgeProtection: (props.properties as any)?.enablePurgeProtection ?? true,
+        },
+        tags: props.tags ?? {
+          environment: scope.props.stage,
+        },
       },
-    })
-
-    createAzureTfOutput(`${id}-keyVaultName`, scope, keyVault.name)
-    createAzureTfOutput(`${id}-keyVaultFriendlyUniqueId`, scope, keyVault.friendlyUniqueId)
-    createAzureTfOutput(`${id}-keyVaultId`, scope, keyVault.id)
-
-    return keyVault
+      { parent: scope }
+    )
   }
 }

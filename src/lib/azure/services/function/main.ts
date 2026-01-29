@@ -1,23 +1,19 @@
-import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group/index.js'
-import { FunctionAppFlexConsumption } from '@cdktf/provider-azurerm/lib/function-app-flex-consumption/index.js'
-import { FunctionAppFunction } from '@cdktf/provider-azurerm/lib/function-app-function/index.js'
-import { LinuxFunctionApp } from '@cdktf/provider-azurerm/lib/linux-function-app/index.js'
+import { ManagedServiceIdentityType, WebApp, WebAppFunction } from '@pulumi/azure-native/web/index.js'
 import { CommonAzureConstruct } from '../../common/index.js'
-import { createAzureTfOutput } from '../../utils/index.js'
 import { FunctionAppFlexConsumptionProps, FunctionAppProps, FunctionProps } from './types.js'
 
 /**
- * @classdesc Provides operations on Azure Functions
+ * @classdesc Provides operations on Azure Functions using Pulumi
  * - A new instance of this class is injected into {@link CommonAzureConstruct} constructor.
  * - If a custom construct extends {@link CommonAzureConstruct}, an instance is available within the context.
  * @example
- * ```
+ * ```typescript
  * import { CommonAzureConstruct, CommonAzureStackProps } from '@gradientedge/cdk-utils'
  *
  * class CustomConstruct extends CommonAzureConstruct {
- *   constructor(parent: Construct, id: string, props: CommonAzureStackProps) {
- *     super(parent, id, props)
- *     this.props: props
+ *   constructor(name: string, props: CommonAzureStackProps) {
+ *     super(name, props)
+ *     this.props = props
  *     this.functionManager.createFunctionApp('MyFunctionApp', this, props)
  *   }
  * }
@@ -25,60 +21,70 @@ import { FunctionAppFlexConsumptionProps, FunctionAppProps, FunctionProps } from
  */
 export class AzureFunctionManager {
   /**
-   * @summary Method to create a new function app
+   * @summary Method to create a new Linux function app
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props function app properties
-   * @see [CDKTF Function App Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/functionApp.typescript.md}
+   * @see [Pulumi Azure Native Function App]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/web/webapp/}
    */
   public createFunctionApp(id: string, scope: CommonAzureConstruct, props: FunctionAppProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-fa-rg`, {
-      name: scope.props.resourceGroupName
-        ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-        : `${props.resourceGroupName}`,
-    })
+    // Get resource group name
+    const resourceGroupName = scope.props.resourceGroupName
+      ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
+      : props.resourceGroupName
 
-    if (!resourceGroup) throw `Resource group undefined for ${id}`
+    if (!resourceGroupName) throw `Resource group name undefined for ${id}`
 
-    const functionApp = new LinuxFunctionApp(scope, `${id}-fa`, {
-      ...props,
-      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.linuxFunctionApp),
-      resourceGroupName: resourceGroup.name,
-      tags: props.tags ?? {
-        environment: scope.props.stage,
+    return new WebApp(
+      `${id}-fa`,
+      {
+        ...props,
+        name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.linuxFunctionApp),
+        resourceGroupName: resourceGroupName,
+        location: props.location ?? scope.props.location,
+        kind: props.kind ?? 'functionapp,linux',
+        identity: props.identity ?? {
+          type: ManagedServiceIdentityType.SystemAssigned,
+        },
+        tags: props.tags ?? {
+          environment: scope.props.stage,
+        },
       },
-    })
-
-    createAzureTfOutput(`${id}-functionAppName`, scope, functionApp.name)
-    createAzureTfOutput(`${id}-functionAppFriendlyUniqueId`, scope, functionApp.friendlyUniqueId)
-    createAzureTfOutput(`${id}-functionAppId`, scope, functionApp.id)
-
-    return functionApp
+      { parent: scope }
+    )
   }
 
   /**
-   * @summary Method to create a new function
+   * @summary Method to create a new function within a function app
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props function properties
-   * @see [CDKTF Function Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/functionAppFunction.typescript.md}
+   * @see [Pulumi Azure Native Function Envelope]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/web/webappfunction/}
+   * @note In Pulumi, individual functions are typically deployed via code deployment rather than as separate infrastructure resources.
+   * This method is provided for API compatibility but may require additional setup.
    */
   public createFunction(id: string, scope: CommonAzureConstruct, props: FunctionProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    const functionAppFunction = new FunctionAppFunction(scope, `${id}-fc`, {
-      ...props,
-      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.functionAppFunction),
-      configJson: JSON.stringify(props.configJson ?? {}),
-    })
+    // Get resource group name
+    const resourceGroupName = scope.props.resourceGroupName
+      ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
+      : ''
 
-    createAzureTfOutput(`${id}-functionName`, scope, functionAppFunction.name)
-    createAzureTfOutput(`${id}-functionFriendlyUniqueId`, scope, functionAppFunction.friendlyUniqueId)
-    createAzureTfOutput(`${id}-functionId`, scope, functionAppFunction.id)
-
-    return functionAppFunction
+    return new WebAppFunction(
+      `${id}-fc`,
+      {
+        name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.functionAppFunction),
+        resourceGroupName: resourceGroupName,
+        functionAppId: props.functionAppId,
+        config: props.configJson,
+        isDisabled: props.enabled !== undefined ? !props.enabled : false,
+        testData: props.testData,
+      } as any,
+      { parent: scope }
+    )
   }
 
   /**
@@ -86,6 +92,7 @@ export class AzureFunctionManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props flex consumption function app properties
+   * @see [Pulumi Azure Native Function App (Flex Consumption)]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/web/webapp/}
    */
   public createFunctionAppFlexConsumption(
     id: string,
@@ -94,37 +101,33 @@ export class AzureFunctionManager {
   ) {
     if (!props) throw `Props undefined for ${id}`
 
-    const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-fa-rg`, {
-      name: scope.props.resourceGroupName
-        ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-        : `${props.resourceGroupName}`,
-    })
+    // Get resource group name
+    const resourceGroupName = scope.props.resourceGroupName
+      ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
+      : props.resourceGroupName
 
-    if (!resourceGroup) throw `Resource group undefined for ${id}`
+    if (!resourceGroupName) throw `Resource group name undefined for ${id}`
 
-    const functionApp = new FunctionAppFlexConsumption(scope, `${id}-fc`, {
-      ...props,
-      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.functionApp),
-      location: resourceGroup.location,
-      resourceGroupName: resourceGroup.name,
-      runtimeName: props.runtimeName ?? 'node',
-      runtimeVersion: props.runtimeVersion ?? '22',
-      storageAuthenticationType: props.storageAuthenticationType ?? 'StorageAccountConnectionString',
-      storageContainerType: props.storageContainerType ?? 'blobContainer',
-      maximumInstanceCount: props.maximumInstanceCount ?? 40,
-      instanceMemoryInMb: props.instanceMemoryInMb ?? 2048,
-      siteConfig: {
-        http2Enabled: props.siteConfig.http2Enabled ?? true,
-        ...props.siteConfig,
+    return new WebApp(
+      `${id}-fc`,
+      {
+        ...props,
+        name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.functionApp),
+        location: props.location ?? scope.props.location,
+        resourceGroupName: resourceGroupName,
+        kind: props.kind ?? 'functionapp,linux',
+        identity: props.identity ?? {
+          type: ManagedServiceIdentityType.SystemAssigned,
+        },
+        siteConfig: props.siteConfig ?? {
+          http20Enabled: true,
+          linuxFxVersion: `${props.runtimeName ?? 'node'}|${props.runtimeVersion ?? '22'}`,
+        },
+        tags: props.tags ?? {
+          environment: scope.props.stage,
+        },
       },
-      identity: props.identity ?? {
-        type: 'SystemAssigned',
-      },
-      tags: props.tags ?? {
-        environment: scope.props.stage,
-      },
-    })
-
-    return functionApp
+      { parent: scope }
+    )
   }
 }

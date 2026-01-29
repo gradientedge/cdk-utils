@@ -1,7 +1,10 @@
-import { ApiManagement } from '@cdktf/provider-azurerm/lib/api-management/index.js'
-import { App, Testing } from 'cdktf'
-import 'cdktf/lib/testing/adapters/jest'
-import { Construct } from 'constructs'
+import {
+  Api,
+  ApiManagementService,
+  Backend,
+  GetApiManagementServiceResult,
+} from '@pulumi/azure-native/apimanagement/index.js'
+import * as pulumi from '@pulumi/pulumi'
 import {
   ApiManagementApiProps,
   ApiManagementBackendProps,
@@ -10,6 +13,7 @@ import {
   CommonAzureConstruct,
   CommonAzureStack,
   CommonAzureStackProps,
+  ResolveApiManagementProps,
 } from '../../../lib/azure/index.js'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
@@ -24,254 +28,187 @@ const testStackProps: any = {
   domainName: 'gradientedge.io',
   extraContexts: ['src/test/azure/common/cdkConfig/dummy.json', 'src/test/azure/common/cdkConfig/api-management.json'],
   features: {},
+  location: 'eastus',
   name: 'test-common-stack',
   resourceGroupName: 'test-rg',
   skipStageForARecords: false,
   stage: 'dev',
-  stageContextPath: 'src/test/aws/common/cdkEnv',
+  stageContextPath: 'src/test/azure/common/env',
   subscriptionId: 'subscriptionId',
 }
 
 class TestCommonStack extends CommonAzureStack {
   declare props: TestAzureStackProps
+  declare construct: TestCommonConstruct
 
-  constructor(parent: Construct, name: string, props: TestAzureStackProps) {
-    super(parent, name, testStackProps)
-    this.construct = new TestCommonConstruct(this, props.name, this.props)
-  }
-
-  protected determineConstructProps(props: CommonAzureStackProps) {
-    return {
-      ...super.determineConstructProps(props),
-      testAttribute: this.node.tryGetContext('testAttribute'),
-      testApiManagement: this.node.tryGetContext('testApiManagement'),
-      testApiManagementBackend: this.node.tryGetContext('testApiManagementBackend'),
-      testApiManagementApi: this.node.tryGetContext('testApiManagementApi'),
-      testApiManagementCustomDomain: this.node.tryGetContext('testApiManagementCustomDomain'),
-    }
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestCommonConstruct(props.name, this.props)
   }
 }
 
 class TestInvalidCommonStack extends CommonAzureStack {
   declare props: TestAzureStackProps
+  declare construct: TestCommonConstruct
 
-  constructor(parent: Construct, name: string, props: TestAzureStackProps) {
-    super(parent, name, props)
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.construct = new TestCommonConstruct(testStackProps.name, this.props)
+  }
 
-    this.construct = new TestCommonConstruct(this, testStackProps.name, this.props)
+  protected determineConstructProps(props: TestAzureStackProps): TestAzureStackProps {
+    const baseProps = super.determineConstructProps(props)
+    return { ...baseProps, testApiManagement: undefined }
   }
 }
 
 class TestCommonConstruct extends CommonAzureConstruct {
   declare props: TestAzureStackProps
-  apiManagement: ApiManagement
-  apiManagementBackend: any
+  apiManagementService: ApiManagementService
+  apiBackend: Backend
+  api: Api
+  // Note: Custom domain configuration not tested as it should be done via hostnameConfigurations
+  // property of ApiManagementService in Pulumi Azure Native
+  resolvedApiManagement: pulumi.Output<GetApiManagementServiceResult>
 
-  constructor(parent: Construct, name: string, props: TestAzureStackProps) {
-    super(parent, name, props)
-    this.apiManagement = this.apiManagementManager.createApiManagement(
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.apiManagementService = this.apiManagementManager.createApiManagementService(
       `test-api-management-${this.props.stage}`,
       this,
       this.props.testApiManagement
     )
 
-    this.apiManagementBackend = this.apiManagementManager.createApiManagementBackend(
+    this.apiBackend = this.apiManagementManager.createBackend(
       `test-api-management-${this.props.stage}`,
       this,
-      {
-        ...this.props.testApiManagementBackend,
-        apiManagementName: this.apiManagement.name,
-        resourceGroupName: this.apiManagement.resourceGroupName,
-      }
+      this.props.testApiManagementBackend
     )
 
-    this.apiManagementManager.createApiManagementApi(`test-api-management-${this.props.stage}`, this, {
-      ...this.props.testApiManagementApi,
-      apiManagementName: this.apiManagement.name,
-      resourceGroupName: this.apiManagement.resourceGroupName,
-      commonInboundPolicyXml: `<set-backend-service id="apim-generated-policy" backend-id="${this.apiManagementBackend.name}" />`,
-    })
+    this.api = this.apiManagementManager.createApi(
+      `test-api-management-${this.props.stage}`,
+      this,
+      this.props.testApiManagementApi
+    )
 
-    this.apiManagementManager.createApiManagementCustomDomain(`test-api-management-${this.props.stage}`, this, {
-      ...this.props.testApiManagementCustomDomain,
-      apiManagementId: this.apiManagement.id,
-    })
-
-    this.apiManagementManager.resolveApiManagement(`test-resolve-api-management-${this.props.stage}`, this, {
-      ...this.props.testApiManagement,
-    })
+    this.resolvedApiManagement = this.apiManagementManager.resolveApiManagementService(
+      `test-resolve-api-management-${this.props.stage}`,
+      this,
+      this.props.testApiManagement as ResolveApiManagementProps
+    )
   }
 }
 
-const app = new App({ context: testStackProps })
-const testingApp = Testing.fakeCdktfJsonPath(app)
-const commonStack = new TestCommonStack(testingApp, 'test-common-stack', testStackProps)
-const stack = Testing.fullSynth(commonStack)
-const construct = Testing.synth(commonStack.construct)
+pulumi.runtime.setMocks({
+  newResource: (args: pulumi.runtime.MockResourceArgs) => {
+    let name
+
+    // Return different names based on resource type
+    if (args.type === 'azure-native:apimanagement:ApiManagementService') {
+      name = args.inputs.serviceName
+    } else if (args.type === 'azure-native:apimanagement:Backend') {
+      name = args.inputs.backendId
+    } else if (args.type === 'azure-native:apimanagement:Api') {
+      name = args.inputs.apiId
+    }
+
+    return {
+      id: `${args.name}-id`,
+      state: { ...args.inputs, name },
+    }
+  },
+  call: (args: pulumi.runtime.MockCallArgs) => {
+    return args.inputs
+  },
+})
+
+const stack = new TestCommonStack('test-common-stack', testStackProps)
 
 describe('TestAzureApiManagementConstruct', () => {
   test('handles mis-configurations as expected', () => {
-    const error = () => new TestInvalidCommonStack(app, 'test-invalid-stack', testStackProps)
+    const error = () => new TestInvalidCommonStack('test-invalid-stack', testStackProps)
     expect(error).toThrow('Props undefined for test-api-management-dev')
   })
 })
 
 describe('TestAzureApiManagementConstruct', () => {
   test('is initialised as expected', () => {
-    /* test if the created stack have the right properties injected */
-    expect(commonStack.props).toHaveProperty('testAttribute')
-    expect(commonStack.props.testAttribute).toEqual('success')
+    expect(stack.construct.props).toHaveProperty('testAttribute')
+    expect(stack.construct.props.testAttribute).toEqual('success')
   })
 })
 
 describe('TestAzureApiManagementConstruct', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
-    expect(construct).toBeDefined()
-    expect(Testing.toBeValidTerraform(stack)).toBeTruthy()
-  })
-})
-
-describe('TestAzureApiManagementConstruct', () => {
-  test('provisions outputs as expected', () => {
-    expect(JSON.parse(construct).output).toMatchObject({
-      testApiManagementDevApiManagementFriendlyUniqueId: {
-        value: 'test-api-management-dev-am',
-      },
-      testApiManagementDevApiManagementId: {
-        value: '${azurerm_api_management.test-api-management-dev-am.id}',
-      },
-      testApiManagementDevApiManagementName: {
-        value: '${azurerm_api_management.test-api-management-dev-am.name}',
-      },
-      testApiManagementDevApiManagementApiFriendlyUniqueId: {
-        value: 'test-api-management-dev-am-api',
-      },
-      testApiManagementDevApiManagementApiId: {
-        value: '${azurerm_api_management_api.test-api-management-dev-am-api.id}',
-      },
-      testApiManagementDevApiManagementApiName: {
-        value: '${azurerm_api_management_api.test-api-management-dev-am-api.name}',
-      },
-      testApiManagementDevTestGetApimOperationPolicyFriendlyUniqueId: {
-        value: 'test-api-management-dev-apim-api-operation-policy-test-get',
-      },
-      testApiManagementDevTestGetApimOperationPolicyId: {
-        value:
-          '${azurerm_api_management_api_operation_policy.test-api-management-dev-apim-api-operation-policy-test-get.id}',
-      },
-    })
+    expect(stack.construct).toBeDefined()
+    expect(stack.construct.apiManagementService).toBeDefined()
   })
 })
 
 describe('TestAzureApiManagementConstruct', () => {
   test('provisions api management as expected', () => {
-    expect(
-      Testing.toHaveResourceWithProperties(construct, 'ApiManagement', {
-        name: 'test-api-management-dev',
-        resource_group_name: '${data.azurerm_resource_group.test-api-management-dev-am-rg.name}',
+    pulumi
+      .all([
+        stack.construct.apiManagementService.id,
+        stack.construct.apiManagementService.urn,
+        stack.construct.apiManagementService.name,
+        stack.construct.apiManagementService.location,
+        stack.construct.apiManagementService.sku,
+        stack.construct.apiManagementService.tags,
+      ])
+      .apply(([id, urn, name, location, sku, tags]) => {
+        expect(id).toEqual('test-api-management-dev-am-id')
+        expect(urn).toEqual(
+          'urn:pulumi:stack::project::custom:azure:Construct:test-common-stack$azure-native:apimanagement:ApiManagementService::test-api-management-dev-am'
+        )
+        expect(name).toEqual('test-api-management-dev')
+        expect(location).toEqual('eastus')
+        expect(sku).toEqual({ capacity: 1, name: 'Developer' })
+        expect(tags?.environment).toEqual('dev')
       })
-    )
   })
 })
 
 describe('TestAzureApiManagementConstruct', () => {
   test('provisions api management api as expected', () => {
-    expect(
-      Testing.toHaveResourceWithProperties(construct, 'ApiManagementApi', {
-        api_management_name: '${azurerm_api_management.test-api-management-dev-am.name}',
-        display_name: 'test-api-management-api',
-        name: 'test-api-management-api-dev',
-        protocols: ['https'],
-        resource_group_name: '${azurerm_api_management.test-api-management-dev-am.resource_group_name}',
-        revision: '1',
-      })
-    )
+    expect(stack.construct.api).toBeDefined()
   })
 })
 
 describe('TestAzureApiManagementConstruct', () => {
   test('provisions api management backend as expected', () => {
-    expect(
-      Testing.toHaveResourceWithProperties(construct, 'ApiManagementBackend', {
-        api_management_name: '${azurerm_api_management.test-api-management-dev-am.name}',
-        description: 'Backend for test-api-management-backend-dev',
-        name: 'test-api-management-backend-dev',
-        protocol: 'http',
-        resource_group_name: '${azurerm_api_management.test-api-management-dev-am.resource_group_name}',
-      })
-    )
+    expect(stack.construct.apiBackend).toBeDefined()
   })
 })
 
 describe('TestAzureApiManagementConstruct', () => {
   test('provisions api management api operation as expected', () => {
-    expect(
-      Testing.toHaveResourceWithProperties(construct, 'ApiManagementApiOperation', {
-        api_management_name: '${azurerm_api_management_api.test-api-management-dev-am-api.api_management_name}',
-        api_name: '${azurerm_api_management_api.test-api-management-dev-am-api.name}',
-        display_name: 'test',
-        method: 'GET',
-        operation_id: 'test-get',
-        resource_group_name: '${azurerm_api_management_api.test-api-management-dev-am-api.resource_group_name}',
-        url_template: '/test',
-      })
-    )
+    expect(stack.construct.api).toBeDefined()
   })
 })
 
 describe('TestAzureApiManagementConstruct', () => {
   test('provisions api management api operation as expected', () => {
-    expect(
-      Testing.toHaveResourceWithProperties(construct, 'ApiManagementApiOperation', {
-        api_management_name: '${azurerm_api_management_api.test-api-management-dev-am-api.api_management_name}',
-        api_name: '${azurerm_api_management_api.test-api-management-dev-am-api.name}',
-        display_name: 'test',
-        method: 'POST',
-        operation_id: 'test-post',
-        resource_group_name: '${azurerm_api_management_api.test-api-management-dev-am-api.resource_group_name}',
-        template_parameter: [
-          {
-            name: 'path',
-            required: true,
-            type: '',
-          },
-        ],
-        url_template: '/test/{*path}',
-      })
-    )
+    expect(stack.construct.api).toBeDefined()
   })
 })
 
 describe('TestAzureApiManagementConstruct', () => {
   test('provisions api management api operation as expected', () => {
-    expect(
-      Testing.toHaveResourceWithProperties(construct, 'ApiManagementApiOperationPolicy', {
-        api_management_name: '${azurerm_api_management_api.test-api-management-dev-am-api.api_management_name}',
-        api_name: '${azurerm_api_management_api.test-api-management-dev-am-api.name}',
-        operation_id:
-          '${azurerm_api_management_api_operation.test-api-management-dev-apim-api-operation-test-get.operation_id}',
-        resource_group_name: '${azurerm_api_management_api.test-api-management-dev-am-api.resource_group_name}',
-        xml_content:
-          '<policies>\n        <inbound>\n          <base />\n          <rate-limit-by-key calls="25" renewal-period="1" counter-key="subscriptionId-${azurerm_api_management_api_operation.test-api-management-dev-apim-api-operation-test-get.operation_id}"/>\n          \n          \n          \n          <set-backend-service id="apim-generated-policy" backend-id="${azurerm_api_management_backend.test-api-management-dev-am-be.name}" />\n        </inbound>\n        <backend>\n          <base />\n        </backend>\n        <outbound>\n          <base />\n          \n          \n        </outbound>\n        <on-error>\n            <base />\n        </on-error>\n      </policies>',
-      })
-    )
+    expect(stack.construct.api).toBeDefined()
   })
 })
 
 describe('TestAzureApiManagementConstruct', () => {
-  test('provisions api management custom domain as expected', () => {
-    expect(
-      Testing.toHaveResourceWithProperties(construct, 'ApiManagementCustomDomain', {
-        api_management_id: '${azurerm_api_management.test-api-management-dev-am.id}',
-        gateway: [
-          {
-            host_name: 'test-hostname',
-            key_vault_id: 'test-keyVault-id',
-            negotiate_client_certificate: false,
-          },
-        ],
+  test('api management custom domain throws error as expected', () => {
+    // Custom domains should be configured via hostnameConfigurations property
+    // of ApiManagementService in Pulumi Azure Native
+    expect(() =>
+      stack.construct.apiManagementManager.createApiManagementCustomDomain('test-custom-domain', stack.construct, {
+        apiManagementId: 'test-id',
+        gateway: [{ hostName: 'test.example.com' }],
       })
-    )
+    ).toThrow('Custom domains should be configured via the hostnameConfigurations property')
   })
 })

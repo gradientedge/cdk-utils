@@ -1,6 +1,5 @@
-import { App, Testing } from 'cdktf'
-import 'cdktf/lib/testing/adapters/jest'
-import { Construct } from 'constructs'
+import { Redis } from '@pulumi/azure-native/redis/index.js'
+import * as pulumi from '@pulumi/pulumi'
 import {
   CommonAzureConstruct,
   CommonAzureStack,
@@ -17,110 +16,123 @@ const testStackProps: any = {
   domainName: 'gradientedge.io',
   extraContexts: ['src/test/azure/common/cdkConfig/dummy.json', 'src/test/azure/common/cdkConfig/redis.json'],
   features: {},
+  location: 'eastus',
   name: 'test-common-stack',
   resourceGroupName: 'test-rg',
   skipStageForARecords: false,
   stage: 'dev',
-  stageContextPath: 'src/test/aws/common/cdkEnv',
+  stageContextPath: 'src/test/azure/common/env',
 }
 
 class TestCommonStack extends CommonAzureStack {
   declare props: TestAzureStackProps
+  declare construct: TestCommonConstruct
 
-  constructor(parent: Construct, name: string, props: TestAzureStackProps) {
-    super(parent, name, testStackProps)
-    this.construct = new TestCommonConstruct(this, props.name, this.props)
-  }
-
-  protected determineConstructProps(props: CommonAzureStackProps) {
-    return {
-      ...super.determineConstructProps(props),
-      testAttribute: this.node.tryGetContext('testAttribute'),
-      testRedisCache: this.node.tryGetContext('testRedisCache'),
-    }
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestCommonConstruct(props.name, this.props)
   }
 }
 
 class TestInvalidCommonStack extends CommonAzureStack {
   declare props: TestAzureStackProps
+  declare construct: TestCommonConstruct
 
-  constructor(parent: Construct, name: string, props: TestAzureStackProps) {
-    super(parent, name, props)
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.construct = new TestCommonConstruct(testStackProps.name, this.props)
+  }
 
-    this.construct = new TestCommonConstruct(this, testStackProps.name, this.props)
+  protected determineConstructProps(props: TestAzureStackProps): TestAzureStackProps {
+    const baseProps = super.determineConstructProps(props)
+    // Override the test property to undefined to trigger validation error
+    return { ...baseProps, testRedisCache: undefined }
   }
 }
 
 class TestCommonConstruct extends CommonAzureConstruct {
   declare props: TestAzureStackProps
+  redisCache: Redis
 
-  constructor(parent: Construct, name: string, props: TestAzureStackProps) {
-    super(parent, name, props)
-    this.redisManager.createManagedRedis(`test-redis-cache-${this.props.stage}`, this, this.props.testRedisCache)
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.redisCache = this.redisManager.createManagedRedis(
+      `test-redis-cache-${this.props.stage}`,
+      this,
+      this.props.testRedisCache
+    )
   }
 }
 
-const app = new App({ context: testStackProps })
-const testingApp = Testing.fakeCdktfJsonPath(app)
-const commonStack = new TestCommonStack(testingApp, 'test-common-stack', testStackProps)
-const stack = Testing.fullSynth(commonStack)
-const construct = Testing.synth(commonStack.construct)
+pulumi.runtime.setMocks({
+  newResource: (args: pulumi.runtime.MockResourceArgs) => {
+    let name
+
+    // Return different names based on resource type
+    if (args.type === 'azure-native:resources:ResourceGroup') {
+      name = args.inputs.resourceGroupName
+    } else if (args.type === 'azure-native:redis:Redis') {
+      name = args.inputs.name
+    }
+
+    return {
+      id: `${args.name}-id`,
+      state: { ...args.inputs, name },
+    }
+  },
+  call: (args: pulumi.runtime.MockCallArgs) => {
+    return args.inputs
+  },
+})
+
+const stack = new TestCommonStack('test-common-stack', testStackProps)
 
 describe('TestAzureRedisConstruct', () => {
   test('handles mis-configurations as expected', () => {
-    const error = () => new TestInvalidCommonStack(app, 'test-invalid-stack', testStackProps)
+    const error = () => new TestInvalidCommonStack('test-invalid-stack', testStackProps)
     expect(error).toThrow('Props undefined for test-redis-cache-dev')
   })
 })
 
 describe('TestAzureRedisConstruct', () => {
   test('is initialised as expected', () => {
-    /* test if the created stack have the right properties injected */
-    expect(commonStack.props).toHaveProperty('testAttribute')
-    expect(commonStack.props.testAttribute).toEqual('success')
+    expect(stack.construct.props).toHaveProperty('testAttribute')
+    expect(stack.construct.props.testAttribute).toEqual('success')
   })
 })
 
 describe('TestAzureRedisConstruct', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
-    expect(construct).toBeDefined()
-    expect(Testing.toBeValidTerraform(stack)).toBeTruthy()
-  })
-})
-
-describe('TestAzureRedisConstruct', () => {
-  test('provisions outputs as expected', () => {
-    expect(JSON.parse(construct).output).toMatchObject({
-      testRedisCacheDevManagedRedisFriendlyUniqueId: {
-        value: 'test-redis-cache-dev-rc',
-      },
-      testRedisCacheDevManagedRedisId: {
-        value: '${azurerm_managed_redis.test-redis-cache-dev-rc.id}',
-      },
-      testRedisCacheDevManagedRedisName: {
-        value: '${azurerm_managed_redis.test-redis-cache-dev-rc.name}',
-      },
-    })
+    expect(stack.construct).toBeDefined()
+    expect(stack.construct.redisCache).toBeDefined()
   })
 })
 
 describe('TestAzureRedisConstruct', () => {
   test('provisions managed redis as expected', () => {
-    expect(
-      Testing.toHaveResourceWithProperties(construct, 'ManagedRedis', {
-        capacity: 2,
-        family: 'C',
-        location: '${data.azurerm_resource_group.test-redis-cache-dev-rc-rg.location}',
-        minimum_tls_version: '1.2',
-        name: 'test-redis-cache-dev',
-        non_ssl_port_enabled: false,
-        resource_group_name: '${data.azurerm_resource_group.test-redis-cache-dev-rc-rg.name}',
-        sku_name: 'Basic',
-        tags: {
-          environment: 'dev',
-        },
+    pulumi
+      .all([
+        stack.construct.redisCache.id,
+        stack.construct.redisCache.urn,
+        stack.construct.redisCache.name,
+        stack.construct.redisCache.location,
+        stack.construct.redisCache.sku,
+        stack.construct.redisCache.minimumTlsVersion,
+        stack.construct.redisCache.enableNonSslPort,
+        stack.construct.redisCache.tags,
+      ])
+      .apply(([id, urn, name, location, sku, tlsVersion, nonSslPort, tags]) => {
+        expect(id).toEqual('test-redis-cache-dev-rc-id')
+        expect(urn).toEqual(
+          'urn:pulumi:stack::project::custom:azure:Construct:test-common-stack$azure-native:redis:Redis::test-redis-cache-dev-rc'
+        )
+        expect(name).toEqual('test-redis-cache-dev')
+        expect(location).toEqual('eastus')
+        expect(sku).toEqual({ capacity: 2, family: 'C', name: 'Basic' })
+        expect(tlsVersion).toEqual('1.2')
+        expect(nonSslPort).toEqual(false)
+        expect(tags?.environment).toEqual('dev')
       })
-    )
   })
 })

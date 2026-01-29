@@ -1,10 +1,13 @@
 {
   "testRedisCache": {
     "name": "test-redis-cache",
-    "capacity": 2,
-    "family": "C",
-    "skuName": "Basic",
-    "nonSslPortEnabled": false,
+    "resourceGroupName": "test-rg-dev",
+    "sku": {
+      "capacity": 2,
+      "family": "C",
+      "name": "Basic"
+    },
+    "enableNonSslPort": false,
     "minimumTlsVersion": "1.2"
   }
 }

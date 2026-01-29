@@ -1,25 +1,20 @@
-import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group/index.js'
-import { DnsARecord } from '@cdktf/provider-azurerm/lib/dns-a-record/index.js'
-import { DnsCnameRecord } from '@cdktf/provider-azurerm/lib/dns-cname-record/index.js'
-import { DnsTxtRecord } from '@cdktf/provider-azurerm/lib/dns-txt-record/index.js'
-import { DnsZone } from '@cdktf/provider-azurerm/lib/dns-zone/index.js'
+import { RecordSet, Zone } from '@pulumi/azure-native/dns/index.js'
 import { CommonAzureConstruct } from '../../common/index.js'
-import { createAzureTfOutput } from '../../utils/index.js'
 import { DnsARecordProps, DnsCnameRecordProps, DnsTxtRecordProps, DnsZoneProps } from './types.js'
 
 /**
- * @classdesc Provides operations on Azure DNS
+ * @classdesc Provides operations on Azure DNS using Pulumi
  * - A new instance of this class is injected into {@link CommonAzureConstruct} constructor.
  * - If a custom construct extends {@link CommonAzureConstruct}, an instance is available within the context.
  * @example
- * ```
+ * ```typescript
  * import { CommonAzureConstruct, CommonAzureStackProps } from '@gradientedge/cdk-utils'
  *
  * class CustomConstruct extends CommonAzureConstruct {
- *   constructor(parent: Construct, id: string, props: CommonAzureStackProps) {
- *     super(parent, id, props)
+ *   constructor(name: string, props: CommonAzureStackProps) {
+ *     super(name, props)
  *     this.props = props
- *     this.dnsManager.createAppService('MyDnsZone', this, props)
+ *     this.dnsManager.createDnsZone('MyDnsZone', this, props)
  *   }
  * }
  * ```
@@ -30,33 +25,34 @@ export class AzureDnsManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props dns zone properties
-   * @see [CDKTF DNS Zone Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/DnsZone.typescript.md}
+   * @see [Pulumi Azure Native DNS Zone]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/network/zone/}
    */
   public createDnsZone(id: string, scope: CommonAzureConstruct, props: DnsZoneProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-dz-rg`, {
-      name: scope.props.resourceGroupName
-        ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-        : `${props.resourceGroupName}`,
-    })
+    // Get resource group name
+    const resourceGroupName = scope.props.resourceGroupName
+      ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
+      : props.resourceGroupName
 
-    if (!resourceGroup) throw `Resource group undefined for ${id}`
+    if (!resourceGroupName) throw `Resource group name undefined for ${id}`
 
-    const dnsZone = new DnsZone(scope, `${id}-dz`, {
-      ...props,
-      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.dnsZone),
-      resourceGroupName: resourceGroup.name,
-      tags: props.tags ?? {
-        environment: scope.props.stage,
+    return new Zone(
+      `${id}-dz`,
+      {
+        ...props,
+        zoneName: scope.resourceNameFormatter.format(
+          props.zoneName?.toString(),
+          scope.props.resourceNameOptions?.dnsZone
+        ),
+        resourceGroupName: resourceGroupName,
+        location: 'global', // DNS zones are always global
+        tags: props.tags ?? {
+          environment: scope.props.stage,
+        },
       },
-    })
-
-    createAzureTfOutput(`${id}-dnsZoneName`, scope, dnsZone.name)
-    createAzureTfOutput(`${id}-dnsZoneFriendlyUniqueId`, scope, dnsZone.friendlyUniqueId)
-    createAzureTfOutput(`${id}-dnsZoneId`, scope, dnsZone.id)
-
-    return dnsZone
+      { parent: scope }
+    )
   }
 
   /**
@@ -64,24 +60,23 @@ export class AzureDnsManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props dns a record properties
-   * @see [CDKTF DNS A Record Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/DnsARecord.typescript.md}
+   * @see [Pulumi Azure Native DNS Record Set]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/network/recordset/}
    */
   public createDnsARecord(id: string, scope: CommonAzureConstruct, props: DnsARecordProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    const dnsARecord = new DnsARecord(scope, `${id}-da`, {
-      ...props,
-      ttl: props.ttl ?? 300,
-      tags: props.tags ?? {
-        environment: scope.props.stage,
+    return new RecordSet(
+      `${id}-da`,
+      {
+        ...props,
+        recordType: 'A',
+        ttl: props.ttl ?? 300,
+        metadata: props.metadata ?? {
+          environment: scope.props.stage,
+        },
       },
-    })
-
-    createAzureTfOutput(`${id}-dnsARecordName`, scope, dnsARecord.name)
-    createAzureTfOutput(`${id}-dnsARecordFriendlyUniqueId`, scope, dnsARecord.friendlyUniqueId)
-    createAzureTfOutput(`${id}-dnsARecordId`, scope, dnsARecord.id)
-
-    return dnsARecord
+      { parent: scope }
+    )
   }
 
   /**
@@ -89,24 +84,23 @@ export class AzureDnsManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props dns cname record properties
-   * @see [CDKTF DNS CNAME Record Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/DnsCnameRecord.typescript.md}
+   * @see [Pulumi Azure Native DNS Record Set]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/network/recordset/}
    */
   public createDnsCnameRecord(id: string, scope: CommonAzureConstruct, props: DnsCnameRecordProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    const dnsCnameRecord = new DnsCnameRecord(scope, `${id}-dc`, {
-      ...props,
-      ttl: props.ttl ?? 300,
-      tags: props.tags ?? {
-        environment: scope.props.stage,
+    return new RecordSet(
+      `${id}-dc`,
+      {
+        ...props,
+        recordType: 'CNAME',
+        ttl: props.ttl ?? 300,
+        metadata: props.metadata ?? {
+          environment: scope.props.stage,
+        },
       },
-    })
-
-    createAzureTfOutput(`${id}-dnsCnameRecordName`, scope, dnsCnameRecord.name)
-    createAzureTfOutput(`${id}-dnsCnameRecordFriendlyUniqueId`, scope, dnsCnameRecord.friendlyUniqueId)
-    createAzureTfOutput(`${id}-dnsCnameRecordId`, scope, dnsCnameRecord.id)
-
-    return dnsCnameRecord
+      { parent: scope }
+    )
   }
 
   /**
@@ -114,23 +108,22 @@ export class AzureDnsManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props dns txt record properties
-   * @see [CDKTF DNS TXT Record Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/DnsCnameRecord.typescript.md}
+   * @see [Pulumi Azure Native DNS Record Set]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/network/recordset/}
    */
   public createDnsTxtRecord(id: string, scope: CommonAzureConstruct, props: DnsTxtRecordProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    const dnsTxtRecord = new DnsTxtRecord(scope, `${id}-dc`, {
-      ...props,
-      ttl: props.ttl ?? 300,
-      tags: props.tags ?? {
-        environment: scope.props.stage,
+    return new RecordSet(
+      `${id}-dt`,
+      {
+        ...props,
+        recordType: 'TXT',
+        ttl: props.ttl ?? 300,
+        metadata: props.metadata ?? {
+          environment: scope.props.stage,
+        },
       },
-    })
-
-    createAzureTfOutput(`${id}-dnsTxtRecordName`, scope, dnsTxtRecord.name)
-    createAzureTfOutput(`${id}-dnsTxtRecordFriendlyUniqueId`, scope, dnsTxtRecord.friendlyUniqueId)
-    createAzureTfOutput(`${id}-dnsTxtRecordId`, scope, dnsTxtRecord.id)
-
-    return dnsTxtRecord
+      { parent: scope }
+    )
   }
 }

@@ -1,3 +1,3 @@
-import { ManagedRedisConfig } from '@cdktf/provider-azurerm/lib/managed-redis/index.js'
+import { RedisArgs } from '@pulumi/azure-native/redis/index.js'
 
-export interface ManagedRedisProps extends ManagedRedisConfig {}
+export interface ManagedRedisProps extends RedisArgs {}

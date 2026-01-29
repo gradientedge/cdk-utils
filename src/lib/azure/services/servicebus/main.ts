@@ -1,13 +1,15 @@
-import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group/index.js'
-import { DataAzurermServicebusQueue } from '@cdktf/provider-azurerm/lib/data-azurerm-servicebus-queue/index.js'
-import { ServicebusNamespace } from '@cdktf/provider-azurerm/lib/servicebus-namespace/index.js'
-import { ServicebusQueue } from '@cdktf/provider-azurerm/lib/servicebus-queue/index.js'
-import { ServicebusSubscription } from '@cdktf/provider-azurerm/lib/servicebus-subscription/index.js'
-import { ServicebusTopic } from '@cdktf/provider-azurerm/lib/servicebus-topic/index.js'
-import { CommonAzureConstruct } from '../../common/index.js'
-import { createAzureTfOutput } from '../../utils/index.js'
 import {
-  DataAzurermServicebusQueueProps,
+  getQueueOutput,
+  ManagedServiceIdentityType,
+  Namespace,
+  Queue,
+  SkuName,
+  Subscription,
+  Topic,
+} from '@pulumi/azure-native/servicebus/index.js'
+import { CommonAzureConstruct } from '../../common/index.js'
+import {
+  ResolveServicebusQueueProps,
   ServicebusNamespaceProps,
   ServicebusQueueProps,
   ServicebusSubscriptionProps,
@@ -15,16 +17,16 @@ import {
 } from './types.js'
 
 /**
- * @classdesc Provides operations on Azure Servicebus
+ * @classdesc Provides operations on Azure Servicebus using Pulumi
  * - A new instance of this class is injected into {@link CommonAzureConstruct} constructor.
  * - If a custom construct extends {@link CommonAzureConstruct}, an instance is available within the context.
  * @example
- * ```
+ * ```typescript
  * import { CommonAzureConstruct, CommonAzureStackProps } from '@gradientedge/cdk-utils'
  *
  * class CustomConstruct extends CommonAzureConstruct {
- *   constructor(parent: Construct, id: string, props: CommonAzureStackProps) {
- *     super(parent, id, props)
+ *   constructor(name: string, props: CommonAzureStackProps) {
+ *     super(name, props)
  *     this.props = props
  *     this.ServicebusManager.createServicebusTopic('MyServicebusTopic', this, props)
  *   }
@@ -37,38 +39,40 @@ export class AzureServicebusManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props servicebus namespace properties
-   * @see [CDKTF Servicebus Namespace Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/servicebusNamespace.typescript.md}
+   * @see [Pulumi Azure Native Service Bus Namespace]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/servicebus/namespace/}
    */
   public createServicebusNamespace(id: string, scope: CommonAzureConstruct, props: ServicebusNamespaceProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-sn-rg`, {
-      name: scope.props.resourceGroupName
-        ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-        : `${props.resourceGroupName}`,
-    })
+    // Get resource group name
+    const resourceGroupName = scope.props.resourceGroupName
+      ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
+      : props.resourceGroupName
 
-    if (!resourceGroup) throw `Resource group undefined for ${id}`
+    if (!resourceGroupName) throw `Resource group name undefined for ${id}`
 
-    const servicebusNamespace = new ServicebusNamespace(scope, `${id}-sn`, {
-      ...props,
-      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.serviceBusNamespace),
-      resourceGroupName: resourceGroup.name,
-      location: resourceGroup.location,
-      identity: {
-        type: props.identity?.type ?? 'SystemAssigned',
+    return new Namespace(
+      `${id}-sn`,
+      {
+        ...props,
+        namespaceName: scope.resourceNameFormatter.format(
+          props.namespaceName?.toString(),
+          scope.props.resourceNameOptions?.serviceBusNamespace
+        ),
+        resourceGroupName: resourceGroupName,
+        location: props.location ?? scope.props.location,
+        identity: props.identity ?? {
+          type: ManagedServiceIdentityType.SystemAssigned,
+        },
+        sku: props.sku ?? {
+          name: SkuName.Standard,
+        },
+        tags: props.tags ?? {
+          environment: scope.props.stage,
+        },
       },
-      sku: props.sku ?? 'Standard',
-      tags: props.tags ?? {
-        environment: scope.props.stage,
-      },
-    })
-
-    createAzureTfOutput(`${id}-servicebusNamespaceName`, scope, servicebusNamespace.name)
-    createAzureTfOutput(`${id}-servicebusNamespaceFriendlyUniqueId`, scope, servicebusNamespace.friendlyUniqueId)
-    createAzureTfOutput(`${id}-servicebusNamespaceId`, scope, servicebusNamespace.id)
-
-    return servicebusNamespace
+      { parent: scope }
+    )
   }
 
   /**
@@ -76,22 +80,24 @@ export class AzureServicebusManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props servicebus topic properties
-   * @see [CDKTF Servicebus Topic Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/servicebusTopic.typescript.md}
+   * @see [Pulumi Azure Native Service Bus Topic]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/servicebus/topic/}
    */
   public createServicebusTopic(id: string, scope: CommonAzureConstruct, props: ServicebusTopicProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    const servicebusTopic = new ServicebusTopic(scope, `${id}-st`, {
-      ...props,
-      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.serviceBusTopic),
-      namespaceId: props.namespaceId,
-    })
-
-    createAzureTfOutput(`${id}-servicebusTopicName`, scope, servicebusTopic.name)
-    createAzureTfOutput(`${id}-servicebusTopicFriendlyUniqueId`, scope, servicebusTopic.friendlyUniqueId)
-    createAzureTfOutput(`${id}-servicebusTopicId`, scope, servicebusTopic.id)
-
-    return servicebusTopic
+    return new Topic(
+      `${id}-st`,
+      {
+        ...props,
+        topicName: scope.resourceNameFormatter.format(
+          props.topicName?.toString(),
+          scope.props.resourceNameOptions?.serviceBusTopic
+        ),
+        namespaceName: props.namespaceName,
+        resourceGroupName: props.resourceGroupName,
+      },
+      { parent: scope }
+    )
   }
 
   /**
@@ -99,26 +105,28 @@ export class AzureServicebusManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props servicebus queue properties
-   * @see [CDKTF Servicebus Queue Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/servicebusQueue.typescript.md}
+   * @see [Pulumi Azure Native Service Bus Queue]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/servicebus/queue/}
    */
   public createServicebusQueue(id: string, scope: CommonAzureConstruct, props: ServicebusQueueProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    const servicebusQueue = new ServicebusQueue(scope, `${id}-sq`, {
-      ...props,
-      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.serviceBusQueue),
-      namespaceId: props.namespaceId,
-      duplicateDetectionHistoryTimeWindow: props.duplicateDetectionHistoryTimeWindow ?? 'PT1M',
-      requiresDuplicateDetection: props.requiresDuplicateDetection ?? true,
-      deadLetteringOnMessageExpiration: props.deadLetteringOnMessageExpiration ?? true,
-      defaultMessageTtl: props.defaultMessageTtl ?? 'P2D',
-    })
-
-    createAzureTfOutput(`${id}-servicebusQueueName`, scope, servicebusQueue.name)
-    createAzureTfOutput(`${id}-servicebusQueueFriendlyUniqueId`, scope, servicebusQueue.friendlyUniqueId)
-    createAzureTfOutput(`${id}-servicebusQueueId`, scope, servicebusQueue.id)
-
-    return servicebusQueue
+    return new Queue(
+      `${id}-sq`,
+      {
+        ...props,
+        queueName: scope.resourceNameFormatter.format(
+          props.queueName?.toString(),
+          scope.props.resourceNameOptions?.serviceBusQueue
+        ),
+        namespaceName: props.namespaceName,
+        resourceGroupName: props.resourceGroupName,
+        duplicateDetectionHistoryTimeWindow: props.duplicateDetectionHistoryTimeWindow ?? 'PT1M',
+        requiresDuplicateDetection: props.requiresDuplicateDetection ?? true,
+        deadLetteringOnMessageExpiration: props.deadLetteringOnMessageExpiration ?? true,
+        defaultMessageTimeToLive: (props as any).defaultMessageTtl ?? 'P2D',
+      },
+      { parent: scope }
+    )
   }
 
   /**
@@ -126,44 +134,45 @@ export class AzureServicebusManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props servicebus subscription properties
-   * @see [CDKTF Servicebus Subscription Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/servicebusSubscription.typescript.md}
+   * @see [Pulumi Azure Native Service Bus Subscription]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/servicebus/subscription/}
    */
   public createServicebusSubscription(id: string, scope: CommonAzureConstruct, props: ServicebusSubscriptionProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    const servicebusSubscription = new ServicebusSubscription(scope, `${id}-ss`, {
-      ...props,
-      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.serviceBusSubscription),
-      maxDeliveryCount: props.maxDeliveryCount ?? 1,
-    })
-
-    createAzureTfOutput(`${id}-servicebusSubscriptionName`, scope, servicebusSubscription.name)
-    createAzureTfOutput(`${id}-servicebusSubscriptionFriendlyUniqueId`, scope, servicebusSubscription.friendlyUniqueId)
-    createAzureTfOutput(`${id}-servicebusSubscriptionId`, scope, servicebusSubscription.id)
-
-    return servicebusSubscription
+    return new Subscription(
+      `${id}-ss`,
+      {
+        ...props,
+        subscriptionName: scope.resourceNameFormatter.format(
+          props.subscriptionName?.toString(),
+          scope.props.resourceNameOptions?.serviceBusSubscription
+        ),
+        maxDeliveryCount: props.maxDeliveryCount ?? 1,
+      },
+      { parent: scope }
+    )
   }
 
   /**
-   * @summary Method to resolve a new servicebus queue
+   * @summary Method to resolve an existing servicebus queue
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props servicebus queue properties
-   * @see [CDKTF Servicebus Queue Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/servicebusQueue.typescript.md}
+   * @param props servicebus queue properties for lookup
+   * @see [Pulumi Azure Native Service Bus Queue Lookup]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/servicebus/queue/}
    */
-  public resolveServicebusQueue(id: string, scope: CommonAzureConstruct, props: DataAzurermServicebusQueueProps) {
+  public resolveServicebusQueue(id: string, scope: CommonAzureConstruct, props: ResolveServicebusQueueProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    const servicebusQueue = new DataAzurermServicebusQueue(scope, `${id}-sq`, {
-      ...props,
-      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.serviceBusQueue),
-      namespaceId: props.namespaceId,
-    })
-
-    createAzureTfOutput(`${id}-servicebusQueueName`, scope, servicebusQueue.name)
-    createAzureTfOutput(`${id}-servicebusQueueFriendlyUniqueId`, scope, servicebusQueue.friendlyUniqueId)
-    createAzureTfOutput(`${id}-servicebusQueueId`, scope, servicebusQueue.id)
-
-    return servicebusQueue
+    return getQueueOutput(
+      {
+        queueName: scope.resourceNameFormatter.format(
+          props.queueName?.toString(),
+          scope.props.resourceNameOptions?.serviceBusQueue
+        ),
+        namespaceName: props.namespaceName,
+        resourceGroupName: props.resourceGroupName,
+      },
+      { parent: scope }
+    )
   }
 }

@@ -1,6 +1,7 @@
 export enum AzureRemoteBackend {
-  local = 'local',
   azurerm = 'azurerm',
+  pulumi = 'pulumi',
+  local = 'local',
 }
 
 /**

@@ -1,12 +1,24 @@
 {
   "testApiManagement": {
-    "name": "test-api-management"
+    "serviceName": "test-api-management",
+    "publisherEmail": "test@example.com",
+    "publisherName": "Test Publisher",
+    "sku": {
+      "name": "Developer",
+      "capacity": 1
+    }
   },
   "testApiManagementBackend": {
-    "name": "test-api-management-backend"
+    "backendId": "test-api-management-backend",
+    "serviceName": "test-api-management-dev",
+    "resourceGroupName": "test-rg-dev",
+    "url": "https://test-backend.example.com"
   },
   "testApiManagementApi": {
-    "name": "test-api-management-api",
+    "apiId": "test-api-management-api",
+    "serviceName": "test-api-management-dev",
+    "resourceGroupName": "test-rg-dev",
+    "path": "test",
     "operations": [
       {
         "displayName": "test",

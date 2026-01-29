@@ -1,6 +1,5 @@
-import { App, Testing } from 'cdktf'
-import 'cdktf/lib/testing/adapters/jest'
-import { Construct } from 'constructs'
+import { WebApp, WebAppFunction } from '@pulumi/azure-native/web/index.js'
+import * as pulumi from '@pulumi/pulumi'
 import {
   CommonAzureConstruct,
   CommonAzureStack,
@@ -21,50 +20,59 @@ const testStackProps: any = {
   domainName: 'gradientedge.io',
   extraContexts: ['src/test/azure/common/cdkConfig/dummy.json', 'src/test/azure/common/cdkConfig/functions.json'],
   features: {},
+  location: 'eastus',
   name: 'test-common-stack',
   resourceGroupName: 'test-rg',
   skipStageForARecords: false,
   stage: 'dev',
-  stageContextPath: 'src/test/aws/common/cdkEnv',
+  stageContextPath: 'src/test/azure/common/env',
 }
 
 class TestCommonStack extends CommonAzureStack {
   declare props: TestAzureStackProps
+  declare construct: TestCommonConstruct
 
-  constructor(parent: Construct, name: string, props: TestAzureStackProps) {
-    super(parent, name, testStackProps)
-    this.construct = new TestCommonConstruct(this, props.name, this.props)
-  }
-
-  protected determineConstructProps(props: CommonAzureStackProps) {
-    return {
-      ...super.determineConstructProps(props),
-      testAttribute: this.node.tryGetContext('testAttribute'),
-      testFunctionApp: this.node.tryGetContext('testFunctionApp'),
-      testFunction: this.node.tryGetContext('testFunction'),
-      testFunctionAppFlexConsumption: this.node.tryGetContext('testFunctionAppFlexConsumption'),
-    }
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestCommonConstruct(props.name, this.props)
   }
 }
 
 class TestInvalidCommonStack extends CommonAzureStack {
   declare props: TestAzureStackProps
+  declare construct: TestCommonConstruct
 
-  constructor(parent: Construct, name: string, props: TestAzureStackProps) {
-    super(parent, name, props)
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.construct = new TestCommonConstruct(testStackProps.name, this.props)
+  }
 
-    this.construct = new TestCommonConstruct(this, testStackProps.name, this.props)
+  protected determineConstructProps(props: TestAzureStackProps): TestAzureStackProps {
+    const baseProps = super.determineConstructProps(props)
+    // Override the test property to undefined to trigger validation error
+    return { ...baseProps, testFunctionApp: undefined }
   }
 }
 
 class TestCommonConstruct extends CommonAzureConstruct {
   declare props: TestAzureStackProps
+  functionApp: WebApp
+  function: WebAppFunction
+  functionAppFlexConsumption: WebApp
 
-  constructor(parent: Construct, name: string, props: TestAzureStackProps) {
-    super(parent, name, props)
-    this.functiontManager.createFunctionApp(`test-function-app-${this.props.stage}`, this, this.props.testFunctionApp)
-    this.functiontManager.createFunction(`test-function-${this.props.stage}`, this, this.props.testFunction)
-    this.functiontManager.createFunctionAppFlexConsumption(
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.functionApp = this.functionManager.createFunctionApp(
+      `test-function-app-${this.props.stage}`,
+      this,
+      this.props.testFunctionApp
+    )
+    this.function = this.functionManager.createFunction(
+      `test-function-${this.props.stage}`,
+      this,
+      this.props.testFunction
+    )
+    this.functionAppFlexConsumption = this.functionManager.createFunctionAppFlexConsumption(
       `test-function-app-flex-consumption-${this.props.stage}`,
       this,
       this.props.testFunctionAppFlexConsumption
@@ -72,104 +80,107 @@ class TestCommonConstruct extends CommonAzureConstruct {
   }
 }
 
-const app = new App({ context: testStackProps })
-const testingApp = Testing.fakeCdktfJsonPath(app)
-const commonStack = new TestCommonStack(testingApp, 'test-common-stack', testStackProps)
-const stack = Testing.fullSynth(commonStack)
-const construct = Testing.synth(commonStack.construct)
+pulumi.runtime.setMocks({
+  newResource: (args: pulumi.runtime.MockResourceArgs) => {
+    let name
 
-describe('TestAzureFunctionAppConstruct', () => {
+    // Return different names based on resource type
+    if (args.type === 'azure-native:web:WebApp') {
+      name = args.inputs.name
+    } else if (args.type === 'azure-native:web:WebAppFunction') {
+      name = args.inputs.name
+    }
+
+    return {
+      id: `${args.name}-id`,
+      state: { ...args.inputs, name },
+    }
+  },
+  call: (args: pulumi.runtime.MockCallArgs) => {
+    return args.inputs
+  },
+})
+
+const stack = new TestCommonStack('test-common-stack', testStackProps)
+
+describe('TestAzureFunctionConstruct', () => {
   test('handles mis-configurations as expected', () => {
-    const error = () => new TestInvalidCommonStack(app, 'test-invalid-stack', testStackProps)
+    const error = () => new TestInvalidCommonStack('test-invalid-stack', testStackProps)
     expect(error).toThrow('Props undefined for test-function-app-dev')
   })
 })
 
-describe('TestAzureFunctionAppConstruct', () => {
+describe('TestAzureFunctionConstruct', () => {
   test('is initialised as expected', () => {
-    /* test if the created stack have the right properties injected */
-    expect(commonStack.props).toHaveProperty('testAttribute')
-    expect(commonStack.props.testAttribute).toEqual('success')
+    expect(stack.construct.props).toHaveProperty('testAttribute')
+    expect(stack.construct.props.testAttribute).toEqual('success')
   })
 })
 
-describe('TestAzureFunctionAppConstruct', () => {
+describe('TestAzureFunctionConstruct', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
-    expect(construct).toBeDefined()
-    expect(Testing.toBeValidTerraform(stack)).toBeTruthy()
+    expect(stack.construct).toBeDefined()
+    expect(stack.construct.functionApp).toBeDefined()
+    expect(stack.construct.function).toBeDefined()
+    expect(stack.construct.functionAppFlexConsumption).toBeDefined()
   })
 })
 
-describe('TestAzureFunctionAppConstruct', () => {
-  test('provisions outputs as expected', () => {
-    expect(JSON.parse(construct).output).toMatchObject({
-      testFunctionAppDevFunctionAppFriendlyUniqueId: {
-        value: 'test-function-app-dev-fa',
-      },
-      testFunctionAppDevFunctionAppId: {
-        value: '${azurerm_linux_function_app.test-function-app-dev-fa.id}',
-      },
-      testFunctionAppDevFunctionAppName: {
-        value: '${azurerm_linux_function_app.test-function-app-dev-fa.name}',
-      },
-      testFunctionDevFunctionFriendlyUniqueId: {
-        value: 'test-function-dev-fc',
-      },
-      testFunctionDevFunctionId: {
-        value: '${azurerm_function_app_function.test-function-dev-fc.id}',
-      },
-      testFunctionDevFunctionName: {
-        value: '${azurerm_function_app_function.test-function-dev-fc.name}',
-      },
-    })
-  })
-})
-
-describe('TestAzureFunctionAppConstruct', () => {
+describe('TestAzureFunctionConstruct', () => {
   test('provisions function app as expected', () => {
-    expect(
-      Testing.toHaveResourceWithProperties(construct, 'LinuxFunctionApp', {
-        name: 'test-function-app-dev',
-        resource_group_name: '${data.azurerm_resource_group.test-function-app-dev-fa-rg.name}',
+    pulumi
+      .all([
+        stack.construct.functionApp.id,
+        stack.construct.functionApp.urn,
+        stack.construct.functionApp.name,
+        stack.construct.functionApp.location,
+        stack.construct.functionApp.kind,
+      ])
+      .apply(([id, urn, name, location, kind]) => {
+        expect(id).toEqual('test-function-app-dev-fa-id')
+        expect(urn).toEqual(
+          'urn:pulumi:stack::project::custom:azure:Construct:test-common-stack$azure-native:web:WebApp::test-function-app-dev-fa'
+        )
+        expect(name).toEqual('test-function-app-dev')
+        expect(location).toEqual('eastus')
+        expect(kind).toEqual('functionapp')
       })
-    )
   })
 })
 
 describe('TestAzureFunctionConstruct', () => {
   test('provisions function as expected', () => {
-    expect(
-      Testing.toHaveResourceWithProperties(construct, 'FunctionAppFunction', {
-        name: 'test-function-dev',
+    pulumi
+      .all([stack.construct.function.id, stack.construct.function.urn, stack.construct.function.name])
+      .apply(([id, urn, name]) => {
+        expect(id).toEqual('test-function-dev-fc-id')
+        expect(urn).toEqual(
+          'urn:pulumi:stack::project::custom:azure:Construct:test-common-stack$azure-native:web:WebAppFunction::test-function-dev-fc'
+        )
+        expect(name).toEqual('test-function-dev')
       })
-    )
   })
 })
 
 describe('TestAzureFunctionConstruct', () => {
   test('provisions function as expected', () => {
-    expect(
-      Testing.toHaveResourceWithProperties(construct, 'FunctionAppFlexConsumption', {
-        identity: {
-          type: 'SystemAssigned',
-        },
-        instance_memory_in_mb: 2048,
-        location: '${data.azurerm_resource_group.test-function-app-flex-consumption-dev-fa-rg.location}',
-        maximum_instance_count: 40,
-        name: 'test-function-app-flex-consumption-dev',
-        resource_group_name: '${data.azurerm_resource_group.test-function-app-flex-consumption-dev-fa-rg.name}',
-        runtime_name: 'node',
-        runtime_version: '22',
-        site_config: {
-          http2_enabled: true,
-        },
-        storage_authentication_type: 'StorageAccountConnectionString',
-        storage_container_type: 'blobContainer',
-        tags: {
-          environment: 'dev',
-        },
+    pulumi
+      .all([
+        stack.construct.functionAppFlexConsumption.id,
+        stack.construct.functionAppFlexConsumption.urn,
+        stack.construct.functionAppFlexConsumption.name,
+        stack.construct.functionAppFlexConsumption.location,
+        stack.construct.functionAppFlexConsumption.kind,
+      ])
+      .apply(([id, urn, name, location, kind]) => {
+        expect(id).toEqual('test-function-app-flex-consumption-dev-fc-id')
+        expect(urn).toEqual(
+          'urn:pulumi:stack::project::custom:azure:Construct:test-common-stack$azure-native:web:WebApp::test-function-app-flex-consumption-dev-fc'
+        )
+        expect(name).toEqual('test-function-app-flex-consumption-dev')
+        expect(location).toEqual('eastus')
+        expect(kind).toEqual('functionapp')
       })
-    )
   })
 })

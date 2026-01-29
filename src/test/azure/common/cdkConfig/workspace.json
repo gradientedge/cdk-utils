@@ -1,0 +1,9 @@
+{
+  "testWorkspace": {
+    "workspaceName": "test-workspace",
+    "resourceGroupName": "test-rg-dev",
+    "sku": {
+      "name": "PerGB2018"
+    }
+  }
+}

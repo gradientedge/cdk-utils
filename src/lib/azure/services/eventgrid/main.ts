@@ -1,34 +1,35 @@
 import {
-  DataAzurermEventgridTopic,
-  DataAzurermEventgridTopicConfig,
-} from '@cdktf/provider-azurerm/lib/data-azurerm-eventgrid-topic/index.js'
-import { DataAzurermResourceGroup } from '@cdktf/provider-azurerm/lib/data-azurerm-resource-group/index.js'
-import { EventgridEventSubscription } from '@cdktf/provider-azurerm/lib/eventgrid-event-subscription/index.js'
-import { EventgridSystemTopicEventSubscription } from '@cdktf/provider-azurerm/lib/eventgrid-system-topic-event-subscription/index.js'
-import { EventgridSystemTopic } from '@cdktf/provider-azurerm/lib/eventgrid-system-topic/index.js'
-import { EventgridTopic } from '@cdktf/provider-azurerm/lib/eventgrid-topic/index.js'
+  EventDeliverySchema,
+  EventSubscription,
+  getTopicOutput,
+  GetTopicResult,
+  SystemTopic,
+  SystemTopicEventSubscription,
+  Topic,
+} from '@pulumi/azure-native/eventgrid/index.js'
+import * as pulumi from '@pulumi/pulumi'
 import { CommonAzureConstruct } from '../../common/index.js'
-import { createAzureTfOutput } from '../../utils/index.js'
 import {
   EventgridEventSubscriptionProps,
   EventgridSystemTopicEventSubscriptionProps,
   EventgridSystemTopicProps,
   EventgridTopicProps,
+  ResolveEventgridTopicProps,
 } from './types.js'
 
 /**
- * @classdesc Provides operations on Azure Event Grid
+ * @classdesc Provides operations on Azure Event Grid using Pulumi
  * - A new instance of this class is injected into {@link CommonAzureConstruct} constructor.
  * - If a custom construct extends {@link CommonAzureConstruct}, an instance is available within the context.
  * @example
- * ```
+ * ```typescript
  * import { CommonAzureConstruct, CommonAzureStackProps } from '@gradientedge/cdk-utils'
  *
  * class CustomConstruct extends CommonAzureConstruct {
- *   constructor(parent: Construct, id: string, props: CommonAzureStackProps) {
- *     super(parent, id, props)
+ *   constructor(name: string, props: CommonAzureStackProps) {
+ *     super(name, props)
  *     this.props = props
- *     this.EventGridManager.createEventGrid('MyEventGrid', this, props)
+ *     this.EventGridManager.createEventgridTopic('MyEventGrid', this, props)
  *   }
  * }
  * ```
@@ -39,35 +40,34 @@ export class AzureEventgridManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props eventgrid topic properties
-   * @see [CDKTF Eventgrid Topic Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/eventgridTopic.typescript.md}
+   * @see [Pulumi Azure Native Event Grid Topic]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/topic/}
    */
   public createEventgridTopic(id: string, scope: CommonAzureConstruct, props: EventgridTopicProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-et-rg`, {
-      name: scope.props.resourceGroupName
-        ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-        : `${props.resourceGroupName}`,
-    })
+    // Get resource group name
+    const resourceGroupName = scope.props.resourceGroupName
+      ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
+      : props.resourceGroupName
 
-    if (!resourceGroup) throw `Resource group undefined for ${id}`
+    if (!resourceGroupName) throw `Resource group name undefined for ${id}`
 
-    const eventgridTopic = new EventgridTopic(scope, `${id}-et`, {
-      ...props,
-      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.eventGridTopic),
-      location: resourceGroup.location,
-      resourceGroupName: resourceGroup.name,
-      tags: props.tags ?? {
-        environment: scope.props.stage,
+    return new Topic(
+      `${id}-et`,
+      {
+        ...props,
+        topicName: scope.resourceNameFormatter.format(
+          props.topicName?.toString(),
+          scope.props.resourceNameOptions?.eventGridTopic
+        ),
+        location: props.location ?? scope.props.location,
+        resourceGroupName: resourceGroupName,
+        tags: props.tags ?? {
+          environment: scope.props.stage,
+        },
       },
-    })
-
-    createAzureTfOutput(`${id}-eventgridTopicName`, scope, eventgridTopic.name)
-    createAzureTfOutput(`${id}-eventgridTopicFriendlyUniqueId`, scope, eventgridTopic.friendlyUniqueId)
-    createAzureTfOutput(`${id}-eventgridTopicId`, scope, eventgridTopic.id)
-    createAzureTfOutput(`${id}-eventgridTopicEndpoint`, scope, eventgridTopic.endpoint)
-
-    return eventgridTopic
+      { parent: scope }
+    )
   }
 
   /**
@@ -75,53 +75,51 @@ export class AzureEventgridManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props eventgrid topic properties
-   * @see [CDKTF Eventgrid Topic Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/eventgridTopic.typescript.md}
+   * @see [Pulumi Azure Native Event Grid Topic Lookup]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/topic/}
    */
-  public resolveEventgridTopic(id: string, scope: CommonAzureConstruct, props: DataAzurermEventgridTopicConfig) {
+  public resolveEventgridTopic(id: string, scope: CommonAzureConstruct, props: ResolveEventgridTopicProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    const eventgridTopic = new DataAzurermEventgridTopic(scope, `${id}-et`, {
-      ...props,
-      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.eventGridTopic),
-      resourceGroupName: scope.props.resourceGroupName
-        ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-        : `${props.resourceGroupName}`,
-    })
-
-    createAzureTfOutput(`${id}-eventgridTopicName`, scope, eventgridTopic.name)
-    createAzureTfOutput(`${id}-eventgridTopicFriendlyUniqueId`, scope, eventgridTopic.friendlyUniqueId)
-    createAzureTfOutput(`${id}-eventgridTopicId`, scope, eventgridTopic.id)
-    createAzureTfOutput(`${id}-eventgridTopicEndpoint`, scope, eventgridTopic.endpoint)
-
-    return eventgridTopic
+    return getTopicOutput(
+      {
+        topicName: scope.resourceNameFormatter.format(
+          props.topicName?.toString(),
+          scope.props.resourceNameOptions?.eventGridTopic
+        ),
+        resourceGroupName: scope.props.resourceGroupName
+          ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
+          : props.resourceGroupName,
+      },
+      { parent: scope }
+    )
   }
 
   /**
    * @summary Method to create a new eventgrid subscription
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props eventgrid subsription properties
-   * @see [CDKTF Eventgrid Subscription Container Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/eventgridEventSubscription.typescript.md}
+   * @param props eventgrid subscription properties
+   * @see [Pulumi Azure Native Event Grid Event Subscription]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/eventsubscription/}
    */
   public createEventgridSubscription(id: string, scope: CommonAzureConstruct, props: EventgridEventSubscriptionProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    const eventgridSubscription = new EventgridEventSubscription(scope, `${id}-es`, {
-      ...props,
-      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.eventGridEventSubscription),
-      eventDeliverySchema: props.eventDeliverySchema ?? 'CloudEventSchemaV1_0',
-      advancedFilteringOnArraysEnabled: props.advancedFilteringOnArraysEnabled ?? true,
-      retryPolicy: {
-        eventTimeToLive: props.retryPolicy?.eventTimeToLive ?? 1440,
-        maxDeliveryAttempts: props.retryPolicy?.maxDeliveryAttempts ?? 7,
+    return new EventSubscription(
+      `${id}-es`,
+      {
+        ...props,
+        eventSubscriptionName: scope.resourceNameFormatter.format(
+          props.eventSubscriptionName?.toString(),
+          scope.props.resourceNameOptions?.eventGridEventSubscription
+        ),
+        eventDeliverySchema: props.eventDeliverySchema ?? EventDeliverySchema.CloudEventSchemaV1_0,
+        retryPolicy: props.retryPolicy ?? {
+          eventTimeToLiveInMinutes: 1440,
+          maxDeliveryAttempts: 7,
+        },
       },
-    })
-
-    createAzureTfOutput(`${id}-eventgridSubscriptiontName`, scope, eventgridSubscription.name)
-    createAzureTfOutput(`${id}-eventgridSubscriptionFriendlyUniqueId`, scope, eventgridSubscription.friendlyUniqueId)
-    createAzureTfOutput(`${id}-eventgridSubscriptionId`, scope, eventgridSubscription.id)
-
-    return eventgridSubscription
+      { parent: scope }
+    )
   }
 
   /**
@@ -129,34 +127,34 @@ export class AzureEventgridManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props eventgrid system topic properties
-   * @see [CDKTF Eventgrid System Topic Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/eventgridSystemTopic.typescript.md}
+   * @see [Pulumi Azure Native Event Grid System Topic]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/systemtopic/}
    */
   public createEventgridSystemTopic(id: string, scope: CommonAzureConstruct, props: EventgridSystemTopicProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-est-rg`, {
-      name: scope.props.resourceGroupName
-        ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-        : `${props.resourceGroupName}`,
-    })
+    // Get resource group name
+    const resourceGroupName = scope.props.resourceGroupName
+      ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
+      : props.resourceGroupName
 
-    if (!resourceGroup) throw `Resource group undefined for ${id}`
+    if (!resourceGroupName) throw `Resource group name undefined for ${id}`
 
-    const eventgridSystemTopic = new EventgridSystemTopic(scope, `${id}-est`, {
-      ...props,
-      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.eventGridSystemTopic),
-      location: resourceGroup.location,
-      resourceGroupName: resourceGroup.name,
-      tags: props.tags ?? {
-        environment: scope.props.stage,
+    return new SystemTopic(
+      `${id}-est`,
+      {
+        ...props,
+        systemTopicName: scope.resourceNameFormatter.format(
+          props.systemTopicName?.toString(),
+          scope.props.resourceNameOptions?.eventGridSystemTopic
+        ),
+        location: props.location ?? scope.props.location,
+        resourceGroupName: resourceGroupName,
+        tags: props.tags ?? {
+          environment: scope.props.stage,
+        },
       },
-    })
-
-    createAzureTfOutput(`${id}-eventgridSystemTopicName`, scope, eventgridSystemTopic.name)
-    createAzureTfOutput(`${id}-eventgridSystemTopicFriendlyUniqueId`, scope, eventgridSystemTopic.friendlyUniqueId)
-    createAzureTfOutput(`${id}-eventgridSystemTopicId`, scope, eventgridSystemTopic.id)
-
-    return eventgridSystemTopic
+      { parent: scope }
+    )
   }
 
   /**
@@ -164,42 +162,42 @@ export class AzureEventgridManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props eventgrid system topic subscription properties
-   * @see [CDKTF Eventgrid System Topic Subscription Module]{@link https://github.com/cdktf/cdktf-provider-azurerm/blob/main/docs/eventgridSystemTopicEventSubscription.typescript.md}
+   * @param systemTopic The system topic to attach this subscription to
+   * @see [Pulumi Azure Native Event Grid System Topic Event Subscription]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/systemtopiceventsubscription/}
    */
   public createEventgridSystemTopicEventSubscription(
     id: string,
     scope: CommonAzureConstruct,
     props: EventgridSystemTopicEventSubscriptionProps,
-    systemTopic: EventgridSystemTopic | DataAzurermEventgridTopic
+    systemTopic: SystemTopic | pulumi.Output<GetTopicResult>
   ) {
     if (!props) throw `Props undefined for ${id}`
 
-    const resourceGroup = new DataAzurermResourceGroup(scope, `${id}-ests-rg`, {
-      name: scope.props.resourceGroupName
-        ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-        : `${props.resourceGroupName}`,
-    })
+    // Get resource group name
+    const resourceGroupName = scope.props.resourceGroupName
+      ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
+      : props.resourceGroupName
 
-    if (!resourceGroup) throw `Resource group undefined for ${id}`
+    if (!resourceGroupName) throw `Resource group name undefined for ${id}`
 
-    const eventgridSystemTopicSubscription = new EventgridSystemTopicEventSubscription(scope, `${id}-ests`, {
-      ...props,
-      name: scope.resourceNameFormatter.format(
-        props.name,
-        scope.props.resourceNameOptions?.eventGridSystemTopicEventSubscription
-      ),
-      systemTopic: systemTopic.name,
-      resourceGroupName: resourceGroup.name,
-    })
+    // Extract system topic name
+    const systemTopicName =
+      systemTopic instanceof SystemTopic
+        ? systemTopic.name
+        : (systemTopic as pulumi.Output<GetTopicResult>).apply(t => t.name)
 
-    createAzureTfOutput(`${id}-eventgridSystemTopicEventSubscriptionName`, scope, eventgridSystemTopicSubscription.name)
-    createAzureTfOutput(
-      `${id}-eventgridSystemTopicEventSubscriptionFriendlyUniqueId`,
-      scope,
-      eventgridSystemTopicSubscription.friendlyUniqueId
+    return new SystemTopicEventSubscription(
+      `${id}-ests`,
+      {
+        ...props,
+        eventSubscriptionName: scope.resourceNameFormatter.format(
+          props.eventSubscriptionName?.toString(),
+          scope.props.resourceNameOptions?.eventGridSystemTopicEventSubscription
+        ),
+        systemTopicName: systemTopicName,
+        resourceGroupName: resourceGroupName,
+      },
+      { parent: scope }
     )
-    createAzureTfOutput(`${id}-eventgridSystemTopicEventSubscriptionId`, scope, eventgridSystemTopicSubscription.id)
-
-    return eventgridSystemTopicSubscription
   }
 }

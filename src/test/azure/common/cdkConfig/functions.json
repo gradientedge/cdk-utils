@@ -1,23 +1,37 @@
 {
   "testFunctionApp": {
-    "name": "test-function-app"
+    "name": "test-function-app",
+    "resourceGroupName": "test-rg-dev",
+    "serverFarmId": "/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.Web/serverfarms/test-asp",
+    "kind": "functionapp"
   },
   "testFunction": {
     "name": "test-function",
-    "functionAppName": "test-function-app"
+    "functionAppName": "test-function-app-dev",
+    "resourceGroupName": "test-rg-dev"
   },
   "testFunctionAppFlexConsumption": {
     "name": "test-function-app-flex-consumption",
-    "sourceCodeHash": "testHash",
-    "deploySource": "src/test/azure/common/nodejs/lib",
-    "siteConfig": {
-      "http2Enabled": true
-    },
-    "alwaysReadyConfig": [
-      {
-        "name": "http",
-        "instanceCount": 10
+    "resourceGroupName": "test-rg-dev",
+    "kind": "functionapp",
+    "functionAppConfig": {
+      "deployment": {
+        "storage": {
+          "type": "blobContainer",
+          "value": "https://testsa.blob.core.windows.net/deployments",
+          "authentication": {
+            "type": "SystemAssignedIdentity"
+          }
+        }
+      },
+      "scaleAndConcurrency": {
+        "maximumInstanceCount": 100,
+        "instanceMemoryMB": 2048
+      },
+      "runtime": {
+        "name": "node",
+        "version": "20"
       }
-    ]
+    }
   }
 }

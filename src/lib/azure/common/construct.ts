@@ -1,8 +1,4 @@
-import { DataAzurermClientConfig } from '@cdktf/provider-azurerm/lib/data-azurerm-client-config/index.js'
-import { AzurermProvider } from '@cdktf/provider-azurerm/lib/provider/index.js'
-import { AzurermBackend, TerraformStack } from 'cdktf'
-import { Provider } from 'cdktf-local-exec'
-import { Construct } from 'constructs'
+import { ComponentResource, ComponentResourceOptions } from '@pulumi/pulumi'
 import { isDevStage, isPrdStage, isTestStage, isUatStage } from '../../common/index.js'
 import {
   AzureApiManagementManager,
@@ -14,19 +10,38 @@ import {
   AzureEventgridManager,
   AzureFunctionManager,
   AzureKeyVaultManager,
-  AzureLogAnalyticsWorkspaceManager,
+  AzureOperationalInsightsManager,
   AzureMonitorManager,
   AzureRedisManager,
   AzureResourceGroupManager,
   AzureServicebusManager,
   AzureStorageManager,
 } from '../services/index.js'
-import { AzureRemoteBackend } from './constants.js'
 import { AzureResourceNameFormatter } from './resource-name-formatter.js'
 import { CommonAzureStackProps } from './types.js'
 
-export class CommonAzureConstruct extends TerraformStack {
+/**
+ * @classdesc Common Azure construct to use as a base for all higher level constructs using Pulumi
+ * - Provides manager instances for all Azure services
+ * - Handles resource naming conventions
+ * - Manages common properties and utilities
+ * @example
+ * ```typescript
+ * import { CommonAzureConstruct } from '@gradientedge/cdk-utils'
+ *
+ * class CustomConstruct extends CommonAzureConstruct {
+ *   constructor(name: string, props: CommonAzureStackProps) {
+ *     super(name, props)
+ *     // provision resources using this.resourceGroupManager, etc.
+ *   }
+ * }
+ * ```
+ */
+export class CommonAzureConstruct extends ComponentResource {
   declare props: CommonAzureStackProps
+  declare options?: ComponentResourceOptions
+  id: string
+  fullyQualifiedDomainName: string
   apiManagementManager: AzureApiManagementManager
   appConfigurationManager: AzureAppConfigurationManager
   appServiceManager: AzureAppServiceManager
@@ -34,23 +49,21 @@ export class CommonAzureConstruct extends TerraformStack {
   cosmosDbManager: AzureCosmosDbManager
   dnsManager: AzureDnsManager
   eventgridManager: AzureEventgridManager
-  fullyQualifiedDomainName: string
-  functiontManager: AzureFunctionManager
-  id: string
+  functionManager: AzureFunctionManager
   keyVaultManager: AzureKeyVaultManager
-  logAnalyticsWorkspaceManager: AzureLogAnalyticsWorkspaceManager
+  operationalInsightsManager: AzureOperationalInsightsManager
   monitorManager: AzureMonitorManager
   redisManager: AzureRedisManager
   resourceGroupManager: AzureResourceGroupManager
   resourceNameFormatter: AzureResourceNameFormatter
   servicebusManager: AzureServicebusManager
   storageManager: AzureStorageManager
-  tenantId: string
 
-  constructor(scope: Construct, id: string, props: CommonAzureStackProps) {
-    super(scope, id)
+  constructor(name: string, props: CommonAzureStackProps, options?: ComponentResourceOptions) {
+    super(`custom:azure:Construct:${name}`, name, props, options)
     this.props = props
-    this.id = id
+    this.options = options
+    this.id = name
 
     this.apiManagementManager = new AzureApiManagementManager()
     this.appConfigurationManager = new AzureAppConfigurationManager()
@@ -59,22 +72,17 @@ export class CommonAzureConstruct extends TerraformStack {
     this.cosmosDbManager = new AzureCosmosDbManager()
     this.dnsManager = new AzureDnsManager()
     this.eventgridManager = new AzureEventgridManager()
-    this.functiontManager = new AzureFunctionManager()
+    this.functionManager = new AzureFunctionManager()
     this.keyVaultManager = new AzureKeyVaultManager()
-    this.logAnalyticsWorkspaceManager = new AzureLogAnalyticsWorkspaceManager()
+    this.operationalInsightsManager = new AzureOperationalInsightsManager()
     this.monitorManager = new AzureMonitorManager()
     this.redisManager = new AzureRedisManager()
     this.resourceGroupManager = new AzureResourceGroupManager()
-    this.resourceNameFormatter = new AzureResourceNameFormatter(this, `${id}-rnf`, props)
+    this.resourceNameFormatter = new AzureResourceNameFormatter(props)
     this.servicebusManager = new AzureServicebusManager()
     this.storageManager = new AzureStorageManager()
 
     this.determineFullyQualifiedDomain()
-    this.determineRemoteBackend()
-    this.determineTenantId()
-
-    new AzurermProvider(this, `${this.id}-provider`, this.props)
-    new Provider(this, `${this.id}-local-exec-provider`)
   }
 
   /**
@@ -84,30 +92,6 @@ export class CommonAzureConstruct extends TerraformStack {
     this.fullyQualifiedDomainName = this.props.subDomain
       ? `${this.props.subDomain}.${this.props.domainName}`
       : this.props.domainName
-  }
-
-  protected determineRemoteBackend() {
-    const debug = this.node.tryGetContext('debug')
-    switch (this.props.remoteBackend?.type) {
-      case AzureRemoteBackend.azurerm:
-        new AzurermBackend(this, {
-          storageAccountName: this.props.remoteBackend.storageAccountName,
-          containerName: this.props.remoteBackend.containerName,
-          key: `${this.id}`,
-          subscriptionId: this.props.subscriptionId,
-          resourceGroupName: this.props.remoteBackend.resourceGroupName,
-        })
-        break
-      case AzureRemoteBackend.local:
-        if (debug) console.debug(`Using local backend for ${this.id}`)
-        break
-      default:
-        break
-    }
-  }
-
-  protected determineTenantId() {
-    this.tenantId = new DataAzurermClientConfig(this, 'current', {}).tenantId
   }
 
   /**
