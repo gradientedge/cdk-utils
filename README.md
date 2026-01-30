@@ -10,8 +10,10 @@
 
 [![AWS CLI][aws-cli-badge]][aws-cli-url]
 [![Node][node-badge]][node-url]
-[![Yarn][yarn-badge]][yarn-url]
 [![CDK][cdk-badge]][cdk-url]
+[![Pulumi][pulumi-badge]][pulumi-url]
+[![Pulumi Azure][pulumi-azure-badge]][pulumi-azure-url]
+[![Pulumi Cloudflare][pulumi-cloudflare-badge]][pulumi-cloudflare-url]
 
 [![Builds][builds]][builds-url]
 [![Coverage][coverage]][codecov-url]
@@ -25,7 +27,7 @@
 
 ## Introduction
 
-Toolkit for working with CDK Constructs ([AWS CDK][aws-cdk] & [CDK for Terraform][cdktf]).
+Toolkit for working with CDK Constructs ([AWS CDK][aws-cdk] & [Pulumi][pulumi]).
 
 For more details, see the full [API documentation](https://gradientedge.github.io/cdk-utils/).
 
@@ -37,12 +39,6 @@ With **npm**:
 
 ```shell
 npm install --save @gradientedge/cdk-utils
-```
-
-With **yarn**:
-
-```shell
-yarn add @gradientedge/cdk-utils
 ```
 
 With **pnpm**:
@@ -87,7 +83,7 @@ There is a debug utility that can be used to print out the contents of a `templa
 [builds]: https://img.shields.io/github/actions/workflow/status/gradientedge/cdk-utils/ci.yml?branch=main
 [builds-url]: https://github.com/gradientedge/cdk-utils/actions
 [cdk-badge]: https://img.shields.io/github/package-json/dependency-version/gradientedge/cdk-utils/aws-cdk-lib
-[cdktf]: https://developer.hashicorp.com/terraform/cdktf
+[pulumi]: https://www.pulumi.com/docs/
 [cdk-url]: https://aws.amazon.com/cdk/
 [checks]: https://img.shields.io/github/checks-status/gradientedge/cdk-utils/main
 [cmd]: https://img.shields.io/badge/command--line-4D4D4D?logo=windows-terminal&style=for-the-badge
@@ -103,6 +99,12 @@ There is a debug utility that can be used to print out the contents of a `templa
 [issues-url]: https://github.com/gradientedge/cdk-utils/issues
 [pr]: https://img.shields.io/github/issues-pr/gradientedge/cdk-utils.svg
 [pr-url]: https://github.com/gradientedge/cdk-utils/pulls
+[pulumi-badge]: https://img.shields.io/github/package-json/dependency-version/gradientedge/cdk-utils/@pulumi/pulumi
+[pulumi-azure-badge]: https://img.shields.io/github/package-json/dependency-version/gradientedge/cdk-utils/@pulumi/azure-native
+[pulumi-cloudflare-badge]: https://img.shields.io/github/package-json/dependency-version/gradientedge/cdk-utils/@pulumi/cloudflare
+[pulumi-url]: https://www.pulumi.com/
+[pulumi-azure-url]: https://www.pulumi.com/registry/packages/azure-native/
+[pulumi-cloudflare-url]: https://www.pulumi.com/registry/packages/cloudflare/
 [last-commit]: https://img.shields.io/github/last-commit/gradientedge/cdk-utils
 [license]: https://img.shields.io/github/license/gradientedge/cdk-utils
 [license-url]: https://github.com/gradientedge/cdk-utils/blob/main/LICENSE
@@ -118,5 +120,3 @@ There is a debug utility that can be used to print out the contents of a `templa
 [twitter-url]: https://twitter.com/gradientedge
 [version]: https://img.shields.io/npm/v/@gradientedge/cdk-utils
 [version-url]: https://www.npmjs.com/package/@gradientedge/cdk-utils
-[yarn-badge]: https://img.shields.io/badge/yarn-1.22.10-green?logo=yarn
-[yarn-url]: https://yarnpkg.com

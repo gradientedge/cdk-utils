@@ -178,7 +178,3 @@ template.json
 
 # layers
 **/layers
-
-# cdktf
-cdktf.out/
-!**/sample.js
