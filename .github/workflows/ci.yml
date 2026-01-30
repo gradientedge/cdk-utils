@@ -59,6 +59,7 @@ jobs:
         uses: ./.github/actions/test
       - name: Publish Code Coverage Report
         uses: codecov/codecov-action@v5
+        if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && success() && matrix.node-version == '24.x' }}
         with:
           slug: gradientedge/cdk-utils
           token: ${{ env.CODECOV_TOKEN }}
