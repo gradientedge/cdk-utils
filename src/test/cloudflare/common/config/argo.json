@@ -1,5 +1,8 @@
 {
   "testArgo": {
     "value": "on"
+  },
+  "testArgoTieredCaching": {
+    "value": "on"
   }
 }

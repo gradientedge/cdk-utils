@@ -1,14 +1,17 @@
 {
   "testCluster": {
-    "clusterName": "test-cluster",
+    "clusterName": "test-cluster"
+  },
+  "testClusterWithTags": {
+    "clusterName": "test-cluster-tags",
     "tags": [
       {
-        "key": "testTagName1",
-        "value": "testTagValue1"
+        "key": "Environment",
+        "value": "test"
       },
       {
-        "key": "testTagName2",
-        "value": "testTagValue2"
+        "key": "Project",
+        "value": "test-project"
       }
     ]
   },
@@ -16,6 +19,38 @@
     "family": "test-task",
     "cpu": "256",
     "memoryMiB": "512",
+    "logging": {
+      "multilinePattern": "^(DEBUG|ERROR|INFO|LOG|WARN)"
+    }
+  },
+  "testTaskWithOptions": {
+    "family": "test-task-opts",
+    "cpu": "512",
+    "memoryMiB": "1024",
+    "logging": {
+      "multilinePattern": "^(DEBUG|ERROR|INFO|LOG|WARN)"
+    },
+    "tags": [
+      {
+        "key": "TaskType",
+        "value": "batch"
+      }
+    ]
+  },
+  "testFargateService": {
+    "loadBalancerName": "test-lb",
+    "serviceName": "test-service",
+    "assignPublicIp": false,
+    "healthCheckGracePeriod": 120,
+    "taskImageOptions": {
+      "containerPort": 80,
+      "enableLogging": false
+    },
+    "healthCheck": {
+      "path": "/health",
+      "intervalInSecs": 30,
+      "timeoutInSecs": 5
+    },
     "logging": {
       "multilinePattern": "^(DEBUG|ERROR|INFO|LOG|WARN)"
     }

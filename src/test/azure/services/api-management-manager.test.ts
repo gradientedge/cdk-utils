@@ -4,6 +4,7 @@ import {
   Backend,
   GetApiManagementServiceResult,
 } from '@pulumi/azure-native/apimanagement/index.js'
+import * as redis from '@pulumi/azure-native/redis/index.js'
 import * as pulumi from '@pulumi/pulumi'
 import {
   ApiManagementApiProps,
@@ -210,5 +211,172 @@ describe('TestAzureApiManagementConstruct', () => {
         gateway: [{ hostName: 'test.example.com' }],
       })
     ).toThrow('Custom domains should be configured via the hostnameConfigurations property')
+  })
+})
+
+// Test for API Management with Application Insights logger
+class TestConstructWithLogger extends CommonAzureConstruct {
+  declare props: TestAzureStackProps
+  apiManagementService: ApiManagementService
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.apiManagementService = this.apiManagementManager.createApiManagementService(
+      `test-api-management-with-logger-${this.props.stage}`,
+      this,
+      this.props.testApiManagement,
+      'test-app-insights-key'
+    )
+  }
+}
+
+class TestStackWithLogger extends CommonAzureStack {
+  declare props: TestAzureStackProps
+  declare construct: TestConstructWithLogger
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestConstructWithLogger(props.name, this.props)
+  }
+}
+
+describe('TestAzureApiManagementWithLogger', () => {
+  test('provisions api management with application insights logger', () => {
+    const stackWithLogger = new TestStackWithLogger('test-stack-with-logger', testStackProps)
+    expect(stackWithLogger.construct.apiManagementService).toBeDefined()
+  })
+})
+
+// Test for API Management with external Redis cache
+class TestConstructWithRedis extends CommonAzureConstruct {
+  declare props: TestAzureStackProps
+  apiManagementService: ApiManagementService
+  redisCache: redis.Redis
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    // Create a mock Redis cache
+    this.redisCache = new redis.Redis(
+      'test-redis',
+      {
+        name: 'test-redis-cache',
+        resourceGroupName: props.resourceGroupName!,
+        location: props.location!,
+        sku: {
+          name: 'Basic',
+          family: 'C',
+          capacity: 0,
+        },
+      },
+      { parent: this }
+    )
+
+    this.apiManagementService = this.apiManagementManager.createApiManagementService(
+      `test-api-management-with-redis-${this.props.stage}`,
+      this,
+      this.props.testApiManagement,
+      undefined,
+      this.redisCache
+    )
+  }
+}
+
+class TestStackWithRedis extends CommonAzureStack {
+  declare props: TestAzureStackProps
+  declare construct: TestConstructWithRedis
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestConstructWithRedis(props.name, this.props)
+  }
+}
+
+describe('TestAzureApiManagementWithRedis', () => {
+  test('provisions api management with external redis cache', () => {
+    const stackWithRedis = new TestStackWithRedis('test-stack-with-redis', testStackProps)
+    expect(stackWithRedis.construct.apiManagementService).toBeDefined()
+    expect(stackWithRedis.construct.redisCache).toBeDefined()
+  })
+})
+
+// Test for API with caching operations
+class TestConstructWithCaching extends CommonAzureConstruct {
+  declare props: TestAzureStackProps
+  apiManagementService: ApiManagementService
+  api: Api
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.apiManagementService = this.apiManagementManager.createApiManagementService(
+      `test-api-management-caching-${this.props.stage}`,
+      this,
+      this.props.testApiManagement
+    )
+
+    const apiPropsWithCaching: ApiManagementApiProps = {
+      ...this.props.testApiManagementApi,
+      operations: [
+        {
+          apiId: 'test-api',
+          resourceGroupName: props.resourceGroupName!,
+          serviceName: 'test-service',
+          displayName: 'test-cached-get',
+          method: 'get',
+          urlTemplate: '/cached-test',
+          caching: {
+            enableCacheSet: true,
+            enableCacheInvalidation: true,
+            ttlInSecs: 900,
+            cachingType: 'prefer-external',
+          },
+        },
+        {
+          apiId: 'test-api',
+          resourceGroupName: props.resourceGroupName!,
+          serviceName: 'test-service',
+          displayName: 'test-cached-post',
+          method: 'post',
+          urlTemplate: '/cached-test',
+          caching: {
+            enableCacheSet: false,
+            enableCacheInvalidation: true,
+            ttlInSecs: 600,
+            cachingType: 'internal',
+          },
+        },
+      ],
+      rateLimit: {
+        calls: 100,
+        renewalPeriodInSecs: 60,
+      },
+      commonInboundPolicyXml:
+        '<set-header name="X-Custom-Header" exists-action="override"><value>test</value></set-header>',
+      commonOutboundPolicyXml:
+        '<set-header name="X-Response-Header" exists-action="override"><value>test</value></set-header>',
+    }
+
+    this.api = this.apiManagementManager.createApi(
+      `test-api-management-caching-${this.props.stage}`,
+      this,
+      apiPropsWithCaching
+    )
+  }
+}
+
+class TestStackWithCaching extends CommonAzureStack {
+  declare props: TestAzureStackProps
+  declare construct: TestConstructWithCaching
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestConstructWithCaching(props.name, this.props)
+  }
+}
+
+describe('TestAzureApiManagementWithCaching', () => {
+  test('provisions api with caching operations', () => {
+    const stackWithCaching = new TestStackWithCaching('test-stack-with-caching', testStackProps)
+    expect(stackWithCaching.construct.apiManagementService).toBeDefined()
+    expect(stackWithCaching.construct.api).toBeDefined()
   })
 })

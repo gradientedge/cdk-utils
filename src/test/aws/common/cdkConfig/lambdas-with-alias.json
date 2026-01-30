@@ -1,0 +1,16 @@
+{
+  "testIamLambdaWithAlias": {
+    "architecture": "arm64",
+    "description": "Test lambda with alias",
+    "functionName": "test-iam-lambda-with-alias",
+    "memorySize": 1024,
+    "runtime": "nodejs24.x",
+    "timeout": 60,
+    "lambdaAliases": [
+      {
+        "aliasName": "live",
+        "version": "$LATEST"
+      }
+    ]
+  }
+}
