@@ -20,6 +20,8 @@ jobs:
       matrix:
         node-version: [22.x, 24.x]
         terraform-version: [1.3.9]
+    env:
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     steps:
       - name: Checkout Code
         uses: actions/checkout@v6
@@ -55,11 +57,10 @@ jobs:
       - name: Test Applications
         id: test-applications
         uses: ./.github/actions/test
-      - name: Publish Unit Test Results
-        uses: EnricoMi/publish-unit-test-result-action@v2
-        if: ${{ github.event_name == 'push' && success() }}
+      - name: Publish Code Coverage Report
+        uses: codecov/codecov-action@v5
         with:
-          junit_files: coverage/junit.xml
+          token: ${{ env.CODECOV_TOKEN }}
       - uses: actions/upload-artifact@v6
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && success() && matrix.node-version == '24.x' }}
         with:
