@@ -1,4 +1,3 @@
-import * as azure from '@pulumi/azure'
 import {
   Blob,
   BlobContainer,
@@ -107,14 +106,6 @@ export class AzureStorageManager {
    */
   public createStorageBlob(id: string, scope: CommonAzureConstruct, props: StorageBlobProps) {
     if (!props) throw `Props undefined for ${id}`
-
-    const resourceGroup = azure.core.getResourceGroupOutput({
-      name: scope.props.resourceGroupName
-        ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-        : `${props.resourceGroupName}`,
-    })
-
-    if (!resourceGroup) throw `Resource group undefined for ${id}`
 
     const resourceGroupName = scope.props.resourceGroupName
       ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)

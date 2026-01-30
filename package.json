@@ -59,7 +59,6 @@
     "@aws-sdk/credential-providers": "^3.978.0",
     "@aws-sdk/types": "^3.973.1",
     "@pulumi/aws": "^7.16.0",
-    "@pulumi/azure": "^6.31.0",
     "@pulumi/azure-native": "^3.13.0",
     "@pulumi/cloudflare": "^6.13.0",
     "@pulumi/command": "^1.1.3",
