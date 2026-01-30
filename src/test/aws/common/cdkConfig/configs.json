@@ -20,5 +20,29 @@
       "growthFactor": 100,
       "replicateTo": "NONE"
     }
+  },
+  "appWithDefaults": {
+    "application": {
+      "name": "test-application-defaults",
+      "description": "test-application defaults"
+    },
+    "environment": {
+      "description": "test-env defaults"
+    },
+    "configurationProfile": {
+      "name": "test-profile-defaults",
+      "description": "test-profile defaults"
+    }
+  },
+  "appWithStrategy": {
+    "application": {
+      "name": "test-application-strategy",
+      "description": "test-application strategy"
+    },
+    "deploymentStrategy": {
+      "deploymentDurationInMinutes": 5,
+      "growthFactor": 50,
+      "replicateTo": "NONE"
+    }
   }
 }

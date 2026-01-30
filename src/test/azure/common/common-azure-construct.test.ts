@@ -32,7 +32,7 @@ class TestCommonStack extends CommonAzureStack {
   declare construct: TestCommonConstruct
 
   constructor(name: string, props: TestAzureStackProps) {
-    super(name, testStackProps)
+    super(name, props)
     this.construct = new TestCommonConstruct(props.name, this.props)
   }
 }
@@ -130,5 +130,64 @@ describe('TestAzureCommonConstruct', () => {
       expect(id).toEqual('test-storage-blob-dev-sb-id')
       expect(name).toBeDefined()
     })
+  })
+})
+
+describe('TestAzureCommonConstruct - Stage Utilities', () => {
+  test('isDevelopmentStage returns true for dev stage', () => {
+    expect(stack.construct.isDevelopmentStage()).toBe(true)
+  })
+
+  test('isTestStage returns false for dev stage', () => {
+    expect(stack.construct.isTestStage()).toBe(false)
+  })
+
+  test('isUatStage returns false for dev stage', () => {
+    expect(stack.construct.isUatStage()).toBe(false)
+  })
+
+  test('isProductionStage returns false for dev stage', () => {
+    expect(stack.construct.isProductionStage()).toBe(false)
+  })
+
+  test('fullyQualifiedDomainName is set correctly without subDomain', () => {
+    expect(stack.construct.fullyQualifiedDomainName).toBe('gradientedge.io')
+  })
+
+  test('fullyQualifiedDomainName is set correctly with subDomain', () => {
+    const stackWithSubdomain = new TestCommonStack('test-stack-subdomain', {
+      ...testStackProps,
+      subDomain: 'test',
+    })
+    expect(stackWithSubdomain.construct.fullyQualifiedDomainName).toBe('test.gradientedge.io')
+  })
+})
+
+describe('TestAzureCommonConstruct - Different Stages', () => {
+  test('isTestStage returns true for tst stage', () => {
+    const testStack = new TestCommonStack('test-stack-tst', {
+      ...testStackProps,
+      stage: 'tst',
+    })
+    expect(testStack.construct.isTestStage()).toBe(true)
+    expect(testStack.construct.isDevelopmentStage()).toBe(false)
+  })
+
+  test('isUatStage returns true for uat stage', () => {
+    const uatStack = new TestCommonStack('test-stack-uat', {
+      ...testStackProps,
+      stage: 'uat',
+    })
+    expect(uatStack.construct.isUatStage()).toBe(true)
+    expect(uatStack.construct.isDevelopmentStage()).toBe(false)
+  })
+
+  test('isProductionStage returns true for prd stage', () => {
+    const prdStack = new TestCommonStack('test-stack-prd', {
+      ...testStackProps,
+      stage: 'prd',
+    })
+    expect(prdStack.construct.isProductionStage()).toBe(true)
+    expect(prdStack.construct.isDevelopmentStage()).toBe(false)
   })
 })

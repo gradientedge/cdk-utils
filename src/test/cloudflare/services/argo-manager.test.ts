@@ -1,7 +1,8 @@
-import { ArgoSmartRouting, Zone } from '@pulumi/cloudflare'
+import { ArgoSmartRouting, ArgoTieredCaching, Zone } from '@pulumi/cloudflare'
 import * as pulumi from '@pulumi/pulumi'
 import {
   ArgoSmartRoutingProps,
+  ArgoTieredCachingProps,
   CommonCloudflareConstruct,
   CommonCloudflareStack,
   CommonCloudflareStackProps,
@@ -11,6 +12,7 @@ import {
 interface TestCloudflareStackProps extends CommonCloudflareStackProps {
   testZone: ZoneProps
   testArgo: ArgoSmartRoutingProps
+  testArgoTieredCaching: ArgoTieredCachingProps
   testAttribute?: string
 }
 
@@ -59,6 +61,7 @@ class TestCommonConstruct extends CommonCloudflareConstruct {
   declare props: TestCloudflareStackProps
   zone: Zone
   argoSmartRouting: ArgoSmartRouting
+  argoTieredCaching: ArgoTieredCaching
 
   constructor(name: string, props: TestCloudflareStackProps) {
     super(name, props)
@@ -70,6 +73,11 @@ class TestCommonConstruct extends CommonCloudflareConstruct {
       `test-argo-${this.props.stage}`,
       this,
       this.props.testArgo
+    )
+    this.argoTieredCaching = this.argoManager.createArgoTieredCaching(
+      `test-argo-tiered-caching-${this.props.stage}`,
+      this,
+      this.props.testArgoTieredCaching
     )
   }
 }
@@ -112,7 +120,7 @@ describe('TestCloudflareArgoManager', () => {
 
 describe('TestCloudflareArgoManager', () => {
   expect(stack.construct.argoSmartRouting).toBeDefined()
-  test('provisions zone as expected', () => {
+  test('provisions argo smart routing as expected', () => {
     pulumi
       .all([
         stack.construct.argoSmartRouting.id,
@@ -123,6 +131,25 @@ describe('TestCloudflareArgoManager', () => {
         expect(id).toEqual('test-argo-dev-id')
         expect(urn).toEqual(
           'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/argoSmartRouting:ArgoSmartRouting::test-argo-dev'
+        )
+        expect(value).toEqual('on')
+      })
+  })
+})
+
+describe('TestCloudflareArgoManager', () => {
+  expect(stack.construct.argoTieredCaching).toBeDefined()
+  test('provisions argo tiered caching as expected', () => {
+    pulumi
+      .all([
+        stack.construct.argoTieredCaching.id,
+        stack.construct.argoTieredCaching.urn,
+        stack.construct.argoTieredCaching.value,
+      ])
+      .apply(([id, urn, value]) => {
+        expect(id).toEqual('test-argo-tiered-caching-dev-id')
+        expect(urn).toEqual(
+          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/argoTieredCaching:ArgoTieredCaching::test-argo-tiered-caching-dev'
         )
         expect(value).toEqual('on')
       })

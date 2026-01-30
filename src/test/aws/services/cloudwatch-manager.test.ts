@@ -343,3 +343,292 @@ describe('TestCloudWatchConstruct', () => {
     })
   })
 })
+
+describe('TestCloudWatchConstruct - Error Handling', () => {
+  test('throws error when creating alarm without props', () => {
+    const testStack = new TestCommonStack(app, 'test-error-stack-1', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.cloudWatchManager.createAlarmForExpression('test-alarm-no-props', testConstruct, null as any)
+    }).toThrow('Alarm props undefined for test-alarm-no-props')
+  })
+
+  test('throws error when creating alarm without expression', () => {
+    const testStack = new TestCommonStack(app, 'test-error-stack-2', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.cloudWatchManager.createAlarmForExpression('test-alarm-no-expr', testConstruct, {
+        metricProps: [],
+      } as any)
+    }).toThrow('Could not find expression for Alarm props for id:test-alarm-no-expr')
+  })
+
+  test('throws error when creating alarm without metricProps', () => {
+    const testStack = new TestCommonStack(app, 'test-error-stack-3', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.cloudWatchManager.createAlarmForExpression('test-alarm-no-metrics', testConstruct, {
+        expression: 'SUM(METRICS())',
+      } as any)
+    }).toThrow('Could not find metricProps for Alarm props for id:test-alarm-no-metrics')
+  })
+
+  test('throws error when creating alarm for metric without props', () => {
+    const testStack = new TestCommonStack(app, 'test-error-stack-4', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+    const testMetric = new watch.Metric({ metricName: 'test', namespace: 'test' })
+
+    expect(() => {
+      testConstruct.cloudWatchManager.createAlarmForMetric(
+        'test-alarm-metric-no-props',
+        testConstruct,
+        null as any,
+        testMetric
+      )
+    }).toThrow('Alarm props undefined for test-alarm-metric-no-props')
+  })
+
+  test('throws error when creating dashboard without props', () => {
+    const testStack = new TestCommonStack(app, 'test-error-stack-5', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.cloudWatchManager.createDashboard('test-dashboard-no-props', testConstruct, null as any)
+    }).toThrow('Dashboard props undefined for test-dashboard-no-props')
+  })
+
+  test('throws error when creating dashboard without dashboardName', () => {
+    const testStack = new TestCommonStack(app, 'test-error-stack-6', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.cloudWatchManager.createDashboard('test-dashboard-no-name', testConstruct, {} as any)
+    }).toThrow('Dashboard dashboardName undefined for test-dashboard-no-name')
+  })
+
+  test('throws error when creating widgets with empty array', () => {
+    const testStack = new TestCommonStack(app, 'test-error-stack-7', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.cloudWatchManager.createWidgets(testConstruct, [])
+    }).toThrow('Widget props undefined')
+  })
+
+  test('throws error when creating widget without props', () => {
+    const testStack = new TestCommonStack(app, 'test-error-stack-8', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.cloudWatchManager.createWidget('test-widget-no-props', testConstruct, null as any)
+    }).toThrow('Widget props undefined for test-widget-no-props')
+  })
+
+  test('throws error for unsupported widget type', () => {
+    const testStack = new TestCommonStack(app, 'test-error-stack-9', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.cloudWatchManager.createWidget('test-widget-invalid', testConstruct, { type: 'InvalidType' } as any)
+    }).toThrow('Unsupported widget type InvalidType')
+  })
+
+  test('throws error when creating text widget without props', () => {
+    const testStack = new TestCommonStack(app, 'test-error-stack-10', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.cloudWatchManager.createTextWidget('test-text-widget-no-props', testConstruct, null as any)
+    }).toThrow('Widget props undefined for test-text-widget-no-props')
+  })
+
+  test('throws error when creating single value widget without props', () => {
+    const testStack = new TestCommonStack(app, 'test-error-stack-11', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.cloudWatchManager.createSingleValueWidget('test-sv-widget-no-props', testConstruct, null as any, [])
+    }).toThrow('Widget props undefined for test-sv-widget-no-props')
+  })
+
+  test('throws error when creating guage widget without props', () => {
+    const testStack = new TestCommonStack(app, 'test-error-stack-12', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.cloudWatchManager.createGuageWidget('test-guage-widget-no-props', testConstruct, null as any, [])
+    }).toThrow('Widget props undefined for test-guage-widget-no-props')
+  })
+
+  test('throws error when creating graph widget without props', () => {
+    const testStack = new TestCommonStack(app, 'test-error-stack-13', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.cloudWatchManager.createGraphWidget('test-graph-widget-no-props', testConstruct, null as any)
+    }).toThrow('Widget props undefined for test-graph-widget-no-props')
+  })
+
+  test('throws error when creating alarm status widget without props', () => {
+    const testStack = new TestCommonStack(app, 'test-error-stack-14', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.cloudWatchManager.createAlarmStatusWidget(
+        'test-alarm-widget-no-props',
+        testConstruct,
+        null as any,
+        []
+      )
+    }).toThrow('Widget props undefined for test-alarm-widget-no-props')
+  })
+
+  test('throws error when creating log query widget without props', () => {
+    const testStack = new TestCommonStack(app, 'test-error-stack-15', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.cloudWatchManager.createLogQueryWidget('test-log-widget-no-props', testConstruct, null as any, [])
+    }).toThrow('Widget props undefined for test-log-widget-no-props')
+  })
+
+  test('throws error when creating cloudfront widget without props', () => {
+    const testStack = new TestCommonStack(app, 'test-error-stack-16', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.cloudWatchManager.createCloudfrontDistributionWidget(
+        'test-cf-widget-no-props',
+        testConstruct,
+        null as any,
+        'distId'
+      )
+    }).toThrow('Widget props undefined for test-cf-widget-no-props')
+  })
+
+  test('throws error when creating state widget without props', () => {
+    const testStack = new TestCommonStack(app, 'test-error-stack-17', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.cloudWatchManager.createStateWidget(
+        'test-state-widget-no-props',
+        testConstruct,
+        null as any,
+        'sfnArn'
+      )
+    }).toThrow('Widget props undefined for test-state-widget-no-props')
+  })
+
+  test('throws error when creating event widget without props', () => {
+    const testStack = new TestCommonStack(app, 'test-error-stack-18', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.cloudWatchManager.createEventWidget(
+        'test-event-widget-no-props',
+        testConstruct,
+        null as any,
+        'bus',
+        'rule'
+      )
+    }).toThrow('Widget props undefined for test-event-widget-no-props')
+  })
+
+  test('throws error when creating api gateway widget without props', () => {
+    const testStack = new TestCommonStack(app, 'test-error-stack-19', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.cloudWatchManager.createApiGatewayWidget(
+        'test-api-widget-no-props',
+        testConstruct,
+        null as any,
+        'apiName'
+      )
+    }).toThrow('Widget props undefined for test-api-widget-no-props')
+  })
+
+  test('throws error when creating lambda widget without props', () => {
+    const testStack = new TestCommonStack(app, 'test-error-stack-20', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.cloudWatchManager.createLambdaWidget(
+        'test-lambda-widget-no-props',
+        testConstruct,
+        null as any,
+        'fnName'
+      )
+    }).toThrow('Widget props undefined for test-lambda-widget-no-props')
+  })
+
+  test('throws error when creating custom widget without props', () => {
+    const testStack = new TestCommonStack(app, 'test-error-stack-21', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.cloudWatchManager.createCustomWidget(
+        'test-custom-widget-no-props',
+        testConstruct,
+        null as any,
+        'service'
+      )
+    }).toThrow('Widget props undefined for test-custom-widget-no-props')
+  })
+
+  test('throws error when creating ecs cluster widget without props', () => {
+    const testStack = new TestCommonStack(app, 'test-error-stack-22', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.cloudWatchManager.createEcsClusterWidget(
+        'test-ecs-widget-no-props',
+        testConstruct,
+        null as any,
+        'cluster'
+      )
+    }).toThrow('Widget props undefined for test-ecs-widget-no-props')
+  })
+
+  test('throws error when creating ecs service widget without props', () => {
+    const testStack = new TestCommonStack(app, 'test-error-stack-23', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.cloudWatchManager.createEcsServiceWidget(
+        'test-ecs-svc-widget-no-props',
+        testConstruct,
+        null as any,
+        'cluster',
+        'service'
+      )
+    }).toThrow('Widget props undefined for test-ecs-svc-widget-no-props')
+  })
+
+  test('throws error when creating elb widget without props', () => {
+    const testStack = new TestCommonStack(app, 'test-error-stack-24', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.cloudWatchManager.createElbWidget('test-elb-widget-no-props', testConstruct, null as any, 'lb')
+    }).toThrow('Widget props undefined for test-elb-widget-no-props')
+  })
+
+  test('throws error when creating cache widget without props', () => {
+    const testStack = new TestCommonStack(app, 'test-error-stack-25', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.cloudWatchManager.createCacheWidget(
+        'test-cache-widget-no-props',
+        testConstruct,
+        null as any,
+        'clusterId'
+      )
+    }).toThrow('Widget props undefined for test-cache-widget-no-props')
+  })
+})

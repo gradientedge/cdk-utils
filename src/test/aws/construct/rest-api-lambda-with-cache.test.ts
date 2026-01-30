@@ -239,3 +239,244 @@ describe('TestRestApiWithCacheLambdaConstruct', () => {
     })
   })
 })
+
+describe('TestRestApiWithCacheLambdaConstruct with existing VPC', () => {
+  test('uses existing VPC when useExistingVpc is true', () => {
+    const existingVpcProps = {
+      ...testRestApiLambdaWithCacheProps,
+      env: {
+        account: '123456789',
+        region: 'eu-west-1',
+      },
+      name: 'test-restapi-existing-vpc',
+    }
+
+    class TestStackWithExistingVpc extends CommonStack {
+      declare props: RestRestApiLambdaWithCacheProps
+
+      constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
+        super(parent, name, props)
+        this.construct = new TestRestApiWithExistingVpc(this, existingVpcProps.name, this.props)
+      }
+
+      protected determineConstructProps(props: cdk.StackProps) {
+        return {
+          ...super.determineConstructProps(props),
+          ...{
+            apiRootPaths: this.node.tryGetContext('apiRootPaths'),
+            apiSubDomain: this.node.tryGetContext('apiSubDomain'),
+            logLevel: this.node.tryGetContext('logLevel'),
+            nodeEnv: this.node.tryGetContext('nodeEnv'),
+            restApiCache: this.node.tryGetContext('testReplicatedElastiCache'),
+            restApiCertificate: this.node.tryGetContext('restApiCertificate'),
+            restApiLambda: this.node.tryGetContext('restApiLambda'),
+            restApiVpc: this.node.tryGetContext('testVpc'),
+            testAttribute: this.node.tryGetContext('testAttribute'),
+            timezone: this.node.tryGetContext('timezone'),
+            useExistingVpc: true,
+            vpcName: 'test-vpc',
+          },
+        }
+      }
+    }
+
+    class TestRestApiWithExistingVpc extends RestApiLambdaWithCache {
+      declare props: RestRestApiLambdaWithCacheProps
+
+      constructor(parent: Construct, id: string, props: RestRestApiLambdaWithCacheProps) {
+        super(parent, id, props)
+        this.props = props
+        this.id = 'test-existing-vpc'
+        this.props.restApiSource = new lambda.AssetCode('src/test/aws/common/nodejs/lib')
+        this.props.restApi = {
+          defaultCorsPreflightOptions: {
+            allowOrigins: apig.Cors.ALL_ORIGINS,
+          },
+          deploy: true,
+          deployOptions: {
+            description: `${this.id} - ${this.props.stage} stage`,
+            stageName: this.props.stage,
+          },
+          endpointConfiguration: {
+            types: [apig.EndpointType.REGIONAL],
+          },
+          handler: this.restApiLambdaFunction,
+          proxy: true,
+          restApiName: 'test-lambda-rest-api-existing',
+        }
+        this.initResources()
+      }
+
+      protected createRestApiResources(): void {}
+    }
+
+    const appWithExistingVpc = new cdk.App({ context: existingVpcProps })
+    const stackWithExistingVpc = new TestStackWithExistingVpc(
+      appWithExistingVpc,
+      'test-restapi-existing-vpc-stack',
+      existingVpcProps
+    )
+    const templateWithExistingVpc = Template.fromStack(stackWithExistingVpc)
+
+    // Should not create new VPC
+    templateWithExistingVpc.resourceCountIs('AWS::EC2::VPC', 0)
+  })
+})
+
+describe('TestRestApiWithCacheLambdaConstruct with IPv6 VPC', () => {
+  test('configures IPv6 security group when isIPV6 is true', () => {
+    const ipv6Props = {
+      ...testRestApiLambdaWithCacheProps,
+      name: 'test-restapi-ipv6',
+    }
+
+    class TestStackWithIPv6 extends CommonStack {
+      declare props: RestRestApiLambdaWithCacheProps
+
+      constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
+        super(parent, name, props)
+        this.construct = new TestRestApiWithIPv6(this, ipv6Props.name, this.props)
+      }
+
+      protected determineConstructProps(props: cdk.StackProps) {
+        return {
+          ...super.determineConstructProps(props),
+          ...{
+            apiRootPaths: this.node.tryGetContext('apiRootPaths'),
+            apiSubDomain: this.node.tryGetContext('apiSubDomain'),
+            logLevel: this.node.tryGetContext('logLevel'),
+            nodeEnv: this.node.tryGetContext('nodeEnv'),
+            restApiCache: this.node.tryGetContext('testReplicatedElastiCache'),
+            restApiCertificate: this.node.tryGetContext('restApiCertificate'),
+            restApiLambda: this.node.tryGetContext('restApiLambda'),
+            restApiVpc: {
+              ...this.node.tryGetContext('testVpc'),
+              isIPV6: true,
+            },
+            testAttribute: this.node.tryGetContext('testAttribute'),
+            timezone: this.node.tryGetContext('timezone'),
+          },
+        }
+      }
+    }
+
+    class TestRestApiWithIPv6 extends RestApiLambdaWithCache {
+      declare props: RestRestApiLambdaWithCacheProps
+
+      constructor(parent: Construct, id: string, props: RestRestApiLambdaWithCacheProps) {
+        super(parent, id, props)
+        this.props = props
+        this.id = 'test-ipv6'
+        this.props.restApiSource = new lambda.AssetCode('src/test/aws/common/nodejs/lib')
+        this.props.restApi = {
+          defaultCorsPreflightOptions: {
+            allowOrigins: apig.Cors.ALL_ORIGINS,
+          },
+          deploy: true,
+          deployOptions: {
+            description: `${this.id} - ${this.props.stage} stage`,
+            stageName: this.props.stage,
+          },
+          endpointConfiguration: {
+            types: [apig.EndpointType.REGIONAL],
+          },
+          handler: this.restApiLambdaFunction,
+          proxy: true,
+          restApiName: 'test-lambda-rest-api-ipv6',
+        }
+        this.initResources()
+      }
+
+      protected createRestApiResources(): void {}
+    }
+
+    const appWithIPv6 = new cdk.App({ context: ipv6Props })
+    const stackWithIPv6 = new TestStackWithIPv6(appWithIPv6, 'test-restapi-ipv6-stack', ipv6Props)
+    const templateWithIPv6 = Template.fromStack(stackWithIPv6)
+
+    // Should create security group with IPv6 rules
+    templateWithIPv6.resourceCountIs('AWS::EC2::SecurityGroup', 1)
+    templateWithIPv6.hasResourceProperties('AWS::EC2::SecurityGroup', {
+      SecurityGroupIngress: [
+        {
+          CidrIpv6: '::/0',
+          Description: 'All Traffic',
+          IpProtocol: '-1',
+        },
+      ],
+    })
+  })
+})
+
+describe('TestRestApiWithCacheLambdaConstruct without cache', () => {
+  test('skips ElastiCache creation when restApiCache is undefined', () => {
+    const noCacheProps = {
+      ...testRestApiLambdaWithCacheProps,
+      name: 'test-restapi-no-cache',
+    }
+
+    class TestStackWithoutCache extends CommonStack {
+      declare props: RestRestApiLambdaWithCacheProps
+
+      constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
+        super(parent, name, props)
+        this.construct = new TestRestApiWithoutCache(this, noCacheProps.name, this.props)
+      }
+
+      protected determineConstructProps(props: cdk.StackProps) {
+        return {
+          ...super.determineConstructProps(props),
+          ...{
+            apiRootPaths: this.node.tryGetContext('apiRootPaths'),
+            apiSubDomain: this.node.tryGetContext('apiSubDomain'),
+            logLevel: this.node.tryGetContext('logLevel'),
+            nodeEnv: this.node.tryGetContext('nodeEnv'),
+            restApiCache: undefined, // No cache
+            restApiCertificate: this.node.tryGetContext('restApiCertificate'),
+            restApiLambda: this.node.tryGetContext('restApiLambda'),
+            restApiVpc: this.node.tryGetContext('testVpc'),
+            testAttribute: this.node.tryGetContext('testAttribute'),
+            timezone: this.node.tryGetContext('timezone'),
+          },
+        }
+      }
+    }
+
+    class TestRestApiWithoutCache extends RestApiLambdaWithCache {
+      declare props: RestRestApiLambdaWithCacheProps
+
+      constructor(parent: Construct, id: string, props: RestRestApiLambdaWithCacheProps) {
+        super(parent, id, props)
+        this.props = props
+        this.id = 'test-no-cache'
+        this.props.restApiSource = new lambda.AssetCode('src/test/aws/common/nodejs/lib')
+        this.props.restApi = {
+          defaultCorsPreflightOptions: {
+            allowOrigins: apig.Cors.ALL_ORIGINS,
+          },
+          deploy: true,
+          deployOptions: {
+            description: `${this.id} - ${this.props.stage} stage`,
+            stageName: this.props.stage,
+          },
+          endpointConfiguration: {
+            types: [apig.EndpointType.REGIONAL],
+          },
+          handler: this.restApiLambdaFunction,
+          proxy: true,
+          restApiName: 'test-lambda-rest-api-no-cache',
+        }
+        this.initResources()
+      }
+
+      protected createRestApiResources(): void {}
+    }
+
+    const appWithoutCache = new cdk.App({ context: noCacheProps })
+    const stackWithoutCache = new TestStackWithoutCache(appWithoutCache, 'test-restapi-no-cache-stack', noCacheProps)
+    const templateWithoutCache = Template.fromStack(stackWithoutCache)
+
+    // Should not create ElastiCache
+    templateWithoutCache.resourceCountIs('AWS::ElastiCache::ReplicationGroup', 0)
+  })
+})
