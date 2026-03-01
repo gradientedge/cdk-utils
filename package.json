@@ -104,7 +104,7 @@
     "prettier": "^3.8.1",
     "prettier-plugin-organize-imports": "^4.3.0",
     "rimraf": "^6.1.2",
-    "rollup": "^4.57.0",
+    "rollup": "^4.59.0",
     "semantic-release": "^25.0.2",
     "@semantic-release/changelog": "^6.0.3",
     "@semantic-release/github": "^12.0.2",
