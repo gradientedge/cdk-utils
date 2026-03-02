@@ -33,7 +33,7 @@ jobs:
         id: setup-environment
         uses: ./.github/actions/setup-env
       - name: Setup Terraform ${{ matrix.terraform-version }}
-        uses: hashicorp/setup-terraform@v3
+        uses: hashicorp/setup-terraform@v4
         with:
           terraform_version: ${{ matrix.terraform-version }}
       - name: Cache dependencies
