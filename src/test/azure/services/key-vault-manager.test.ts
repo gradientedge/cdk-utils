@@ -120,7 +120,7 @@ describe('TestAzureKeyVaultConstruct', () => {
       .apply(([id, urn, name, location, properties, tags]) => {
         expect(id).toEqual('test-key-vault-dev-kv-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::custom:azure:Construct:test-common-stack$azure-native:keyvault:Vault::test-key-vault-dev-kv'
+          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:keyvault:Vault::test-key-vault-dev-kv'
         )
         expect(name).toEqual('test-key-vault-dev')
         expect(location).toEqual('eastus')

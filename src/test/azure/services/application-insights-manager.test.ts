@@ -124,7 +124,7 @@ describe('TestAzureApplicationInsightsConstruct', () => {
       .apply(([id, urn, name, location, applicationType, tags]) => {
         expect(id).toEqual('test-application-insights-dev-ai-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::custom:azure:Construct:test-common-stack$azure-native:applicationinsights:Component::test-application-insights-dev-ai'
+          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:applicationinsights:Component::test-application-insights-dev-ai'
         )
         // expect(name).toEqual('test-application-insights-dev')
         expect(location).toEqual('eastus')

@@ -34,7 +34,7 @@ export class CommonCloudflareConstruct extends ComponentResource {
   provider: CloudflareProvider
 
   constructor(name: string, props: CommonCloudflareStackProps, options?: ComponentResourceOptions) {
-    super(`custom:cloudflare:Construct:${name}`, name, props, options)
+    super(`cloudflare:${name}`, name, props, options)
     this.props = props
     this.options = options
     this.id = name

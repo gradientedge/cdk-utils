@@ -124,7 +124,7 @@ describe('TestAzureAppConfigurationConstruct', () => {
       .apply(([id, urn, name, location, sku, tags]) => {
         expect(id).toEqual('test-app-configuration-dev-ac-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::custom:azure:Construct:test-common-stack$azure-native:appconfiguration:ConfigurationStore::test-app-configuration-dev-ac'
+          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:appconfiguration:ConfigurationStore::test-app-configuration-dev-ac'
         )
         // expect(name).toEqual('test-app-configuration-dev')
         expect(location).toEqual('eastus')

@@ -140,7 +140,7 @@ describe('TestAzureFunctionConstruct', () => {
       .apply(([id, urn, name, location, kind]) => {
         expect(id).toEqual('test-function-app-dev-fa-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::custom:azure:Construct:test-common-stack$azure-native:web:WebApp::test-function-app-dev-fa'
+          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:web:WebApp::test-function-app-dev-fa'
         )
         expect(name).toEqual('test-function-app-dev')
         expect(location).toEqual('eastus')
@@ -156,7 +156,7 @@ describe('TestAzureFunctionConstruct', () => {
       .apply(([id, urn, name]) => {
         expect(id).toEqual('test-function-dev-fc-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::custom:azure:Construct:test-common-stack$azure-native:web:WebAppFunction::test-function-dev-fc'
+          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:web:WebAppFunction::test-function-dev-fc'
         )
         expect(name).toEqual('test-function-dev')
       })
@@ -176,7 +176,7 @@ describe('TestAzureFunctionConstruct', () => {
       .apply(([id, urn, name, location, kind]) => {
         expect(id).toEqual('test-function-app-flex-consumption-dev-fc-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::custom:azure:Construct:test-common-stack$azure-native:web:WebApp::test-function-app-flex-consumption-dev-fc'
+          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:web:WebApp::test-function-app-flex-consumption-dev-fc'
         )
         expect(name).toEqual('test-function-app-flex-consumption-dev')
         expect(location).toEqual('eastus')

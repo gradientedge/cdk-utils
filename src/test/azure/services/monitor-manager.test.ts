@@ -120,7 +120,7 @@ describe('TestAzureMonitorConstruct', () => {
       .apply(([id, urn, name, logs, metrics, storageAccountId]) => {
         expect(id).toEqual('test-monitor-diagnostic-setting-dev-ds-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::custom:azure:Construct:test-common-stack$azure-native:monitor:DiagnosticSetting::test-monitor-diagnostic-setting-dev-ds'
+          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:monitor:DiagnosticSetting::test-monitor-diagnostic-setting-dev-ds'
         )
         expect(name).toEqual('test-monitor-diagnostic-setting-dev')
         expect(logs).toEqual([{ categoryGroup: 'allLogs', enabled: true }])

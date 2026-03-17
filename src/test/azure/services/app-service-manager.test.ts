@@ -131,7 +131,7 @@ describe('TestAzureAppServiceConstruct', () => {
       .apply(([id, urn, name, location, sku, tags]) => {
         expect(id).toEqual('test-app-service-plan-dev-as-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::custom:azure:Construct:test-common-stack$azure-native:web:AppServicePlan::test-app-service-plan-dev-as'
+          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:web:AppServicePlan::test-app-service-plan-dev-as'
         )
         expect(name).toEqual('test-app-service-plan-dev')
         expect(location).toEqual('eastus')
@@ -157,7 +157,7 @@ describe('TestAzureLinuxWebAppConstruct', () => {
       .apply(([id, urn, name, location, enabled, httpsOnly, siteConfig, tags]) => {
         expect(id).toEqual('test-linux-web-app-dev-lwa-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::custom:azure:Construct:test-common-stack$azure-native:web:WebApp::test-linux-web-app-dev-lwa'
+          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:web:WebApp::test-linux-web-app-dev-lwa'
         )
         expect(name).toEqual('test-linux-web-app-dev')
         expect(location).toEqual('eastus')
