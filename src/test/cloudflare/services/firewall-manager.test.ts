@@ -106,7 +106,7 @@ describe('TestCloudflareFirewallManager', () => {
       .apply(([id, urn, name, account]) => {
         expect(id).toEqual('test-zone-dev-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/zone:Zone::test-zone-dev'
+          'urn:pulumi:stack::project::cloudflare:test-common-stack$cloudflare:index/zone:Zone::test-zone-dev'
         )
         expect(name).toEqual('gradientedge.io')
         expect(account.id).toEqual('test-account')
@@ -127,7 +127,7 @@ describe('TestCloudflareFirewallManager', () => {
       .apply(([id, urn, bodies, expression]) => {
         expect(id).toEqual('test-filter-dev-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/filter:Filter::test-filter-dev'
+          'urn:pulumi:stack::project::cloudflare:test-common-stack$cloudflare:index/filter:Filter::test-filter-dev'
         )
         expect(bodies).toEqual([
           {
@@ -154,7 +154,7 @@ describe('TestCloudflareFirewallManager', () => {
       .apply(([id, urn, filter, zoneId]) => {
         expect(id).toEqual('test-firewall-rule-dev-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/firewallRule:FirewallRule::test-firewall-rule-dev'
+          'urn:pulumi:stack::project::cloudflare:test-common-stack$cloudflare:index/firewallRule:FirewallRule::test-firewall-rule-dev'
         )
         expect(filter).toEqual({
           bodies: [

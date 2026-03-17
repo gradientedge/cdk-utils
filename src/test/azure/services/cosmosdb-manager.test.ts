@@ -149,7 +149,7 @@ describe('TestAzureCosmosDbConstruct', () => {
       .apply(([id, urn, name, location, consistencyPolicy, tags]) => {
         expect(id).toEqual('test-cosmosdb-account-dev-ca-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::custom:azure:Construct:test-common-stack$azure-native:cosmosdb:DatabaseAccount::test-cosmosdb-account-dev-ca'
+          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:cosmosdb:DatabaseAccount::test-cosmosdb-account-dev-ca'
         )
         expect(name).toEqual('test-cosmosdb-account-dev')
         expect(location).toEqual('eastus')
@@ -170,7 +170,7 @@ describe('TestAzureCosmosDbConstruct', () => {
       .apply(([id, urn, name]) => {
         expect(id).toEqual('test-cosmosdb-database-dev-cd-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::custom:azure:Construct:test-common-stack$azure-native:cosmosdb:SqlResourceSqlDatabase::test-cosmosdb-database-dev-cd'
+          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:cosmosdb:SqlResourceSqlDatabase::test-cosmosdb-database-dev-cd'
         )
         expect(name).toEqual('test-cosmosdb-database-dev')
       })
@@ -189,7 +189,7 @@ describe('TestAzureCosmosDbConstruct', () => {
       .apply(([id, urn, name, resource]) => {
         expect(id).toEqual('test-cosmosdb-container-dev-cc-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::custom:azure:Construct:test-common-stack$azure-native:cosmosdb:SqlResourceSqlContainer::test-cosmosdb-container-dev-cc'
+          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:cosmosdb:SqlResourceSqlContainer::test-cosmosdb-container-dev-cc'
         )
         expect(name).toEqual('test-cosmosdb-container-dev')
         expect(resource).toEqual({

@@ -137,7 +137,7 @@ describe('TestCloudflareZoneManager', () => {
       .apply(([id, urn, name, account]) => {
         expect(id).toEqual('test-zone-dev-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/zone:Zone::test-zone-dev'
+          'urn:pulumi:stack::project::cloudflare:test-common-stack$cloudflare:index/zone:Zone::test-zone-dev'
         )
         expect(name).toEqual('gradientedge.io')
         expect(account.id).toEqual('test-account')
@@ -157,7 +157,7 @@ describe('TestCloudflareZoneManager', () => {
       .apply(([id, urn, zoneId]) => {
         expect(id).toEqual('test-zone-cache-reserve-dev-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/zoneCacheReserve:ZoneCacheReserve::test-zone-cache-reserve-dev'
+          'urn:pulumi:stack::project::cloudflare:test-common-stack$cloudflare:index/zoneCacheReserve:ZoneCacheReserve::test-zone-cache-reserve-dev'
         )
         expect(zoneId).toEqual('test-zone-dev-id')
       })
@@ -177,7 +177,7 @@ describe('TestCloudflareZoneManager', () => {
       .apply(([id, urn, value, zoneId]) => {
         expect(id).toEqual('test-zone-cache-variants-dev-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/zoneCacheVariants:ZoneCacheVariants::test-zone-cache-variants-dev'
+          'urn:pulumi:stack::project::cloudflare:test-common-stack$cloudflare:index/zoneCacheVariants:ZoneCacheVariants::test-zone-cache-variants-dev'
         )
         expect(value).toEqual({
           avif: ['image/avif', 'image/webp'],

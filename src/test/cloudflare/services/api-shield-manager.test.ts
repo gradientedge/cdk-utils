@@ -160,7 +160,7 @@ describe('TestCloudflareApiShieldManager', () => {
       .apply(([id, urn, name, account]) => {
         expect(id).toEqual('test-zone-dev-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/zone:Zone::test-zone-dev'
+          'urn:pulumi:stack::project::cloudflare:test-common-stack$cloudflare:index/zone:Zone::test-zone-dev'
         )
         expect(name).toEqual('gradientedge.io')
         expect(account.id).toEqual('test-account')
@@ -181,7 +181,7 @@ describe('TestCloudflareApiShieldManager', () => {
       .apply(([id, urn, authIdCharacteristics, zoneId]) => {
         expect(id).toEqual('test-api-shield-dev-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/apiShield:ApiShield::test-api-shield-dev'
+          'urn:pulumi:stack::project::cloudflare:test-common-stack$cloudflare:index/apiShield:ApiShield::test-api-shield-dev'
         )
         expect(authIdCharacteristics).toEqual([
           {
@@ -209,7 +209,7 @@ describe('TestCloudflareApiShieldManager', () => {
       .apply(([id, urn, file, kind, name, zoneId]) => {
         expect(id).toEqual('test-api-shield-sch-dev-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/apiShieldSchema:ApiShieldSchema::test-api-shield-sch-dev'
+          'urn:pulumi:stack::project::cloudflare:test-common-stack$cloudflare:index/apiShieldSchema:ApiShieldSchema::test-api-shield-sch-dev'
         )
         expect(file).toEqual('{\n  "test": true,\n  "hello": "world"\n}\n')
         expect(kind).toEqual('openapi_v3')
@@ -233,7 +233,7 @@ describe('TestCloudflareApiShieldManager', () => {
       .apply(([id, urn, validationDefaultMitigationAction, validationOverrideMitigationAction, zoneId]) => {
         expect(id).toEqual('test-api-shield-val-dev-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/apiShieldSchemaValidationSettings:ApiShieldSchemaValidationSettings::test-api-shield-val-dev'
+          'urn:pulumi:stack::project::cloudflare:test-common-stack$cloudflare:index/apiShieldSchemaValidationSettings:ApiShieldSchemaValidationSettings::test-api-shield-val-dev'
         )
         expect(validationDefaultMitigationAction).toEqual('log')
         expect(validationOverrideMitigationAction).toEqual('none')
@@ -257,7 +257,7 @@ describe('TestCloudflareApiShieldManager', () => {
       .apply(([id, urn, endpoint, host, method, zoneId]) => {
         expect(id).toEqual('test-api-shield-op-dev-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/apiShieldOperation:ApiShieldOperation::test-api-shield-op-dev'
+          'urn:pulumi:stack::project::cloudflare:test-common-stack$cloudflare:index/apiShieldOperation:ApiShieldOperation::test-api-shield-op-dev'
         )
         expect(endpoint).toEqual('/product')
         expect(host).toEqual('api.gradientedge.io')
@@ -281,7 +281,7 @@ describe('TestCloudflareApiShieldManager', () => {
       .apply(([id, urn, mitigationAction, operationId, zoneId]) => {
         expect(id).toEqual('test-api-shield-op-val-dev-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/apiShieldOperationSchemaValidationSettings:ApiShieldOperationSchemaValidationSettings::test-api-shield-op-val-dev'
+          'urn:pulumi:stack::project::cloudflare:test-common-stack$cloudflare:index/apiShieldOperationSchemaValidationSettings:ApiShieldOperationSchemaValidationSettings::test-api-shield-op-val-dev'
         )
         expect(mitigationAction).toEqual('block')
         expect(operationId).toEqual('test-api-shield-op-dev-id')

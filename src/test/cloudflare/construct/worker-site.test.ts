@@ -101,7 +101,7 @@ describe('TestCloudflareWorkerSite', () => {
       .apply(([id, urn, name, account]) => {
         expect(id).toEqual('test-common-stack-zone-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/zone:Zone::test-common-stack-zone'
+          'urn:pulumi:stack::project::cloudflare:test-common-stack$cloudflare:index/zone:Zone::test-common-stack-zone'
         )
         expect(name).toEqual('gradientedge.io')
         expect(account.id).toEqual('test-account')
@@ -124,7 +124,7 @@ describe('TestCloudflareWorkerSite', () => {
       .apply(([id, urn, accountId, bindings, content, scriptName]) => {
         expect(id).toEqual('test-common-stack-worker-script-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/workersScript:WorkersScript::test-common-stack-worker-script'
+          'urn:pulumi:stack::project::cloudflare:test-common-stack$cloudflare:index/workersScript:WorkersScript::test-common-stack-worker-script'
         )
         expect(accountId).toEqual('test-account')
         expect(bindings).toEqual([])
@@ -149,7 +149,7 @@ describe('TestCloudflareWorkerSite', () => {
       .apply(([id, urn, accountId, hostname, service, zoneId]) => {
         expect(id).toEqual('test-common-stack-worker-domain-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/workersCustomDomain:WorkersCustomDomain::test-common-stack-worker-domain'
+          'urn:pulumi:stack::project::cloudflare:test-common-stack$cloudflare:index/workersCustomDomain:WorkersCustomDomain::test-common-stack-worker-domain'
         )
         expect(accountId).toEqual('test-account')
         expect(hostname).toEqual('test.app.gradientedge.io')
@@ -172,7 +172,7 @@ describe('TestCloudflareWorkerSite', () => {
       .apply(([id, urn, name, rules]) => {
         expect(id).toEqual('test-common-stack-rule-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/ruleset:Ruleset::test-common-stack-rule'
+          'urn:pulumi:stack::project::cloudflare:test-common-stack$cloudflare:index/ruleset:Ruleset::test-common-stack-rule'
         )
         expect(name).toEqual('testRuleSet')
         expect(rules).toEqual({
@@ -196,7 +196,7 @@ describe('TestCloudflareWorkerSite', () => {
       .apply(([id, urn, settingId, value, zoneId]) => {
         expect(id).toEqual('test-common-stack-zone-setting-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::custom:cloudflare:Construct:test-common-stack$cloudflare:index/zoneSetting:ZoneSetting::test-common-stack-zone-setting'
+          'urn:pulumi:stack::project::cloudflare:test-common-stack$cloudflare:index/zoneSetting:ZoneSetting::test-common-stack-zone-setting'
         )
         expect(settingId).toEqual('always_online')
         expect(value).toEqual('on')

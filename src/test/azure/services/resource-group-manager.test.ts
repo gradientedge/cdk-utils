@@ -111,7 +111,7 @@ describe('TestAzureResourceGroupConstruct', () => {
       .apply(([id, urn, name, location, tags]) => {
         expect(id).toEqual('test-resource-group-dev-rg-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::custom:azure:Construct:test-common-stack$azure-native:resources:ResourceGroup::test-resource-group-dev-rg'
+          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:resources:ResourceGroup::test-resource-group-dev-rg'
         )
         expect(name).toEqual('test-resource-group-dev')
         expect(location).toEqual('eastus')

@@ -162,7 +162,7 @@ describe('TestAzureEventgridConstruct', () => {
       .apply(([id, urn, name, location, tags]) => {
         expect(id).toEqual('test-eventgrid-topic-dev-et-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::custom:azure:Construct:test-common-stack$azure-native:eventgrid:Topic::test-eventgrid-topic-dev-et'
+          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:eventgrid:Topic::test-eventgrid-topic-dev-et'
         )
         expect(name).toEqual('test-eventgrid-topic-dev')
         expect(location).toEqual('eastus')
@@ -182,7 +182,7 @@ describe('TestAzureEventgridConstruct', () => {
       .apply(([id, urn, name]) => {
         expect(id).toEqual('test-eventgrid-subscription-dev-es-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::custom:azure:Construct:test-common-stack$azure-native:eventgrid:EventSubscription::test-eventgrid-subscription-dev-es'
+          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:eventgrid:EventSubscription::test-eventgrid-subscription-dev-es'
         )
         expect(name).toEqual('test-eventgrid-subscription-dev')
       })
@@ -202,7 +202,7 @@ describe('TestAzureEventgridConstruct', () => {
       .apply(([id, urn, name, location, tags]) => {
         expect(id).toEqual('test-eventgrid-system-topic-dev-est-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::custom:azure:Construct:test-common-stack$azure-native:eventgrid:SystemTopic::test-eventgrid-system-topic-dev-est'
+          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:eventgrid:SystemTopic::test-eventgrid-system-topic-dev-est'
         )
         expect(name).toEqual('test-eventgrid-system-topic-dev')
         expect(location).toEqual('eastus')
@@ -222,7 +222,7 @@ describe('TestAzureEventgridConstruct', () => {
       .apply(([id, urn, name]) => {
         expect(id).toEqual('test-eventgrid-subscription-dev-ests-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::custom:azure:Construct:test-common-stack$azure-native:eventgrid:SystemTopicEventSubscription::test-eventgrid-subscription-dev-ests'
+          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:eventgrid:SystemTopicEventSubscription::test-eventgrid-subscription-dev-ests'
         )
         expect(name).toEqual('test-eventgrid-system-subscription-dev')
       })
