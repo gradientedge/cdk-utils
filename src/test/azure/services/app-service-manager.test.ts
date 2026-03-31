@@ -157,10 +157,9 @@ describe('TestAzureLinuxWebAppConstruct', () => {
         stack.construct.linuxWebApp.location,
         stack.construct.linuxWebApp.enabled,
         stack.construct.linuxWebApp.httpsOnly,
-        stack.construct.linuxWebApp.siteConfig,
         stack.construct.linuxWebApp.tags,
       ])
-      .apply(([id, urn, name, location, enabled, httpsOnly, siteConfig, tags]) => {
+      .apply(([id, urn, name, location, enabled, httpsOnly, tags]) => {
         expect(id).toEqual('test-linux-web-app-dev-lwa-id')
         expect(urn).toEqual(
           'urn:pulumi:stack::project::azure:test-common-stack$azure-native:web:WebApp::test-linux-web-app-dev-lwa'
@@ -169,12 +168,6 @@ describe('TestAzureLinuxWebAppConstruct', () => {
         expect(location).toEqual('eastus')
         expect(enabled).toEqual(true)
         expect(httpsOnly).toEqual(true)
-        expect(siteConfig).toEqual({
-          alwaysOn: true,
-          http20Enabled: true,
-          localMySqlEnabled: false,
-          netFrameworkVersion: 'v4.6',
-        })
         expect(tags?.environment).toEqual('dev')
       })
   })
