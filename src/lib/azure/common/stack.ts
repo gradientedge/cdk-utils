@@ -23,6 +23,8 @@ import { CommonAzureStackProps } from './types.js'
  * ```
  */
 export class CommonAzureStack extends ComponentResource {
+  public static NODEJS_RUNTIME = '22'
+
   construct: CommonAzureConstruct
   props: CommonAzureStackProps
   config: Config

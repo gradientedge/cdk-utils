@@ -40,9 +40,11 @@ export class AzureRestApi extends CommonAzureConstruct {
   }
 
   protected resolveApplicationInsights() {
+    if (!this.props.commonApplicationInsights || !this.props.commonApplicationInsights.resourceName) return
+
     this.applicationInsights = getComponentOutput({
-      resourceName: this.props.apiApplicationInsights.resourceName,
-      resourceGroupName: this.props.apiApplicationInsights.resourceGroupName,
+      resourceName: this.props.commonApplicationInsights.resourceName,
+      resourceGroupName: this.props.commonApplicationInsights.resourceGroupName,
     })
   }
 

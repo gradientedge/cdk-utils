@@ -178,8 +178,9 @@ describe('TestAzureFunctionConstruct', () => {
         stack.construct.functionAppFlexConsumption.name,
         stack.construct.functionAppFlexConsumption.location,
         stack.construct.functionAppFlexConsumption.kind,
+        stack.construct.functionAppFlexConsumption.functionAppConfig,
       ])
-      .apply(([id, urn, name, location, kind]) => {
+      .apply(([id, urn, name, location, kind, functionAppConfig]) => {
         expect(id).toEqual('test-function-app-flex-consumption-dev-fc-id')
         expect(urn).toEqual(
           'urn:pulumi:stack::project::azure:test-common-stack$azure-native:web:WebApp::test-function-app-flex-consumption-dev-fc'

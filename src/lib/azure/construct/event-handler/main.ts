@@ -134,7 +134,7 @@ export class AzureEventHandler extends AzureFunctionApp {
         scope: this.eventGridTopic.id,
         destination: {
           endpointType: 'ServiceBusQueue',
-          resourceId: this.serviceBus.queue.id.get(),
+          resourceId: this.serviceBus.queue.id,
         },
         deadLetterDestination: {
           blobContainerName: this.eventGridEventSubscription.dlqStorageContainer.name,

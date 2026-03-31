@@ -78,9 +78,11 @@ export class AzureFunctionApp extends CommonAzureConstruct {
   }
 
   protected resolveApplicationInsights() {
+    if (!this.props.commonApplicationInsights || !this.props.commonApplicationInsights.resourceName) return
+
     this.applicationInsights = getComponentOutput({
-      resourceName: this.props.apiApplicationInsights.resourceName,
-      resourceGroupName: this.props.apiApplicationInsights.resourceGroupName,
+      resourceName: this.props.commonApplicationInsights.resourceName,
+      resourceGroupName: this.props.commonApplicationInsights.resourceGroupName,
     })
   }
 
@@ -225,7 +227,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
       secretName: this.props.dataKeyVaultSecretName,
       resourceGroupName: this.resourceGroup.name,
       properties: {
-        value: sasToken.get(),
+        value: sasToken,
       },
     })
   }
@@ -378,7 +380,6 @@ export class AzureFunctionApp extends CommonAzureConstruct {
             this.appConnectionStrings.map(cs => [cs.name, { type: cs.type, value: cs.value }])
           ),
         },
-        instanceMemoryInMb: this.props.functionApp.app.instanceMemoryInMb ?? 4096,
         httpsOnly: this.props.functionApp.app.httpsOnly ?? true,
       },
       { ...resourceOptions }
@@ -468,7 +469,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
       functionAppName: this.app.name,
       functionAppResourceGroupName: this.resourceGroup.name,
       insightsAppName: this.applicationInsights.name,
-      insightsAppResourceGroupName: this.props.apiLogAnalyticsWorkspace.resourceGroupName,
+      insightsAppResourceGroupName: this.props.commonLogAnalyticsWorkspace?.resourceGroupName,
     }
   }
 

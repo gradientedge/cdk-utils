@@ -1,5 +1,6 @@
+import { GetComponentOutputArgs } from '@pulumi/azure-native/applicationinsights/index.js'
+import { GetWorkspaceOutputArgs } from '@pulumi/azure-native/operationalinsights/index.js'
 import { BaseProps } from '../../common/index.js'
-import { WorkspaceProps } from '../services/index.js'
 import { AzureLocation, AzureRemoteBackend } from './constants.js'
 
 export interface AzureLocationConfig {
@@ -24,6 +25,8 @@ export interface CommonAzureStackProps extends BaseProps {
   locationConfig?: Record<AzureLocation, AzureLocationConfig>
   locales?: string[]
   defaultTags?: { [key: string]: string }
+  commonLogAnalyticsWorkspace?: GetWorkspaceOutputArgs
+  commonApplicationInsights?: GetComponentOutputArgs
 
   // Azure Provider properties for Pulumi
   subscriptionId?: string
@@ -36,7 +39,6 @@ export interface CommonAzureStackProps extends BaseProps {
   oidcRequestUrl?: string
   useMsi?: boolean
   msiEndpoint?: string
-  commonLogAnalyticsWorkspace?: WorkspaceProps
 }
 
 export interface AzureRemoteBackendProps {

@@ -13,16 +13,6 @@ export interface OtelProps {
   otelTracesSamplerArg: string
 }
 
-export interface ApiLogAnalyticsWorkspace {
-  workspaceName: string
-  resourceGroupName: string
-}
-
-export interface ApiApplicationInsights {
-  resourceName: string
-  resourceGroupName: string
-}
-
 export interface FunctionAppProperties {
   app: FunctionAppFlexConsumptionProps
   appConfiguration: AppConfigurationProps
@@ -45,8 +35,6 @@ export interface AzureFunctionAppProps extends CommonAzureStackProps {
   hostsConfiguration: any
   existingConfigStoreResourceGroupName: string
   existingConfigStoreName: string
-  apiLogAnalyticsWorkspace: ApiLogAnalyticsWorkspace
-  apiApplicationInsights: ApiApplicationInsights
   functionApp: FunctionAppProperties
   useConfigOverride?: boolean
   dataStorageContainer: StorageContainerProps
