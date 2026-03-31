@@ -196,7 +196,7 @@ class CustomConstruct extends CommonAzureConstruct {
 
     
 
-    <h4 class="name" id="createKeyVault"><span class="type-signature"></span>createKeyVault<span class="signature">(id, scope, props)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="createKeyVault"><span class="type-signature"></span>createKeyVault<span class="signature">(id, scope, props, resourceOptions)</span><span class="type-signature"></span></h4>
 
     
     <p class="summary usertext"><p>Method to create a new key vault</p></p>
@@ -214,7 +214,7 @@ class CustomConstruct extends CommonAzureConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_key-vault_main.ts.html">azure/services/key-vault/main.ts</a>, <a href="azure_services_key-vault_main.ts.html#line28">line 28</a>
+        <a href="azure_services_key-vault_main.ts.html">azure/services/key-vault/main.ts</a>, <a href="azure_services_key-vault_main.ts.html#line29">line 29</a>
     </li></ul></dd>
     
 
@@ -341,6 +341,401 @@ class CustomConstruct extends CommonAzureConstruct {
             
 
             <td class="description last"><p>key vault properties</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>resourceOptions</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Optional settings to control resource behaviour</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="createKeyVaultSecret"><span class="type-signature"></span>createKeyVaultSecret<span class="signature">(id, scope, props, resourceOptions)</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to create a new key vault secret</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_services_key-vault_main.ts.html">azure/services/key-vault/main.ts</a>, <a href="azure_services_key-vault_main.ts.html#line69">line 69</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+    <dt class="tag-see">See:</dt>
+    <dd class="tag-see">
+        <ul>
+            <li><p><a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/keyvault/secret/">Pulumi Azure Native Key Vault Secret</a></p></li>
+        </ul>
+    </dd>
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="h5-parameters">Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>id</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>scoped id of the resource</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>scope</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>scope in which this resource is defined</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>props</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>key vault secret properties</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>resourceOptions</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Optional settings to control resource behaviour</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="resolveKeyVault"><span class="type-signature"></span>resolveKeyVault<span class="signature">(scope, vaultName, resourceGroupName, resourceOptions)</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to resolve an existing key vault</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_services_key-vault_main.ts.html">azure/services/key-vault/main.ts</a>, <a href="azure_services_key-vault_main.ts.html#line81">line 81</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="h5-parameters">Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>scope</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>scope in which this resource is defined</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>vaultName</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>the key vault name</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>resourceGroupName</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>the resource group name</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>resourceOptions</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Optional settings to control resource behaviour</p></td>
         </tr>
 
     

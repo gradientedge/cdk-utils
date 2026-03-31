@@ -49,6 +49,7 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>import { DiagnosticSetting } from '@pulumi/azure-native/monitor/index.js'
+import { ResourceOptions } from '@pulumi/pulumi'
 import { CommonAzureConstruct } from '../../common/index.js'
 import { MonitorDiagnosticSettingProps } from './types.js'
 
@@ -75,12 +76,14 @@ export class AzureMonitorManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props monitor diagnostics settings properties
+   * @param resourceOptions Optional settings to control resource behaviour
    * @see [Pulumi Azure Native Monitor Diagnostic Settings]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/insights/diagnosticsetting/}
    */
   public createMonitorDiagnosticSettings(
     id: string,
     scope: CommonAzureConstruct,
-    props: MonitorDiagnosticSettingProps
+    props: MonitorDiagnosticSettingProps,
+    resourceOptions?: ResourceOptions
   ) {
     if (!props) throw `Props undefined for ${id}`
 
@@ -93,7 +96,7 @@ export class AzureMonitorManager {
           scope.props.resourceNameOptions?.monitorDiagnosticSetting
         ),
       },
-      { parent: scope }
+      { parent: scope, ...resourceOptions }
     )
   }
 }

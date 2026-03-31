@@ -48,9 +48,10 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { Workspace, WorkspaceSkuNameEnum } from '@pulumi/azure-native/operationalinsights/index.js'
+            <pre class="prettyprint source linenums"><code>import { Table, Workspace, WorkspaceSkuNameEnum } from '@pulumi/azure-native/operationalinsights/index.js'
+import { ResourceOptions } from '@pulumi/pulumi'
 import { CommonAzureConstruct } from '../../common/index.js'
-import { WorkspaceProps } from './types.js'
+import { WorkspaceProps, WorkspaceTableProps } from './types.js'
 
 /**
  * @classdesc Provides operations on Azure Log Analytics Workspace using Pulumi
@@ -75,9 +76,15 @@ export class AzureOperationalInsightsManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props log analytics workspace properties
+   * @param resourceOptions Optional settings to control resource behaviour
    * @see [Pulumi Azure Native Operational Insights Workspace]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/operationalinsights/workspace/}
    */
-  public createWorkspace(id: string, scope: CommonAzureConstruct, props: WorkspaceProps) {
+  public createWorkspace(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: WorkspaceProps,
+    resourceOptions?: ResourceOptions
+  ) {
     if (!props) throw `Props undefined for ${id}`
 
     // Get resource group name
@@ -105,8 +112,27 @@ export class AzureOperationalInsightsManager {
           environment: scope.props.stage,
         },
       },
-      { parent: scope }
+      { parent: scope, ...resourceOptions }
     )
+  }
+
+  /**
+   * @summary Method to create a new log analytics workspace table
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props log analytics workspace table properties
+   * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native Operational Insights Table]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/operationalinsights/table/}
+   */
+  public createTable(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: WorkspaceTableProps,
+    resourceOptions?: ResourceOptions
+  ) {
+    if (!props) throw `Props undefined for ${id}`
+
+    return new Table(`${id}`, props, { parent: scope, ...resourceOptions })
   }
 }
 </code></pre>

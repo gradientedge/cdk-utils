@@ -56,6 +56,7 @@
   WorkersRoute,
   WorkersScript,
 } from '@pulumi/cloudflare'
+import _ from 'lodash'
 import { CommonCloudflareConstruct } from '../../common/index.js'
 import {
   WorkerCronTriggerProps,
@@ -143,7 +144,7 @@ export class CloudflareWorkerManager {
   public createWorkerScript(id: string, scope: CommonCloudflareConstruct, props: WorkerScriptProps) {
     if (!props) throw `Props undefined for ${id}`
 
-    return new WorkersScript(
+    const script = new WorkersScript(
       id,
       {
         ...props,
@@ -152,6 +153,14 @@ export class CloudflareWorkerManager {
       },
       { parent: scope }
     )
+
+    if (props.routes) {
+      _.forEach(props.routes, (route: WorkerRouteProps) => {
+        this.createWorkerRoute(`${id}-route-${route.pattern}`, scope, route)
+      })
+    }
+
+    return script
   }
 
   /**

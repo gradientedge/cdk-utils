@@ -98,17 +98,12 @@ export class CommonCloudflareStack extends ComponentResource {
     }
 
     return {
-      accountId: projectProps.accountId,
-      apiToken: projectProps.apiToken,
-      domainName: projectProps.domainName,
-      extraContexts: projectProps.extraContexts,
-      name: projectProps.resourceGroupName ?? projectProps.name,
-      skipStageForARecords: projectProps.skipStageForARecords,
-      stage: projectProps.stage,
-      stageContextPath: projectProps.stageContextPath,
-      subDomain: projectProps.subDomain,
-      ...this.determineExtraContexts(props),
-      ...this.determineStageContexts(props),
+      ...props,
+      extraContexts: this.config.getObject('extraContexts'),
+      stage: this.config.require('stage'),
+      stageContextPath: this.config.require('stageContextPath'),
+      ...this.determineExtraContexts(),
+      ...this.determineStageContexts(),
     }
   }
 
@@ -117,22 +112,24 @@ export class CommonCloudflareStack extends ComponentResource {
    * - Sets the properties from the extra contexts into cdk node context
    * - Primary use is to have layered config in separate files to enable easier maintenance and readability
    */
-  protected determineExtraContexts(props: CommonCloudflareStackProps) {
-    if (!props.extraContexts) {
-      if (props.debug) console.debug(`No additional contexts provided. Using default context properties`)
+  protected determineExtraContexts() {
+    const extraContexts = this.config.getObject('extraContexts')
+    const debug = this.config.getBoolean('debug')
+    if (!extraContexts) {
+      if (debug) console.debug(`No additional contexts provided. Using default context properties`)
       return {}
     }
 
     let extraContextProps: Record&lt;string, any> = {}
-    _.forEach(props.extraContexts, (context: string) => {
+    _.forEach(extraContexts, (context: string) => {
       const extraContextPath = path.join(appRoot.path, context)
 
-      /* scenario where extra context is configured in cdk.json but absent in file system */
+      /* scenario where extra context is configured but absent in file system */
       if (!fs.existsSync(extraContextPath)) throw `Extra context properties unavailable in path:${extraContextPath}`
 
       /* read the extra properties */
       const extraContextPropsBuffer = fs.readFileSync(extraContextPath)
-      if (props.debug) console.debug(`Adding additional contexts provided in ${extraContextPath}`)
+      if (debug) console.debug(`Adding additional contexts provided in ${extraContextPath}`)
 
       /* parse as JSON properties */
       extraContextProps = {
@@ -148,23 +145,26 @@ export class CommonCloudflareStack extends ComponentResource {
    * - Sets the properties from the extra stage contexts into cdk node context
    * - Primary use is to have layered config for each environment which is injected into the context
    */
-  protected determineStageContexts(props: CommonCloudflareStackProps) {
-    const stageContextFilePath = path.join(appRoot.path, props.stageContextPath ?? 'env', `${props.stage}.json`)
+  protected determineStageContexts() {
+    const debug = this.config.getBoolean('debug')
+    const stage = this.config.require('stage')
+    const stageContextPath = this.config.get('stageContextPath')
+    const stageContextFilePath = path.join(appRoot.path, stageContextPath ?? 'env', `${stage}.json`)
 
-    if (isDevStage(props.stage)) {
-      if (props.debug) console.debug(`Development stage. Using default stage context properties`)
+    if (isDevStage(stage)) {
+      if (debug) console.debug(`Development stage. Using default stage context properties`)
     }
 
     /* alert default context usage when extra stage config is missing */
     if (!fs.existsSync(stageContextFilePath)) {
-      if (props.debug) console.debug(`Stage specific context properties unavailable in path:${stageContextFilePath}`)
-      if (props.debug) console.debug(`Using default stage context properties for ${props.stage} stage`)
+      if (debug) console.debug(`Stage specific context properties unavailable in path:${stageContextFilePath}`)
+      if (debug) console.debug(`Using default stage context properties for ${stage} stage`)
       return {}
     }
 
     /* read the extra properties */
     const stageContextPropsBuffer = fs.readFileSync(stageContextFilePath)
-    if (props.debug) console.debug(`Adding additional stage contexts provided in ${stageContextFilePath}`)
+    if (debug) console.debug(`Adding additional stage contexts provided in ${stageContextFilePath}`)
 
     /* parse as JSON properties */
     return JSON.parse(stageContextPropsBuffer.toString('utf-8'))

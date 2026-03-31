@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>azure/construct/rest-api/main.ts - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="main.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <script src="scripts/commonNav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">azure/construct/rest-api/main.ts</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { HostnameType, LoggerType } from '@pulumi/azure-native/apimanagement/index.js'
+import { getComponentOutput, GetComponentResult } from '@pulumi/azure-native/applicationinsights/index.js'
+import { getVaultOutput } from '@pulumi/azure-native/keyvault/index.js'
+import * as pulumi from '@pulumi/pulumi'
+import { Output } from '@pulumi/pulumi'
+import { CommonAzureConstruct } from '../../common/index.js'
+import { RoleDefinitionId } from '../../services/index.js'
+import { AzureApi, AzureRestApiProps } from './types.js'
+
+export class AzureRestApi extends CommonAzureConstruct {
+  props: AzureRestApiProps
+  api: AzureApi
+  applicationInsights: Output&lt;GetComponentResult>
+
+  constructor(id: string, props: AzureRestApiProps) {
+    super(id, props)
+    this.props = props
+    this.id = id
+  }
+
+  public initResources() {
+    this.createResourceGroup()
+    this.resolveApiKeyVault()
+    this.resolveCommonLogAnalyticsWorkspace()
+    this.resolveApplicationInsights()
+    this.createApiManagement()
+    this.createNamespaceSecretRole()
+    this.createNamespaceSecret()
+    this.createSubscriptionKeySecret()
+    this.createApiManagementLogger()
+    this.createApiDiagnostic()
+    this.createDiagnosticLog()
+  }
+
+  protected resolveApiKeyVault() {
+    this.api.authKeyVault = getVaultOutput({
+      vaultName: this.props.apiAuthKeyVault.name,
+      resourceGroupName: this.props.apiAuthKeyVault.resourceGroupName,
+    })
+  }
+
+  protected resolveApplicationInsights() {
+    if (!this.props.commonApplicationInsights || !this.props.commonApplicationInsights.resourceName) return
+
+    this.applicationInsights = getComponentOutput({
+      resourceName: this.props.commonApplicationInsights.resourceName,
+      resourceGroupName: this.props.commonApplicationInsights.resourceGroupName,
+    })
+  }
+
+  protected createApiManagement() {
+    if (this.props.apiManagement.useExistingApiManagement) {
+      if (this.props.apiManagement.apiStackName) {
+        const apiStack = new pulumi.StackReference(this.props.apiManagement.apiStackName)
+        this.api.id = apiStack.getOutput('apiId')
+        this.api.name = apiStack.getOutput('apiName')
+        this.api.resourceGroupName = apiStack.getOutput('apiResourceGroupName')
+      }
+    } else {
+      let hostnameConfigurations
+      if (this.props.apiManagement.certificateKeyVaultId) {
+        hostnameConfigurations = [
+          {
+            hostName: `api-${this.props.locationConfig?.[this.props.location].name}.${this.props.domainName}`,
+            keyVaultId: this.props.apiManagement.certificateKeyVaultId,
+            type: HostnameType.Management,
+          },
+        ]
+      }
+
+      this.api.apim = this.apiManagementManager.createApiManagementService(
+        this.id,
+        this,
+        {
+          ...this.props.apiManagement,
+          serviceName: this.props.stackName,
+          location: this.resourceGroup.location,
+          resourceGroupName: this.resourceGroup.name,
+          hostnameConfigurations,
+        },
+        undefined,
+        undefined,
+        { protect: true }
+      )
+      this.api.id = this.api.apim.id
+      this.api.name = this.api.apim.name
+      this.api.resourceGroupName = this.resourceGroup.name
+
+      if (this.props.apiManagement.certificateKeyVaultId) {
+        this.authorisationManager.createRoleAssignment(`${this.id}-kv-role`, this, {
+          principalId: this.api.apim.identity.apply(identity => identity?.principalId ?? ''),
+          roleDefinitionId: RoleDefinitionId.KEY_VAULT_CERTIFICATE_USER,
+          scope: this.props.apiManagement.certificateKeyVaultId,
+        })
+      }
+    }
+
+    this.registerOutputs({
+      apiId: this.api.id,
+      apiName: this.api.name,
+      apiResourceGroupName: this.api.resourceGroupName,
+    })
+  }
+
+  protected createNamespaceSecretRole() {
+    if (this.props.apiManagement.useExistingApiManagement) return
+
+    this.api.namedValueRoleAssignment = this.authorisationManager.createRoleAssignment(
+      `${this.id}-key-vault-role-api-namespace`,
+      this,
+      {
+        principalId: this.api.apim.identity.apply(identity => identity?.principalId ?? ''),
+        roleDefinitionId: `/subscriptions/${this.props.subscriptionId}/providers/Microsoft.Authorization/roleDefinitions/4633458b-17de-408a-b874-0445c86b69e6`,
+        scope: this.api.authKeyVault.id,
+      }
+    )
+  }
+
+  protected createNamespaceSecret() {
+    if (this.props.apiManagement.useExistingApiManagement) return
+
+    this.api.namedValueSecret = this.keyVaultManager.createKeyVaultSecret(
+      `${this.id}-key-vault-api-namespace-secret`,
+      this,
+      {
+        vaultName: this.api.authKeyVault.name,
+        secretName: `${this.applicationInsights.name}-${this.props.stackName}-key`,
+        resourceGroupName: this.resourceGroup.name,
+        properties: {
+          value: this.applicationInsights.instrumentationKey,
+        },
+      }
+    )
+  }
+
+  protected createSubscriptionKeySecret() {
+    if (this.props.apiManagement.useExistingApiManagement) return
+
+    const apiManagementSubscription = this.apiManagementManager.createSubscription(this.id, this, {
+      serviceName: this.api.apim.name,
+      resourceGroupName: this.resourceGroup.name,
+      displayName: 'all-apis',
+      state: 'active',
+      allowTracing: false,
+      scope: '', // todo
+    })
+
+    this.keyVaultManager.createKeyVaultSecret(`${this.id}-key-vault-api-subscription-key-secret`, this, {
+      vaultName: this.api.authKeyVault.name,
+      secretName: `${this.props.stackName}-subscription-key`,
+      resourceGroupName: this.resourceGroup.name,
+      properties: {
+        value: apiManagementSubscription.primaryKey.apply(key => key ?? ''),
+      },
+    })
+  }
+
+  protected createApiManagementLogger() {
+    if (this.props.apiManagement.useExistingApiManagement) return
+
+    const apiAppNamedValue = this.apiManagementManager.createNamedValue(`${this.id}-am-nv`, this, {
+      displayName: this.applicationInsights.name,
+      resourceGroupName: this.resourceGroup.name,
+      serviceName: this.api.apim.name,
+      namedValueId: `${this.applicationInsights.name}-key`,
+      secret: true,
+      keyVault: {
+        secretIdentifier: this.api.namedValueSecret.id,
+      },
+    })
+
+    this.api.logger = this.apiManagementManager.createLogger(`${this.id}-am-logger`, this, {
+      resourceGroupName: this.resourceGroup.name,
+      serviceName: this.api.apim.name,
+      resourceId: this.applicationInsights.id,
+      loggerType: LoggerType.ApplicationInsights,
+      credentials: {
+        instrumentationKey: `{{${apiAppNamedValue.displayName}}}`,
+      },
+    })
+  }
+
+  protected createApiDiagnostic() {
+    if (this.props.apiManagement.useExistingApiManagement) return
+
+    this.apiManagementManager.createApiDiagnostic(`${this.id}-all-apis`, this, {
+      ...this.props.apiManagementDiagnostic,
+      apiId: this.api.apim.id,
+      resourceGroupName: this.resourceGroup.name,
+      serviceName: this.api.apim.name,
+      loggerId: this.api.logger.id,
+    })
+  }
+
+  protected createDiagnosticLog() {
+    if (this.props.apiManagement.useExistingApiManagement) return
+
+    this.monitorManager.createMonitorDiagnosticSettings(`${this.id}-apim-diagnostic`, this, {
+      ...this.props.apiManagementDiagnosticSettings,
+      name: `${this.props.stackName}-api-management`,
+      resourceUri: this.api.apim.id,
+      workspaceId: this.commonLogAnalyticsWorkspace.id,
+    })
+  }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+    
+</div>
+
+<br class="clear">
+
+<footer>
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>

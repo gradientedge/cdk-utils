@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>AzureRedisManager - Documentation</title>
+    <title>AzureSecurityCentermanager - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -38,7 +38,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">AzureRedisManager</h1>
+    <h1 class="page-title">AzureSecurityCentermanager</h1>
     
 
     
@@ -52,11 +52,11 @@
     
         <h2>
         
-            AzureRedisManager
+            AzureSecurityCentermanager
         
         </h2>
         
-            <div class="class-description usertext"><p>Provides operations on Azure Redis using Pulumi</p>
+            <div class="class-description usertext"><p>Provides operations on Azure Security Center using Pulumi</p>
 <ul>
 <li>A new instance of this class is injected into <a href="CommonAzureConstruct.html">CommonAzureConstruct</a> constructor.</li>
 <li>If a custom construct extends <a href="CommonAzureConstruct.html">CommonAzureConstruct</a>, an instance is available within the context.</li>
@@ -75,7 +75,7 @@
     <h2>Constructor</h2>
     
 
-    <h4 class="name" id="AzureRedisManager"><span class="type-signature"></span>new AzureRedisManager<span class="signature">()</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="AzureSecurityCentermanager"><span class="type-signature"></span>new AzureSecurityCentermanager<span class="signature">()</span><span class="type-signature"></span></h4>
 
     
 
@@ -91,7 +91,7 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_redis_main.ts.html">azure/services/redis/main.ts</a>, <a href="azure_services_redis_main.ts.html#line20">line 20</a>
+        <a href="azure_services_security-center_main.ts.html">azure/services/security-center/main.ts</a>, <a href="azure_services_security-center_main.ts.html#line20">line 20</a>
     </li></ul></dd>
     
 
@@ -145,7 +145,7 @@ class CustomConstruct extends CommonAzureConstruct {
   constructor(name: string, props: CommonAzureStackProps) {
     super(name, props)
     this.props = props
-    this.redisManager.createManagedRedis('MyManagedRedis', this, props)
+    this.securityCenterManager.createDefenderForStorage('MyDefender', this, props)
   }
 }
 ```</code></pre>
@@ -196,10 +196,10 @@ class CustomConstruct extends CommonAzureConstruct {
 
     
 
-    <h4 class="name" id="createManagedRedis"><span class="type-signature"></span>createManagedRedis<span class="signature">(id, scope, props, resourceOptions)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="createDefenderForStorage"><span class="type-signature"></span>createDefenderForStorage<span class="signature">(id, scope, props, resourceOptions)</span><span class="type-signature"></span></h4>
 
     
-    <p class="summary usertext"><p>Method to create a new managed redis cache</p></p>
+    <p class="summary usertext"><p>Method to create a new defender for storage account</p></p>
     
 
 
@@ -214,7 +214,7 @@ class CustomConstruct extends CommonAzureConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_redis_main.ts.html">azure/services/redis/main.ts</a>, <a href="azure_services_redis_main.ts.html#line29">line 29</a>
+        <a href="azure_services_security-center_main.ts.html">azure/services/security-center/main.ts</a>, <a href="azure_services_security-center_main.ts.html#line29">line 29</a>
     </li></ul></dd>
     
 
@@ -248,7 +248,7 @@ class CustomConstruct extends CommonAzureConstruct {
     <dt class="tag-see">See:</dt>
     <dd class="tag-see">
         <ul>
-            <li><p><a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/cache/redis/">Pulumi Azure Native Redis</a></p></li>
+            <li><p><a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/security/defenderforstorage/">Pulumi Azure Native Defender For Storage</a></p></li>
         </ul>
     </dd>
     
@@ -340,7 +340,7 @@ class CustomConstruct extends CommonAzureConstruct {
 
             
 
-            <td class="description last"><p>redis cache properties</p></td>
+            <td class="description last"><p>defender for storage account properties</p></td>
         </tr>
 
     

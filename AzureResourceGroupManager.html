@@ -196,7 +196,7 @@ class CustomConstruct extends CommonAzureConstruct {
 
     
 
-    <h4 class="name" id="createResourceGroup"><span class="type-signature"></span>createResourceGroup<span class="signature">(id, scope, props)</span><span class="type-signature"></span></h4>
+    <h4 class="name" id="createResourceGroup"><span class="type-signature"></span>createResourceGroup<span class="signature">(id, scope, props, resourceOptions)</span><span class="type-signature"></span></h4>
 
     
     <p class="summary usertext"><p>Method to create a new resource group</p></p>
@@ -214,7 +214,7 @@ class CustomConstruct extends CommonAzureConstruct {
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_services_resource-group_main.ts.html">azure/services/resource-group/main.ts</a>, <a href="azure_services_resource-group_main.ts.html#line28">line 28</a>
+        <a href="azure_services_resource-group_main.ts.html">azure/services/resource-group/main.ts</a>, <a href="azure_services_resource-group_main.ts.html#line29">line 29</a>
     </li></ul></dd>
     
 
@@ -341,6 +341,191 @@ class CustomConstruct extends CommonAzureConstruct {
             
 
             <td class="description last"><p>resource group properties</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>resourceOptions</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Optional settings to control resource behaviour</p></td>
+        </tr>
+
+    
+    </tbody>
+</table>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="resolveResourceGroup"><span class="type-signature"></span>resolveResourceGroup<span class="signature">(scope, resourceGroupName, resourceOptions)</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to resolve an existing resource group</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_services_resource-group_main.ts.html">azure/services/resource-group/main.ts</a>, <a href="azure_services_resource-group_main.ts.html#line47">line 47</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="h5-parameters">Parameters:</h5>
+    
+
+<table class="params">
+    <thead>
+    <tr>
+        
+        <th>Name</th>
+        
+
+        <th>Type</th>
+
+        
+
+        
+
+        <th class="last">Description</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    
+
+        <tr>
+            
+                <td class="name"><code>scope</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>scope in which this resource is defined</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>resourceGroupName</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>the resource group name</p></td>
+        </tr>
+
+    
+
+        <tr>
+            
+                <td class="name"><code>resourceOptions</code></td>
+            
+
+            <td class="type">
+            
+            </td>
+
+            
+
+            
+
+            <td class="description last"><p>Optional settings to control resource behaviour</p></td>
         </tr>
 
     

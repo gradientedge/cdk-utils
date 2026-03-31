@@ -3,7 +3,7 @@
 <head>
     
     <meta charset="utf-8">
-    <title>azure/services/resource-group/main.ts - Documentation</title>
+    <title>azure/services/portal/main.ts - Documentation</title>
     
     
     <script src="scripts/prettify/prettify.js"></script>
@@ -38,7 +38,7 @@
 
 <div id="main">
     
-    <h1 class="page-title">azure/services/resource-group/main.ts</h1>
+    <h1 class="page-title">azure/services/portal/main.ts</h1>
     
 
     
@@ -48,13 +48,15 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { getResourceGroupOutput, ResourceGroup } from '@pulumi/azure-native/resources/index.js'
+            <pre class="prettyprint source linenums"><code>import { Dashboard } from '@pulumi/azure-native/portal/index.js'
 import { ResourceOptions } from '@pulumi/pulumi'
-import { CommonAzureConstruct } from '../../common/index.js'
-import { ResourceGroupProps } from './types.js'
+import fs from 'fs'
+import { CommonAzureConstruct } from '../../index.js'
+import { AzureDashboardRenderer } from './renderer.js'
+import { PortalDashboardProps } from './types.js'
 
 /**
- * @classdesc Provides operations on Azure Resource Group using Pulumi
+ * @classdesc Provides operations on Azure Portal Dashboards using Pulumi
  * - A new instance of this class is injected into {@link CommonAzureConstruct} constructor.
  * - If a custom construct extends {@link CommonAzureConstruct}, an instance is available within the context.
  * @example
@@ -65,66 +67,65 @@ import { ResourceGroupProps } from './types.js'
  *   constructor(name: string, props: CommonAzureStackProps) {
  *     super(name, props)
  *     this.props = props
- *     this.resourceGroupManager.createResourceGroup('MyResourceGroup', this, props)
+ *     this.azurePortalManager.createDashBoard('MyDashboard', this, props)
  *   }
  * }
  * ```
  */
-export class AzureResourceGroupManager {
+export class AzurePortalManager {
   /**
-   * @summary Method to create a new resource group
+   * @summary Method to create a new portal dashboard
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props resource group properties
+   * @param props  the dashboard properties
+   * @param renderer An optional renderer to use
    * @param resourceOptions Optional settings to control resource behaviour
-   * @see [Pulumi Azure Native Resource Group]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/resources/resourcegroup/}
+   * @see [Pulumi Azure Native Portal Dashboard]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/portal/dashboard/}
    */
-  public createResourceGroup(
+  public createDashBoard(
     id: string,
     scope: CommonAzureConstruct,
-    props: ResourceGroupProps,
+    props: PortalDashboardProps,
+    renderer?: AzureDashboardRenderer,
     resourceOptions?: ResourceOptions
   ) {
     if (!props) throw `Props undefined for ${id}`
 
-    return new ResourceGroup(
-      `${id}-rg`,
+    const resourceGroup = scope.resourceGroupManager.resolveResourceGroup(
+      scope,
+      props.resourceGroupName.toString() ?? scope.props.resourceGroupName,
+      resourceOptions
+    )
+
+    const dashboardName = scope.resourceNameFormatter.format(
+      props.dashboardName?.toString(),
+      scope.props.resourceNameOptions?.portalDashboard
+    )
+
+    const dashboardRenderer = renderer ?? new AzureDashboardRenderer()
+    const templateFile = dashboardRenderer.renderToFile(dashboardName, props)
+    const template = fs.readFileSync(templateFile, 'utf-8')
+    const content = Object.entries(props.variables).reduce(
+      (result, [key, value]) => result.replaceAll(`\${${key}}`, String(value)),
+      template
+    )
+
+    return new Dashboard(
+      `${id}-dashboard`,
       {
         ...props,
-        resourceGroupName: scope.resourceNameFormatter.format(
-          props.resourceGroupName?.toString(),
-          scope.props.resourceNameOptions?.resourceGroup
+        dashboardName: scope.resourceNameFormatter.format(
+          props.dashboardName?.toString(),
+          scope.props.resourceNameOptions?.portalDashboard
         ),
-        location: props.location,
-        tags: props.tags ?? {
-          environment: scope.props.stage,
+        resourceGroupName: resourceGroup.name,
+        location: props.location ?? resourceGroup.location,
+        properties: JSON.parse(content),
+        tags: {
+          'hidden-title': `${props.location} - ${props.displayName}`,
         },
       },
-      { parent: scope, ...resourceOptions }
-    )
-  }
-
-  /**
-   * @summary Method to resolve an existing resource group
-   * @param scope scope in which this resource is defined
-   * @param resourceGroupName the resource group name
-   * @param resourceOptions Optional settings to control resource behaviour
-   */
-  public resolveResourceGroup(
-    scope: CommonAzureConstruct,
-    resourceGroupName: string,
-    resourceOptions?: ResourceOptions
-  ) {
-    if (!resourceGroupName) throw `Resource Group Name undefined`
-
-    return getResourceGroupOutput(
-      {
-        resourceGroupName: scope.resourceNameFormatter.format(
-          resourceGroupName?.toString(),
-          scope.props.resourceNameOptions?.resourceGroup
-        ),
-      },
-      { parent: scope, ...resourceOptions }
+      { ...resourceOptions, ignoreChanges: ['location'] }
     )
   }
 }

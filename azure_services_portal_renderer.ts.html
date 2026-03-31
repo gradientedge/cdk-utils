@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>azure/services/portal/renderer.ts - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="main.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <script src="scripts/commonNav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">azure/services/portal/renderer.ts</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import appRoot from 'app-root-path'
+import fs from 'fs'
+import _ from 'lodash'
+import path from 'path'
+import { parse } from 'yaml'
+import { TemplateError } from './error.js'
+import { DashboardRenderer, MissingKeys, PaneTemplate, RenderParams } from './types.js'
+
+export class AzureDashboardRenderer implements DashboardRenderer {
+  private readonly paneTemplatePath: string
+  private readonly outputDir: string
+
+  constructor(basePath?: string, outputDir?: string) {
+    this.paneTemplatePath = basePath ?? path.join(appRoot.path, 'template', 'dashboard')
+    this.outputDir = outputDir ?? path.join(appRoot.path, '.artifacts')
+  }
+
+  private getPaneId(id: string): PaneTemplate {
+    const panePath = `${this.paneTemplatePath}/${id}.yaml`
+    const paneFileContent = fs.readFileSync(panePath, 'utf-8')
+    const paneTemplate = parse(paneFileContent)
+    return paneTemplate
+  }
+
+  public getMissingProperties(template: PaneTemplate, properties: RenderParams['properties'] = []): MissingKeys {
+    const keys = Object.keys(template.properties).filter(key => !(key in properties))
+    return {
+      keys,
+      hasMissingKeys: keys.length !== 0,
+    }
+  }
+
+  public getMissingVariables(template: PaneTemplate, variables: RenderParams['variables']): MissingKeys {
+    const keys = Object.keys(template.variables).filter(key => !(key in variables))
+    return {
+      keys,
+      hasMissingKeys: keys.length !== 0,
+    }
+  }
+
+  public render(params: RenderParams): string {
+    _.templateSettings.interpolate = /{{([\s\S]+?)}}/g
+
+    // if client is used instead of hosts
+    let partsIndex = 0
+    let yIndex = 0
+    const parts: Record&lt;string, any> = {}
+    for (const pane of params.panes) {
+      try {
+        const paneTemplate = this.getPaneId(pane.id)
+        const compiled = _.template(paneTemplate.template)
+
+        function getValue(value: string | number): string | number {
+          try {
+            if (typeof value === 'number') {
+              return value
+            }
+
+            if (value.includes(':')) {
+              const [property, formatter] = value.split(':')
+              const unformattedValue = _.get(params.properties, property)
+              if (formatter === 'host') {
+                const host = new URL(unformattedValue)
+                const port = host.protocol.startsWith('https') ? '443' : '80'
+                return `${host.host}:${port}`
+              }
+
+              return unformattedValue
+            }
+
+            return value
+          } catch (e) {
+            console.error('failed to process', value, 'with error', e)
+
+            return ''
+          }
+        }
+
+        const missingVariables = this.getMissingVariables(paneTemplate, params.variables)
+        if (missingVariables.hasMissingKeys) {
+          throw new TemplateError(
+            `Failed to render pane ${pane.id}: Missing required variables [${missingVariables.keys.join(', ')}] for template substitution.`
+          )
+        }
+
+        const paneProperties: Record&lt;string, string | number | Array&lt;string | number>> = {}
+        for (const [key, value] of Object.entries(pane.properties ?? {})) {
+          if (value === undefined || value === null) {
+            continue
+          }
+
+          let resolvedValue: string | number | Array&lt;string | number> = ''
+          if (typeof value === 'string') {
+            resolvedValue = getValue(value)
+          }
+
+          if (Array.isArray(value)) {
+            resolvedValue = value.map(v => getValue(v))
+          }
+
+          paneProperties[key] = resolvedValue
+        }
+
+        const properties = { ...params.properties, yIndex, ...paneProperties }
+        const missingProperties = this.getMissingProperties(paneTemplate, properties)
+        if (missingProperties.hasMissingKeys) {
+          throw new TemplateError(
+            `Failed to render pane ${pane.id}: Missing required properties [${missingProperties.keys.join(', ')}] for template substitution.`
+          )
+        }
+        const paneContent = compiled(properties)
+        const paneJSON = JSON.parse(paneContent)
+        const templateParts = paneJSON.parts
+
+        for (const part of templateParts) {
+          parts[`${partsIndex}`] = part
+          partsIndex++
+        }
+        yIndex += paneTemplate.dimensions.height
+      } catch (e) {
+        if (TemplateError.isInstance(e)) {
+          throw e
+        }
+        console.error('failed to render pane', pane.id, 'with error', e)
+      }
+    }
+
+    const dashboard = {
+      lenses: {
+        '0': {
+          order: 0,
+          parts,
+        },
+      },
+      metadata: {
+        model: {
+          timeRange: {
+            value: {
+              relative: {
+                duration: 24,
+                timeUnit: 1,
+              },
+            },
+            type: 'MsPortalFx.Composition.Configuration.ValueTypes.TimeRange',
+          },
+          filterLocale: {
+            value: params.filter?.locale ?? 'en-us',
+          },
+          filters: {
+            value: {
+              MsPortalFx_TimeRange: {
+                model: {
+                  format: params.filter?.timeFormat ?? 'utc',
+                  granularity: params.filter?.timeGranularity ?? 'auto',
+                  relative: params.filter?.timeRelative ?? '4h',
+                },
+                displayCache: {
+                  name: 'UTC Time',
+                  value: 'Past 4 hours',
+                },
+                filteredPartIds: [],
+              },
+            },
+          },
+        },
+      },
+    }
+
+    return JSON.stringify(dashboard, null, 2)
+  }
+
+  renderToFile(filename: string, params: RenderParams): string {
+    const templateOutput = this.render(params)
+    if (!fs.existsSync(this.outputDir)) {
+      fs.mkdirSync(this.outputDir, { recursive: true })
+    }
+    const filePath = path.join(this.outputDir, `${filename}.tftpl`)
+    fs.writeFileSync(filePath, templateOutput)
+
+    return filePath
+  }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+    
+</div>
+
+<br class="clear">
+
+<footer>
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>
