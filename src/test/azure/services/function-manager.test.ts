@@ -224,8 +224,8 @@ describe('TestAzureFunctionConstruct', () => {
     const config = resource.properties.functionAppConfig
     expect(config.runtime.name).toEqual('node')
     expect(config.runtime.version).toEqual('22')
-    expect(config.scaleAndConcurrency.instanceMemoryMB).toEqual(4096)
-    expect(config.scaleAndConcurrency.maximumInstanceCount).toEqual(40)
+    expect(config.scaleAndConcurrency.instanceMemoryMB).toEqual(2048)
+    expect(config.scaleAndConcurrency.maximumInstanceCount).toEqual(100)
     expect(config.siteUpdateStrategy.type).toEqual('RollingUpdate')
   })
 })

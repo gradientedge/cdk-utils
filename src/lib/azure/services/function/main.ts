@@ -139,8 +139,8 @@ export class AzureFunctionManager {
         functionAppConfig: props.functionAppConfig ?? {
           runtime: {
             ...props.runtime,
-            name: props.runtimeName ?? props.runtime?.name ?? 'node',
-            version: props.runtimeVersion ?? props.runtime?.version ?? CommonAzureStack.NODEJS_RUNTIME,
+            name: props.runtime?.name ?? 'node',
+            version: props.runtime?.version ?? CommonAzureStack.NODEJS_RUNTIME,
           },
           scaleAndConcurrency: {
             ...props.scaleAndConcurrency,
@@ -150,7 +150,7 @@ export class AzureFunctionManager {
         },
         siteConfig: props.siteConfig ?? {
           http20Enabled: true,
-          linuxFxVersion: `${props.runtimeName ?? 'node'}|${props.runtimeVersion ?? CommonAzureStack.NODEJS_RUNTIME}`,
+          linuxFxVersion: `${props.runtime?.name ?? 'node'}|${props.runtime?.version ?? CommonAzureStack.NODEJS_RUNTIME}`,
         },
         tags: props.tags ?? {
           environment: scope.props.stage,
@@ -158,6 +158,8 @@ export class AzureFunctionManager {
       },
       { parent: scope, ...resourceOptions }
     )
+
+    const functionAppConfig = props.functionAppConfig as Record<string, any> | undefined
 
     new Deployment(
       `${id}-deployment`,
@@ -179,13 +181,22 @@ export class AzureFunctionManager {
                     ...props.functionAppConfig,
                     runtime: {
                       ...props.runtime,
-                      name: props.runtimeName ?? props.runtime?.name ?? 'node',
-                      version: props.runtimeVersion ?? props.runtime?.version ?? CommonAzureStack.NODEJS_RUNTIME,
+                      name: props.runtime?.name ?? functionAppConfig?.runtime?.name ?? 'node',
+                      version:
+                        props.runtime?.version ??
+                        functionAppConfig?.runtime?.version ??
+                        CommonAzureStack.NODEJS_RUNTIME,
                     },
                     scaleAndConcurrency: {
                       ...props.scaleAndConcurrency,
-                      instanceMemoryMB: props.scaleAndConcurrency?.instanceMemoryMB ?? 4096,
-                      maximumInstanceCount: props.scaleAndConcurrency?.maximumInstanceCount ?? 40,
+                      instanceMemoryMB:
+                        props.scaleAndConcurrency?.instanceMemoryMB ??
+                        functionAppConfig?.scaleAndConcurrency?.instanceMemoryMB ??
+                        4096,
+                      maximumInstanceCount:
+                        props.scaleAndConcurrency?.maximumInstanceCount ??
+                        functionAppConfig?.scaleAndConcurrency?.maximumInstanceCount ??
+                        40,
                     },
                     siteUpdateStrategy: {
                       type: 'RollingUpdate',
@@ -244,8 +255,8 @@ export class AzureFunctionManager {
             ...props.functionAppConfig,
             runtime: {
               ...props.runtime,
-              name: props.runtimeName ?? props.runtime?.name ?? 'node',
-              version: props.runtimeVersion ?? props.runtime?.version ?? CommonAzureStack.NODEJS_RUNTIME,
+              name: props.runtime?.name ?? 'node',
+              version: props.runtime?.version ?? CommonAzureStack.NODEJS_RUNTIME,
             },
             scaleAndConcurrency: {
               ...props.scaleAndConcurrency,

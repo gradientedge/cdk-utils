@@ -17,8 +17,6 @@ export interface FunctionProps {
 export interface FunctionAppFlexConsumptionProps extends WebAppArgs {
   name?: string
   runtime?: input.web.FunctionsRuntimeArgs
-  runtimeName?: string
-  runtimeVersion?: string
   scaleAndConcurrency?: input.web.FunctionsScaleAndConcurrencyArgs
   storageAuthenticationType?: string
   storageContainerType?: string
