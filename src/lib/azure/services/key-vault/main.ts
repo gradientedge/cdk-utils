@@ -1,6 +1,7 @@
-import { SkuFamily, SkuName, Vault } from '@pulumi/azure-native/keyvault/index.js'
+import { getVaultOutput, Secret, SkuFamily, SkuName, Vault } from '@pulumi/azure-native/keyvault/index.js'
+import { ResourceOptions } from '@pulumi/pulumi'
 import { CommonAzureConstruct } from '../../common/index.js'
-import { KeyVaultProps } from './types.js'
+import { KeyVaultProps, SecretProps } from './types.js'
 
 /**
  * @classdesc Provides operations on Azure Key Vault using Pulumi
@@ -25,9 +26,15 @@ export class AzureKeyVaultManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props key vault properties
+   * @param resourceOptions Optional settings to control resource behaviour
    * @see [Pulumi Azure Native Key Vault]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/keyvault/vault/}
    */
-  public createKeyVault(id: string, scope: CommonAzureConstruct, props: KeyVaultProps) {
+  public createKeyVault(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: KeyVaultProps,
+    resourceOptions?: ResourceOptions
+  ) {
     if (!props) throw `Props undefined for ${id}`
 
     // Get resource group name
@@ -63,7 +70,43 @@ export class AzureKeyVaultManager {
           environment: scope.props.stage,
         },
       },
-      { parent: scope }
+      { parent: scope, ...resourceOptions }
     )
+  }
+
+  /**
+   *
+   * @summary Method to create a new key vault secret
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props key vault secret properties
+   * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native Key Vault Secret]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/keyvault/secret/}
+   */
+  public createKeyVaultSecret(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: SecretProps,
+    resourceOptions?: ResourceOptions
+  ) {
+    if (!props) throw `Props undefined for ${id}`
+
+    return new Secret(`${id}`, props, { parent: scope, ...resourceOptions })
+  }
+
+  /**
+   * @summary Method to resolve an existing key vault
+   * @param scope scope in which this resource is defined
+   * @param vaultName the key vault name
+   * @param resourceGroupName the resource group name
+   * @param resourceOptions Optional settings to control resource behaviour
+   */
+  public resolveKeyVault(
+    scope: CommonAzureConstruct,
+    vaultName: string,
+    resourceGroupName: string,
+    resourceOptions?: ResourceOptions
+  ) {
+    return getVaultOutput({ vaultName, resourceGroupName }, { parent: scope, ...resourceOptions })
   }
 }

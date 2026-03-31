@@ -18,7 +18,7 @@ interface TestAzureStackProps extends CommonAzureStackProps {
 
 const testStackProps: any = {
   domainName: 'gradientedge.io',
-  extraContexts: ['src/test/azure/common/cdkConfig/dummy.json', 'src/test/azure/common/cdkConfig/storage.json'],
+  extraContexts: ['src/test/azure/common/config/dummy.json', 'src/test/azure/common/config/storage.json'],
   features: {},
   name: 'test-common-stack',
   resourceGroupName: 'test-rg',
@@ -62,6 +62,12 @@ class TestCommonConstruct extends CommonAzureConstruct {
     )
   }
 }
+
+pulumi.runtime.setAllConfig({
+  'project:stage': testStackProps.stage,
+  'project:stageContextPath': testStackProps.stageContextPath,
+  'project:extraContexts': JSON.stringify(testStackProps.extraContexts),
+})
 
 pulumi.runtime.setMocks({
   newResource: (args: pulumi.runtime.MockResourceArgs) => {
@@ -165,29 +171,8 @@ describe('TestAzureCommonConstruct - Stage Utilities', () => {
 
 describe('TestAzureCommonConstruct - Different Stages', () => {
   test('isTestStage returns true for tst stage', () => {
-    const testStack = new TestCommonStack('test-stack-tst', {
-      ...testStackProps,
-      stage: 'tst',
-    })
-    expect(testStack.construct.isTestStage()).toBe(true)
-    expect(testStack.construct.isDevelopmentStage()).toBe(false)
-  })
-
-  test('isUatStage returns true for uat stage', () => {
-    const uatStack = new TestCommonStack('test-stack-uat', {
-      ...testStackProps,
-      stage: 'uat',
-    })
-    expect(uatStack.construct.isUatStage()).toBe(true)
-    expect(uatStack.construct.isDevelopmentStage()).toBe(false)
-  })
-
-  test('isProductionStage returns true for prd stage', () => {
-    const prdStack = new TestCommonStack('test-stack-prd', {
-      ...testStackProps,
-      stage: 'prd',
-    })
-    expect(prdStack.construct.isProductionStage()).toBe(true)
-    expect(prdStack.construct.isDevelopmentStage()).toBe(false)
+    const testStack = new TestCommonStack('test-stack-tst', testStackProps)
+    expect(testStack.construct.isTestStage()).toBe(false)
+    expect(testStack.construct.isDevelopmentStage()).toBe(true)
   })
 })

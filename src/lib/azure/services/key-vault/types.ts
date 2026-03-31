@@ -1,5 +1,5 @@
-import { VaultArgs } from '@pulumi/azure-native/keyvault/index.js'
+import { SecretArgs, VaultArgs } from '@pulumi/azure-native/keyvault/index.js'
 
-export interface KeyVaultProps extends VaultArgs {
-  name?: string
-}
+export interface KeyVaultProps extends VaultArgs {}
+
+export interface SecretProps extends SecretArgs {}

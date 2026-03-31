@@ -83,6 +83,12 @@ class TestCommonConstruct extends CommonCloudflareConstruct {
   }
 }
 
+pulumi.runtime.setAllConfig({
+  'project:stage': testStackProps.stage,
+  'project:stageContextPath': testStackProps.stageContextPath,
+  'project:extraContexts': JSON.stringify(testStackProps.extraContexts),
+})
+
 pulumi.runtime.setMocks({
   newResource: (args: pulumi.runtime.MockResourceArgs) => {
     return {

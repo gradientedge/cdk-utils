@@ -1,0 +1,58 @@
+{
+  "functionApp": {
+    "servicePlan": {
+      "name": "test-function-app-plan",
+      "resourceGroupName": "test-rg-dev",
+      "sku": {
+        "name": "FC1",
+        "tier": "FlexConsumption"
+      }
+    },
+    "storageAccount": {
+      "accountName": "test-func-storage",
+      "resourceGroupName": "test-rg-dev"
+    },
+    "deploymentStorageContainer": {
+      "containerName": "test-deployment-container",
+      "accountName": "test-func-storage-dev",
+      "resourceGroupName": "test-rg-dev"
+    },
+    "storageContainer": {
+      "containerName": "test-storage-container",
+      "accountName": "test-func-storage-dev",
+      "resourceGroupName": "test-rg-dev"
+    },
+    "appConfiguration": {
+      "configStoreName": "test-app-config",
+      "resourceGroupName": "test-rg-dev"
+    },
+    "app": {
+      "name": "test-function-app",
+      "resourceGroupName": "test-rg-dev",
+      "kind": "functionapp,linux"
+    },
+    "dashboard": {
+      "enabled": false
+    },
+    "deploySource": "dist",
+    "packageName": "app.zip",
+    "timerTriggerCronExpression": "0 */5 * * * *"
+  },
+  "dataStorageAccount": {
+    "accountName": "test-data-storage",
+    "resourceGroupName": "test-rg-dev"
+  },
+  "dataStorageContainer": {
+    "containerName": "test-data-container",
+    "accountName": "test-data-storage-dev",
+    "resourceGroupName": "test-rg-dev"
+  },
+  "commonLogAnalyticsWorkspace": {
+    "workspaceName": "test-workspace",
+    "resourceGroupName": "test-rg-dev"
+  },
+  "commonApplicationInsights": {
+    "resourceName": "test-app-insights",
+    "resourceGroupName": "test-rg-dev"
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "apiAuthKeyVault": {
+    "name": "test-api-keyvault",
+    "resourceGroupName": "test-rg-dev"
+  },
+  "apiManagement": {
+    "useExistingApiManagement": false,
+    "serviceName": "test-api-management",
+    "publisherEmail": "test@gradientedge.io",
+    "publisherName": "GradientEdge",
+    "sku": {
+      "name": "Consumption",
+      "capacity": 0
+    },
+    "certificateKeyVaultId": "/subscriptions/test-sub/resourceGroups/test-rg/providers/Microsoft.KeyVault/vaults/test-kv/certificates/test-cert"
+  },
+  "apiManagementDiagnostic": {
+    "diagnosticId": "applicationinsights",
+    "apiId": "/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.ApiManagement/service/test-api-management-dev/apis/test-api"
+  },
+  "apiManagementDiagnosticSettings": {
+    "name": "test-api-diagnostic",
+    "logs": [
+      {
+        "categoryGroup": "allLogs",
+        "enabled": true
+      }
+    ],
+    "metrics": [
+      {
+        "category": "AllMetrics",
+        "enabled": true
+      }
+    ]
+  },
+  "commonLogAnalyticsWorkspace": {
+    "workspaceName": "test-workspace",
+    "resourceGroupName": "test-rg-dev"
+  },
+  "commonApplicationInsights": {
+    "resourceName": "test-app-insights",
+    "resourceGroupName": "test-rg-dev"
+  }
+}

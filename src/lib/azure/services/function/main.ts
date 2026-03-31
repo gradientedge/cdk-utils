@@ -1,5 +1,7 @@
+import { Deployment, DeploymentMode, Resource } from '@pulumi/azure-native/resources/index.js'
 import { ManagedServiceIdentityType, WebApp, WebAppFunction } from '@pulumi/azure-native/web/index.js'
-import { CommonAzureConstruct } from '../../common/index.js'
+import { ResourceOptions } from '@pulumi/pulumi'
+import { CommonAzureConstruct, CommonAzureStack } from '../../common/index.js'
 import { FunctionAppFlexConsumptionProps, FunctionAppProps, FunctionProps } from './types.js'
 
 /**
@@ -25,9 +27,15 @@ export class AzureFunctionManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props function app properties
+   * @param resourceOptions Optional settings to control resource behaviour
    * @see [Pulumi Azure Native Function App]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/web/webapp/}
    */
-  public createFunctionApp(id: string, scope: CommonAzureConstruct, props: FunctionAppProps) {
+  public createFunctionApp(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: FunctionAppProps,
+    resourceOptions?: ResourceOptions
+  ) {
     if (!props) throw `Props undefined for ${id}`
 
     // Get resource group name
@@ -52,7 +60,7 @@ export class AzureFunctionManager {
           environment: scope.props.stage,
         },
       },
-      { parent: scope }
+      { parent: scope, ...resourceOptions }
     )
   }
 
@@ -61,11 +69,17 @@ export class AzureFunctionManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props function properties
+   * @param resourceOptions Optional settings to control resource behaviour
    * @see [Pulumi Azure Native Function Envelope]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/web/webappfunction/}
    * @note In Pulumi, individual functions are typically deployed via code deployment rather than as separate infrastructure resources.
    * This method is provided for API compatibility but may require additional setup.
    */
-  public createFunction(id: string, scope: CommonAzureConstruct, props: FunctionProps) {
+  public createFunction(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: FunctionProps,
+    resourceOptions?: ResourceOptions
+  ) {
     if (!props) throw `Props undefined for ${id}`
 
     // Get resource group name
@@ -83,7 +97,7 @@ export class AzureFunctionManager {
         isDisabled: props.enabled !== undefined ? !props.enabled : false,
         testData: props.testData,
       } as any,
-      { parent: scope }
+      { parent: scope, ...resourceOptions }
     )
   }
 
@@ -92,12 +106,14 @@ export class AzureFunctionManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props flex consumption function app properties
+   * @param resourceOptions Optional settings to control resource behaviour
    * @see [Pulumi Azure Native Function App (Flex Consumption)]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/web/webapp/}
    */
   public createFunctionAppFlexConsumption(
     id: string,
     scope: CommonAzureConstruct,
-    props: FunctionAppFlexConsumptionProps
+    props: FunctionAppFlexConsumptionProps,
+    resourceOptions?: ResourceOptions
   ) {
     if (!props) throw `Props undefined for ${id}`
 
@@ -108,7 +124,7 @@ export class AzureFunctionManager {
 
     if (!resourceGroupName) throw `Resource group name undefined for ${id}`
 
-    return new WebApp(
+    const functionApp = new WebApp(
       `${id}-fc`,
       {
         ...props,
@@ -116,18 +132,148 @@ export class AzureFunctionManager {
         location: props.location ?? scope.props.location,
         resourceGroupName: resourceGroupName,
         kind: props.kind ?? 'functionapp,linux',
+        httpsOnly: props.httpsOnly ?? true,
         identity: props.identity ?? {
           type: ManagedServiceIdentityType.SystemAssigned,
         },
+        functionAppConfig: props.functionAppConfig ?? {
+          runtime: {
+            ...props.runtime,
+            name: props.runtime?.name ?? 'node',
+            version: props.runtime?.version ?? CommonAzureStack.NODEJS_RUNTIME,
+          },
+          scaleAndConcurrency: {
+            ...props.scaleAndConcurrency,
+            instanceMemoryMB: props.scaleAndConcurrency?.instanceMemoryMB ?? 4096,
+            maximumInstanceCount: props.scaleAndConcurrency?.maximumInstanceCount ?? 40,
+          },
+        },
         siteConfig: props.siteConfig ?? {
           http20Enabled: true,
-          linuxFxVersion: `${props.runtimeName ?? 'node'}|${props.runtimeVersion ?? '22'}`,
+          linuxFxVersion: `${props.runtime?.name ?? 'node'}|${props.runtime?.version ?? CommonAzureStack.NODEJS_RUNTIME}`,
         },
         tags: props.tags ?? {
           environment: scope.props.stage,
         },
       },
-      { parent: scope }
+      { parent: scope, ...resourceOptions }
+    )
+
+    const functionAppConfig = props.functionAppConfig as Record<string, any> | undefined
+
+    new Deployment(
+      `${id}-deployment`,
+      {
+        resourceGroupName: resourceGroupName,
+        properties: {
+          mode: DeploymentMode.Incremental,
+          template: {
+            $schema: 'https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#',
+            contentVersion: '1.0.0.0',
+            resources: [
+              {
+                type: 'Microsoft.Web/sites',
+                apiVersion: '2024-04-01',
+                name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.functionApp),
+                location: props.location ?? scope.props.location,
+                properties: {
+                  functionAppConfig: {
+                    ...props.functionAppConfig,
+                    runtime: {
+                      ...props.runtime,
+                      name: props.runtime?.name ?? functionAppConfig?.runtime?.name ?? 'node',
+                      version:
+                        props.runtime?.version ??
+                        functionAppConfig?.runtime?.version ??
+                        CommonAzureStack.NODEJS_RUNTIME,
+                    },
+                    scaleAndConcurrency: {
+                      ...props.scaleAndConcurrency,
+                      instanceMemoryMB:
+                        props.scaleAndConcurrency?.instanceMemoryMB ??
+                        functionAppConfig?.scaleAndConcurrency?.instanceMemoryMB ??
+                        4096,
+                      maximumInstanceCount:
+                        props.scaleAndConcurrency?.maximumInstanceCount ??
+                        functionAppConfig?.scaleAndConcurrency?.maximumInstanceCount ??
+                        40,
+                    },
+                    siteUpdateStrategy: {
+                      type: 'RollingUpdate',
+                    },
+                  },
+                },
+              },
+            ],
+          },
+        },
+      },
+      { parent: scope, ...resourceOptions }
+    )
+
+    return functionApp
+  }
+
+  /**
+   * @summary Method to create a new flex consumption function app
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props flex consumption function app properties
+   * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native Function App (Flex Consumption)]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/web/webapp/}
+   */
+  public createFunctionAppFlexConsumptionResource(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: FunctionAppFlexConsumptionProps,
+    resourceOptions?: ResourceOptions
+  ) {
+    if (!props) throw `Props undefined for ${id}`
+
+    // Get resource group name
+    const resourceGroupName = scope.props.resourceGroupName
+      ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
+      : props.resourceGroupName
+
+    if (!resourceGroupName) throw `Resource group name undefined for ${id}`
+
+    return new Resource(
+      `${id}-fc`,
+      {
+        apiVersion: '2024-04-01',
+        identity: {
+          type: ManagedServiceIdentityType.SystemAssigned,
+        },
+        kind: props.kind ?? 'functionapp,linux',
+        location: props.location ?? scope.props.location,
+        parentResourcePath: '',
+        properties: {
+          httpsOnly: props.httpsOnly ?? true,
+          serverFarmId: props.serverFarmId,
+          siteConfig: props.siteConfig,
+          functionAppConfig: {
+            ...props.functionAppConfig,
+            runtime: {
+              ...props.runtime,
+              name: props.runtime?.name ?? 'node',
+              version: props.runtime?.version ?? CommonAzureStack.NODEJS_RUNTIME,
+            },
+            scaleAndConcurrency: {
+              ...props.scaleAndConcurrency,
+              instanceMemoryMB: props.scaleAndConcurrency?.instanceMemoryMB ?? 4096,
+              maximumInstanceCount: props.scaleAndConcurrency?.maximumInstanceCount ?? 40,
+            },
+            siteUpdateStrategy: {
+              type: 'RollingUpdate',
+            },
+          },
+        },
+        resourceGroupName: resourceGroupName,
+        resourceName: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.functionApp),
+        resourceProviderNamespace: 'Microsoft.Web',
+        resourceType: 'sites',
+      },
+      { parent: scope, ...resourceOptions }
     )
   }
 }

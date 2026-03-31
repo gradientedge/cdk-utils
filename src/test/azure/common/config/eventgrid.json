@@ -1,0 +1,35 @@
+{
+  "testEventgridEventSubscription": {
+    "destination": {
+      "endpointType": "WebHook",
+      "properties": {
+        "endpointUrl": "https://test.example.com/webhook"
+      }
+    },
+    "eventSubscriptionName": "test-eventgrid-subscription",
+    "scope": "/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.EventGrid/topics/test-eventgrid-topic-dev"
+  },
+  "testEventgridSystemEventSubscription": {
+    "destination": {
+      "endpointType": "WebHook",
+      "properties": {
+        "endpointUrl": "https://test.example.com/webhook"
+      }
+    },
+    "eventSubscriptionName": "test-eventgrid-system-subscription",
+    "resourceGroupName": "test-rg-dev",
+    "scope": "/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.EventGrid/systemTopics/test-eventgrid-system-topic-dev"
+  },
+  "testEventgridSystemTopic": {
+    "location": "eastus",
+    "resourceGroupName": "test-rg-dev",
+    "source": "/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.Storage/storageAccounts/testsa",
+    "systemTopicName": "test-eventgrid-system-topic",
+    "topicType": "Microsoft.Storage.StorageAccounts"
+  },
+  "testEventgridTopic": {
+    "location": "eastus",
+    "resourceGroupName": "test-rg-dev",
+    "topicName": "test-eventgrid-topic"
+  }
+}

@@ -20,7 +20,7 @@ interface TestAzureStackProps extends CommonAzureStackProps {
 
 const testStackProps: any = {
   domainName: 'gradientedge.io',
-  extraContexts: ['src/test/azure/common/cdkConfig/dummy.json', 'src/test/azure/common/cdkConfig/dns.json'],
+  extraContexts: ['src/test/azure/common/config/dummy.json', 'src/test/azure/common/config/dns.json'],
   features: {},
   location: 'eastus',
   name: 'test-common-stack',
@@ -86,6 +86,12 @@ class TestCommonConstruct extends CommonAzureConstruct {
     )
   }
 }
+
+pulumi.runtime.setAllConfig({
+  'project:stage': testStackProps.stage,
+  'project:stageContextPath': testStackProps.stageContextPath,
+  'project:extraContexts': JSON.stringify(testStackProps.extraContexts),
+})
 
 pulumi.runtime.setMocks({
   newResource: (args: pulumi.runtime.MockResourceArgs) => {

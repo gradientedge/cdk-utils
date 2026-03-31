@@ -1,25 +1,36 @@
 import {
   Api,
+  ApiDiagnostic,
   ApiManagementService,
   ApiOperation,
   ApiOperationPolicy,
+  ApiPolicy,
   Backend,
   BackendProtocol,
   Cache,
   getApiManagementServiceOutput,
   Logger,
   LoggerType,
-  PolicyContentFormat,
+  NamedValue,
   Protocol,
+  Subscription,
 } from '@pulumi/azure-native/apimanagement/index.js'
 import * as redis from '@pulumi/azure-native/redis/index.js'
-import _ from 'lodash'
+import { ResourceOptions } from '@pulumi/pulumi'
 import { CommonAzureConstruct } from '../../common/index.js'
 import {
+  ApiDiagnosticProps,
   ApiManagementApiProps,
   ApiManagementBackendProps,
   ApiManagementCustomDomainProps,
   ApiManagementProps,
+  ApiOperationPolicyProps,
+  ApiOperationProps,
+  ApiPolicyProps,
+  ApiSubscriptionProps,
+  CacheProps,
+  LoggerProps,
+  NamedValueProps,
   ResolveApiManagementProps,
 } from './types.js'
 
@@ -48,6 +59,7 @@ export class AzureApiManagementManager {
    * @param props API Management properties
    * @param applicationInsightsKey Optional Application Insights instrumentation key for logging
    * @param externalRedisCache Optional external Redis cache for API Management caching
+   * @param resourceOptions Optional settings to control resource behaviour
    * @see [Pulumi Azure Native API Management]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/apimanagement/apimanagementservice/}
    */
   public createApiManagementService(
@@ -55,7 +67,8 @@ export class AzureApiManagementManager {
     scope: CommonAzureConstruct,
     props: ApiManagementProps,
     applicationInsightsKey?: string,
-    externalRedisCache?: redis.Redis
+    externalRedisCache?: redis.Redis,
+    resourceOptions?: ResourceOptions
   ) {
     if (!props) throw `Props undefined for ${id}`
 
@@ -82,7 +95,7 @@ export class AzureApiManagementManager {
           environment: scope.props.stage,
         },
       },
-      { parent: scope }
+      { parent: scope, ...resourceOptions }
     )
 
     // Create logger if Application Insights key is provided
@@ -101,7 +114,7 @@ export class AzureApiManagementManager {
             instrumentationKey: applicationInsightsKey,
           },
         },
-        { parent: scope }
+        { parent: scope, dependsOn: [apiManagementService] }
       )
     }
 
@@ -123,7 +136,7 @@ export class AzureApiManagementManager {
           useFromLocation: externalRedisCache.location,
           resourceId: externalRedisCache.id,
         },
-        { parent: scope }
+        { parent: scope, dependsOn: apiManagementService }
       )
     }
 
@@ -135,9 +148,15 @@ export class AzureApiManagementManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props API Management lookup properties
+   * @param resourceOptions Optional settings to control resource behaviour
    * @see [Pulumi Azure Native API Management Lookup]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/apimanagement/apimanagementservice/}
    */
-  public resolveApiManagementService(id: string, scope: CommonAzureConstruct, props: ResolveApiManagementProps) {
+  public resolveApiManagementService(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: ResolveApiManagementProps,
+    resourceOptions?: ResourceOptions
+  ) {
     if (!props) throw `Props undefined for ${id}`
 
     return getApiManagementServiceOutput(
@@ -150,7 +169,7 @@ export class AzureApiManagementManager {
           ? `${scope.props.resourceGroupName}-${scope.props.stage}`
           : props.resourceGroupName,
       },
-      { parent: scope }
+      { parent: scope, ...resourceOptions }
     )
   }
 
@@ -159,9 +178,15 @@ export class AzureApiManagementManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props API Management backend properties
+   * @param resourceOptions Optional settings to control resource behaviour
    * @see [Pulumi Azure Native API Management Backend]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/apimanagement/backend/}
    */
-  public createBackend(id: string, scope: CommonAzureConstruct, props: ApiManagementBackendProps) {
+  public createBackend(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: ApiManagementBackendProps,
+    resourceOptions?: ResourceOptions
+  ) {
     if (!props) throw `Props undefined for ${id}`
 
     return new Backend(
@@ -175,7 +200,7 @@ export class AzureApiManagementManager {
         description: props.description ?? `Backend for ${(props as any).name || id}-${scope.props.stage}`,
         protocol: props.protocol ?? BackendProtocol.Http,
       },
-      { parent: scope }
+      { parent: scope, ...resourceOptions }
     )
   }
 
@@ -184,9 +209,15 @@ export class AzureApiManagementManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props API Management API properties
+   * @param resourceOptions Optional settings to control resource behaviour
    * @see [Pulumi Azure Native API Management API]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/apimanagement/api/}
    */
-  public createApi(id: string, scope: CommonAzureConstruct, props: ApiManagementApiProps) {
+  public createApi(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: ApiManagementApiProps,
+    resourceOptions?: ResourceOptions
+  ) {
     if (!props) throw `Props undefined for ${id}`
 
     const api = new Api(
@@ -201,160 +232,146 @@ export class AzureApiManagementManager {
         apiRevision: props.apiRevision ?? '1',
         protocols: props.protocols ?? [Protocol.Https],
       },
-      { parent: scope }
+      { parent: scope, ...resourceOptions }
     )
 
-    // Create operations and policies
-    _.forEach(props.operations, operation => {
-      const operationId = `${operation.displayName}-${operation.method}`
-      const apimOperation = new ApiOperation(
-        `${id}-apim-api-operation-${operation.displayName}-${operation.method}`,
-        {
-          operationId: operationId,
-          method: (operation.method as string)?.toUpperCase() || 'GET',
-          serviceName: props.serviceName!,
-          resourceGroupName: props.resourceGroupName!,
-          apiId: api.name,
-          displayName: operation.displayName,
-          urlTemplate: operation.urlTemplate,
-          templateParameters: operation.templateParameters,
-        },
-        { parent: scope }
-      )
-
-      // Define Caching Policy if enabled
-      let cacheSetVariablePolicy = ''
-      let cacheInvalidateInboundPolicy = ''
-      let cacheSetInboundPolicy = ''
-      let cacheSetOutboundPolicy = ''
-
-      if (operation.caching) {
-        cacheSetVariablePolicy = `<!-- Generate a comprehensive custom cache key (without query params or Accept header) -->
-              <set-variable name="customCacheKey" value="@{
-                  // Instance identification
-
-                  // API identification
-                  string apiName = context.Api.Name.Replace(" ", "").ToLower();
-                  string apiVersion = context.Api.Version ?? "v1";
-
-                  // Full path construction (without query parameters)
-                  string fullPath = context.Request.Url.Path.ToLower();
-
-                  // Query parameters
-                  string query = context.Request.Url.QueryString.ToLower();
-
-                  // Construct final cache key (no Accept header needed for JSON-only APIs)
-                  return $"{apiName}:{apiVersion}:{fullPath}:{query}";
-              }" />
-              <set-variable name="bypassCache" value="@(context.Request.Headers.GetValueOrDefault("X-Cache-Bypass", "false").ToLower())" />`
-
-        if (operation.caching.enableCacheSet) {
-          cacheSetInboundPolicy = `<choose>
-                  <when condition="@((string)context.Variables["bypassCache"] != "true")">
-                      <!-- Attempt to retrieve cached response -->
-                      <cache-lookup-value key="@((string)context.Variables["customCacheKey"])" variable-name="cachedResponse" caching-type="${operation.caching.cachingType || 'prefer-external'}" />
-
-                      <!-- If cache hit, return cached response -->
-                      <choose>
-                          <when condition="@(context.Variables.ContainsKey("cachedResponse"))">
-                              <return-response>
-                                  <set-status code="200" reason="OK" />
-                                  <set-header name="Content-Type" exists-action="override">
-                                      <value>application/json</value>
-                                  </set-header>
-                                  <set-header name="X-Apim-Cache-Status" exists-action="override">
-                                      <value>HIT</value>
-                                  </set-header>
-                                  <set-header name="X-Apim-Cache-Key" exists-action="override">
-                                      <value>@((string)context.Variables["customCacheKey"])</value>
-                                  </set-header>
-                                  <set-body>@((string)context.Variables["cachedResponse"])</set-body>
-                              </return-response>
-                          </when>
-                      </choose>
-                  </when>
-                  <when condition="@((string)context.Variables["bypassCache"] == "true")">
-                      <cache-remove-value key="@((string)context.Variables["customCacheKey"])" caching-type="${operation.caching.cachingType || 'prefer-external'}" />
-                  </when>
-              </choose>`
-          cacheSetOutboundPolicy = `<!-- Store the response body in cache -->
-              <choose>
-                  <when condition="@(context.Response.StatusCode == 200)">
-                      <cache-store-value key="@((string)context.Variables["customCacheKey"])" value="@(context.Response.Body.As<string>(preserveContent: true))" duration="${operation.caching.ttlInSecs ?? 900}" caching-type="${operation.caching.cachingType || 'prefer-external'}" />
-                      <!-- Add cache status header -->
-                      <set-header name="X-Apim-Cache-Status" exists-action="override">
-                          <value>MISS</value>
-                      </set-header>
-                  </when>
-              </choose>
-              <!-- Add debug headers -->
-              <set-header name="X-Apim-Cache-Key" exists-action="override">
-                  <value>@((string)context.Variables["customCacheKey"])</value>
-              </set-header>
-              <set-header name="X-Apim-API-Name" exists-action="override">
-                  <value>@(context.Api.Name)</value>
-              </set-header>`
-        }
-
-        if (operation.caching.enableCacheInvalidation) {
-          cacheInvalidateInboundPolicy = `<set-variable name="clearCache" value="@(context.Request.Headers.GetValueOrDefault("X-Apim-Clear-Cache", "false").ToLower())" />
-              <!-- Allow admin to clear specific cache entries -->
-              <choose>
-                  <when condition="@((string)context.Variables["clearCache"] == "true")">
-                      <cache-remove-value key="@((string)context.Variables["customCacheKey"])" caching-type="${operation.caching.cachingType || 'prefer-external'}" />
-                      <return-response>
-                          <set-status code="200" reason="OK" />
-                          <set-body>Cache entry removed successfully</set-body>
-                      </return-response>
-                  </when>
-              </choose>`
-        }
-      }
-
-      // Inject rate limiting policy (if configured)
-      let rateLimitPolicy = ''
-      if (props.rateLimit && scope.props.subscriptionId) {
-        rateLimitPolicy = `<rate-limit-by-key calls="${props.rateLimit.calls}" renewal-period="${props.rateLimit.renewalPeriodInSecs}" counter-key="${scope.props.subscriptionId}-${operationId}"/>`
-      }
-
-      const policyXmlContent = `<policies>
-        <inbound>
-          <base />
-          ${rateLimitPolicy}
-          ${cacheSetVariablePolicy}
-          ${cacheInvalidateInboundPolicy}
-          ${cacheSetInboundPolicy}
-          ${props.commonInboundPolicyXml ?? ''}
-        </inbound>
-        <backend>
-          <base />
-        </backend>
-        <outbound>
-          <base />
-          ${cacheSetOutboundPolicy}
-          ${props.commonOutboundPolicyXml ?? ''}
-        </outbound>
-        <on-error>
-            <base />
-        </on-error>
-      </policies>`
-
-      new ApiOperationPolicy(
-        `${id}-apim-api-operation-policy-${operation.displayName}-${operation.method}`,
-        {
-          serviceName: props.serviceName!,
-          resourceGroupName: props.resourceGroupName!,
-          apiId: api.name,
-          operationId: operationId,
-          policyId: 'policy',
-          value: policyXmlContent,
-          format: PolicyContentFormat.Xml,
-        },
-        { parent: scope }
-      )
-    })
-
     return api
+  }
+
+  /**
+   * @summary Method to create a new API Diagnostic
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props API Disagnostic properties
+   * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native API Management Diagnostic]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/apimanagement/apidiagnostic/}
+   */
+  public createApiDiagnostic(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: ApiDiagnosticProps,
+    resourceOptions?: ResourceOptions
+  ) {
+    if (!props) throw `Props undefined for ${id}`
+
+    return new ApiDiagnostic(`${id}`, props, { parent: scope, ...resourceOptions })
+  }
+
+  /**
+   * @summary Method to create a new API Logger
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props API Logger properties
+   * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native API Management Logger]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/apimanagement/logger/}
+   */
+  public createLogger(id: string, scope: CommonAzureConstruct, props: LoggerProps, resourceOptions?: ResourceOptions) {
+    if (!props) throw `Props undefined for ${id}`
+
+    return new Logger(`${id}`, props, { parent: scope, ...resourceOptions })
+  }
+
+  /**
+   * @summary Method to create a new API Named Value
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props API Named Value properties
+   * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native API Management Named Value]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/apimanagement/namedvalue/}
+   */
+  public createNamedValue(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: NamedValueProps,
+    resourceOptions?: ResourceOptions
+  ) {
+    if (!props) throw `Props undefined for ${id}`
+
+    return new NamedValue(`${id}`, props, { parent: scope, ...resourceOptions })
+  }
+
+  /**
+   * @summary Method to create a new API Subscription
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props API Subscription properties
+   * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native API Management Subscription]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/apimanagement/subscription/}
+   */
+  public createSubscription(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: ApiSubscriptionProps,
+    resourceOptions?: ResourceOptions
+  ) {
+    if (!props) throw `Props undefined for ${id}`
+
+    return new Subscription(`${id}`, props, { parent: scope, ...resourceOptions })
+  }
+
+  /**
+   * @summary Method to create a new API cache
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props API cache properties
+   * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native API Management Cache]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/apimanagement/cache/}
+   */
+  public createCache(id: string, scope: CommonAzureConstruct, props: CacheProps, resourceOptions?: ResourceOptions) {
+    if (!props) throw `Props undefined for ${id}`
+
+    return new Cache(`${id}`, props, { parent: scope, ...resourceOptions })
+  }
+
+  /**
+   * @summary Method to create a new API operation
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props API operation properties
+   * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native API Management Operation]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/apimanagement/apioperation/}
+   */
+  public createOperation(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: ApiOperationProps,
+    resourceOptions?: ResourceOptions
+  ) {
+    return new ApiOperation(`${id}`, props, { parent: scope, ...resourceOptions })
+  }
+
+  /**
+   * @summary Method to create a new API operation policy
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props API operation policy properties
+   * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native API Management Operation Policy]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/apimanagement/apioperationpolicy/}
+   */
+  public createOperationPolicy(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: ApiOperationPolicyProps,
+    resourceOptions?: ResourceOptions
+  ) {
+    return new ApiOperationPolicy(`${id}`, props, { parent: scope, ...resourceOptions })
+  }
+
+  /**
+   * @summary Method to create a new API policy
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props API policy properties
+   * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native API Management Policy]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/apimanagement/apipolicy/}
+   */
+  public createPolicy(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: ApiPolicyProps,
+    resourceOptions?: ResourceOptions
+  ) {
+    return new ApiPolicy(`${id}`, props, { parent: scope, ...resourceOptions })
   }
 
   /**
@@ -362,6 +379,7 @@ export class AzureApiManagementManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props API Management custom domain properties
+   * @param resourceOptions Optional settings to control resource behaviour
    * @note In Pulumi Azure Native, custom domains are configured as part of the API Management service resource,
    * not as a separate resource. Use the hostnameConfigurations property when creating the service.
    */
@@ -370,8 +388,6 @@ export class AzureApiManagementManager {
     scope: CommonAzureConstruct,
     props: ApiManagementCustomDomainProps
   ) {
-    if (!props) throw `Props undefined for ${id}`
-
     // Note: In Pulumi Azure Native, custom domains are part of the ApiManagementService
     // This method is provided for API compatibility but should be configured
     // via the hostnameConfigurations property of ApiManagementService instead

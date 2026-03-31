@@ -1,0 +1,10 @@
+{
+  "apiAuthKeyVault": {
+    "name": "test-api-keyvault",
+    "resourceGroupName": "test-rg-dev"
+  },
+  "commonLogAnalyticsWorkspace": {
+    "workspaceName": "test-workspace",
+    "resourceGroupName": "test-rg-dev"
+  }
+}
