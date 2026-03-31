@@ -12,7 +12,7 @@ export class AzureDashboardRenderer implements DashboardRenderer {
 
   constructor(basePath?: string, outputDir?: string) {
     this.paneTemplatePath = basePath ?? path.join(appRoot.path, 'template', 'dashboard')
-    this.outputDir = outputDir ?? path.join(appRoot.path, 'cdktf.out')
+    this.outputDir = outputDir ?? path.join(appRoot.path, '.artifacts')
   }
 
   private getPaneId(id: string): PaneTemplate {
