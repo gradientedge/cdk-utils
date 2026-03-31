@@ -63,7 +63,7 @@ jobs:
         with:
           slug: gradientedge/cdk-utils
           token: ${{ env.CODECOV_TOKEN }}
-      - uses: actions/upload-artifact@v6
+      - uses: actions/upload-artifact@v7
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && success() && matrix.node-version == '24.x' }}
         with:
           name: docs-artifact
