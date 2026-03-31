@@ -1,7 +1,7 @@
 import { ApiManagementService, Logger } from '@pulumi/azure-native/apimanagement/index.js'
 import { RoleAssignment } from '@pulumi/azure-native/authorization/index.js'
 import { GetVaultResult, Secret } from '@pulumi/azure-native/keyvault/index.js'
-import { Output } from '@pulumi/pulumi'
+import { Input, Output } from '@pulumi/pulumi'
 import {
   ApiDiagnosticProps,
   ApiManagementProps,
@@ -22,9 +22,9 @@ export interface AzureRestApiProps extends CommonAzureStackProps {
 }
 
 export interface AzureApi {
-  id: string
-  name: string
-  resourceGroupName: string
+  id: Input<string>
+  name: Input<string>
+  resourceGroupName: Input<string>
   authKeyVault: Output<GetVaultResult>
   apim: ApiManagementService
   namedValueSecret: Secret

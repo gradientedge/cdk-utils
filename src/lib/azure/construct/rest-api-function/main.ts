@@ -66,7 +66,7 @@ export class AzureRestApiFunction extends AzureFunctionApp {
       this,
       {
         vaultName: this.api.authKeyVault.name,
-        secretName: `${this.app.name.get()}key`,
+        secretName: pulumi.interpolate`${this.app.name}key`,
         resourceGroupName: this.resourceGroup.name,
         properties: {
           value: functionDefaultKey.functionKeys?.apply(keys => keys?.['default'] ?? ''),
@@ -79,15 +79,15 @@ export class AzureRestApiFunction extends AzureFunctionApp {
     if (this.props.apiManagement.useExistingApiManagement) {
       if (this.props.apiManagement.apiStackName) {
         const apiStack = new pulumi.StackReference(this.props.apiManagement.apiStackName)
-        this.api.id = apiStack.getOutput('apiId').get()
-        this.api.name = apiStack.getOutput('apiName').get()
-        this.api.resourceGroupName = apiStack.getOutput('apiResourceGroupName').get()
+        this.api.id = apiStack.getOutput('apiId')
+        this.api.name = apiStack.getOutput('apiName')
+        this.api.resourceGroupName = apiStack.getOutput('apiResourceGroupName')
       }
     } else {
       let hostnameConfigurations
       if (this.props.apiManagement.certificateKeyVaultId) {
         this.authorisationManager.createRoleAssignment(`${this.id}-kv-role`, this, {
-          principalId: this.api.apim.identity.get()?.principalId ?? '',
+          principalId: this.api.apim.identity.apply(identity => identity?.principalId ?? ''),
           roleDefinitionId: RoleDefinitionId.KEY_VAULT_CERTIFICATE_USER,
           scope: this.props.apiManagement.certificateKeyVaultId,
         })
@@ -115,9 +115,9 @@ export class AzureRestApiFunction extends AzureFunctionApp {
         undefined,
         { protect: true }
       )
-      this.api.id = this.api.apim.id.get()
-      this.api.name = this.api.apim.name.get()
-      this.api.resourceGroupName = this.resourceGroup.name.get()
+      this.api.id = this.api.apim.id
+      this.api.name = this.api.apim.name
+      this.api.resourceGroupName = this.resourceGroup.name
     }
   }
 
@@ -137,8 +137,8 @@ export class AzureRestApiFunction extends AzureFunctionApp {
       title: this.props.stackName,
       resourceGroupName: this.api.resourceGroupName,
       serviceName: this.api.name,
-      url: `https://${this.app.name.get()}.azurewebsites.net/${this.props.apiManagementBackend.backendUrlPath}`,
-      resourceId: `https://management.azure.com/subscriptions/${this.props.subscriptionId}/resourceGroups/${this.resourceGroup.name}/providers/Microsoft.Web/sites/${this.app.name.get()}`,
+      url: pulumi.interpolate`https://${this.app.name}.azurewebsites.net/${this.props.apiManagementBackend.backendUrlPath}`,
+      resourceId: pulumi.interpolate`https://management.azure.com/subscriptions/${this.props.subscriptionId}/resourceGroups/${this.resourceGroup.name}/providers/Microsoft.Web/sites/${this.app.name}`,
       credentials: {
         header: {
           'x-functions-key': [`{{${this.api.namedValue.name}}}`],
@@ -270,12 +270,12 @@ export class AzureRestApiFunction extends AzureFunctionApp {
   } */
 
   protected createApiPolicy() {
-    const policyXmlContent = `
+    const policyXmlContent = pulumi.interpolate`
       <policies>
         <inbound>
           <base />
           ${this.api.corsPolicyXmlContent ?? ''}
-          <set-backend-service backend-id="${this.api.backend.name.get()}" />
+          <set-backend-service backend-id="${this.api.backend.name}" />
           <set-header name="traceparent" exists-action="override">
             <value>@(context.Request.Headers.GetValueOrDefault("traceparent", ""))</value>
           </set-header>
@@ -298,8 +298,7 @@ export class AzureRestApiFunction extends AzureFunctionApp {
       serviceName: this.api.name,
       apiId: this.api.id,
       resourceGroupName: this.api.resourceGroupName,
-      // replace new lines
-      value: policyXmlContent.replace(/\n[ \t]*\n/g, '\n'), // move to utils
+      value: policyXmlContent.apply(xml => xml.replace(/\n[ \t]*\n/g, '\n')),
     })
   }
 

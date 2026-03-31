@@ -386,9 +386,8 @@ export class AzureFunctionApp extends CommonAzureConstruct {
     )
   }
 
-  protected getFunctionAppPrincipleId(): string {
-    const identity = this.app.identity.get()
-    return identity?.principalId ? identity.principalId : ''
+  protected getFunctionAppPrincipalId(): Output<string> {
+    return this.app.identity.apply(identity => (identity?.principalId ? identity.principalId : ''))
   }
 
   protected createRoleAssignments() {
@@ -396,8 +395,8 @@ export class AzureFunctionApp extends CommonAzureConstruct {
       this.authorisationManager.grantRoleAssignmentToStorageAccount(
         `${this.id}-data`,
         this,
-        this.dataStorageAccount.id.get(),
-        this.getFunctionAppPrincipleId(),
+        this.dataStorageAccount.id,
+        this.getFunctionAppPrincipalId(),
         RoleDefinitionId.STORAGE_BLOB_DATA_CONTRIBUTOR
       )
     }
@@ -405,8 +404,8 @@ export class AzureFunctionApp extends CommonAzureConstruct {
     this.authorisationManager.grantRoleAssignmentToStorageAccount(
       this.id,
       this,
-      this.appStorageAccount.id.get(),
-      this.getFunctionAppPrincipleId(),
+      this.appStorageAccount.id,
+      this.getFunctionAppPrincipalId(),
       RoleDefinitionId.STORAGE_BLOB_DATA_CONTRIBUTOR
     )
 
@@ -414,8 +413,8 @@ export class AzureFunctionApp extends CommonAzureConstruct {
       this.authorisationManager.grantRoleAssignmentToApplicationConfiguration(
         this.id,
         this,
-        this.appConfig.id.get(),
-        this.getFunctionAppPrincipleId(),
+        this.appConfig.id,
+        this.getFunctionAppPrincipalId(),
         RoleDefinitionId.APP_CONFIGURATION_DATA_READER
       )
     }
@@ -429,7 +428,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
         this,
         this.props.existingCosmosAccountName,
         this.props.existingCosmosAccountResourceGroupName,
-        this.getFunctionAppPrincipleId(),
+        this.getFunctionAppPrincipalId(),
         [CosmosRoleDefinition.CONTRIBUTOR, CosmosRoleDefinition.READER]
       )
     }
@@ -442,7 +441,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
             this,
             keyVaultName,
             resourceGroup,
-            this.getFunctionAppPrincipleId(),
+            this.getFunctionAppPrincipalId(),
             RoleDefinitionId.KEY_VAULT_SECRETS_USER
           )
         })
@@ -455,7 +454,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
         this,
         this.props.existingTopicName,
         this.props.existingTopicResourceGroupName,
-        this.getFunctionAppPrincipleId(),
+        this.getFunctionAppPrincipalId(),
         RoleDefinitionId.EVENTGRID_DATA_SENDER
       )
     }

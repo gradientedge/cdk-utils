@@ -52,15 +52,15 @@ export class AzureRestApi extends CommonAzureConstruct {
     if (this.props.apiManagement.useExistingApiManagement) {
       if (this.props.apiManagement.apiStackName) {
         const apiStack = new pulumi.StackReference(this.props.apiManagement.apiStackName)
-        this.api.id = apiStack.getOutput('apiId').get()
-        this.api.name = apiStack.getOutput('apiName').get()
-        this.api.resourceGroupName = apiStack.getOutput('apiResourceGroupName').get()
+        this.api.id = apiStack.getOutput('apiId')
+        this.api.name = apiStack.getOutput('apiName')
+        this.api.resourceGroupName = apiStack.getOutput('apiResourceGroupName')
       }
     } else {
       let hostnameConfigurations
       if (this.props.apiManagement.certificateKeyVaultId) {
         this.authorisationManager.createRoleAssignment(`${this.id}-kv-role`, this, {
-          principalId: this.api.apim.identity.get()?.principalId ?? '',
+          principalId: this.api.apim.identity.apply(identity => identity?.principalId ?? ''),
           roleDefinitionId: RoleDefinitionId.KEY_VAULT_CERTIFICATE_USER,
           scope: this.props.apiManagement.certificateKeyVaultId,
         })
@@ -88,9 +88,9 @@ export class AzureRestApi extends CommonAzureConstruct {
         undefined,
         { protect: true }
       )
-      this.api.id = this.api.apim.id.get()
-      this.api.name = this.api.apim.name.get()
-      this.api.resourceGroupName = this.resourceGroup.name.get()
+      this.api.id = this.api.apim.id
+      this.api.name = this.api.apim.name
+      this.api.resourceGroupName = this.resourceGroup.name
     }
 
     this.registerOutputs({
@@ -107,7 +107,7 @@ export class AzureRestApi extends CommonAzureConstruct {
       `${this.id}-key-vault-role-api-namespace`,
       this,
       {
-        principalId: this.api.apim.identity.get()?.principalId ?? '',
+        principalId: this.api.apim.identity.apply(identity => identity?.principalId ?? ''),
         roleDefinitionId: `/subscriptions/${this.props.subscriptionId}/providers/Microsoft.Authorization/roleDefinitions/4633458b-17de-408a-b874-0445c86b69e6`,
         scope: this.api.authKeyVault.id,
       }
@@ -148,7 +148,7 @@ export class AzureRestApi extends CommonAzureConstruct {
       secretName: `${this.props.stackName}-subscription-key`,
       resourceGroupName: this.resourceGroup.name,
       properties: {
-        value: apiManagementSubscription.primaryKey.get(),
+        value: apiManagementSubscription.primaryKey.apply(key => key ?? ''),
       },
     })
   }

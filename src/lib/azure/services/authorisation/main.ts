@@ -1,5 +1,5 @@
 import { RoleAssignment } from '@pulumi/azure-native/authorization/index.js'
-import { ResourceOptions } from '@pulumi/pulumi'
+import { Input, ResourceOptions } from '@pulumi/pulumi'
 import { CommonAzureConstruct } from '../../common/index.js'
 import { RoleDefinitionId } from './constants.js'
 import { RoleAssignmentProps } from './types.js'
@@ -55,7 +55,7 @@ export class AzureAuthorisationManager {
     scope: CommonAzureConstruct,
     vaultName: string,
     resourceGroupName: string,
-    principalId: string,
+    principalId: Input<string>,
     roleDefinitionId: RoleDefinitionId,
     resourceOptions?: ResourceOptions
   ) {
@@ -87,7 +87,7 @@ export class AzureAuthorisationManager {
     scope: CommonAzureConstruct,
     topicName: string,
     resourceGroupName: string,
-    principalId: string,
+    principalId: Input<string>,
     roleDefinitionId: RoleDefinitionId,
     resourceOptions?: ResourceOptions
   ) {
@@ -124,8 +124,8 @@ export class AzureAuthorisationManager {
   public grantRoleAssignmentToApplicationConfiguration(
     id: string,
     scope: CommonAzureConstruct,
-    appConfigId: string,
-    principalId: string,
+    appConfigId: Input<string>,
+    principalId: Input<string>,
     roleDefinitionId: RoleDefinitionId,
     resourceOptions?: ResourceOptions
   ) {
@@ -153,8 +153,8 @@ export class AzureAuthorisationManager {
   public grantRoleAssignmentToStorageAccount(
     id: string,
     scope: CommonAzureConstruct,
-    accountId: string,
-    principalId: string,
+    accountId: Input<string>,
+    principalId: Input<string>,
     roleDefinitionId: RoleDefinitionId,
     resourceOptions?: ResourceOptions
   ) {
@@ -182,8 +182,8 @@ export class AzureAuthorisationManager {
   public grantRoleAssignmentToStorageTable(
     id: string,
     scope: CommonAzureConstruct,
-    tableId: string,
-    principalId: string,
+    tableId: Input<string>,
+    principalId: Input<string>,
     roleDefinitionId: RoleDefinitionId,
     resourceOptions?: ResourceOptions
   ) {

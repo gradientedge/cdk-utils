@@ -7,7 +7,7 @@ import {
   SqlResourceSqlDatabase,
   SqlResourceSqlRoleAssignment,
 } from '@pulumi/azure-native/cosmosdb/index.js'
-import { ResourceOptions } from '@pulumi/pulumi'
+import { Input, ResourceOptions } from '@pulumi/pulumi'
 import { CommonAzureConstruct } from '../../common/index.js'
 import { CosmosRoleDefinition, CosmosRoleDefinitionId } from './constants.js'
 import {
@@ -192,7 +192,7 @@ export class AzureCosmosDbManager {
    */
   public resolveSqlRoleDefinition(
     scope: CommonAzureConstruct,
-    accountName: string,
+    accountName: Input<string>,
     resourceGroupName: string,
     roleDefinitionId: string,
     resourceOptions?: ResourceOptions
@@ -218,7 +218,7 @@ export class AzureCosmosDbManager {
     scope: CommonAzureConstruct,
     accountName: string,
     resourceGroupName: string,
-    principalId: string,
+    principalId: Input<string>,
     roleDefinitions: CosmosRoleDefinition[],
     resourceOptions?: ResourceOptions
   ) {
@@ -227,7 +227,7 @@ export class AzureCosmosDbManager {
     if (roleDefinitions.includes(CosmosRoleDefinition.CONTRIBUTOR)) {
       const cosmosdbSqlRoleDefinitionContributor = this.resolveSqlRoleDefinition(
         scope,
-        cosmosDbAccount.name.get(),
+        cosmosDbAccount.name,
         resourceGroupName,
         CosmosRoleDefinitionId.CONTRIBUTOR,
         resourceOptions
@@ -250,7 +250,7 @@ export class AzureCosmosDbManager {
     if (roleDefinitions.includes(CosmosRoleDefinition.READER)) {
       const cosmosdbSqlRoleDefinitionReader = this.resolveSqlRoleDefinition(
         scope,
-        cosmosDbAccount.name.get(),
+        cosmosDbAccount.name,
         resourceGroupName,
         CosmosRoleDefinitionId.READER,
         resourceOptions
