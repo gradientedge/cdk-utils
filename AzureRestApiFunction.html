@@ -56,6 +56,8 @@
         
         </h2>
         
+            <div class="class-description usertext"><p>Provides a construct to create and deploy an Azure Function App with API Management integration</p></div>
+        
     
 </header>
 
@@ -65,6 +67,8 @@
         
             
 
+    
+    <h2>Constructor</h2>
     
 
     <h4 class="name" id="AzureRestApiFunction"><span class="type-signature"></span>new AzureRestApiFunction<span class="signature">()</span><span class="type-signature"></span></h4>
@@ -83,7 +87,129 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_construct_rest-api-function_main.ts.html">azure/construct/rest-api-function/main.ts</a>, <a href="azure_construct_rest-api-function_main.ts.html#line9">line 9</a>
+        <a href="azure_construct_rest-api-function_main.ts.html">azure/construct/rest-api-function/main.ts</a>, <a href="azure_construct_rest-api-function_main.ts.html#line23">line 23</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="h5-examples">Example</h5>
+    
+    <pre class="prettyprint"><code>import { AzureRestApiFunction, AzureRestApiFunctionProps } from '@gradientedge/cdk-utils'
+
+class CustomConstruct extends AzureRestApiFunction {
+  constructor(id: string, props: AzureRestApiFunctionProps) {
+    super(id, props)
+    this.props = props
+    this.id = id
+    this.initResources()
+  }
+}</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        </div>
+    
+
+    
+
+    
+
+    
+    
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id="createApiManagement"><span class="type-signature"></span>createApiManagement<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to create or resolve an existing API Management service</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_rest-api-function_main.ts.html">azure/construct/rest-api-function/main.ts</a>, <a href="azure_construct_rest-api-function_main.ts.html#line92">line 92</a>
     </li></ul></dd>
     
 
@@ -148,7 +274,30 @@
 
 
         
-        </div>
+            
+
+    
+
+    <h4 class="name" id="createApiManagementNamespace"><span class="type-signature"></span>createApiManagementNamespace<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to create the API Management named value and backend for the function app</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_rest-api-function_main.ts.html">azure/construct/rest-api-function/main.ts</a>, <a href="azure_construct_rest-api-function_main.ts.html#line134">line 134</a>
+    </li></ul></dd>
     
 
     
@@ -156,15 +305,845 @@
     
 
     
-    
-    
-
-     
 
     
 
     
 
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="createApiManagementRoutes"><span class="type-signature"></span>createApiManagementRoutes<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to create the API Management API and operation routes</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_rest-api-function_main.ts.html">azure/construct/rest-api-function/main.ts</a>, <a href="azure_construct_rest-api-function_main.ts.html#line161">line 161</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="createApiOperation"><span class="type-signature"></span>createApiOperation<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to create an API Management API operation</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_rest-api-function_main.ts.html">azure/construct/rest-api-function/main.ts</a>, <a href="azure_construct_rest-api-function_main.ts.html#line178">line 178</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="createApiOperationCachePolicy"><span class="type-signature"></span>createApiOperationCachePolicy<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to create a cache policy for an API Management API operation</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_rest-api-function_main.ts.html">azure/construct/rest-api-function/main.ts</a>, <a href="azure_construct_rest-api-function_main.ts.html#line193">line 193</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="createApiPolicy"><span class="type-signature"></span>createApiPolicy<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to create the API-level policy for API Management with backend routing and tracing</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_rest-api-function_main.ts.html">azure/construct/rest-api-function/main.ts</a>, <a href="azure_construct_rest-api-function_main.ts.html#line262">line 262</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="createCorsPolicy"><span class="type-signature"></span>createCorsPolicy<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to create the CORS policy for API Management</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_rest-api-function_main.ts.html">azure/construct/rest-api-function/main.ts</a>, <a href="azure_construct_rest-api-function_main.ts.html#line224">line 224</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="createNamespaceSecret"><span class="type-signature"></span>createNamespaceSecret<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to create the namespace secret in Key Vault for the function app host key</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_rest-api-function_main.ts.html">azure/construct/rest-api-function/main.ts</a>, <a href="azure_construct_rest-api-function_main.ts.html#line73">line 73</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="dashboardVariables"><span class="type-signature"></span>dashboardVariables<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to get the dashboard template variables including API Management name</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_rest-api-function_main.ts.html">azure/construct/rest-api-function/main.ts</a>, <a href="azure_construct_rest-api-function_main.ts.html#line296">line 296</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="initResources"><span class="type-signature"></span>initResources<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Initialise and provision resources</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_rest-api-function_main.ts.html">azure/construct/rest-api-function/main.ts</a>, <a href="azure_construct_rest-api-function_main.ts.html#line34">line 34</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="resolveApiKeyVault"><span class="type-signature"></span>resolveApiKeyVault<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to resolve the API authentication Key Vault</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_rest-api-function_main.ts.html">azure/construct/rest-api-function/main.ts</a>, <a href="azure_construct_rest-api-function_main.ts.html#line64">line 64</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
     
 
     

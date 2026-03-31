@@ -56,6 +56,8 @@
         
         </h2>
         
+            <div class="class-description usertext"><p>Provides a construct to create and deploy an Azure EventGrid Event Handler with Service Bus integration</p></div>
+        
     
 </header>
 
@@ -65,6 +67,8 @@
         
             
 
+    
+    <h2>Constructor</h2>
     
 
     <h4 class="name" id="AzureEventHandler"><span class="type-signature"></span>new AzureEventHandler<span class="signature">()</span><span class="type-signature"></span></h4>
@@ -83,7 +87,129 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_construct_event-handler_main.ts.html">azure/construct/event-handler/main.ts</a>, <a href="azure_construct_event-handler_main.ts.html#line5">line 5</a>
+        <a href="azure_construct_event-handler_main.ts.html">azure/construct/event-handler/main.ts</a>, <a href="azure_construct_event-handler_main.ts.html#line19">line 19</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="h5-examples">Example</h5>
+    
+    <pre class="prettyprint"><code>import { AzureEventHandler, AzureEventHandlerProps } from '@gradientedge/cdk-utils'
+
+class CustomConstruct extends AzureEventHandler {
+  constructor(id: string, props: AzureEventHandlerProps) {
+    super(id, props)
+    this.props = props
+    this.id = id
+    this.initResources()
+  }
+}</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        </div>
+    
+
+    
+
+    
+
+    
+    
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id="createEventGrid"><span class="type-signature"></span>createEventGrid<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to create or resolve an existing EventGrid topic</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_event-handler_main.ts.html">azure/construct/event-handler/main.ts</a>, <a href="azure_construct_event-handler_main.ts.html#line97">line 97</a>
     </li></ul></dd>
     
 
@@ -148,7 +274,30 @@
 
 
         
-        </div>
+            
+
+    
+
+    <h4 class="name" id="createEventGridEventSubscription"><span class="type-signature"></span>createEventGridEventSubscription<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to create the EventGrid event subscription with Service Bus queue destination</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_event-handler_main.ts.html">azure/construct/event-handler/main.ts</a>, <a href="azure_construct_event-handler_main.ts.html#line126">line 126</a>
+    </li></ul></dd>
     
 
     
@@ -156,15 +305,671 @@
     
 
     
-    
-    
-
-     
 
     
 
     
 
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="createEventGridSubscriptionDlqStorageAccount"><span class="type-signature"></span>createEventGridSubscriptionDlqStorageAccount<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to create the dead-letter queue storage account for EventGrid subscriptions</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_event-handler_main.ts.html">azure/construct/event-handler/main.ts</a>, <a href="azure_construct_event-handler_main.ts.html#line49">line 49</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="createEventGridSubscriptionDlqStorageContainer"><span class="type-signature"></span>createEventGridSubscriptionDlqStorageContainer<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to create the dead-letter queue storage container for EventGrid subscriptions</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_event-handler_main.ts.html">azure/construct/event-handler/main.ts</a>, <a href="azure_construct_event-handler_main.ts.html#line59">line 59</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="createServiceBusDiagnosticLog"><span class="type-signature"></span>createServiceBusDiagnosticLog<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to create diagnostic log settings for the Service Bus namespace</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_event-handler_main.ts.html">azure/construct/event-handler/main.ts</a>, <a href="azure_construct_event-handler_main.ts.html#line145">line 145</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="createServiceBusNamespace"><span class="type-signature"></span>createServiceBusNamespace<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to create the Service Bus namespace</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_event-handler_main.ts.html">azure/construct/event-handler/main.ts</a>, <a href="azure_construct_event-handler_main.ts.html#line70">line 70</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="createServiceBusQueue"><span class="type-signature"></span>createServiceBusQueue<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to create the Service Bus queue</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_event-handler_main.ts.html">azure/construct/event-handler/main.ts</a>, <a href="azure_construct_event-handler_main.ts.html#line83">line 83</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="enableMalwareScanningOnDataStorageAccount"><span class="type-signature"></span>enableMalwareScanningOnDataStorageAccount<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to enable Microsoft Defender malware scanning on the data storage account</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_event-handler_main.ts.html">azure/construct/event-handler/main.ts</a>, <a href="azure_construct_event-handler_main.ts.html#line168">line 168</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="initResources"><span class="type-signature"></span>initResources<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Initialise and provision resources</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_event-handler_main.ts.html">azure/construct/event-handler/main.ts</a>, <a href="azure_construct_event-handler_main.ts.html#line32">line 32</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
     
 
     

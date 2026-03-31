@@ -56,6 +56,8 @@
         
         </h2>
         
+            <div class="class-description usertext"><p>Provides a construct to create and deploy an Azure Function App with Flex Consumption hosting</p></div>
+        
     
 </header>
 
@@ -65,6 +67,8 @@
         
             
 
+    
+    <h2>Constructor</h2>
     
 
     <h4 class="name" id="AzureFunctionApp"><span class="type-signature"></span>new AzureFunctionApp<span class="signature">()</span><span class="type-signature"></span></h4>
@@ -83,7 +87,129 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_construct_function-app_main.ts.html">azure/construct/function-app/main.ts</a>, <a href="azure_construct_function-app_main.ts.html#line15">line 15</a>
+        <a href="azure_construct_function-app_main.ts.html">azure/construct/function-app/main.ts</a>, <a href="azure_construct_function-app_main.ts.html#line29">line 29</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="h5-examples">Example</h5>
+    
+    <pre class="prettyprint"><code>import { AzureFunctionApp, AzureFunctionAppProps } from '@gradientedge/cdk-utils'
+
+class CustomConstruct extends AzureFunctionApp {
+  constructor(id: string, props: AzureFunctionAppProps) {
+    super(id, props)
+    this.props = props
+    this.id = id
+    this.initResources()
+  }
+}</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        </div>
+    
+
+    
+
+    
+
+    
+    
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id="createAppConfiguration"><span class="type-signature"></span>createAppConfiguration<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to create or resolve the App Configuration store</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_function-app_main.ts.html">azure/construct/function-app/main.ts</a>, <a href="azure_construct_function-app_main.ts.html#line108">line 108</a>
     </li></ul></dd>
     
 
@@ -148,7 +274,33 @@
 
 
         
-        </div>
+            
+
+    
+
+    <h4 class="name" id="createAppConfigurations"><span class="type-signature"></span>createAppConfigurations<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to create app configurations</p>
+<ul>
+<li>To be implemented in the overriding method in the implementation class</li>
+</ul></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_function-app_main.ts.html">azure/construct/function-app/main.ts</a>, <a href="azure_construct_function-app_main.ts.html#line128">line 128</a>
+    </li></ul></dd>
     
 
     
@@ -156,15 +308,1634 @@
     
 
     
-    
-    
-
-     
 
     
 
     
 
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="createAppServicePlan"><span class="type-signature"></span>createAppServicePlan<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to create the App Service Plan for the function app</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_function-app_main.ts.html">azure/construct/function-app/main.ts</a>, <a href="azure_construct_function-app_main.ts.html#line92">line 92</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="createCodePackage"><span class="type-signature"></span>createCodePackage<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to create the code package archive for deployment</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_function-app_main.ts.html">azure/construct/function-app/main.ts</a>, <a href="azure_construct_function-app_main.ts.html#line254">line 254</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="createDataStorageAccount"><span class="type-signature"></span>createDataStorageAccount<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to create the data storage account</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_function-app_main.ts.html">azure/construct/function-app/main.ts</a>, <a href="azure_construct_function-app_main.ts.html#line168">line 168</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="createDataStorageContainer"><span class="type-signature"></span>createDataStorageContainer<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to create the data storage container</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_function-app_main.ts.html">azure/construct/function-app/main.ts</a>, <a href="azure_construct_function-app_main.ts.html#line184">line 184</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="createFunctionApp"><span class="type-signature"></span>createFunctionApp<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to create the Azure Function App with Flex Consumption hosting</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_function-app_main.ts.html">azure/construct/function-app/main.ts</a>, <a href="azure_construct_function-app_main.ts.html#line271">line 271</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="createFunctionAppSiteConfig"><span class="type-signature"></span>createFunctionAppSiteConfig<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to create the function app site configuration</p>
+<ul>
+<li>To be implemented in the overriding method in the implementation class</li>
+</ul></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_function-app_main.ts.html">azure/construct/function-app/main.ts</a>, <a href="azure_construct_function-app_main.ts.html#line267">line 267</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="createFunctionDashboard"><span class="type-signature"></span>createFunctionDashboard<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to create the Azure Portal dashboard for the function app</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_function-app_main.ts.html">azure/construct/function-app/main.ts</a>, <a href="azure_construct_function-app_main.ts.html#line362">line 362</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="createFunctionHosts"><span class="type-signature"></span>createFunctionHosts<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to create and configure the function host.json</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_function-app_main.ts.html">azure/construct/function-app/main.ts</a>, <a href="azure_construct_function-app_main.ts.html#line242">line 242</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="createRoleAssignments"><span class="type-signature"></span>createRoleAssignments<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to create role assignments for the function app identity</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_function-app_main.ts.html">azure/construct/function-app/main.ts</a>, <a href="azure_construct_function-app_main.ts.html#line322">line 322</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="createStorageAccount"><span class="type-signature"></span>createStorageAccount<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to create the storage account for the function app</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_function-app_main.ts.html">azure/construct/function-app/main.ts</a>, <a href="azure_construct_function-app_main.ts.html#line132">line 132</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="createStorageContainer"><span class="type-signature"></span>createStorageContainer<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to create the storage container for the function app</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_function-app_main.ts.html">azure/construct/function-app/main.ts</a>, <a href="azure_construct_function-app_main.ts.html#line152">line 152</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="createStorageDeploymentContainer"><span class="type-signature"></span>createStorageDeploymentContainer<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to create the storage deployment container for the function app</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_function-app_main.ts.html">azure/construct/function-app/main.ts</a>, <a href="azure_construct_function-app_main.ts.html#line142">line 142</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="createdParsedAppConfigurations"><span class="type-signature"></span>createdParsedAppConfigurations<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to create parsed app configurations</p>
+<ul>
+<li>To be implemented in the overriding method in the implementation class</li>
+</ul></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_function-app_main.ts.html">azure/construct/function-app/main.ts</a>, <a href="azure_construct_function-app_main.ts.html#line104">line 104</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="dashboardVariables"><span class="type-signature"></span>dashboardVariables<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to get the dashboard template variables</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_function-app_main.ts.html">azure/construct/function-app/main.ts</a>, <a href="azure_construct_function-app_main.ts.html#line348">line 348</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="generateStorageContainerSas"><span class="type-signature"></span>generateStorageContainerSas<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to generate a SAS token for the storage container and store it in Key Vault</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_function-app_main.ts.html">azure/construct/function-app/main.ts</a>, <a href="azure_construct_function-app_main.ts.html#line196">line 196</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="getFunctionAppPrincipalId"><span class="type-signature"></span>getFunctionAppPrincipalId<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to get the function app managed identity principal ID</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_function-app_main.ts.html">azure/construct/function-app/main.ts</a>, <a href="azure_construct_function-app_main.ts.html#line316">line 316</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="initResources"><span class="type-signature"></span>initResources<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Initialise and provision resources</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_function-app_main.ts.html">azure/construct/function-app/main.ts</a>, <a href="azure_construct_function-app_main.ts.html#line57">line 57</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="resolveApplicationInsights"><span class="type-signature"></span>resolveApplicationInsights<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to resolve the Application Insights instance</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_function-app_main.ts.html">azure/construct/function-app/main.ts</a>, <a href="azure_construct_function-app_main.ts.html#line81">line 81</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
     
 
     

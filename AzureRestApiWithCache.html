@@ -56,6 +56,8 @@
         
         </h2>
         
+            <div class="class-description usertext"><p>Provides a construct to create and deploy an Azure API Management service with Redis cache integration</p></div>
+        
     
 </header>
 
@@ -65,6 +67,8 @@
         
             
 
+    
+    <h2>Constructor</h2>
     
 
     <h4 class="name" id="AzureRestApiWithCache"><span class="type-signature"></span>new AzureRestApiWithCache<span class="signature">()</span><span class="type-signature"></span></h4>
@@ -83,7 +87,129 @@
     
     <dt class="tag-source">Source:</dt>
     <dd class="tag-source"><ul class="dummy"><li>
-        <a href="azure_construct_rest-api-with-cache_main.ts.html">azure/construct/rest-api-with-cache/main.ts</a>, <a href="azure_construct_rest-api-with-cache_main.ts.html#line3">line 3</a>
+        <a href="azure_construct_rest-api-with-cache_main.ts.html">azure/construct/rest-api-with-cache/main.ts</a>, <a href="azure_construct_rest-api-with-cache_main.ts.html#line17">line 17</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+    <h5 class="h5-examples">Example</h5>
+    
+    <pre class="prettyprint"><code>import { AzureRestApiWithCache, AzureRestApiWithCacheProps } from '@gradientedge/cdk-utils'
+
+class CustomConstruct extends AzureRestApiWithCache {
+  constructor(id: string, props: AzureRestApiWithCacheProps) {
+    super(id, props)
+    this.props = props
+    this.id = id
+    this.initResources()
+  }
+}</code></pre>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+        </div>
+    
+
+    
+
+    
+
+    
+    
+    
+
+     
+
+    
+
+    
+
+    
+        <h3 class="subsection-title">Methods</h3>
+
+        
+            
+
+    
+
+    <h4 class="name" id="createRedisCache"><span class="type-signature"></span>createRedisCache<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to create the managed Redis cache instance</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_rest-api-with-cache_main.ts.html">azure/construct/rest-api-with-cache/main.ts</a>, <a href="azure_construct_rest-api-with-cache_main.ts.html#line37">line 37</a>
     </li></ul></dd>
     
 
@@ -148,7 +274,30 @@
 
 
         
-        </div>
+            
+
+    
+
+    <h4 class="name" id="createRedisCacheApiManagement"><span class="type-signature"></span>createRedisCacheApiManagement<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to register the Redis cache with API Management</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_rest-api-with-cache_main.ts.html">azure/construct/rest-api-with-cache/main.ts</a>, <a href="azure_construct_rest-api-with-cache_main.ts.html#line76">line 76</a>
+    </li></ul></dd>
     
 
     
@@ -156,15 +305,323 @@
     
 
     
-    
-    
-
-     
 
     
 
     
 
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="createRedisCacheNamespace"><span class="type-signature"></span>createRedisCacheNamespace<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to create the API Management named value for the Redis cache secret</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_rest-api-with-cache_main.ts.html">azure/construct/rest-api-with-cache/main.ts</a>, <a href="azure_construct_rest-api-with-cache_main.ts.html#line61">line 61</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="createRedisCacheSecret"><span class="type-signature"></span>createRedisCacheSecret<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Method to create the Redis cache connection string secret in Key Vault</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_rest-api-with-cache_main.ts.html">azure/construct/rest-api-with-cache/main.ts</a>, <a href="azure_construct_rest-api-with-cache_main.ts.html#line48">line 48</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+            
+
+    
+
+    <h4 class="name" id="initResources"><span class="type-signature"></span>initResources<span class="signature">()</span><span class="type-signature"></span></h4>
+
+    
+    <p class="summary usertext"><p>Initialise and provision resources</p></p>
+    
+
+
+
+
+<dl class="details">
+    
+    <dt class="tag-description">Description:</dt>
+    <dd class="tag-description"><ul class="dummy"><li><script type="text/javascript" src="https://unpkg.com/mermaid@7.1.0/dist/mermaid.min.js"></script></li></ul></dd>
+    
+
+    
+    <dt class="tag-source">Source:</dt>
+    <dd class="tag-source"><ul class="dummy"><li>
+        <a href="azure_construct_rest-api-with-cache_main.ts.html">azure/construct/rest-api-with-cache/main.ts</a>, <a href="azure_construct_rest-api-with-cache_main.ts.html#line27">line 27</a>
+    </li></ul></dd>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+</dl>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
     
 
     
