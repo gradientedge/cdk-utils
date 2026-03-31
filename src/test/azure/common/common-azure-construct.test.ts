@@ -18,7 +18,7 @@ interface TestAzureStackProps extends CommonAzureStackProps {
 
 const testStackProps: any = {
   domainName: 'gradientedge.io',
-  extraContexts: ['src/test/azure/common/cdkConfig/dummy.json', 'src/test/azure/common/cdkConfig/storage.json'],
+  extraContexts: ['src/test/azure/common/config/dummy.json', 'src/test/azure/common/config/storage.json'],
   features: {},
   name: 'test-common-stack',
   resourceGroupName: 'test-rg',
