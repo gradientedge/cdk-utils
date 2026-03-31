@@ -24,6 +24,20 @@ import { CosmosRoleDefinition } from '../../services/cosmosdb/constants.js'
 import { AzureAppConfigurationManager, RoleDefinitionId } from '../../services/index.js'
 import { AzureFunctionAppProps } from './types.js'
 
+/**
+ * @classdesc Provides a construct to create and deploy an Azure Function App with Flex Consumption hosting
+ * @example
+ * import { AzureFunctionApp, AzureFunctionAppProps } from '@gradientedge/cdk-utils'
+ *
+ * class CustomConstruct extends AzureFunctionApp {
+ *   constructor(id: string, props: AzureFunctionAppProps) {
+ *     super(id, props)
+ *     this.props = props
+ *     this.id = id
+ *     this.initResources()
+ *   }
+ * }
+ */
 export class AzureFunctionApp extends CommonAzureConstruct {
   props: AzureFunctionAppProps
   app: WebApp
@@ -53,6 +67,9 @@ export class AzureFunctionApp extends CommonAzureConstruct {
     this.id = id
   }
 
+  /**
+   * @summary Initialise and provision resources
+   */
   public initResources() {
     this.createResourceGroup()
     this.resolveCommonLogAnalyticsWorkspace()
@@ -75,6 +92,9 @@ export class AzureFunctionApp extends CommonAzureConstruct {
     this.createFunctionDashboard()
   }
 
+  /**
+   * @summary Method to resolve the Application Insights instance
+   */
   protected resolveApplicationInsights() {
     if (!this.props.commonApplicationInsights || !this.props.commonApplicationInsights.resourceName) return
 
@@ -84,6 +104,9 @@ export class AzureFunctionApp extends CommonAzureConstruct {
     })
   }
 
+  /**
+   * @summary Method to create the App Service Plan for the function app
+   */
   protected createAppServicePlan() {
     this.appServicePlan = this.appServiceManager.createAppServicePlan(`${this.id}-app-service-plan`, this, {
       ...this.props.functionApp.servicePlan,
@@ -93,8 +116,15 @@ export class AzureFunctionApp extends CommonAzureConstruct {
     })
   }
 
+  /**
+   * @summary Method to create parsed app configurations
+   * - To be implemented in the overriding method in the implementation class
+   */
   protected createdParsedAppConfigurations() {}
 
+  /**
+   * @summary Method to create or resolve the App Configuration store
+   */
   protected createAppConfiguration() {
     if (this.props.functionApp.appConfiguration) {
       this.appConfig = this.appConfigurationManager.createConfigurationStore(`${this.id}-app-configuration`, this, {
@@ -111,8 +141,15 @@ export class AzureFunctionApp extends CommonAzureConstruct {
     this.appConfigPrefix = _.camelCase(this.id)
   }
 
+  /**
+   * @summary Method to create app configurations
+   * - To be implemented in the overriding method in the implementation class
+   */
   protected createAppConfigurations() {}
 
+  /**
+   * @summary Method to create the storage account for the function app
+   */
   protected createStorageAccount() {
     this.appStorageAccount = this.storageManager.createStorageAccount(`${this.id}-storage-account`, this, {
       ...this.props.functionApp.storageAccount,
@@ -121,6 +158,9 @@ export class AzureFunctionApp extends CommonAzureConstruct {
     })
   }
 
+  /**
+   * @summary Method to create the storage deployment container for the function app
+   */
   protected createStorageDeploymentContainer() {
     this.appDeploymentStorageContainer = this.storageManager.createStorageContainer(
       `${this.id}-storage-deployment-container`,
@@ -133,6 +173,9 @@ export class AzureFunctionApp extends CommonAzureConstruct {
     )
   }
 
+  /**
+   * @summary Method to create the storage container for the function app
+   */
   protected createStorageContainer() {
     if (!this.props.functionApp.storageContainer) return
 
@@ -148,6 +191,9 @@ export class AzureFunctionApp extends CommonAzureConstruct {
     }
   }
 
+  /**
+   * @summary Method to create the data storage account
+   */
   protected createDataStorageAccount() {
     if (!this.props.dataStorageAccount) return
 
@@ -163,6 +209,9 @@ export class AzureFunctionApp extends CommonAzureConstruct {
     }
   }
 
+  /**
+   * @summary Method to create the data storage container
+   */
   protected createDataStorageContainer() {
     if (!this.props.dataStorageContainer) return
 
@@ -173,6 +222,9 @@ export class AzureFunctionApp extends CommonAzureConstruct {
     })
   }
 
+  /**
+   * @summary Method to generate a SAS token for the storage container and store it in Key Vault
+   */
   protected generateStorageContainerSas() {
     if (!this.props.dataStorageContainerSas) return
 
@@ -230,6 +282,9 @@ export class AzureFunctionApp extends CommonAzureConstruct {
     })
   }
 
+  /**
+   * @summary Method to create and configure the function host.json
+   */
   protected createFunctionHosts() {
     const currentDirectory = path.resolve()
     const hostsJsonFile = `${currentDirectory}/${this.props.functionApp.deploySource}/host.json`
@@ -244,6 +299,9 @@ export class AzureFunctionApp extends CommonAzureConstruct {
     fs.writeFileSync(hostsJsonFile, JSON.stringify(hostsConfig, null, 2))
   }
 
+  /**
+   * @summary Method to create the code package archive for deployment
+   */
   protected createCodePackage() {
     const currentDirectory = path.resolve()
     this.appCodeArchiveFile = archive.getFileOutput({
@@ -254,8 +312,15 @@ export class AzureFunctionApp extends CommonAzureConstruct {
     })
   }
 
+  /**
+   * @summary Method to create the function app site configuration
+   * - To be implemented in the overriding method in the implementation class
+   */
   protected createFunctionAppSiteConfig() {}
 
+  /**
+   * @summary Method to create the Azure Function App with Flex Consumption hosting
+   */
   protected createFunctionApp(resourceOptions?: ResourceOptions) {
     this.app = this.functionManager.createFunctionAppFlexConsumption(
       `${this.id}-function-app-flex`,
@@ -308,10 +373,16 @@ export class AzureFunctionApp extends CommonAzureConstruct {
     )
   }
 
+  /**
+   * @summary Method to get the function app managed identity principal ID
+   */
   protected getFunctionAppPrincipalId(): Output<string> {
     return this.app.identity.apply(identity => (identity?.principalId ? identity.principalId : ''))
   }
 
+  /**
+   * @summary Method to create role assignments for the function app identity
+   */
   protected createRoleAssignments() {
     if (this.props.dataStorageAccount) {
       this.authorisationManager.grantRoleAssignmentToStorageAccount(
@@ -382,6 +453,9 @@ export class AzureFunctionApp extends CommonAzureConstruct {
     }
   }
 
+  /**
+   * @summary Method to get the dashboard template variables
+   */
   protected dashboardVariables(): Record<string, any> {
     return {
       displayName: this.props.functionApp.dashboard.displayName,
@@ -394,6 +468,9 @@ export class AzureFunctionApp extends CommonAzureConstruct {
     }
   }
 
+  /**
+   * @summary Method to create the Azure Portal dashboard for the function app
+   */
   protected createFunctionDashboard(): void {
     if (!this.props.functionApp.dashboard?.enabled) return
 

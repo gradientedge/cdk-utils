@@ -7,6 +7,20 @@ import { CommonAzureConstruct } from '../../common/index.js'
 import { RoleDefinitionId } from '../../services/index.js'
 import { AzureApi, AzureRestApiProps } from './types.js'
 
+/**
+ * @classdesc Provides a construct to create and deploy an Azure API Management service with diagnostics and logging
+ * @example
+ * import { AzureRestApi, AzureRestApiProps } from '@gradientedge/cdk-utils'
+ *
+ * class CustomConstruct extends AzureRestApi {
+ *   constructor(id: string, props: AzureRestApiProps) {
+ *     super(id, props)
+ *     this.props = props
+ *     this.id = id
+ *     this.initResources()
+ *   }
+ * }
+ */
 export class AzureRestApi extends CommonAzureConstruct {
   props: AzureRestApiProps
   api: AzureApi
@@ -18,6 +32,9 @@ export class AzureRestApi extends CommonAzureConstruct {
     this.id = id
   }
 
+  /**
+   * @summary Initialise and provision resources
+   */
   public initResources() {
     this.createResourceGroup()
     this.resolveApiKeyVault()
@@ -32,6 +49,9 @@ export class AzureRestApi extends CommonAzureConstruct {
     this.createDiagnosticLog()
   }
 
+  /**
+   * @summary Method to resolve the API authentication Key Vault
+   */
   protected resolveApiKeyVault() {
     this.api.authKeyVault = getVaultOutput({
       vaultName: this.props.apiAuthKeyVault.name,
@@ -39,6 +59,9 @@ export class AzureRestApi extends CommonAzureConstruct {
     })
   }
 
+  /**
+   * @summary Method to resolve the Application Insights instance
+   */
   protected resolveApplicationInsights() {
     if (!this.props.commonApplicationInsights || !this.props.commonApplicationInsights.resourceName) return
 
@@ -48,6 +71,9 @@ export class AzureRestApi extends CommonAzureConstruct {
     })
   }
 
+  /**
+   * @summary Method to create or resolve an existing API Management service
+   */
   protected createApiManagement() {
     if (this.props.apiManagement.useExistingApiManagement) {
       if (this.props.apiManagement.apiStackName) {
@@ -102,6 +128,9 @@ export class AzureRestApi extends CommonAzureConstruct {
     })
   }
 
+  /**
+   * @summary Method to create the Key Vault role assignment for the API Management identity
+   */
   protected createNamespaceSecretRole() {
     if (this.props.apiManagement.useExistingApiManagement) return
 
@@ -116,6 +145,9 @@ export class AzureRestApi extends CommonAzureConstruct {
     )
   }
 
+  /**
+   * @summary Method to create the namespace secret in Key Vault for Application Insights
+   */
   protected createNamespaceSecret() {
     if (this.props.apiManagement.useExistingApiManagement) return
 
@@ -133,6 +165,9 @@ export class AzureRestApi extends CommonAzureConstruct {
     )
   }
 
+  /**
+   * @summary Method to create the API Management subscription and store the key in Key Vault
+   */
   protected createSubscriptionKeySecret() {
     if (this.props.apiManagement.useExistingApiManagement) return
 
@@ -155,6 +190,9 @@ export class AzureRestApi extends CommonAzureConstruct {
     })
   }
 
+  /**
+   * @summary Method to create the API Management logger with Application Insights integration
+   */
   protected createApiManagementLogger() {
     if (this.props.apiManagement.useExistingApiManagement) return
 
@@ -180,6 +218,9 @@ export class AzureRestApi extends CommonAzureConstruct {
     })
   }
 
+  /**
+   * @summary Method to create the API diagnostic settings for API Management
+   */
   protected createApiDiagnostic() {
     if (this.props.apiManagement.useExistingApiManagement) return
 
@@ -192,6 +233,9 @@ export class AzureRestApi extends CommonAzureConstruct {
     })
   }
 
+  /**
+   * @summary Method to create the Monitor diagnostic log settings for API Management
+   */
   protected createDiagnosticLog() {
     if (this.props.apiManagement.useExistingApiManagement) return
 

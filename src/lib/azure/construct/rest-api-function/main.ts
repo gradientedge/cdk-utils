@@ -7,6 +7,20 @@ import { ApiManagementApiOperationProps, RoleDefinitionId } from '../../services
 import { AzureFunctionApp } from '../function-app/index.js'
 import { AzureApiFunction, AzureRestApiFunctionProps } from './types.js'
 
+/**
+ * @classdesc Provides a construct to create and deploy an Azure Function App with API Management integration
+ * @example
+ * import { AzureRestApiFunction, AzureRestApiFunctionProps } from '@gradientedge/cdk-utils'
+ *
+ * class CustomConstruct extends AzureRestApiFunction {
+ *   constructor(id: string, props: AzureRestApiFunctionProps) {
+ *     super(id, props)
+ *     this.props = props
+ *     this.id = id
+ *     this.initResources()
+ *   }
+ * }
+ */
 export class AzureRestApiFunction extends AzureFunctionApp {
   props: AzureRestApiFunctionProps
   api: AzureApiFunction
@@ -17,6 +31,9 @@ export class AzureRestApiFunction extends AzureFunctionApp {
     this.id = id
   }
 
+  /**
+   * @summary Initialise and provision resources
+   */
   public initResources() {
     this.createResourceGroup()
     this.resolveCommonLogAnalyticsWorkspace()
@@ -45,6 +62,9 @@ export class AzureRestApiFunction extends AzureFunctionApp {
     this.createFunctionDashboard()
   }
 
+  /**
+   * @summary Method to resolve the API authentication Key Vault
+   */
   protected resolveApiKeyVault() {
     this.api.authKeyVault = getVaultOutput({
       vaultName: this.props.apiAuthKeyVault.name,
@@ -52,6 +72,9 @@ export class AzureRestApiFunction extends AzureFunctionApp {
     })
   }
 
+  /**
+   * @summary Method to create the namespace secret in Key Vault for the function app host key
+   */
   protected createNamespaceSecret() {
     if (!this.props.apiManagement.useExistingApiManagement) return
 
@@ -74,6 +97,9 @@ export class AzureRestApiFunction extends AzureFunctionApp {
     )
   }
 
+  /**
+   * @summary Method to create or resolve an existing API Management service
+   */
   protected createApiManagement() {
     if (this.props.apiManagement.useExistingApiManagement) {
       if (this.props.apiManagement.apiStackName) {
@@ -122,6 +148,9 @@ export class AzureRestApiFunction extends AzureFunctionApp {
     }
   }
 
+  /**
+   * @summary Method to create the API Management named value and backend for the function app
+   */
   protected createApiManagementNamespace() {
     this.api.namedValue = new NamedValue(`${this.id}-am-nv`, {
       displayName: this.app.name,
@@ -148,6 +177,9 @@ export class AzureRestApiFunction extends AzureFunctionApp {
     })
   }
 
+  /**
+   * @summary Method to create the API Management API and operation routes
+   */
   protected createApiManagementRoutes() {
     this.api.managementApi = this.apiManagementManager.createApi(`${this.id}-apim-api`, this, {
       ...this.props.apiManagementApi,
@@ -164,6 +196,9 @@ export class AzureRestApiFunction extends AzureFunctionApp {
     })
   }
 
+  /**
+   * @summary Method to create an API Management API operation
+   */
   protected createApiOperation(operation: ApiManagementApiOperationProps) {
     this.api.apiOperations[operation.displayName.toString()] = this.apiManagementManager.createOperation(
       `${this.id}-apim-api-apim-api-operation-${operation.displayName}-${operation.method}`,
@@ -181,6 +216,9 @@ export class AzureRestApiFunction extends AzureFunctionApp {
     )
   }
 
+  /**
+   * @summary Method to create a cache policy for an API Management API operation
+   */
   protected createApiOperationCachePolicy(operation: ApiManagementApiOperationProps) {
     if (!operation.caching || !operation.caching.enableCacheSet) return
 
@@ -214,6 +252,9 @@ export class AzureRestApiFunction extends AzureFunctionApp {
     )
   }
 
+  /**
+   * @summary Method to create the CORS policy for API Management
+   */
   protected createCorsPolicy() {
     if (!this.props.apiManagementCors?.enableCors) return
 
@@ -254,6 +295,9 @@ export class AzureRestApiFunction extends AzureFunctionApp {
         </cors>`.replace(/\n[ \t]*\n/g, '\n') // move to utils
   }
 
+  /**
+   * @summary Method to create the API-level policy for API Management with backend routing and tracing
+   */
   protected createApiPolicy() {
     const policyXmlContent = pulumi.interpolate`
       <policies>
@@ -287,6 +331,9 @@ export class AzureRestApiFunction extends AzureFunctionApp {
     })
   }
 
+  /**
+   * @summary Method to get the dashboard template variables including API Management name
+   */
   protected dashboardVariables(): Record<string, any> {
     const variables = super.dashboardVariables()
     return {

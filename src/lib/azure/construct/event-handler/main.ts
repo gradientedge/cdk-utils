@@ -5,6 +5,20 @@ import { Output } from '@pulumi/pulumi'
 import { AzureFunctionApp } from '../function-app/index.js'
 import { AzureEventHandlerProps, EventHandlerEventGridSubscription, EventHandlerServiceBus } from './types.js'
 
+/**
+ * @classdesc Provides a construct to create and deploy an Azure EventGrid Event Handler with Service Bus integration
+ * @example
+ * import { AzureEventHandler, AzureEventHandlerProps } from '@gradientedge/cdk-utils'
+ *
+ * class CustomConstruct extends AzureEventHandler {
+ *   constructor(id: string, props: AzureEventHandlerProps) {
+ *     super(id, props)
+ *     this.props = props
+ *     this.id = id
+ *     this.initResources()
+ *   }
+ * }
+ */
 export class AzureEventHandler extends AzureFunctionApp {
   props: AzureEventHandlerProps
   eventGridEventSubscription: EventHandlerEventGridSubscription
@@ -17,6 +31,9 @@ export class AzureEventHandler extends AzureFunctionApp {
     this.id = id
   }
 
+  /**
+   * @summary Initialise and provision resources
+   */
   public initResources() {
     this.createResourceGroup()
     this.resolveCommonLogAnalyticsWorkspace()
@@ -32,6 +49,9 @@ export class AzureEventHandler extends AzureFunctionApp {
     super.initResources()
   }
 
+  /**
+   * @summary Method to create the dead-letter queue storage account for EventGrid subscriptions
+   */
   protected createEventGridSubscriptionDlqStorageAccount() {
     this.eventGridEventSubscription.dlqStorageAccount = this.storageManager.createStorageAccount(
       `${this.id}-eventgrid-subscription-dlq-storage-account`,
@@ -44,6 +64,9 @@ export class AzureEventHandler extends AzureFunctionApp {
     )
   }
 
+  /**
+   * @summary Method to create the dead-letter queue storage container for EventGrid subscriptions
+   */
   protected createEventGridSubscriptionDlqStorageContainer() {
     this.eventGridEventSubscription.dlqStorageContainer = this.storageManager.createStorageContainer(
       `${this.id}-eventgrid-subscription-dlq-container`,
@@ -57,6 +80,9 @@ export class AzureEventHandler extends AzureFunctionApp {
     )
   }
 
+  /**
+   * @summary Method to create the Service Bus namespace
+   */
   protected createServiceBusNamespace() {
     this.serviceBus.namespace = this.serviceBusManager.createServiceBusNamespace(
       this.id,
@@ -74,6 +100,9 @@ export class AzureEventHandler extends AzureFunctionApp {
     })
   }
 
+  /**
+   * @summary Method to create the Service Bus queue
+   */
   protected createServiceBusQueue() {
     this.serviceBus.queue = this.serviceBusManager.createServiceBusQueue(this.id, this, {
       ...this.props.serviceBus.queue,
@@ -87,6 +116,9 @@ export class AzureEventHandler extends AzureFunctionApp {
     })
   }
 
+  /**
+   * @summary Method to create or resolve an existing EventGrid topic
+   */
   protected createEventGrid() {
     if (!this.props.eventGridTopic.useExistingTopic) {
       this.eventGridTopic = this.eventgridManager.createEventgridTopic(
@@ -124,6 +156,9 @@ export class AzureEventHandler extends AzureFunctionApp {
     }
   }
 
+  /**
+   * @summary Method to create the EventGrid event subscription with Service Bus queue destination
+   */
   protected createEventGridEventSubscription() {
     this.eventGridEventSubscription.eventSubscription = this.eventgridManager.createEventgridSubscription(
       this.id,
@@ -146,6 +181,9 @@ export class AzureEventHandler extends AzureFunctionApp {
     )
   }
 
+  /**
+   * @summary Method to create diagnostic log settings for the Service Bus namespace
+   */
   protected createServiceBusDiagnosticLog() {
     this.monitorManager.createMonitorDiagnosticSettings(this.id, this, {
       name: `${this.props.stackName}-servicebus`,
@@ -167,6 +205,9 @@ export class AzureEventHandler extends AzureFunctionApp {
     })
   }
 
+  /**
+   * @summary Method to enable Microsoft Defender malware scanning on the data storage account
+   */
   protected enableMalwareScanningOnDataStorageAccount() {
     if (!this.props.defender) return
 

@@ -7,6 +7,20 @@ import * as path from 'path'
 import { CommonAzureConstruct } from '../../common/index.js'
 import { Site, SiteWithWebAppProps } from './types.js'
 
+/**
+ * @classdesc Provides a construct to create and deploy a site hosted with an Azure Linux Web App
+ * @example
+ * import { SiteWithWebApp, SiteWithWebAppProps } from '@gradientedge/cdk-utils'
+ *
+ * class CustomConstruct extends SiteWithWebApp {
+ *   constructor(id: string, props: SiteWithWebAppProps) {
+ *     super(id, props)
+ *     this.props = props
+ *     this.id = id
+ *     this.initResources()
+ *   }
+ * }
+ */
 export class SiteWithWebApp extends CommonAzureConstruct {
   props: SiteWithWebAppProps
   applicationInsights: Output<GetComponentResult>
@@ -18,6 +32,9 @@ export class SiteWithWebApp extends CommonAzureConstruct {
     this.id = id
   }
 
+  /**
+   * @summary Initialise and provision resources
+   */
   public initResources() {
     this.createResourceGroup()
     this.resolveCommonLogAnalyticsWorkspace()
@@ -31,6 +48,9 @@ export class SiteWithWebApp extends CommonAzureConstruct {
     this.createDiagnosticLog()
   }
 
+  /**
+   * @summary Method to resolve the Application Insights instance
+   */
   protected resolveApplicationInsights() {
     if (!this.props.commonApplicationInsights || !this.props.commonApplicationInsights.resourceName) return
 
@@ -40,6 +60,9 @@ export class SiteWithWebApp extends CommonAzureConstruct {
     })
   }
 
+  /**
+   * @summary Method to create the App Service Plan for the web app
+   */
   protected createSiteAppServicePlan() {
     this.site.appServicePlan = this.appServiceManager.createAppServicePlan(`${this.id}-app-service-plan`, this, {
       ...this.props.site.appServicePlan,
@@ -48,6 +71,9 @@ export class SiteWithWebApp extends CommonAzureConstruct {
     })
   }
 
+  /**
+   * @summary Method to create the storage account for the web app
+   */
   protected createSiteStorageAccount() {
     this.site.storageAccount = this.storageManager.createStorageAccount(`${this.id}-storage-account`, this, {
       ...this.props.site.storageAccount,
@@ -56,6 +82,9 @@ export class SiteWithWebApp extends CommonAzureConstruct {
     })
   }
 
+  /**
+   * @summary Method to create the storage container for web app deployment
+   */
   protected createSiteStorageContainer() {
     this.site.storageContainer = this.storageManager.createStorageContainer(
       `${this.id}-storage-deployment-container`,
@@ -68,6 +97,9 @@ export class SiteWithWebApp extends CommonAzureConstruct {
     )
   }
 
+  /**
+   * @summary Method to create the code package archive for deployment
+   */
   protected createCodePackage() {
     const currentDirectory = path.resolve()
 
@@ -95,6 +127,9 @@ export class SiteWithWebApp extends CommonAzureConstruct {
     })
   }
 
+  /**
+   * @summary Method to create the web app site configuration with environment variables
+   */
   protected createWebAppSiteConfig() {
     this.site.environmentVariables = {
       APPINSIGHTS_INSTRUMENTATIONKEY: this.applicationInsights.instrumentationKey,
@@ -108,6 +143,9 @@ export class SiteWithWebApp extends CommonAzureConstruct {
     }
   }
 
+  /**
+   * @summary Method to create the Azure Linux Web App
+   */
   protected createWebApp(resourceOptions?: ResourceOptions) {
     this.site.webApp = this.appServiceManager.createLinuxWebApp(
       `${this.id}-web-app`,
@@ -125,6 +163,9 @@ export class SiteWithWebApp extends CommonAzureConstruct {
     )
   }
 
+  /**
+   * @summary Method to create the Monitor diagnostic log settings for the web app
+   */
   protected createDiagnosticLog() {
     this.monitorManager.createMonitorDiagnosticSettings(this.id, this, {
       name: `${this.props.site.webApp.name}-webapp`,
