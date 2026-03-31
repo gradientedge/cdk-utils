@@ -9,6 +9,8 @@ import {
   FunctionProps,
 } from '../../../lib/azure/index.js'
 
+const capturedResources: Record<string, pulumi.runtime.MockResourceArgs> = {}
+
 interface TestAzureStackProps extends CommonAzureStackProps {
   testFunctionApp: FunctionAppProps
   testFunction: FunctionProps
@@ -90,6 +92,8 @@ pulumi.runtime.setMocks({
   newResource: (args: pulumi.runtime.MockResourceArgs) => {
     let name
 
+    capturedResources[args.name] = args
+
     // Return different names based on resource type
     if (args.type === 'azure-native:web:WebApp') {
       name = args.inputs.name
@@ -170,7 +174,7 @@ describe('TestAzureFunctionConstruct', () => {
 })
 
 describe('TestAzureFunctionConstruct', () => {
-  test('provisions function as expected', () => {
+  test('provisions flex consumption function app as expected', () => {
     pulumi
       .all([
         stack.construct.functionAppFlexConsumption.id,
@@ -189,5 +193,39 @@ describe('TestAzureFunctionConstruct', () => {
         expect(location).toEqual('eastus')
         expect(kind).toEqual('functionapp')
       })
+  })
+})
+
+describe('TestAzureFunctionConstruct', () => {
+  test('flex consumption function app has correct functionAppConfig', () => {
+    pulumi.all([stack.construct.functionAppFlexConsumption.functionAppConfig]).apply(([functionAppConfig]) => {
+      expect(functionAppConfig).toBeDefined()
+      expect(functionAppConfig?.runtime?.name).toEqual('node')
+      expect(functionAppConfig?.runtime?.version).toEqual('22')
+      expect(functionAppConfig?.scaleAndConcurrency?.instanceMemoryMB).toEqual(2048)
+      expect(functionAppConfig?.scaleAndConcurrency?.maximumInstanceCount).toEqual(100)
+    })
+  })
+
+  test('flex consumption deployment has correct settings', () => {
+    const deploymentArgs = capturedResources['test-function-app-flex-consumption-dev-deployment']
+    expect(deploymentArgs).toBeDefined()
+    expect(deploymentArgs.type).toEqual('azure-native:resources:Deployment')
+
+    const template = deploymentArgs.inputs.properties.template
+    expect(template.$schema).toEqual('https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#')
+    expect(template.contentVersion).toEqual('1.0.0.0')
+
+    const resource = template.resources[0]
+    expect(resource.type).toEqual('Microsoft.Web/sites')
+    expect(resource.apiVersion).toEqual('2024-04-01')
+    expect(resource.location).toEqual('eastus')
+
+    const config = resource.properties.functionAppConfig
+    expect(config.runtime.name).toEqual('node')
+    expect(config.runtime.version).toEqual('22')
+    expect(config.scaleAndConcurrency.instanceMemoryMB).toEqual(4096)
+    expect(config.scaleAndConcurrency.maximumInstanceCount).toEqual(40)
+    expect(config.siteUpdateStrategy.type).toEqual('RollingUpdate')
   })
 })
