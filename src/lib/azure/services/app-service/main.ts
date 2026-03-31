@@ -4,6 +4,7 @@ import {
   SupportedTlsVersions,
   WebApp,
 } from '@pulumi/azure-native/web/index.js'
+import { ResourceOptions } from '@pulumi/pulumi'
 import { CommonAzureConstruct } from '../../common/index.js'
 import { LinuxWebAppProps, ServicePlanProps } from './types.js'
 
@@ -30,9 +31,15 @@ export class AzureAppServiceManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props app service plan properties
+   * @param resourceOptions Optional settings to control resource behaviour
    * @see [Pulumi Azure Native App Service Plan]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/web/appserviceplan/}
    */
-  public createAppServicePlan(id: string, scope: CommonAzureConstruct, props: ServicePlanProps) {
+  public createAppServicePlan(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: ServicePlanProps,
+    resourceOptions?: ResourceOptions
+  ) {
     if (!props) throw `Props undefined for ${id}`
 
     // Get resource group name
@@ -52,11 +59,17 @@ export class AzureAppServiceManager {
         ),
         resourceGroupName: resourceGroupName,
         location: props.location ?? scope.props.location,
+        sku: props.sku ?? {
+          name: 'FC1',
+          tier: 'FlexConsumption',
+        },
+        reserved: props.reserved ?? true,
+        zoneRedundant: props.zoneRedundant ?? true,
         tags: props.tags ?? {
           environment: scope.props.stage,
         },
       },
-      { parent: scope }
+      { parent: scope, ...resourceOptions }
     )
   }
 
@@ -65,9 +78,15 @@ export class AzureAppServiceManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props web app properties
+   * @param resourceOptions Optional settings to control resource behaviour
    * @see [Pulumi Azure Native Web App]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/web/webapp/}
    */
-  public createLinuxWebApp(id: string, scope: CommonAzureConstruct, props: LinuxWebAppProps) {
+  public createLinuxWebApp(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: LinuxWebAppProps,
+    resourceOptions?: ResourceOptions
+  ) {
     if (!props) throw `Props undefined for ${id}`
 
     // Get resource group name
@@ -98,7 +117,7 @@ export class AzureAppServiceManager {
           environment: scope.props.stage,
         },
       },
-      { parent: scope }
+      { parent: scope, ...resourceOptions }
     )
   }
 }

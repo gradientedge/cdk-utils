@@ -1,11 +1,19 @@
+import { GetComponentOutputArgs } from '@pulumi/azure-native/applicationinsights/index.js'
+import { GetWorkspaceOutputArgs } from '@pulumi/azure-native/operationalinsights/index.js'
 import { BaseProps } from '../../common/index.js'
-import { AzureRemoteBackend } from './constants.js'
+import { AzureLocation, AzureRemoteBackend } from './constants.js'
+
+export interface AzureLocationConfig {
+  id: string
+  name: string
+}
 
 /**
  * @interface CommonAzureStackProps
  * @description Common properties for Azure stack configuration using Pulumi
  */
 export interface CommonAzureStackProps extends BaseProps {
+  stackName?: string
   resourceGroupName?: string
   remoteBackend?: AzureRemoteBackendProps
   globalPrefix?: string
@@ -13,8 +21,12 @@ export interface CommonAzureStackProps extends BaseProps {
   resourcePrefix?: string
   resourceSuffix?: string
   resourceNameOptions?: { [key: string]: AzureResourceNameFormatterProps }
-  location?: string
+  location: AzureLocation
+  locationConfig?: Record<AzureLocation, AzureLocationConfig>
+  locales?: string[]
   defaultTags?: { [key: string]: string }
+  commonLogAnalyticsWorkspace?: GetWorkspaceOutputArgs
+  commonApplicationInsights?: GetComponentOutputArgs
 
   // Azure Provider properties for Pulumi
   subscriptionId?: string

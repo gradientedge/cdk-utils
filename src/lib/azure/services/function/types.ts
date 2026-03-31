@@ -1,3 +1,4 @@
+import { input } from '@pulumi/azure-native/types/index.js'
 import { WebAppArgs } from '@pulumi/azure-native/web/index.js'
 
 export interface FunctionAppProps extends WebAppArgs {
@@ -15,10 +16,8 @@ export interface FunctionProps {
 
 export interface FunctionAppFlexConsumptionProps extends WebAppArgs {
   name?: string
-  runtimeName?: string
-  runtimeVersion?: string
+  runtime?: input.web.FunctionsRuntimeArgs
+  scaleAndConcurrency?: input.web.FunctionsScaleAndConcurrencyArgs
   storageAuthenticationType?: string
   storageContainerType?: string
-  maximumInstanceCount?: number
-  instanceMemoryInMb?: number
 }

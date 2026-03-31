@@ -1,11 +1,21 @@
 import {
   DatabaseAccount,
+  getDatabaseAccountOutput,
+  getSqlResourceSqlRoleDefinitionOutput,
   ResourceIdentityType,
   SqlResourceSqlContainer,
   SqlResourceSqlDatabase,
+  SqlResourceSqlRoleAssignment,
 } from '@pulumi/azure-native/cosmosdb/index.js'
+import { Input, ResourceOptions } from '@pulumi/pulumi'
 import { CommonAzureConstruct } from '../../common/index.js'
-import { CosmosdbAccountProps, CosmosdbSqlContainerProps, CosmosdbSqlDatabaseProps } from './types.js'
+import { CosmosRoleDefinition, CosmosRoleDefinitionId } from './constants.js'
+import {
+  CosmosdbAccountProps,
+  CosmosdbSqlContainerProps,
+  CosmosdbSqlDatabaseProps,
+  SqlResourceSqlRoleAssignmentProps,
+} from './types.js'
 
 /**
  * @classdesc Provides operations on Azure CosmosDB using Pulumi
@@ -30,9 +40,15 @@ export class AzureCosmosDbManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props cosmosdb account properties
-   * @see [Pulumi Azure Native CosmosDB Account]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/documentdb/databaseaccount/}
+   * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native CosmosDB Database Account]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/documentdb/databaseaccount/}
    */
-  public createCosmosDbAccount(id: string, scope: CommonAzureConstruct, props: CosmosdbAccountProps) {
+  public createCosmosDbAccount(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: CosmosdbAccountProps,
+    resourceOptions?: ResourceOptions
+  ) {
     if (!props) throw `Props undefined for ${id}`
 
     // Get resource group name
@@ -59,7 +75,7 @@ export class AzureCosmosDbManager {
           type: ResourceIdentityType.SystemAssigned,
         },
       },
-      { parent: scope }
+      { parent: scope, ...resourceOptions }
     )
   }
 
@@ -68,9 +84,15 @@ export class AzureCosmosDbManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props cosmosdb database properties
+   * @param resourceOptions Optional settings to control resource behaviour
    * @see [Pulumi Azure Native CosmosDB SQL Database]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/documentdb/sqlresourcesqldatabase/}
    */
-  public createCosmosDbDatabase(id: string, scope: CommonAzureConstruct, props: CosmosdbSqlDatabaseProps) {
+  public createCosmosDbDatabase(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: CosmosdbSqlDatabaseProps,
+    resourceOptions?: ResourceOptions
+  ) {
     if (!props) throw `Props undefined for ${id}`
 
     // Get resource group name
@@ -90,7 +112,7 @@ export class AzureCosmosDbManager {
         ),
         resourceGroupName: resourceGroupName,
       },
-      { parent: scope }
+      { parent: scope, ...resourceOptions }
     )
   }
 
@@ -99,9 +121,15 @@ export class AzureCosmosDbManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props cosmosdb container properties
+   * @param resourceOptions Optional settings to control resource behaviour
    * @see [Pulumi Azure Native CosmosDB SQL Container]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/documentdb/sqlresourcesqlcontainer/}
    */
-  public createCosmosDbContainer(id: string, scope: CommonAzureConstruct, props: CosmosdbSqlContainerProps) {
+  public createCosmosDbContainer(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: CosmosdbSqlContainerProps,
+    resourceOptions?: ResourceOptions
+  ) {
     if (!props) throw `Props undefined for ${id}`
 
     // Get resource group name
@@ -121,7 +149,129 @@ export class AzureCosmosDbManager {
         ),
         resourceGroupName: resourceGroupName,
       },
-      { parent: scope }
+      { parent: scope, ...resourceOptions }
     )
+  }
+
+  /**
+   * @summary Method to create a sql role assignment
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props sql role assignment properties
+   * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native CosmosDB SQL Role Assignment]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/documentdb/sqlresourcesqlroleassignment/}
+   */
+  public createSqlResourceSqlRoleAssignment(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: SqlResourceSqlRoleAssignmentProps,
+    resourceOptions?: ResourceOptions
+  ) {
+    return new SqlResourceSqlRoleAssignment(`${id}`, props, { parent: scope, ...resourceOptions })
+  }
+
+  /**
+   * @summary Method to resolve an existing cosmosdb account
+   * @param scope scope in which this resource is defined
+   * @param accountName the account name
+   * @param resourceGroupName the resource group name
+   * @param resourceOptions Optional settings to control resource behaviour
+   */
+  public resolveCosmosDbAccount(
+    scope: CommonAzureConstruct,
+    accountName: string,
+    resourceGroupName: string,
+    resourceOptions?: ResourceOptions
+  ) {
+    return getDatabaseAccountOutput({ accountName, resourceGroupName }, { parent: scope, ...resourceOptions })
+  }
+
+  /**
+   * @summary Method to resolve an existing sql role definition
+   * @param scope scope in which this resource is defined
+   * @param accountName the account name
+   * @param resourceGroupName the resource group name
+   * @param roleDefinitionId the role definition id
+   * @param resourceOptions Optional settings to control resource behaviour
+   */
+  public resolveSqlRoleDefinition(
+    scope: CommonAzureConstruct,
+    accountName: Input<string>,
+    resourceGroupName: string,
+    roleDefinitionId: string,
+    resourceOptions?: ResourceOptions
+  ) {
+    return getSqlResourceSqlRoleDefinitionOutput(
+      { accountName, resourceGroupName, roleDefinitionId },
+      { parent: scope, ...resourceOptions }
+    )
+  }
+
+  /**
+   * @summary Method to assign a sql role assignment
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param accountName the account name
+   * @param resourceGroupName the resource group name
+   * @param principalId the principal id to which the role is assigned to
+   * @param roleDefinitions list of role definitions to
+   * @param resourceOptions Optional settings to control resource behaviour
+   */
+  public grantSqlRoleDefinitionToAccount(
+    id: string,
+    scope: CommonAzureConstruct,
+    accountName: string,
+    resourceGroupName: string,
+    principalId: Input<string>,
+    roleDefinitions: CosmosRoleDefinition[],
+    resourceOptions?: ResourceOptions
+  ) {
+    const cosmosDbAccount = this.resolveCosmosDbAccount(scope, accountName, resourceGroupName, resourceOptions)
+
+    if (roleDefinitions.includes(CosmosRoleDefinition.CONTRIBUTOR)) {
+      const cosmosdbSqlRoleDefinitionContributor = this.resolveSqlRoleDefinition(
+        scope,
+        cosmosDbAccount.name,
+        resourceGroupName,
+        CosmosRoleDefinitionId.CONTRIBUTOR,
+        resourceOptions
+      )
+
+      this.createSqlResourceSqlRoleAssignment(
+        `${id}-cdb-ra-contributor`,
+        scope,
+        {
+          accountName: cosmosDbAccount.name,
+          resourceGroupName: resourceGroupName,
+          roleDefinitionId: cosmosdbSqlRoleDefinitionContributor.id,
+          principalId,
+          scope: cosmosDbAccount.id,
+        },
+        resourceOptions
+      )
+    }
+
+    if (roleDefinitions.includes(CosmosRoleDefinition.READER)) {
+      const cosmosdbSqlRoleDefinitionReader = this.resolveSqlRoleDefinition(
+        scope,
+        cosmosDbAccount.name,
+        resourceGroupName,
+        CosmosRoleDefinitionId.READER,
+        resourceOptions
+      )
+
+      this.createSqlResourceSqlRoleAssignment(
+        `${id}-cdb-ra-reader`,
+        scope,
+        {
+          accountName: cosmosDbAccount.name,
+          resourceGroupName: resourceGroupName,
+          roleDefinitionId: cosmosdbSqlRoleDefinitionReader.id,
+          principalId,
+          scope: cosmosDbAccount.id,
+        },
+        resourceOptions
+      )
+    }
   }
 }

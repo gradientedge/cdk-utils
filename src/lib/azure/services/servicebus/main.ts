@@ -7,13 +7,14 @@ import {
   Subscription,
   Topic,
 } from '@pulumi/azure-native/servicebus/index.js'
+import { ResourceOptions } from '@pulumi/pulumi'
 import { CommonAzureConstruct } from '../../common/index.js'
 import {
   ResolveServicebusQueueProps,
-  ServicebusNamespaceProps,
-  ServicebusQueueProps,
-  ServicebusSubscriptionProps,
-  ServicebusTopicProps,
+  ServiceBusNamespaceProps,
+  ServiceBusQueueProps,
+  ServiceBusSubscriptionProps,
+  ServiceBusTopicProps,
 } from './types.js'
 
 /**
@@ -33,15 +34,21 @@ import {
  * }
  * ```
  */
-export class AzureServicebusManager {
+export class AzureServiceBusManager {
   /**
-   * @summary Method to create a new servicebus namespace
+   * @summary Method to create a new service bus namespace
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props servicebus namespace properties
-   * @see [Pulumi Azure Native Service Bus Namespace]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/servicebus/namespace/}
+   * @param props service bus namespace properties
+   * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native Service Bus Namespace]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/service bus/namespace/}
    */
-  public createServicebusNamespace(id: string, scope: CommonAzureConstruct, props: ServicebusNamespaceProps) {
+  public createServiceBusNamespace(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: ServiceBusNamespaceProps,
+    resourceOptions?: ResourceOptions
+  ) {
     if (!props) throw `Props undefined for ${id}`
 
     // Get resource group name
@@ -71,18 +78,24 @@ export class AzureServicebusManager {
           environment: scope.props.stage,
         },
       },
-      { parent: scope }
+      { parent: scope, ...resourceOptions }
     )
   }
 
   /**
-   * @summary Method to create a new servicebus topic
+   * @summary Method to create a new service bus topic
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props servicebus topic properties
-   * @see [Pulumi Azure Native Service Bus Topic]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/servicebus/topic/}
+   * @param props service bus topic properties
+   * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native Service Bus Topic]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/service bus/topic/}
    */
-  public createServicebusTopic(id: string, scope: CommonAzureConstruct, props: ServicebusTopicProps) {
+  public createServiceBusTopic(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: ServiceBusTopicProps,
+    resourceOptions?: ResourceOptions
+  ) {
     if (!props) throw `Props undefined for ${id}`
 
     return new Topic(
@@ -96,18 +109,24 @@ export class AzureServicebusManager {
         namespaceName: props.namespaceName,
         resourceGroupName: props.resourceGroupName,
       },
-      { parent: scope }
+      { parent: scope, ...resourceOptions }
     )
   }
 
   /**
-   * @summary Method to create a new servicebus queue
+   * @summary Method to create a new service bus queue
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props servicebus queue properties
-   * @see [Pulumi Azure Native Service Bus Queue]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/servicebus/queue/}
+   * @param props service bus queue properties
+   * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native Service Bus Queue]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/service bus/queue/}
    */
-  public createServicebusQueue(id: string, scope: CommonAzureConstruct, props: ServicebusQueueProps) {
+  public createServiceBusQueue(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: ServiceBusQueueProps,
+    resourceOptions?: ResourceOptions
+  ) {
     if (!props) throw `Props undefined for ${id}`
 
     return new Queue(
@@ -125,18 +144,24 @@ export class AzureServicebusManager {
         deadLetteringOnMessageExpiration: props.deadLetteringOnMessageExpiration ?? true,
         defaultMessageTimeToLive: (props as any).defaultMessageTtl ?? 'P2D',
       },
-      { parent: scope }
+      { parent: scope, ...resourceOptions }
     )
   }
 
   /**
-   * @summary Method to create a new servicebus subscription
+   * @summary Method to create a new service bus subscription
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props servicebus subscription properties
-   * @see [Pulumi Azure Native Service Bus Subscription]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/servicebus/subscription/}
+   * @param props service bus subscription properties
+   * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native Service Bus Subscription]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/service bus/subscription/}
    */
-  public createServicebusSubscription(id: string, scope: CommonAzureConstruct, props: ServicebusSubscriptionProps) {
+  public createServiceBusSubscription(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: ServiceBusSubscriptionProps,
+    resourceOptions?: ResourceOptions
+  ) {
     if (!props) throw `Props undefined for ${id}`
 
     return new Subscription(
@@ -149,18 +174,24 @@ export class AzureServicebusManager {
         ),
         maxDeliveryCount: props.maxDeliveryCount ?? 1,
       },
-      { parent: scope }
+      { parent: scope, ...resourceOptions }
     )
   }
 
   /**
-   * @summary Method to resolve an existing servicebus queue
+   * @summary Method to resolve an existing service bus queue
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props servicebus queue properties for lookup
-   * @see [Pulumi Azure Native Service Bus Queue Lookup]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/servicebus/queue/}
+   * @param props service bus queue properties for lookup
+   * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native Service Bus Queue Lookup]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/service bus/queue/}
    */
-  public resolveServicebusQueue(id: string, scope: CommonAzureConstruct, props: ResolveServicebusQueueProps) {
+  public resolveServiceBusQueue(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: ResolveServicebusQueueProps,
+    resourceOptions?: ResourceOptions
+  ) {
     if (!props) throw `Props undefined for ${id}`
 
     return getQueueOutput(
@@ -172,7 +203,7 @@ export class AzureServicebusManager {
         namespaceName: props.namespaceName,
         resourceGroupName: props.resourceGroupName,
       },
-      { parent: scope }
+      { parent: scope, ...resourceOptions }
     )
   }
 }

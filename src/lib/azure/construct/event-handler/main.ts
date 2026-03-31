@@ -1,0 +1,183 @@
+import { Provider } from '@pulumi/azure-native'
+import { getTopicOutput, GetTopicResult, Topic } from '@pulumi/azure-native/eventgrid/index.js'
+import { Resource } from '@pulumi/azure-native/resources/index.js'
+import { Output } from '@pulumi/pulumi'
+import { AzureFunctionApp } from '../function-app/index.js'
+import { AzureEventHandlerProps, EventHandlerEventGridSubscription, EventHandlerServiceBus } from './types.js'
+
+export class AzureEventHandler extends AzureFunctionApp {
+  props: AzureEventHandlerProps
+  eventGridEventSubscription: EventHandlerEventGridSubscription
+  eventGridTopic: Topic | Output<GetTopicResult>
+  serviceBus: EventHandlerServiceBus
+
+  constructor(id: string, props: AzureEventHandlerProps) {
+    super(id, props)
+    this.props = props
+    this.id = id
+  }
+
+  public initResources() {
+    this.createResourceGroup()
+    this.resolveCommonLogAnalyticsWorkspace()
+    this.resolveApplicationInsights()
+    this.createEventGridSubscriptionDlqStorageAccount()
+    this.createEventGridSubscriptionDlqStorageContainer()
+    this.createServiceBusNamespace()
+    this.createServiceBusQueue()
+    this.createEventGrid()
+    this.createEventGridEventSubscription()
+    this.createServiceBusDiagnosticLog()
+    this.enableMalwareScanningOnDataStorageAccount()
+    super.initResources()
+  }
+
+  protected createEventGridSubscriptionDlqStorageAccount() {
+    this.eventGridEventSubscription.dlqStorageAccount = this.storageManager.createStorageAccount(
+      `${this.id}-eventgrid-subscription-dlq-storage-account`,
+      this,
+      {
+        ...this.props.eventGridSubscription.dlqStorageAccount,
+        resourceGroupName: this.resourceGroup.name,
+        location: this.resourceGroup.location,
+      }
+    )
+  }
+
+  protected createEventGridSubscriptionDlqStorageContainer() {
+    this.eventGridEventSubscription.dlqStorageContainer = this.storageManager.createStorageContainer(
+      `${this.id}-eventgrid-subscription-dlq-container`,
+      this,
+      {
+        ...this.props.eventGridSubscription.dlqStorageContainer,
+        accountName: this.eventGridEventSubscription.dlqStorageAccount.name,
+        containerName: 'eventgrid-subscription-dlq-container',
+        resourceGroupName: this.resourceGroup.name,
+      }
+    )
+  }
+
+  protected createServiceBusNamespace() {
+    this.serviceBus.namespace = this.serviceBusManager.createServiceBusNamespace(
+      this.id,
+      this,
+      {
+        ...this.props.serviceBus.namespace,
+        namespaceName: this.props.serviceBus.namespace.namespaceName ?? this.id,
+        resourceGroupName: this.resourceGroup.name,
+      },
+      { ignoreChanges: ['location'] }
+    )
+
+    this.registerOutputs({
+      serviceBusNamespaceId: this.serviceBus.namespace.id,
+    })
+  }
+
+  protected createServiceBusQueue() {
+    this.serviceBus.queue = this.serviceBusManager.createServiceBusQueue(this.id, this, {
+      ...this.props.serviceBus.queue,
+      queueName: this.props.serviceBus.queue.queueName ?? this.id,
+      namespaceName: this.serviceBus.namespace.name,
+    })
+
+    this.registerOutputs({
+      serviceBusQueueId: this.serviceBus.queue.id,
+      serviceBusQueueName: this.serviceBus.queue.name,
+    })
+  }
+
+  protected createEventGrid() {
+    if (!this.props.eventGridTopic.useExistingTopic) {
+      this.eventGridTopic = this.eventgridManager.createEventgridTopic(
+        this.id,
+        this,
+        {
+          ...this.props.eventGridTopic,
+          topicName: this.props.eventGridTopic.topicName ?? this.id,
+          location: this.resourceGroup.location,
+          resourceGroupName: this.resourceGroup.name,
+        },
+        { protect: true, ignoreChanges: ['location'] }
+      )
+      return
+    }
+
+    const existingSubscriptionId = this.props.eventGridTopic.existingSubscriptionId
+    const existingTopicName = this.props.eventGridTopic.existingTopicName
+    const existingResourceGroupName = this.props.eventGridTopic.existingResourceGroupName
+
+    let provider: Provider | undefined
+    if (existingSubscriptionId) {
+      provider = new Provider(`${this.id}-${existingSubscriptionId}`, {
+        subscriptionId: existingSubscriptionId,
+      })
+    }
+    if (existingResourceGroupName && existingTopicName) {
+      this.eventGridTopic = getTopicOutput(
+        {
+          topicName: existingTopicName,
+          resourceGroupName: existingResourceGroupName,
+        },
+        { provider }
+      )
+    }
+  }
+
+  protected createEventGridEventSubscription() {
+    this.eventGridEventSubscription.eventSubscription = this.eventgridManager.createEventgridSubscription(
+      this.id,
+      this,
+      {
+        ...this.props.eventGridEventSubscription,
+        eventSubscriptionName: this.props.eventGridEventSubscription.eventSubscriptionName ?? this.id,
+        scope: this.eventGridTopic.id,
+        destination: {
+          endpointType: 'ServiceBusQueue',
+          resourceId: this.serviceBus.queue.id,
+        },
+        deadLetterDestination: {
+          blobContainerName: this.eventGridEventSubscription.dlqStorageContainer.name,
+          endpointType: 'StorageBlob',
+          resourceId: this.eventGridEventSubscription.dlqStorageAccount.id,
+        },
+      },
+      { dependsOn: [this.eventGridTopic as unknown as Resource] }
+    )
+  }
+
+  protected createServiceBusDiagnosticLog() {
+    this.monitorManager.createMonitorDiagnosticSettings(this.id, this, {
+      name: `${this.props.stackName}-servicebus`,
+      resourceUri: this.serviceBus.namespace.id,
+      workspaceId: this.commonLogAnalyticsWorkspace.id,
+      logAnalyticsDestinationType: 'Dedicated',
+      logs: [
+        {
+          categoryGroup: 'allLogs',
+          enabled: true,
+        },
+      ],
+      metrics: [
+        {
+          category: 'AllMetrics',
+          enabled: true,
+        },
+      ],
+    })
+  }
+
+  protected enableMalwareScanningOnDataStorageAccount() {
+    if (!this.props.defender) return
+
+    this.securityCentermanager.createDefenderForStorage(`${this.id}-data-storage-defender`, this, {
+      ...this.props.defender,
+      resourceId: this.dataStorageAccount.id,
+      properties: {
+        malwareScanning: {
+          scanResultsEventGridTopicResourceId: this.eventGridTopic.id,
+        },
+      },
+    })
+  }
+}
