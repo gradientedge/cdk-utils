@@ -1,14 +1,9 @@
 import { Redis } from '@pulumi/azure-native/redis/index.js'
 import * as pulumi from '@pulumi/pulumi'
-import {
-  CommonAzureConstruct,
-  CommonAzureStack,
-  CommonAzureStackProps,
-  ManagedRedisProps,
-} from '../../../lib/azure/index.js'
+import { CommonAzureConstruct, CommonAzureStack, CommonAzureStackProps, RedisProps } from '../../../lib/azure/index.js'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
-  testRedisCache: ManagedRedisProps
+  testRedisCache: RedisProps
   testAttribute?: string
 }
 
@@ -63,6 +58,12 @@ class TestCommonConstruct extends CommonAzureConstruct {
     )
   }
 }
+
+pulumi.runtime.setAllConfig({
+  'project:stage': testStackProps.stage,
+  'project:stageContextPath': testStackProps.stageContextPath,
+  'project:extraContexts': JSON.stringify(testStackProps.extraContexts),
+})
 
 pulumi.runtime.setMocks({
   newResource: (args: pulumi.runtime.MockResourceArgs) => {

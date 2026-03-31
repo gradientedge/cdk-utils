@@ -1,4 +1,5 @@
-import { ResourceGroup } from '@pulumi/azure-native/resources/index.js'
+import { getResourceGroupOutput, ResourceGroup } from '@pulumi/azure-native/resources/index.js'
+import { ResourceOptions } from '@pulumi/pulumi'
 import { CommonAzureConstruct } from '../../common/index.js'
 import { ResourceGroupProps } from './types.js'
 
@@ -25,9 +26,15 @@ export class AzureResourceGroupManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props resource group properties
+   * @param resourceOptions Optional settings to control resource behaviour
    * @see [Pulumi Azure Native Resource Group]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/resources/resourcegroup/}
    */
-  public createResourceGroup(id: string, scope: CommonAzureConstruct, props: ResourceGroupProps) {
+  public createResourceGroup(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: ResourceGroupProps,
+    resourceOptions?: ResourceOptions
+  ) {
     if (!props) throw `Props undefined for ${id}`
 
     return new ResourceGroup(
@@ -43,7 +50,31 @@ export class AzureResourceGroupManager {
           environment: scope.props.stage,
         },
       },
-      { parent: scope }
+      { parent: scope, ...resourceOptions }
+    )
+  }
+
+  /**
+   * @summary Method to resolve an existing resource group
+   * @param scope scope in which this resource is defined
+   * @param resourceGroupName the resource group name
+   * @param resourceOptions Optional settings to control resource behaviour
+   */
+  public resolveResourceGroup(
+    scope: CommonAzureConstruct,
+    resourceGroupName: string,
+    resourceOptions?: ResourceOptions
+  ) {
+    if (!resourceGroupName) throw `Resource Group Name undefined`
+
+    return getResourceGroupOutput(
+      {
+        resourceGroupName: scope.resourceNameFormatter.format(
+          resourceGroupName?.toString(),
+          scope.props.resourceNameOptions?.resourceGroup
+        ),
+      },
+      { parent: scope, ...resourceOptions }
     )
   }
 }

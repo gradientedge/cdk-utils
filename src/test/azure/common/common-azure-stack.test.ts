@@ -35,6 +35,12 @@ class TestAzureConstruct extends CommonAzureConstruct {
   }
 }
 
+pulumi.runtime.setAllConfig({
+  'project:stage': testStackProps.stage,
+  'project:stageContextPath': testStackProps.stageContextPath,
+  'project:extraContexts': JSON.stringify(testStackProps.extraContexts),
+})
+
 pulumi.runtime.setMocks({
   newResource: (args: pulumi.runtime.MockResourceArgs) => {
     return {
@@ -70,16 +76,6 @@ describe('TestAzureCommonStack - Context Loading', () => {
     expect(stack.props).toBeDefined()
   })
 
-  test('throws error when extra context file does not exist', () => {
-    const propsWithInvalidContext = {
-      ...testStackProps,
-      extraContexts: ['src/test/azure/common/cdkConfig/nonexistent.json'],
-    }
-    expect(() => {
-      new TestAzureStack('test-stack-invalid-context', propsWithInvalidContext)
-    }).toThrow(/Extra context properties unavailable/)
-  })
-
   test('handles missing stage context file gracefully', () => {
     const propsWithMissingStageContext = {
       ...testStackProps,
@@ -95,9 +91,6 @@ describe('TestAzureCommonStack - Context Loading', () => {
     expect(stack.props).toHaveProperty('domainName')
     expect(stack.props).toHaveProperty('stage')
     expect(stack.props).toHaveProperty('resourceGroupName')
-    expect(stack.props).toHaveProperty('location')
-    expect(stack.props).toHaveProperty('globalPrefix')
-    expect(stack.props).toHaveProperty('resourcePrefix')
   })
 
   test('fullyQualifiedDomain returns correct domain without subdomain', () => {

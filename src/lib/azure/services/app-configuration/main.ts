@@ -1,4 +1,5 @@
 import { ConfigurationStore, IdentityType } from '@pulumi/azure-native/appconfiguration/index.js'
+import { ResourceOptions } from '@pulumi/pulumi'
 import { CommonAzureConstruct } from '../../common/index.js'
 import { AppConfigurationProps } from './types.js'
 
@@ -25,9 +26,15 @@ export class AzureAppConfigurationManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props app configuration properties
+   * @param resourceOptions Optional settings to control resource behaviour
    * @see [Pulumi Azure Native App Configuration]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/appconfiguration/configurationstore/}
    */
-  public createConfigurationStore(id: string, scope: CommonAzureConstruct, props: AppConfigurationProps) {
+  public createConfigurationStore(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: AppConfigurationProps,
+    resourceOptions?: ResourceOptions
+  ) {
     if (!props) throw `Props undefined for ${id}`
 
     // Get resource group name
@@ -57,7 +64,27 @@ export class AzureAppConfigurationManager {
           environment: scope.props.stage,
         },
       },
-      { parent: scope }
+      { parent: scope, ...resourceOptions }
+    )
+  }
+
+  /**
+   * @summary Determine if the config object has cosmosdb dependencies
+   * @param obj the config object value
+   */
+  static hasCosmosDependencies = (obj: any): boolean => {
+    if (!obj || typeof obj !== 'object') return false
+    if ('databaseName' in obj || 'tableName' in obj) return true
+    return Object.values(obj).some(val => this.hasCosmosDependencies(val))
+  }
+
+  /**
+   * @summary Determine if the config object has eventgrid target dependencies
+   * @param obj the config object value
+   */
+  static hasEventGridTargets(obj: any): boolean {
+    return (
+      obj && typeof obj === 'object' && ('eventGridTargets' in obj || Object.values(obj).some(this.hasEventGridTargets))
     )
   }
 }

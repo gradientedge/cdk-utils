@@ -46,37 +46,13 @@ export class CommonAzureStack extends ComponentResource {
    * @returns The stack properties
    */
   protected determineConstructProps(props: CommonAzureStackProps) {
-    let projectProps: CommonAzureStackProps = props
-    if (!projectProps) {
-      const projectPropsPath = path.join(appRoot.path, 'pulumi.json')
-      if (!fs.existsSync(projectPropsPath)) throw `Context properties unavailable in path:${projectPropsPath}`
-
-      const projectPropsBuffer = fs.readFileSync(projectPropsPath)
-      projectProps = JSON.parse(projectPropsBuffer.toString('utf-8'))
-    }
-
     return {
-      domainName: projectProps.domainName,
-      extraContexts: projectProps.extraContexts,
-      location: projectProps.location,
-      name: projectProps.resourceGroupName ?? projectProps.name,
-      resourceGroupName: projectProps.resourceGroupName,
-      globalPrefix: projectProps.globalPrefix,
-      globalSuffix: projectProps.globalSuffix,
-      resourceNameOptions: projectProps.resourceNameOptions,
-      resourcePrefix: projectProps.resourcePrefix,
-      resourceSuffix: projectProps.resourceSuffix,
-      skipStageForARecords: projectProps.skipStageForARecords,
-      stage: projectProps.stage,
-      stageContextPath: projectProps.stageContextPath,
-      subDomain: projectProps.subDomain,
-      subscriptionId: projectProps.subscriptionId,
-      tenantId: projectProps.tenantId,
-      clientId: projectProps.clientId,
-      clientSecret: projectProps.clientSecret,
-      defaultTags: projectProps.defaultTags,
-      ...this.determineExtraContexts(props),
-      ...this.determineStageContexts(props),
+      ...props,
+      extraContexts: this.config.getObject('extraContexts'),
+      stage: this.config.require('stage'),
+      stageContextPath: this.config.require('stageContextPath'),
+      ...this.determineExtraContexts(),
+      ...this.determineStageContexts(),
     }
   }
 
@@ -85,14 +61,16 @@ export class CommonAzureStack extends ComponentResource {
    * - Sets the properties from the extra contexts
    * - Primary use is to have layered config in separate files to enable easier maintenance and readability
    */
-  protected determineExtraContexts(props: CommonAzureStackProps) {
-    if (!props.extraContexts) {
-      if (props.debug) console.debug(`No additional contexts provided. Using default context properties`)
+  protected determineExtraContexts() {
+    const extraContexts = this.config.getObject('extraContexts')
+    const debug = this.config.getBoolean('debug')
+    if (!extraContexts) {
+      if (debug) console.debug(`No additional contexts provided. Using default context properties`)
       return {}
     }
 
     let extraContextProps: Record<string, any> = {}
-    _.forEach(props.extraContexts, (context: string) => {
+    _.forEach(extraContexts, (context: string) => {
       const extraContextPath = path.join(appRoot.path, context)
 
       /* scenario where extra context is configured but absent in file system */
@@ -100,7 +78,7 @@ export class CommonAzureStack extends ComponentResource {
 
       /* read the extra properties */
       const extraContextPropsBuffer = fs.readFileSync(extraContextPath)
-      if (props.debug) console.debug(`Adding additional contexts provided in ${extraContextPath}`)
+      if (debug) console.debug(`Adding additional contexts provided in ${extraContextPath}`)
 
       /* parse as JSON properties */
       extraContextProps = {
@@ -116,23 +94,26 @@ export class CommonAzureStack extends ComponentResource {
    * - Sets the properties from the extra stage contexts
    * - Primary use is to have layered config for each environment which is injected into the context
    */
-  protected determineStageContexts(props: CommonAzureStackProps) {
-    const stageContextFilePath = path.join(appRoot.path, props.stageContextPath ?? 'env', `${props.stage}.json`)
+  protected determineStageContexts() {
+    const debug = this.config.getBoolean('debug')
+    const stage = this.config.require('stage')
+    const stageContextPath = this.config.get('stageContextPath')
+    const stageContextFilePath = path.join(appRoot.path, stageContextPath ?? 'env', `${stage}.json`)
 
-    if (isDevStage(props.stage)) {
-      if (props.debug) console.debug(`Development stage. Using default stage context properties`)
+    if (isDevStage(stage)) {
+      if (debug) console.debug(`Development stage. Using default stage context properties`)
     }
 
     /* alert default context usage when extra stage config is missing */
     if (!fs.existsSync(stageContextFilePath)) {
-      if (props.debug) console.debug(`Stage specific context properties unavailable in path:${stageContextFilePath}`)
-      if (props.debug) console.debug(`Using default stage context properties for ${props.stage} stage`)
+      if (debug) console.debug(`Stage specific context properties unavailable in path:${stageContextFilePath}`)
+      if (debug) console.debug(`Using default stage context properties for ${stage} stage`)
       return {}
     }
 
     /* read the extra properties */
     const stageContextPropsBuffer = fs.readFileSync(stageContextFilePath)
-    if (props.debug) console.debug(`Adding additional stage contexts provided in ${stageContextFilePath}`)
+    if (debug) console.debug(`Adding additional stage contexts provided in ${stageContextFilePath}`)
 
     /* parse as JSON properties */
     return JSON.parse(stageContextPropsBuffer.toString('utf-8'))

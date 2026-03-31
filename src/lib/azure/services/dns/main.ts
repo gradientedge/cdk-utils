@@ -1,4 +1,5 @@
 import { RecordSet, Zone } from '@pulumi/azure-native/dns/index.js'
+import { ResourceOptions } from '@pulumi/pulumi'
 import { CommonAzureConstruct } from '../../common/index.js'
 import { DnsARecordProps, DnsCnameRecordProps, DnsTxtRecordProps, DnsZoneProps } from './types.js'
 
@@ -25,9 +26,15 @@ export class AzureDnsManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props dns zone properties
+   * @param resourceOptions Optional settings to control resource behaviour
    * @see [Pulumi Azure Native DNS Zone]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/network/zone/}
    */
-  public createDnsZone(id: string, scope: CommonAzureConstruct, props: DnsZoneProps) {
+  public createDnsZone(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: DnsZoneProps,
+    resourceOptions?: ResourceOptions
+  ) {
     if (!props) throw `Props undefined for ${id}`
 
     // Get resource group name
@@ -51,7 +58,7 @@ export class AzureDnsManager {
           environment: scope.props.stage,
         },
       },
-      { parent: scope }
+      { parent: scope, ...resourceOptions }
     )
   }
 
@@ -60,9 +67,15 @@ export class AzureDnsManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props dns a record properties
+   * @param resourceOptions Optional settings to control resource behaviour
    * @see [Pulumi Azure Native DNS Record Set]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/network/recordset/}
    */
-  public createDnsARecord(id: string, scope: CommonAzureConstruct, props: DnsARecordProps) {
+  public createDnsARecord(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: DnsARecordProps,
+    resourceOptions?: ResourceOptions
+  ) {
     if (!props) throw `Props undefined for ${id}`
 
     return new RecordSet(
@@ -75,7 +88,7 @@ export class AzureDnsManager {
           environment: scope.props.stage,
         },
       },
-      { parent: scope }
+      { parent: scope, ...resourceOptions }
     )
   }
 
@@ -84,9 +97,15 @@ export class AzureDnsManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props dns cname record properties
+   * @param resourceOptions Optional settings to control resource behaviour
    * @see [Pulumi Azure Native DNS Record Set]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/network/recordset/}
    */
-  public createDnsCnameRecord(id: string, scope: CommonAzureConstruct, props: DnsCnameRecordProps) {
+  public createDnsCnameRecord(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: DnsCnameRecordProps,
+    resourceOptions?: ResourceOptions
+  ) {
     if (!props) throw `Props undefined for ${id}`
 
     return new RecordSet(
@@ -99,7 +118,7 @@ export class AzureDnsManager {
           environment: scope.props.stage,
         },
       },
-      { parent: scope }
+      { parent: scope, ...resourceOptions }
     )
   }
 
@@ -108,9 +127,15 @@ export class AzureDnsManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props dns txt record properties
+   * @param resourceOptions Optional settings to control resource behaviour
    * @see [Pulumi Azure Native DNS Record Set]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/network/recordset/}
    */
-  public createDnsTxtRecord(id: string, scope: CommonAzureConstruct, props: DnsTxtRecordProps) {
+  public createDnsTxtRecord(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: DnsTxtRecordProps,
+    resourceOptions?: ResourceOptions
+  ) {
     if (!props) throw `Props undefined for ${id}`
 
     return new RecordSet(
@@ -123,7 +148,7 @@ export class AzureDnsManager {
           environment: scope.props.stage,
         },
       },
-      { parent: scope }
+      { parent: scope, ...resourceOptions }
     )
   }
 }

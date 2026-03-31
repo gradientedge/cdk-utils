@@ -1,6 +1,8 @@
+import { Resource } from '@pulumi/azure-native/resources/index.js'
 import { ManagedServiceIdentityType, WebApp, WebAppFunction } from '@pulumi/azure-native/web/index.js'
 import { CommonAzureConstruct } from '../../common/index.js'
 import { FunctionAppFlexConsumptionProps, FunctionAppProps, FunctionProps } from './types.js'
+import { ResourceOptions } from '@pulumi/pulumi'
 
 /**
  * @classdesc Provides operations on Azure Functions using Pulumi
@@ -25,9 +27,15 @@ export class AzureFunctionManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props function app properties
+   * @param resourceOptions Optional settings to control resource behaviour
    * @see [Pulumi Azure Native Function App]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/web/webapp/}
    */
-  public createFunctionApp(id: string, scope: CommonAzureConstruct, props: FunctionAppProps) {
+  public createFunctionApp(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: FunctionAppProps,
+    resourceOptions?: ResourceOptions
+  ) {
     if (!props) throw `Props undefined for ${id}`
 
     // Get resource group name
@@ -52,7 +60,7 @@ export class AzureFunctionManager {
           environment: scope.props.stage,
         },
       },
-      { parent: scope }
+      { parent: scope, ...resourceOptions }
     )
   }
 
@@ -61,11 +69,17 @@ export class AzureFunctionManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props function properties
+   * @param resourceOptions Optional settings to control resource behaviour
    * @see [Pulumi Azure Native Function Envelope]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/web/webappfunction/}
    * @note In Pulumi, individual functions are typically deployed via code deployment rather than as separate infrastructure resources.
    * This method is provided for API compatibility but may require additional setup.
    */
-  public createFunction(id: string, scope: CommonAzureConstruct, props: FunctionProps) {
+  public createFunction(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: FunctionProps,
+    resourceOptions?: ResourceOptions
+  ) {
     if (!props) throw `Props undefined for ${id}`
 
     // Get resource group name
@@ -83,7 +97,7 @@ export class AzureFunctionManager {
         isDisabled: props.enabled !== undefined ? !props.enabled : false,
         testData: props.testData,
       } as any,
-      { parent: scope }
+      { parent: scope, ...resourceOptions }
     )
   }
 
@@ -92,12 +106,14 @@ export class AzureFunctionManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props flex consumption function app properties
+   * @param resourceOptions Optional settings to control resource behaviour
    * @see [Pulumi Azure Native Function App (Flex Consumption)]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/web/webapp/}
    */
   public createFunctionAppFlexConsumption(
     id: string,
     scope: CommonAzureConstruct,
-    props: FunctionAppFlexConsumptionProps
+    props: FunctionAppFlexConsumptionProps,
+    resourceOptions?: ResourceOptions
   ) {
     if (!props) throw `Props undefined for ${id}`
 
@@ -127,7 +143,7 @@ export class AzureFunctionManager {
           environment: scope.props.stage,
         },
       },
-      { parent: scope }
+      { parent: scope, ...resourceOptions }
     )
   }
 }

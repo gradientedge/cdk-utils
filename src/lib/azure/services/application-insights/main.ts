@@ -1,6 +1,11 @@
-import { ApplicationType, Component } from '@pulumi/azure-native/applicationinsights/index.js'
+import {
+  ApplicationType,
+  Component,
+  ComponentCurrentBillingFeature,
+} from '@pulumi/azure-native/applicationinsights/index.js'
+import { ResourceOptions } from '@pulumi/pulumi'
 import { CommonAzureConstruct } from '../../common/index.js'
-import { ApplicationInsightsProps } from './types.js'
+import { ApplicationInsightsProps, ComponentCurrentBillingFeatureProps } from './types.js'
 
 /**
  * @classdesc Provides operations on Azure Application Insights using Pulumi
@@ -21,13 +26,19 @@ import { ApplicationInsightsProps } from './types.js'
  */
 export class AzureApplicationInsightsManager {
   /**
-   * @summary Method to create a new application insights
+   * @summary Method to create a new application insights component
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props application insights properties
+   * @param props application insights component properties
+   * @param resourceOptions Optional settings to control resource behaviour
    * @see [Pulumi Azure Native Application Insights Component]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/insights/component/}
    */
-  public createComponent(id: string, scope: CommonAzureConstruct, props: ApplicationInsightsProps) {
+  public createComponent(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: ApplicationInsightsProps,
+    resourceOptions?: ResourceOptions
+  ) {
     if (!props) throw `Props undefined for ${id}`
 
     // Get resource group name
@@ -37,7 +48,7 @@ export class AzureApplicationInsightsManager {
 
     if (!resourceGroupName) throw `Resource group name undefined for ${id}`
 
-    return new Component(
+    const component = new Component(
       `${id}-ai`,
       {
         ...props,
@@ -52,7 +63,34 @@ export class AzureApplicationInsightsManager {
           environment: scope.props.stage,
         },
       },
-      { parent: scope }
+      { parent: scope, ...resourceOptions }
     )
+
+    if (props.billingFeatures) {
+      this.createComponentCurrentBillingFeature(`${id}-billing`, scope, props.billingFeatures, {
+        parent: scope,
+        ...resourceOptions,
+      })
+    }
+
+    return component
+  }
+
+  /**
+   * @summary Method to create a new application insights component billing feature
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props application insights properties component billing featureø
+   * @param resourceOptions Optional settings to control resource behaviour
+   */
+  public createComponentCurrentBillingFeature(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: ComponentCurrentBillingFeatureProps,
+    resourceOptions?: ResourceOptions
+  ) {
+    if (!props) throw `Props undefined for ${id}`
+
+    return new ComponentCurrentBillingFeature(`${id}`, props, { parent: scope, ...resourceOptions })
   }
 }

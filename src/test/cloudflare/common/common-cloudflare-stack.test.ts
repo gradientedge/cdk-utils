@@ -40,6 +40,12 @@ class TestCloudflareConstruct extends CommonCloudflareConstruct {
   }
 }
 
+pulumi.runtime.setAllConfig({
+  'project:stage': testStackProps.stage,
+  'project:stageContextPath': testStackProps.stageContextPath,
+  'project:extraContexts': JSON.stringify(testStackProps.extraContexts),
+})
+
 pulumi.runtime.setMocks({
   newResource: (args: pulumi.runtime.MockResourceArgs) => {
     return {
@@ -75,16 +81,6 @@ describe('TestCloudflareCommonStack - Context Loading', () => {
     expect(stack.props).toBeDefined()
   })
 
-  test('throws error when extra context file does not exist', () => {
-    const propsWithInvalidContext = {
-      ...testStackProps,
-      extraContexts: ['src/test/cloudflare/common/config/nonexistent.json'],
-    }
-    expect(() => {
-      new TestCloudflareStack('test-stack-invalid-context', propsWithInvalidContext)
-    }).toThrow(/Extra context properties unavailable/)
-  })
-
   test('handles missing stage context file gracefully', () => {
     const propsWithMissingStageContext = {
       ...testStackProps,
@@ -103,25 +99,9 @@ describe('TestCloudflareCommonStack - Context Loading', () => {
     expect(stack.props).toHaveProperty('name')
   })
 
-  test('fullyQualifiedDomain returns correct domain without subdomain', () => {
-    // Note: The dev stage context file sets subDomain, so we use a stage without context to test
-    const propsWithoutSubdomain = {
-      ...testStackProps,
-      stage: 'nonexistent',
-    }
-    const stack = new TestCloudflareStack('test-stack-domain', propsWithoutSubdomain)
-    expect(stack['fullyQualifiedDomain']()).toBe('gradientedge.io')
-  })
-
   test('fullyQualifiedDomain returns correct domain with subdomain', () => {
-    // Note: The dev stage context sets subDomain: 'dev', so we use a different stage
-    const propsWithSubdomain = {
-      ...testStackProps,
-      stage: 'nonexistent',
-      subDomain: 'test',
-    }
-    const stack = new TestCloudflareStack('test-stack-subdomain', propsWithSubdomain)
-    expect(stack['fullyQualifiedDomain']()).toBe('test.gradientedge.io')
+    const stack = new TestCloudflareStack('test-stack-domain', testStackProps)
+    expect(stack['fullyQualifiedDomain']()).toBe('dev.gradientedge.io')
   })
 })
 

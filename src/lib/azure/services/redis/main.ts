@@ -1,6 +1,7 @@
 import { Redis, SkuFamily, SkuName } from '@pulumi/azure-native/redis/index.js'
+import { ResourceOptions } from '@pulumi/pulumi'
 import { CommonAzureConstruct } from '../../common/index.js'
-import { ManagedRedisProps } from './types.js'
+import { RedisProps } from './types.js'
 
 /**
  * @classdesc Provides operations on Azure Redis using Pulumi
@@ -25,9 +26,15 @@ export class AzureRedisManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props redis cache properties
+   * @param resourceOptions Optional settings to control resource behaviour
    * @see [Pulumi Azure Native Redis]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/cache/redis/}
    */
-  public createManagedRedis(id: string, scope: CommonAzureConstruct, props: ManagedRedisProps) {
+  public createManagedRedis(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: RedisProps,
+    resourceOptions?: ResourceOptions
+  ) {
     if (!props) throw `Props undefined for ${id}`
 
     // Get resource group name
@@ -53,7 +60,7 @@ export class AzureRedisManager {
           environment: scope.props.stage,
         },
       },
-      { parent: scope }
+      { parent: scope, ...resourceOptions }
     )
   }
 }

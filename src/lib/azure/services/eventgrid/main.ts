@@ -1,13 +1,13 @@
 import {
   EventDeliverySchema,
   EventSubscription,
+  GetSystemTopicResult,
   getTopicOutput,
-  GetTopicResult,
   SystemTopic,
   SystemTopicEventSubscription,
   Topic,
 } from '@pulumi/azure-native/eventgrid/index.js'
-import * as pulumi from '@pulumi/pulumi'
+import { Output, ResourceOptions } from '@pulumi/pulumi'
 import { CommonAzureConstruct } from '../../common/index.js'
 import {
   EventgridEventSubscriptionProps,
@@ -40,9 +40,15 @@ export class AzureEventgridManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props eventgrid topic properties
+   * @param resourceOptions Optional settings to control resource behaviour
    * @see [Pulumi Azure Native Event Grid Topic]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/topic/}
    */
-  public createEventgridTopic(id: string, scope: CommonAzureConstruct, props: EventgridTopicProps) {
+  public createEventgridTopic(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: EventgridTopicProps,
+    resourceOptions?: ResourceOptions
+  ) {
     if (!props) throw `Props undefined for ${id}`
 
     // Get resource group name
@@ -66,7 +72,7 @@ export class AzureEventgridManager {
           environment: scope.props.stage,
         },
       },
-      { parent: scope }
+      { parent: scope, ...resourceOptions }
     )
   }
 
@@ -75,9 +81,15 @@ export class AzureEventgridManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props eventgrid topic properties
+   * @param resourceOptions Optional settings to control resource behaviour
    * @see [Pulumi Azure Native Event Grid Topic Lookup]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/topic/}
    */
-  public resolveEventgridTopic(id: string, scope: CommonAzureConstruct, props: ResolveEventgridTopicProps) {
+  public resolveEventgridTopic(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: ResolveEventgridTopicProps,
+    resourceOptions?: ResourceOptions
+  ) {
     if (!props) throw `Props undefined for ${id}`
 
     return getTopicOutput(
@@ -90,7 +102,7 @@ export class AzureEventgridManager {
           ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
           : props.resourceGroupName,
       },
-      { parent: scope }
+      { parent: scope, ...resourceOptions }
     )
   }
 
@@ -99,9 +111,15 @@ export class AzureEventgridManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props eventgrid subscription properties
+   * @param resourceOptions Optional settings to control resource behaviour
    * @see [Pulumi Azure Native Event Grid Event Subscription]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/eventsubscription/}
    */
-  public createEventgridSubscription(id: string, scope: CommonAzureConstruct, props: EventgridEventSubscriptionProps) {
+  public createEventgridSubscription(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: EventgridEventSubscriptionProps,
+    resourceOptions?: ResourceOptions
+  ) {
     if (!props) throw `Props undefined for ${id}`
 
     return new EventSubscription(
@@ -118,7 +136,7 @@ export class AzureEventgridManager {
           maxDeliveryAttempts: 7,
         },
       },
-      { parent: scope }
+      { parent: scope, ...resourceOptions }
     )
   }
 
@@ -127,12 +145,17 @@ export class AzureEventgridManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props eventgrid system topic properties
+   * @param resourceOptions Optional settings to control resource behaviour
    * @see [Pulumi Azure Native Event Grid System Topic]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/systemtopic/}
    */
-  public createEventgridSystemTopic(id: string, scope: CommonAzureConstruct, props: EventgridSystemTopicProps) {
+  public createEventgridSystemTopic(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: EventgridSystemTopicProps,
+    resourceOptions?: ResourceOptions
+  ) {
     if (!props) throw `Props undefined for ${id}`
 
-    // Get resource group name
     const resourceGroupName = scope.props.resourceGroupName
       ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
       : props.resourceGroupName
@@ -153,7 +176,7 @@ export class AzureEventgridManager {
           environment: scope.props.stage,
         },
       },
-      { parent: scope }
+      { parent: scope, ...resourceOptions }
     )
   }
 
@@ -163,28 +186,23 @@ export class AzureEventgridManager {
    * @param scope scope in which this resource is defined
    * @param props eventgrid system topic subscription properties
    * @param systemTopic The system topic to attach this subscription to
+   * @param resourceOptions Optional settings to control resource behaviour
    * @see [Pulumi Azure Native Event Grid System Topic Event Subscription]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/systemtopiceventsubscription/}
    */
   public createEventgridSystemTopicEventSubscription(
     id: string,
     scope: CommonAzureConstruct,
     props: EventgridSystemTopicEventSubscriptionProps,
-    systemTopic: SystemTopic | pulumi.Output<GetTopicResult>
+    systemTopic: SystemTopic | Output<GetSystemTopicResult>,
+    resourceOptions?: ResourceOptions
   ) {
     if (!props) throw `Props undefined for ${id}`
 
-    // Get resource group name
-    const resourceGroupName = scope.props.resourceGroupName
+    let resourceGroupName = scope.props.resourceGroupName
       ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
       : props.resourceGroupName
 
     if (!resourceGroupName) throw `Resource group name undefined for ${id}`
-
-    // Extract system topic name
-    const systemTopicName =
-      systemTopic instanceof SystemTopic
-        ? systemTopic.name
-        : (systemTopic as pulumi.Output<GetTopicResult>).apply(t => t.name)
 
     return new SystemTopicEventSubscription(
       `${id}-ests`,
@@ -194,10 +212,10 @@ export class AzureEventgridManager {
           props.eventSubscriptionName?.toString(),
           scope.props.resourceNameOptions?.eventGridSystemTopicEventSubscription
         ),
-        systemTopicName: systemTopicName,
-        resourceGroupName: resourceGroupName,
+        systemTopicName: systemTopic.name,
+        resourceGroupName: props.resourceGroupName ?? resourceGroupName,
       },
-      { parent: scope }
+      { parent: scope, ...resourceOptions }
     )
   }
 }

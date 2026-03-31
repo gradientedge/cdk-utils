@@ -1,3 +1,7 @@
-import { ComponentArgs } from '@pulumi/azure-native/applicationinsights/index.js'
+import { ComponentArgs, ComponentCurrentBillingFeatureArgs } from '@pulumi/azure-native/applicationinsights/index.js'
 
-export interface ApplicationInsightsProps extends ComponentArgs {}
+export interface ComponentCurrentBillingFeatureProps extends ComponentCurrentBillingFeatureArgs {}
+
+export interface ApplicationInsightsProps extends ComponentArgs {
+  billingFeatures?: ComponentCurrentBillingFeatureProps
+}
