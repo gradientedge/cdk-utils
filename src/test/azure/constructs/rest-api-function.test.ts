@@ -25,15 +25,12 @@ const testStackProps: TestAzureStackProps = {
 } as TestAzureStackProps
 
 class TestCommonStack extends CommonAzureStack {
-  declare props: TestAzureStackProps
+  declare props: any
   declare construct: TestRestApiFunctionConstruct
 
   constructor(name: string, props: TestAzureStackProps) {
     super(name, testStackProps)
-    this.construct = new TestRestApiFunctionConstruct(
-      props.name,
-      this.props as unknown as AzureRestApiFunctionProps & TestAzureStackProps
-    )
+    this.construct = new TestRestApiFunctionConstruct(props.name, this.props)
   }
 }
 
