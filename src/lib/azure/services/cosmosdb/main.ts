@@ -41,6 +41,7 @@ export class AzureCosmosDbManager {
    * @param scope scope in which this resource is defined
    * @param props cosmosdb account properties
    * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native CosmosDB Database Account]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/documentdb/databaseaccount/}
    */
   public createCosmosDbAccount(
     id: string,
@@ -84,6 +85,7 @@ export class AzureCosmosDbManager {
    * @param scope scope in which this resource is defined
    * @param props cosmosdb database properties
    * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native CosmosDB SQL Database]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/documentdb/sqlresourcesqldatabase/}
    */
   public createCosmosDbDatabase(
     id: string,
@@ -120,6 +122,7 @@ export class AzureCosmosDbManager {
    * @param scope scope in which this resource is defined
    * @param props cosmosdb container properties
    * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native CosmosDB SQL Container]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/documentdb/sqlresourcesqlcontainer/}
    */
   public createCosmosDbContainer(
     id: string,
@@ -156,6 +159,7 @@ export class AzureCosmosDbManager {
    * @param scope scope in which this resource is defined
    * @param props sql role assignment properties
    * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native CosmosDB SQL Role Assignment]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/documentdb/sqlresourcesqlroleassignment/}
    */
   public createSqlResourceSqlRoleAssignment(
     id: string,

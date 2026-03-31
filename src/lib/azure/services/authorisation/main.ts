@@ -28,6 +28,7 @@ export class AzureAuthorisationManager {
    * @param scope scope in which this resource is defined
    * @param props Role assignment properties
    * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native Role Assignment]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/authorization/roleassignment/}
    */
   public createRoleAssignment(
     id: string,

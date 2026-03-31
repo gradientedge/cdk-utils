@@ -30,6 +30,7 @@ export class AzurePortalManager {
    * @param props  the dashboard properties
    * @param renderer An optional renderer to use
    * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native Portal Dashboard]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/portal/dashboard/}
    */
   public createDashBoard(
     id: string,

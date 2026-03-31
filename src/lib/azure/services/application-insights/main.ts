@@ -82,6 +82,7 @@ export class AzureApplicationInsightsManager {
    * @param scope scope in which this resource is defined
    * @param props application insights properties component billing featureø
    * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native Application Insights Billing Feature]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/insights/componentcurrentbillingfeature/}
    */
   public createComponentCurrentBillingFeature(
     id: string,

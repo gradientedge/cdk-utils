@@ -72,6 +72,7 @@ export class AzureOperationalInsightsManager {
    * @param scope scope in which this resource is defined
    * @param props log analytics workspace table properties
    * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native Operational Insights Table]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/operationalinsights/table/}
    */
   public createTable(
     id: string,

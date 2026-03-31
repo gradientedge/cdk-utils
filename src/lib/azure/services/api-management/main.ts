@@ -244,6 +244,7 @@ export class AzureApiManagementManager {
    * @param scope scope in which this resource is defined
    * @param props API Disagnostic properties
    * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native API Management Diagnostic]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/apimanagement/apidiagnostic/}
    */
   public createApiDiagnostic(
     id: string,
@@ -262,6 +263,7 @@ export class AzureApiManagementManager {
    * @param scope scope in which this resource is defined
    * @param props API Logger properties
    * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native API Management Logger]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/apimanagement/logger/}
    */
   public createLogger(id: string, scope: CommonAzureConstruct, props: LoggerProps, resourceOptions?: ResourceOptions) {
     if (!props) throw `Props undefined for ${id}`
@@ -275,6 +277,7 @@ export class AzureApiManagementManager {
    * @param scope scope in which this resource is defined
    * @param props API Named Value properties
    * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native API Management Named Value]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/apimanagement/namedvalue/}
    */
   public createNamedValue(
     id: string,
@@ -293,6 +296,7 @@ export class AzureApiManagementManager {
    * @param scope scope in which this resource is defined
    * @param props API Subscription properties
    * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native API Management Subscription]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/apimanagement/subscription/}
    */
   public createSubscription(
     id: string,
@@ -311,6 +315,7 @@ export class AzureApiManagementManager {
    * @param scope scope in which this resource is defined
    * @param props API cache properties
    * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native API Management Cache]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/apimanagement/cache/}
    */
   public createCache(id: string, scope: CommonAzureConstruct, props: CacheProps, resourceOptions?: ResourceOptions) {
     if (!props) throw `Props undefined for ${id}`
@@ -319,11 +324,12 @@ export class AzureApiManagementManager {
   }
 
   /**
-   * @summary Method to create a new API operation policy
+   * @summary Method to create a new API operation
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props API operation policy properties
+   * @param props API operation properties
    * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native API Management Operation]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/apimanagement/apioperation/}
    */
   public createOperation(
     id: string,
@@ -340,6 +346,7 @@ export class AzureApiManagementManager {
    * @param scope scope in which this resource is defined
    * @param props API operation policy properties
    * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native API Management Operation Policy]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/apimanagement/apioperationpolicy/}
    */
   public createOperationPolicy(
     id: string,
@@ -356,6 +363,7 @@ export class AzureApiManagementManager {
    * @param scope scope in which this resource is defined
    * @param props API policy properties
    * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native API Management Policy]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/apimanagement/apipolicy/}
    */
   public createPolicy(
     id: string,

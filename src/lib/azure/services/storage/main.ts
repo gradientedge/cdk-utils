@@ -224,6 +224,7 @@ export class AzureStorageManager {
    * @param scope scope in which this resource is defined
    * @param props storage management policy properties
    * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native Storage Management Policy]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/storage/managementpolicy/}
    */
   public createManagementPolicy(
     id: string,
@@ -242,6 +243,7 @@ export class AzureStorageManager {
    * @param scope scope in which this resource is defined
    * @param props storage table properties
    * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native Storage Table]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/storage/table/}
    */
   public createTable(
     id: string,

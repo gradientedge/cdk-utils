@@ -81,6 +81,7 @@ export class AzureKeyVaultManager {
    * @param scope scope in which this resource is defined
    * @param props key vault secret properties
    * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native Key Vault Secret]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/keyvault/secret/}
    */
   public createKeyVaultSecret(
     id: string,
