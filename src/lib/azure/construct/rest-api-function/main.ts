@@ -86,12 +86,6 @@ export class AzureRestApiFunction extends AzureFunctionApp {
     } else {
       let hostnameConfigurations
       if (this.props.apiManagement.certificateKeyVaultId) {
-        this.authorisationManager.createRoleAssignment(`${this.id}-kv-role`, this, {
-          principalId: this.api.apim.identity.apply(identity => identity?.principalId ?? ''),
-          roleDefinitionId: RoleDefinitionId.KEY_VAULT_CERTIFICATE_USER,
-          scope: this.props.apiManagement.certificateKeyVaultId,
-        })
-
         hostnameConfigurations = [
           {
             hostName: `api-${this.props.locationConfig?.[this.props.location].name}.${this.props.domainName}`,
@@ -118,6 +112,14 @@ export class AzureRestApiFunction extends AzureFunctionApp {
       this.api.id = this.api.apim.id
       this.api.name = this.api.apim.name
       this.api.resourceGroupName = this.resourceGroup.name
+
+      if (this.props.apiManagement.certificateKeyVaultId) {
+        this.authorisationManager.createRoleAssignment(`${this.id}-kv-role`, this, {
+          principalId: this.api.apim.identity.apply(identity => identity?.principalId ?? ''),
+          roleDefinitionId: RoleDefinitionId.KEY_VAULT_CERTIFICATE_USER,
+          scope: this.props.apiManagement.certificateKeyVaultId,
+        })
+      }
     }
   }
 

@@ -1,0 +1,43 @@
+{
+  "site": {
+    "appServicePlan": {
+      "name": "test-site-plan",
+      "resourceGroupName": "test-rg-dev",
+      "sku": {
+        "name": "B1",
+        "tier": "Basic"
+      }
+    },
+    "storageAccount": {
+      "accountName": "test-site-storage",
+      "resourceGroupName": "test-rg-dev"
+    },
+    "storageContainer": {
+      "containerName": "test-site-deployment-container",
+      "accountName": "test-site-storage-dev",
+      "resourceGroupName": "test-rg-dev"
+    },
+    "webApp": {
+      "name": "test-site-web-app",
+      "resourceGroupName": "test-rg-dev",
+      "serverFarmId": "/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.Web/serverfarms/test-site-plan-dev",
+      "httpsOnly": true,
+      "kind": "app,linux",
+      "siteConfig": {
+        "alwaysOn": true
+      }
+    },
+    "codeArchiveFile": {
+      "type": "zip",
+      "sourceDir": "dist",
+      "outputPath": "dist/app.zip"
+    }
+  },
+  "deploySource": "dist",
+  "packageName": "app.zip",
+  "nodeOptions": "--max-old-space-size=4096",
+  "commonLogAnalyticsWorkspace": {
+    "workspaceName": "test-workspace",
+    "resourceGroupName": "test-rg-dev"
+  }
+}

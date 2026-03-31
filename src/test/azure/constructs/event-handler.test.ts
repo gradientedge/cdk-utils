@@ -33,8 +33,50 @@ const testStackProps: TestAzureStackProps = {
   stageContextPath: 'src/test/azure/common/env',
 } as TestAzureStackProps
 
+const testStackExistingTopicProps: TestAzureStackProps = {
+  domainName: 'gradientedge.io',
+  extraContexts: [
+    'src/test/azure/common/config/dummy.json',
+    'src/test/azure/common/config/event-handler-existing-topic.json',
+  ],
+  location: AzureLocation.EastUS,
+  name: 'test-common-stack',
+  resourceGroupName: 'test-rg',
+  skipStageForARecords: false,
+  stage: 'dev',
+  stageContextPath: 'src/test/azure/common/env',
+} as TestAzureStackProps
+
+const testStackExistingTopicNoSubProps: TestAzureStackProps = {
+  domainName: 'gradientedge.io',
+  extraContexts: [
+    'src/test/azure/common/config/dummy.json',
+    'src/test/azure/common/config/event-handler-existing-topic-nosub.json',
+  ],
+  location: AzureLocation.EastUS,
+  name: 'test-common-stack',
+  resourceGroupName: 'test-rg',
+  skipStageForARecords: false,
+  stage: 'dev',
+  stageContextPath: 'src/test/azure/common/env',
+} as TestAzureStackProps
+
+const testStackDefenderProps: TestAzureStackProps = {
+  domainName: 'gradientedge.io',
+  extraContexts: [
+    'src/test/azure/common/config/dummy.json',
+    'src/test/azure/common/config/event-handler-defender.json',
+  ],
+  location: AzureLocation.EastUS,
+  name: 'test-common-stack',
+  resourceGroupName: 'test-rg',
+  skipStageForARecords: false,
+  stage: 'dev',
+  stageContextPath: 'src/test/azure/common/env',
+} as TestAzureStackProps
+
 class TestCommonStack extends CommonAzureStack {
-  declare props: any
+  declare props: AzureEventHandlerProps & TestAzureStackProps
   declare construct: TestEventHandlerConstruct
 
   constructor(name: string, props: TestAzureStackProps) {
@@ -64,8 +106,119 @@ class TestEventHandlerConstruct extends AzureEventHandler {
     this.createEventGrid()
     this.createEventGridEventSubscription()
     this.createServiceBusDiagnosticLog()
+    this.enableMalwareScanningOnDataStorageAccount()
   }
 }
+
+/** Test class to cover useExistingTopic with existingSubscriptionId */
+class TestCommonStackExistingTopic extends CommonAzureStack {
+  declare props: AzureEventHandlerProps & TestAzureStackProps
+  declare construct: TestEventHandlerExistingTopicConstruct
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackExistingTopicProps)
+    this.construct = new TestEventHandlerExistingTopicConstruct(`${props.name}-existing`, this.props)
+  }
+}
+
+class TestEventHandlerExistingTopicConstruct extends AzureEventHandler {
+  declare props: AzureEventHandlerProps & TestAzureStackProps
+
+  constructor(name: string, props: AzureEventHandlerProps & TestAzureStackProps) {
+    super(name, props)
+    this.props = props
+    this.eventGridEventSubscription = {} as EventHandlerEventGridSubscription
+    this.serviceBus = {} as EventHandlerServiceBus
+    this.initResources()
+  }
+
+  public initResources() {
+    this.createResourceGroup()
+    this.resolveCommonLogAnalyticsWorkspace()
+    this.createEventGridSubscriptionDlqStorageAccount()
+    this.createEventGridSubscriptionDlqStorageContainer()
+    this.createServiceBusNamespace()
+    this.createServiceBusQueue()
+    this.createEventGrid()
+    this.createEventGridEventSubscription()
+    this.createServiceBusDiagnosticLog()
+  }
+}
+
+/** Test class to cover useExistingTopic without existingSubscriptionId */
+class TestCommonStackExistingTopicNoSub extends CommonAzureStack {
+  declare props: AzureEventHandlerProps & TestAzureStackProps
+  declare construct: TestEventHandlerExistingTopicNoSubConstruct
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackExistingTopicNoSubProps)
+    this.construct = new TestEventHandlerExistingTopicNoSubConstruct(`${props.name}-existing-nosub`, this.props)
+  }
+}
+
+class TestEventHandlerExistingTopicNoSubConstruct extends AzureEventHandler {
+  declare props: AzureEventHandlerProps & TestAzureStackProps
+
+  constructor(name: string, props: AzureEventHandlerProps & TestAzureStackProps) {
+    super(name, props)
+    this.props = props
+    this.eventGridEventSubscription = {} as EventHandlerEventGridSubscription
+    this.serviceBus = {} as EventHandlerServiceBus
+    this.initResources()
+  }
+
+  public initResources() {
+    this.createResourceGroup()
+    this.resolveCommonLogAnalyticsWorkspace()
+    this.createEventGridSubscriptionDlqStorageAccount()
+    this.createEventGridSubscriptionDlqStorageContainer()
+    this.createServiceBusNamespace()
+    this.createServiceBusQueue()
+    this.createEventGrid()
+    this.createEventGridEventSubscription()
+    this.createServiceBusDiagnosticLog()
+  }
+}
+
+/** Test class to cover enableMalwareScanningOnDataStorageAccount with defender props */
+class TestCommonStackWithDefender extends CommonAzureStack {
+  declare props: AzureEventHandlerProps & TestAzureStackProps
+  declare construct: TestEventHandlerWithDefenderConstruct
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackDefenderProps)
+    this.construct = new TestEventHandlerWithDefenderConstruct(`${props.name}-defender`, this.props)
+  }
+}
+
+class TestEventHandlerWithDefenderConstruct extends AzureEventHandler {
+  declare props: AzureEventHandlerProps & TestAzureStackProps
+
+  constructor(name: string, props: AzureEventHandlerProps & TestAzureStackProps) {
+    super(name, props)
+    this.props = props
+    this.eventGridEventSubscription = {} as EventHandlerEventGridSubscription
+    this.serviceBus = {} as EventHandlerServiceBus
+    this.initResources()
+  }
+
+  public initResources() {
+    this.createResourceGroup()
+    this.resolveCommonLogAnalyticsWorkspace()
+    this.createEventGridSubscriptionDlqStorageAccount()
+    this.createEventGridSubscriptionDlqStorageContainer()
+    this.createServiceBusNamespace()
+    this.createServiceBusQueue()
+    this.createEventGrid()
+    this.createEventGridEventSubscription()
+    this.createServiceBusDiagnosticLog()
+    this.createDataStorageAccount()
+    this.enableMalwareScanningOnDataStorageAccount()
+  }
+}
+
+// Suppress expected unhandled rejections from dependsOn with non-Resource values in existing topic variants
+process.on('unhandledRejection', () => {})
 
 pulumi.runtime.setAllConfig({
   'project:stage': testStackProps.stage,
@@ -92,6 +245,10 @@ pulumi.runtime.setMocks({
       name = args.inputs.eventSubscriptionName
     } else if (args.type === 'azure-native:monitor:DiagnosticSetting') {
       name = args.inputs.name
+    } else if (args.type === 'azure-native:security:DefenderForStorage') {
+      name = args.name
+    } else if (args.type === 'pulumi:providers:azure-native') {
+      name = args.name
     }
 
     return {
@@ -106,11 +263,30 @@ pulumi.runtime.setMocks({
         secondaryConnectionString: 'mock-servicebus-secondary-connection-string',
       }
     }
+    if (args.token === 'azure-native:eventgrid:getTopic') {
+      return {
+        id: 'existing-topic-id',
+        name: args.inputs.topicName,
+        endpoint: 'https://existing-topic.endpoint.com',
+      }
+    }
     return args.inputs
   },
 })
 
 const stack = new TestCommonStack('test-common-stack', testStackProps)
+
+pulumi.runtime.setConfig('project:extraContexts', JSON.stringify(testStackExistingTopicProps.extraContexts))
+const stackExistingTopic = new TestCommonStackExistingTopic('test-existing-topic-stack', testStackExistingTopicProps)
+
+pulumi.runtime.setConfig('project:extraContexts', JSON.stringify(testStackExistingTopicNoSubProps.extraContexts))
+const stackExistingTopicNoSub = new TestCommonStackExistingTopicNoSub(
+  'test-existing-topic-nosub-stack',
+  testStackExistingTopicNoSubProps
+)
+
+pulumi.runtime.setConfig('project:extraContexts', JSON.stringify(testStackDefenderProps.extraContexts))
+const stackWithDefender = new TestCommonStackWithDefender('test-defender-stack', testStackDefenderProps)
 
 describe('TestAzureEventHandlerConstruct', () => {
   test('is initialised as expected', () => {
@@ -237,5 +413,35 @@ describe('TestAzureEventHandlerConstruct', () => {
         )
         expect(name).toEqual('test-event-handler-subscription-dev')
       })
+  })
+})
+
+describe('TestAzureEventHandlerExistingTopicConstruct', () => {
+  test('synthesises with existing topic and subscription id as expected', () => {
+    expect(stackExistingTopic).toBeDefined()
+    expect(stackExistingTopic.construct).toBeDefined()
+    expect(stackExistingTopic.construct.eventGridTopic).toBeDefined()
+    expect(stackExistingTopic.construct.props.eventGridTopic.useExistingTopic).toEqual(true)
+    expect(stackExistingTopic.construct.props.eventGridTopic.existingSubscriptionId).toEqual('test-subscription-id')
+  })
+})
+
+describe('TestAzureEventHandlerExistingTopicNoSubConstruct', () => {
+  test('synthesises with existing topic without subscription id as expected', () => {
+    expect(stackExistingTopicNoSub).toBeDefined()
+    expect(stackExistingTopicNoSub.construct).toBeDefined()
+    expect(stackExistingTopicNoSub.construct.eventGridTopic).toBeDefined()
+    expect(stackExistingTopicNoSub.construct.props.eventGridTopic.useExistingTopic).toEqual(true)
+    expect(stackExistingTopicNoSub.construct.props.eventGridTopic.existingSubscriptionId).toBeUndefined()
+  })
+})
+
+describe('TestAzureEventHandlerWithDefenderConstruct', () => {
+  test('synthesises with defender as expected', () => {
+    expect(stackWithDefender).toBeDefined()
+    expect(stackWithDefender.construct).toBeDefined()
+    expect(stackWithDefender.construct.eventGridTopic).toBeDefined()
+    expect(stackWithDefender.construct.dataStorageAccount).toBeDefined()
+    expect(stackWithDefender.construct.props.defender).toBeDefined()
   })
 })

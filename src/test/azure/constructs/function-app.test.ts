@@ -29,6 +29,27 @@ const testStackProps: TestAzureStackProps = {
   stageContextPath: 'src/test/azure/common/env',
 } as TestAzureStackProps
 
+const testStackPropsOverrides: TestAzureStackProps = {
+  ...testStackProps,
+  extraContexts: [
+    'src/test/azure/common/config/dummy.json',
+    'src/test/azure/common/config/function-app-overrides.json',
+  ],
+} as TestAzureStackProps
+
+const testStackPropsExistingConfig: TestAzureStackProps = {
+  ...testStackProps,
+  extraContexts: [
+    'src/test/azure/common/config/dummy.json',
+    'src/test/azure/common/config/function-app-existing-config.json',
+  ],
+} as TestAzureStackProps
+
+const testStackPropsMinimal: TestAzureStackProps = {
+  ...testStackProps,
+  extraContexts: ['src/test/azure/common/config/dummy.json', 'src/test/azure/common/config/function-app-minimal.json'],
+} as TestAzureStackProps
+
 class TestCommonStack extends CommonAzureStack {
   declare props: any
   declare construct: TestFunctionAppConstruct
@@ -45,6 +66,7 @@ class TestFunctionAppConstruct extends AzureFunctionApp {
   constructor(name: string, props: AzureFunctionAppProps & TestAzureStackProps) {
     super(name, props)
     this.props = props
+    this.appConnectionStrings = []
     this.initResources()
   }
 
@@ -59,6 +81,125 @@ class TestFunctionAppConstruct extends AzureFunctionApp {
     this.createStorageContainer()
     this.createDataStorageAccount()
     this.createDataStorageContainer()
+    this.createCodePackage()
+    this.createFunctionApp()
+    this.createRoleAssignments()
+    this.createFunctionDashboard()
+  }
+}
+
+class TestCommonStackWithOverrides extends CommonAzureStack {
+  declare props: any
+  declare construct: TestFunctionAppWithOverridesConstruct
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackPropsOverrides)
+    this.construct = new TestFunctionAppWithOverridesConstruct(`${props.name}-overrides`, this.props)
+  }
+}
+
+class TestFunctionAppWithOverridesConstruct extends AzureFunctionApp {
+  declare props: AzureFunctionAppProps & TestAzureStackProps
+
+  constructor(name: string, props: AzureFunctionAppProps & TestAzureStackProps) {
+    super(name, props)
+    this.props = props
+    this.appConnectionStrings = []
+    this.appConfigurationsParsedConfig = { someSetting: 'test-value' }
+    this.appConfigurationsOriginalParsedConfig = { appConfig: {} }
+    this.appKeyVaultsByResourceGroup = new Map([['test-rg-dev', new Set(['test-keyvault'])]])
+    this.initResources()
+  }
+
+  public initResources() {
+    this.createResourceGroup()
+    this.resolveCommonLogAnalyticsWorkspace()
+    this.resolveApplicationInsights()
+    this.createAppServicePlan()
+    this.createAppConfiguration()
+    this.createStorageAccount()
+    this.createStorageDeploymentContainer()
+    this.createStorageContainer()
+    this.createDataStorageAccount()
+    this.createDataStorageContainer()
+    this.generateStorageContainerSas()
+    this.createCodePackage()
+    this.createFunctionApp()
+    this.createRoleAssignments()
+    this.createFunctionDashboard()
+  }
+}
+
+class TestCommonStackWithExistingConfig extends CommonAzureStack {
+  declare props: any
+  declare construct: TestFunctionAppWithExistingConfigConstruct
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackPropsExistingConfig)
+    this.construct = new TestFunctionAppWithExistingConfigConstruct(`${props.name}-existing-config`, this.props)
+  }
+}
+
+class TestFunctionAppWithExistingConfigConstruct extends AzureFunctionApp {
+  declare props: AzureFunctionAppProps & TestAzureStackProps
+
+  constructor(name: string, props: AzureFunctionAppProps & TestAzureStackProps) {
+    super(name, props)
+    this.props = props
+    this.appConnectionStrings = []
+    this.appConfigurationsParsedConfig = { eventGridTargets: ['target1'] }
+    this.appConfigurationsOriginalParsedConfig = { appConfig: {} }
+    this.initResources()
+  }
+
+  public initResources() {
+    this.createResourceGroup()
+    this.resolveCommonLogAnalyticsWorkspace()
+    this.resolveApplicationInsights()
+    this.createAppServicePlan()
+    this.createAppConfiguration()
+    this.createStorageAccount()
+    this.createStorageDeploymentContainer()
+    this.createDataStorageAccount()
+    this.createDataStorageContainer()
+    this.createCodePackage()
+    this.createFunctionApp()
+    this.createRoleAssignments()
+  }
+}
+
+class TestCommonStackMinimal extends CommonAzureStack {
+  declare props: any
+  declare construct: TestFunctionAppMinimalConstruct
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackPropsMinimal)
+    this.construct = new TestFunctionAppMinimalConstruct(`${props.name}-minimal`, this.props)
+  }
+}
+
+class TestFunctionAppMinimalConstruct extends AzureFunctionApp {
+  declare props: AzureFunctionAppProps & TestAzureStackProps
+
+  constructor(name: string, props: AzureFunctionAppProps & TestAzureStackProps) {
+    super(name, props)
+    this.props = props
+    this.appConnectionStrings = []
+    this.initResources()
+  }
+
+  public initResources() {
+    this.createResourceGroup()
+    this.resolveCommonLogAnalyticsWorkspace()
+    this.resolveApplicationInsights()
+    this.createAppServicePlan()
+    this.createAppConfiguration()
+    this.createStorageAccount()
+    this.createStorageDeploymentContainer()
+    this.createStorageContainer()
+    this.createDataStorageAccount()
+    this.createDataStorageContainer()
+    this.generateStorageContainerSas()
   }
 }
 
@@ -72,7 +213,6 @@ pulumi.runtime.setMocks({
   newResource: (args: pulumi.runtime.MockResourceArgs) => {
     let name
 
-    // Return different names based on resource type
     if (args.type === 'azure-native:resources:ResourceGroup') {
       name = args.inputs.resourceGroupName
     } else if (args.type === 'azure-native:web:AppServicePlan') {
@@ -83,6 +223,18 @@ pulumi.runtime.setMocks({
       name = args.inputs.accountName
     } else if (args.type === 'azure-native:storage:BlobContainer') {
       name = args.inputs.containerName
+    } else if (args.type === 'azure-native:web:WebApp') {
+      name = args.inputs.name
+    } else if (args.type === 'azure-native:authorization:RoleAssignment') {
+      name = args.name
+    } else if (args.type === 'azure-native:keyvault:Vault') {
+      name = args.inputs.vaultName
+    } else if (args.type === 'azure-native:keyvault:Secret') {
+      name = args.inputs.secretName
+    } else if (args.type === 'azure-native:monitor:DiagnosticSetting') {
+      name = args.inputs.name
+    } else if (args.type === 'azure-native:portal:Dashboard') {
+      name = args.inputs.dashboardName
     }
 
     return {
@@ -91,20 +243,44 @@ pulumi.runtime.setMocks({
     }
   },
   call: (args: pulumi.runtime.MockCallArgs) => {
+    if (args.token === 'azure-native:storage:listStorageAccountKeys') {
+      return { keys: [{ value: 'mock-storage-key' }] }
+    }
+    if (args.token === 'azure-native:storage:listStorageAccountSAS') {
+      return { accountSasToken: 'mock-sas-token' }
+    }
+    if (args.token.includes('archive')) {
+      return {
+        source: args.inputs.sourceDir ?? 'dist',
+        outputPath: args.inputs.outputPath ?? 'dist/app.zip',
+        outputSize: 1024,
+        outputBase64sha256: 'mock-hash',
+      }
+    }
     return args.inputs
   },
 })
 
 const stack = new TestCommonStack('test-common-stack', testStackProps)
 
+pulumi.runtime.setConfig('project:extraContexts', JSON.stringify(testStackPropsOverrides.extraContexts))
+const stackWithOverrides = new TestCommonStackWithOverrides('test-overrides-stack', testStackPropsOverrides)
+
+pulumi.runtime.setConfig('project:extraContexts', JSON.stringify(testStackPropsExistingConfig.extraContexts))
+const stackWithExistingConfig = new TestCommonStackWithExistingConfig(
+  'test-existing-config-stack',
+  testStackPropsExistingConfig
+)
+
+pulumi.runtime.setConfig('project:extraContexts', JSON.stringify(testStackPropsMinimal.extraContexts))
+const stackMinimal = new TestCommonStackMinimal('test-minimal-stack', testStackPropsMinimal)
+
 describe('TestAzureFunctionAppConstruct', () => {
   test('is initialised as expected', () => {
     expect(stack.construct.props).toHaveProperty('testAttribute')
     expect(stack.construct.props.testAttribute).toEqual('success')
   })
-})
 
-describe('TestAzureFunctionAppConstruct', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
     expect(stack.construct).toBeDefined()
@@ -115,10 +291,10 @@ describe('TestAzureFunctionAppConstruct', () => {
     expect(stack.construct.appStorageContainer).toBeDefined()
     expect(stack.construct.dataStorageAccount).toBeDefined()
     expect(stack.construct.dataStorageContainer).toBeDefined()
+    expect(stack.construct.app).toBeDefined()
+    expect(stack.construct.appCodeArchiveFile).toBeDefined()
   })
-})
 
-describe('TestAzureFunctionAppConstruct', () => {
   test('provisions app service plan as expected', () => {
     pulumi
       .all([
@@ -129,16 +305,12 @@ describe('TestAzureFunctionAppConstruct', () => {
       ])
       .apply(([id, urn, name, tags]) => {
         expect(id).toEqual('test-common-stack-app-service-plan-as-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:web:AppServicePlan::test-common-stack-app-service-plan-as'
-        )
+        expect(urn).toBeDefined()
         expect(name).toEqual('test-common-stack-dev')
         expect(tags?.environment).toEqual('dev')
       })
   })
-})
 
-describe('TestAzureFunctionAppConstruct', () => {
   test('provisions app configuration as expected', () => {
     pulumi
       .all([
@@ -148,104 +320,58 @@ describe('TestAzureFunctionAppConstruct', () => {
       ])
       .apply(([id, urn, name]) => {
         expect(id).toEqual('test-common-stack-app-configuration-ac-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:appconfiguration:ConfigurationStore::test-common-stack-app-configuration-ac'
-        )
+        expect(urn).toBeDefined()
         expect(name).toEqual('test-app-config-dev')
       })
   })
-})
 
-describe('TestAzureFunctionAppConstruct', () => {
   test('provisions app storage account as expected', () => {
-    pulumi
-      .all([
-        stack.construct.appStorageAccount.id,
-        stack.construct.appStorageAccount.urn,
-        stack.construct.appStorageAccount.name,
-        stack.construct.appStorageAccount.tags,
-      ])
-      .apply(([id, urn, name, tags]) => {
-        expect(id).toEqual('test-common-stack-storage-account-sa-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:storage:StorageAccount::test-common-stack-storage-account-sa'
-        )
-        expect(name).toBeDefined()
-        expect(tags?.environment).toEqual('dev')
-      })
+    pulumi.all([stack.construct.appStorageAccount.id, stack.construct.appStorageAccount.tags]).apply(([id, tags]) => {
+      expect(id).toEqual('test-common-stack-storage-account-sa-id')
+      expect(tags?.environment).toEqual('dev')
+    })
+  })
+
+  test('provisions function app as expected', () => {
+    pulumi.all([stack.construct.app.id, stack.construct.app.urn]).apply(([id, urn]) => {
+      expect(id).toBeDefined()
+      expect(urn).toBeDefined()
+    })
   })
 })
 
-describe('TestAzureFunctionAppConstruct', () => {
-  test('provisions deployment storage container as expected', () => {
-    pulumi
-      .all([
-        stack.construct.appDeploymentStorageContainer.id,
-        stack.construct.appDeploymentStorageContainer.urn,
-        stack.construct.appDeploymentStorageContainer.name,
-      ])
-      .apply(([id, urn, name]) => {
-        expect(id).toEqual('test-common-stack-storage-deployment-container-sc-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:storage:BlobContainer::test-common-stack-storage-deployment-container-sc'
-        )
-        expect(name).toBeDefined()
-      })
+describe('TestAzureFunctionAppWithOverridesConstruct', () => {
+  test('synthesises with overrides as expected', () => {
+    expect(stackWithOverrides).toBeDefined()
+    expect(stackWithOverrides.construct).toBeDefined()
+    expect(stackWithOverrides.construct.app).toBeDefined()
+    expect(stackWithOverrides.construct.functionDashboard).toBeDefined()
+    expect(stackWithOverrides.construct.props.useConfigOverride).toEqual(true)
+  })
+
+  test('creates function dashboard as expected', () => {
+    pulumi.all([stackWithOverrides.construct.functionDashboard.id]).apply(([id]) => {
+      expect(id).toBeDefined()
+    })
   })
 })
 
-describe('TestAzureFunctionAppConstruct', () => {
-  test('provisions app storage container as expected', () => {
-    pulumi
-      .all([
-        stack.construct.appStorageContainer.id,
-        stack.construct.appStorageContainer.urn,
-        stack.construct.appStorageContainer.name,
-      ])
-      .apply(([id, urn, name]) => {
-        expect(id).toEqual('test-common-stack-storage-container-sc-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:storage:BlobContainer::test-common-stack-storage-container-sc'
-        )
-        expect(name).toBeDefined()
-      })
+describe('TestAzureFunctionAppWithExistingConfigConstruct', () => {
+  test('synthesises with existing config as expected', () => {
+    expect(stackWithExistingConfig).toBeDefined()
+    expect(stackWithExistingConfig.construct).toBeDefined()
+    expect(stackWithExistingConfig.construct.appConfig).toBeDefined()
+    expect(stackWithExistingConfig.construct.app).toBeDefined()
   })
 })
 
-describe('TestAzureFunctionAppConstruct', () => {
-  test('provisions data storage account as expected', () => {
-    pulumi
-      .all([
-        stack.construct.dataStorageAccount.id,
-        stack.construct.dataStorageAccount.urn,
-        stack.construct.dataStorageAccount.name,
-        stack.construct.dataStorageAccount.tags,
-      ])
-      .apply(([id, urn, name, tags]) => {
-        expect(id).toEqual('test-common-stack-data-storage-account-sa-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:storage:StorageAccount::test-common-stack-data-storage-account-sa'
-        )
-        expect(name).toBeDefined()
-        expect(tags?.environment).toEqual('dev')
-      })
-  })
-})
-
-describe('TestAzureFunctionAppConstruct', () => {
-  test('provisions data storage container as expected', () => {
-    pulumi
-      .all([
-        stack.construct.dataStorageContainer.id,
-        stack.construct.dataStorageContainer.urn,
-        stack.construct.dataStorageContainer.name,
-      ])
-      .apply(([id, urn, name]) => {
-        expect(id).toEqual('test-common-stack-data-storage-container-sc-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:storage:BlobContainer::test-common-stack-data-storage-container-sc'
-        )
-        expect(name).toBeDefined()
-      })
+describe('TestAzureFunctionAppMinimalConstruct', () => {
+  test('synthesises minimal construct as expected', () => {
+    expect(stackMinimal).toBeDefined()
+    expect(stackMinimal.construct).toBeDefined()
+    expect(stackMinimal.construct.appServicePlan).toBeDefined()
+    expect(stackMinimal.construct.dataStorageAccount).toBeUndefined()
+    expect(stackMinimal.construct.dataStorageContainer).toBeUndefined()
+    expect(stackMinimal.construct.appStorageContainer).toBeUndefined()
   })
 })

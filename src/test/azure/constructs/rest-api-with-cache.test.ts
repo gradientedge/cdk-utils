@@ -49,7 +49,16 @@ class TestRestApiWithCacheConstruct extends AzureRestApiWithCache {
     this.resolveCommonLogAnalyticsWorkspace()
     this.resolveApplicationInsights()
     this.createApiManagement()
+    this.createNamespaceSecretRole()
+    this.createNamespaceSecret()
+    this.createSubscriptionKeySecret()
+    this.createApiManagementLogger()
+    this.createApiDiagnostic()
+    this.createDiagnosticLog()
     this.createRedisCache()
+    this.createRedisCacheSecret()
+    this.createRedisCacheNamespace()
+    this.createRedisCacheApiManagement()
   }
 }
 
@@ -71,11 +80,31 @@ pulumi.runtime.setMocks({
       name = args.inputs.name
     } else if (args.type === 'azure-native:monitor:DiagnosticSetting') {
       name = args.inputs.name
+    } else if (args.type === 'azure-native:authorization:RoleAssignment') {
+      name = args.name
+    } else if (args.type === 'azure-native:keyvault:Secret') {
+      name = args.inputs.secretName
+    } else if (args.type === 'azure-native:apimanagement:NamedValue') {
+      name = args.inputs.displayName
+    } else if (args.type === 'azure-native:apimanagement:Cache') {
+      name = args.name
+    } else if (args.type === 'azure-native:apimanagement:Logger') {
+      name = args.name
+    } else if (args.type === 'azure-native:apimanagement:ApiDiagnostic') {
+      name = args.name
+    } else if (args.type === 'azure-native:apimanagement:Subscription') {
+      name = args.name
     }
 
     return {
       id: `${args.name}-id`,
-      state: { ...args.inputs, name },
+      state: {
+        ...args.inputs,
+        name,
+        identity: { principalId: 'mock-principal-id' },
+        accessKeys: { primaryKey: 'mock-redis-primary-key' },
+        location: 'eastus',
+      },
     }
   },
   call: (args: pulumi.runtime.MockCallArgs) => {
@@ -164,5 +193,29 @@ describe('TestAzureRestApiWithCacheConstruct', () => {
 describe('TestAzureRestApiWithCacheConstruct', () => {
   test('resolves api key vault as expected', () => {
     expect(stack.construct.api.authKeyVault).toBeDefined()
+  })
+})
+
+describe('TestAzureRestApiWithCacheConstruct', () => {
+  test('provisions namespace secret role as expected', () => {
+    expect(stack.construct.api.namedValueRoleAssignment).toBeDefined()
+  })
+})
+
+describe('TestAzureRestApiWithCacheConstruct', () => {
+  test('provisions redis cache secret as expected', () => {
+    expect(stack.construct.api.redisNamedValueSecret).toBeDefined()
+    pulumi.all([stack.construct.api.redisNamedValueSecret.id]).apply(([id]) => {
+      expect(id).toBeDefined()
+    })
+  })
+})
+
+describe('TestAzureRestApiWithCacheConstruct', () => {
+  test('provisions redis cache namespace as expected', () => {
+    expect(stack.construct.api.redisNamedValue).toBeDefined()
+    pulumi.all([stack.construct.api.redisNamedValue.id]).apply(([id]) => {
+      expect(id).toBeDefined()
+    })
   })
 })

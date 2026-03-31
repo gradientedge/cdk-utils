@@ -23,6 +23,14 @@ const testStackProps: TestAzureStackProps = {
   stageContextPath: 'src/test/azure/common/env',
 } as TestAzureStackProps
 
+const testStackPropsMinimal: TestAzureStackProps = {
+  ...testStackProps,
+  extraContexts: [
+    'src/test/azure/common/config/dummy.json',
+    'src/test/azure/common/config/site-with-webapp-minimal.json',
+  ],
+} as TestAzureStackProps
+
 class TestCommonStack extends CommonAzureStack {
   declare props: any
   declare construct: TestSiteWithWebAppConstruct
@@ -42,6 +50,27 @@ class TestSiteWithWebAppConstruct extends SiteWithWebApp {
     this.site = {} as Site
     this.initResources()
   }
+}
+
+class TestCommonStackMinimal extends CommonAzureStack {
+  declare props: any
+  declare construct: TestSiteWithWebAppMinimalConstruct
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackPropsMinimal)
+    this.construct = new TestSiteWithWebAppMinimalConstruct(`${props.name}-minimal`, this.props)
+  }
+}
+
+class TestSiteWithWebAppMinimalConstruct extends SiteWithWebApp {
+  declare props: SiteWithWebAppProps & TestAzureStackProps
+
+  constructor(name: string, props: SiteWithWebAppProps & TestAzureStackProps) {
+    super(name, props)
+    this.props = props
+    this.site = {} as Site
+    this.initResources()
+  }
 
   public initResources() {
     this.createResourceGroup()
@@ -50,6 +79,7 @@ class TestSiteWithWebAppConstruct extends SiteWithWebApp {
     this.createSiteAppServicePlan()
     this.createSiteStorageAccount()
     this.createSiteStorageContainer()
+    this.createCodePackage()
   }
 }
 
@@ -71,6 +101,10 @@ pulumi.runtime.setMocks({
       name = args.inputs.accountName
     } else if (args.type === 'azure-native:storage:BlobContainer') {
       name = args.inputs.containerName
+    } else if (args.type === 'azure-native:web:WebApp') {
+      name = args.inputs.name
+    } else if (args.type === 'azure-native:monitor:DiagnosticSetting') {
+      name = args.inputs.name
     }
 
     return {
@@ -79,20 +113,27 @@ pulumi.runtime.setMocks({
     }
   },
   call: (args: pulumi.runtime.MockCallArgs) => {
+    if (args.token.includes('archive')) {
+      return {
+        source: args.inputs.sourceDir ?? 'dist',
+        outputPath: args.inputs.outputPath ?? 'dist/app.zip',
+        outputSize: 1024,
+        outputBase64sha256: 'mock-hash',
+      }
+    }
     return args.inputs
   },
 })
 
 const stack = new TestCommonStack('test-common-stack', testStackProps)
+const stackMinimal = new TestCommonStackMinimal('test-minimal-stack', testStackPropsMinimal)
 
 describe('TestSiteWithWebAppConstruct', () => {
   test('is initialised as expected', () => {
     expect(stack.construct.props).toHaveProperty('testAttribute')
     expect(stack.construct.props.testAttribute).toEqual('success')
   })
-})
 
-describe('TestSiteWithWebAppConstruct', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
     expect(stack.construct).toBeDefined()
@@ -100,10 +141,11 @@ describe('TestSiteWithWebAppConstruct', () => {
     expect(stack.construct.site.appServicePlan).toBeDefined()
     expect(stack.construct.site.storageAccount).toBeDefined()
     expect(stack.construct.site.storageContainer).toBeDefined()
+    expect(stack.construct.site.codeArchiveFile).toBeDefined()
+    expect(stack.construct.site.environmentVariables).toBeDefined()
+    expect(stack.construct.site.webApp).toBeDefined()
   })
-})
 
-describe('TestSiteWithWebAppConstruct', () => {
   test('provisions site app service plan as expected', () => {
     pulumi
       .all([
@@ -121,9 +163,7 @@ describe('TestSiteWithWebAppConstruct', () => {
         expect(tags?.environment).toEqual('dev')
       })
   })
-})
 
-describe('TestSiteWithWebAppConstruct', () => {
   test('provisions site storage account as expected', () => {
     pulumi
       .all([
@@ -141,9 +181,7 @@ describe('TestSiteWithWebAppConstruct', () => {
         expect(tags?.environment).toEqual('dev')
       })
   })
-})
 
-describe('TestSiteWithWebAppConstruct', () => {
   test('provisions site storage container as expected', () => {
     pulumi
       .all([
@@ -158,5 +196,49 @@ describe('TestSiteWithWebAppConstruct', () => {
         )
         expect(name).toBeDefined()
       })
+  })
+
+  test('provisions web app as expected', () => {
+    pulumi
+      .all([
+        stack.construct.site.webApp.id,
+        stack.construct.site.webApp.urn,
+        stack.construct.site.webApp.name,
+        stack.construct.site.webApp.tags,
+      ])
+      .apply(([id, urn, name, tags]) => {
+        expect(id).toEqual('test-common-stack-web-app-lwa-id')
+        expect(urn).toBeDefined()
+        expect(name).toEqual('test-site-web-app-dev')
+        expect(tags?.environment).toEqual('dev')
+      })
+  })
+
+  test('creates site config environment variables as expected', () => {
+    const envVars = stack.construct.site.environmentVariables
+    expect(envVars).toBeDefined()
+    expect(envVars.STAGE).toEqual('dev')
+    expect(envVars.NODE_OPTIONS).toEqual('--max-old-space-size=4096')
+    expect(envVars.NODE_ENV).toEqual('development')
+    expect(envVars.BUILD_VERSION).toEqual('0.0.0')
+    expect(envVars.ApplicationInsightsAgent_EXTENSION_VERSION).toEqual('~3')
+    expect(envVars.OTEL_SDK_DISABLED).toEqual('false')
+  })
+})
+
+describe('TestSiteWithWebAppMinimalConstruct', () => {
+  test('synthesises minimal construct as expected', () => {
+    expect(stackMinimal).toBeDefined()
+    expect(stackMinimal.construct).toBeDefined()
+    expect(stackMinimal.construct.site).toBeDefined()
+    expect(stackMinimal.construct.site.appServicePlan).toBeDefined()
+    expect(stackMinimal.construct.site.storageAccount).toBeDefined()
+    expect(stackMinimal.construct.site.storageContainer).toBeDefined()
+    expect(stackMinimal.construct.site.codeArchiveFile).toBeDefined()
+  })
+
+  test('does not create web app or environment variables when methods are not called', () => {
+    expect(stackMinimal.construct.site.webApp).toBeUndefined()
+    expect(stackMinimal.construct.site.environmentVariables).toBeUndefined()
   })
 })

@@ -1,0 +1,82 @@
+{
+  "apiAuthKeyVault": {
+    "name": "test-api-keyvault",
+    "resourceGroupName": "test-rg-dev"
+  },
+  "apiManagement": {
+    "useExistingApiManagement": false,
+    "serviceName": "test-api-management",
+    "publisherEmail": "test@gradientedge.io",
+    "publisherName": "GradientEdge",
+    "sku": {
+      "name": "Consumption",
+      "capacity": 0
+    }
+  },
+  "apiManagementBackend": {
+    "backendId": "test-backend",
+    "protocol": "http",
+    "backendUrlPath": "api"
+  },
+  "apiManagementApi": {
+    "apiId": "test-api",
+    "displayName": "Test API",
+    "path": "/api",
+    "protocols": ["https"],
+    "isCurrent": true,
+    "operations": []
+  },
+  "apiManagementDiagnostic": {
+    "diagnosticId": "applicationinsights"
+  },
+  "apiManagementDiagnosticSettings": {
+    "name": "test-api-diagnostic"
+  },
+  "functionApp": {
+    "servicePlan": {
+      "name": "test-rest-api-func-plan",
+      "resourceGroupName": "test-rg-dev",
+      "sku": {
+        "name": "FC1",
+        "tier": "FlexConsumption"
+      }
+    },
+    "storageAccount": {
+      "accountName": "test-rest-api-func-sa",
+      "resourceGroupName": "test-rg-dev"
+    },
+    "deploymentStorageContainer": {
+      "containerName": "test-deployment-container",
+      "accountName": "test-rest-api-func-sa-dev",
+      "resourceGroupName": "test-rg-dev"
+    },
+    "storageContainer": {
+      "containerName": "test-storage-container",
+      "accountName": "test-rest-api-func-sa-dev",
+      "resourceGroupName": "test-rg-dev"
+    },
+    "appConfiguration": {
+      "configStoreName": "test-rest-api-func-config",
+      "resourceGroupName": "test-rg-dev"
+    },
+    "app": {
+      "name": "test-rest-api-func-app",
+      "resourceGroupName": "test-rg-dev",
+      "kind": "functionapp,linux"
+    },
+    "dashboard": {
+      "enabled": false
+    },
+    "deploySource": "dist",
+    "packageName": "app.zip",
+    "timerTriggerCronExpression": "0 */5 * * * *"
+  },
+  "commonLogAnalyticsWorkspace": {
+    "workspaceName": "test-workspace",
+    "resourceGroupName": "test-rg-dev"
+  },
+  "commonApplicationInsights": {
+    "resourceName": "test-app-insights",
+    "resourceGroupName": "test-rg-dev"
+  }
+}
