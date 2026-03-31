@@ -34,7 +34,6 @@ export class AzureRestApiFunction extends AzureFunctionApp {
     this.createFunctionHosts()
     this.createCodePackage()
     this.createFunctionAppSiteConfig()
-    // this.createFunctionAppAuthentication()
     this.createFunctionApp()
     this.createRoleAssignments()
     this.resolveApiKeyVault()
@@ -229,12 +228,6 @@ export class AzureRestApiFunction extends AzureFunctionApp {
           `<origin>https://${this.props.apiManagementCors?.originSubdomain}-${locale}.${this.props.domainName}</origin>`
         )
       })
-
-      // todo set in consumer
-      /* isDevStage(this.props.stage) ? allowedOrigins.push('<origin>http://localhost:3000</origin>') : ''
-      isDevStage(this.props.stage) ? allowedOrigins.push('<origin>http://localhost:5000</origin>') : ''
-      isDevStage(this.props.stage) ? allowedOrigins.push('<origin>http://localhost:5001</origin>') : ''
-      allowedOrigins.push('<origin>http://bs-local.com/</origin>') */
     }
 
     const allowedHeaders: string[] = []
@@ -260,16 +253,6 @@ export class AzureRestApiFunction extends AzureFunctionApp {
           </allowed-headers>
         </cors>`.replace(/\n[ \t]*\n/g, '\n') // move to utils
   }
-
-  /* protected createApiAuthenticationPolicy() {
-    if (this.props.functionApp.app.authSettingsV2?.authEnabled === true) {
-      this.apiManagementAuthenticationPolicyXmlContent = `<authentication-managed-identity resource="${this.functionAppRegistration.clientId}"
-          output-token-variable-name="msi-access-token" ignore-error="false" />
-        <set-header name="Authorization" exists-action="override">
-          <value>@("Bearer " + (string)context.Variables["msi-access-token"])</value>
-        </set-header>`
-    }
-  } */
 
   protected createApiPolicy() {
     const policyXmlContent = pulumi.interpolate`

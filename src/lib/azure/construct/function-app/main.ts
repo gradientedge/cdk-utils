@@ -45,7 +45,6 @@ export class AzureFunctionApp extends CommonAzureConstruct {
   dataStorageContainer: BlobContainer
 
   applicationInsights: Output<GetComponentResult>
-  // functionAppRegistration: ApplicationRegistration
   functionDashboard: Dashboard
 
   constructor(id: string, props: AzureFunctionAppProps) {
@@ -71,7 +70,6 @@ export class AzureFunctionApp extends CommonAzureConstruct {
     this.createFunctionHosts()
     this.createCodePackage()
     this.createFunctionAppSiteConfig()
-    // this.createFunctionAppAuthentication()
     this.createFunctionApp()
     this.createRoleAssignments()
     this.createFunctionDashboard()
@@ -257,82 +255,6 @@ export class AzureFunctionApp extends CommonAzureConstruct {
   }
 
   protected createFunctionAppSiteConfig() {}
-
-  /* protected createFunctionAppAuthentication() {
-    if (this.props.functionFunctionApp?.authSettingsV2?.authEnabled === true) {
-      new AzureadProvider(this, `${this.id}-azuread-provider`, this.props)
-
-      // Creates the app registration
-      this.functionAppRegistration = new ApplicationRegistration(this, `${this.id}-app-registration`, {
-        displayName: `RTP-${this.id.toUpperCase()}-${this.props.stage.toUpperCase()}`,
-      })
-
-      new ApplicationIdentifierUri(this, `${this.id}-app-identifier-uri`, {
-        applicationId: this.functionAppRegistration.id,
-        identifierUri: `api://${this.functionAppRegistration.clientId}`,
-      })
-
-      // Use a managed identity instead of a secret (preview)
-      // https://learn.microsoft.com/en-us/azure/app-service/configure-authentication-provider-aad?tabs=workforce-configuration#use-a-managed-identity-instead-of-a-secret-preview
-      // Step 1 : Create a user-assigned managed identity resource
-      const userAssignedIdentity = new UserAssignedIdentity(this, `${this.id}-user-assigned-identity`, {
-        location: this.props.location,
-        resourceGroupName: this.resourceGroup.name,
-        name: this.resourceNameFormatter.format(
-          `${this.id}`,
-          this.props.resourceNameOptions?.userAssignedIdentity
-        ),
-      })
-
-      // Step 2 : Assign that identity to your Azure Functions resource
-      this.props.functionFunctionApp = {
-        ...this.props.functionFunctionApp,
-        identity: {
-          type: 'SystemAssigned, UserAssigned',
-          identityIds: [userAssignedIdentity.id],
-        },
-      }
-
-      // Step 4 : Configure a federated identity credential
-      new ApplicationFederatedIdentityCredential(this, `${this.id}-federated-identity-credential`, {
-        applicationId: this.functionAppRegistration.id,
-        displayName: `${this.props.stage}-federated-id`,
-        issuer: `https://login.microsoftonline.com/${this.props.tenantId}/v2.0`,
-        audiences: ['api://AzureADTokenExchange'],
-        subject: userAssignedIdentity.id,
-      })
-
-      // Step 5 : Add a new application setting named OVERRIDE_USE_MI_FIC_ASSERTION_CLIENTID
-      this.functionFunctionAppEnvironmentVariables = {
-        ...this.functionFunctionAppEnvironmentVariables,
-        OVERRIDE_USE_MI_FIC_ASSERTION_CLIENTID: userAssignedIdentity.clientId,
-      }
-
-      // Step 5 : In the built-in authentication settings for your app resource, set Client secret setting name to OVERRIDE_USE_MI_FIC_ASSERTION_CLIENTID
-      this.props.functionFunctionApp = {
-        ...this.props.functionFunctionApp,
-        name: this.id,
-        stickySettings: {
-          appSettingNames: ['OVERRIDE_USE_MI_FIC_ASSERTION_CLIENTID'],
-        },
-        authSettingsV2: {
-          ...this.props.functionFunctionApp?.authSettingsV2,
-          unauthenticatedAction: 'Return401',
-          requireAuthentication: true,
-          runtimeVersion: '~1',
-          activeDirectoryV2: {
-            clientId: this.functionAppRegistration.clientId,
-            clientSecretSettingName: 'OVERRIDE_USE_MI_FIC_ASSERTION_CLIENTID',
-            allowedAudiences: [`api://${this.functionAppRegistration.clientId}`],
-            tenantAuthEndpoint: `https://sts.windows.net/${this.props.tenantId}/v2.0`,
-          },
-          login: {
-            tokenStoreEnabled: true,
-          },
-        },
-      }
-    }
-  } */
 
   protected createFunctionApp(resourceOptions?: ResourceOptions) {
     this.app = this.functionManager.createFunctionAppFlexConsumption(
