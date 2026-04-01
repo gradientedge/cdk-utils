@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>aws/src/services/evidently/main.ts - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="main.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <script src="scripts/commonNav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">aws/src/services/evidently/main.ts</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { CfnExperiment, CfnFeature, CfnLaunch, CfnProject, CfnSegment } from 'aws-cdk-lib/aws-evidently'
+import { CommonConstruct } from '../../common/index.js'
+import { createCfnOutput } from '../../utils/index.js'
+import {
+  EvidentlyExperimentProps,
+  EvidentlyFeatureProps,
+  EvidentlyLaunchProps,
+  EvidentlyProjectProps,
+  EvidentlySegmentProps,
+} from './types.js'
+
+/**
+ * @classdesc Provides operations on AWS Evidently
+ * - A new instance of this class is injected into {@link CommonConstruct} constructor.
+ * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
+ * @example
+ * import { CommonConstruct } from '@gradientedge/cdk-utils'
+ *
+ * class CustomConstruct extends CommonConstruct {
+ *   constructor(parent: cdk.Construct, id: string, props: common.CommonStackProps) {
+ *     super(parent, id, props)
+ *     this.props = props
+ *     this.evidentlyManager.createProject('MyNewProhect', this, props)
+ *   }
+ * }
+ * @see [CDK Evidently Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_evidently-readme.html}
+ */
+export class EvidentlyManager {
+  /**
+   * @summary Method to create a project
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props the project properties
+   */
+  public createProject(id: string, scope: CommonConstruct, props: EvidentlyProjectProps) {
+    if (!props) throw `EvidentlyProject props undefined for ${id}`
+    if (!props.name) throw `EvidentlyProject name undefined for ${id}`
+
+    const project = new CfnProject(scope, `${id}`, {
+      ...props,
+      description: `${props.description} ${scope.props.stage}`,
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.evidentlyProject),
+    })
+    createCfnOutput(`${id}-projectArn`, scope, project.attrArn)
+    createCfnOutput(`${id}-projectName`, scope, project.name)
+    return project
+  }
+
+  /**
+   * @summary Method to create a feature
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props the feature properties
+   */
+  public createFeature(id: string, scope: CommonConstruct, props: EvidentlyFeatureProps) {
+    if (!props) throw `EvidentlyFeature props undefined for ${id}`
+
+    const feature = new CfnFeature(scope, `${id}`, props)
+    createCfnOutput(`${id}-featureArn`, scope, feature.attrArn)
+    createCfnOutput(`${id}-featureName`, scope, feature.name)
+    return feature
+  }
+
+  /**
+   * @summary Method to create a launch
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props the launch properties
+   */
+  public createLaunch(id: string, scope: CommonConstruct, props: EvidentlyLaunchProps) {
+    if (!props) throw `EvidentlyLaunch props undefined for ${id}`
+    if (!props.name) throw `EvidentlyLaunch name undefined for ${id}`
+
+    const launch = new CfnLaunch(scope, `${id}`, {
+      ...props,
+      description: `${props.description} ${scope.props.stage}`,
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.evidentlyLaunch),
+    })
+    createCfnOutput(`${id}-launchArn`, scope, launch.attrArn)
+    createCfnOutput(`${id}-launchName`, scope, launch.name)
+    return launch
+  }
+
+  /**
+   * @summary Method to create an experiment
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props the experiment properties
+   */
+  public createExperiment(id: string, scope: CommonConstruct, props: EvidentlyExperimentProps) {
+    if (!props) throw `EvidentlyExperiment props undefined for ${id}`
+    if (!props.name) throw `EvidentlyExperiment name undefined for ${id}`
+
+    const experiment = new CfnExperiment(scope, `${id}`, {
+      ...props,
+      description: `${props.description} ${scope.props.stage}`,
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.evidentlyExperiment),
+    })
+    createCfnOutput(`${id}-experimentArn`, scope, experiment.attrArn)
+    createCfnOutput(`${id}-experimentName`, scope, experiment.name)
+    return experiment
+  }
+
+  /**
+   * @summary Method to create a segment
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props the segment properties
+   */
+  public createSegment(id: string, scope: CommonConstruct, props: EvidentlySegmentProps) {
+    if (!props) throw `EvidentlySegment props undefined for ${id}`
+    if (!props.name) throw `EvidentlySegment name undefined for ${id}`
+
+    const segment = new CfnSegment(scope, `${id}`, {
+      ...props,
+      description: `${props.description} ${scope.props.stage}`,
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.evidentlySegment),
+    })
+    createCfnOutput(`${id}-segmentArn`, scope, segment.attrArn)
+    createCfnOutput(`${id}-segmentName`, scope, segment.name)
+    return segment
+  }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+    
+</div>
+
+<br class="clear">
+
+<footer>
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>

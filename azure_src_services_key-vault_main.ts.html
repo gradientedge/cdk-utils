@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>azure/src/services/key-vault/main.ts - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="main.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <script src="scripts/commonNav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">azure/src/services/key-vault/main.ts</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { getVaultOutput, Secret, SkuFamily, SkuName, Vault } from '@pulumi/azure-native/keyvault/index.js'
+import { ResourceOptions } from '@pulumi/pulumi'
+import { CommonAzureConstruct } from '../../common/index.js'
+import { KeyVaultProps, SecretProps } from './types.js'
+
+/**
+ * @classdesc Provides operations on Azure Key Vault using Pulumi
+ * - A new instance of this class is injected into {@link CommonAzureConstruct} constructor.
+ * - If a custom construct extends {@link CommonAzureConstruct}, an instance is available within the context.
+ * @example
+ * ```typescript
+ * import { CommonAzureConstruct, CommonAzureStackProps } from '@gradientedge/cdk-utils'
+ *
+ * class CustomConstruct extends CommonAzureConstruct {
+ *   constructor(name: string, props: CommonAzureStackProps) {
+ *     super(name, props)
+ *     this.props = props
+ *     this.keyVaultManager.createKeyVault('MyKeyVault', this, props)
+ *   }
+ * }
+ * ```
+ */
+export class AzureKeyVaultManager {
+  /**
+   * @summary Method to create a new key vault
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props key vault properties
+   * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native Key Vault]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/keyvault/vault/}
+   */
+  public createKeyVault(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: KeyVaultProps,
+    resourceOptions?: ResourceOptions
+  ) {
+    if (!props) throw `Props undefined for ${id}`
+
+    // Get resource group name
+    const resourceGroupName = scope.props.resourceGroupName
+      ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
+      : props.resourceGroupName
+
+    if (!resourceGroupName) throw `Resource group name undefined for ${id}`
+
+    return new Vault(
+      `${id}-kv`,
+      {
+        ...props,
+        vaultName: scope.resourceNameFormatter.format(
+          props.vaultName?.toString(),
+          scope.props.resourceNameOptions?.keyVault
+        ),
+        location: props.location ?? scope.props.location,
+        resourceGroupName: resourceGroupName,
+        properties: {
+          ...(props.properties as any),
+          sku: (props.properties as any)?.sku ?? {
+            family: SkuFamily.A,
+            name: SkuName.Standard,
+          },
+          tenantId: (props.properties as any)?.tenantId ?? scope.props.tenantId ?? '',
+          enableRbacAuthorization: (props.properties as any)?.enableRbacAuthorization ?? true,
+          enableSoftDelete: (props.properties as any)?.enableSoftDelete ?? true,
+          softDeleteRetentionInDays: (props.properties as any)?.softDeleteRetentionInDays ?? 90,
+          enablePurgeProtection: (props.properties as any)?.enablePurgeProtection ?? true,
+        },
+        tags: props.tags ?? {
+          environment: scope.props.stage,
+        },
+      },
+      { parent: scope, ...resourceOptions }
+    )
+  }
+
+  /**
+   *
+   * @summary Method to create a new key vault secret
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props key vault secret properties
+   * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native Key Vault Secret]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/keyvault/secret/}
+   */
+  public createKeyVaultSecret(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: SecretProps,
+    resourceOptions?: ResourceOptions
+  ) {
+    if (!props) throw `Props undefined for ${id}`
+
+    return new Secret(`${id}`, props, { parent: scope, ...resourceOptions })
+  }
+
+  /**
+   * @summary Method to resolve an existing key vault
+   * @param scope scope in which this resource is defined
+   * @param vaultName the key vault name
+   * @param resourceGroupName the resource group name
+   * @param resourceOptions Optional settings to control resource behaviour
+   */
+  public resolveKeyVault(
+    scope: CommonAzureConstruct,
+    vaultName: string,
+    resourceGroupName: string,
+    resourceOptions?: ResourceOptions
+  ) {
+    return getVaultOutput({ vaultName, resourceGroupName }, { parent: scope, ...resourceOptions })
+  }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+    
+</div>
+
+<br class="clear">
+
+<footer>
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>

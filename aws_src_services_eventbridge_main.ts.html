@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>aws/src/services/eventbridge/main.ts - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="main.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <script src="scripts/commonNav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">aws/src/services/eventbridge/main.ts</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { Tags } from 'aws-cdk-lib'
+import { ICluster, ITaskDefinition } from 'aws-cdk-lib/aws-ecs'
+import { CfnRule, EventBus, IEventBus, IRuleTarget, Rule } from 'aws-cdk-lib/aws-events'
+import { CfnRole, Role } from 'aws-cdk-lib/aws-iam'
+import { CfnPermission, IFunction } from 'aws-cdk-lib/aws-lambda'
+import { CfnPipe } from 'aws-cdk-lib/aws-pipes'
+import { IQueue } from 'aws-cdk-lib/aws-sqs'
+import { IStateMachine } from 'aws-cdk-lib/aws-stepfunctions'
+import _ from 'lodash'
+import { CommonConstruct } from '../../common/index.js'
+import { createCfnOutput } from '../../utils/index.js'
+import {
+  DynamoDbToLambdaPipeProps,
+  EventBusProps,
+  EventRuleProps,
+  RuleProps,
+  SqsToLambdaPipeProps,
+  SqsToSfnPipeProps,
+} from './types.js'
+
+/**
+ * @classdesc Provides operations on AWS EventBridge.
+ * - A new instance of this class is injected into {@link CommonConstruct} constructor.
+ * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
+ * @example
+ * import { CommonConstruct } from '@gradientedge/cdk-utils'
+ *
+ * class CustomConstruct extends CommonConstruct {
+ *   constructor(parent: Construct, id: string, props: common.CommonStackProps) {
+ *     super(parent, id, props)
+ *     this.props = props
+ *     this.eventManager.createLambdaRule('MyLambdaRule', this, lambdaFunction)
+ *   }
+ * }
+ * @see [CDK EventBridge Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_events-readme.html}
+ */
+export class EventManager {
+  /**
+   * Method to create an event bus
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props event bus properties
+   */
+  public createEventBus(id: string, scope: CommonConstruct, props: EventBusProps) {
+    if (!props) throw `EventBus props undefined for ${id}`
+    if (!props.eventBusName) throw `EventBus eventBusName undefined for ${id}`
+
+    let eventBusName = props.eventBusName
+    if (eventBusName != 'default') {
+      eventBusName = scope.resourceNameFormatter.format(
+        props.eventBusName,
+        scope.props.resourceNameOptions?.eventbridgeBus
+      )
+    }
+    const eventBus = new EventBus(scope, `${id}`, {
+      ...props,
+      eventBusName,
+    })
+
+    createCfnOutput(`${id}-eventBusName`, scope, eventBusName)
+    createCfnOutput(`${id}-eventBusArn`, scope, eventBus.eventBusArn)
+
+    return eventBus
+  }
+
+  /**
+   * Method to create an event rule
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props event rule properties
+   * @param eventBus optional custom event bus
+   * @param targets optional event targets
+   */
+  public createRule(
+    id: string,
+    scope: CommonConstruct,
+    props: EventRuleProps,
+    eventBus?: IEventBus,
+    targets?: IRuleTarget[]
+  ) {
+    if (!props) throw `EventRule props undefined for ${id}`
+    if (!props.ruleName) throw `EventRule ruleName undefined for ${id}`
+
+    const rule = new Rule(scope, `${id}`, {
+      ...props,
+      eventBus,
+      ruleName: scope.resourceNameFormatter.format(props.ruleName, scope.props.resourceNameOptions?.eventbridgeRule),
+    })
+
+    if (targets &amp;&amp; !_.isEmpty(targets)) {
+      _.forEach(targets, target => {
+        rule.addTarget(target)
+      })
+    }
+
+    if (props.tags &amp;&amp; !_.isEmpty(props.tags)) {
+      _.forEach(props.tags, tag => {
+        Tags.of(rule).add(tag.key, tag.value)
+      })
+    }
+
+    createCfnOutput(`${id}-ruleArn`, scope, rule.ruleArn)
+    createCfnOutput(`${id}-ruleName`, scope, rule.ruleName)
+
+    return rule
+  }
+
+  /**
+   * @summary Method to create an eventbridge rule with lambda target
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props
+   * @param lambdaFunction
+   * @param eventBusName
+   * @param eventPattern
+   * @param scheduleExpression
+   */
+  public createLambdaRule(
+    id: string,
+    scope: CommonConstruct,
+    props: RuleProps,
+    lambdaFunction: IFunction,
+    eventBusName?: string,
+    eventPattern?: any,
+    scheduleExpression?: string
+  ) {
+    if (!props) throw `EventRule props undefined for ${id}`
+    if (!props.name) throw `EventRule name undefined for ${id}`
+
+    const eventRule = new CfnRule(scope, `${id}`, {
+      ...props,
+      description: 'Rule to send notification to lambda function target',
+      eventBusName,
+      eventPattern,
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.eventbridgeRule),
+      scheduleExpression,
+      targets: [
+        {
+          arn: lambdaFunction.functionArn,
+          id: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.eventbridgeRule),
+          input: props.input ?? undefined,
+        },
+      ],
+    })
+
+    if (props.tags &amp;&amp; !_.isEmpty(props.tags)) {
+      _.forEach(props.tags, tag => {
+        Tags.of(eventRule).add(tag.key, tag.value)
+      })
+    }
+
+    new CfnPermission(scope, `${id}LambdaPermission`, {
+      action: 'lambda:InvokeFunction',
+      functionName: lambdaFunction.functionName,
+      principal: 'events.amazonaws.com',
+      sourceArn: eventRule.attrArn,
+    })
+
+    createCfnOutput(`${id}-ruleArn`, scope, eventRule.attrArn)
+    createCfnOutput(`${id}-ruleName`, scope, eventRule.name)
+
+    return eventRule
+  }
+
+  /**
+   * @summary Method to create an eventbridge rule with fargate task target
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props
+   * @param cluster
+   * @param task
+   * @param subnetIds
+   * @param role
+   * @param eventPattern
+   */
+  public createFargateTaskRule(
+    id: string,
+    scope: CommonConstruct,
+    props: RuleProps,
+    cluster: ICluster,
+    task: ITaskDefinition,
+    subnetIds: string[],
+    role: Role | CfnRole,
+    eventPattern?: any
+  ) {
+    if (!props) throw `EventRule props undefined for ${id}`
+    if (!props.name) throw `EventRule name undefined for ${id}`
+
+    const eventRule = new CfnRule(scope, `${id}`, {
+      ...props,
+      description: 'Rule to send notification on new objects in data bucket to ecs task target',
+      eventPattern,
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.eventbridgeRule),
+      targets: [
+        {
+          arn: cluster.clusterArn,
+          ecsParameters: {
+            launchType: 'FARGATE',
+            networkConfiguration: {
+              awsVpcConfiguration: { assignPublicIp: 'ENABLED', subnets: subnetIds },
+            },
+            taskCount: 1,
+            taskDefinitionArn: task.taskDefinitionArn,
+          },
+          id: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.eventbridgeRule),
+          roleArn: role instanceof Role ? role.roleArn : role.attrArn,
+        },
+      ],
+    })
+
+    createCfnOutput(`${id}-ruleArn`, scope, eventRule.attrArn)
+    createCfnOutput(`${id}-ruleName`, scope, eventRule.name)
+
+    return eventRule
+  }
+
+  /**
+   * @summary Method to create an eventbridge pipe with sqs queue as source and step function as target
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props the props for the pipe
+   * @param sourceQueue the source sqs queue
+   * @param targetStepFunction the target step function
+   */
+  public createSqsToSfnCfnPipe(
+    id: string,
+    scope: CommonConstruct,
+    props: SqsToSfnPipeProps,
+    sourceQueue: IQueue,
+    targetStepFunction: IStateMachine
+  ) {
+    if (!props) throw `Pipe props undefined for ${id}`
+    if (!props.name) throw `Pipe name undefined for ${id}`
+
+    const pipeRole = scope.iamManager.createRoleForSqsToSfnPipe(
+      `${id}-role`,
+      scope,
+      sourceQueue.queueArn,
+      targetStepFunction.stateMachineArn
+    )
+
+    const pipe = new CfnPipe(scope, `${id}`, {
+      ...props,
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.eventbridgePipe),
+      roleArn: pipeRole.roleArn,
+      source: sourceQueue.queueArn,
+      sourceParameters: {
+        filterCriteria: props.pipeFilterPattern
+          ? {
+              filters: [
+                {
+                  pattern: JSON.stringify(props.pipeFilterPattern),
+                },
+              ],
+            }
+          : undefined,
+        sqsQueueParameters: {
+          batchSize: props.sqsBatchSize,
+          maximumBatchingWindowInSeconds: props.sqsMaximumBatchingWindowInSeconds,
+        },
+      },
+      target: targetStepFunction.stateMachineArn,
+      targetParameters: {
+        inputTemplate: props.sfnInputTemplate,
+        stepFunctionStateMachineParameters: {
+          invocationType: props.sfnInvocationType ?? 'FIRE_AND_FORGET',
+        },
+      },
+    })
+
+    createCfnOutput(`${id}-pipeArn`, scope, pipe.attrArn)
+    createCfnOutput(`${id}-pipeName`, scope, pipe.name)
+
+    return pipe
+  }
+
+  /**
+   * @summary Method to create an eventbridge pipe with sqs queue as source and lambda function as target
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props the props for the pipe
+   * @param sourceQueue the source sqs queue
+   * @param targetLambdaFunction the target lambda function
+   */
+  public createSqsToLambdaCfnPipe(
+    id: string,
+    scope: CommonConstruct,
+    props: SqsToLambdaPipeProps,
+    sourceQueue: IQueue,
+    targetLambdaFunction: IFunction
+  ) {
+    if (!props) throw `Pipe props undefined for ${id}`
+    if (!props.name) throw `Pipe name undefined for ${id}`
+
+    const pipeRole = scope.iamManager.createRoleForSqsToLambdaPipe(
+      `${id}-role`,
+      scope,
+      sourceQueue.queueArn,
+      targetLambdaFunction.functionArn
+    )
+
+    const pipe = new CfnPipe(scope, `${id}`, {
+      ...props,
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.eventbridgePipe),
+      roleArn: pipeRole.roleArn,
+      source: sourceQueue.queueArn,
+      sourceParameters: {
+        filterCriteria: props.pipeFilterPattern
+          ? {
+              filters: [
+                {
+                  pattern: JSON.stringify(props.pipeFilterPattern),
+                },
+              ],
+            }
+          : undefined,
+        sqsQueueParameters: {
+          batchSize: props.sqsBatchSize,
+          maximumBatchingWindowInSeconds: props.sqsMaximumBatchingWindowInSeconds,
+        },
+      },
+      target: targetLambdaFunction.functionArn,
+      targetParameters: {
+        inputTemplate: props.lambdaInputTemplate,
+      },
+    })
+
+    createCfnOutput(`${id}-pipeArn`, scope, pipe.attrArn)
+    createCfnOutput(`${id}-pipeName`, scope, pipe.name)
+
+    return pipe
+  }
+
+  /**
+   * @summary Method to create an eventbridge pipe with DynamoDb stream as source and lambda function as target
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props the props for the pipe
+   * @param dynamoDbStream the source dynamoDb stream
+   * @param targetLambdaFunction the target lambda function
+   */
+  public createDynamoDbToLambdaCfnPipe(
+    id: string,
+    scope: CommonConstruct,
+    props: DynamoDbToLambdaPipeProps,
+    sourceDynamoDbStreamArn: string,
+    targetLambdaFunction: IFunction
+  ) {
+    if (!props) throw `Pipe props undefined for ${id}`
+    if (!props.name) throw `Pipe name undefined for ${id}`
+
+    const pipeRole = scope.iamManager.createRoleForDynamoDbToLambdaPipe(
+      `${id}-role`,
+      scope,
+      sourceDynamoDbStreamArn,
+      targetLambdaFunction.functionArn
+    )
+
+    const pipe = new CfnPipe(scope, `${id}`, {
+      ...props,
+      name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.eventbridgePipe),
+      roleArn: pipeRole.roleArn,
+      source: sourceDynamoDbStreamArn,
+      sourceParameters: {
+        filterCriteria: props.pipeFilterPattern
+          ? {
+              filters: [
+                {
+                  pattern: JSON.stringify(props.pipeFilterPattern),
+                },
+              ],
+            }
+          : undefined,
+        dynamoDbStreamParameters: {
+          startingPosition: props.dynamoDbStartingPosition,
+          batchSize: props.dynamoDbBatchSize,
+        },
+      },
+      target: targetLambdaFunction.functionArn,
+    })
+
+    createCfnOutput(`${id}-pipeArn`, scope, pipe.attrArn)
+    createCfnOutput(`${id}-pipeName`, scope, pipe.name)
+
+    return pipe
+  }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+    
+</div>
+
+<br class="clear">
+
+<footer>
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>

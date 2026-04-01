@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>aws/src/construct/static-asset-deployment/main.ts - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="main.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <script src="scripts/commonNav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">aws/src/construct/static-asset-deployment/main.ts</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { Fn } from 'aws-cdk-lib'
+import { IBucket } from 'aws-cdk-lib/aws-s3'
+import { IDistribution, DistributionAttributes } from 'aws-cdk-lib/aws-cloudfront'
+import { Construct } from 'constructs'
+import { BucketDeployment, Source, BucketDeploymentProps, ISource } from 'aws-cdk-lib/aws-s3-deployment'
+import _ from 'lodash'
+import { CommonConstruct } from '../../common/index.js'
+import { StaticAssetDeploymentProps } from './types.js'
+import appRoot from 'app-root-path'
+import path from 'path'
+
+/**
+ * @classdesc Provides a construct to create and deploy static assets into S3 bucket
+ * @example
+ * import { StaticAssetDeployment, StaticAssetDeploymentProps } '@gradientedge/cdk-utils'
+ * import { Construct } from 'constructs'
+ *
+ * class CustomConstruct extends StaticAssetDeployment {
+ *   constructor(parent: Construct, id: string, props: StaticAssetDeploymentProps) {
+ *     super(parent, id, props)
+ *     this.initResources()
+ *   }
+ * }
+ */
+export class StaticAssetDeployment extends CommonConstruct {
+  /* construct resources */
+  staticAssetBucket: IBucket
+  cloudfrontDistribution?: IDistribution
+  props: StaticAssetDeploymentProps
+  id: string
+
+  constructor(parent: Construct, id: string, props: StaticAssetDeploymentProps) {
+    super(parent, id, props)
+    this.id = id
+    this.props = props
+  }
+  /**
+   * @summary Initialise and provision resources
+   */
+  public initResources() {
+    this.createAssetBucket()
+    this.resolveDistribution()
+    this.deployStaticAssets()
+  }
+
+  /**
+   * @summary Create the static asset bucket
+   */
+  protected createAssetBucket() {
+    this.staticAssetBucket = this.s3Manager.createS3Bucket(`${this.id}-sa-bucket`, this, this.props.staticAssetBucket)
+  }
+
+  /**
+   * @summary Distribute the load for the static asset bucket if both distribution and paths are provided
+   */
+  protected resolveDistribution() {
+    if (
+      this.props.cloudFrontDistribution &amp;&amp;
+      (this.props.cloudFrontDistribution.domainName || this.props.cloudFrontDistribution.domainNameRef) &amp;&amp;
+      (this.props.cloudFrontDistribution.distributionId || this.props.cloudFrontDistribution.distributionIdRef) &amp;&amp;
+      this.props.cloudFrontDistribution.invalidationPaths &amp;&amp;
+      this.props.cloudFrontDistribution.invalidationPaths.length > 0
+    ) {
+      let domainName = this.props.cloudFrontDistribution.domainName
+      if (this.props.cloudFrontDistribution.domainNameRef) {
+        domainName = Fn.importValue(this.props.cloudFrontDistribution.domainNameRef)
+      }
+      let distributionId = this.props.cloudFrontDistribution.distributionId
+      if (this.props.cloudFrontDistribution.distributionIdRef) {
+        distributionId = Fn.importValue(this.props.cloudFrontDistribution.distributionIdRef)
+      }
+
+      const distributionAttributes = {
+        domainName: domainName,
+        distributionId: distributionId,
+      } as any as DistributionAttributes
+
+      this.cloudfrontDistribution = this.cloudFrontManager.resolveDistribution(this, distributionAttributes)
+    }
+  }
+
+  /**
+   * @summary Deploy the static assets into the static asset bucket
+   */
+  protected deployStaticAssets() {
+    let sources: Array&lt;ISource> = []
+    if (
+      Array.isArray(this.props.staticAssetSources) &amp;&amp;
+      this.props.staticAssetSources.length > 0 &amp;&amp;
+      typeof this.props.staticAssetSources[0] === 'string'
+    ) {
+      sources = this.props.staticAssetSources.map(source => {
+        const resolvedPath = path.join(appRoot.path, source)
+        return Source.asset(resolvedPath)
+      })
+    } else {
+      sources = this.props.staticAssetSources as ISource[]
+    }
+
+    let distributionOptions: Pick&lt;BucketDeploymentProps, 'distribution' | 'distributionPaths'> = {}
+    if (this.cloudfrontDistribution) {
+      distributionOptions = {
+        distribution: this.cloudfrontDistribution,
+        distributionPaths: this.props.cloudFrontDistribution?.invalidationPaths,
+      }
+    }
+
+    let destinationKeyPrefixOptions = {}
+    if (this.props.destinationKeyPrefix) {
+      destinationKeyPrefixOptions = {
+        destinationKeyPrefix: this.props.destinationKeyPrefix,
+      }
+    }
+
+    new BucketDeployment(this, `${this.id}-static-deployment`, {
+      ...this.props.staticAssetDeployment,
+      destinationBucket: this.staticAssetBucket,
+      sources: sources,
+      ...destinationKeyPrefixOptions,
+      ...distributionOptions,
+    })
+
+    const staticAssetsForExport = this.props.staticAssetsForExport
+    if (!staticAssetsForExport) return
+
+    /* optional additional exports needed for asset urls */
+    _.forEach(staticAssetsForExport, asset => {
+      this.addCfnOutput(asset.key, this.staticAssetBucket.s3UrlForObject(asset.value))
+    })
+  }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+    
+</div>
+
+<br class="clear">
+
+<footer>
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>

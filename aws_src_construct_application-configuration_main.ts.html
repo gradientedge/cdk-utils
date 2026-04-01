@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    
+    <meta charset="utf-8">
+    <title>aws/src/construct/application-configuration/main.ts - Documentation</title>
+    
+    
+    <script src="scripts/prettify/prettify.js"></script>
+    <script src="scripts/prettify/lang-css.js"></script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc.css">
+    <link type="text/css" rel="stylesheet" href="main.css">
+    <script src="scripts/nav.js" defer></script>
+    
+    <script src="scripts/commonNav.js" defer></script>
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+</head>
+<body>
+
+<input type="checkbox" id="nav-trigger" class="nav-trigger" />
+<label for="nav-trigger" class="navicon-button x">
+  <div class="navicon"></div>
+</label>
+
+<label for="nav-trigger" class="overlay"></label>
+
+<nav >
+    
+    <input type="text" id="nav-search" placeholder="Search" />
+    
+    
+</nav>
+
+<div id="main">
+    
+    <h1 class="page-title">aws/src/construct/application-configuration/main.ts</h1>
+    
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>import { Duration, Fn } from 'aws-cdk-lib'
+import {
+  CfnApplication,
+  CfnConfigurationProfile,
+  CfnDeployment,
+  CfnEnvironment,
+  CfnHostedConfigurationVersion,
+  DeploymentStrategy,
+  IDeploymentStrategy,
+  RolloutStrategy,
+} from 'aws-cdk-lib/aws-appconfig'
+import { Construct } from 'constructs'
+import { CommonConstruct } from '../../common/index.js'
+import { ApplicationConfigurationProps } from './types.js'
+
+export class ApplicationConfiguration extends CommonConstruct {
+  declare props: ApplicationConfigurationProps
+  id: string
+  appConfigApplication: CfnApplication
+  appConfigEnvironment: CfnEnvironment
+  appConfigProfile: CfnConfigurationProfile
+  appConfigVersion: CfnHostedConfigurationVersion
+  appConfigDeploymentStrategy: IDeploymentStrategy
+
+  constructor(parent: Construct, id: string, props: ApplicationConfigurationProps) {
+    super(parent, id, props)
+    this.props = props
+    this.id = id
+  }
+
+  public initResources() {
+    this.createConfiguration()
+    this.resolveEnvironmentVariables()
+  }
+
+  protected createConfiguration() {
+    this.createAppConfigApplication()
+    this.createAppConfigEnvironment()
+    this.createAppConfigProfile()
+    this.createAppConfigVersion()
+    this.createAppConfigDeploymentStrategy()
+    this.createAppConfigDeployment()
+  }
+
+  protected createAppConfigApplication() {
+    this.appConfigApplication = this.appConfigManager.createApplication(
+      `${this.id}-ac-application`,
+      this,
+      this.props.appConfig
+    )
+  }
+
+  protected createAppConfigEnvironment() {
+    this.appConfigEnvironment = this.appConfigManager.createEnvironment(
+      `${this.id}-ac-environment`,
+      this,
+      Fn.ref(this.appConfigApplication.logicalId),
+      this.props.appConfig
+    )
+  }
+
+  protected createAppConfigProfile() {
+    this.appConfigProfile = this.appConfigManager.createConfigurationProfile(
+      `${this.id}-ac-profile`,
+      this,
+      Fn.ref(this.appConfigApplication.logicalId),
+      this.props.appConfig
+    )
+  }
+
+  protected createAppConfigVersion() {
+    this.appConfigVersion = new CfnHostedConfigurationVersion(this, `${this.id}-ac-configuration`, {
+      applicationId: Fn.ref(this.appConfigApplication.logicalId),
+      configurationProfileId: Fn.ref(this.appConfigProfile.logicalId),
+      content: JSON.stringify(this.props.appConfigContent),
+      contentType: 'application/json',
+    })
+  }
+
+  protected createAppConfigDeploymentStrategy() {
+    if (!this.props.appConfig.deploymentStrategy) return
+
+    if (this.props.appConfig.deploymentStrategy?.deploymentStrategyArn) {
+      this.appConfigDeploymentStrategy = DeploymentStrategy.fromDeploymentStrategyArn(
+        this,
+        `${this.id}-ac-deployment-strategy`,
+        this.props.appConfig.deploymentStrategy?.deploymentStrategyArn
+      )
+      return
+    }
+
+    this.appConfigDeploymentStrategy = new DeploymentStrategy(this, `${this.id}-ac-deployment-strategy`, {
+      ...this.props.appConfig.deploymentStrategy,
+      rolloutStrategy:
+        this.props.appConfig.deploymentStrategy?.rolloutStrategy ??
+        RolloutStrategy.linear({
+          growthFactor: 100,
+          deploymentDuration: Duration.minutes(0),
+          finalBakeTime: Duration.minutes(0),
+        }),
+      deploymentStrategyName: this.resourceNameFormatter.format(
+        this.props.appConfig.deploymentStrategy.deploymentStrategyName ?? 'common-deployment-strategy',
+        this.props.resourceNameOptions?.appconfig
+      ),
+    })
+  }
+
+  protected createAppConfigDeployment() {
+    new CfnDeployment(this, `${this.id}-app-config-deployment`, {
+      applicationId: Fn.ref(this.appConfigApplication.logicalId),
+      configurationProfileId: Fn.ref(this.appConfigProfile.logicalId),
+      configurationVersion: Fn.ref(this.appConfigVersion.logicalId),
+      deploymentStrategyId: this.appConfigDeploymentStrategy.deploymentStrategyId,
+      environmentId: Fn.ref(this.appConfigEnvironment.logicalId),
+    })
+  }
+
+  public resolveEnvironmentVariables(): any {
+    return {
+      APP_CONFIG_APPLICATION_ID: Fn.ref(this.appConfigApplication.logicalId),
+      APP_CONFIG_CONFIGURATION_PROFILE_ID: Fn.ref(this.appConfigProfile.logicalId),
+      APP_CONFIG_ENVIRONMENT_ID: Fn.ref(this.appConfigEnvironment.logicalId),
+    }
+  }
+}
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+
+    
+</div>
+
+<br class="clear">
+
+<footer>
+</footer>
+
+<script>prettyPrint();</script>
+<script src="scripts/polyfill.js"></script>
+<script src="scripts/linenumber.js"></script>
+
+<script src="scripts/search.js" defer></script>
+
+
+<script src="scripts/collapse.js" defer></script>
+
+
+</body>
+</html>
