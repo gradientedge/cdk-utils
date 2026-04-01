@@ -1,0 +1,38 @@
+{
+  "name": "@gradientedge/cdk-utils-common",
+  "version": "0.0.0",
+  "description": "Common utilities for @gradientedge/cdk-utils",
+  "type": "module",
+  "main": "dist/src/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/src/index.js",
+      "types": "./dist/src/index.d.ts"
+    }
+  },
+  "files": [
+    "dist/src/"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "build:production": "tsc -p tsconfig.prd.json",
+    "test": "vitest run --coverage",
+    "lint": "eslint src/**/*.ts --cache --max-warnings=0 --no-warn-ignored"
+  },
+  "peerDependencies": {
+    "constructs": "^10.6.0"
+  },
+  "dependencies": {
+    "@types/lodash": "^4.17.24",
+    "lodash": "^4.17.23"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gradientedge/cdk-utils.git",
+    "directory": "packages/common"
+  }
+}

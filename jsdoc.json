@@ -5,12 +5,16 @@
     "exclude": [
       "__snapshots__",
       "test",
-      "src/test",
+      "packages/*/test",
       "__tests__",
       "build",
       "coverage",
       "logo",
       "node_modules",
+      "packages/aws/node_modules",
+      "packages/azure/node_modules",
+      "packages/cloudflare/node_modules",
+      "packages/common/node_modules",
       "app/api-destined-function/node_modules",
       "app/api-destined-function/layers",
       "dist",
@@ -26,7 +30,7 @@
     "node_modules/better-docs/typescript"
   ],
   "typescript": {
-    "moduleRoot": "src"
+    "moduleRoot": "packages"
   },
   "docdash": {
     "static": true,

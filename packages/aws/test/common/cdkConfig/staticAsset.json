@@ -1,0 +1,22 @@
+{
+  "staticAssetDeployment": {
+    "prune": true,
+    "retainOnDelete": false
+  },
+  "staticAssetDeploymentNoPrune": {
+    "prune": false,
+    "retainOnDelete": false
+  },
+  "staticAssetSources": ["packages/aws/test/common/resources/", "packages/aws/test/common/"],
+  "staticAssetDestinationKeyPrefix": "destination-path/",
+  "staticAssetCloudFrontDistributionRef": {
+    "domainNameRef": "test.one.io",
+    "distributionIdRef": "D1",
+    "invalidationPaths": ["/*"]
+  },
+  "staticAssetCloudFrontDistribution": {
+    "domainName": "test.one.io",
+    "distributionId": "D1",
+    "invalidationPaths": ["/*"]
+  }
+}
