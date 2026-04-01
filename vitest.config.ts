@@ -4,6 +4,7 @@ export default defineConfig({
   test: {
     globals: true,
     environment: 'node',
+    setupFiles: ['./packages/azure/vitest.setup.ts'],
     include: ['packages/*/test/**/?(*.)+(spec|test).[t]s?(x)'],
     coverage: {
       provider: 'v8',
