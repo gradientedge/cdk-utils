@@ -51,10 +51,10 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@gradientedge/cdk-utils-aws": "workspace:*",
-    "@gradientedge/cdk-utils-azure": "workspace:*",
-    "@gradientedge/cdk-utils-cloudflare": "workspace:*",
-    "@gradientedge/cdk-utils-common": "workspace:*"
+    "@gradientedge/cdk-utils-aws": "*",
+    "@gradientedge/cdk-utils-azure": "*",
+    "@gradientedge/cdk-utils-cloudflare": "*",
+    "@gradientedge/cdk-utils-common": "*"
   },
   "devDependencies": {
     "@babel/core": "^7.29.0",
