@@ -20,7 +20,7 @@
     "lint": "eslint src/**/*.ts --cache --max-warnings=0 --no-warn-ignored"
   },
   "dependencies": {
-    "@gradientedge/cdk-utils-common": "*",
+    "@gradientedge/cdk-utils-common": "workspace:*",
     "@pulumi/archive": "^0.3.7",
     "@pulumi/azure-native": "^3.16.0",
     "@pulumi/pulumi": "^3.228.0",

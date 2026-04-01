@@ -51,10 +51,10 @@
     "prepare": "husky"
   },
   "dependencies": {
-    "@gradientedge/cdk-utils-aws": "*",
-    "@gradientedge/cdk-utils-azure": "*",
-    "@gradientedge/cdk-utils-cloudflare": "*",
-    "@gradientedge/cdk-utils-common": "*"
+    "@gradientedge/cdk-utils-aws": "workspace:*",
+    "@gradientedge/cdk-utils-azure": "workspace:*",
+    "@gradientedge/cdk-utils-cloudflare": "workspace:*",
+    "@gradientedge/cdk-utils-common": "workspace:*"
   },
   "devDependencies": {
     "@babel/core": "^7.29.0",
@@ -62,6 +62,7 @@
     "@eslint/config-array": "^0.23.3",
     "@eslint/object-schema": "^3.0.3",
     "@semantic-release/changelog": "^6.0.3",
+    "@semantic-release/exec": "^7.1.0",
     "@semantic-release/github": "^12.0.6",
     "@semantic-release/npm": "^13.1.5",
     "@types/node": "^25.5.0",
