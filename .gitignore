@@ -167,6 +167,7 @@ typedocs/
 
 # Misc
 !.eslintrc.js
+!packages/cloudflare/test/common/sample.js
 !setup.js
 .DS_Store
 dist/
