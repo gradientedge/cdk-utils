@@ -9,16 +9,16 @@ importers:
   .:
     dependencies:
       '@gradientedge/cdk-utils-aws':
-        specifier: workspace:*
+        specifier: '*'
         version: link:packages/aws
       '@gradientedge/cdk-utils-azure':
-        specifier: workspace:*
+        specifier: '*'
         version: link:packages/azure
       '@gradientedge/cdk-utils-cloudflare':
-        specifier: workspace:*
+        specifier: '*'
         version: link:packages/cloudflare
       '@gradientedge/cdk-utils-common':
-        specifier: workspace:*
+        specifier: '*'
         version: link:packages/common
     devDependencies:
       '@babel/core':
@@ -177,7 +177,7 @@ importers:
         specifier: ^3.973.6
         version: 3.973.6
       '@gradientedge/cdk-utils-common':
-        specifier: workspace:*
+        specifier: '*'
         version: link:../common
       '@types/lodash':
         specifier: ^4.17.24
@@ -204,7 +204,7 @@ importers:
   packages/azure:
     dependencies:
       '@gradientedge/cdk-utils-common':
-        specifier: workspace:*
+        specifier: '*'
         version: link:../common
       '@pulumi/archive':
         specifier: ^0.3.7
@@ -231,7 +231,7 @@ importers:
   packages/cloudflare:
     dependencies:
       '@gradientedge/cdk-utils-common':
-        specifier: workspace:*
+        specifier: '*'
         version: link:../common
       '@pulumi/aws':
         specifier: ^7.24.0
