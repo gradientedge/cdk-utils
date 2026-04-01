@@ -110,11 +110,14 @@ jobs:
           path: ./api-docs/
       - name: Build Production
         run: pnpm build:production
-      - name: Deploy Package(s)
+      - name: Create Release Pull Request or Publish
+        uses: changesets/action@v1
+        with:
+          publish: pnpm release
+          version: pnpm changeset version
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-        run: npx multi-semantic-release
       - name: Deploy Documentation
         uses: peaceiris/actions-gh-pages@v4
         with:
