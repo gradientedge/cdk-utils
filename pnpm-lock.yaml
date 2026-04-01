@@ -206,6 +206,9 @@ importers:
       '@gradientedge/cdk-utils-common':
         specifier: workspace:*
         version: link:../common
+      '@pulumi/archive':
+        specifier: ^0.3.7
+        version: 0.3.7(ts-node@10.9.2(@types/node@25.5.0)(typescript@4.9.5))(typescript@4.9.5)
       '@pulumi/azure-native':
         specifier: ^3.16.0
         version: 3.16.0(ts-node@10.9.2(@types/node@25.5.0)(typescript@4.9.5))(typescript@4.9.5)
@@ -221,6 +224,9 @@ importers:
       lodash:
         specifier: ^4.17.23
         version: 4.17.23
+      yaml:
+        specifier: ^2.8.3
+        version: 2.8.3
 
   packages/cloudflare:
     dependencies:
@@ -1115,6 +1121,9 @@ packages:
 
   '@protobufjs/utf8@1.1.0':
     resolution: {integrity: sha512-Vvn3zZrhQZkkBE8LSuW3em98c0FwgO4nxzv6OdSxPKJIEKY2bGbHn+mhGIPerzI4twdxaP8/0+06HBpwf345Lw==}
+
+  '@pulumi/archive@0.3.7':
+    resolution: {integrity: sha512-GHsEr0FSEDj2jvQVIoCK+7K7ZZ/5CKGWHgQM/Pg3IJn0a1a3fVNuZuJHcDyN1+AqMIVnTx5BpfHgp99RzIWBEg==}
 
   '@pulumi/aws@7.24.0':
     resolution: {integrity: sha512-Y+zV+uU3Mr+5kUaqsFbF0/lf9yc8TU1Kx1cgcqMbyUQTRBRyfpXb6lR3sBwC88z1DX/WFMrBCD+1bbwnS2fBbw==}
@@ -6618,6 +6627,14 @@ snapshots:
   '@protobufjs/pool@1.1.0': {}
 
   '@protobufjs/utf8@1.1.0': {}
+
+  '@pulumi/archive@0.3.7(ts-node@10.9.2(@types/node@25.5.0)(typescript@4.9.5))(typescript@4.9.5)':
+    dependencies:
+      '@pulumi/pulumi': 3.228.0(ts-node@10.9.2(@types/node@25.5.0)(typescript@4.9.5))(typescript@4.9.5)
+    transitivePeerDependencies:
+      - supports-color
+      - ts-node
+      - typescript
 
   '@pulumi/aws@7.24.0(ts-node@10.9.2(@types/node@25.5.0)(typescript@4.9.5))(typescript@4.9.5)':
     dependencies:
