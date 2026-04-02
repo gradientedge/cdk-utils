@@ -17,7 +17,9 @@ import {
 } from '@pulumi/azure-native/apimanagement/index.js'
 import * as redis from '@pulumi/azure-native/redis/index.js'
 import { ResourceOptions } from '@pulumi/pulumi'
+
 import { CommonAzureConstruct } from '../../common/index.js'
+
 import {
   ApiDiagnosticProps,
   ApiManagementApiProps,

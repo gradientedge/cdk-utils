@@ -11,7 +11,9 @@ import {
   ZeroTrustAccessTag,
   ZeroTrustOrganization,
 } from '@pulumi/cloudflare'
+
 import { CommonCloudflareConstruct } from '../../common/construct.js'
+
 import {
   AccessRuleProps,
   ZeroTrustAccessApplicationProps,

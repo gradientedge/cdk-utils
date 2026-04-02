@@ -5,7 +5,7 @@ import jsdoc from 'eslint-plugin-jsdoc';
 
 export default [
   {
-    ignores: ["*.js", "**/cdk.out/**", "**/build/**", "**/*.d.ts", "coverage", "api-docs/**", "dist/**"]
+    ignores: ["*.js", "**/cdk.out/**", "**/build/**", "**/*.d.ts", "coverage", "api-docs/**", "dist/**", "**/test/**"]
   },
   {
     files: ["**/*.ts"],

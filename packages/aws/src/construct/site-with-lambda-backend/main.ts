@@ -18,7 +18,9 @@ import { IBucket } from 'aws-cdk-lib/aws-s3'
 import { BucketDeployment } from 'aws-cdk-lib/aws-s3-deployment'
 import { Construct } from 'constructs'
 import _ from 'lodash'
+
 import { CommonConstruct } from '../../common/index.js'
+
 import { LAMBDA_ALIAS_NAME_CURRENT } from './constants.js'
 import {
   SiteWithLambdaBackendCachePolicyProps,

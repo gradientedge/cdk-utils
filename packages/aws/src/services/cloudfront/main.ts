@@ -22,9 +22,11 @@ import { AssetCode, FileSystem, ILayerVersion } from 'aws-cdk-lib/aws-lambda'
 import { IBucket } from 'aws-cdk-lib/aws-s3'
 import { AwsCustomResource, AwsCustomResourcePolicy, PhysicalResourceId } from 'aws-cdk-lib/custom-resources'
 import _ from 'lodash'
+
 import { CommonConstruct, CommonStack } from '../../common/index.js'
 import { createCfnOutput } from '../../utils/index.js'
 import { LambdaEdgeProps } from '../lambda/index.js'
+
 import { CloudfrontFunctionProps, DistributionProps } from './types.js'
 
 /**

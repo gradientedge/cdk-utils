@@ -1,8 +1,10 @@
 import { Tags } from 'aws-cdk-lib'
 import { BillingMode, Table, TableV2, TableEncryption } from 'aws-cdk-lib/aws-dynamodb'
 import _ from 'lodash'
+
 import { CommonConstruct } from '../../common/index.js'
 import { createCfnOutput } from '../../utils/index.js'
+
 import { TableProps, TablePropsV2 } from './types.js'
 
 /**

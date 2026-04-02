@@ -1,6 +1,8 @@
 import { RoleAssignment } from '@pulumi/azure-native/authorization/index.js'
 import { Input, ResourceOptions } from '@pulumi/pulumi'
+
 import { CommonAzureConstruct } from '../../common/index.js'
+
 import { RoleDefinitionId } from './constants.js'
 import { RoleAssignmentProps } from './types.js'
 

@@ -16,8 +16,10 @@ import {
 import { ICertificate } from 'aws-cdk-lib/aws-certificatemanager'
 import { IFunction } from 'aws-cdk-lib/aws-lambda'
 import _ from 'lodash'
+
 import { CommonConstruct } from '../../common/index.js'
 import { createCfnOutput } from '../../utils/index.js'
+
 import { LambdaRestApiProps } from './types.js'
 
 /**

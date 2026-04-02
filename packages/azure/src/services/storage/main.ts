@@ -15,7 +15,9 @@ import {
 } from '@pulumi/azure-native/storage/index.js'
 import * as pulumi from '@pulumi/pulumi'
 import { ResourceOptions } from '@pulumi/pulumi'
+
 import { CommonAzureConstruct } from '../../common/index.js'
+
 import {
   ContainerSasTokenProps,
   ManagementPolicyProps,

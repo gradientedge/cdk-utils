@@ -1,5 +1,6 @@
 import { AssetCode, LambdaInsightsVersion } from 'aws-cdk-lib/aws-lambda'
 import { SecretProps } from 'aws-cdk-lib/aws-secretsmanager'
+
 import { CommonStackProps } from '../../common/index.js'
 import { LambdaEnvironment, LambdaProps } from '../../services/index.js'
 

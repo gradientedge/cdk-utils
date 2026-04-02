@@ -1,8 +1,10 @@
 import { CfnTrail } from 'aws-cdk-lib/aws-cloudtrail'
 import { CfnLogGroup } from 'aws-cdk-lib/aws-logs'
 import { CfnBucketPolicy, IBucket } from 'aws-cdk-lib/aws-s3'
+
 import { CommonConstruct } from '../../common/index.js'
 import { createCfnOutput } from '../../utils/index.js'
+
 import { CloudTrailProps } from './types.js'
 
 /**

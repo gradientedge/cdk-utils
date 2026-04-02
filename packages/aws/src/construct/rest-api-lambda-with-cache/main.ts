@@ -4,9 +4,11 @@ import { CfnReplicationGroup } from 'aws-cdk-lib/aws-elasticache'
 import { ManagedPolicy } from 'aws-cdk-lib/aws-iam'
 import { Construct } from 'constructs'
 import _ from 'lodash'
+
 import { createCfnOutput } from '../../utils/index.js'
-import { RestApiLambdaWithCacheProps } from './types.js'
 import { RestApiLambda } from '../rest-api-lambda/index.js'
+
+import { RestApiLambdaWithCacheProps } from './types.js'
 
 /**
  * @classdesc Provides a construct to create and deploy a RestApi API as Lambda with Caching

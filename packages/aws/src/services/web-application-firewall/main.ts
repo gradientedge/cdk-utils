@@ -1,6 +1,8 @@
 import { CfnIPSet, CfnWebACL } from 'aws-cdk-lib/aws-wafv2'
+
 import { CommonConstruct } from '../../common/index.js'
 import { createCfnOutput } from '../../utils/index.js'
+
 import { WafIPSetProps, WafWebACLProps } from './types.js'
 
 /**

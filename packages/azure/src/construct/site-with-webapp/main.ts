@@ -1,10 +1,13 @@
+import { writeFileSync } from 'fs'
+import * as path from 'path'
+
 import * as archive from '@pulumi/archive'
 import { getComponentOutput, GetComponentResult } from '@pulumi/azure-native/applicationinsights/index.js'
 import { Output, ResourceOptions } from '@pulumi/pulumi'
-import { writeFileSync } from 'fs'
 import _ from 'lodash'
-import * as path from 'path'
+
 import { CommonAzureConstruct } from '../../common/index.js'
+
 import { Site, SiteWithWebAppProps } from './types.js'
 
 /**

@@ -1,5 +1,7 @@
 import { FirewallRule } from '@pulumi/cloudflare'
+
 import { CommonCloudflareConstruct } from '../../common/index.js'
+
 import { FirewallRuleProps } from './types.js'
 
 /**

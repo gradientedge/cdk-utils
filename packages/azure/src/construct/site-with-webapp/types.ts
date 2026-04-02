@@ -3,6 +3,7 @@ import { GetFileOutputArgs } from '@pulumi/archive'
 import { BlobContainer, StorageAccount } from '@pulumi/azure-native/storage/index.js'
 import { AppServicePlan, WebApp } from '@pulumi/azure-native/web/index.js'
 import { Output } from '@pulumi/pulumi'
+
 import { CommonAzureStackProps } from '../../common/index.js'
 import { LinuxWebAppProps, ServicePlanProps, StorageAccountProps, StorageContainerProps } from '../../services/index.js'
 

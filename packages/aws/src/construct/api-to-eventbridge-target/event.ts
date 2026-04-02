@@ -1,5 +1,6 @@
 import { IEventBus, Rule } from 'aws-cdk-lib/aws-events'
 import { LogGroup } from 'aws-cdk-lib/aws-logs'
+
 import { ApiToEventBridgeTargetEventType } from './types.js'
 
 /**

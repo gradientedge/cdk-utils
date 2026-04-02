@@ -7,6 +7,7 @@ import {
   StorageAccountArgs,
   TableArgs,
 } from '@pulumi/azure-native/storage/index.js'
+
 import { BaseAzureConfigProps } from '../../types/index.js'
 
 export interface StorageAccountProps extends StorageAccountArgs {

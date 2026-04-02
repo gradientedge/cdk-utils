@@ -1,4 +1,5 @@
 import { AzureRestApi } from '../rest-api/main.js'
+
 import { AzureApiWithCache, AzureRestApiWithCacheProps } from './types.js'
 
 /**

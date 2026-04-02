@@ -11,7 +11,9 @@ import {
 } from 'aws-cdk-lib/aws-apigateway'
 import { ISecret } from 'aws-cdk-lib/aws-secretsmanager'
 import { Construct } from 'constructs'
+
 import { CommonConstruct } from '../../common/index.js'
+
 import { ApiToAnyTargetRestApi } from './target.js'
 import { ApiToAnyTargetProps, ApiToAnyTargetRestApiResource, ApiToAnyTargetRestApiType } from './types.js'
 

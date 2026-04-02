@@ -1,8 +1,10 @@
 import { GetSecretValueCommand, SecretsManagerClient } from '@aws-sdk/client-secrets-manager'
 import { Fn } from 'aws-cdk-lib'
 import { Secret } from 'aws-cdk-lib/aws-secretsmanager'
+
 import { CommonConstruct } from '../../common/index.js'
 import { createCfnOutput, determineCredentials } from '../../utils/index.js'
+
 import { SecretBaseProps } from './types.js'
 
 /**

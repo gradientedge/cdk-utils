@@ -1,5 +1,7 @@
 import { Filter } from '@pulumi/cloudflare'
+
 import { CommonCloudflareConstruct } from '../../common/index.js'
+
 import { FilterProps } from './types.js'
 
 /**

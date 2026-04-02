@@ -8,7 +8,9 @@ import {
   SqlResourceSqlRoleAssignment,
 } from '@pulumi/azure-native/cosmosdb/index.js'
 import { Input, ResourceOptions } from '@pulumi/pulumi'
+
 import { CommonAzureConstruct } from '../../common/index.js'
+
 import { CosmosRoleDefinition, CosmosRoleDefinitionId } from './constants.js'
 import {
   CosmosdbAccountProps,

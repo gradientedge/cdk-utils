@@ -7,7 +7,9 @@ import {
   WorkersScript,
 } from '@pulumi/cloudflare'
 import _ from 'lodash'
+
 import { CommonCloudflareConstruct } from '../../common/index.js'
+
 import {
   WorkerCronTriggerProps,
   WorkerDomainProps,

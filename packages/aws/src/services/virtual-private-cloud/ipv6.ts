@@ -9,7 +9,9 @@ import {
   Vpc,
 } from 'aws-cdk-lib/aws-ec2'
 import _ from 'lodash'
+
 import { CommonConstruct } from '../../common/index.js'
+
 import { VpcProps } from './types.js'
 
 export class Ipv6Vpc extends Vpc {

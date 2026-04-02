@@ -1,9 +1,11 @@
 import { Duration, RemovalPolicy, Tags } from 'aws-cdk-lib'
 import { IQueue, Queue } from 'aws-cdk-lib/aws-sqs'
 import _ from 'lodash'
+
 import { CommonConstruct } from '../../common/index.js'
 import { createCfnOutput } from '../../utils/index.js'
 import { LambdaProps } from '../lambda/index.js'
+
 import { QueueProps } from './types.js'
 
 /**

@@ -9,7 +9,9 @@ import {
 import { ARecord, IHostedZone } from 'aws-cdk-lib/aws-route53'
 import { IBucket } from 'aws-cdk-lib/aws-s3'
 import { Construct } from 'constructs'
+
 import { CommonConstruct } from '../../common/index.js'
+
 import { StaticSiteProps } from './types.js'
 
 /**

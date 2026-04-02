@@ -1,8 +1,10 @@
 import * as cdk from 'aws-cdk-lib'
 import * as logs from 'aws-cdk-lib/aws-logs'
 import _ from 'lodash'
+
 import { CommonConstruct } from '../../common/index.js'
 import * as utils from '../../utils/index.js'
+
 import { LogProps, MetricFilterProps } from './types.js'
 
 /**

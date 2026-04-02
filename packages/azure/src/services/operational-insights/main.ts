@@ -1,6 +1,8 @@
 import { Table, Workspace, WorkspaceSkuNameEnum } from '@pulumi/azure-native/operationalinsights/index.js'
 import { ResourceOptions } from '@pulumi/pulumi'
+
 import { CommonAzureConstruct } from '../../common/index.js'
+
 import { WorkspaceProps, WorkspaceTableProps } from './types.js'
 
 /**

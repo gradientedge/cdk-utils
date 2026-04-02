@@ -3,8 +3,10 @@ import { getComponentOutput, GetComponentResult } from '@pulumi/azure-native/app
 import { getVaultOutput } from '@pulumi/azure-native/keyvault/index.js'
 import * as pulumi from '@pulumi/pulumi'
 import { Output } from '@pulumi/pulumi'
+
 import { CommonAzureConstruct } from '../../common/index.js'
 import { RoleDefinitionId } from '../../services/index.js'
+
 import { AzureApi, AzureRestApiProps } from './types.js'
 
 /**

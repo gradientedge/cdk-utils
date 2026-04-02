@@ -1,6 +1,8 @@
 import { ConfigurationStore, IdentityType } from '@pulumi/azure-native/appconfiguration/index.js'
 import { ResourceOptions } from '@pulumi/pulumi'
+
 import { CommonAzureConstruct } from '../../common/index.js'
+
 import { AppConfigurationProps } from './types.js'
 
 /**

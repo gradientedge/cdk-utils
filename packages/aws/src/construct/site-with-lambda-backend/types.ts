@@ -5,6 +5,7 @@ import {
   ResponseHeadersStrictTransportSecurity,
   ResponseSecurityHeadersBehavior,
 } from 'aws-cdk-lib/aws-cloudfront'
+
 import { CommonStackProps } from '../../common/index.js'
 import {
   AcmProps,
@@ -14,6 +15,7 @@ import {
   LogProps,
   S3BucketProps,
 } from '../../services/index.js'
+
 import { SiteWithLambdaBackendResponseHeaderPolicyType } from './constants.js'
 
 /**

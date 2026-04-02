@@ -1,4 +1,5 @@
 import { Construct } from 'constructs'
+
 import { CommonStackProps, ResourceNameFormatterProps } from './types.js'
 
 export class ResourceNameFormatter extends Construct {

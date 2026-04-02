@@ -2,6 +2,7 @@ import { ApiManagementService, Logger } from '@pulumi/azure-native/apimanagement
 import { RoleAssignment } from '@pulumi/azure-native/authorization/index.js'
 import { GetVaultResult, Secret } from '@pulumi/azure-native/keyvault/index.js'
 import { Input, Output } from '@pulumi/pulumi'
+
 import {
   ApiDiagnosticProps,
   ApiManagementProps,

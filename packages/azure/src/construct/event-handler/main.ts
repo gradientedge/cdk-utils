@@ -2,7 +2,9 @@ import { Provider } from '@pulumi/azure-native'
 import { getTopicOutput, GetTopicResult, Topic } from '@pulumi/azure-native/eventgrid/index.js'
 import { Resource } from '@pulumi/azure-native/resources/index.js'
 import { Output } from '@pulumi/pulumi'
+
 import { AzureFunctionApp } from '../function-app/index.js'
+
 import { AzureEventHandlerProps, EventHandlerEventGridSubscription, EventHandlerServiceBus } from './types.js'
 
 /**

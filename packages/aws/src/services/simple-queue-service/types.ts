@@ -1,4 +1,5 @@
 import * as sqs from 'aws-cdk-lib/aws-sqs'
+
 import { TagProps } from '../../types/index.js'
 
 /**

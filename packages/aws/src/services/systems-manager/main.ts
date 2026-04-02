@@ -5,8 +5,10 @@ import {
   AwsSdkCall,
   PhysicalResourceId,
 } from 'aws-cdk-lib/custom-resources'
+
 import { CommonConstruct } from '../../common/index.js'
 import { createCfnOutput } from '../../utils/index.js'
+
 import { SSMParameterReaderProps, SSMStringParameterProps } from './types.js'
 
 /**

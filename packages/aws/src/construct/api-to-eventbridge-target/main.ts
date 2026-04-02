@@ -20,7 +20,9 @@ import { CloudWatchLogGroup } from 'aws-cdk-lib/aws-events-targets'
 import { PolicyDocument, Role, ServicePrincipal } from 'aws-cdk-lib/aws-iam'
 import { ISecret } from 'aws-cdk-lib/aws-secretsmanager'
 import { Construct } from 'constructs'
+
 import { CommonConstruct } from '../../common/index.js'
+
 import { ApiToEventbridgeTargetRestApi } from './api.js'
 import { ApiToEventbridgeTargetEvent } from './event.js'
 import {

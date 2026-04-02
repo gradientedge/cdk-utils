@@ -1,4 +1,5 @@
 import { DockerImageAsset } from 'aws-cdk-lib/aws-ecr-assets'
+
 import { CommonConstruct } from '../../common/index.js'
 import { createCfnOutput } from '../../utils/index.js'
 

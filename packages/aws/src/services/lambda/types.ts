@@ -1,5 +1,6 @@
 import { AliasProps, FunctionProps } from 'aws-cdk-lib/aws-lambda'
 import { SqsEventSourceProps } from 'aws-cdk-lib/aws-lambda-event-sources'
+
 import { TagProps } from '../../types/index.js'
 import { QueueProps } from '../simple-queue-service/index.js'
 

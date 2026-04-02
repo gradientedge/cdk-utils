@@ -1,5 +1,6 @@
 import { CfnRuleProps, EventBusProps as EBProps, RuleProps as EBRuleProps } from 'aws-cdk-lib/aws-events'
 import { CfnPipeProps } from 'aws-cdk-lib/aws-pipes'
+
 import { TagProps } from '../../types/index.js'
 
 /**

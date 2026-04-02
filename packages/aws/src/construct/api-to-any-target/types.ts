@@ -13,6 +13,7 @@ import {
 import { ICertificate } from 'aws-cdk-lib/aws-certificatemanager'
 import { LogGroup } from 'aws-cdk-lib/aws-logs'
 import { IHostedZone } from 'aws-cdk-lib/aws-route53'
+
 import { CommonStackProps } from '../../common/index.js'
 import { AcmProps, RestApigProps } from '../../services/index.js'
 

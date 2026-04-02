@@ -22,6 +22,7 @@ import { LayerVersion } from 'aws-cdk-lib/aws-lambda'
 import { EventBridgeDestination } from 'aws-cdk-lib/aws-lambda-destinations'
 import { ISecret } from 'aws-cdk-lib/aws-secretsmanager'
 import { Construct } from 'constructs'
+
 import { CommonConstruct } from '../../common/index.js'
 import {
   ApiToEventBridgeTargetEventType,
@@ -30,6 +31,7 @@ import {
   ApiToEventbridgeTargetEvent,
   ApiToEventbridgeTargetRestApi,
 } from '../api-to-eventbridge-target/index.js'
+
 import { ApiDestinedLambda } from './api-destined-lambda.js'
 import { ApiDestinedLambdaType } from './types.js'
 

@@ -1,7 +1,9 @@
 import { Deployment, DeploymentMode, Resource } from '@pulumi/azure-native/resources/index.js'
 import { ManagedServiceIdentityType, WebApp, WebAppFunction } from '@pulumi/azure-native/web/index.js'
 import { ResourceOptions } from '@pulumi/pulumi'
+
 import { CommonAzureConstruct, CommonAzureStack } from '../../common/index.js'
+
 import { FunctionAppFlexConsumptionProps, FunctionAppProps, FunctionProps } from './types.js'
 
 /**

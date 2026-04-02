@@ -17,9 +17,11 @@ import {
 } from 'aws-cdk-lib/aws-lambda'
 import { SqsEventSource } from 'aws-cdk-lib/aws-lambda-event-sources'
 import _ from 'lodash'
+
 import { CommonConstruct, CommonStack } from '../../common/index.js'
 import { createCfnOutput } from '../../utils/index.js'
 import { CloudFrontManager } from '../cloudfront/index.js'
+
 import { LambdaAliasProps, LambdaEdgeProps, LambdaProps } from './types.js'
 
 /**

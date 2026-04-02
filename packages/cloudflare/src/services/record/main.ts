@@ -1,5 +1,7 @@
 import { DnsRecord } from '@pulumi/cloudflare'
+
 import { CommonCloudflareConstruct } from '../../common/index.js'
+
 import { DnsRecordProps } from './types.js'
 
 /**

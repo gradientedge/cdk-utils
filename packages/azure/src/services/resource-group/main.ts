@@ -1,6 +1,8 @@
 import { getResourceGroupOutput, ResourceGroup } from '@pulumi/azure-native/resources/index.js'
 import { ResourceOptions } from '@pulumi/pulumi'
+
 import { CommonAzureConstruct } from '../../common/index.js'
+
 import { ResourceGroupProps } from './types.js'
 
 /**

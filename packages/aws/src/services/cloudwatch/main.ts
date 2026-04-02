@@ -2,8 +2,10 @@ import * as cdk from 'aws-cdk-lib'
 import * as watch from 'aws-cdk-lib/aws-cloudwatch'
 import { IMetric } from 'aws-cdk-lib/aws-cloudwatch'
 import _ from 'lodash'
+
 import { CommonConstruct } from '../../common/index.js'
 import * as utils from '../../utils/index.js'
+
 import {
   AlarmProps,
   AlarmStatusWidgetProps,

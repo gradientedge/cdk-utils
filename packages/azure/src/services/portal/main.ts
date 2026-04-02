@@ -1,7 +1,10 @@
+import fs from 'fs'
+
 import { Dashboard } from '@pulumi/azure-native/portal/index.js'
 import { ResourceOptions } from '@pulumi/pulumi'
-import fs from 'fs'
+
 import { CommonAzureConstruct } from '../../index.js'
+
 import { AzureDashboardRenderer } from './renderer.js'
 import { PortalDashboardProps } from './types.js'
 

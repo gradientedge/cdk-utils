@@ -1,8 +1,10 @@
 import { IVpc, InstanceClass, InstanceSize, InstanceType } from 'aws-cdk-lib/aws-ec2'
 import { DockerImageAsset } from 'aws-cdk-lib/aws-ecr-assets'
 import { Cluster, KubernetesVersion } from 'aws-cdk-lib/aws-eks'
+
 import { CommonConstruct } from '../../common/index.js'
 import { createCfnOutput } from '../../utils/index.js'
+
 import { EksClusterProps } from './types.js'
 
 /**

@@ -8,7 +8,9 @@ import {
   Topic,
 } from '@pulumi/azure-native/eventgrid/index.js'
 import { Output, ResourceOptions } from '@pulumi/pulumi'
+
 import { CommonAzureConstruct } from '../../common/index.js'
+
 import {
   EventgridEventSubscriptionProps,
   EventgridSystemTopicEventSubscriptionProps,
@@ -198,7 +200,7 @@ export class AzureEventgridManager {
   ) {
     if (!props) throw `Props undefined for ${id}`
 
-    let resourceGroupName = scope.props.resourceGroupName
+    const resourceGroupName = scope.props.resourceGroupName
       ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
       : props.resourceGroupName
 

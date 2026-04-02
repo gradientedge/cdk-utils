@@ -15,8 +15,10 @@ import { ApplicationLoadBalancedFargateService } from 'aws-cdk-lib/aws-ecs-patte
 import { Role } from 'aws-cdk-lib/aws-iam'
 import { ILogGroup } from 'aws-cdk-lib/aws-logs'
 import _ from 'lodash'
+
 import { CommonConstruct } from '../../common/index.js'
 import { createCfnOutput } from '../../utils/index.js'
+
 import { EcsApplicationLoadBalancedFargateServiceProps, EcsClusterProps, EcsTaskProps } from './types.js'
 
 /**

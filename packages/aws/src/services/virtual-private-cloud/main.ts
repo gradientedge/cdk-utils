@@ -1,8 +1,10 @@
 import { Tags } from 'aws-cdk-lib'
 import { SubnetType, Vpc } from 'aws-cdk-lib/aws-ec2'
 import _ from 'lodash'
+
 import { CommonConstruct } from '../../common/index.js'
 import { createCfnOutput } from '../../utils/index.js'
+
 import { Ipv6Vpc } from './ipv6.js'
 import { VpcProps } from './types.js'
 

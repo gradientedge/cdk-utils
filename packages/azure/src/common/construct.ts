@@ -3,6 +3,7 @@ import { ResourceGroup } from '@pulumi/azure-native/resources/index.js'
 import * as pulumi from '@pulumi/pulumi'
 import { ComponentResource, ComponentResourceOptions, Output } from '@pulumi/pulumi'
 import { isDevStage, isPrdStage, isTestStage, isUatStage } from '@gradientedge/cdk-utils-common'
+
 import { AzureAuthorisationManager } from '../services/authorisation/main.js'
 import {
   AzureApiManagementManager,
@@ -23,6 +24,7 @@ import {
   AzureServiceBusManager,
   AzureStorageManager,
 } from '../services/index.js'
+
 import { AzureResourceNameFormatter } from './resource-name-formatter.js'
 import { CommonAzureStackProps } from './types.js'
 

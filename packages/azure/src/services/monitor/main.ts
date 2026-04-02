@@ -1,6 +1,8 @@
 import { DiagnosticSetting } from '@pulumi/azure-native/monitor/index.js'
 import { ResourceOptions } from '@pulumi/pulumi'
+
 import { CommonAzureConstruct } from '../../common/index.js'
+
 import { MonitorDiagnosticSettingProps } from './types.js'
 
 /**

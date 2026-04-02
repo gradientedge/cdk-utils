@@ -5,7 +5,9 @@ import {
   WebApp,
 } from '@pulumi/azure-native/web/index.js'
 import { ResourceOptions } from '@pulumi/pulumi'
+
 import { CommonAzureConstruct } from '../../common/index.js'
+
 import { LinuxWebAppProps, ServicePlanProps } from './types.js'
 
 /**

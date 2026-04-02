@@ -4,7 +4,9 @@ import {
   ComponentCurrentBillingFeature,
 } from '@pulumi/azure-native/applicationinsights/index.js'
 import { ResourceOptions } from '@pulumi/pulumi'
+
 import { CommonAzureConstruct } from '../../common/index.js'
+
 import { ApplicationInsightsProps, ComponentCurrentBillingFeatureProps } from './types.js'
 
 /**

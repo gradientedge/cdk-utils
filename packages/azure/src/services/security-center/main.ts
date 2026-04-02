@@ -1,6 +1,8 @@
 import { DefenderForStorage } from '@pulumi/azure-native/security/index.js'
 import { ResourceOptions } from '@pulumi/pulumi'
+
 import { CommonAzureConstruct } from '../../common/index.js'
+
 import { DefenderForStorageProps } from './types.js'
 
 /**

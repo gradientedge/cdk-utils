@@ -1,8 +1,10 @@
-import appRoot from 'app-root-path'
 import fs from 'fs'
-import _ from 'lodash'
 import path from 'path'
+
+import appRoot from 'app-root-path'
+import _ from 'lodash'
 import { parse } from 'yaml'
+
 import { TemplateError } from './error.js'
 import { DashboardRenderer, MissingKeys, PaneTemplate, RenderParams } from './types.js'
 

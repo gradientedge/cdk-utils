@@ -1,6 +1,7 @@
 import { GetComponentOutputArgs } from '@pulumi/azure-native/applicationinsights/index.js'
 import { GetWorkspaceOutputArgs } from '@pulumi/azure-native/operationalinsights/index.js'
 import { BaseProps } from '@gradientedge/cdk-utils-common'
+
 import { AzureLocation, AzureRemoteBackend } from './constants.js'
 
 export interface AzureLocationConfig {

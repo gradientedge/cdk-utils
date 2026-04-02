@@ -1,5 +1,7 @@
 import { ArgoSmartRouting, ArgoTieredCaching } from '@pulumi/cloudflare'
+
 import { CommonCloudflareConstruct } from '../../common/index.js'
+
 import { ArgoSmartRoutingProps, ArgoTieredCachingProps } from './types.js'
 
 /**

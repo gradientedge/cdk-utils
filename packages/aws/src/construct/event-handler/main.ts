@@ -6,7 +6,9 @@ import { CfnQueuePolicy } from 'aws-cdk-lib/aws-sqs'
 import { JsonPath, Map } from 'aws-cdk-lib/aws-stepfunctions'
 import { Construct } from 'constructs'
 import _ from 'lodash'
+
 import { CommonConstruct } from '../../common/index.js'
+
 import { Handler } from './handler.js'
 import { EventHandlerProps } from './types.js'
 

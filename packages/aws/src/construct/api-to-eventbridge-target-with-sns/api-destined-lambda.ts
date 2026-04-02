@@ -1,6 +1,7 @@
 import { PolicyDocument, Role } from 'aws-cdk-lib/aws-iam'
 import { IFunction, LayerVersion } from 'aws-cdk-lib/aws-lambda'
 import { EventBridgeDestination } from 'aws-cdk-lib/aws-lambda-destinations'
+
 import { ApiDestinedLambdaEnvironment, ApiDestinedLambdaType } from './types.js'
 
 /**

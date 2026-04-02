@@ -1,11 +1,14 @@
+import fs from 'fs'
+
 import * as aws from '@pulumi/aws'
 import * as azure from '@pulumi/azure-native'
 import { Ruleset, WorkersCustomDomain, WorkersScript, Zone, ZoneSetting } from '@pulumi/cloudflare'
 import { WorkersScriptBinding } from '@pulumi/cloudflare/types/input.js'
 import { ComponentResourceOptions } from '@pulumi/pulumi'
 import * as std from '@pulumi/std'
-import fs from 'fs'
+
 import { CommonCloudflareConstruct } from '../../common/index.js'
+
 import { CloudflareWorkerSiteProps } from './types.js'
 
 /**

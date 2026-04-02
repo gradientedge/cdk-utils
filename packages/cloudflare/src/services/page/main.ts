@@ -1,6 +1,8 @@
 import { PageRule, PagesDomain, PagesProject } from '@pulumi/cloudflare'
 import { local } from '@pulumi/command'
+
 import { CommonCloudflareConstruct } from '../../common/index.js'
+
 import { PageRuleProps, PagesDomainProps, PagesProjectDeployProps, PagesProjectProps } from './types.js'
 
 /**

@@ -8,7 +8,9 @@ import {
   Topic,
 } from '@pulumi/azure-native/servicebus/index.js'
 import { ResourceOptions } from '@pulumi/pulumi'
+
 import { CommonAzureConstruct } from '../../common/index.js'
+
 import {
   ResolveServicebusQueueProps,
   ServiceBusNamespaceProps,

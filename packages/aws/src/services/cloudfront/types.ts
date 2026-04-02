@@ -1,4 +1,5 @@
 import { DistributionProps as CfDistributionProps, FunctionProps } from 'aws-cdk-lib/aws-cloudfront'
+
 import { TagProps } from '../../types/index.js'
 
 /**

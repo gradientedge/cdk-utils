@@ -1,8 +1,10 @@
 import { Tags } from 'aws-cdk-lib'
 import { CfnCacheCluster, CfnReplicationGroup, CfnSubnetGroup } from 'aws-cdk-lib/aws-elasticache'
 import _ from 'lodash'
+
 import { CommonConstruct } from '../../common/index.js'
 import { createCfnOutput } from '../../utils/index.js'
+
 import { ElastiCacheProps, ReplicatedElastiCacheProps } from './types.js'
 
 /**

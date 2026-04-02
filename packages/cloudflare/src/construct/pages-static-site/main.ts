@@ -7,7 +7,9 @@ import {
 } from '@pulumi/cloudflare/types/input.js'
 import { ComponentResourceOptions } from '@pulumi/pulumi'
 import * as std from '@pulumi/std'
+
 import { CommonCloudflareConstruct } from '../../common/index.js'
+
 import { CloudflarePagesStaticSiteProps } from './types.js'
 
 /**

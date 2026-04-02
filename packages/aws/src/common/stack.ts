@@ -1,14 +1,14 @@
-import { App, Stack, StackProps } from 'aws-cdk-lib'
-import { Runtime } from 'aws-cdk-lib/aws-lambda'
 import fs from 'fs'
 import path from 'path'
 
-import { CommonConstruct } from './construct.js'
-import { CommonStackProps } from './types.js'
-
+import { Runtime } from 'aws-cdk-lib/aws-lambda'
+import { App, Stack, StackProps } from 'aws-cdk-lib'
 import appRoot from 'app-root-path'
 import _ from 'lodash'
 import { isDevStage } from '@gradientedge/cdk-utils-common'
+
+import { CommonStackProps } from './types.js'
+import { CommonConstruct } from './construct.js'
 
 /**
  * @classdesc Common stack to use as a base for all higher level constructs.

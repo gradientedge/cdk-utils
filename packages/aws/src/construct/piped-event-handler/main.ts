@@ -2,7 +2,9 @@ import { SqsQueue } from 'aws-cdk-lib/aws-events-targets'
 import { IQueue } from 'aws-cdk-lib/aws-sqs'
 import { Construct } from 'constructs'
 import _ from 'lodash'
+
 import { EventHandler } from '../event-handler/index.js'
+
 import { PipedEventHandlerProps } from './types.js'
 
 /**

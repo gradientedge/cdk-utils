@@ -2,8 +2,10 @@ import { DomainName } from 'aws-cdk-lib/aws-apigateway'
 import { IDistribution } from 'aws-cdk-lib/aws-cloudfront'
 import { ARecord, HostedZone, IHostedZone, RecordTarget } from 'aws-cdk-lib/aws-route53'
 import { ApiGatewayDomain, CloudFrontTarget } from 'aws-cdk-lib/aws-route53-targets'
+
 import { CommonConstruct } from '../../common/index.js'
 import { createCfnOutput } from '../../utils/index.js'
+
 import { Route53Props } from './types.js'
 
 /**

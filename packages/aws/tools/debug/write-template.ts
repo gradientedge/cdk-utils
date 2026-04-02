@@ -1,6 +1,7 @@
+import fs from 'node:fs'
+
 import { Template } from 'aws-cdk-lib/assertions'
 import { stringify } from 'yaml'
-import fs from 'node:fs'
 
 /**
  * Write a template to a file

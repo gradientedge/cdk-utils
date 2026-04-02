@@ -1,3 +1,6 @@
+import fs from 'fs'
+import * as path from 'path'
+
 import * as archive from '@pulumi/archive'
 import {
   ConfigurationStore,
@@ -16,12 +19,12 @@ import {
 } from '@pulumi/azure-native/web/index.js'
 import * as pulumi from '@pulumi/pulumi'
 import { Output, ResourceOptions } from '@pulumi/pulumi'
-import fs from 'fs'
 import _ from 'lodash'
-import * as path from 'path'
+
 import { CommonAzureConstruct } from '../../common/index.js'
 import { CosmosRoleDefinition } from '../../services/cosmosdb/constants.js'
 import { AzureAppConfigurationManager, RoleDefinitionId } from '../../services/index.js'
+
 import { AzureFunctionAppProps } from './types.js'
 
 /**

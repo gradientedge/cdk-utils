@@ -1,4 +1,5 @@
 import * as dynamodb from 'aws-cdk-lib/aws-dynamodb'
+
 import { TagProps } from '../../types/index.js'
 
 /**

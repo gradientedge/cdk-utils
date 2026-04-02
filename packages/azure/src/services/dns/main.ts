@@ -1,6 +1,8 @@
 import { RecordSet, Zone } from '@pulumi/azure-native/dns/index.js'
 import { ResourceOptions } from '@pulumi/pulumi'
+
 import { CommonAzureConstruct } from '../../common/index.js'
+
 import { DnsARecordProps, DnsCnameRecordProps, DnsTxtRecordProps, DnsZoneProps } from './types.js'
 
 /**

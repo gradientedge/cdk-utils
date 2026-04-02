@@ -1,6 +1,8 @@
 import { getVaultOutput, Secret, SkuFamily, SkuName, Vault } from '@pulumi/azure-native/keyvault/index.js'
 import { ResourceOptions } from '@pulumi/pulumi'
+
 import { CommonAzureConstruct } from '../../common/index.js'
+
 import { KeyVaultProps, SecretProps } from './types.js'
 
 /**

@@ -1,5 +1,6 @@
 import { Duration } from 'aws-cdk-lib'
 import { BuildSpec, ComputeType, LinuxBuildImage, Project } from 'aws-cdk-lib/aws-codebuild'
+
 import { CommonConstruct } from '../../common/index.js'
 
 /**

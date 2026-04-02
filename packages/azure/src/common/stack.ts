@@ -1,9 +1,11 @@
+import fs from 'fs'
+import path from 'path'
+
 import { ComponentResource, ComponentResourceOptions, Config } from '@pulumi/pulumi'
 import appRoot from 'app-root-path'
-import fs from 'fs'
 import _ from 'lodash'
-import path from 'path'
 import { isDevStage } from '@gradientedge/cdk-utils-common'
+
 import { CommonAzureConstruct } from './construct.js'
 import { registerTagTransformation } from './tagging.js'
 import { CommonAzureStackProps } from './types.js'
