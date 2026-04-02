@@ -11,6 +11,8 @@
   /* Typography */
   --font-family: Avenir, sans-serif;
   --font-family-monospace: "SF Mono", Menlo, Monaco, Consolas, monospace;
+  --font-size: 16px;
+  --line-height: 1.7;
 
   /* Code blocks */
   --color-code-background: #1a1f36;
@@ -75,6 +77,11 @@ nav.tsd-navigation .tsd-nav-link:hover {
   display: none;
 }
 
+/* Hide settings pane */
+.tsd-navigation.settings {
+  display: none;
+}
+
 /* Search input */
 #tsd-search input {
   background-color: #4f566b;
@@ -119,12 +126,312 @@ thead {
   line-height: 20px;
 }
 
-/* User-facing text headings */
-.tsd-comment h1,
-.tsd-comment h2,
-.tsd-comment h3 {
+/* Typography — headings */
+h1, .tsd-page-title h1 {
   font-family: Avenir, sans-serif;
+  font-weight: 700;
+  font-size: 2rem;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  margin-bottom: 0.75rem;
 }
+
+h2, .tsd-accordion-summary h2 {
+  font-family: Avenir, sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+h3 {
+  font-family: Avenir, sans-serif;
+  font-weight: 600;
+  font-size: 1.2rem;
+  letter-spacing: -0.01em;
+  line-height: 1.4;
+  margin-top: 1.5rem;
+  margin-bottom: 0.4rem;
+}
+
+h4, h5, h6 {
+  font-family: Avenir, sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0;
+  line-height: 1.5;
+  margin-top: 1.25rem;
+  margin-bottom: 0.3rem;
+}
+
+/* Body text — better spacing and measure */
+.col-content {
+  font-size: 1rem;
+  line-height: 1.7;
+  max-width: 52rem;
+  padding: 2.5rem 3rem;
+}
+
+.col-content p {
+  margin-bottom: 1rem;
+}
+
+.col-content li {
+  margin-bottom: 0.35rem;
+}
+
+/* Signatures — lighter weight, monospace for clarity */
+.tsd-signature {
+  font-family: "SF Mono", Menlo, Monaco, Consolas, monospace;
+  font-size: 0.9rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.6;
+}
+
+/* Member names — prominent but not heavy */
+.tsd-member-summary-name {
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+/* Breadcrumb — small, muted */
+.tsd-breadcrumb {
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  opacity: 0.7;
+  margin-bottom: 0.5rem;
+}
+
+/* Sidebar typography — tighter for navigation */
+nav.tsd-navigation {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+}
+
+nav.tsd-navigation .tsd-nav-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+/* Code blocks — slightly smaller, generous padding */
+pre, pre > code {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  border-radius: 8px;
+}
+
+pre {
+  padding: 1.25rem;
+  background-color: #1a1f36;
+  color: #a3acb9;
+}
+
+/* Tables — cleaner typography */
+table {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+th {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+}
+
+td {
+  padding: 0.5rem 0.75rem;
+}
+
+/* ============================================
+   Dark Mode
+   ============================================ */
+[data-theme="dark"] {
+  --color-background: #0f1221;
+  --color-background-secondary: #141829;
+  --color-text: #c9d1d9;
+  --color-text-aside: #8b949e;
+  --color-code-background: #0d1017;
+  --color-ts-keyword: #7ee787;
+  --color-accent: #6e7681;
+  --color-link: #58a6ff;
+}
+
+/* Dark mode — main content area */
+[data-theme="dark"] .col-content,
+[data-theme="dark"] .col-content h1,
+[data-theme="dark"] .col-content h2,
+[data-theme="dark"] .col-content h3,
+[data-theme="dark"] .col-content h4,
+[data-theme="dark"] .col-content h5,
+[data-theme="dark"] .col-content p,
+[data-theme="dark"] .col-content li,
+[data-theme="dark"] .col-content span,
+[data-theme="dark"] .tsd-page-title,
+[data-theme="dark"] .tsd-page-title h1,
+[data-theme="dark"] .tsd-panel,
+[data-theme="dark"] .tsd-panel p,
+[data-theme="dark"] .tsd-panel li,
+[data-theme="dark"] .tsd-typography,
+[data-theme="dark"] .tsd-typography p,
+[data-theme="dark"] .tsd-typography li,
+[data-theme="dark"] .tsd-description,
+[data-theme="dark"] .tsd-description p,
+[data-theme="dark"] .tsd-comment,
+[data-theme="dark"] .tsd-comment p {
+  color: #c9d1d9;
+}
+
+/* Dark mode — headings slightly brighter */
+[data-theme="dark"] .col-content h1,
+[data-theme="dark"] .col-content h2,
+[data-theme="dark"] .tsd-page-title h1 {
+  color: #e6edf3;
+}
+
+[data-theme="dark"] .col-content h3,
+[data-theme="dark"] .col-content h4,
+[data-theme="dark"] .col-content h5 {
+  color: #d2dae4;
+}
+
+/* Dark mode — content background */
+[data-theme="dark"] .col-content {
+  background-color: #0f1221;
+}
+
+/* Dark mode — sidebar deepens */
+[data-theme="dark"] .col-sidebar,
+[data-theme="dark"] .col-sidebar .site-menu,
+[data-theme="dark"] .site-menu,
+[data-theme="dark"] nav.tsd-navigation,
+[data-theme="dark"] nav.tsd-navigation a,
+[data-theme="dark"] nav.tsd-navigation span,
+[data-theme="dark"] nav.tsd-navigation summary,
+[data-theme="dark"] nav.tsd-navigation .tsd-nav-title,
+[data-theme="dark"] nav.tsd-navigation .tsd-nav-link,
+[data-theme="dark"] nav.tsd-navigation .tsd-accordion-summary {
+  background-color: #141829;
+}
+
+[data-theme="dark"] nav.tsd-navigation a,
+[data-theme="dark"] nav.tsd-navigation span,
+[data-theme="dark"] nav.tsd-navigation .tsd-nav-link {
+  color: #8b949e;
+}
+
+[data-theme="dark"] nav.tsd-navigation a:hover,
+[data-theme="dark"] nav.tsd-navigation .tsd-nav-link:hover {
+  color: #c9d1d9;
+}
+
+[data-theme="dark"] nav.tsd-navigation .tsd-nav-title {
+  color: #e6edf3;
+}
+
+/* Dark mode — code blocks */
+[data-theme="dark"] pre,
+[data-theme="dark"] pre > code,
+[data-theme="dark"] pre code span,
+[data-theme="dark"] .col-content pre,
+[data-theme="dark"] .col-content pre > code,
+[data-theme="dark"] .col-content pre code span {
+  background-color: #0d1017;
+  color: #c9d1d9;
+}
+
+/* Dark mode — inline code */
+[data-theme="dark"] code {
+  background-color: #1c2333;
+  color: #c9d1d9;
+}
+
+/* Dark mode — tables */
+[data-theme="dark"] .col-content td,
+[data-theme="dark"] .col-content th {
+  color: #c9d1d9;
+  border-color: #21262d;
+}
+
+[data-theme="dark"] th {
+  color: #8b949e;
+}
+
+[data-theme="dark"] table,
+[data-theme="dark"] tr {
+  border-color: #21262d;
+}
+
+/* Dark mode — links */
+[data-theme="dark"] .col-content a,
+[data-theme="dark"] .tsd-panel a,
+[data-theme="dark"] .tsd-typography a {
+  color: #58a6ff;
+}
+
+[data-theme="dark"] .col-content a:hover,
+[data-theme="dark"] .tsd-panel a:hover {
+  color: #79b8ff;
+}
+
+/* Dark mode — search */
+[data-theme="dark"] #tsd-search input {
+  background-color: #1c2333;
+  border-color: #21262d;
+  color: #c9d1d9;
+}
+
+[data-theme="dark"] #tsd-search input::placeholder {
+  color: #6e7681;
+}
+
+/* Dark mode — signatures */
+[data-theme="dark"] .col-content .tsd-signature,
+[data-theme="dark"] .tsd-signature {
+  color: #c9d1d9;
+  background-color: #0d1017;
+  border-color: #21262d;
+}
+
+/* Dark mode — member groups */
+[data-theme="dark"] .tsd-panel-group {
+  border-color: #21262d;
+}
+
+/* Dark mode — breadcrumb */
+[data-theme="dark"] .tsd-breadcrumb,
+[data-theme="dark"] .tsd-breadcrumb a {
+  color: #6e7681;
+}
+
+/* Dark mode — deprecation notice */
+[data-theme="dark"] .deprecated {
+  color: #f85149;
+}
+
+/* Dark mode — images softer shadow */
+[data-theme="dark"] .tsd-description img,
+[data-theme="dark"] .tsd-comment img {
+  box-shadow: 0px 2px 16px rgba(0, 0, 0, 0.6);
+}
+
+/* Dark mode — settings panel */
+[data-theme="dark"] .tsd-navigation.settings,
+[data-theme="dark"] .tsd-navigation.settings details {
+  background-color: #141829;
+}
+
+/* ============================================
+   Light Mode
+   ============================================ */
 
 /* Black text for all light-background content areas */
 .col-content,
