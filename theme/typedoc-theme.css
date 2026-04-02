@@ -1,0 +1,1330 @@
+:root {
+  /* Sidebar / dark navy */
+  --color-background-secondary: #1a1f36;
+  --color-icon-background: #1a1f36;
+
+  /* Main content */
+  --color-background: #fff;
+  --color-text: #1a1f36;
+  --color-text-aside: #1a1f36;
+
+  /* Typography */
+  --font-family: Avenir, sans-serif;
+  --font-family-monospace: "SF Mono", Menlo, Monaco, Consolas, monospace;
+  --font-size: 16px;
+  --line-height: 1.7;
+
+  /* Code blocks */
+  --color-code-background: #1a1f36;
+  --color-ts-keyword: #cdd3da;
+
+  /* Accent */
+  --color-accent: #4f566b;
+}
+
+/* Sidebar navigation — full height, flush to top and left */
+.col-sidebar,
+.col-sidebar .site-menu {
+  background: linear-gradient(180deg, #141829 0%, #1a1f36 40%, #1e2540 100%);
+  min-height: 100vh;
+  margin: 0;
+  padding-top: 0;
+  top: 0;
+}
+
+.col-sidebar {
+  padding-left: 0;
+  margin-left: 0;
+}
+
+.container {
+  padding-left: 0;
+  padding-right: 0;
+  max-width: none;
+}
+
+.container.container-main {
+  padding-top: 0;
+  margin-top: 0;
+  --dim-container-main-margin-y: 0rem;
+}
+
+.site-menu,
+.site-menu a,
+nav.tsd-navigation,
+nav.tsd-navigation a,
+nav.tsd-navigation span,
+nav.tsd-navigation summary,
+nav.tsd-navigation .tsd-nav-title,
+nav.tsd-navigation .tsd-nav-link,
+nav.tsd-navigation .tsd-accordion-summary {
+  background-color: #1a1f36;
+  color: #a3acb9;
+}
+
+/* Sidebar — active link gradient bar */
+nav.tsd-navigation a.current,
+.site-menu a.current {
+  color: #e6edf3;
+  border-left: 3px solid transparent;
+  border-image: linear-gradient(180deg, #58a6ff, #a371f7) 1;
+  padding-left: 10px;
+}
+
+.site-menu a:hover,
+.site-menu a:active,
+.site-menu a:focus,
+nav.tsd-navigation a:hover,
+nav.tsd-navigation a:active,
+nav.tsd-navigation a:focus,
+nav.tsd-navigation .tsd-nav-link:hover {
+  color: #e6edf3;
+  background: linear-gradient(90deg, rgba(88, 166, 255, 0.08) 0%, transparent 100%);
+  border-radius: 4px;
+}
+
+/* Header toolbar — hide everything except search */
+.tsd-page-toolbar {
+  background: #0d1017;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.tsd-page-toolbar .title,
+.tsd-page-toolbar .tsd-widget.menu,
+.tsd-page-toolbar #tsd-toolbar-links {
+  display: none;
+}
+
+/* Hide settings pane */
+.tsd-navigation.settings {
+  display: none;
+}
+
+/* Sidebar — nav title gradient text */
+nav.tsd-navigation .tsd-nav-title {
+  background: linear-gradient(135deg, #58a6ff, #a371f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Sidebar — no horizontal scroll */
+.col-sidebar,
+.site-menu,
+nav.tsd-navigation {
+  overflow-x: hidden;
+}
+
+.site-menu > nav.tsd-navigation > ul {
+  overflow-x: hidden;
+  word-break: break-word;
+}
+
+/* Sidebar — top project title */
+.site-menu > nav.tsd-navigation > a {
+  display: block;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 1.25rem 1rem 1rem;
+  color: #e6edf3 !important;
+  -webkit-text-fill-color: #e6edf3 !important;
+  position: relative;
+  border-bottom: none;
+  background: transparent;
+  transition: color 0.3s ease;
+}
+
+.site-menu > nav.tsd-navigation > a::after {
+  content: "";
+  display: block;
+  margin-top: 0.75rem;
+  height: 1px;
+  background: linear-gradient(90deg, #58a6ff, #a371f7, transparent);
+}
+
+.site-menu > nav.tsd-navigation > a:hover {
+  padding-left: 1rem;
+}
+
+/* Search input */
+#tsd-search input {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(88, 166, 255, 0.15);
+  border-radius: 10px;
+  color: #c9d1d9;
+}
+
+#tsd-search input::placeholder {
+  color: #6e7681;
+}
+
+#tsd-search input:focus {
+  border-color: transparent;
+  background-image: linear-gradient(rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.05)),
+                      linear-gradient(135deg, #58a6ff, #a371f7);
+  background-origin: border-box;
+  background-clip: padding-box, border-box;
+}
+
+/* Signature / method name headers */
+.tsd-signature,
+.tsd-kind-icon ~ span {
+  font-family: Avenir, sans-serif;
+}
+
+/* Code blocks with dark background */
+pre,
+pre > code,
+.tsd-description pre,
+.tsd-description pre code,
+.col-content pre,
+.col-content pre > code {
+  background-color: #1a1f36;
+  color: #a3acb9;
+}
+
+/* Architecture images — card style (only alt="Architecture") */
+.tsd-description img[alt="Architecture"],
+.tsd-comment img[alt="Architecture"] {
+  max-width: 100%;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(88, 166, 255, 0.06);
+  background: linear-gradient(135deg, rgba(20, 24, 41, 0.8), rgba(13, 16, 23, 0.9));
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  display: block;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.tsd-description img[alt="Architecture"]:hover,
+.tsd-comment img[alt="Architecture"]:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(88, 166, 255, 0.15);
+  border-color: rgba(88, 166, 255, 0.2);
+}
+
+/* Table headers */
+thead {
+  height: 20px;
+  line-height: 20px;
+}
+
+/* Typography — headings */
+h1, .tsd-page-title h1 {
+  font-family: Avenir, sans-serif;
+  font-weight: 700;
+  font-size: 2rem;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+  margin-bottom: 0.75rem;
+}
+
+/* Page title — gradient text */
+[data-theme="dark"] .tsd-page-title h1 {
+  background: linear-gradient(135deg, #e6edf3 0%, #58a6ff 50%, #a371f7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Section headers — subtle gradient underline */
+[data-theme="dark"] .tsd-accordion-summary h2 {
+  padding-bottom: 0.4rem;
+  border-bottom: 2px solid transparent;
+  border-image: linear-gradient(90deg, #58a6ff, #a371f7, transparent) 1;
+}
+
+h2, .tsd-accordion-summary h2 {
+  font-family: Avenir, sans-serif;
+  font-weight: 600;
+  font-size: 1.5rem;
+  letter-spacing: -0.02em;
+  line-height: 1.3;
+  margin-top: 2rem;
+  margin-bottom: 0.5rem;
+}
+
+h3 {
+  font-family: Avenir, sans-serif;
+  font-weight: 600;
+  font-size: 1.2rem;
+  letter-spacing: -0.01em;
+  line-height: 1.4;
+  margin-top: 1.5rem;
+  margin-bottom: 0.4rem;
+}
+
+h4, h5, h6 {
+  font-family: Avenir, sans-serif;
+  font-weight: 600;
+  font-size: 1rem;
+  letter-spacing: 0;
+  line-height: 1.5;
+  margin-top: 1.25rem;
+  margin-bottom: 0.3rem;
+}
+
+/* Body text — better spacing and measure */
+.col-content {
+  font-size: 1rem;
+  line-height: 1.7;
+  max-width: 52rem;
+  padding: 2.5rem 3rem;
+}
+
+.col-content p {
+  margin-bottom: 1rem;
+}
+
+.col-content li {
+  margin-bottom: 0.35rem;
+}
+
+/* Signatures — lighter weight, monospace for clarity */
+.tsd-signature {
+  font-family: "SF Mono", Menlo, Monaco, Consolas, monospace;
+  font-size: 0.9rem;
+  font-weight: 400;
+  letter-spacing: -0.01em;
+  line-height: 1.6;
+}
+
+/* Member names — prominent but not heavy */
+.tsd-member-summary-name {
+  font-size: 1.05rem;
+  font-weight: 500;
+  letter-spacing: -0.01em;
+}
+
+/* Breadcrumb — small, muted */
+.tsd-breadcrumb {
+  font-size: 0.8rem;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  opacity: 0.7;
+  margin-bottom: 0.5rem;
+}
+
+.tsd-breadcrumb li:last-child::after {
+  content: "";
+}
+
+/* Sidebar typography — tighter for navigation */
+nav.tsd-navigation {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  letter-spacing: 0.01em;
+}
+
+nav.tsd-navigation .tsd-nav-title {
+  font-weight: 600;
+  font-size: 0.95rem;
+  letter-spacing: -0.01em;
+  text-transform: uppercase;
+}
+
+/* Code blocks — slightly smaller, generous padding */
+pre, pre > code {
+  font-size: 0.875rem;
+  line-height: 1.6;
+  border-radius: 8px;
+}
+
+pre {
+  padding: 1.25rem;
+  background-color: #1a1f36;
+  color: #a3acb9;
+}
+
+/* Tables — cleaner typography */
+table {
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+th {
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+}
+
+td {
+  padding: 0.5rem 0.75rem;
+}
+
+/* ============================================
+   Dark Mode
+   ============================================ */
+[data-theme="dark"] {
+  --color-background: #0f1221;
+  --color-background-secondary: #141829;
+  --color-text: #c9d1d9;
+  --color-text-aside: #8b949e;
+  --color-code-background: #0d1017;
+  --color-ts-keyword: #7ee787;
+  --color-accent: #6e7681;
+  --color-link: #58a6ff;
+}
+
+/* Dark mode — main content area */
+[data-theme="dark"] .col-content,
+[data-theme="dark"] .col-content h1,
+[data-theme="dark"] .col-content h2,
+[data-theme="dark"] .col-content h3,
+[data-theme="dark"] .col-content h4,
+[data-theme="dark"] .col-content h5,
+[data-theme="dark"] .col-content p,
+[data-theme="dark"] .col-content li,
+[data-theme="dark"] .col-content span:not([class^="hl-"]),
+[data-theme="dark"] .tsd-page-title,
+[data-theme="dark"] .tsd-page-title h1,
+[data-theme="dark"] .tsd-panel,
+[data-theme="dark"] .tsd-panel p,
+[data-theme="dark"] .tsd-panel li,
+[data-theme="dark"] .tsd-typography,
+[data-theme="dark"] .tsd-typography p,
+[data-theme="dark"] .tsd-typography li,
+[data-theme="dark"] .tsd-description,
+[data-theme="dark"] .tsd-description p,
+[data-theme="dark"] .tsd-comment,
+[data-theme="dark"] .tsd-comment p,
+[data-theme="dark"] .tsd-parameters,
+[data-theme="dark"] .tsd-parameters-title,
+[data-theme="dark"] .tsd-returns-title,
+[data-theme="dark"] .tsd-sources,
+[data-theme="dark"] .tsd-sources a,
+[data-theme="dark"] .tsd-signatures,
+[data-theme="dark"] .tsd-kind-parameter,
+[data-theme="dark"] .tsd-kind-call-signature,
+[data-theme="dark"] .tsd-kind-constructor-signature,
+[data-theme="dark"] .tsd-member,
+[data-theme="dark"] .tsd-member p,
+[data-theme="dark"] .tsd-member li,
+[data-theme="dark"] .tsd-member span,
+[data-theme="dark"] .tsd-member h3,
+[data-theme="dark"] .tsd-member h4,
+[data-theme="dark"] .tsd-anchor-link,
+[data-theme="dark"] .tsd-index-heading,
+[data-theme="dark"] .tsd-index-link,
+[data-theme="dark"] .tsd-index-link a {
+  color: #c9d1d9;
+}
+
+/* Dark mode — headings slightly brighter */
+[data-theme="dark"] .col-content h1,
+[data-theme="dark"] .col-content h2,
+[data-theme="dark"] .tsd-page-title h1 {
+  color: #e6edf3;
+}
+
+[data-theme="dark"] .col-content h3,
+[data-theme="dark"] .col-content h4,
+[data-theme="dark"] .col-content h5 {
+  color: #d2dae4;
+}
+
+/* Dark mode — content background */
+[data-theme="dark"] .col-content {
+  background-color: #0f1221;
+}
+
+/* Dark mode — sidebar deepens with gradient */
+[data-theme="dark"] .col-sidebar,
+[data-theme="dark"] .col-sidebar .site-menu {
+  background: linear-gradient(180deg, #0d1017 0%, #141829 50%, #181d30 100%);
+}
+
+[data-theme="dark"] .site-menu,
+[data-theme="dark"] nav.tsd-navigation,
+[data-theme="dark"] nav.tsd-navigation a,
+[data-theme="dark"] nav.tsd-navigation span,
+[data-theme="dark"] nav.tsd-navigation summary,
+[data-theme="dark"] nav.tsd-navigation .tsd-nav-title,
+[data-theme="dark"] nav.tsd-navigation .tsd-nav-link,
+[data-theme="dark"] nav.tsd-navigation .tsd-accordion-summary {
+  background-color: transparent;
+}
+
+[data-theme="dark"] nav.tsd-navigation a,
+[data-theme="dark"] nav.tsd-navigation span,
+[data-theme="dark"] nav.tsd-navigation .tsd-nav-link {
+  color: #8b949e;
+}
+
+[data-theme="dark"] nav.tsd-navigation a:hover,
+[data-theme="dark"] nav.tsd-navigation .tsd-nav-link:hover {
+  color: #c9d1d9;
+}
+
+[data-theme="dark"] nav.tsd-navigation .tsd-nav-title {
+  color: #e6edf3;
+}
+
+/* Dark mode — code blocks */
+[data-theme="dark"] pre,
+[data-theme="dark"] pre > code,
+[data-theme="dark"] .col-content pre,
+[data-theme="dark"] .col-content pre > code {
+  background-color: #0d1017;
+  color: #c9d1d9;
+}
+
+/* Dark mode — inline code */
+[data-theme="dark"] code {
+  background-color: #1c2333;
+  color: #c9d1d9;
+}
+
+/* Dark mode — tables */
+[data-theme="dark"] .col-content td,
+[data-theme="dark"] .col-content th {
+  color: #c9d1d9;
+  border-color: #21262d;
+}
+
+[data-theme="dark"] th {
+  color: #8b949e;
+}
+
+[data-theme="dark"] table,
+[data-theme="dark"] tr {
+  border-color: #21262d;
+}
+
+/* Dark mode — links with gradient hover */
+[data-theme="dark"] .col-content a,
+[data-theme="dark"] .tsd-panel a,
+[data-theme="dark"] .tsd-typography a {
+  color: #58a6ff;
+}
+
+[data-theme="dark"] .col-content a:hover,
+[data-theme="dark"] .tsd-panel a:hover,
+[data-theme="dark"] .tsd-typography a:hover {
+  background: linear-gradient(135deg, #58a6ff, #a371f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* Dark mode — search */
+[data-theme="dark"] #tsd-search input {
+  background-color: #1c2333;
+  border-color: #21262d;
+  color: #c9d1d9;
+}
+
+[data-theme="dark"] #tsd-search input::placeholder {
+  color: #6e7681;
+}
+
+/* Dark mode — tag badges (Abstract, etc.) */
+[data-theme="dark"] code.tsd-tag {
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  background: linear-gradient(135deg, #58a6ff, #a371f7);
+  border: none;
+  border-radius: 10px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.2em 0.6em;
+  vertical-align: middle;
+  display: inline-block;
+  line-height: 1.4;
+}
+
+/* Dark mode — signatures */
+[data-theme="dark"] .col-content .tsd-signature,
+[data-theme="dark"] .tsd-signature {
+  color: #c9d1d9;
+  background-color: #0d1017;
+  border-color: #21262d;
+}
+
+/* Dark mode — member groups */
+[data-theme="dark"] .tsd-panel-group {
+  border-color: #21262d;
+}
+
+/* Dark mode — breadcrumb */
+[data-theme="dark"] .tsd-breadcrumb,
+[data-theme="dark"] .tsd-breadcrumb a {
+  color: #6e7681;
+}
+
+/* Dark mode — deprecation notice */
+[data-theme="dark"] .deprecated {
+  color: #f85149;
+}
+
+/* Dark mode — architecture images enhanced */
+[data-theme="dark"] .tsd-description img[alt="Architecture"],
+[data-theme="dark"] .tsd-comment img[alt="Architecture"] {
+  background: linear-gradient(135deg, rgba(20, 24, 41, 0.9), rgba(13, 16, 23, 0.95));
+  border-color: rgba(88, 166, 255, 0.08);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+[data-theme="dark"] .tsd-description img[alt="Architecture"]:hover,
+[data-theme="dark"] .tsd-comment img[alt="Architecture"]:hover {
+  border-color: rgba(88, 166, 255, 0.25);
+  box-shadow:
+    0 8px 40px rgba(0, 0, 0, 0.6),
+    0 0 20px rgba(88, 166, 255, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
+}
+
+/* Dark mode — settings panel */
+[data-theme="dark"] .tsd-navigation.settings,
+[data-theme="dark"] .tsd-navigation.settings details {
+  background-color: #141829;
+}
+
+/* ============================================
+   Color Accents — Kind Icons
+   ============================================ */
+
+/* Class icons — blue */
+[data-theme="dark"] svg[aria-label="Class"] {
+  color: #58a6ff;
+}
+
+/* Interface icons — purple */
+[data-theme="dark"] svg[aria-label="Interface"] {
+  color: #a371f7;
+}
+
+/* Enum icons — teal */
+[data-theme="dark"] svg[aria-label="Enumeration"] {
+  color: #3fb950;
+}
+
+/* Function icons — orange */
+[data-theme="dark"] svg[aria-label="Function"] {
+  color: #d29922;
+}
+
+/* Variable/Constant icons — coral */
+[data-theme="dark"] svg[aria-label="Variable"] {
+  color: #f47067;
+}
+
+/* Constructor icons — cyan */
+[data-theme="dark"] svg[aria-label="Constructor"] {
+  color: #39d2c0;
+}
+
+/* Method icons — sky blue */
+[data-theme="dark"] svg[aria-label="Method"] {
+  color: #79c0ff;
+}
+
+/* Property icons — lavender */
+[data-theme="dark"] svg[aria-label="Property"] {
+  color: #bc8cff;
+}
+
+/* ============================================
+   Color Accents — Category Badges
+   ============================================ */
+
+/* Category section headers — colored left border */
+[data-theme="dark"] [data-key="section-Construct"] h2 {
+  border-image: linear-gradient(180deg, #58a6ff, #39d2c0) 1;
+  border-left: 3px solid transparent;
+  padding-left: 0.75rem;
+  border-bottom: none;
+}
+
+[data-theme="dark"] [data-key="section-Service"] h2 {
+  border-image: linear-gradient(180deg, #a371f7, #f778ba) 1;
+  border-left: 3px solid transparent;
+  padding-left: 0.75rem;
+  border-bottom: none;
+}
+
+[data-theme="dark"] [data-key="section-Common"] h2 {
+  border-image: linear-gradient(180deg, #d29922, #f47067) 1;
+  border-left: 3px solid transparent;
+  padding-left: 0.75rem;
+  border-bottom: none;
+}
+
+[data-theme="dark"] [data-key="section-Enum"] h2 {
+  border-image: linear-gradient(180deg, #3fb950, #58a6ff) 1;
+  border-left: 3px solid transparent;
+  padding-left: 0.75rem;
+  border-bottom: none;
+}
+
+[data-theme="dark"] [data-key="section-Interface"] h2 {
+  border-image: linear-gradient(180deg, #a371f7, #58a6ff) 1;
+  border-left: 3px solid transparent;
+  padding-left: 0.75rem;
+  border-bottom: none;
+}
+
+[data-theme="dark"] [data-key="section-Constant"] h2 {
+  border-image: linear-gradient(180deg, #f47067, #d29922) 1;
+  border-left: 3px solid transparent;
+  padding-left: 0.75rem;
+  border-bottom: none;
+}
+
+/* Category header text — tinted to match border */
+[data-theme="dark"] [data-key="section-Construct"] h2 { color: #58a6ff; }
+[data-theme="dark"] [data-key="section-Service"] h2 { color: #a371f7; }
+[data-theme="dark"] [data-key="section-Common"] h2 { color: #d29922; }
+[data-theme="dark"] [data-key="section-Enum"] h2 { color: #3fb950; }
+[data-theme="dark"] [data-key="section-Interface"] h2 { color: #bc8cff; }
+[data-theme="dark"] [data-key="section-Constant"] h2 { color: #f47067; }
+
+/* ============================================
+   Cards Layout
+   ============================================ */
+
+/* Category sections as cards */
+[data-theme="dark"] .tsd-panel-group.tsd-member-group {
+  background: linear-gradient(135deg, rgba(20, 24, 41, 0.6) 0%, rgba(15, 18, 33, 0.8) 100%);
+  border: 1px solid rgba(88, 166, 255, 0.08);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+[data-theme="dark"] .tsd-panel-group.tsd-member-group:hover {
+  border-color: rgba(88, 166, 255, 0.15);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(88, 166, 255, 0.05);
+}
+
+/* Member summary items as mini cards */
+[data-theme="dark"] .tsd-member-summary {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  margin: 0.25rem 0;
+  transition: all 0.25s ease;
+}
+
+[data-theme="dark"] .tsd-member-summary:hover {
+  background: rgba(88, 166, 255, 0.06);
+  border-color: rgba(88, 166, 255, 0.12);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+  transform: translateX(2px);
+}
+
+/* Member detail sections as cards */
+[data-theme="dark"] .tsd-member {
+  background: rgba(20, 24, 41, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+[data-theme="dark"] .tsd-member:hover {
+  border-color: rgba(88, 166, 255, 0.1);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.25);
+}
+
+/* Signature blocks as inset cards */
+[data-theme="dark"] .tsd-signatures {
+  background: rgba(13, 16, 23, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 0.5rem 0;
+}
+
+/* Parameter lists — card feel */
+[data-theme="dark"] .tsd-parameters {
+  background: rgba(13, 16, 23, 0.3);
+  border-left: 2px solid rgba(88, 166, 255, 0.15);
+  border-radius: 0 8px 8px 0;
+  padding: 0.75rem 1rem;
+  margin: 0.5rem 0;
+}
+
+/* Index sections (on module pages) — card grid */
+[data-theme="dark"] .tsd-index-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+[data-theme="dark"] .tsd-index-link {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 8px;
+  padding: 0.4rem 0.75rem;
+  transition: all 0.25s ease;
+}
+
+[data-theme="dark"] .tsd-index-link:hover {
+  background: rgba(88, 166, 255, 0.06);
+  border-color: rgba(88, 166, 255, 0.12);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transform: translateX(2px);
+}
+
+/* Code blocks — card style */
+[data-theme="dark"] pre {
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] pre:hover {
+  border-color: rgba(88, 166, 255, 0.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+/* Page navigation (On This Page) — card */
+[data-theme="dark"] .tsd-page-navigation {
+  background: rgba(20, 24, 41, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 0.75rem;
+}
+
+/* Breadcrumb — pill style */
+[data-theme="dark"] .tsd-breadcrumb {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  padding: 0.3rem 0.8rem;
+  display: inline-flex;
+}
+
+/* ============================================
+   Color Accents — Deprecated styling
+   ============================================ */
+
+[data-theme="dark"] a.deprecated {
+  color: #6e7681;
+  text-decoration: line-through;
+  text-decoration-color: #f47067;
+}
+
+[data-theme="dark"] a.deprecated:hover {
+  color: #8b949e;
+}
+
+/* ============================================
+   Light Mode
+   ============================================ */
+
+/* Light mode text for content areas */
+/* ============================================
+   Smooth Transitions & Animations
+   ============================================ */
+
+/* Smooth scrolling */
+html {
+  scroll-behavior: smooth;
+}
+
+/* Base transitions for interactive elements */
+a,
+summary,
+button,
+input,
+.tsd-accordion-details,
+.tsd-kind-icon,
+.tsd-member-summary-name,
+.tsd-signature {
+  transition: all 0.2s ease;
+}
+
+/* Sidebar links — smooth color + indent on hover */
+nav.tsd-navigation a,
+nav.tsd-navigation .tsd-nav-link,
+.site-menu a {
+  transition: color 0.2s ease, padding-left 0.2s ease, opacity 0.2s ease;
+}
+
+nav.tsd-navigation a:hover,
+.site-menu a:hover {
+  padding-left: 4px;
+}
+
+/* Sidebar accordion — smooth expand/collapse */
+.tsd-accordion-details {
+  transition: max-height 0.3s ease, opacity 0.3s ease;
+  overflow: hidden;
+}
+
+details[open] > .tsd-accordion-details {
+  animation: slideDown 0.3s ease forwards;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Accordion chevron rotation */
+.tsd-accordion-summary svg {
+  transition: transform 0.25s ease;
+}
+
+details[open] > .tsd-accordion-summary svg {
+  transform: rotate(180deg);
+}
+
+/* Member summaries — subtle fade-in on hover */
+.tsd-member-summary {
+  transition: background-color 0.2s ease;
+  border-radius: 6px;
+  padding: 2px 6px;
+  margin: 0 -6px;
+}
+
+.tsd-member-summary:hover {
+  background-color: rgba(255, 255, 255, 0.03);
+}
+
+/* Links — smooth underline reveal */
+.col-content a,
+.tsd-panel a,
+.tsd-typography a {
+  text-decoration: none;
+  background-image: linear-gradient(currentColor, currentColor);
+  background-size: 0% 1px;
+  background-position: 0 100%;
+  background-repeat: no-repeat;
+  transition: background-size 0.3s ease, color 0.2s ease;
+}
+
+.col-content a:hover,
+.tsd-panel a:hover,
+.tsd-typography a:hover {
+  background-size: 100% 1px;
+}
+
+/* Search input — focus glow */
+#tsd-search input {
+  transition: box-shadow 0.25s ease, border-color 0.25s ease;
+}
+
+#tsd-search input:focus {
+  box-shadow: 0 0 0 3px rgba(88, 166, 255, 0.15);
+  border-color: #58a6ff;
+  outline: none;
+}
+
+/* Code blocks — subtle entrance */
+pre {
+  transition: box-shadow 0.2s ease;
+}
+
+pre:hover {
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* Images — transitions handled in main image styling above */
+
+/* Kind icons — subtle pulse on hover */
+.tsd-kind-icon {
+  transition: transform 0.2s ease;
+}
+
+.tsd-member-summary:hover .tsd-kind-icon {
+  transform: scale(1.15);
+}
+
+/* Page content — fade in on load */
+.col-content {
+  animation: fadeIn 0.4s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================
+   Light Mode
+   ============================================ */
+
+[data-theme="light"] .col-content,
+[data-theme="light"] .col-content h1,
+[data-theme="light"] .col-content h2,
+[data-theme="light"] .col-content h3,
+[data-theme="light"] .col-content h4,
+[data-theme="light"] .col-content h5,
+[data-theme="light"] .col-content p,
+[data-theme="light"] .col-content li,
+[data-theme="light"] .col-content td,
+[data-theme="light"] .col-content th,
+[data-theme="light"] .col-content span:not([class^="hl-"]),
+[data-theme="light"] .col-content .tsd-signature,
+[data-theme="light"] .col-content .tsd-kind-icon ~ span,
+[data-theme="light"] .tsd-page-title,
+[data-theme="light"] .tsd-page-title h1,
+[data-theme="light"] .tsd-panel,
+[data-theme="light"] .tsd-panel p,
+[data-theme="light"] .tsd-panel li,
+[data-theme="light"] .tsd-typography,
+[data-theme="light"] .tsd-typography p,
+[data-theme="light"] .tsd-typography li,
+[data-theme="light"] .tsd-description,
+[data-theme="light"] .tsd-description p,
+[data-theme="light"] .tsd-comment,
+[data-theme="light"] .tsd-comment p {
+  color: #1a1f36;
+}
+
+/* ============================================
+   Footer Styling
+   ============================================ */
+
+footer {
+  background: linear-gradient(180deg, transparent, rgba(13, 16, 23, 0.5));
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 1.5rem 2rem;
+  text-align: center;
+}
+
+[data-theme="dark"] footer {
+  color: #6e7681;
+}
+
+[data-theme="dark"] footer p {
+  color: #6e7681;
+  font-size: 0.8rem;
+  letter-spacing: 0.03em;
+  margin: 0;
+}
+
+/* ============================================
+   Search Dialog Styling
+   ============================================ */
+
+[data-theme="dark"] #tsd-search {
+  background: #0f1221;
+  border: 1px solid rgba(88, 166, 255, 0.15);
+  border-radius: 12px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+  padding: 0.75rem;
+}
+
+[data-theme="dark"] #tsd-search-results {
+  background: #0f1221;
+  border-radius: 8px;
+}
+
+[data-theme="dark"] #tsd-search-results li {
+  color: #c9d1d9;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+}
+
+[data-theme="dark"] #tsd-search-results li:hover,
+[data-theme="dark"] #tsd-search-results li:focus {
+  background: rgba(88, 166, 255, 0.08);
+}
+
+[data-theme="dark"] #tsd-search-results a {
+  color: #c9d1d9;
+}
+
+[data-theme="dark"] #tsd-search-status {
+  color: #6e7681;
+}
+
+/* ============================================
+   Custom Scrollbars
+   ============================================ */
+
+/* Sidebar scrollbar */
+[data-theme="dark"] .col-sidebar::-webkit-scrollbar,
+[data-theme="dark"] .site-menu::-webkit-scrollbar,
+[data-theme="dark"] nav.tsd-navigation::-webkit-scrollbar {
+  width: 6px;
+}
+
+[data-theme="dark"] .col-sidebar::-webkit-scrollbar-track,
+[data-theme="dark"] .site-menu::-webkit-scrollbar-track,
+[data-theme="dark"] nav.tsd-navigation::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+[data-theme="dark"] .col-sidebar::-webkit-scrollbar-thumb,
+[data-theme="dark"] .site-menu::-webkit-scrollbar-thumb,
+[data-theme="dark"] nav.tsd-navigation::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+[data-theme="dark"] .col-sidebar::-webkit-scrollbar-thumb:hover,
+[data-theme="dark"] .site-menu::-webkit-scrollbar-thumb:hover,
+[data-theme="dark"] nav.tsd-navigation::-webkit-scrollbar-thumb:hover {
+  background: rgba(88, 166, 255, 0.3);
+}
+
+/* Content scrollbar */
+[data-theme="dark"] .col-content::-webkit-scrollbar,
+[data-theme="dark"] ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+[data-theme="dark"] .col-content::-webkit-scrollbar-track,
+[data-theme="dark"] ::-webkit-scrollbar-track {
+  background: #0f1221;
+}
+
+[data-theme="dark"] .col-content::-webkit-scrollbar-thumb,
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+}
+
+[data-theme="dark"] .col-content::-webkit-scrollbar-thumb:hover,
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(88, 166, 255, 0.25);
+}
+
+/* Firefox scrollbar */
+[data-theme="dark"] * {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.08) transparent;
+}
+
+/* ============================================
+   Syntax Highlighting Overrides
+   ============================================ */
+
+[data-theme="dark"] {
+  --hl-0: #B392F0;  /* function calls — purple */
+  --hl-1: #E1E4E8;  /* plain text */
+  --hl-2: #9ECBFF;  /* strings — light blue */
+  --hl-3: #79B8FF;  /* constants/numbers — blue */
+  --hl-4: #6A737D;  /* comments — gray */
+  --hl-5: #F97583;  /* keywords — red/pink */
+  --hl-6: #FFAB70;  /* types/classes — orange */
+  --hl-7: #FDAEB7;  /* regexp — soft red */
+  --code-background: #0d1017;
+}
+
+/* ============================================
+   Responsive — Mobile & Tablet
+   ============================================ */
+
+@media (max-width: 769px) {
+  .col-content {
+    padding: 1.5rem 1rem;
+    max-width: 100%;
+  }
+
+  h1, .tsd-page-title h1 {
+    font-size: 1.5rem;
+  }
+
+  h2, .tsd-accordion-summary h2 {
+    font-size: 1.25rem;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+  }
+
+  /* Stack breadcrumb pills */
+  .tsd-breadcrumb {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+  }
+
+  /* Compact member summaries */
+  [data-theme="dark"] .tsd-member-summary {
+    padding: 0.35rem 0.5rem;
+  }
+
+  /* Compact code blocks */
+  pre {
+    padding: 0.75rem;
+    font-size: 0.8rem;
+  }
+
+  /* Full-width images */
+  .tsd-description img[alt="Architecture"],
+  .tsd-comment img[alt="Architecture"] {
+    padding: 0.75rem;
+  }
+
+  /* Cards — reduce padding */
+  [data-theme="dark"] .tsd-panel-group.tsd-member-group {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  [data-theme="dark"] .tsd-member {
+    padding: 0.75rem 1rem;
+  }
+
+  /* Footer compact */
+  footer {
+    padding: 1rem;
+  }
+}
+
+/* ============================================
+   Back-to-Top Button
+   ============================================ */
+
+.back-to-top {
+  position: fixed;
+  bottom: 2rem;
+  right: 2rem;
+  width: 40px;
+  height: 40px;
+  border: 1px solid rgba(88, 166, 255, 0.15);
+  border-radius: 10px;
+  background: rgba(15, 18, 33, 0.9);
+  color: #8b949e;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transform: translateY(10px);
+  pointer-events: none;
+  transition: all 0.3s ease;
+  z-index: 200;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.back-to-top.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+
+.back-to-top:hover {
+  color: #58a6ff;
+  border-color: rgba(88, 166, 255, 0.3);
+  box-shadow: 0 4px 16px rgba(88, 166, 255, 0.1);
+}
+
+/* ============================================
+   Anchor Link Styling
+   ============================================ */
+
+[data-theme="dark"] .tsd-anchor-icon {
+  opacity: 0;
+  transition: opacity 0.2s ease;
+  color: #6e7681;
+}
+
+*:hover > .tsd-anchor-icon {
+  opacity: 0.5;
+}
+
+.tsd-anchor-icon:hover {
+  opacity: 1 !important;
+  color: #58a6ff;
+}
+
+/* ============================================
+   Active Sidebar Item
+   ============================================ */
+
+nav.tsd-navigation a.sidebar-active {
+  color: #e6edf3 !important;
+  -webkit-text-fill-color: #e6edf3 !important;
+  background: rgba(88, 166, 255, 0.08);
+  border-radius: 4px;
+  border-left: 2px solid #58a6ff;
+  padding-left: 6px;
+}
+
+/* ============================================
+   Version Badge
+   ============================================ */
+
+.version-badge {
+  display: inline-block;
+  height: 20px;
+  margin-left: 0.5rem;
+  vertical-align: middle;
+  border-radius: 4px;
+}
+
+/* ============================================
+   Edit on GitHub Link
+   ============================================ */
+
+.edit-on-github {
+  position: absolute;
+  top: 0.5rem;
+  right: 0;
+}
+
+.edit-on-github a {
+  color: #6e7681;
+  font-size: 0.75rem;
+  text-decoration: none;
+  padding: 0.25rem 0.6rem;
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 6px;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+}
+
+.edit-on-github a:hover {
+  color: #c9d1d9;
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+@media (max-width: 480px) {
+  .col-content {
+    padding: 1rem 0.75rem;
+  }
+
+  h1, .tsd-page-title h1 {
+    font-size: 1.3rem;
+  }
+
+  .tsd-signature {
+    font-size: 0.8rem;
+  }
+
+  pre {
+    font-size: 0.75rem;
+    padding: 0.5rem;
+    border-radius: 6px;
+  }
+}

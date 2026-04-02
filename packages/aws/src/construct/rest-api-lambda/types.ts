@@ -5,10 +5,12 @@ import { CommonStackProps } from '../../common/index.js'
 
 /**
  */
+/** @category Interface */
 export interface RestApiLambdaEnvironment extends LambdaEnvironment {}
 
 /**
  */
+/** @category Interface */
 export interface RestApiLambdaProps extends CommonStackProps {
   apiRootPaths?: string[]
   apiSubDomain: string

@@ -8,7 +8,7 @@ import { AzureFunctionApp } from '../function-app/index.js'
 import { AzureEventHandlerProps, EventHandlerEventGridSubscription, EventHandlerServiceBus } from './types.js'
 
 /**
- * @classdesc Provides a construct to create and deploy an Azure EventGrid Event Handler with Service Bus integration
+ * Provides a construct to create and deploy an Azure EventGrid Event Handler with Service Bus integration
  * @example
  * import { AzureEventHandler, AzureEventHandlerProps } from '@gradientedge/cdk-utils'
  *
@@ -20,6 +20,7 @@ import { AzureEventHandlerProps, EventHandlerEventGridSubscription, EventHandler
  *     this.initResources()
  *   }
  * }
+ * @category Construct
  */
 export class AzureEventHandler extends AzureFunctionApp {
   props: AzureEventHandlerProps

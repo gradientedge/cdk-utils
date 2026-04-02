@@ -21,30 +21,35 @@ import {
 
 /**
  */
+/** @category Interface */
 export interface SfnSucceedProps extends SucceedProps {
   name: string
 }
 
 /**
  */
+/** @category Interface */
 export interface SfnRetryProps extends RetryProps {
   intervalInSecs: number
 }
 
 /**
  */
+/** @category Interface */
 export interface SfnFailProps extends FailProps {
   name: string
 }
 
 /**
  */
+/** @category Interface */
 export interface SfnPassProps extends PassProps {
   name: string
 }
 
 /**
  */
+/** @category Interface */
 export interface SfnDynamoGetItemProps extends DynamoGetItemProps {
   name: string
   retries?: SfnRetryProps[]
@@ -52,6 +57,7 @@ export interface SfnDynamoGetItemProps extends DynamoGetItemProps {
 
 /**
  */
+/** @category Interface */
 export interface SfnDynamoPutItemProps extends DynamoPutItemProps {
   name: string
   retries?: SfnRetryProps[]
@@ -59,6 +65,7 @@ export interface SfnDynamoPutItemProps extends DynamoPutItemProps {
 
 /**
  */
+/** @category Interface */
 export interface SfnDynamoDeleteItemProps extends DynamoDeleteItemProps {
   name: string
   retries?: SfnRetryProps[]
@@ -66,6 +73,7 @@ export interface SfnDynamoDeleteItemProps extends DynamoDeleteItemProps {
 
 /**
  */
+/** @category Interface */
 export interface SfnSqsSendMessageProps extends SqsSendMessageProps {
   name: string
   retries?: SfnRetryProps[]
@@ -73,6 +81,7 @@ export interface SfnSqsSendMessageProps extends SqsSendMessageProps {
 
 /**
  */
+/** @category Interface */
 export interface SfnParallelProps extends ParallelProps {
   name: string
   retries?: SfnRetryProps[]
@@ -80,12 +89,14 @@ export interface SfnParallelProps extends ParallelProps {
 
 /**
  */
+/** @category Interface */
 export interface SfnChoiceProps extends ChoiceProps {
   name: string
 }
 
 /**
  */
+/** @category Interface */
 export interface SfnWaitProps extends WaitProps {
   name: string
   delayInSeconds: number
@@ -93,6 +104,7 @@ export interface SfnWaitProps extends WaitProps {
 
 /**
  */
+/** @category Interface */
 export interface SfnLambdaInvokeProps extends LambdaInvokeProps {
   name: string
   retries?: SfnRetryProps[]
@@ -100,6 +112,7 @@ export interface SfnLambdaInvokeProps extends LambdaInvokeProps {
 
 /**
  */
+/** @category Interface */
 export interface SfnCallApiGatewayRestApiEndpointProps extends CallApiGatewayRestApiEndpointProps {
   name: string
   retries?: SfnRetryProps[]
@@ -107,14 +120,17 @@ export interface SfnCallApiGatewayRestApiEndpointProps extends CallApiGatewayRes
 
 /**
  */
+/** @category Interface */
 export interface SfnStateMachineProps extends StateMachineProps {}
 
 /**
  */
+/** @category Interface */
 export interface SfnMapProps extends MapProps {}
 
 /**
  */
+/** @category Interface */
 export interface SfnStartExecutionProps extends StepFunctionsStartExecutionProps {
   retries?: SfnRetryProps[]
 }

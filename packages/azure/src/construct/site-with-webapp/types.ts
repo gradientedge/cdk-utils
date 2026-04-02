@@ -7,6 +7,7 @@ import { Output } from '@pulumi/pulumi'
 import { CommonAzureStackProps } from '../../common/index.js'
 import { LinuxWebAppProps, ServicePlanProps, StorageAccountProps, StorageContainerProps } from '../../services/index.js'
 
+/** @category Interface */
 export interface SiteProps {
   appServicePlan: ServicePlanProps
   codeArchiveFile: GetFileOutputArgs
@@ -15,6 +16,7 @@ export interface SiteProps {
   webApp: LinuxWebAppProps
 }
 
+/** @category Interface */
 export interface SiteWithWebAppProps extends CommonAzureStackProps {
   deploySource: string
   nodeOptions: string
@@ -24,6 +26,7 @@ export interface SiteWithWebAppProps extends CommonAzureStackProps {
   startCommand: string
 }
 
+/** @category Interface */
 export interface Site {
   appServicePlan: AppServicePlan
   codeArchiveFile: Output<archive.GetFileResult>

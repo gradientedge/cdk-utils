@@ -1,5 +1,6 @@
 import { DashboardArgs } from '@pulumi/azure-native/portal/index.js'
 
+/** @category Interface */
 export type PaneTemplate = {
   dimensions: { height: number }
   properties: Record<string, string>
@@ -7,16 +8,19 @@ export type PaneTemplate = {
   template: string
 }
 
+/** @category Interface */
 export type MissingKeys = {
   keys: Array<string>
   hasMissingKeys: boolean
 }
 
+/** @category Interface */
 export type Pane = {
   id: string
   properties?: Record<string, string | number | Array<string | number>>
 }
 
+/** @category Interface */
 export type Filter = {
   locale?: string
   timeFormat?: string
@@ -24,6 +28,7 @@ export type Filter = {
   timeRelative?: string
 }
 
+/** @category Interface */
 export type RenderParams = {
   panes: Array<Pane>
   variables: Record<string, any>
@@ -31,11 +36,13 @@ export type RenderParams = {
   filter?: Filter
 }
 
+/** @category Interface */
 export interface DashboardRenderer {
   render(params: RenderParams): string
   renderToFile(filename: string, params: RenderParams): string
 }
 
+/** @category Interface */
 export interface PortalDashboardProps extends DashboardArgs {
   displayName: string
   panes: Array<Pane>

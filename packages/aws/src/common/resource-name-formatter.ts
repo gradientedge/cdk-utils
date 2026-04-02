@@ -2,6 +2,7 @@ import { Construct } from 'constructs'
 
 import { CommonStackProps, ResourceNameFormatterProps } from './types.js'
 
+/** @category Common */
 export class ResourceNameFormatter extends Construct {
   props: CommonStackProps
 

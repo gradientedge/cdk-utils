@@ -8,19 +8,21 @@ import { createCfnOutput } from '../../utils/index.js'
 
 import { EfsAccessPointOptions, EfsFileSystemProps } from './types.js'
 
+/** @category Constant */
 export const DEFAULT_CREATE_ACL = {
   ownerGid: '1000',
   ownerUid: '1000',
   permissions: '755',
 }
 
+/** @category Constant */
 export const DEFAULT_POSIX_USER = {
   gid: '1000',
   uid: '1000',
 }
 
 /**
- * @classdesc Provides operations on AWS Elastic File System.
+ * Provides operations on AWS Elastic File System.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
  * @example
@@ -34,6 +36,7 @@ export const DEFAULT_POSIX_USER = {
  *   }
  * }
  * @see [CDK EFS Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_efs-readme.html}
+ * @category Service
  */
 export class EfsManager {
   /**

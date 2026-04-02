@@ -14,6 +14,7 @@ import { CommonConstruct } from '../../common/index.js'
 
 import { VpcProps } from './types.js'
 
+/** @category Service */
 export class Ipv6Vpc extends Vpc {
   public egressOnlyInternetGatewayId: string
 

@@ -11,7 +11,7 @@ import { createCfnOutput } from '../../utils/index.js'
 import { LifecycleRule, S3BucketProps } from './types.js'
 
 /**
- * @classdesc Provides operations on AWS S3
+ * Provides operations on AWS S3
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
  * @example
@@ -25,6 +25,7 @@ import { LifecycleRule, S3BucketProps } from './types.js'
  *   }
  * }
  * @see [CDK S3 Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_s3-readme.html}
+ * @category Service
  */
 export class S3Manager {
   /**

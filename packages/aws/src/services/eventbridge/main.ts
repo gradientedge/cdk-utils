@@ -21,7 +21,7 @@ import {
 } from './types.js'
 
 /**
- * @classdesc Provides operations on AWS EventBridge.
+ * Provides operations on AWS EventBridge.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
  * @example
@@ -35,6 +35,7 @@ import {
  *   }
  * }
  * @see [CDK EventBridge Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_events-readme.html}
+ * @category Service
  */
 export class EventManager {
   /**
@@ -338,7 +339,7 @@ export class EventManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props the props for the pipe
-   * @param dynamoDbStream the source dynamoDb stream
+   * @param sourceDynamoDbStreamArn the source dynamoDb stream
    * @param targetLambdaFunction the target lambda function
    */
   public createDynamoDbToLambdaCfnPipe(

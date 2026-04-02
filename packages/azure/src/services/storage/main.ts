@@ -28,7 +28,7 @@ import {
 } from './types.js'
 
 /**
- * @classdesc Provides operations on Azure Storage using Pulumi
+ * Provides operations on Azure Storage using Pulumi
  * - A new instance of this class is injected into {@link CommonAzureConstruct} constructor.
  * - If a custom construct extends {@link CommonAzureConstruct}, an instance is available within the context.
  * @example
@@ -43,6 +43,7 @@ import {
  *   }
  * }
  * ```
+ * @category Service
  */
 export class AzureStorageManager {
   /**
@@ -177,7 +178,6 @@ export class AzureStorageManager {
   /**
    * @summary Generates a container-level SAS token for an existing Azure Storage container.
    *
-   * @description
    * This method generates a Shared Access Signature (SAS) token for secure container access.
    * The token is generated using Pulumi's listStorageAccountSAS function.
    *

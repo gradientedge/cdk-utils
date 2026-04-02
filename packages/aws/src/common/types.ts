@@ -5,6 +5,7 @@ import { BaseProps } from '@gradientedge/cdk-utils-common'
 
 /**
  */
+/** @category Interface */
 export interface CommonStackProps extends BaseProps, StackProps {
   region: string
   resourceProjectIdentifier?: string
@@ -21,6 +22,7 @@ export interface CommonStackProps extends BaseProps, StackProps {
   resourceNameOptions?: { [key: string]: ResourceNameFormatterProps }
 }
 
+/** @category Interface */
 export interface ResourceNameFormatterProps {
   exclude?: boolean
   globalPrefix?: boolean

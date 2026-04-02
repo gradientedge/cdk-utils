@@ -14,6 +14,7 @@ import { IHostedZone } from 'aws-cdk-lib/aws-route53'
 
 import { ApiToAnyTargetRestApiType } from './types.js'
 
+/** @category Construct */
 export class ApiToAnyTargetRestApi implements ApiToAnyTargetRestApiType {
   accessLogGroup: LogGroup
   api: IRestApi

@@ -26,6 +26,13 @@
     "@types/lodash": "4.17.24",
     "lodash": "4.18.1"
   },
+  "keywords": [
+    "gradientedge",
+    "cdk",
+    "pulumi",
+    "iac",
+    "typescript"
+  ],
   "publishConfig": {
     "access": "public"
   },
@@ -34,5 +41,9 @@
     "type": "git",
     "url": "git+https://github.com/gradientedge/cdk-utils.git",
     "directory": "packages/common"
+  },
+  "typedocOptions": {
+    "gitRevision": "main",
+    "sourceLinkTemplate": "https://github.com/gradientedge/cdk-utils/blob/main/{path}#L{line}"
   }
 }

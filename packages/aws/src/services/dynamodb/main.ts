@@ -8,7 +8,7 @@ import { createCfnOutput } from '../../utils/index.js'
 import { TableProps, TablePropsV2 } from './types.js'
 
 /**
- * @classdesc Provides operations on AWS DynamoDB
+ * Provides operations on AWS DynamoDB
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
  * @example
@@ -22,6 +22,7 @@ import { TableProps, TablePropsV2 } from './types.js'
  *   }
  * }
  * @see [CDK Certificate Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_dynamodb-readme.html}
+ * @category Service
  */
 export class DynamodbManager {
   /**

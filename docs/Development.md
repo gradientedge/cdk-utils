@@ -1,85 +1,178 @@
-## Table of Contents
-- [Requirements](#requirements)
-- [Setting up Development Environment](#development-instructions)
+# Development
 
 ## Requirements
+
 ### Mandatory
-- [AWS CLI][aws-cli]
-- [Node][node-cli]
-- [Npm][npm-cli]
-- [Yarn][yarn-cli]
 
-### Optional
-- [AWS Logs][aws-logs]
-- [Grip][grip]
-- [JetBrains IntelliJ Idea][intellij]
-  - [AWS Toolkit][aws-toolkit]
-  - [AWS CloudFormation][aws-cloudformation]
-- [Act][act]
-  
-### Docker system Requirements
-Resource | Value
--------- | -----
-CPUs     | _1 (more performant if >2 available)_
-Memory   | _5 GB_
-Swap     | _1 GB_
-Disk     | _10 GB_
+- [Node.js](https://nodejs.org/) >= 22
+- [pnpm](https://pnpm.io/) 10
+- [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html)
 
-## Development Instructions
-### Install the packages
-#### ![cmd]
-With **npm**:
-```shell
-npm install
+### Recommended
+
+- [Visual Studio Code](https://code.visualstudio.com/)
+  - [AWS Toolkit](https://marketplace.visualstudio.com/items?itemName=AmazonWebServices.aws-toolkit-vscode)
+  - [ESLint](https://marketplace.visualstudio.com/items?itemName=dbaeumer.vscode-eslint)
+  - [Prettier](https://marketplace.visualstudio.com/items?itemName=esbenp.prettier-vscode)
+- [AWS Logs](https://github.com/jorgebastida/awslogs) — for tailing CloudWatch logs
+- [Act](https://github.com/nektos/act) — for running GitHub Actions locally
+
+### Docker System Requirements
+
+| Resource | Value                                     |
+| -------- | ----------------------------------------- |
+| CPUs     | _1 (more performant if >2 available)_     |
+| Memory   | _5 GB_                                    |
+| Swap     | _1 GB_                                    |
+| Disk     | _10 GB_                                   |
+
+## Project Structure
+
+```
+cdk-utils/
+├── packages/
+│   ├── aws/              # AWS CDK constructs and service managers
+│   ├── azure/            # Azure Pulumi constructs and service managers
+│   ├── cloudflare/       # Cloudflare Pulumi constructs and service managers
+│   ├── common/           # Shared utilities, types, and enums
+│   └── cdk-utils/        # Umbrella package re-exporting all sub-packages
+├── docs/                 # Project documentation (rendered in API docs)
+├── img/                  # Architecture diagrams and logo
+├── theme/                # Custom TypeDoc theme (CSS + JS)
+├── .github/              # GitHub Actions workflows and actions
+└── app/                  # Example applications
 ```
 
-With **yarn**:
-```shell
-yarn install
+Each package under `packages/` follows a consistent structure:
+
+```
+packages/<name>/
+├── src/
+│   ├── common/           # Base constructs, stacks, and shared types
+│   ├── construct/        # High-level construct patterns
+│   ├── services/         # Service manager classes
+│   └── index.ts          # Public API exports
+├── test/                 # Unit and integration tests
+├── package.json
+└── tsconfig.json
 ```
 
-### Build the packages
-#### ![cmd]
-With **npm**:
+## Setting up the Development Environment
+
+### 1. Clone the repository
+
 ```shell
-npm run build
+git clone https://github.com/gradientedge/cdk-utils.git
+cd cdk-utils
 ```
 
-With **yarn**:
+### 2. Install dependencies
+
 ```shell
-yarn build
+pnpm install
 ```
 
-### Test the packages
-#### ![cmd]
-With **npm**:
+### 3. Build all packages
+
 ```shell
-npm run validate
+pnpm build
 ```
 
-With **yarn**:
+### 4. Run tests
+
 ```shell
-yarn validate
+pnpm test
 ```
 
-<!-- references -->
-[act]: https://github.com/nektos/act
-[aws-cli]: https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-install.html
-[aws-cloudformation]: https://plugins.jetbrains.com/plugin/7371-aws-cloudformation
-[aws-logs]: https://github.com/jorgebastida/awslogs
-[aws-toolkit]: https://plugins.jetbrains.com/plugin/11349-aws-toolkit
-[bash-support]: https://plugins.jetbrains.com/plugin/4230-bashsupport
-[build-process]: https://img.shields.io/badge/build--process-48DAD0?logo=read-the-docs&style=for-the-badge
-[cmd]: https://img.shields.io/badge/command--line-4D4D4D?logo=windows-terminal&style=for-the-badge
-[cyberduck]: https://cyberduck.io
-[docs-development]: https://img.shields.io/badge/development-02303A?logo=read-the-docs&style=for-the-badge
-[docs-ci-cd]: https://img.shields.io/badge/CI--CD-48DAD0?logo=read-the-docs&style=for-the-badge
-[docker]: https://docs.docker.com/docker-for-mac/install
-[docs-architecture]: https://img.shields.io/badge/architecture-48DAD0?logo=read-the-docs&style=for-the-badge
-[grip]: https://github.com/joeyespo/grip
-[intellij]: https://www.jetbrains.com/idea
-[node-cli]: https://nodejs.org/
-[npm-cli]: https://www.npmjs.com
-[purescript]: https://img.shields.io/badge/package.json-4D4D4D?logo=purescript&style=for-the-badge
-[yarn-cli]: https://yarnpkg.com
-[package.json]: /package.json
+## Common Tasks
+
+### Install dependencies
+
+```shell
+pnpm install
+```
+
+### Build all packages
+
+```shell
+pnpm build
+```
+
+### Run the full validation suite (prettier + lint + test)
+
+```shell
+pnpm validate
+```
+
+### Run tests with watch mode
+
+```shell
+pnpm test:watch
+```
+
+### Lint and auto-fix
+
+```shell
+pnpm fix
+```
+
+### Format code with Prettier
+
+```shell
+pnpm prettify
+```
+
+### Generate API documentation
+
+```shell
+pnpm run docs
+```
+
+### Update dependencies
+
+```shell
+pnpm update:deps
+```
+
+### Build a specific package
+
+```shell
+pnpm --filter @gradientedge/cdk-utils-aws build
+```
+
+### Run tests for a specific package
+
+```shell
+pnpm --filter @gradientedge/cdk-utils-aws test
+```
+
+## Code Style
+
+- **TypeScript** — strict mode enabled, `noImplicitAny`, `strictNullChecks`
+- **Formatting** — [Prettier](https://prettier.io/) with organized imports
+- **Linting** — [ESLint](https://eslint.org/) with TypeScript and JSDoc plugins
+- **Module system** — ESM (`"type": "module"`) with Node.js module resolution
+
+All code is automatically formatted and linted via pre-commit hooks (powered by [Husky](https://typicode.github.io/husky/)).
+
+## Commit Conventions
+
+This project uses [Conventional Commits](https://www.conventionalcommits.org/):
+
+```
+<type>(<scope>): <description>
+```
+
+Common types:
+
+| Type       | Description                                |
+| ---------- | ------------------------------------------ |
+| `feat`     | A new feature                              |
+| `fix`      | A bug fix                                  |
+| `docs`     | Documentation changes                      |
+| `style`    | Formatting, missing semicolons, etc.       |
+| `refactor` | Code change that neither fixes nor adds    |
+| `test`     | Adding or updating tests                   |
+| `chore`    | Maintenance tasks (deps, CI, build, etc.)  |
+
+Commit messages are validated automatically via a `commit-msg` hook using [commitlint](https://commitlint.js.org/).

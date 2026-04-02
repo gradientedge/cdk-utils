@@ -6,12 +6,14 @@ import { LambdaEnvironment } from '../../services/index.js'
 
 /**
  */
+/** @category Interface */
 export interface ApiDestinedLambdaEnvironment extends LambdaEnvironment {
   SOURCE_ID: string
 }
 
 /**
  */
+/** @category Interface */
 export interface ApiDestinedLambdaType {
   destinationFailure: EventBridgeDestination
   destinationSuccess: EventBridgeDestination

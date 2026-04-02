@@ -4,6 +4,7 @@ import { TagProps } from '../../types/index.js'
 
 /**
  */
+/** @category Interface */
 export interface QueueProps extends sqs.QueueProps {
   dataKeyReuseInSecs?: number
   deliveryDelayInSecs?: number

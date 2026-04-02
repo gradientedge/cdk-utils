@@ -1,3 +1,4 @@
+/** @category Service */
 export class TemplateError extends Error {
   public readonly isTemplateError = true
 

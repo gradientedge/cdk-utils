@@ -7,6 +7,7 @@ import {
   ZoneSettingProps,
 } from '../../services/index.js'
 
+/** @category Interface */
 export interface CloudflareWorkerSiteProps extends CommonCloudflareStackProps {
   siteSubDomain: string
   siteZone: ZoneProps

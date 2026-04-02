@@ -30,7 +30,7 @@ enum CloudWatchWidgetType {
 }
 
 /**
- * @classdesc Provides operations on AWS CloudWatch.
+ * Provides operations on AWS CloudWatch.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
  * @example
@@ -44,6 +44,7 @@ enum CloudWatchWidgetType {
  *   }
  * }
  * @see [CDK CloudWatch Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_cloudwatch-readme.html}
+ * @category Service
  */
 export class CloudWatchManager {
   /**

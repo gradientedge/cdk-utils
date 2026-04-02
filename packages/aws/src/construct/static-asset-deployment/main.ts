@@ -13,7 +13,7 @@ import { CommonConstruct } from '../../common/index.js'
 import { StaticAssetDeploymentProps } from './types.js'
 
 /**
- * @classdesc Provides a construct to create and deploy static assets into S3 bucket
+ * Provides a construct to create and deploy static assets into S3 bucket
  * @example
  * import { StaticAssetDeployment, StaticAssetDeploymentProps } '@gradientedge/cdk-utils'
  * import { Construct } from 'constructs'
@@ -24,6 +24,7 @@ import { StaticAssetDeploymentProps } from './types.js'
  *     this.initResources()
  *   }
  * }
+ * @category Construct
  */
 export class StaticAssetDeployment extends CommonConstruct {
   /* construct resources */

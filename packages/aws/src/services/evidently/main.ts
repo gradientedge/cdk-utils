@@ -12,7 +12,7 @@ import {
 } from './types.js'
 
 /**
- * @classdesc Provides operations on AWS Evidently
+ * Provides operations on AWS Evidently
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
  * @example
@@ -26,6 +26,7 @@ import {
  *   }
  * }
  * @see [CDK Evidently Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_evidently-readme.html}
+ * @category Service
  */
 export class EvidentlyManager {
   /**

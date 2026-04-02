@@ -5,7 +5,7 @@ import { CommonCloudflareConstruct } from '../../common/index.js'
 import { ArgoSmartRoutingProps, ArgoTieredCachingProps } from './types.js'
 
 /**
- * @classdesc Provides operations on Cloudflare Argo
+ * Provides operations on Cloudflare Argo
  * - A new instance of this class is injected into {@link CommonCloudflareConstruct} constructor.
  * - If a custom construct extends {@link CommonCloudflareConstruct}, an instance is available within the context.
  * @example
@@ -20,6 +20,7 @@ import { ArgoSmartRoutingProps, ArgoTieredCachingProps } from './types.js'
  *   }
  * }
  * ```
+ * @category Service
  */
 export class CloudflareArgoManager {
   /**

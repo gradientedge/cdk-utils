@@ -64,7 +64,7 @@ const DEFAULT_RETRY_CONFIG = [
 ]
 
 /**
- * @classdesc Provides operations on AWS Step Functions Service.
+ * Provides operations on AWS Step Functions Service.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
  * @example
@@ -78,6 +78,7 @@ const DEFAULT_RETRY_CONFIG = [
  *   }
  * }
  * @see [CDK Step Functions Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_stepfunctions-readme.html}
+ * @category Service
  */
 export class SfnManager {
   /**

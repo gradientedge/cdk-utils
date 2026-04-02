@@ -12,9 +12,9 @@ import { CommonConstruct } from '../../common/index.js'
 import { RestApiLambdaEnvironment, RestApiLambdaProps } from './types.js'
 
 /**
- * @classdesc Provides a construct to create and deploy a RestApi as Lambda
+ * Provides a construct to create and deploy a RestApi as Lambda
  *
- * <b>Architecture</b><br/> ![Architecture](./RestApiLambda.jpg)
+ * <b>Architecture</b><br/> ![Architecture](https://raw.githubusercontent.com/gradientedge/cdk-utils/main/img/RestApiLambda.jpg)
  * @example
  * import { RestApiLambda, RestApiLambdaProps } '@gradientedge/cdk-utils'
  * import { Construct } from 'constructs'
@@ -27,6 +27,7 @@ import { RestApiLambdaEnvironment, RestApiLambdaProps } from './types.js'
  *     this.initResources()
  *   }
  * }
+ * @category Construct
  */
 export abstract class RestApiLambda extends CommonConstruct {
   /* restApiLambda props */

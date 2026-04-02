@@ -10,7 +10,7 @@ import { CommonCloudflareConstruct } from './construct.js'
 import { CommonCloudflareStackProps } from './types.js'
 
 /**
- * @classdesc Common stack to use as a base for all higher level constructs.
+ * Common stack to use as a base for all higher level constructs.
  * @example
  * import { CommonCloudflareStack } from '@gradientedge/cdk-utils'
  *
@@ -20,6 +20,7 @@ import { CommonCloudflareStackProps } from './types.js'
  *     // provision resources
  *   }
  * }
+ * @category Common
  */
 export class CommonCloudflareStack extends ComponentResource {
   construct: CommonCloudflareConstruct

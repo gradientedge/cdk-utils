@@ -11,6 +11,7 @@ import { ApiToLambdaTargetRestApi } from './api.js'
 import { ApiToLambdaTargetProps, ApiToLambdaTargetRestApiType } from './types.js'
 
 /**
+ * @category Construct
  */
 export class ApiToLambdaTarget extends CommonConstruct {
   props: ApiToLambdaTargetProps

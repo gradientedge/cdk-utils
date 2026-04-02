@@ -9,7 +9,7 @@ import { createCfnOutput } from '../../utils/index.js'
 import { Route53Props } from './types.js'
 
 /**
- * @classdesc Provides operations on AWS Route53
+ * Provides operations on AWS Route53
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
  * @example
@@ -23,6 +23,7 @@ import { Route53Props } from './types.js'
  *   }
  * }
  * @see [CDK Route53 Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_route53-readme.html}
+ * @category Service
  */
 export class Route53Manager {
   /**

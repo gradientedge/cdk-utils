@@ -18,7 +18,7 @@ import { CommonConstruct } from '../../common/index.js'
 import { createCfnOutput } from '../../utils/index.js'
 
 /**
- * @classdesc Provides operations on AWS
+ * Provides operations on AWS
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
  * @example
@@ -32,6 +32,7 @@ import { createCfnOutput } from '../../utils/index.js'
  *   }
  * }
  * @see [CDK IAM Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_iam-readme.html}
+ * @category Service
  */
 export class IamManager {
   /**

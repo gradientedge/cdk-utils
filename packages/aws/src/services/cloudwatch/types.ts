@@ -5,6 +5,7 @@ import { TagProps } from '../../types/index.js'
 
 /**
  */
+/** @category Interface */
 export interface AlarmProps extends watch.AlarmProps {
   expression?: string
   metricProps?: MetricProps[]
@@ -13,10 +14,12 @@ export interface AlarmProps extends watch.AlarmProps {
 
 /**
  */
+/** @category Interface */
 export interface DashboardProps extends watch.DashboardProps {}
 
 /**
  */
+/** @category Interface */
 export interface MetricProps extends watch.MetricProps {
   apiName?: string
   cacheClusterId?: string
@@ -36,6 +39,7 @@ export interface MetricProps extends watch.MetricProps {
 
 /**
  */
+/** @category Interface */
 export interface TextWidgetProps extends watch.TextWidgetProps {
   positionX: number
   positionY: number
@@ -44,6 +48,7 @@ export interface TextWidgetProps extends watch.TextWidgetProps {
 
 /**
  */
+/** @category Interface */
 export interface NumericWidgetProps extends watch.SingleValueWidgetProps {
   metricProps: watch.MetricProps[]
   positionX: number
@@ -53,6 +58,7 @@ export interface NumericWidgetProps extends watch.SingleValueWidgetProps {
 
 /**
  */
+/** @category Interface */
 export interface GuageWidgetProps extends watch.GaugeWidgetProps {
   metricProps: watch.MetricProps[]
   positionX: number
@@ -62,6 +68,7 @@ export interface GuageWidgetProps extends watch.GaugeWidgetProps {
 
 /**
  */
+/** @category Interface */
 export interface GraphWidgetProps extends watch.GraphWidgetProps {
   metricProps: MetricProps[]
   positionX: number
@@ -71,6 +78,7 @@ export interface GraphWidgetProps extends watch.GraphWidgetProps {
 
 /**
  */
+/** @category Interface */
 export interface AlarmStatusWidgetProps extends watch.AlarmStatusWidgetProps {
   alarmProps: watch.AlarmProps[]
   positionX: number
@@ -80,6 +88,7 @@ export interface AlarmStatusWidgetProps extends watch.AlarmStatusWidgetProps {
 
 /**
  */
+/** @category Interface */
 export interface LogQueryWidgetProps extends watch.LogQueryWidgetProps {
   positionX: number
   positionY: number
@@ -88,6 +97,7 @@ export interface LogQueryWidgetProps extends watch.LogQueryWidgetProps {
 
 /**
  */
+/** @category Interface */
 export interface MetricFilterProps extends logs.MetricFilterProps {
   options: watch.MetricOptions
   periodInSecs: number
@@ -95,6 +105,7 @@ export interface MetricFilterProps extends logs.MetricFilterProps {
 
 /**
  */
+/** @category Interface */
 export interface LogProps extends logs.LogGroupProps {
   tags?: TagProps[]
 }

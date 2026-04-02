@@ -9,7 +9,7 @@ import { LambdaProps } from '../lambda/index.js'
 import { QueueProps } from './types.js'
 
 /**
- * @classdesc Provides operations on AWS Simple Queue Service.
+ * Provides operations on AWS Simple Queue Service.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
  * @example
@@ -23,6 +23,7 @@ import { QueueProps } from './types.js'
  *   }
  * }
  * @see [CDK Simple Queue Service Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_sqs-readme.html}
+ * @category Service
  */
 export class SqsManager {
   /**

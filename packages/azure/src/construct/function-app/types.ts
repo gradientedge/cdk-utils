@@ -9,10 +9,12 @@ import {
   StorageContainerProps,
 } from '../../index.js'
 
+/** @category Interface */
 export interface OtelProps {
   otelTracesSamplerArg: string
 }
 
+/** @category Interface */
 export interface FunctionAppProperties {
   app: FunctionAppFlexConsumptionProps
   appConfiguration: AppConfigurationProps
@@ -27,6 +29,7 @@ export interface FunctionAppProperties {
   timerTriggerCronExpression: string
 }
 
+/** @category Interface */
 export interface AzureFunctionAppProps extends CommonAzureStackProps {
   existingTopicName: string
   existingTopicResourceGroupName: string

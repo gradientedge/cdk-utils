@@ -3,6 +3,7 @@ import { AccessPointOptions, FileSystemProps } from 'aws-cdk-lib/aws-efs'
 
 /**
  */
+/** @category Interface */
 export interface EfsFileSystemProps extends FileSystemProps {
   authorizationConfig?: AuthorizationConfig
   provisionNewOnDeployment?: boolean
@@ -13,4 +14,5 @@ export interface EfsFileSystemProps extends FileSystemProps {
 
 /**
  */
+/** @category Interface */
 export interface EfsAccessPointOptions extends AccessPointOptions {}

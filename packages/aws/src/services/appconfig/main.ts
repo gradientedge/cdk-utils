@@ -15,7 +15,7 @@ import { ArnsByRegionForArm64, ArnsByRegionForX86_64 } from './constants.js'
 import { AppConfigProps } from './types.js'
 
 /**
- * @classdesc Provides operations on AWS
+ * Provides operations on AWS
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
  * @example
@@ -29,6 +29,7 @@ import { AppConfigProps } from './types.js'
  *   }
  * }
  * @see [CDK AppConfig Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_appconfig-readme.html}
+ * @category Service
  */
 export class AppConfigManager {
   /**

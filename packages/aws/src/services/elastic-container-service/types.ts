@@ -13,17 +13,20 @@ import { TagProps } from '../../types/index.js'
 
 /**
  */
+/** @category Interface */
 export interface EcsClusterProps extends ClusterProps {
   tags?: TagProps[]
 }
 
 /**
  */
+/** @category Interface */
 export interface EcsTaskProps extends TaskDefinitionProps {
   logging?: AwsLogDriverProps
   tags?: TagProps[]
 }
 
+/** @category Interface */
 export interface EcsScalingProps {
   maxCapacity?: number
   minCapacity?: number
@@ -35,6 +38,7 @@ export interface EcsScalingProps {
 
 /**
  */
+/** @category Interface */
 export interface HealthCheck extends ElbHealthCheck {
   intervalInSecs: number
   timeoutInSecs: number
@@ -43,6 +47,7 @@ export interface HealthCheck extends ElbHealthCheck {
 /**
  *
  */
+/** @category Interface */
 export interface EcsApplicationLoadBalancedFargateServiceHealthCheck extends FargateHealthCheck {
   intervalInSecs: number
   timeoutInSecs: number
@@ -50,6 +55,7 @@ export interface EcsApplicationLoadBalancedFargateServiceHealthCheck extends Far
 
 /**
  */
+/** @category Interface */
 export interface EcsApplicationLoadBalancedFargateServiceProps extends ApplicationLoadBalancedFargateServiceProps {
   healthCheck?: EcsApplicationLoadBalancedFargateServiceHealthCheck
   logging?: AwsLogDriverProps

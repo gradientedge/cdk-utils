@@ -13,7 +13,7 @@ import { Architecture } from '../../services/index.js'
 import { LambdaWithIamAccessEnvironment, LambdaWithIamAccessProps } from './types.js'
 
 /**
- * @classdesc Provides a construct to create a lambda function with IAM access
+ * Provides a construct to create a lambda function with IAM access
  * @example
  * import { LambdaWithIamAccess, LambdaWithIamAccessProps } '@gradientedge/cdk-utils'
  * import { Construct } from 'constructs'
@@ -26,6 +26,7 @@ import { LambdaWithIamAccessEnvironment, LambdaWithIamAccessProps } from './type
  *     this.initResources()
  *   }
  * }
+ * @category Construct
  */
 export class LambdaWithIamAccess extends CommonConstruct {
   /* LambdaWithIamAccess props */

@@ -8,6 +8,7 @@ import { Chain, Map, StateMachine } from 'aws-cdk-lib/aws-stepfunctions'
 
 import { EventHandlerType } from './types.js'
 
+/** @category Construct */
 export class Handler implements EventHandlerType {
   archive: Archive
   ecsTargets: EcsTask[] = []

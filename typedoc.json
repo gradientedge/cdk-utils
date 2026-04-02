@@ -1,0 +1,68 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": ["packages/aws", "packages/azure", "packages/cloudflare", "packages/common"],
+  "entryPointStrategy": "packages",
+  "tsconfig": "./tsconfig.base.json",
+  "out": "api-docs",
+  "name": "GradientEdge CDK Utils",
+  "readme": "README.md",
+  "plugin": ["typedoc-plugin-mermaid"],
+  "hideGenerator": true,
+  "favicon": "./img/logo.png",
+  "darkHighlightTheme": "github-dark",
+  "lightHighlightTheme": "github-light",
+  "customFooterHtml": "© <span id=\"footer-year\"></span> GradientEdge. All rights reserved.",
+  "excludePrivate": true,
+  "excludeExternals": true,
+  "searchInComments": true,
+  "navigation": {
+    "includeCategories": true,
+    "includeGroups": true,
+    "includeFolders": true
+  },
+  "sort": ["kind", "alphabetical"],
+  "categorizeByGroup": true,
+  "groupOrder": ["Classes", "Interfaces", "Enumerations", "Type Aliases", "Functions", "Variables"],
+  "categoryOrder": ["Construct", "Service", "Common", "Enum", "Interface", "Constant", "*"],
+  "projectDocuments": [
+    "./docs/Getting-Started.md",
+    "./docs/Architecture.md",
+    "./docs/Configuration.md",
+    "./docs/Creating-Custom-Constructs.md",
+    "./docs/Build.md",
+    "./docs/CI-CD.md",
+    "./docs/Development.md",
+    "./docs/Contributing.md",
+    "./docs/Releasing.md"
+  ],
+  "customCss": "./theme/typedoc-theme.css",
+  "customJs": "./theme/typedoc-custom.js",
+  "blockTags": [
+    "@category",
+    "@classdesc",
+    "@default",
+    "@defaultValue",
+    "@deprecated",
+    "@description",
+    "@example",
+    "@inheritDoc",
+    "@note",
+    "@param",
+    "@remarks",
+    "@returns",
+    "@see",
+    "@summary",
+    "@throws",
+    "@typeParam"
+  ],
+  "externalSymbolLinkMappings": {
+    "@pulumi/pulumi": {
+      "CustomResource": "https://www.pulumi.com/docs/reference/pkg/nodejs/pulumi/pulumi/#CustomResource"
+    },
+    "aws-cdk-lib": {
+      "ContainerInsights.DISABLED": "https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_ecs.ContainerInsights.html",
+      "NetworkMode.AWS_VPC": "https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_ecs.NetworkMode.html",
+      "NetworkMode.HOST": "https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_ecs.NetworkMode.html"
+    }
+  }
+}

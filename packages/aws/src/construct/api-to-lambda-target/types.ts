@@ -21,6 +21,7 @@ import { CommonStackProps } from '../../common/index.js'
 
 /**
  */
+/** @category Interface */
 export interface ApiToLambdaTargetRestApiType {
   api: IRestApi
   authoriser?: IAuthorizer
@@ -47,6 +48,7 @@ export interface ApiToLambdaTargetRestApiType {
 
 /**
  */
+/** @category Interface */
 export interface ApiToLambdaTargetRestApiProps {
   certificate: AcmProps
   importedRestApiRef?: string
@@ -61,6 +63,7 @@ export interface ApiToLambdaTargetRestApiProps {
 
 /**
  */
+/** @category Interface */
 export interface ApiToLambdaTargetProps extends CommonStackProps {
   api: ApiToLambdaTargetRestApiProps
   apiRootPaths?: string[]

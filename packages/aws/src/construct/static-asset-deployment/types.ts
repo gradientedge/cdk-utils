@@ -1,6 +1,7 @@
 import { BucketDeploymentProps, S3BucketProps } from '../../services/index.js'
 import { CommonStackProps } from '../../common/index.js'
 
+/** @category Interface */
 export interface AssetExport {
   key: string
   value: string
@@ -11,6 +12,7 @@ export interface AssetExport {
  * When value is configured, the construct will invalidate the distribution after the deployment.
  * Use either domainName or distributionId or domainNameRef or distributionIdRef.
  */
+/** @category Interface */
 export interface StaticCloudFrontDistribution {
   /**
    * @summary The domain name to associate with the bucket.
@@ -34,6 +36,7 @@ export interface StaticCloudFrontDistribution {
   invalidationPaths: string[]
 }
 
+/** @category Interface */
 export interface StaticAssetDeploymentProps extends CommonStackProps {
   staticAssetBucket: S3BucketProps
   staticAssetDeployment: BucketDeploymentProps

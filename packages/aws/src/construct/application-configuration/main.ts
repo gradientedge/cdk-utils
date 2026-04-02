@@ -15,6 +15,7 @@ import { CommonConstruct } from '../../common/index.js'
 
 import { ApplicationConfigurationProps } from './types.js'
 
+/** @category Construct */
 export class ApplicationConfiguration extends CommonConstruct {
   declare props: ApplicationConfigurationProps
   id: string

@@ -3,6 +3,7 @@ import { ReplicatedElastiCacheProps, VpcProps } from '../../services/index.js'
 
 /**
  */
+/** @category Interface */
 export interface RestApiLambdaWithCacheProps extends RestApiLambdaProps {
   restApiCache: ReplicatedElastiCacheProps
   restApiVpc: VpcProps

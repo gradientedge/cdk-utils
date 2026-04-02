@@ -1,3 +1,4 @@
+/** @category Interface */
 export interface BaseProps {
   debug?: boolean
   domainName: string

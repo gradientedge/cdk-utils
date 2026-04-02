@@ -6,7 +6,7 @@ import { CommonCloudflareConstruct } from '../../common/index.js'
 import { PageRuleProps, PagesDomainProps, PagesProjectDeployProps, PagesProjectProps } from './types.js'
 
 /**
- * @classdesc Provides operations on Cloudflare Pages
+ * Provides operations on Cloudflare Pages
  * - A new instance of this class is injected into {@link CommonCloudflareConstruct} constructor.
  * - If a custom construct extends {@link CommonCloudflareConstruct}, an instance is available within the context.
  * @example
@@ -21,6 +21,7 @@ import { PageRuleProps, PagesDomainProps, PagesProjectDeployProps, PagesProjectP
  *   }
  * }
  * ```
+ * @category Service
  */
 export class CloudflarePageManager {
   /**

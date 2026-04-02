@@ -10,11 +10,13 @@ import {
   MonitorDiagnosticSettingProps,
 } from '../../index.js'
 
+/** @category Interface */
 export interface ApiAuthKeyVault {
   name: string
   resourceGroupName: string
 }
 
+/** @category Interface */
 export interface AzureRestApiProps extends CommonAzureStackProps {
   apiAuthKeyVault: ApiAuthKeyVault
   apiManagement: ApiManagementProps
@@ -22,6 +24,7 @@ export interface AzureRestApiProps extends CommonAzureStackProps {
   apiManagementDiagnosticSettings: MonitorDiagnosticSettingProps
 }
 
+/** @category Interface */
 export interface AzureApi {
   id: Input<string>
   name: Input<string>

@@ -8,7 +8,7 @@ import { createCfnOutput } from '../../utils/index.js'
 import { AcmProps } from './types.js'
 
 /**
- * @classdesc Provides operations on AWS Certificates.
+ * Provides operations on AWS Certificates.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
  * @example
@@ -22,6 +22,7 @@ import { AcmProps } from './types.js'
  *   }
  * }
  * @see [CDK Certificate Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_certificatemanager-readme.html}
+ * @category Service
  */
 export class AcmManager {
   /**
@@ -31,16 +32,17 @@ export class AcmManager {
    * @param props certificate props
    * @param hostedZone optional hosted zone to perform DNS validation
    * @returns the resolved certificate
-   * @mermaid
-   *   graph LR;
-   *     A((Start)) --> B{Valid Properties?};
-   *     B -- Yes --> C(Fetch By ARN);
-   *     B -- No --> D[Throw Error];
-   *     D --> G((Stop));
-   *     C --> E{Valid ARN?};
-   *     E -- Yes --> F(Return Certificate);
-   *     E -- No --> D;
-   *     F --> G;
+   * ```mermaid
+   * graph LR;
+   *   A((Start)) --> B{Valid Properties?};
+   *   B -- Yes --> C(Fetch By ARN);
+   *   B -- No --> D[Throw Error];
+   *   D --> G((Stop));
+   *   C --> E{Valid ARN?};
+   *   E -- Yes --> F(Return Certificate);
+   *   E -- No --> D;
+   *   F --> G;
+   * ```
    */
   public resolveCertificate(
     id: string,

@@ -1,6 +1,7 @@
 /**
  * @returns { Map<string, string> } AppConfig extension ARN by region for x84
  */
+/** @category Constant */
 export const ArnsByRegionForX86_64: { [region: string]: string } = {
   'af-south-1': 'arn:aws:lambda:af-south-1:574348263942:layer:AWS-AppConfig-Extension:116',
   'ap-east-1': 'arn:aws:lambda:ap-east-1:630222743974:layer:AWS-AppConfig-Extension:106',
@@ -38,6 +39,7 @@ export const ArnsByRegionForX86_64: { [region: string]: string } = {
 /**
  * @returns { Map<string, string> } AppConfig extension ARN by region for arm64
  */
+/** @category Constant */
 export const ArnsByRegionForArm64: { [region: string]: string } = {
   'ap-northeast-1': 'arn:aws:lambda:ap-northeast-1:980059726660:layer:AWS-AppConfig-Extension-Arm64:72',
   'ap-south-1': 'arn:aws:lambda:ap-south-1:554480029851:layer:AWS-AppConfig-Extension-Arm64:81',

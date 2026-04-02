@@ -5,7 +5,7 @@ import { CommonCloudflareConstruct } from '../../common/index.js'
 import { RulesetProps } from './types.js'
 
 /**
- * @classdesc Provides operations on Cloudflare Rule Sets
+ * Provides operations on Cloudflare Rule Sets
  * - A new instance of this class is injected into {@link CommonCloudflareConstruct} constructor.
  * - If a custom construct extends {@link CommonCloudflareConstruct}, an instance is available within the context.
  * @example
@@ -20,6 +20,7 @@ import { RulesetProps } from './types.js'
  *   }
  * }
  * ```
+ * @category Service
  */
 export class CloudflareRuleSetManager {
   /**

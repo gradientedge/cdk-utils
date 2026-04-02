@@ -23,7 +23,7 @@ import {
 } from './types.js'
 
 /**
- * @classdesc Provides operations on Cloudflare Zone using Pulumi
+ * Provides operations on Cloudflare Zone using Pulumi
  * - A new instance of this class is injected into {@link CommonCloudflareConstruct} constructor.
  * - If a custom construct extends {@link CommonCloudflareConstruct}, an instance is available within the context.
  * @example
@@ -38,6 +38,7 @@ import {
  *   }
  * }
  * ```
+ * @category Service
  */
 export class CloudflareZoneManager {
   /**

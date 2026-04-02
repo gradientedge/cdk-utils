@@ -5,7 +5,7 @@ import { CommonCloudflareConstruct } from '../../common/index.js'
 import { FilterProps } from './types.js'
 
 /**
- * @classdesc Provides operations on Cloudflare Filters
+ * Provides operations on Cloudflare Filters
  * - A new instance of this class is injected into {@link CommonCloudflareConstruct} constructor.
  * - If a custom construct extends {@link CommonCloudflareConstruct}, an instance is available within the context.
  * @example
@@ -20,6 +20,7 @@ import { FilterProps } from './types.js'
  *   }
  * }
  * ```
+ * @category Service
  */
 export class CloudflareFilterManager {
   /**

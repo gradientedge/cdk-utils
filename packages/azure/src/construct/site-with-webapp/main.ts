@@ -11,7 +11,7 @@ import { CommonAzureConstruct } from '../../common/index.js'
 import { Site, SiteWithWebAppProps } from './types.js'
 
 /**
- * @classdesc Provides a construct to create and deploy a site hosted with an Azure Linux Web App
+ * Provides a construct to create and deploy a site hosted with an Azure Linux Web App
  * @example
  * import { SiteWithWebApp, SiteWithWebAppProps } from '@gradientedge/cdk-utils'
  *
@@ -23,6 +23,7 @@ import { Site, SiteWithWebAppProps } from './types.js'
  *     this.initResources()
  *   }
  * }
+ * @category Construct
  */
 export class SiteWithWebApp extends CommonAzureConstruct {
   props: SiteWithWebAppProps

@@ -4,7 +4,7 @@ import { CommonConstruct } from '../../common/index.js'
 import { createCfnOutput } from '../../utils/index.js'
 
 /**
- * @classdesc Provides operations on AWS Elastic Container Registry.
+ * Provides operations on AWS Elastic Container Registry.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
  * @example
@@ -18,6 +18,7 @@ import { createCfnOutput } from '../../utils/index.js'
  *   }
  * }
  * @see [CDK ECR Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_ecr-readme.html}
+ * @category Service
  */
 export class EcrManager {
   /**

@@ -7,7 +7,7 @@ import { CommonAzureConstruct, CommonAzureStack } from '../../common/index.js'
 import { FunctionAppFlexConsumptionProps, FunctionAppProps, FunctionProps } from './types.js'
 
 /**
- * @classdesc Provides operations on Azure Functions using Pulumi
+ * Provides operations on Azure Functions using Pulumi
  * - A new instance of this class is injected into {@link CommonAzureConstruct} constructor.
  * - If a custom construct extends {@link CommonAzureConstruct}, an instance is available within the context.
  * @example
@@ -22,6 +22,7 @@ import { FunctionAppFlexConsumptionProps, FunctionAppProps, FunctionProps } from
  *   }
  * }
  * ```
+ * @category Service
  */
 export class AzureFunctionManager {
   /**
@@ -73,7 +74,7 @@ export class AzureFunctionManager {
    * @param props function properties
    * @param resourceOptions Optional settings to control resource behaviour
    * @see [Pulumi Azure Native Function Envelope]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/web/webappfunction/}
-   * @note In Pulumi, individual functions are typically deployed via code deployment rather than as separate infrastructure resources.
+   * In Pulumi, individual functions are typically deployed via code deployment rather than as separate infrastructure resources.
    * This method is provided for API compatibility but may require additional setup.
    */
   public createFunction(

@@ -5,6 +5,7 @@ export * from './stack.js'
 export * from './types.js'
 export * from './utils.js'
 
+/** @category Constant */
 export const applyMixins = (derivedCtor: any, constructors: any[]) => {
   _.forEach(constructors, baseConstructor => {
     Object.getOwnPropertyNames(baseConstructor.prototype).forEach(name => {

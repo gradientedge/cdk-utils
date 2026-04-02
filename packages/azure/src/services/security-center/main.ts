@@ -6,7 +6,7 @@ import { CommonAzureConstruct } from '../../common/index.js'
 import { DefenderForStorageProps } from './types.js'
 
 /**
- * @classdesc Provides operations on Azure Security Center using Pulumi
+ * Provides operations on Azure Security Center using Pulumi
  * - A new instance of this class is injected into {@link CommonAzureConstruct} constructor.
  * - If a custom construct extends {@link CommonAzureConstruct}, an instance is available within the context.
  * @example
@@ -21,6 +21,7 @@ import { DefenderForStorageProps } from './types.js'
  *   }
  * }
  * ```
+ * @category Service
  */
 export class AzureSecurityCentermanager {
   /**

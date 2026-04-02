@@ -6,7 +6,7 @@ import { ILogGroup } from 'aws-cdk-lib/aws-logs'
 import { CommonConstruct } from '../../common/index.js'
 
 /**
- * @classdesc Provides operations on AWS EventBridge Targets
+ * Provides operations on AWS EventBridge Targets
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
  * @example
@@ -20,6 +20,7 @@ import { CommonConstruct } from '../../common/index.js'
  *   }
  * }
  * @see [CDK EventBridge Target Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_events_targets-readme.html}
+ * @category Service
  */
 export class EventTargetManager {
   /**
@@ -43,6 +44,7 @@ export class EventTargetManager {
 /**
  * Customize the CloudWatch LogGroup Event Target
  */
+/** @category Interface */
 export interface LogGroupNoPolicyProps extends TargetBaseProps {
   /**
    * The event to send to the CloudWatch LogGroup
@@ -55,6 +57,7 @@ export interface LogGroupNoPolicyProps extends TargetBaseProps {
 
 /**
  * Use an AWS CloudWatch LogGroup as an event rule target, but don't apply a policy.
+ * @category Service
  */
 export class CloudWatchLogGroupNoPolicy implements IRuleTarget {
   constructor(

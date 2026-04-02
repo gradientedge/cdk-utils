@@ -10,7 +10,7 @@ import { RoleDefinitionId } from '../../services/index.js'
 import { AzureApi, AzureRestApiProps } from './types.js'
 
 /**
- * @classdesc Provides a construct to create and deploy an Azure API Management service with diagnostics and logging
+ * Provides a construct to create and deploy an Azure API Management service with diagnostics and logging
  * @example
  * import { AzureRestApi, AzureRestApiProps } from '@gradientedge/cdk-utils'
  *
@@ -22,6 +22,7 @@ import { AzureApi, AzureRestApiProps } from './types.js'
  *     this.initResources()
  *   }
  * }
+ * @category Construct
  */
 export class AzureRestApi extends CommonAzureConstruct {
   props: AzureRestApiProps

@@ -29,8 +29,14 @@
   "license": "MIT",
   "keywords": [
     "gradientedge",
+    "aws",
+    "azure",
+    "cloudflare",
     "cdk",
-    "pulumi"
+    "aws-cdk",
+    "pulumi",
+    "iac",
+    "typescript"
   ],
   "repository": {
     "type": "git",
@@ -40,5 +46,8 @@
   "bugs": {
     "url": "https://github.com/gradientedge/cdk-utils/issues"
   },
-  "homepage": "https://github.com/gradientedge/cdk-utils#readme"
+  "homepage": "https://github.com/gradientedge/cdk-utils#readme",
+  "engines": {
+    "node": ">=22 <=24"
+  }
 }

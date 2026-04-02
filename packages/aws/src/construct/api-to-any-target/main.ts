@@ -18,7 +18,7 @@ import { ApiToAnyTargetRestApi } from './target.js'
 import { ApiToAnyTargetProps, ApiToAnyTargetRestApiResource, ApiToAnyTargetRestApiType } from './types.js'
 
 /**
- * @classdesc Provides a construct to create and deploy a shallow API Gateway
+ * Provides a construct to create and deploy a shallow API Gateway
  * @example
  * import { ApiToAnyTarget, ApiToAnyTargetProps } '@gradientedge/cdk-utils'
  * import { Construct } from 'constructs'
@@ -31,6 +31,7 @@ import { ApiToAnyTargetProps, ApiToAnyTargetRestApiResource, ApiToAnyTargetRestA
  *     this.initResources()
  *   }
  * }
+ * @category Construct
  */
 export class ApiToAnyTarget extends CommonConstruct {
   props: ApiToAnyTargetProps

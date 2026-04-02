@@ -32,9 +32,9 @@ import {
 } from './types.js'
 
 /**
- * @classdesc Provides a construct to create and deploy API Gateway invocations to EventBridge
+ * Provides a construct to create and deploy API Gateway invocations to EventBridge
  *
- * <b>Architecture</b><br/> ![Architecture](./ApiToEventBridgeTarget.jpg)
+ * <b>Architecture</b><br/> ![Architecture](https://raw.githubusercontent.com/gradientedge/cdk-utils/main/img/ApiToEventBridgeTarget.jpg)
  * @example
  * import { ApiToEventBridgeTarget, ApiToEventBridgeTargetProps } '@gradientedge/cdk-utils'
  * import { Construct } from 'constructs'
@@ -47,6 +47,7 @@ import {
  *     this.initResources()
  *   }
  * }
+ * @category Construct
  */
 export class ApiToEventBridgeTarget extends CommonConstruct {
   props: ApiToEventBridgeTargetProps

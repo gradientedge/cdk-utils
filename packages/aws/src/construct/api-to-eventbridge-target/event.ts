@@ -4,7 +4,8 @@ import { LogGroup } from 'aws-cdk-lib/aws-logs'
 import { ApiToEventBridgeTargetEventType } from './types.js'
 
 /**
- * @classdesc Provides a construct to contain event resources for ApiToEventBridgeTargetWithSns
+ * Provides a construct to contain event resources for ApiToEventBridgeTargetWithSns
+ * @category Construct
  */
 export class ApiToEventbridgeTargetEvent implements ApiToEventBridgeTargetEventType {
   eventBus: IEventBus
