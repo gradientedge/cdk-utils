@@ -495,6 +495,23 @@ td {
   color: #6e7681;
 }
 
+/* Dark mode — tag badges (Abstract, etc.) */
+[data-theme="dark"] code.tsd-tag {
+  color: #fff !important;
+  -webkit-text-fill-color: #fff !important;
+  background: linear-gradient(135deg, #58a6ff, #a371f7);
+  border: none;
+  border-radius: 10px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 0.2em 0.6em;
+  vertical-align: middle;
+  display: inline-block;
+  line-height: 1.4;
+}
+
 /* Dark mode — signatures */
 [data-theme="dark"] .col-content .tsd-signature,
 [data-theme="dark"] .tsd-signature {

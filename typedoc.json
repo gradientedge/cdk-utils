@@ -7,6 +7,8 @@
   "name": "GradientEdge CDK Utils",
   "readme": "README.md",
   "plugin": ["typedoc-plugin-mermaid"],
+  "hideGenerator": true,
+  "customFooterHtml": "© <span id=\"footer-year\"></span> GradientEdge. All rights reserved.",
   "excludePrivate": true,
   "excludeExternals": true,
   "searchInComments": true,

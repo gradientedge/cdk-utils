@@ -40,5 +40,9 @@
     "type": "git",
     "url": "git+https://github.com/gradientedge/cdk-utils.git",
     "directory": "packages/aws"
+  },
+  "typedocOptions": {
+    "gitRevision": "main",
+    "sourceLinkTemplate": "https://github.com/gradientedge/cdk-utils/blob/main/{path}#L{line}"
   }
 }

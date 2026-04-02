@@ -39,5 +39,9 @@
     "type": "git",
     "url": "git+https://github.com/gradientedge/cdk-utils.git",
     "directory": "packages/cloudflare"
+  },
+  "typedocOptions": {
+    "gitRevision": "main",
+    "sourceLinkTemplate": "https://github.com/gradientedge/cdk-utils/blob/main/{path}#L{line}"
   }
 }
