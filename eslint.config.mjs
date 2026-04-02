@@ -1,6 +1,6 @@
 import tseslint from '@typescript-eslint/eslint-plugin';
 import tsparser from '@typescript-eslint/parser';
-import importPlugin from 'eslint-plugin-import';
+import importPlugin from 'eslint-plugin-import-x';
 import jsdoc from 'eslint-plugin-jsdoc';
 
 export default [
@@ -18,7 +18,7 @@ export default [
     },
     plugins: {
       '@typescript-eslint': tseslint,
-      'import': importPlugin,
+      'import-x': importPlugin,
       'jsdoc': jsdoc
     },
     rules: {
@@ -28,12 +28,12 @@ export default [
       '@typescript-eslint/no-non-null-assertion': 'warn',
       
       // Import rules
-      'import/order': ['error', {
+      'import-x/order': ['error', {
         'groups': ['builtin', 'external', 'internal', 'parent', 'sibling', 'index'],
         'newlines-between': 'always'
       }],
-      'import/no-duplicates': 'error',
-      'import/no-unresolved': 'off',
+      'import-x/no-duplicates': 'error',
+      'import-x/no-unresolved': 'off',
       
       // Code complexity
       'complexity': ['warn', 10],
