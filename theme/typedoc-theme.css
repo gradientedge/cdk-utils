@@ -609,6 +609,126 @@ td {
 [data-theme="dark"] [data-key="section-Constant"] h2 { color: #f47067; }
 
 /* ============================================
+   Cards Layout
+   ============================================ */
+
+/* Category sections as cards */
+[data-theme="dark"] .tsd-panel-group.tsd-member-group {
+  background: linear-gradient(135deg, rgba(20, 24, 41, 0.6) 0%, rgba(15, 18, 33, 0.8) 100%);
+  border: 1px solid rgba(88, 166, 255, 0.08);
+  border-radius: 12px;
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+[data-theme="dark"] .tsd-panel-group.tsd-member-group:hover {
+  border-color: rgba(88, 166, 255, 0.15);
+  box-shadow: 0 4px 24px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(88, 166, 255, 0.05);
+}
+
+/* Member summary items as mini cards */
+[data-theme="dark"] .tsd-member-summary {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 8px;
+  padding: 0.5rem 0.75rem;
+  margin: 0.25rem 0;
+  transition: all 0.25s ease;
+}
+
+[data-theme="dark"] .tsd-member-summary:hover {
+  background: rgba(88, 166, 255, 0.06);
+  border-color: rgba(88, 166, 255, 0.12);
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.2);
+  transform: translateX(2px);
+}
+
+/* Member detail sections as cards */
+[data-theme="dark"] .tsd-member {
+  background: rgba(20, 24, 41, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1rem;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+[data-theme="dark"] .tsd-member:hover {
+  border-color: rgba(88, 166, 255, 0.1);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.25);
+}
+
+/* Signature blocks as inset cards */
+[data-theme="dark"] .tsd-signatures {
+  background: rgba(13, 16, 23, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 8px;
+  padding: 1rem;
+  margin: 0.5rem 0;
+}
+
+/* Parameter lists — card feel */
+[data-theme="dark"] .tsd-parameters {
+  background: rgba(13, 16, 23, 0.3);
+  border-left: 2px solid rgba(88, 166, 255, 0.15);
+  border-radius: 0 8px 8px 0;
+  padding: 0.75rem 1rem;
+  margin: 0.5rem 0;
+}
+
+/* Index sections (on module pages) — card grid */
+[data-theme="dark"] .tsd-index-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+[data-theme="dark"] .tsd-index-link {
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 8px;
+  padding: 0.4rem 0.75rem;
+  transition: all 0.25s ease;
+}
+
+[data-theme="dark"] .tsd-index-link:hover {
+  background: rgba(88, 166, 255, 0.06);
+  border-color: rgba(88, 166, 255, 0.12);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+  transform: translateX(2px);
+}
+
+/* Code blocks — card style */
+[data-theme="dark"] pre {
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
+
+[data-theme="dark"] pre:hover {
+  border-color: rgba(88, 166, 255, 0.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+/* Page navigation (On This Page) — card */
+[data-theme="dark"] .tsd-page-navigation {
+  background: rgba(20, 24, 41, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 0.75rem;
+}
+
+/* Breadcrumb — pill style */
+[data-theme="dark"] .tsd-breadcrumb {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  padding: 0.3rem 0.8rem;
+  display: inline-flex;
+}
+
+/* ============================================
    Color Accents — Deprecated styling
    ============================================ */
 
