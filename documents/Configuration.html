@@ -1,0 +1,356 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="../"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>Configuration | GradientEdge CDK Utils</title><link rel="icon" href="../assets/favicon.png" type="image/png"/><meta name="description" content="Documentation for GradientEdge CDK Utils"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><link rel="stylesheet" href="../assets/custom.css"/><script defer src="../assets/main.js"></script><script defer src="../assets/custom.js"></script><script async src="../assets/icons.js" id="tsd-icons-script"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/navigation.js" id="tsd-nav-script"></script><script async src="../assets/hierarchy.js" id="tsd-hierarchy-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar"><div class="tsd-toolbar-contents container"><a href="../index.html" class="title">GradientEdge CDK Utils</a><div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/><ul role="listbox" id="tsd-search-results"></ul><div id="tsd-search-status" aria-live="polite" aria-atomic="true"><div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-menu"></use></svg></a></div></header><div class="container container-main"><div class="col-content"><div class="tsd-page-title"><ul class="tsd-breadcrumb" aria-label="Breadcrumb"><li><a href="" aria-current="page">Configuration</a></li></ul></div><div class="tsd-panel tsd-typography"><h1 id="configuration" class="tsd-anchor-link">Configuration<a href="#configuration" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h1>
+<p>This guide explains how to configure CDK Utils for different environments and deployment stages.</p>
+<h2 id="commonstackprops" class="tsd-anchor-link">CommonStackProps<a href="#commonstackprops" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>The primary configuration interface. All properties are passed through the CDK context.</p>
+<h3 id="core-properties" class="tsd-anchor-link">Core Properties<a href="#core-properties" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>name</code></td>
+<td><code>string</code></td>
+<td>Yes</td>
+<td>Stack/construct identifier</td>
+</tr>
+<tr>
+<td><code>stage</code></td>
+<td><code>string</code></td>
+<td>Yes</td>
+<td>Deployment stage (e.g., <code>dev</code>, <code>tst</code>, <code>uat</code>, <code>prd</code>)</td>
+</tr>
+<tr>
+<td><code>region</code></td>
+<td><code>string</code></td>
+<td>Yes</td>
+<td>AWS region for deployment</td>
+</tr>
+<tr>
+<td><code>domainName</code></td>
+<td><code>string</code></td>
+<td>Yes</td>
+<td>Base domain name (e.g., <code>example.com</code>)</td>
+</tr>
+<tr>
+<td><code>subDomain</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td>Subdomain prefix (e.g., <code>api</code>)</td>
+</tr>
+<tr>
+<td><code>stackName</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td>Override the CloudFormation stack name</td>
+</tr>
+</tbody>
+</table>
+<h3 id="resource-naming-properties" class="tsd-anchor-link">Resource Naming Properties<a href="#resource-naming-properties" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>globalPrefix</code></td>
+<td><code>string</code></td>
+<td>—</td>
+<td>Prefix applied to all resource names</td>
+</tr>
+<tr>
+<td><code>globalSuffix</code></td>
+<td><code>string</code></td>
+<td>—</td>
+<td>Suffix applied to all resource names</td>
+</tr>
+<tr>
+<td><code>resourcePrefix</code></td>
+<td><code>string</code></td>
+<td>—</td>
+<td>Project-level prefix for resource names</td>
+</tr>
+<tr>
+<td><code>resourceSuffix</code></td>
+<td><code>string</code></td>
+<td>—</td>
+<td>Project-level suffix for resource names</td>
+</tr>
+<tr>
+<td><code>resourceProjectIdentifier</code></td>
+<td><code>string</code></td>
+<td>—</td>
+<td>Project identifier for cross-project references</td>
+</tr>
+<tr>
+<td><code>resourceNameOptions</code></td>
+<td><code>object</code></td>
+<td>—</td>
+<td>Per-resource naming overrides (see below)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="runtime-properties" class="tsd-anchor-link">Runtime Properties<a href="#runtime-properties" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>nodejsRuntime</code></td>
+<td><code>Runtime</code></td>
+<td><code>NODEJS_24_X</code></td>
+<td>Lambda Node.js runtime version</td>
+</tr>
+<tr>
+<td><code>logRetention</code></td>
+<td><code>RetentionDays</code></td>
+<td>—</td>
+<td>CloudWatch log retention period</td>
+</tr>
+<tr>
+<td><code>defaultReservedLambdaConcurrentExecutions</code></td>
+<td><code>number</code></td>
+<td>—</td>
+<td>Default reserved concurrency for Lambda</td>
+</tr>
+<tr>
+<td><code>defaultTracing</code></td>
+<td><code>Tracing</code></td>
+<td>—</td>
+<td>Default X-Ray tracing mode for Lambda</td>
+</tr>
+</tbody>
+</table>
+<h3 id="bucket-naming-properties" class="tsd-anchor-link">Bucket Naming Properties<a href="#bucket-naming-properties" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>excludeDomainNameForBuckets</code></td>
+<td><code>boolean</code></td>
+<td><code>false</code></td>
+<td>Exclude domain name from S3 bucket names</td>
+</tr>
+<tr>
+<td><code>excludeAccountNumberForBuckets</code></td>
+<td><code>boolean</code></td>
+<td><code>false</code></td>
+<td>Exclude AWS account number from bucket names</td>
+</tr>
+</tbody>
+</table>
+<h3 id="domain-properties" class="tsd-anchor-link">Domain Properties<a href="#domain-properties" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>skipStageForARecords</code></td>
+<td><code>boolean</code></td>
+<td><code>false</code></td>
+<td>Skip stage prefix in Route53 A records (useful for production)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="stage-configuration" class="tsd-anchor-link">Stage Configuration<a href="#stage-configuration" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<h3 id="directory-structure" class="tsd-anchor-link">Directory Structure<a href="#directory-structure" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Create a <code>cdkEnv/</code> directory in your project root with a JSON file per stage:</p>
+<pre><code><span class="hl-1">my</span><span class="hl-3">-</span><span class="hl-1">project</span><span class="hl-3">/</span><br/><span class="hl-1">├── cdk.json</span><br/><span class="hl-1">├── cdkEnv</span><span class="hl-3">/</span><br/><span class="hl-1">│   ├── dev.json</span><br/><span class="hl-1">│   ├── tst.json</span><br/><span class="hl-1">│   ├── uat.json</span><br/><span class="hl-1">│   └── prd.json</span>
+</code><button>Copy</button></pre>
+
+<h3 id="stage-file-example" class="tsd-anchor-link">Stage File Example<a href="#stage-file-example" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><code>cdkEnv/tst.json</code>:</p>
+<pre><code class="json"><span class="hl-1">{</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;stage&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;tst&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;subDomain&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;test&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;resourcePrefix&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;myapp&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;apiSubDomain&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;api&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;siteSubDomain&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;site&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;logLevel&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;debug&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;nodeEnv&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;development&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;timezone&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;UTC&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;useExistingHostedZone&quot;</span><span class="hl-1">: </span><span class="hl-5">true</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="how-stage-loading-works" class="tsd-anchor-link">How Stage Loading Works<a href="#how-stage-loading-works" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<ol>
+<li>CDK reads the <code>stage</code> value from context (typically passed via <code>-c stage=tst</code>)</li>
+<li><code>CommonStack</code> looks for <code>cdkEnv/{stage}.json</code></li>
+<li>Properties from the stage file are merged into the CDK context</li>
+<li>Objects and arrays are deep-merged; primitives are overwritten</li>
+</ol>
+<h3 id="custom-stage-context-path" class="tsd-anchor-link">Custom Stage Context Path<a href="#custom-stage-context-path" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Override the default <code>cdkEnv/</code> directory:</p>
+<pre><code class="json"><span class="hl-7">// cdk.json</span><br/><span class="hl-1">{</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;context&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;stageContextPath&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;config/environments&quot;</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="extra-contexts" class="tsd-anchor-link">Extra Contexts<a href="#extra-contexts" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Layer additional configuration files on top of the stage config:</p>
+<pre><code class="json"><span class="hl-7">// cdk.json</span><br/><span class="hl-1">{</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;context&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;extraContexts&quot;</span><span class="hl-1">: [</span><br/><span class="hl-1">      </span><span class="hl-2">&quot;config/shared.json&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-2">&quot;config/secrets.json&quot;</span><br/><span class="hl-1">    ]</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<p>Extra contexts are loaded before stage contexts, so stage-specific values take precedence.</p>
+<h2 id="resource-naming" class="tsd-anchor-link">Resource Naming<a href="#resource-naming" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<h3 id="default-pattern" class="tsd-anchor-link">Default Pattern<a href="#default-pattern" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<pre><code><span class="hl-1">[globalPrefix]</span><span class="hl-3">-</span><span class="hl-1">[resourcePrefix]</span><span class="hl-3">-</span><span class="hl-1">resourceName</span><span class="hl-3">-</span><span class="hl-1">[resourceSuffix]</span><span class="hl-3">-</span><span class="hl-1">[globalSuffix]</span><span class="hl-3">-</span><span class="hl-1">stage</span>
+</code><button>Copy</button></pre>
+
+<h3 id="examples" class="tsd-anchor-link">Examples<a href="#examples" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>With <code>resourcePrefix: &quot;myapp&quot;</code> and <code>stage: &quot;dev&quot;</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Resource Name</th>
+<th>Formatted Output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>user-table</code></td>
+<td><code>myapp-user-table-dev</code></td>
+</tr>
+<tr>
+<td><code>api-function</code></td>
+<td><code>myapp-api-function-dev</code></td>
+</tr>
+</tbody>
+</table>
+<p>With <code>globalPrefix: &quot;acme&quot;</code>, <code>resourcePrefix: &quot;myapp&quot;</code>, and <code>stage: &quot;prd&quot;</code>:</p>
+<table>
+<thead>
+<tr>
+<th>Resource Name</th>
+<th>Formatted Output</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>user-table</code></td>
+<td><code>acme-myapp-user-table-prd</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="per-resource-overrides" class="tsd-anchor-link">Per-Resource Overrides<a href="#per-resource-overrides" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Use <code>resourceNameOptions</code> to customise naming for specific resources:</p>
+<pre><code class="json"><span class="hl-1">{</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;resourceNameOptions&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;my-special-bucket&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">      </span><span class="hl-5">&quot;prefix&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;custom&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-5">&quot;suffix&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;v2&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-5">&quot;globalPrefix&quot;</span><span class="hl-1">: </span><span class="hl-5">false</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-5">&quot;globalSuffix&quot;</span><span class="hl-1">: </span><span class="hl-5">false</span><br/><span class="hl-1">    },</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;legacy-table&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">      </span><span class="hl-5">&quot;exclude&quot;</span><span class="hl-1">: </span><span class="hl-5">true</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>exclude</code></td>
+<td><code>boolean</code></td>
+<td>Skip all prefixes/suffixes, only append stage</td>
+</tr>
+<tr>
+<td><code>prefix</code></td>
+<td><code>string</code></td>
+<td>Override resourcePrefix for this resource</td>
+</tr>
+<tr>
+<td><code>suffix</code></td>
+<td><code>string</code></td>
+<td>Override resourceSuffix for this resource</td>
+</tr>
+<tr>
+<td><code>globalPrefix</code></td>
+<td><code>boolean</code></td>
+<td>Include/exclude the global prefix</td>
+</tr>
+<tr>
+<td><code>globalSuffix</code></td>
+<td><code>boolean</code></td>
+<td>Include/exclude the global suffix</td>
+</tr>
+</tbody>
+</table>
+<h2 id="domain-name-resolution" class="tsd-anchor-link">Domain Name Resolution<a href="#domain-name-resolution" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>The fully qualified domain name is computed as:</p>
+<pre><code><span class="hl-1">{subDomain}.{domainName}</span>
+</code><button>Copy</button></pre>
+
+<p>For stage-aware domains (Route53 A records):</p>
+<ul>
+<li><strong>Non-production:</strong> <code>{stage}.{subDomain}.{domainName}</code> (e.g., <code>tst.api.example.com</code>)</li>
+<li><strong>Production:</strong> <code>{subDomain}.{domainName}</code> (e.g., <code>api.example.com</code>)</li>
+<li><strong>skipStageForARecords:</strong> Forces production-style naming regardless of stage</li>
+</ul>
+<h2 id="aws-cdk-configuration" class="tsd-anchor-link">AWS CDK Configuration<a href="#aws-cdk-configuration" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<h3 id="cdkjson-example" class="tsd-anchor-link">cdk.json Example<a href="#cdkjson-example" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<pre><code class="json"><span class="hl-1">{</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;app&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;npx ts-node --prefer-ts-exts src/main.ts&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;context&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;stage&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;dev&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;domainName&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;example.com&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;subDomain&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;api&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;region&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;eu-west-1&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;globalPrefix&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;acme&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;resourcePrefix&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;myapp&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;stageContextPath&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;cdkEnv&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;extraContexts&quot;</span><span class="hl-1">: []</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<p>Deploy with a different stage:</p>
+<pre><code class="shell"><span class="hl-0">cdk</span><span class="hl-1"> </span><span class="hl-2">deploy</span><span class="hl-1"> </span><span class="hl-5">-c</span><span class="hl-1"> </span><span class="hl-2">stage=prd</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="azure-pulumi-configuration" class="tsd-anchor-link">Azure Pulumi Configuration<a href="#azure-pulumi-configuration" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Azure uses the <a href="https://www.pulumi.com/registry/packages/azure-native/">Pulumi Azure Native</a> provider (<code>@pulumi/azure-native</code>), which provides 100% API coverage of Azure Resource Manager. This is the recommended provider over the classic <code>@pulumi/azure</code> provider.</p>
+<p><code>CommonAzureStackProps</code> shares the same base properties (<code>stage</code>, <code>domainName</code>, <code>subDomain</code>, <code>name</code>) from <code>@gradientedge/cdk-utils-common</code>, plus Azure-specific options.</p>
+<h3 id="pulumiyaml-example" class="tsd-anchor-link">Pulumi.yaml Example<a href="#pulumiyaml-example" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<pre><code class="yaml"><span class="hl-8">name</span><span class="hl-1">: </span><span class="hl-2">my-azure-project</span><br/><span class="hl-8">runtime</span><span class="hl-1">: </span><span class="hl-2">nodejs</span><br/><span class="hl-8">config</span><span class="hl-1">:</span><br/><span class="hl-1">  </span><span class="hl-8">stage</span><span class="hl-1">: </span><span class="hl-2">dev</span><br/><span class="hl-1">  </span><span class="hl-8">domainName</span><span class="hl-1">: </span><span class="hl-2">example.com</span><br/><span class="hl-1">  </span><span class="hl-8">resourcePrefix</span><span class="hl-1">: </span><span class="hl-2">myapp</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="azure-resource-naming" class="tsd-anchor-link">Azure Resource Naming<a href="#azure-resource-naming" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>The <code>AzureResourceNameFormatter</code> follows the same pattern as AWS:</p>
+<pre><code><span class="hl-1">[globalPrefix]</span><span class="hl-3">-</span><span class="hl-1">[resourcePrefix]</span><span class="hl-3">-</span><span class="hl-1">resourceName</span><span class="hl-3">-</span><span class="hl-1">[resourceSuffix]</span><span class="hl-3">-</span><span class="hl-1">[globalSuffix]</span><span class="hl-3">-</span><span class="hl-1">stage</span>
+</code><button>Copy</button></pre>
+
+<p>Key difference: Azure handles <code>undefined</code> resource names gracefully (converts to empty string).</p>
+<h3 id="azure-specific-properties" class="tsd-anchor-link">Azure-Specific Properties<a href="#azure-specific-properties" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>resourceGroup</code></td>
+<td><code>ResourceGroup</code></td>
+<td>The Azure resource group for all resources</td>
+</tr>
+<tr>
+<td><code>commonLogAnalyticsWorkspace</code></td>
+<td><code>Workspace</code></td>
+<td>Shared Log Analytics workspace</td>
+</tr>
+</tbody>
+</table>
+<h2 id="cloudflare-pulumi-configuration" class="tsd-anchor-link">Cloudflare Pulumi Configuration<a href="#cloudflare-pulumi-configuration" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Cloudflare uses <code>CommonCloudflareStackProps</code> with the same shared base properties.</p>
+<h3 id="pulumiyaml-example-1" class="tsd-anchor-link">Pulumi.yaml Example<a href="#pulumiyaml-example-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<pre><code class="yaml"><span class="hl-8">name</span><span class="hl-1">: </span><span class="hl-2">my-cloudflare-project</span><br/><span class="hl-8">runtime</span><span class="hl-1">: </span><span class="hl-2">nodejs</span><br/><span class="hl-8">config</span><span class="hl-1">:</span><br/><span class="hl-1">  </span><span class="hl-8">stage</span><span class="hl-1">: </span><span class="hl-2">dev</span><br/><span class="hl-1">  </span><span class="hl-8">domainName</span><span class="hl-1">: </span><span class="hl-2">example.com</span>
+</code><button type="button">Copy</button></pre>
+
+<p>Cloudflare constructs use Pulumi's native naming conventions rather than a custom formatter.</p>
+</div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg><h3>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg><h3>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#configuration"><span>Configuration</span></a><ul><li><a href="#commonstackprops"><span>Common<wbr/>Stack<wbr/>Props</span></a></li><li><ul><li><a href="#core-properties"><span>Core <wbr/>Properties</span></a></li><li><a href="#resource-naming-properties"><span>Resource <wbr/>Naming <wbr/>Properties</span></a></li><li><a href="#runtime-properties"><span>Runtime <wbr/>Properties</span></a></li><li><a href="#bucket-naming-properties"><span>Bucket <wbr/>Naming <wbr/>Properties</span></a></li><li><a href="#domain-properties"><span>Domain <wbr/>Properties</span></a></li></ul></li><li><a href="#stage-configuration"><span>Stage <wbr/>Configuration</span></a></li><li><ul><li><a href="#directory-structure"><span>Directory <wbr/>Structure</span></a></li><li><a href="#stage-file-example"><span>Stage <wbr/>File <wbr/>Example</span></a></li><li><a href="#how-stage-loading-works"><span>How <wbr/>Stage <wbr/>Loading <wbr/>Works</span></a></li><li><a href="#custom-stage-context-path"><span>Custom <wbr/>Stage <wbr/>Context <wbr/>Path</span></a></li></ul></li><li><a href="#extra-contexts"><span>Extra <wbr/>Contexts</span></a></li><li><a href="#resource-naming"><span>Resource <wbr/>Naming</span></a></li><li><ul><li><a href="#default-pattern"><span>Default <wbr/>Pattern</span></a></li><li><a href="#examples"><span>Examples</span></a></li><li><a href="#per-resource-overrides"><span>Per-<wbr/>Resource <wbr/>Overrides</span></a></li></ul></li><li><a href="#domain-name-resolution"><span>Domain <wbr/>Name <wbr/>Resolution</span></a></li><li><a href="#aws-cdk-configuration"><span>AWS <wbr/>CDK <wbr/>Configuration</span></a></li><li><ul><li><a href="#cdkjson-example"><span>cdk.json <wbr/>Example</span></a></li></ul></li><li><a href="#azure-pulumi-configuration"><span>Azure <wbr/>Pulumi <wbr/>Configuration</span></a></li><li><ul><li><a href="#pulumiyaml-example"><span>Pulumi.yaml <wbr/>Example</span></a></li><li><a href="#azure-resource-naming"><span>Azure <wbr/>Resource <wbr/>Naming</span></a></li><li><a href="#azure-specific-properties"><span>Azure-<wbr/>Specific <wbr/>Properties</span></a></li></ul></li><li><a href="#cloudflare-pulumi-configuration"><span>Cloudflare <wbr/>Pulumi <wbr/>Configuration</span></a></li><li><ul><li><a href="#pulumiyaml-example-1"><span>Pulumi.yaml <wbr/>Example</span></a></li></ul></li></ul></div></details></div><div class="site-menu"><nav class="tsd-navigation"><a href="../modules.html">GradientEdge CDK Utils</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><footer><p>© <span id="footer-year"></span> GradientEdge. All rights reserved.</p></footer><div class="overlay"></div></body></html>

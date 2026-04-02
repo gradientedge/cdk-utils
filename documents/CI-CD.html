@@ -1,0 +1,146 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="../"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>CI-CD | GradientEdge CDK Utils</title><link rel="icon" href="../assets/favicon.png" type="image/png"/><meta name="description" content="Documentation for GradientEdge CDK Utils"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><link rel="stylesheet" href="../assets/custom.css"/><script defer src="../assets/main.js"></script><script defer src="../assets/custom.js"></script><script async src="../assets/icons.js" id="tsd-icons-script"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/navigation.js" id="tsd-nav-script"></script><script async src="../assets/hierarchy.js" id="tsd-hierarchy-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar"><div class="tsd-toolbar-contents container"><a href="../index.html" class="title">GradientEdge CDK Utils</a><div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/><ul role="listbox" id="tsd-search-results"></ul><div id="tsd-search-status" aria-live="polite" aria-atomic="true"><div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-menu"></use></svg></a></div></header><div class="container container-main"><div class="col-content"><div class="tsd-page-title"><ul class="tsd-breadcrumb" aria-label="Breadcrumb"><li><a href="" aria-current="page">CI-CD</a></li></ul></div><div class="tsd-panel tsd-typography"><h1 id="cicd" class="tsd-anchor-link">CI/CD<a href="#cicd" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h1>
+<p>This project uses <a href="https://docs.github.com/en/actions">GitHub Actions</a> for Continuous Integration and Delivery.</p>
+<h2 id="workflows" class="tsd-anchor-link">Workflows<a href="#workflows" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<h3 id="ci-pipeline" class="tsd-anchor-link">CI Pipeline<a href="#ci-pipeline" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><strong>Trigger:</strong> Push to <code>main</code>, pull requests targeting <code>main</code></p>
+<p>The CI pipeline validates code quality across multiple Node.js versions:</p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Checkout</td>
+<td>Clones the repository</td>
+</tr>
+<tr>
+<td>Setup Node.js</td>
+<td>Configures Node.js (matrix: 22.x, 24.x)</td>
+</tr>
+<tr>
+<td>Setup Environment</td>
+<td>Configures pnpm and environment variables</td>
+</tr>
+<tr>
+<td>Cache Dependencies</td>
+<td>Caches <code>node_modules</code> using <code>pnpm-lock.yaml</code> hash</td>
+</tr>
+<tr>
+<td>Install Packages</td>
+<td>Runs <code>pnpm install --frozen-lockfile</code> (if cache miss)</td>
+</tr>
+<tr>
+<td>Build</td>
+<td>Compiles all packages with TypeScript</td>
+</tr>
+<tr>
+<td>Test</td>
+<td>Runs the full test suite with coverage</td>
+</tr>
+<tr>
+<td>Publish Coverage</td>
+<td>Uploads coverage report to <a href="https://app.codecov.io/gh/gradientedge/cdk-utils">Codecov</a> (main branch, Node 24.x only)</td>
+</tr>
+<tr>
+<td>Upload Docs Artifact</td>
+<td>Saves generated API docs for the release job</td>
+</tr>
+</tbody>
+</table>
+<h3 id="release-pipeline" class="tsd-anchor-link">Release Pipeline<a href="#release-pipeline" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><strong>Trigger:</strong> Successful push to <code>main</code> (runs after CI passes)</p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Checkout</td>
+<td>Clones the repository with full history</td>
+</tr>
+<tr>
+<td>Setup Node.js</td>
+<td>Configures Node.js 24.x</td>
+</tr>
+<tr>
+<td>Setup Environment</td>
+<td>Configures pnpm and environment variables</td>
+</tr>
+<tr>
+<td>Download Docs Artifact</td>
+<td>Retrieves API docs from the CI job</td>
+</tr>
+<tr>
+<td>Build Production</td>
+<td>Compiles all packages with production TypeScript config</td>
+</tr>
+<tr>
+<td>Changesets</td>
+<td>Creates a release PR or publishes to npm via <a href="https://github.com/changesets/changesets">Changesets</a></td>
+</tr>
+<tr>
+<td>Deploy Documentation</td>
+<td>Publishes API docs to GitHub Pages</td>
+</tr>
+</tbody>
+</table>
+<h3 id="codeql-analysis" class="tsd-anchor-link">CodeQL Analysis<a href="#codeql-analysis" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><strong>Trigger:</strong> Push to <code>main</code>, pull requests targeting <code>main</code>, weekly schedule (Thursdays)</p>
+<p>Runs GitHub's <a href="https://codeql.github.com/">CodeQL</a> static analysis for security vulnerability detection across JavaScript and Python files.</p>
+<h2 id="versioning" class="tsd-anchor-link">Versioning<a href="#versioning" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>This project uses <a href="https://github.com/changesets/changesets">Changesets</a> for version management:</p>
+<ol>
+<li>Create a changeset when making changes:<pre><code class="shell"><span class="hl-0">pnpm</span><span class="hl-1"> </span><span class="hl-2">changeset</span>
+</code><button type="button">Copy</button></pre>
+
+</li>
+<li>Select the affected packages and the semver bump type</li>
+<li>Commit the generated changeset file with your PR</li>
+<li>When merged to <code>main</code>, the release workflow either:
+<ul>
+<li>Creates a <strong>Version Packages</strong> PR that bumps versions and updates changelogs</li>
+<li>Or <strong>publishes</strong> the packages to npm if a version PR was already merged</li>
+</ul>
+</li>
+</ol>
+<h2 id="documentation-deployment" class="tsd-anchor-link">Documentation Deployment<a href="#documentation-deployment" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>API documentation is automatically generated and deployed to <a href="https://gradientedge.github.io/cdk-utils/">GitHub Pages</a> on every successful push to <code>main</code>. The docs are built using <a href="https://typedoc.org/">TypeDoc</a> during the CI job and deployed during the release job.</p>
+<h2 id="environment-variables" class="tsd-anchor-link">Environment Variables<a href="#environment-variables" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Source</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CODECOV_TOKEN</code></td>
+<td>Repository secret</td>
+<td>Token for Codecov uploads</td>
+</tr>
+<tr>
+<td><code>GIT_TOKEN</code></td>
+<td>Repository secret</td>
+<td>GitHub token for release steps</td>
+</tr>
+<tr>
+<td><code>NPM_TOKEN</code></td>
+<td>Repository secret</td>
+<td>npm publish authentication</td>
+</tr>
+<tr>
+<td><code>GITHUB_TOKEN</code></td>
+<td>Auto-provided</td>
+<td>GitHub Actions built-in token</td>
+</tr>
+</tbody>
+</table>
+</div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg><h3>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg><h3>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#cicd"><span>CI/<wbr/>CD</span></a><ul><li><a href="#workflows"><span>Workflows</span></a></li><li><ul><li><a href="#ci-pipeline"><span>CI <wbr/>Pipeline</span></a></li><li><a href="#release-pipeline"><span>Release <wbr/>Pipeline</span></a></li><li><a href="#codeql-analysis"><span>Code<wbr/>QL <wbr/>Analysis</span></a></li></ul></li><li><a href="#versioning"><span>Versioning</span></a></li><li><a href="#documentation-deployment"><span>Documentation <wbr/>Deployment</span></a></li><li><a href="#environment-variables"><span>Environment <wbr/>Variables</span></a></li></ul></div></details></div><div class="site-menu"><nav class="tsd-navigation"><a href="../modules.html">GradientEdge CDK Utils</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><footer><p>© <span id="footer-year"></span> GradientEdge. All rights reserved.</p></footer><div class="overlay"></div></body></html>

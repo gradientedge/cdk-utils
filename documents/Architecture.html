@@ -1,0 +1,149 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="../"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>Architecture | GradientEdge CDK Utils</title><link rel="icon" href="../assets/favicon.png" type="image/png"/><meta name="description" content="Documentation for GradientEdge CDK Utils"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><link rel="stylesheet" href="../assets/custom.css"/><script defer src="../assets/main.js"></script><script defer src="../assets/custom.js"></script><script async src="../assets/icons.js" id="tsd-icons-script"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/navigation.js" id="tsd-nav-script"></script><script async src="../assets/hierarchy.js" id="tsd-hierarchy-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar"><div class="tsd-toolbar-contents container"><a href="../index.html" class="title">GradientEdge CDK Utils</a><div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/><ul role="listbox" id="tsd-search-results"></ul><div id="tsd-search-status" aria-live="polite" aria-atomic="true"><div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-menu"></use></svg></a></div></header><div class="container container-main"><div class="col-content"><div class="tsd-page-title"><ul class="tsd-breadcrumb" aria-label="Breadcrumb"><li><a href="" aria-current="page">Architecture</a></li></ul></div><div class="tsd-panel tsd-typography"><h1 id="architecture" class="tsd-anchor-link">Architecture<a href="#architecture" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h1>
+<p>This document explains the design principles, patterns, and structure behind CDK Utils.</p>
+<h2 id="design-principles" class="tsd-anchor-link">Design Principles<a href="#design-principles" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<ul>
+<li><strong>Convention over configuration</strong> — sensible defaults with the ability to override</li>
+<li><strong>Composition through inheritance</strong> — extend base constructs, get all service managers for free</li>
+<li><strong>Cloud-agnostic patterns</strong> — consistent API across AWS CDK, Azure Pulumi, and Cloudflare Pulumi</li>
+<li><strong>Stage-aware</strong> — resource naming, configuration, and domain handling adapt to the deployment stage</li>
+</ul>
+<h2 id="package-architecture" class="tsd-anchor-link">Package Architecture<a href="#package-architecture" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<pre><code><span class="hl-1">@gradientedge</span><span class="hl-3">/</span><span class="hl-1">cdk</span><span class="hl-3">-</span><span class="hl-0">utils</span><span class="hl-1"> (umbrella)</span><br/><span class="hl-1">├── @gradientedge</span><span class="hl-3">/</span><span class="hl-1">cdk</span><span class="hl-3">-</span><span class="hl-1">utils</span><span class="hl-3">-</span><span class="hl-1">aws        → </span><span class="hl-5">AWS</span><span class="hl-1"> </span><span class="hl-5">CDK</span><br/><span class="hl-1">├── @gradientedge</span><span class="hl-3">/</span><span class="hl-1">cdk</span><span class="hl-3">-</span><span class="hl-1">utils</span><span class="hl-3">-</span><span class="hl-1">azure      → Azure </span><span class="hl-0">Pulumi</span><span class="hl-1"> (Azure Native provider)</span><br/><span class="hl-1">├── @gradientedge</span><span class="hl-3">/</span><span class="hl-1">cdk</span><span class="hl-3">-</span><span class="hl-1">utils</span><span class="hl-3">-</span><span class="hl-1">cloudflare → Cloudflare Pulumi</span><br/><span class="hl-1">└── @gradientedge</span><span class="hl-3">/</span><span class="hl-1">cdk</span><span class="hl-3">-</span><span class="hl-1">utils</span><span class="hl-3">-</span><span class="hl-1">common     → Shared types, enums, utilities</span>
+</code><button>Copy</button></pre>
+
+<blockquote>
+<p><strong>Note:</strong> The Azure package uses the <a href="https://www.pulumi.com/registry/packages/azure-native/">Pulumi Azure Native</a> provider (<code>@pulumi/azure-native</code>), which provides 100% API coverage of Azure Resource Manager. This is the recommended provider over the classic <code>@pulumi/azure</code> provider.</p>
+</blockquote>
+<p>Each cloud-specific package follows the same internal structure:</p>
+<pre><code><span class="hl-1">packages</span><span class="hl-3">/&lt;</span><span class="hl-1">cloud</span><span class="hl-3">&gt;</span><span class="hl-2">/</span><span class="hl-6">src</span><span class="hl-2">/</span><br/><span class="hl-1">├── common</span><span class="hl-3">/</span><span class="hl-1">           Base constructs, stacks, types, resource naming</span><br/><span class="hl-1">├── construct</span><span class="hl-3">/</span><span class="hl-1">        High</span><span class="hl-3">-</span><span class="hl-1">level patterns combining multiple resources</span><br/><span class="hl-1">├── services</span><span class="hl-3">/</span><span class="hl-1">         Individual service manager classes</span><br/><span class="hl-1">└── index.ts          Public </span><span class="hl-5">API</span><span class="hl-1"> </span><span class="hl-5">exports</span>
+</code><button>Copy</button></pre>
+
+<h2 id="core-abstractions" class="tsd-anchor-link">Core Abstractions<a href="#core-abstractions" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<h3 id="stack-→-construct-→-service-managers" class="tsd-anchor-link">Stack → Construct → Service Managers<a href="#stack-→-construct-→-service-managers" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>The core pattern flows from top to bottom:</p>
+<p><strong>Stack</strong> (entry point) creates a <strong>Construct</strong> (resource orchestrator), which injects <strong>Service Managers</strong> (resource creators):</p>
+<pre><code><span class="hl-1">CommonStack</span><br/><span class="hl-1">  └── CommonConstruct</span><br/><span class="hl-1">        ├── LambdaManager</span><br/><span class="hl-1">        ├── S3Manager</span><br/><span class="hl-1">        ├── DynamodbManager</span><br/><span class="hl-1">        ├── ApiManager</span><br/><span class="hl-1">        ├── </span><span class="hl-3">...</span><span class="hl-1"> (</span><span class="hl-5">23</span><span class="hl-1"> managers total for </span><span class="hl-5">AWS</span><span class="hl-1">)</span><br/><span class="hl-1">        └── ResourceNameFormatter</span>
+</code><button>Copy</button></pre>
+
+<h3 id="commonstack" class="tsd-anchor-link">CommonStack<a href="#commonstack" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>The stack is responsible for:</p>
+<ol>
+<li>Loading <strong>stage-specific configuration</strong> from JSON files</li>
+<li>Loading <strong>extra contexts</strong> for configuration layering</li>
+<li>Extracting <code>CommonStackProps</code> from the CDK context</li>
+<li>Creating the root <code>CommonConstruct</code> instance</li>
+</ol>
+<h3 id="commonconstruct" class="tsd-anchor-link">CommonConstruct<a href="#commonconstruct" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>The construct is the base class all custom infrastructure extends. It:</p>
+<ol>
+<li>Instantiates all service managers as public properties</li>
+<li>Provides a <code>ResourceNameFormatter</code> for consistent naming</li>
+<li>Computes the fully qualified domain name</li>
+<li>Provides stage-checking utilities (<code>isDevelopmentStage()</code>, <code>isProductionStage()</code>, etc.)</li>
+</ol>
+<h3 id="service-managers" class="tsd-anchor-link">Service Managers<a href="#service-managers" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Service managers are stateless utility classes. Each one wraps a specific AWS/Azure/Cloudflare service:</p>
+<pre><code class="typescript"><span class="hl-7">// Managers are instantiated without parameters</span><br/><span class="hl-5">this</span><span class="hl-1">.lambdaManager </span><span class="hl-3">=</span><span class="hl-1"> </span><span class="hl-3">new</span><span class="hl-1"> </span><span class="hl-0">LambdaManager</span><span class="hl-1">()</span><br/><span class="hl-5">this</span><span class="hl-1">.s3Manager </span><span class="hl-3">=</span><span class="hl-1"> </span><span class="hl-3">new</span><span class="hl-1"> </span><span class="hl-0">S3Manager</span><span class="hl-1">()</span>
+</code><button type="button">Copy</button></pre>
+
+<p>Every manager method takes the construct <code>scope</code> as a parameter, giving it access to:</p>
+<ul>
+<li><code>scope.props</code> — all configuration properties</li>
+<li><code>scope.resourceNameFormatter</code> — consistent naming</li>
+<li>Other managers via <code>scope.&lt;managerName&gt;</code></li>
+</ul>
+<p><strong>Example method signature:</strong></p>
+<pre><code class="typescript"><span class="hl-1">public </span><span class="hl-0">createLambdaFunction</span><span class="hl-1">(</span><br/><span class="hl-1">  id: string,</span><br/><span class="hl-1">  scope: CommonConstruct,</span><br/><span class="hl-1">  props: LambdaProps</span><br/><span class="hl-1">): IFunction</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="resource-naming" class="tsd-anchor-link">Resource Naming<a href="#resource-naming" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>All resources are named using the <code>ResourceNameFormatter</code>:</p>
+<pre><code><span class="hl-1">[globalPrefix]</span><span class="hl-3">-</span><span class="hl-1">[resourcePrefix]</span><span class="hl-3">-</span><span class="hl-1">resourceName</span><span class="hl-3">-</span><span class="hl-1">[resourceSuffix]</span><span class="hl-3">-</span><span class="hl-1">[globalSuffix]</span><span class="hl-3">-</span><span class="hl-1">stage</span>
+</code><button>Copy</button></pre>
+
+<ul>
+<li><strong>globalPrefix/globalSuffix</strong> — org-wide identifiers</li>
+<li><strong>resourcePrefix/resourceSuffix</strong> — project-level identifiers</li>
+<li><strong>stage</strong> — always appended (dev, tst, uat, prd)</li>
+</ul>
+<p>Per-resource overrides are available via <code>resourceNameOptions</code> in props.</p>
+<h2 id="configuration-hierarchy" class="tsd-anchor-link">Configuration Hierarchy<a href="#configuration-hierarchy" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Configuration loads in layers, with later layers overriding earlier ones:</p>
+<pre><code><span class="hl-5">1.</span><span class="hl-1"> cdk.</span><span class="hl-0">json</span><span class="hl-1"> (base context)</span><br/><span class="hl-1">   ↓ merged </span><span class="hl-3">with</span><br/><span class="hl-5">2.</span><span class="hl-1"> Extra context </span><span class="hl-0">files</span><span class="hl-1"> (from extraContexts array)</span><br/><span class="hl-1">   ↓ merged </span><span class="hl-3">with</span><br/><span class="hl-5">3.</span><span class="hl-1"> Stage</span><span class="hl-3">-</span><span class="hl-1">specific </span><span class="hl-0">file</span><span class="hl-1"> (cdkEnv</span><span class="hl-3">/</span><span class="hl-1">{stage}.json)</span><br/><span class="hl-1">   ↓ produces</span><br/><span class="hl-5">4.</span><span class="hl-1"> CommonStackProps</span>
+</code><button>Copy</button></pre>
+
+<ul>
+<li>Objects and arrays are deep-merged (via lodash <code>_.merge</code>)</li>
+<li>Primitive values are overwritten</li>
+</ul>
+<h2 id="cross-cloud-compatibility" class="tsd-anchor-link">Cross-Cloud Compatibility<a href="#cross-cloud-compatibility" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<table>
+<thead>
+<tr>
+<th>Concept</th>
+<th>AWS CDK</th>
+<th>Azure Pulumi</th>
+<th>Cloudflare Pulumi</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Base class</td>
+<td><code>Construct</code></td>
+<td><code>ComponentResource</code></td>
+<td><code>ComponentResource</code></td>
+</tr>
+<tr>
+<td>Provider</td>
+<td>AWS CDK</td>
+<td><code>@pulumi/azure-native</code> (Azure Native)</td>
+<td><code>@pulumi/cloudflare</code></td>
+</tr>
+<tr>
+<td>Stack</td>
+<td><code>CommonStack</code></td>
+<td><code>CommonAzureStack</code></td>
+<td><code>CommonCloudflareStack</code></td>
+</tr>
+<tr>
+<td>Construct</td>
+<td><code>CommonConstruct</code></td>
+<td><code>CommonAzureConstruct</code></td>
+<td><code>CommonCloudflareConstruct</code></td>
+</tr>
+<tr>
+<td>Managers</td>
+<td>23 services</td>
+<td>16 services</td>
+<td>10 services</td>
+</tr>
+<tr>
+<td>Naming</td>
+<td><code>ResourceNameFormatter</code></td>
+<td><code>AzureResourceNameFormatter</code></td>
+<td>(uses Pulumi naming)</td>
+</tr>
+</tbody>
+</table>
+<p>All three share:</p>
+<ul>
+<li>Stage detection utilities from <code>@gradientedge/cdk-utils-common</code></li>
+<li>The same property patterns (<code>stage</code>, <code>domainName</code>, <code>subDomain</code>)</li>
+<li>Consistent inheritance model (extend the base construct, call <code>initResources()</code>)</li>
+</ul>
+<h2 id="construct-lifecycle" class="tsd-anchor-link">Construct Lifecycle<a href="#construct-lifecycle" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>When creating a custom construct:</p>
+<pre><code class="typescript"><span class="hl-3">class</span><span class="hl-1"> </span><span class="hl-0">MyConstruct</span><span class="hl-1"> </span><span class="hl-3">extends</span><span class="hl-1"> </span><span class="hl-0">CommonConstruct</span><span class="hl-1"> {</span><br/><span class="hl-1">  </span><span class="hl-3">constructor</span><span class="hl-1">(</span><span class="hl-4">parent</span><span class="hl-3">:</span><span class="hl-1"> </span><span class="hl-0">Construct</span><span class="hl-1">, </span><span class="hl-4">id</span><span class="hl-3">:</span><span class="hl-1"> </span><span class="hl-5">string</span><span class="hl-1">, </span><span class="hl-4">props</span><span class="hl-3">:</span><span class="hl-1"> </span><span class="hl-0">MyProps</span><span class="hl-1">) {</span><br/><span class="hl-1">    </span><span class="hl-5">super</span><span class="hl-1">(parent, id, props)  </span><span class="hl-7">// 1. Injects all service managers</span><br/><span class="hl-1">    </span><span class="hl-5">this</span><span class="hl-1">.props </span><span class="hl-3">=</span><span class="hl-1"> props</span><br/><span class="hl-1">    </span><span class="hl-5">this</span><span class="hl-1">.id </span><span class="hl-3">=</span><span class="hl-1"> id</span><br/><span class="hl-1">    </span><span class="hl-5">this</span><span class="hl-1">.</span><span class="hl-0">initResources</span><span class="hl-1">()      </span><span class="hl-7">// 2. Kicks off resource creation</span><br/><span class="hl-1">  }</span><br/><br/><span class="hl-1">  </span><span class="hl-3">protected</span><span class="hl-1"> </span><span class="hl-0">initResources</span><span class="hl-1">() {</span><br/><span class="hl-1">    </span><span class="hl-5">this</span><span class="hl-1">.</span><span class="hl-0">resolveHostedZone</span><span class="hl-1">()   </span><span class="hl-7">// 3. Resolve existing resources</span><br/><span class="hl-1">    </span><span class="hl-5">this</span><span class="hl-1">.</span><span class="hl-0">createBucket</span><span class="hl-1">()        </span><span class="hl-7">// 4. Create new resources</span><br/><span class="hl-1">    </span><span class="hl-5">this</span><span class="hl-1">.</span><span class="hl-0">createFunction</span><span class="hl-1">()      </span><span class="hl-7">// 5. Wire resources together</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<p>Pre-built constructs like <code>RestApiLambda</code> follow this pattern with a defined initialization pipeline:</p>
+<ol>
+<li>Resolve secrets</li>
+<li>Resolve hosted zone and certificate</li>
+<li>Create IAM policy and role</li>
+<li>Create Lambda environment, layers, and function</li>
+<li>Create REST API and wire to Lambda</li>
+<li>Create custom domain and base path mappings</li>
+<li>Create Route53 DNS records</li>
+</ol>
+</div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg><h3>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg><h3>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#architecture"><span>Architecture</span></a><ul><li><a href="#design-principles"><span>Design <wbr/>Principles</span></a></li><li><a href="#package-architecture"><span>Package <wbr/>Architecture</span></a></li><li><a href="#core-abstractions"><span>Core <wbr/>Abstractions</span></a></li><li><ul><li><a href="#stack-→-construct-→-service-managers"><span>Stack → <wbr/>Construct → <wbr/>Service <wbr/>Managers</span></a></li><li><a href="#commonstack"><span>Common<wbr/>Stack</span></a></li><li><a href="#commonconstruct"><span>Common<wbr/>Construct</span></a></li><li><a href="#service-managers"><span>Service <wbr/>Managers</span></a></li></ul></li><li><a href="#resource-naming"><span>Resource <wbr/>Naming</span></a></li><li><a href="#configuration-hierarchy"><span>Configuration <wbr/>Hierarchy</span></a></li><li><a href="#cross-cloud-compatibility"><span>Cross-<wbr/>Cloud <wbr/>Compatibility</span></a></li><li><a href="#construct-lifecycle"><span>Construct <wbr/>Lifecycle</span></a></li></ul></div></details></div><div class="site-menu"><nav class="tsd-navigation"><a href="../modules.html">GradientEdge CDK Utils</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><footer><p>© <span id="footer-year"></span> GradientEdge. All rights reserved.</p></footer><div class="overlay"></div></body></html>

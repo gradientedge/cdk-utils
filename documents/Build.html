@@ -1,0 +1,120 @@
+<!DOCTYPE html><html class="default" lang="en" data-base="../"><head><meta charset="utf-8"/><meta http-equiv="x-ua-compatible" content="IE=edge"/><title>Build | GradientEdge CDK Utils</title><link rel="icon" href="../assets/favicon.png" type="image/png"/><meta name="description" content="Documentation for GradientEdge CDK Utils"/><meta name="viewport" content="width=device-width, initial-scale=1"/><link rel="stylesheet" href="../assets/style.css"/><link rel="stylesheet" href="../assets/highlight.css"/><link rel="stylesheet" href="../assets/custom.css"/><script defer src="../assets/main.js"></script><script defer src="../assets/custom.js"></script><script async src="../assets/icons.js" id="tsd-icons-script"></script><script async src="../assets/search.js" id="tsd-search-script"></script><script async src="../assets/navigation.js" id="tsd-nav-script"></script><script async src="../assets/hierarchy.js" id="tsd-hierarchy-script"></script></head><body><script>document.documentElement.dataset.theme = localStorage.getItem("tsd-theme") || "os";document.body.style.display="none";setTimeout(() => window.app?app.showPage():document.body.style.removeProperty("display"),500)</script><header class="tsd-page-toolbar"><div class="tsd-toolbar-contents container"><a href="../index.html" class="title">GradientEdge CDK Utils</a><div id="tsd-toolbar-links"></div><button id="tsd-search-trigger" class="tsd-widget" aria-label="Search"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-search"></use></svg></button><dialog id="tsd-search" aria-label="Search"><input role="combobox" id="tsd-search-input" aria-controls="tsd-search-results" aria-autocomplete="list" aria-expanded="true" autocapitalize="off" autocomplete="off" placeholder="Search the docs" maxLength="100"/><ul role="listbox" id="tsd-search-results"></ul><div id="tsd-search-status" aria-live="polite" aria-atomic="true"><div>Preparing search index...</div></div></dialog><a href="#" class="tsd-widget menu" id="tsd-toolbar-menu-trigger" data-toggle="menu" aria-label="Menu"><svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-menu"></use></svg></a></div></header><div class="container container-main"><div class="col-content"><div class="tsd-page-title"><ul class="tsd-breadcrumb" aria-label="Breadcrumb"><li><a href="" aria-current="page">Build</a></li></ul></div><div class="tsd-panel tsd-typography"><h1 id="build" class="tsd-anchor-link">Build<a href="#build" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h1>
+<h2 id="prerequisites" class="tsd-anchor-link">Prerequisites<a href="#prerequisites" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<ul>
+<li><a href="https://nodejs.org/">Node.js</a> &gt;= 22</li>
+<li><a href="https://pnpm.io/">pnpm</a> 10</li>
+</ul>
+<h2 id="build-commands" class="tsd-anchor-link">Build Commands<a href="#build-commands" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<h3 id="build-all-packages" class="tsd-anchor-link">Build all packages<a href="#build-all-packages" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Compiles TypeScript source in every package:</p>
+<pre><code class="shell"><span class="hl-0">pnpm</span><span class="hl-1"> </span><span class="hl-2">build</span>
+</code><button type="button">Copy</button></pre>
+
+<p>This runs <code>tsc</code> in each package via pnpm's recursive build, producing JavaScript output in <code>dist/</code> directories.</p>
+<h3 id="production-build" class="tsd-anchor-link">Production build<a href="#production-build" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Uses production-specific TypeScript configurations (<code>tsconfig.prd.json</code>) which may exclude test files and enable additional optimizations:</p>
+<pre><code class="shell"><span class="hl-0">pnpm</span><span class="hl-1"> </span><span class="hl-2">build:production</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="build-a-specific-package" class="tsd-anchor-link">Build a specific package<a href="#build-a-specific-package" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<pre><code class="shell"><span class="hl-0">pnpm</span><span class="hl-1"> </span><span class="hl-5">--filter</span><span class="hl-1"> </span><span class="hl-2">@gradientedge/cdk-utils-aws</span><span class="hl-1"> </span><span class="hl-2">build</span><br/><span class="hl-0">pnpm</span><span class="hl-1"> </span><span class="hl-5">--filter</span><span class="hl-1"> </span><span class="hl-2">@gradientedge/cdk-utils-azure</span><span class="hl-1"> </span><span class="hl-2">build</span><br/><span class="hl-0">pnpm</span><span class="hl-1"> </span><span class="hl-5">--filter</span><span class="hl-1"> </span><span class="hl-2">@gradientedge/cdk-utils-cloudflare</span><span class="hl-1"> </span><span class="hl-2">build</span><br/><span class="hl-0">pnpm</span><span class="hl-1"> </span><span class="hl-5">--filter</span><span class="hl-1"> </span><span class="hl-2">@gradientedge/cdk-utils-common</span><span class="hl-1"> </span><span class="hl-2">build</span>
+</code><button type="button">Copy</button></pre>
+
+<h2 id="ci-build" class="tsd-anchor-link">CI Build<a href="#ci-build" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>The full CI pipeline runs install, build, validation, and documentation generation:</p>
+<pre><code class="shell"><span class="hl-0">pnpm</span><span class="hl-1"> </span><span class="hl-2">run</span><span class="hl-1"> </span><span class="hl-2">ci</span>
+</code><button type="button">Copy</button></pre>
+
+<p>This executes the following steps in order:</p>
+<table>
+<thead>
+<tr>
+<th>Step</th>
+<th>Command</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Install</td>
+<td><code>pnpm install --frozen-lockfile</code></td>
+<td>Install dependencies (exact versions)</td>
+</tr>
+<tr>
+<td>Build</td>
+<td><code>pnpm build</code></td>
+<td>Compile all packages</td>
+</tr>
+<tr>
+<td>Validate</td>
+<td><code>pnpm validate</code></td>
+<td>Run prettier, lint, and tests</td>
+</tr>
+<tr>
+<td>Generate Docs</td>
+<td><code>pnpm run docs</code></td>
+<td>Generate API documentation</td>
+</tr>
+</tbody>
+</table>
+<h2 id="build-output" class="tsd-anchor-link">Build Output<a href="#build-output" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Each package produces its build output in a <code>dist/</code> directory:</p>
+<pre><code><span class="hl-1">packages</span><span class="hl-3">/&lt;</span><span class="hl-1">name</span><span class="hl-3">&gt;</span><span class="hl-2">/</span><span class="hl-6">dist</span><span class="hl-2">/</span><br/><span class="hl-1">├── src</span><span class="hl-3">/</span><br/><span class="hl-1">│   ├── index.js          # Compiled entry point</span><br/><span class="hl-1">│   ├── index.d.ts        # Type declarations</span><br/><span class="hl-1">│   ├── index.d.ts.map    # Declaration source maps</span><br/><span class="hl-1">│   └── </span><span class="hl-3">...</span><span class="hl-1">               # Compiled source files</span>
+</code><button>Copy</button></pre>
+
+<p>Only the <code>dist/src/</code> directory is included in published npm packages (configured via <code>&quot;files&quot;</code> in each <code>package.json</code>).</p>
+<h2 id="typescript-configuration" class="tsd-anchor-link">TypeScript Configuration<a href="#typescript-configuration" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>The project uses a shared base TypeScript configuration:</p>
+<ul>
+<li><strong><code>tsconfig.base.json</code></strong> — shared compiler options (strict mode, ESM, Node.js module resolution)</li>
+<li><strong><code>packages/&lt;name&gt;/tsconfig.json</code></strong> — extends the base, includes <code>src/</code> and <code>test/</code> files</li>
+<li><strong><code>packages/&lt;name&gt;/tsconfig.prd.json</code></strong> — production config, typically excludes test files</li>
+</ul>
+<p>Key compiler options:</p>
+<table>
+<thead>
+<tr>
+<th>Option</th>
+<th>Value</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>target</code></td>
+<td><code>esnext</code></td>
+<td>Latest ECMAScript features</td>
+</tr>
+<tr>
+<td><code>module</code></td>
+<td><code>nodenext</code></td>
+<td>Node.js ESM module system</td>
+</tr>
+<tr>
+<td><code>strict</code></td>
+<td><code>true</code></td>
+<td>All strict type-checking options</td>
+</tr>
+<tr>
+<td><code>declaration</code></td>
+<td><code>true</code></td>
+<td>Emit <code>.d.ts</code> type declaration files</td>
+</tr>
+<tr>
+<td><code>declarationMap</code></td>
+<td><code>true</code></td>
+<td>Emit <code>.d.ts.map</code> for IDE navigation</td>
+</tr>
+<tr>
+<td><code>sourceMap</code></td>
+<td><code>true</code></td>
+<td>Emit source maps for debugging</td>
+</tr>
+<tr>
+<td><code>skipLibCheck</code></td>
+<td><code>true</code></td>
+<td>Skip type checking of <code>.d.ts</code> files</td>
+</tr>
+</tbody>
+</table>
+</div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg><h3>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg><h3>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#build"><span>Build</span></a><ul><li><a href="#prerequisites"><span>Prerequisites</span></a></li><li><a href="#build-commands"><span>Build <wbr/>Commands</span></a></li><li><ul><li><a href="#build-all-packages"><span>Build all packages</span></a></li><li><a href="#production-build"><span>Production build</span></a></li><li><a href="#build-a-specific-package"><span>Build a specific package</span></a></li></ul></li><li><a href="#ci-build"><span>CI <wbr/>Build</span></a></li><li><a href="#build-output"><span>Build <wbr/>Output</span></a></li><li><a href="#typescript-configuration"><span>Type<wbr/>Script <wbr/>Configuration</span></a></li></ul></div></details></div><div class="site-menu"><nav class="tsd-navigation"><a href="../modules.html">GradientEdge CDK Utils</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><footer><p>© <span id="footer-year"></span> GradientEdge. All rights reserved.</p></footer><div class="overlay"></div></body></html>
