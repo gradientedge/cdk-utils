@@ -276,3 +276,26 @@ describe('TestCloudflarePagesManager - With explicit zoneId', () => {
     })
   })
 })
+
+describe('TestCloudflarePagesManager - Undefined props', () => {
+  test('throws error when pages project props are undefined', () => {
+    const construct = stack.construct
+    expect(() => construct.pageManager.createPagesProject('test-pages-no-props', construct, undefined as any)).toThrow(
+      'Props undefined for test-pages-no-props'
+    )
+  })
+
+  test('throws error when pages domain props are undefined', () => {
+    const construct = stack.construct
+    expect(() => construct.pageManager.createPagesDomain('test-domain-no-props', construct, undefined as any)).toThrow(
+      'Props undefined for test-domain-no-props'
+    )
+  })
+
+  test('throws error when deploy pages project props are undefined', () => {
+    const construct = stack.construct
+    expect(() => construct.pageManager.deployPagesProject('test-deploy-no-props', construct, undefined as any)).toThrow(
+      'Props undefined for test-deploy-no-props'
+    )
+  })
+})

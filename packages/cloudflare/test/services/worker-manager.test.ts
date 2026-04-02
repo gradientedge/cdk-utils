@@ -10,6 +10,8 @@ import {
 } from '@pulumi/cloudflare'
 import * as pulumi from '@pulumi/pulumi'
 import fs from 'fs'
+import path from 'path'
+import appRoot from 'app-root-path'
 import {
   CommonCloudflareConstruct,
   CommonCloudflareStack,
@@ -108,7 +110,9 @@ class TestCommonConstruct extends CommonCloudflareConstruct {
     )
     this.workersScript = this.workerManager.createWorkerScript(`test-worker-script-${this.props.stage}`, this, {
       ...this.props.testWorkerScript,
-      content: fs.readFileSync('packages/cloudflare/test/common/sample.js', { encoding: 'utf8' }),
+      content: fs.readFileSync(path.join(appRoot.path, 'packages/cloudflare/test/common/sample.js'), {
+        encoding: 'utf8',
+      }),
     })
     this.workersKvNamespace = this.workerManager.createWorkersKvNamespace(
       `test-workers-kv-ns-${this.props.stage}`,
@@ -229,7 +233,9 @@ class TestWithZoneIdConstruct extends CommonCloudflareConstruct {
     })
     this.workersScript = this.workerManager.createWorkerScript(`test-worker-script-zid-${this.props.stage}`, this, {
       ...this.props.testWorkerScript,
-      content: fs.readFileSync('packages/cloudflare/test/common/sample.js', { encoding: 'utf8' }),
+      content: fs.readFileSync(path.join(appRoot.path, 'packages/cloudflare/test/common/sample.js'), {
+        encoding: 'utf8',
+      }),
       routes: [
         {
           ...this.props.testWorkerRoute,
@@ -299,7 +305,9 @@ class TestNoAccountIdConstruct extends CommonCloudflareConstruct {
     this.workersScript = this.workerManager.createWorkerScript(`test-worker-script-noacct-${this.props.stage}`, this, {
       ...this.props.testWorkerScript,
       accountId: undefined as any,
-      content: fs.readFileSync('packages/cloudflare/test/common/sample.js', { encoding: 'utf8' }),
+      content: fs.readFileSync(path.join(appRoot.path, 'packages/cloudflare/test/common/sample.js'), {
+        encoding: 'utf8',
+      }),
     })
     this.workersKvNamespace = this.workerManager.createWorkersKvNamespace(
       `test-workers-kv-ns-noacct-${this.props.stage}`,
@@ -335,6 +343,63 @@ describe('TestCloudflareWorkerManager - Without explicit accountId', () => {
 
     pulumi.all([noAcctStack.construct.workersScript.accountId]).apply(([accountId]) => {
       expect(accountId).toEqual('123456789012')
+    })
+  })
+})
+
+describe('TestCloudflareWorkerManager - Undefined props', () => {
+  test('throws error when worker script props are undefined', () => {
+    const construct = stack.construct
+    expect(() =>
+      construct.workerManager.createWorkerScript('test-script-no-props', construct, undefined as any)
+    ).toThrow('Props undefined for test-script-no-props')
+  })
+
+  test('throws error when workers kv namespace props are undefined', () => {
+    const construct = stack.construct
+    expect(() =>
+      construct.workerManager.createWorkersKvNamespace('test-kv-ns-no-props', construct, undefined as any)
+    ).toThrow('Props undefined for test-kv-ns-no-props')
+  })
+
+  test('throws error when workers kv props are undefined', () => {
+    const construct = stack.construct
+    expect(() => construct.workerManager.createWorkersKv('test-kv-no-props', construct, undefined as any)).toThrow(
+      'Props undefined for test-kv-no-props'
+    )
+  })
+
+  test('throws error when worker cron trigger props are undefined', () => {
+    const construct = stack.construct
+    expect(() =>
+      construct.workerManager.createWorkerCronTrigger('test-cron-no-props', construct, undefined as any)
+    ).toThrow('Props undefined for test-cron-no-props')
+  })
+})
+
+class TestProductionConstruct extends CommonCloudflareConstruct {
+  declare props: TestCloudflareStackProps
+  zone: Zone
+  workersKvNamespace: WorkersKvNamespace
+
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, { ...props, stage: 'prd' })
+    this.zone = this.zoneManager.createZone(`test-zone-prd-${this.props.stage}`, this, this.props.testZone)
+    this.workersKvNamespace = this.workerManager.createWorkersKvNamespace(
+      `test-workers-kv-ns-prd-${this.props.stage}`,
+      this,
+      this.props.testWorkersKvNamespace
+    )
+  }
+}
+
+describe('TestCloudflareWorkerManager - Production stage KV namespace', () => {
+  test('uses title without stage suffix in production', () => {
+    const prdConstruct = new TestProductionConstruct('test-prd-construct', stack.props as any)
+    expect(prdConstruct.workersKvNamespace).toBeDefined()
+    expect(prdConstruct.isProductionStage()).toBe(true)
+    pulumi.all([prdConstruct.workersKvNamespace.title]).apply(([title]) => {
+      expect(title).toEqual('test-namespace')
     })
   })
 })

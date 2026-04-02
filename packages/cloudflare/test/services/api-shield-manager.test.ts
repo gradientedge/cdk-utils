@@ -8,6 +8,8 @@ import {
 } from '@pulumi/cloudflare'
 import * as pulumi from '@pulumi/pulumi'
 import fs from 'fs'
+import path from 'path'
+import appRoot from 'app-root-path'
 import {
   ApiShieldOperationProps,
   ApiShieldOperationSchemaValidationSettingsProps,
@@ -96,7 +98,9 @@ class TestCommonConstruct extends CommonCloudflareConstruct {
       this,
       {
         ...this.props.testApiShieldSchema,
-        file: fs.readFileSync('packages/cloudflare/test/common/sample.json', { encoding: 'utf8' }),
+        file: fs.readFileSync(path.join(appRoot.path, 'packages/cloudflare/test/common/sample.json'), {
+          encoding: 'utf8',
+        }),
       }
     )
     this.apiShieldSchemaValidationSettings = this.apiShieldManager.createApiShieldSchemaValidationSettings(
@@ -327,7 +331,9 @@ class TestWithZoneIdConstruct extends CommonCloudflareConstruct {
       this,
       {
         ...this.props.testApiShieldSchema,
-        file: fs.readFileSync('packages/cloudflare/test/common/sample.json', { encoding: 'utf8' }),
+        file: fs.readFileSync(path.join(appRoot.path, 'packages/cloudflare/test/common/sample.json'), {
+          encoding: 'utf8',
+        }),
         zoneId: this.zone.id,
       }
     )

@@ -33,6 +33,12 @@
       "pointInTimeRecoveryEnabled": true
     },
     "timeToLiveAttribute": "expirationTime",
+    "tags": [
+      {
+        "key": "testV2TagName1",
+        "value": "testV2TagValue1"
+      }
+    ],
     "dynamoStream": "NEW_AND_OLD_IMAGES",
     "globalSecondaryIndexes": [
       {

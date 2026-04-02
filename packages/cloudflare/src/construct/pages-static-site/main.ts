@@ -114,10 +114,12 @@ export class CloudflarePagesStaticSite extends CommonCloudflareConstruct {
    */
   protected resolveSecretFromAWS(secretName: string) {
     if (this.config.require('secretsProvider') !== 'aws') return
+    /* v8 ignore start - requires real Pulumi backend for AWS invoke */
     const secret = aws.secretsmanager.getSecretOutput({ name: secretName })
     const secretVersion = aws.secretsmanager.getSecretVersionOutput({ secretId: secret.id })
     if (!secretVersion) throw new Error(`Unable to resolve secret:${secretName}`)
     return std.jsondecodeOutput({ input: secretVersion.secretString })
+    /* v8 ignore stop */
   }
 
   /**
@@ -130,6 +132,7 @@ export class CloudflarePagesStaticSite extends CommonCloudflareConstruct {
    */
   protected resolveSecretFromAzure(resourceGroupName: string, keyVaultName: string, secretKey: string) {
     if (this.config.require('secretsProvider') !== 'azure') return
+    /* v8 ignore start - requires real Pulumi backend for Azure invoke */
     const secretValueData = azure.keyvault.getSecretOutput({
       resourceGroupName,
       secretName: secretKey,
@@ -137,6 +140,7 @@ export class CloudflarePagesStaticSite extends CommonCloudflareConstruct {
     })
     if (!secretValueData) throw new Error(`Unable to resolve secret:${secretKey}`)
     return secretValueData.properties?.value
+    /* v8 ignore stop */
   }
 
   /**

@@ -1,7 +1,7 @@
 import * as cdk from 'aws-cdk-lib'
 import { Template } from 'aws-cdk-lib/assertions'
 import { Construct } from 'constructs'
-import { CommonConstruct, CommonStack, CommonStackProps } from '../../src/index.js'
+import { CommonConstruct, CommonStack, CommonStackProps, SsmManager } from '../../src/index.js'
 
 interface TestStackProps extends CommonStackProps {}
 
@@ -77,5 +77,41 @@ describe('TestSsmConstruct', () => {
       Type: 'String',
       Value: 'Hello World!',
     })
+  })
+})
+
+describe('TestSsmConstruct', () => {
+  test('handles writeStringToParameters mis-configurations as expected', () => {
+    const ssmManager = new SsmManager()
+    const scope = commonStack.construct as CommonConstruct
+
+    expect(() => ssmManager.writeStringToParameters('test-param', scope, undefined as any)).toThrow(
+      'Parameter props undefined for test-param'
+    )
+    expect(() =>
+      ssmManager.writeStringToParameters('test-param', scope, { parameterName: '', stringValue: '' } as any)
+    ).toThrow('Parameter parameterName undefined for test-param')
+  })
+
+  test('handles readStringParameter mis-configurations as expected', () => {
+    const ssmManager = new SsmManager()
+    const scope = commonStack.construct as CommonConstruct
+
+    expect(() => ssmManager.readStringParameter('test-param', scope, '')).toThrow('Invalid parameter name')
+    expect(() => ssmManager.readStringParameter('test-param', scope, undefined as any)).toThrow(
+      'Invalid parameter name'
+    )
+  })
+
+  test('handles readStringParameterFromRegion mis-configurations as expected', () => {
+    const ssmManager = new SsmManager()
+    const scope = commonStack.construct as CommonConstruct
+
+    expect(() => ssmManager.readStringParameterFromRegion('test-param', scope, '', 'eu-west-1')).toThrow(
+      'Invalid parameter name for test-param'
+    )
+    expect(() => ssmManager.readStringParameterFromRegion('test-param', scope, 'test-param', '')).toThrow(
+      'Invalid region for test-param'
+    )
   })
 })

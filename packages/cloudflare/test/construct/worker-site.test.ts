@@ -1,4 +1,6 @@
 import * as pulumi from '@pulumi/pulumi'
+import path from 'path'
+import appRoot from 'app-root-path'
 import { CloudflareWorkerSite, CloudflareWorkerSiteProps, CommonCloudflareStack } from '../../src/index.js'
 
 interface TestCloudflareStackProps extends CloudflareWorkerSiteProps {
@@ -33,7 +35,7 @@ class TestCommonCloudflareStack extends CommonCloudflareStack {
   protected determineConstructProps(props: TestCloudflareStackProps) {
     return {
       ...super.determineConstructProps(props),
-      siteWorkerAsset: `packages/cloudflare/test/common/sample.html`,
+      siteWorkerAsset: path.join(appRoot.path, `packages/cloudflare/test/common/sample.html`),
       siteSubDomain: `test.app`,
     }
   }
@@ -51,7 +53,7 @@ class TestExistingZoneCloudflareStack extends CommonCloudflareStack {
   protected determineConstructProps(props: TestCloudflareStackProps) {
     return {
       ...super.determineConstructProps(props),
-      siteWorkerAsset: `packages/cloudflare/test/common/sample.html`,
+      siteWorkerAsset: path.join(appRoot.path, `packages/cloudflare/test/common/sample.html`),
       siteSubDomain: `test.app`,
       useExistingZone: true,
     }
@@ -70,7 +72,7 @@ class TestNoRuleSetCloudflareStack extends CommonCloudflareStack {
   protected determineConstructProps(props: TestCloudflareStackProps) {
     return {
       ...super.determineConstructProps(props),
-      siteWorkerAsset: `packages/cloudflare/test/common/sample.html`,
+      siteWorkerAsset: path.join(appRoot.path, `packages/cloudflare/test/common/sample.html`),
       siteSubDomain: `test.app`,
       siteRuleSet: undefined,
       siteZoneSetting: undefined,

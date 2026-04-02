@@ -361,3 +361,33 @@ describe('TestCloudflareZoneManager - resolveZone', () => {
     expect(resolvedZone).toBeDefined()
   })
 })
+
+describe('TestCloudflareZoneManager - Undefined props', () => {
+  test('throws error when zone hold props are undefined', () => {
+    const construct = stack.construct
+    expect(() => construct.zoneManager.createZoneHold('test-zone-hold-no-props', construct, undefined as any)).toThrow(
+      'Props undefined for test-zone-hold-no-props'
+    )
+  })
+
+  test('throws error when zone lockdown props are undefined', () => {
+    const construct = stack.construct
+    expect(() =>
+      construct.zoneManager.createZoneLockdown('test-zone-lockdown-no-props', construct, undefined as any)
+    ).toThrow('Props undefined for test-zone-lockdown-no-props')
+  })
+
+  test('throws error when zone dns settings props are undefined', () => {
+    const construct = stack.construct
+    expect(() =>
+      construct.zoneManager.createZoneDnsSettings('test-zone-dns-no-props', construct, undefined as any)
+    ).toThrow('Props undefined for test-zone-dns-no-props')
+  })
+
+  test('throws error when zone setting props are undefined', () => {
+    const construct = stack.construct
+    expect(() =>
+      construct.zoneManager.createZoneSetting('test-zone-setting-no-props', construct, undefined as any)
+    ).toThrow('Props undefined for test-zone-setting-no-props')
+  })
+})

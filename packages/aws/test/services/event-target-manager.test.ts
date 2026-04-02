@@ -1,7 +1,7 @@
 import * as cdk from 'aws-cdk-lib'
 import { Template } from 'aws-cdk-lib/assertions'
 import { Construct } from 'constructs'
-import { CommonConstruct, CommonStack, CommonStackProps } from '../../src/index.js'
+import { CloudWatchLogGroupNoPolicy, CommonConstruct, CommonStack, CommonStackProps } from '../../src/index.js'
 
 interface TestStackProps extends CommonStackProps {
   testLogGroup: any
@@ -42,11 +42,16 @@ class TestCommonStack extends CommonStack {
 
 class TestCommonConstruct extends CommonConstruct {
   declare props: TestStackProps
+  logGroupTarget!: CloudWatchLogGroupNoPolicy
 
   constructor(parent: Construct, name: string, props: TestStackProps) {
     super(parent, name, props)
     const testLogGroup = this.logManager.createLogGroup('test-log-group', this, this.props.testLogGroup)
-    this.eventTargetManager.createCloudWatchLogGroupNoPolicy('test-log-group-target', this, testLogGroup)
+    this.logGroupTarget = this.eventTargetManager.createCloudWatchLogGroupNoPolicy(
+      'test-log-group-target',
+      this,
+      testLogGroup
+    )
   }
 }
 
@@ -73,5 +78,19 @@ describe('TestEventTargetConstruct', () => {
     template.hasResourceProperties('AWS::Logs::LogGroup', {
       LogGroupName: 'test-lg',
     })
+  })
+})
+
+describe('TestEventTargetConstruct', () => {
+  test('bind returns a valid rule target config', () => {
+    const construct = commonStack.construct as TestCommonConstruct
+    const target = construct.logGroupTarget
+    expect(target).toBeDefined()
+    const config = target.bind()
+    expect(config).toBeDefined()
+    expect(config.arn).toBeDefined()
+    expect(config.arn).toContain(':logs:')
+    expect(config.arn).toContain('log-group')
+    expect(config.targetResource).toBeDefined()
   })
 })

@@ -520,3 +520,115 @@ describe('TestAzureRestApiFunctionWithCorsSubdomainConstruct', () => {
     expect(stackWithCorsSubdomain.construct.api.corsPolicyXmlContent).toContain('app-fr')
   })
 })
+
+/* --- Test for createApiPolicy and dashboardVariables --- */
+
+class TestRestApiFunctionWithPolicyConstruct extends AzureRestApiFunction {
+  declare props: AzureRestApiFunctionProps & TestAzureStackProps
+
+  constructor(name: string, props: AzureRestApiFunctionProps & TestAzureStackProps) {
+    super(name, props)
+    this.props = props
+    this.api = { apiOperations: {} } as AzureApiFunction
+    this.appConnectionStrings = []
+    this.initResources()
+  }
+
+  public initResources() {
+    this.createResourceGroup()
+    this.resolveCommonLogAnalyticsWorkspace()
+    this.resolveApplicationInsights()
+    this.createAppServicePlan()
+    this.createAppConfiguration()
+    this.createStorageAccount()
+    this.createStorageDeploymentContainer()
+    this.createStorageContainer()
+    this.createCodePackage()
+    this.createFunctionApp()
+    this.resolveApiKeyVault()
+    this.createNamespaceSecret()
+    this.createApiManagement()
+    this.createApiManagementNamespace()
+    this.createApiManagementRoutes()
+    this.createCorsPolicy()
+    this.createApiPolicy()
+  }
+
+  public getDashboardVars(): Record<string, any> {
+    return this.dashboardVariables()
+  }
+}
+
+class TestCommonStackWithPolicy extends CommonAzureStack {
+  declare props: CommonAzureStackProps
+  declare construct: TestRestApiFunctionWithPolicyConstruct
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.construct = new TestRestApiFunctionWithPolicyConstruct(
+      `${props.name}-policy`,
+      this.props as AzureRestApiFunctionProps & TestAzureStackProps
+    )
+  }
+}
+
+pulumi.runtime.setConfig('project:extraContexts', JSON.stringify(testStackProps.extraContexts))
+const stackWithPolicy = new TestCommonStackWithPolicy('test-policy-stack', testStackProps)
+
+describe('TestAzureRestApiFunctionWithPolicyConstruct', () => {
+  test('creates api policy as expected', () => {
+    expect(stackWithPolicy).toBeDefined()
+    expect(stackWithPolicy.construct).toBeDefined()
+    expect(stackWithPolicy.construct.api).toBeDefined()
+  })
+
+  test('dashboardVariables returns expected variables', () => {
+    const vars = stackWithPolicy.construct.getDashboardVars()
+    expect(vars).toBeDefined()
+    expect(vars).toHaveProperty('apimName')
+    expect(vars).toHaveProperty('functionAppName')
+    expect(vars).toHaveProperty('subscriptionId')
+  })
+})
+
+/* --- Test for full initResources flow --- */
+
+class TestRestApiFunctionFullConstruct extends AzureRestApiFunction {
+  declare props: AzureRestApiFunctionProps & TestAzureStackProps
+
+  constructor(name: string, props: AzureRestApiFunctionProps & TestAzureStackProps) {
+    super(name, props)
+    this.props = props
+    this.api = { apiOperations: {} } as AzureApiFunction
+    this.appConnectionStrings = []
+    this.initResources()
+  }
+}
+
+class TestCommonStackFull extends CommonAzureStack {
+  declare props: CommonAzureStackProps
+  declare construct: TestRestApiFunctionFullConstruct
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.construct = new TestRestApiFunctionFullConstruct(
+      `${props.name}-full`,
+      this.props as AzureRestApiFunctionProps & TestAzureStackProps
+    )
+  }
+}
+
+pulumi.runtime.setConfig('project:extraContexts', JSON.stringify(testStackProps.extraContexts))
+const stackFull = new TestCommonStackFull('test-full-raf-stack', testStackProps)
+
+describe('TestAzureRestApiFunctionFullConstruct', () => {
+  test('full initResources covers all methods', () => {
+    expect(stackFull).toBeDefined()
+    expect(stackFull.construct).toBeDefined()
+    expect(stackFull.construct.api).toBeDefined()
+    expect(stackFull.construct.api.namedValueSecret).toBeDefined()
+    expect(stackFull.construct.api.namedValue).toBeDefined()
+    expect(stackFull.construct.api.backend).toBeDefined()
+    expect(stackFull.construct.api.managementApi).toBeDefined()
+  })
+})

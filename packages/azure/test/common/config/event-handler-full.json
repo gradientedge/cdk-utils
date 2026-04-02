@@ -1,0 +1,74 @@
+{
+  "eventGridTopic": {
+    "topicName": "test-event-handler-topic",
+    "location": "eastus",
+    "resourceGroupName": "test-rg-dev",
+    "useExistingTopic": false
+  },
+  "eventGridEventSubscription": {
+    "eventSubscriptionName": "test-event-handler-subscription",
+    "scope": "/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.EventGrid/topics/test-event-handler-topic-dev"
+  },
+  "eventGridSubscription": {
+    "dlqStorageAccount": {
+      "accountName": "test-event-handler-dlq-sa",
+      "resourceGroupName": "test-rg-dev"
+    },
+    "dlqStorageContainer": {
+      "containerName": "eventgrid-subscription-dlq-container",
+      "accountName": "test-event-handler-dlq-sa-dev",
+      "resourceGroupName": "test-rg-dev"
+    }
+  },
+  "serviceBus": {
+    "namespace": {
+      "namespaceName": "test-event-handler-sb-ns",
+      "resourceGroupName": "test-rg-dev",
+      "sku": {
+        "name": "Standard"
+      }
+    },
+    "queue": {
+      "queueName": "test-event-handler-sb-queue",
+      "namespaceName": "test-event-handler-sb-ns-dev",
+      "resourceGroupName": "test-rg-dev"
+    }
+  },
+  "commonLogAnalyticsWorkspace": {
+    "workspaceName": "test-workspace",
+    "resourceGroupName": "test-rg-dev"
+  },
+  "commonApplicationInsights": {
+    "resourceName": "test-app-insights",
+    "resourceGroupName": "test-rg-dev"
+  },
+  "functionApp": {
+    "servicePlan": {
+      "name": "test-function-app-plan",
+      "resourceGroupName": "test-rg-dev",
+      "sku": {
+        "name": "FC1",
+        "tier": "FlexConsumption"
+      }
+    },
+    "storageAccount": {
+      "accountName": "test-func-storage",
+      "resourceGroupName": "test-rg-dev"
+    },
+    "deploymentStorageContainer": {
+      "containerName": "test-deployment-container",
+      "accountName": "test-func-storage-dev",
+      "resourceGroupName": "test-rg-dev"
+    },
+    "app": {
+      "name": "test-function-app",
+      "resourceGroupName": "test-rg-dev",
+      "kind": "functionapp,linux"
+    },
+    "dashboard": {
+      "enabled": false
+    },
+    "deploySource": "dist",
+    "packageName": "app.zip"
+  }
+}

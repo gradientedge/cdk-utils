@@ -275,3 +275,65 @@ describe('TestAzureStorageConstruct - Error Handling', () => {
     }).toThrow('Props undefined for test-table-err')
   })
 })
+
+/* --- Tests for createManagementPolicy and createTable --- */
+
+import { ManagementPolicy, Table } from '@pulumi/azure-native/storage/index.js'
+import { ManagementPolicyProps, StorageTableProps } from '../../src/index.js'
+
+class TestConstructWithMgmtPolicy extends CommonAzureConstruct {
+  declare props: TestAzureStackProps
+  storageAccount: StorageAccount
+  managementPolicy: ManagementPolicy
+  storageTable: Table
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.storageAccount = this.storageManager.createStorageAccount(
+      `test-storage-mp-${this.props.stage}`,
+      this,
+      this.props.testStorageAccount
+    )
+    this.managementPolicy = this.storageManager.createManagementPolicy(`test-mp-${this.props.stage}`, this, {
+      accountName: this.storageAccount.name,
+      resourceGroupName: 'test-rg-dev',
+      managementPolicyName: 'default',
+      policy: {
+        rules: [],
+      },
+    } as ManagementPolicyProps)
+    this.storageTable = this.storageManager.createTable(`test-table-${this.props.stage}`, this, {
+      tableName: 'testTable',
+      accountName: this.storageAccount.name,
+      resourceGroupName: 'test-rg-dev',
+    } as StorageTableProps)
+  }
+}
+
+class TestStackWithMgmtPolicy extends CommonAzureStack {
+  declare props: TestAzureStackProps
+  declare construct: TestConstructWithMgmtPolicy
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestConstructWithMgmtPolicy(props.name, this.props)
+  }
+}
+
+const stackWithMgmtPolicy = new TestStackWithMgmtPolicy('test-mgmt-policy-stack', testStackProps)
+
+describe('TestAzureStorageConstruct - ManagementPolicy and Table', () => {
+  test('provisions management policy as expected', () => {
+    expect(stackWithMgmtPolicy.construct.managementPolicy).toBeDefined()
+    pulumi.all([stackWithMgmtPolicy.construct.managementPolicy.id]).apply(([id]) => {
+      expect(id).toBeDefined()
+    })
+  })
+
+  test('provisions storage table as expected', () => {
+    expect(stackWithMgmtPolicy.construct.storageTable).toBeDefined()
+    pulumi.all([stackWithMgmtPolicy.construct.storageTable.id]).apply(([id]) => {
+      expect(id).toBeDefined()
+    })
+  })
+})

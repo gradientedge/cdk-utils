@@ -386,3 +386,243 @@ describe('TestAzureApiManagementWithCaching', () => {
     expect(stackWithCaching.construct.api).toBeDefined()
   })
 })
+
+/* --- Tests for createApiDiagnostic, createLogger, createNamedValue, createSubscription, createCache, createOperation, createOperationPolicy --- */
+
+import {
+  ApiDiagnostic,
+  ApiOperation,
+  ApiOperationPolicy,
+  ApiPolicy,
+  Cache,
+  Logger,
+  NamedValue,
+  Subscription as ApiSubscription,
+} from '@pulumi/azure-native/apimanagement/index.js'
+import {
+  ApiDiagnosticProps,
+  ApiOperationPolicyProps,
+  ApiOperationProps,
+  ApiPolicyProps,
+  ApiSubscriptionProps,
+  CacheProps,
+  LoggerProps,
+  NamedValueProps,
+} from '../../src/index.js'
+
+class TestConstructWithExtraApimMethods extends CommonAzureConstruct {
+  declare props: TestAzureStackProps
+  apiDiagnostic: ApiDiagnostic
+  apiLogger: Logger
+  apiNamedValue: NamedValue
+  apiSubscription: ApiSubscription
+  apiCache: Cache
+  apiOperation: ApiOperation
+  apiOperationPolicy: ApiOperationPolicy
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+
+    this.apiDiagnostic = this.apiManagementManager.createApiDiagnostic(
+      `test-api-diagnostic-${this.props.stage}`,
+      this,
+      {
+        diagnosticId: 'applicationinsights',
+        apiId: 'test-api',
+        resourceGroupName: 'test-rg-dev',
+        serviceName: 'test-service',
+        loggerId: 'test-logger-id',
+      } as ApiDiagnosticProps
+    )
+
+    this.apiLogger = this.apiManagementManager.createLogger(`test-api-logger-${this.props.stage}`, this, {
+      resourceGroupName: 'test-rg-dev',
+      serviceName: 'test-service',
+      loggerType: 'applicationInsights',
+      credentials: { instrumentationKey: 'test-key' },
+    } as LoggerProps)
+
+    this.apiNamedValue = this.apiManagementManager.createNamedValue(`test-api-nv-${this.props.stage}`, this, {
+      displayName: 'test-named-value',
+      resourceGroupName: 'test-rg-dev',
+      serviceName: 'test-service',
+      secret: true,
+    } as NamedValueProps)
+
+    this.apiSubscription = this.apiManagementManager.createSubscription(`test-api-sub-${this.props.stage}`, this, {
+      serviceName: 'test-service',
+      resourceGroupName: 'test-rg-dev',
+      displayName: 'test-subscription',
+      state: 'active',
+      scope: '/subscriptions/test-sub/resourceGroups/test-rg-dev',
+    } as ApiSubscriptionProps)
+
+    this.apiCache = this.apiManagementManager.createCache(`test-api-cache-${this.props.stage}`, this, {
+      serviceName: 'test-service',
+      resourceGroupName: 'test-rg-dev',
+      connectionString: 'test-connection-string',
+      cacheId: 'test-cache-id',
+      useFromLocation: 'eastus',
+    } as CacheProps)
+
+    this.apiOperation = this.apiManagementManager.createOperation(`test-api-op-${this.props.stage}`, this, {
+      apiId: 'test-api',
+      resourceGroupName: 'test-rg-dev',
+      serviceName: 'test-service',
+      operationId: 'test-operation',
+      displayName: 'Test Operation',
+      method: 'GET',
+      urlTemplate: '/test',
+    } as ApiOperationProps)
+
+    this.apiOperationPolicy = this.apiManagementManager.createOperationPolicy(
+      `test-api-op-policy-${this.props.stage}`,
+      this,
+      {
+        apiId: 'test-api',
+        resourceGroupName: 'test-rg-dev',
+        serviceName: 'test-service',
+        operationId: 'test-operation',
+        value: '<policies><inbound><base /></inbound></policies>',
+      } as ApiOperationPolicyProps
+    )
+  }
+}
+
+class TestStackWithExtraApimMethods extends CommonAzureStack {
+  declare props: TestAzureStackProps
+  declare construct: TestConstructWithExtraApimMethods
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestConstructWithExtraApimMethods(props.name, this.props)
+  }
+}
+
+const stackWithExtraMethods = new TestStackWithExtraApimMethods('test-extra-apim-stack', testStackProps)
+
+describe('TestAzureApiManagementExtraMethods', () => {
+  test('provisions api diagnostic as expected', () => {
+    expect(stackWithExtraMethods.construct.apiDiagnostic).toBeDefined()
+  })
+
+  test('provisions api logger as expected', () => {
+    expect(stackWithExtraMethods.construct.apiLogger).toBeDefined()
+  })
+
+  test('provisions api named value as expected', () => {
+    expect(stackWithExtraMethods.construct.apiNamedValue).toBeDefined()
+  })
+
+  test('provisions api subscription as expected', () => {
+    expect(stackWithExtraMethods.construct.apiSubscription).toBeDefined()
+  })
+
+  test('provisions api cache as expected', () => {
+    expect(stackWithExtraMethods.construct.apiCache).toBeDefined()
+  })
+
+  test('provisions api operation as expected', () => {
+    expect(stackWithExtraMethods.construct.apiOperation).toBeDefined()
+  })
+
+  test('provisions api operation policy as expected', () => {
+    expect(stackWithExtraMethods.construct.apiOperationPolicy).toBeDefined()
+  })
+})
+
+describe('TestAzureApiManagementExtraMethods - Error Handling', () => {
+  test('createApiDiagnostic throws when props are undefined', () => {
+    expect(() => {
+      stackWithExtraMethods.construct.apiManagementManager.createApiDiagnostic(
+        'test-diag-err',
+        stackWithExtraMethods.construct,
+        undefined as any
+      )
+    }).toThrow('Props undefined for test-diag-err')
+  })
+
+  test('createLogger throws when props are undefined', () => {
+    expect(() => {
+      stackWithExtraMethods.construct.apiManagementManager.createLogger(
+        'test-logger-err',
+        stackWithExtraMethods.construct,
+        undefined as any
+      )
+    }).toThrow('Props undefined for test-logger-err')
+  })
+
+  test('createNamedValue throws when props are undefined', () => {
+    expect(() => {
+      stackWithExtraMethods.construct.apiManagementManager.createNamedValue(
+        'test-nv-err',
+        stackWithExtraMethods.construct,
+        undefined as any
+      )
+    }).toThrow('Props undefined for test-nv-err')
+  })
+
+  test('createSubscription throws when props are undefined', () => {
+    expect(() => {
+      stackWithExtraMethods.construct.apiManagementManager.createSubscription(
+        'test-sub-err',
+        stackWithExtraMethods.construct,
+        undefined as any
+      )
+    }).toThrow('Props undefined for test-sub-err')
+  })
+
+  test('createCache throws when props are undefined', () => {
+    expect(() => {
+      stackWithExtraMethods.construct.apiManagementManager.createCache(
+        'test-cache-err',
+        stackWithExtraMethods.construct,
+        undefined as any
+      )
+    }).toThrow('Props undefined for test-cache-err')
+  })
+})
+
+/* --- Tests for createPolicy --- */
+
+class TestConstructWithPolicy extends CommonAzureConstruct {
+  declare props: TestAzureStackProps
+  apiManagementService: ApiManagementService
+  apiPolicy: ApiPolicy
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.apiManagementService = this.apiManagementManager.createApiManagementService(
+      `test-api-management-policy-${this.props.stage}`,
+      this,
+      this.props.testApiManagement
+    )
+
+    this.apiPolicy = this.apiManagementManager.createPolicy(`test-api-policy-${this.props.stage}`, this, {
+      serviceName: this.apiManagementService.name,
+      apiId: 'test-api',
+      resourceGroupName: 'test-rg-dev',
+      value: '<policies><inbound><base /></inbound></policies>',
+    } as ApiPolicyProps)
+  }
+}
+
+class TestStackWithPolicy extends CommonAzureStack {
+  declare props: TestAzureStackProps
+  declare construct: TestConstructWithPolicy
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestConstructWithPolicy(props.name, this.props)
+  }
+}
+
+describe('TestAzureApiManagementWithPolicy', () => {
+  test('provisions api policy as expected', () => {
+    const stackWithPolicy = new TestStackWithPolicy('test-stack-with-policy', testStackProps)
+    expect(stackWithPolicy.construct.apiPolicy).toBeDefined()
+    pulumi.all([stackWithPolicy.construct.apiPolicy.id]).apply(([id]) => {
+      expect(id).toBeDefined()
+    })
+  })
+})

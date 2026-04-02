@@ -252,3 +252,142 @@ describe('TestAzureServicebusConstruct', () => {
       })
   })
 })
+
+/* --- Tests for error handling on topic, queue, subscription, resolve --- */
+
+describe('TestAzureServicebusConstruct - Error Handling', () => {
+  test('createServiceBusTopic throws when props are undefined', () => {
+    expect(() => {
+      stack.construct.serviceBusManager.createServiceBusTopic('test-topic-err', stack.construct, undefined as any)
+    }).toThrow('Props undefined for test-topic-err')
+  })
+
+  test('createServiceBusQueue throws when props are undefined', () => {
+    expect(() => {
+      stack.construct.serviceBusManager.createServiceBusQueue('test-queue-err', stack.construct, undefined as any)
+    }).toThrow('Props undefined for test-queue-err')
+  })
+
+  test('createServiceBusSubscription throws when props are undefined', () => {
+    expect(() => {
+      stack.construct.serviceBusManager.createServiceBusSubscription('test-sub-err', stack.construct, undefined as any)
+    }).toThrow('Props undefined for test-sub-err')
+  })
+
+  test('resolveServiceBusQueue throws when props are undefined', () => {
+    expect(() => {
+      stack.construct.serviceBusManager.resolveServiceBusQueue('test-resolve-err', stack.construct, undefined as any)
+    }).toThrow('Props undefined for test-resolve-err')
+  })
+})
+
+/* --- Tests for resource group name fallback and default values --- */
+
+class TestMinimalServiceBusConstruct extends CommonAzureConstruct {
+  declare props: TestAzureStackProps
+  serviceBusNamespace: Namespace
+  serviceBusTopic: Topic
+  serviceBusQueue: Queue
+  serviceBusSubscription: Subscription
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.serviceBusNamespace = this.serviceBusManager.createServiceBusNamespace(
+      `test-minimal-sb-ns-${this.props.stage}`,
+      this,
+      {
+        namespaceName: 'test-minimal-sb-ns',
+        resourceGroupName: 'test-rg-dev',
+      } as ServiceBusNamespaceProps
+    )
+
+    this.serviceBusTopic = this.serviceBusManager.createServiceBusTopic(
+      `test-minimal-sb-topic-${this.props.stage}`,
+      this,
+      {
+        topicName: 'test-minimal-sb-topic',
+        namespaceName: 'test-minimal-sb-ns-dev',
+        resourceGroupName: 'test-rg-dev',
+      } as ServiceBusTopicProps
+    )
+
+    this.serviceBusQueue = this.serviceBusManager.createServiceBusQueue(
+      `test-minimal-sb-queue-${this.props.stage}`,
+      this,
+      {
+        queueName: 'test-minimal-sb-queue',
+        namespaceName: 'test-minimal-sb-ns-dev',
+        resourceGroupName: 'test-rg-dev',
+      } as ServiceBusQueueProps
+    )
+
+    this.serviceBusSubscription = this.serviceBusManager.createServiceBusSubscription(
+      `test-minimal-sb-sub-${this.props.stage}`,
+      this,
+      {
+        subscriptionName: 'test-minimal-sb-sub',
+        namespaceName: 'test-minimal-sb-ns-dev',
+        topicName: 'test-minimal-sb-topic-dev',
+        resourceGroupName: 'test-rg-dev',
+      } as ServiceBusSubscriptionProps
+    )
+  }
+}
+
+class TestMinimalServiceBusStack extends CommonAzureStack {
+  declare props: TestAzureStackProps
+  declare construct: TestMinimalServiceBusConstruct
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestMinimalServiceBusConstruct(props.name, this.props)
+  }
+}
+
+const minimalSbStack = new TestMinimalServiceBusStack('test-minimal-sb-stack', testStackProps)
+
+describe('TestAzureServicebusConstruct - Default Values', () => {
+  test('provisions namespace with default identity, sku and tags', () => {
+    pulumi
+      .all([
+        minimalSbStack.construct.serviceBusNamespace.identity,
+        minimalSbStack.construct.serviceBusNamespace.sku,
+        minimalSbStack.construct.serviceBusNamespace.tags,
+      ])
+      .apply(([identity, sku, tags]) => {
+        expect(identity?.type).toEqual('SystemAssigned')
+        expect(sku?.name).toEqual('Standard')
+        expect(tags?.environment).toEqual('dev')
+      })
+  })
+
+  test('provisions topic as expected', () => {
+    expect(minimalSbStack.construct.serviceBusTopic).toBeDefined()
+  })
+
+  test('provisions queue with default values', () => {
+    pulumi
+      .all([
+        minimalSbStack.construct.serviceBusQueue.requiresDuplicateDetection,
+        minimalSbStack.construct.serviceBusQueue.deadLetteringOnMessageExpiration,
+        minimalSbStack.construct.serviceBusQueue.duplicateDetectionHistoryTimeWindow,
+      ])
+      .apply(([requiresDuplicateDetection, deadLetteringOnMessageExpiration, duplicateDetectionHistoryTimeWindow]) => {
+        expect(requiresDuplicateDetection).toEqual(true)
+        expect(deadLetteringOnMessageExpiration).toEqual(true)
+        expect(duplicateDetectionHistoryTimeWindow).toEqual('PT1M')
+      })
+  })
+
+  test('provisions subscription with default maxDeliveryCount', () => {
+    pulumi.all([minimalSbStack.construct.serviceBusSubscription.maxDeliveryCount]).apply(([maxDeliveryCount]) => {
+      expect(maxDeliveryCount).toEqual(1)
+    })
+  })
+})
+
+describe('TestAzureServicebusConstruct - resolveServiceBusQueue', () => {
+  test('resolves existing service bus queue', () => {
+    expect(stack.construct.resolvedServiceBusQueue).toBeDefined()
+  })
+})
