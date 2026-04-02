@@ -236,9 +236,6 @@ describe('TestAzureEventgridConstruct', () => {
 })
 
 /* --- Tests for default value fallback branches --- */
-
-const capturedMinimalResources: Record<string, pulumi.runtime.MockResourceArgs> = {}
-
 class TestMinimalEventgridConstruct extends CommonAzureConstruct {
   declare props: TestAzureStackProps
   eventgridTopic: Topic

@@ -207,9 +207,6 @@ describe('TestAzureCosmosDbConstruct', () => {
 })
 
 /* --- Tests for default value fallback branches --- */
-
-const capturedMinimalResources: Record<string, pulumi.runtime.MockResourceArgs> = {}
-
 class TestMinimalCosmosConstruct extends CommonAzureConstruct {
   declare props: TestAzureStackProps
   cosmosDbAccount: DatabaseAccount

@@ -482,8 +482,6 @@ class TestBranchCoverageConstruct extends CommonConstruct {
       this,
       this.props.testSubmitStepSuccess
     )
-    const testSubmitStepFailure = this.sfnManager.createFailStep('test-failure', this, this.props.testSubmitStepFailure)
-
     const testWorkflowIntegration = sfn.Chain.start(lambdaWithCustomRetries)
       .next(lambdaWithEmptyRetries)
       .next(skippableLambdaNoSkip)
