@@ -29,7 +29,7 @@
     "cz": "cz",
     "docs": "rimraf api-docs && pnpm override:plugin:docs && jsdoc --pedantic -c jsdoc.json .",
     "fix": "pnpm prettify && eslint --fix **/*.ts",
-    "lint": "pnpm prettify && eslint **/*.ts --max-warnings=0 --no-warn-ignored",
+    "lint": "pnpm prettify && eslint --no-cache **/*.ts --max-warnings=0 --no-warn-ignored",
     "override:plugin:docs": "cp theme/type-converter.js node_modules/better-docs/typescript",
     "prettier": "prettier --check \"**/*.{ts,json,md}\"",
     "prettify": "prettier --write \"**/*.{ts,json,md}\"",

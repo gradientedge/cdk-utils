@@ -38,7 +38,7 @@ export class AzureAuthorisationManager {
     props: RoleAssignmentProps,
     resourceOptions?: ResourceOptions
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     return new RoleAssignment(`${id}`, props, { parent: scope, ...resourceOptions })
   }

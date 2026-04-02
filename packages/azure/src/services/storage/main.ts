@@ -59,7 +59,7 @@ export class AzureStorageManager {
     props: StorageAccountProps,
     resourceOptions?: ResourceOptions
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     const resourceGroupName = scope.props.resourceGroupName
       ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
@@ -117,7 +117,7 @@ export class AzureStorageManager {
     props: StorageContainerProps,
     resourceOptions?: ResourceOptions
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     const resourceGroupName = scope.props.resourceGroupName
       ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
@@ -152,7 +152,7 @@ export class AzureStorageManager {
     props: StorageBlobProps,
     resourceOptions?: ResourceOptions
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     const resourceGroupName = scope.props.resourceGroupName
       ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
@@ -234,7 +234,7 @@ export class AzureStorageManager {
     props: ManagementPolicyProps,
     resourceOptions?: ResourceOptions
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     return new ManagementPolicy(`${id}`, props, { parent: scope, ...resourceOptions })
   }
@@ -253,7 +253,7 @@ export class AzureStorageManager {
     props: StorageTableProps,
     resourceOptions?: ResourceOptions
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     return new Table(`${id}`, props, { parent: scope, ...resourceOptions })
   }

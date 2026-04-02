@@ -205,7 +205,7 @@ export class ApiToLambdaTarget extends CommonConstruct {
    * @summary Method to create a role for api integration
    */
   protected createApiToLambdaTargetRole() {
-    if (!this.apiToLambdaTargetRestApi.policy) throw 'Policy undefined'
+    if (!this.apiToLambdaTargetRestApi.policy) throw new Error('Policy undefined')
 
     this.apiToLambdaTargetRestApi.role = new Role(this, `${this.id}-rest-api-role`, {
       assumedBy: new ServicePrincipal('apigateway.amazonaws.com'),

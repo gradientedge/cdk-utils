@@ -87,7 +87,7 @@ export class SfnManager {
    * @param props
    */
   public createSuccessStep(id: string, scope: CommonConstruct, props: SfnSucceedProps) {
-    if (!props) throw `Step props undefined for ${id}`
+    if (!props) throw new Error(`Step props undefined for ${id}`)
     return new Succeed(scope, `${props.name}`, {
       ...props,
       comment: `Succeed step for ${props.name} - ${scope.props.stage} stage`,
@@ -101,7 +101,7 @@ export class SfnManager {
    * @param props
    */
   public createFailStep(id: string, scope: CommonConstruct, props: SfnFailProps) {
-    if (!props) throw `Step props undefined for ${id}`
+    if (!props) throw new Error(`Step props undefined for ${id}`)
     return new Fail(scope, `${props.name}`, {
       ...props,
       comment: `Fail step for ${props.name} - ${scope.props.stage} stage`,
@@ -115,7 +115,7 @@ export class SfnManager {
    * @param props
    */
   public createPassStep(id: string, scope: CommonConstruct, props: SfnPassProps) {
-    if (!props) throw `Step props undefined for ${id}`
+    if (!props) throw new Error(`Step props undefined for ${id}`)
     return new Pass(scope, `${props.name}`, {
       ...props,
       comment: `Pass step for ${props.name} - ${scope.props.stage} stage`,
@@ -129,7 +129,7 @@ export class SfnManager {
    * @param props
    */
   public createParallelStep(id: string, scope: CommonConstruct, props: SfnParallelProps) {
-    if (!props) throw `Step props undefined for ${id}`
+    if (!props) throw new Error(`Step props undefined for ${id}`)
     return new Parallel(scope, `${props.name}`, {
       ...props,
       comment: `Parallel step for ${props.name} - ${scope.props.stage} stage`,
@@ -143,7 +143,7 @@ export class SfnManager {
    * @param props
    */
   public createChoiceStep(id: string, scope: CommonConstruct, props: SfnChoiceProps) {
-    if (!props) throw `Step props undefined for ${id}`
+    if (!props) throw new Error(`Step props undefined for ${id}`)
     return new Choice(scope, `${props.name}`, {
       ...props,
       comment: `Choice step for ${props.name} - ${scope.props.stage} stage`,
@@ -179,7 +179,7 @@ export class SfnManager {
     table: ITable,
     tableKey: { [key: string]: DynamoAttributeValue }
   ) {
-    if (!props) throw `Step props undefined for ${id}`
+    if (!props) throw new Error(`Step props undefined for ${id}`)
     const step = new DynamoGetItem(scope, `${props.name}`, {
       ...props,
       comment: `DynamoDB GetItem step for ${props.name} - ${scope.props.stage} stage`,
@@ -217,7 +217,7 @@ export class SfnManager {
     table: ITable,
     tableItem: { [key: string]: DynamoAttributeValue }
   ) {
-    if (!props) throw `Step props undefined for ${id}`
+    if (!props) throw new Error(`Step props undefined for ${id}`)
     const step = new DynamoPutItem(scope, `${props.name}`, {
       ...props,
       comment: `DynamoDB PutItem step for ${props.name} - ${scope.props.stage} stage`,
@@ -255,7 +255,7 @@ export class SfnManager {
     table: ITable,
     tableKey: { [key: string]: DynamoAttributeValue }
   ) {
-    if (!props) throw `Step props undefined for ${id}`
+    if (!props) throw new Error(`Step props undefined for ${id}`)
     const step = new DynamoDeleteItem(scope, `${props.name}`, {
       ...props,
       comment: `DynamoDB DeleteItem step for ${props.name} - ${scope.props.stage} stage`,
@@ -286,8 +286,8 @@ export class SfnManager {
    * @param queue The queue to send the message to
    */
   public createSendSqsMessageStep(id: string, scope: CommonConstruct, props: SfnSqsSendMessageProps, queue: IQueue) {
-    if (!props) throw `Step props undefined for ${id}`
-    if (!props.messageBody) throw 'Message body undefined'
+    if (!props) throw new Error(`Step props undefined for ${id}`)
+    if (!props.messageBody) throw new Error('Message body undefined')
     const step = new SqsSendMessage(scope, `${props.name}`, {
       ...props,
       comment: `DynamoDB PutItem step for ${props.name} - ${scope.props.stage} stage`,
@@ -317,7 +317,7 @@ export class SfnManager {
    * @param lambdaFunction
    */
   public createLambdaStep(id: string, scope: CommonConstruct, props: SfnLambdaInvokeProps, lambdaFunction: IFunction) {
-    if (!props) throw `Step props undefined for ${id}`
+    if (!props) throw new Error(`Step props undefined for ${id}`)
     const step = new LambdaInvoke(scope, `${props.name}`, {
       ...props,
       comment: `Lambda step for ${props.name} - ${scope.props.stage} stage`,
@@ -354,7 +354,7 @@ export class SfnManager {
     lambdaFunction: IFunction,
     skipExecution?: boolean
   ) {
-    if (!props) throw `Step props undefined for ${id}`
+    if (!props) throw new Error(`Step props undefined for ${id}`)
     if (skipExecution) return this.createPassStep(id, scope, { comment: props.comment, name: props.name })
     const step = new LambdaInvoke(scope, `${props.name}`, {
       ...props,
@@ -390,7 +390,7 @@ export class SfnManager {
     props: SfnCallApiGatewayRestApiEndpointProps,
     api: IRestApi
   ) {
-    if (!props) throw `Step props undefined for ${id}`
+    if (!props) throw new Error(`Step props undefined for ${id}`)
     const step = new CallApiGatewayRestApiEndpoint(scope, `${props.name}`, {
       ...props,
       api,
@@ -475,8 +475,8 @@ export class SfnManager {
     logGroup: ILogGroup,
     role?: IRole
   ) {
-    if (!props) throw `State Machine props undefined for ${id}`
-    if (!props.stateMachineName) throw `State Machine stateMachineName undefined for ${id}`
+    if (!props) throw new Error(`State Machine props undefined for ${id}`)
+    if (!props.stateMachineName) throw new Error(`State Machine stateMachineName undefined for ${id}`)
 
     const stateMachine = new StateMachine(scope, `${id}`, {
       ...props,

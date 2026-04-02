@@ -32,7 +32,7 @@ export class LogManager {
    * @param logGroup
    */
   public createMetricFilter(id: string, scope: CommonConstruct, props: MetricFilterProps, logGroup: logs.ILogGroup) {
-    if (!props) throw `MetricFilter props undefined for ${id}`
+    if (!props) throw new Error(`MetricFilter props undefined for ${id}`)
 
     const metricFilter = new logs.MetricFilter(scope, `${id}`, {
       defaultValue: props.defaultValue,
@@ -61,8 +61,8 @@ export class LogManager {
    * @param props
    */
   public createCfnLogGroup(id: string, scope: CommonConstruct, props: LogProps) {
-    if (!props) throw `Logs props undefined for ${id}`
-    if (!props.logGroupName) throw `Logs logGroupName undefined for ${id}`
+    if (!props) throw new Error(`Logs props undefined for ${id}`)
+    if (!props.logGroupName) throw new Error(`Logs logGroupName undefined for ${id}`)
 
     const logGroup = new logs.CfnLogGroup(scope, `${id}`, {
       ...props,
@@ -88,8 +88,8 @@ export class LogManager {
    * @param props
    */
   public createLogGroup(id: string, scope: CommonConstruct, props: LogProps) {
-    if (!props) throw `Logs props undefined for ${id}`
-    if (!props.logGroupName) throw `Logs logGroupName undefined for ${id}`
+    if (!props) throw new Error(`Logs props undefined for ${id}`)
+    if (!props.logGroupName) throw new Error(`Logs logGroupName undefined for ${id}`)
 
     const logGroup = new logs.LogGroup(scope, `${id}`, {
       ...props,

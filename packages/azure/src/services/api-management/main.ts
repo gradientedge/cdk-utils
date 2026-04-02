@@ -24,7 +24,6 @@ import {
   ApiDiagnosticProps,
   ApiManagementApiProps,
   ApiManagementBackendProps,
-  ApiManagementCustomDomainProps,
   ApiManagementProps,
   ApiOperationPolicyProps,
   ApiOperationProps,
@@ -72,14 +71,14 @@ export class AzureApiManagementManager {
     externalRedisCache?: redis.Redis,
     resourceOptions?: ResourceOptions
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     // Get resource group name
     const resourceGroupName = scope.props.resourceGroupName
       ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
       : props.resourceGroupName
 
-    if (!resourceGroupName) throw `Resource group name undefined for ${id}`
+    if (!resourceGroupName) throw new Error(`Resource group name undefined for ${id}`)
 
     const apiManagementService = new ApiManagementService(
       `${id}-am`,
@@ -159,7 +158,7 @@ export class AzureApiManagementManager {
     props: ResolveApiManagementProps,
     resourceOptions?: ResourceOptions
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     return getApiManagementServiceOutput(
       {
@@ -189,7 +188,7 @@ export class AzureApiManagementManager {
     props: ApiManagementBackendProps,
     resourceOptions?: ResourceOptions
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     return new Backend(
       `${id}-am-be`,
@@ -220,7 +219,7 @@ export class AzureApiManagementManager {
     props: ApiManagementApiProps,
     resourceOptions?: ResourceOptions
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     const api = new Api(
       `${id}-am-api`,
@@ -254,7 +253,7 @@ export class AzureApiManagementManager {
     props: ApiDiagnosticProps,
     resourceOptions?: ResourceOptions
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     return new ApiDiagnostic(`${id}`, props, { parent: scope, ...resourceOptions })
   }
@@ -268,7 +267,7 @@ export class AzureApiManagementManager {
    * @see [Pulumi Azure Native API Management Logger]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/apimanagement/logger/}
    */
   public createLogger(id: string, scope: CommonAzureConstruct, props: LoggerProps, resourceOptions?: ResourceOptions) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     return new Logger(`${id}`, props, { parent: scope, ...resourceOptions })
   }
@@ -287,7 +286,7 @@ export class AzureApiManagementManager {
     props: NamedValueProps,
     resourceOptions?: ResourceOptions
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     return new NamedValue(`${id}`, props, { parent: scope, ...resourceOptions })
   }
@@ -306,7 +305,7 @@ export class AzureApiManagementManager {
     props: ApiSubscriptionProps,
     resourceOptions?: ResourceOptions
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     return new Subscription(`${id}`, props, { parent: scope, ...resourceOptions })
   }
@@ -320,7 +319,7 @@ export class AzureApiManagementManager {
    * @see [Pulumi Azure Native API Management Cache]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/apimanagement/cache/}
    */
   public createCache(id: string, scope: CommonAzureConstruct, props: CacheProps, resourceOptions?: ResourceOptions) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     return new Cache(`${id}`, props, { parent: scope, ...resourceOptions })
   }
@@ -378,18 +377,10 @@ export class AzureApiManagementManager {
 
   /**
    * @summary Method to create a new API Management custom domain
-   * @param id scoped id of the resource
-   * @param scope scope in which this resource is defined
-   * @param props API Management custom domain properties
-   * @param resourceOptions Optional settings to control resource behaviour
    * @note In Pulumi Azure Native, custom domains are configured as part of the API Management service resource,
    * not as a separate resource. Use the hostnameConfigurations property when creating the service.
    */
-  public createApiManagementCustomDomain(
-    id: string,
-    scope: CommonAzureConstruct,
-    props: ApiManagementCustomDomainProps
-  ) {
+  public createApiManagementCustomDomain() {
     // Note: In Pulumi Azure Native, custom domains are part of the ApiManagementService
     // This method is provided for API compatibility but should be configured
     // via the hostnameConfigurations property of ApiManagementService instead

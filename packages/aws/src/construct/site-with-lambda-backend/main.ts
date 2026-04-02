@@ -192,7 +192,7 @@ export class SiteWithLambdaBackend extends CommonConstruct {
   }
 
   protected createSiteCachePolicy(id: string, siteCachePolicy: SiteWithLambdaBackendCachePolicyProps) {
-    if (!siteCachePolicy.cachePolicyName) throw `SiteCachePolicy cachePolicyName undefined for ${id}`
+    if (!siteCachePolicy.cachePolicyName) throw new Error(`SiteCachePolicy cachePolicyName undefined for ${id}`)
 
     return new CachePolicy(this, `${id}`, {
       cachePolicyName: this.resourceNameFormatter.format(siteCachePolicy.cachePolicyName),
@@ -218,7 +218,7 @@ export class SiteWithLambdaBackend extends CommonConstruct {
   protected createSiteOriginRequestPolicy() {
     if (!this.props.siteOriginRequestPolicy) return
     if (!this.props.siteOriginRequestPolicy.originRequestPolicyName)
-      throw `SiteOriginRequestPolicy originRequestPolicyName undefined for ${this.id}`
+      throw new Error(`SiteOriginRequestPolicy originRequestPolicyName undefined for ${this.id}`)
 
     this.siteOriginRequestPolicy = new OriginRequestPolicy(this, `${this.id}-sorp`, {
       comment: `Request Policy for ${this.id}-distribution - ${this.props.stage} stage`,
@@ -238,7 +238,7 @@ export class SiteWithLambdaBackend extends CommonConstruct {
   protected createResponseHeaderPolicy(props: SiteWithLambdaBackendResponseHeadersPolicyProps) {
     if (!props) return undefined
     if (!props.responseHeadersPolicyName)
-      throw `SiteResponseHeadersPolicy responseHeadersPolicyName undefined for ${this.id}`
+      throw new Error(`SiteResponseHeadersPolicy responseHeadersPolicyName undefined for ${this.id}`)
 
     return new ResponseHeadersPolicy(this, `${this.id}-${props.type}-srhp`, {
       ...props,

@@ -30,7 +30,7 @@ export class CloudflareFirewallManager {
    * @see [Pulumi Cloudflare Firewall Rule]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/firewallrule/}
    */
   public createFirewallRule(id: string, scope: CommonCloudflareConstruct, props: FirewallRuleProps) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     const zoneId = props.zoneId
       ? props.zoneId

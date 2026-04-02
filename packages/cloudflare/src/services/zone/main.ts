@@ -47,7 +47,7 @@ export class CloudflareZoneManager {
    * @param props zone properties
    */
   public createZone(id: string, scope: CommonCloudflareConstruct, props: ZoneProps) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     return new Zone(
       id,
@@ -72,7 +72,7 @@ export class CloudflareZoneManager {
    * @param props zone cache reserve properties
    */
   public createZoneCacheReserve(id: string, scope: CommonCloudflareConstruct, props: ZoneCacheReserveProps) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     const zoneId =
       props.zoneId ??
@@ -94,7 +94,7 @@ export class CloudflareZoneManager {
    * @param props zone cache variants properties
    */
   public createZoneCacheVariants(id: string, scope: CommonCloudflareConstruct, props: ZoneCacheVariantsProps) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     const zoneId =
       props.zoneId ??
@@ -116,7 +116,7 @@ export class CloudflareZoneManager {
    * @param props zone dnssec properties
    */
   public createZoneDnssec(id: string, scope: CommonCloudflareConstruct, props: ZoneDnssecProps) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     const zoneId =
       props.zoneId ??
@@ -138,7 +138,7 @@ export class CloudflareZoneManager {
    * @param props zone hold properties
    */
   public createZoneHold(id: string, scope: CommonCloudflareConstruct, props: ZoneHoldProps) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     const zoneId =
       props.zoneId ??
@@ -160,7 +160,7 @@ export class CloudflareZoneManager {
    * @param props zone lockdown properties
    */
   public createZoneLockdown(id: string, scope: CommonCloudflareConstruct, props: ZoneLockdownProps) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     const zoneId =
       props.zoneId ??
@@ -182,7 +182,7 @@ export class CloudflareZoneManager {
    * @param props zone dns settings properties
    */
   public createZoneDnsSettings(id: string, scope: CommonCloudflareConstruct, props: ZoneSettingProps) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     const zoneId =
       props.zoneId ??
@@ -206,7 +206,7 @@ export class CloudflareZoneManager {
    * @param props zone setting properties
    */
   public createZoneSetting(id: string, scope: CommonCloudflareConstruct, props: ZoneSettingProps) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     const zoneId =
       props.zoneId ??

@@ -45,7 +45,7 @@ export class CloudflareWorkerManager {
    * @see [Pulumi Worker Domain]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/workercustomdomain/}
    */
   public createWorkerDomain(id: string, scope: CommonCloudflareConstruct, props: WorkerDomainProps) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     const zoneId = props.zoneId
       ? props.zoneId
@@ -69,7 +69,7 @@ export class CloudflareWorkerManager {
    * @see [Pulumi Worker Route]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/workerroute/}
    */
   public createWorkerRoute(id: string, scope: CommonCloudflareConstruct, props: WorkerRouteProps) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     const zoneId = props.zoneId
       ? props.zoneId
@@ -94,7 +94,7 @@ export class CloudflareWorkerManager {
    * @see [Pulumi Worker Script]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/workerscript/}
    */
   public createWorkerScript(id: string, scope: CommonCloudflareConstruct, props: WorkerScriptProps) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     const script = new WorkersScript(
       id,
@@ -123,7 +123,7 @@ export class CloudflareWorkerManager {
    * @see [Pulumi Workers KV Namespace]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/workerskvnamespace/}
    */
   public createWorkersKvNamespace(id: string, scope: CommonCloudflareConstruct, props: WorkersKvNamespaceProps) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     return new WorkersKvNamespace(
       id,
@@ -144,7 +144,7 @@ export class CloudflareWorkerManager {
    * @see [Pulumi Workers KV]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/workerskv/}
    */
   public createWorkersKv(id: string, scope: CommonCloudflareConstruct, props: WorkersKvProps) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     return new WorkersKv(
       id,
@@ -164,7 +164,7 @@ export class CloudflareWorkerManager {
    * @see [Pulumi Workers Cron Trigger]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/workercrontrigger/}
    */
   public createWorkerCronTrigger(id: string, scope: CommonCloudflareConstruct, props: WorkerCronTriggerProps) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     return new WorkersCronTrigger(
       id,

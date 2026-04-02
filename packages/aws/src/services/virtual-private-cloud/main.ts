@@ -36,8 +36,8 @@ export class VpcManager {
    * @param props
    */
   public createVpc(id: string, scope: CommonConstruct, props: VpcProps) {
-    if (!props) throw `Vpc props undefined for ${id}`
-    if (!props.vpcName) throw `Vpc vpcName undefined for ${id}`
+    if (!props) throw new Error(`Vpc props undefined for ${id}`)
+    if (!props.vpcName) throw new Error(`Vpc vpcName undefined for ${id}`)
 
     const vpcName = scope.resourceNameFormatter.format(props.vpcName, scope.props.resourceNameOptions?.vpc)
     let vpc

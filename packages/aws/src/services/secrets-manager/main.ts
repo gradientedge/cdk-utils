@@ -31,8 +31,8 @@ export class SecretsManager {
    * @param props the secret properties
    */
   public createSecret(id: string, scope: CommonConstruct, props: SecretBaseProps) {
-    if (!props) throw `Secret props undefined for ${id}`
-    if (!props.secretName) throw `Secret name undefined for ${id}`
+    if (!props) throw new Error(`Secret props undefined for ${id}`)
+    if (!props.secretName) throw new Error(`Secret name undefined for ${id}`)
 
     const secret = new Secret(scope, `${id}`, {
       ...props,
@@ -71,7 +71,7 @@ export class SecretsManager {
       SecretId: secretId,
     })
     const response = await client.send(command)
-    if (!response.SecretString) throw `Unable to resolve secret for ${secretId}`
+    if (!response.SecretString) throw new Error(`Unable to resolve secret for ${secretId}`)
     const secretString = JSON.parse(response.SecretString)
 
     return secretString[secretKey]

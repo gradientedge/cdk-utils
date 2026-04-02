@@ -53,10 +53,10 @@ export class CloudWatchManager {
    * @param props
    */
   public createAlarmForExpression(id: string, scope: CommonConstruct, props: AlarmProps) {
-    if (!props) throw `Alarm props undefined for ${id}`
+    if (!props) throw new Error(`Alarm props undefined for ${id}`)
 
-    if (!props.expression) throw `Could not find expression for Alarm props for id:${id}`
-    if (!props.metricProps) throw `Could not find metricProps for Alarm props for id:${id}`
+    if (!props.expression) throw new Error(`Could not find expression for Alarm props for id:${id}`)
+    if (!props.metricProps) throw new Error(`Could not find metricProps for Alarm props for id:${id}`)
 
     const metrics: any = {}
     _.map(this.determineMetrics(scope, props.metricProps), (metric: watch.IMetric, index: number) => {
@@ -88,7 +88,7 @@ export class CloudWatchManager {
    * @param metric
    */
   public createAlarmForMetric(id: string, scope: CommonConstruct, props: AlarmProps, metric: watch.Metric) {
-    if (!props) throw `Alarm props undefined for ${id}`
+    if (!props) throw new Error(`Alarm props undefined for ${id}`)
 
     const alarm = metric.createAlarm(scope, `${id}`, {
       ...props,
@@ -108,8 +108,8 @@ export class CloudWatchManager {
    * @param widgets
    */
   public createDashboard(id: string, scope: CommonConstruct, props: DashboardProps, widgets?: watch.IWidget[][]) {
-    if (!props) throw `Dashboard props undefined for ${id}`
-    if (!props.dashboardName) throw `Dashboard dashboardName undefined for ${id}`
+    if (!props) throw new Error(`Dashboard props undefined for ${id}`)
+    if (!props.dashboardName) throw new Error(`Dashboard dashboardName undefined for ${id}`)
 
     const dashboard = new watch.Dashboard(scope, `${id}`, {
       ...props,
@@ -133,7 +133,7 @@ export class CloudWatchManager {
    * @param props
    */
   public createWidgets(scope: CommonConstruct, props: any[]) {
-    if (!props || props.length == 0) throw `Widget props undefined`
+    if (!props || props.length === 0) throw new Error(`Widget props undefined`)
 
     const widgets: any = []
     _.forEach(props, (widgetProps: any) => {
@@ -150,7 +150,7 @@ export class CloudWatchManager {
    * @param props
    */
   public createWidget(id: string, scope: CommonConstruct, props: any) {
-    if (!props) throw `Widget props undefined for ${id}`
+    if (!props) throw new Error(`Widget props undefined for ${id}`)
 
     const metrics = this.determineMetrics(scope, props.metricProps)
     let alarms,
@@ -171,7 +171,7 @@ export class CloudWatchManager {
         logGroupNames = props.logGroupNames.map((name: string) => `${name}-${scope.props.stage}`)
         return this.createLogQueryWidget(id, scope, props, logGroupNames)
       default:
-        throw `Unsupported widget type ${props.type}`
+        throw new Error(`Unsupported widget type ${props.type}`)
     }
   }
 
@@ -183,7 +183,7 @@ export class CloudWatchManager {
    * @param distributionId the cloudfront distribution id
    */
   public createCloudfrontDistributionWidget(id: string, scope: CommonConstruct, props: any, distributionId: string) {
-    if (!props) throw `Widget props undefined for ${id}`
+    if (!props) throw new Error(`Widget props undefined for ${id}`)
     const metricProps: any[] = props.metricProps
     return this.createWidget(id, scope, {
       ...props,
@@ -199,7 +199,7 @@ export class CloudWatchManager {
    * @param stateMachineArn the step function arn
    */
   public createStateWidget(id: string, scope: CommonConstruct, props: any, stateMachineArn: string) {
-    if (!props) throw `Widget props undefined for ${id}`
+    if (!props) throw new Error(`Widget props undefined for ${id}`)
     const metricProps: any[] = props.metricProps
     return this.createWidget(id, scope, {
       ...props,
@@ -216,7 +216,7 @@ export class CloudWatchManager {
    * @param ruleName the event rule name
    */
   public createEventWidget(id: string, scope: CommonConstruct, props: any, eventBusName: string, ruleName: string) {
-    if (!props) throw `Widget props undefined for ${id}`
+    if (!props) throw new Error(`Widget props undefined for ${id}`)
     const metricProps: any[] = props.metricProps
     return this.createWidget(id, scope, {
       ...props,
@@ -232,7 +232,7 @@ export class CloudWatchManager {
    * @param apiName the api name
    */
   public createApiGatewayWidget(id: string, scope: CommonConstruct, props: any, apiName: string) {
-    if (!props) throw `Widget props undefined for ${id}`
+    if (!props) throw new Error(`Widget props undefined for ${id}`)
     const metricProps: any[] = props.metricProps
     return this.createWidget(id, scope, {
       ...props,
@@ -248,7 +248,7 @@ export class CloudWatchManager {
    * @param functionName the lambda function name
    */
   public createLambdaWidget(id: string, scope: CommonConstruct, props: any, functionName: string) {
-    if (!props) throw `Widget props undefined for ${id}`
+    if (!props) throw new Error(`Widget props undefined for ${id}`)
     const metricProps: any[] = props.metricProps
     return this.createWidget(id, scope, {
       ...props,
@@ -264,7 +264,7 @@ export class CloudWatchManager {
    * @param service the service identifier
    */
   public createCustomWidget(id: string, scope: CommonConstruct, props: any, service: string) {
-    if (!props) throw `Widget props undefined for ${id}`
+    if (!props) throw new Error(`Widget props undefined for ${id}`)
     const metricProps: any[] = props.metricProps
     return this.createWidget(id, scope, {
       ...props,
@@ -280,7 +280,7 @@ export class CloudWatchManager {
    * @param clusterName the ecs cluster name
    */
   public createEcsClusterWidget(id: string, scope: CommonConstruct, props: any, clusterName: string) {
-    if (!props) throw `Widget props undefined for ${id}`
+    if (!props) throw new Error(`Widget props undefined for ${id}`)
     const metricProps: any[] = props.metricProps
     return this.createWidget(id, scope, {
       ...props,
@@ -303,7 +303,7 @@ export class CloudWatchManager {
     clusterName: string,
     serviceName: string
   ) {
-    if (!props) throw `Widget props undefined for ${id}`
+    if (!props) throw new Error(`Widget props undefined for ${id}`)
     const metricProps: any[] = props.metricProps
     return this.createWidget(id, scope, {
       ...props,
@@ -319,7 +319,7 @@ export class CloudWatchManager {
    * @param loadBalancer the loadbalancer reference
    */
   public createElbWidget(id: string, scope: CommonConstruct, props: any, loadBalancer: string) {
-    if (!props) throw `Widget props undefined for ${id}`
+    if (!props) throw new Error(`Widget props undefined for ${id}`)
     const metricProps: any[] = props.metricProps
     return this.createWidget(id, scope, {
       ...props,
@@ -335,7 +335,7 @@ export class CloudWatchManager {
    * @param cacheClusterId the elasticache cluster id
    */
   public createCacheWidget(id: string, scope: CommonConstruct, props: any, cacheClusterId: string) {
-    if (!props) throw `Widget props undefined for ${id}`
+    if (!props) throw new Error(`Widget props undefined for ${id}`)
     const metricProps: any[] = props.metricProps
     return this.createWidget(id, scope, {
       ...props,
@@ -350,7 +350,7 @@ export class CloudWatchManager {
    * @param props
    */
   public createTextWidget(id: string, scope: CommonConstruct, props: TextWidgetProps) {
-    if (!props) throw `Widget props undefined for ${id}`
+    if (!props) throw new Error(`Widget props undefined for ${id}`)
     const widget = new watch.TextWidget({
       ...props,
     })
@@ -368,7 +368,7 @@ export class CloudWatchManager {
    * @param metrics
    */
   public createSingleValueWidget(id: string, scope: CommonConstruct, props: NumericWidgetProps, metrics: IMetric[]) {
-    if (!props) throw `Widget props undefined for ${id}`
+    if (!props) throw new Error(`Widget props undefined for ${id}`)
     const widget = new watch.SingleValueWidget({
       ...props,
       metrics,
@@ -388,7 +388,7 @@ export class CloudWatchManager {
    * @param metrics
    */
   public createGuageWidget(id: string, scope: CommonConstruct, props: GuageWidgetProps, metrics: IMetric[]) {
-    if (!props) throw `Widget props undefined for ${id}`
+    if (!props) throw new Error(`Widget props undefined for ${id}`)
     const widget = new watch.GaugeWidget({
       ...props,
       metrics,
@@ -415,7 +415,7 @@ export class CloudWatchManager {
     leftYMetrics?: IMetric[],
     rightYMetrics?: IMetric[]
   ) {
-    if (!props) throw `Widget props undefined for ${id}`
+    if (!props) throw new Error(`Widget props undefined for ${id}`)
     const widget = new watch.GraphWidget({
       ...props,
       left: leftYMetrics,
@@ -441,7 +441,7 @@ export class CloudWatchManager {
     props: AlarmStatusWidgetProps,
     alarms: watch.IAlarm[]
   ) {
-    if (!props) throw `Widget props undefined for ${id}`
+    if (!props) throw new Error(`Widget props undefined for ${id}`)
     const widget = new watch.AlarmStatusWidget({
       ...props,
       alarms,
@@ -460,7 +460,7 @@ export class CloudWatchManager {
    * @param logGroupNames
    */
   public createLogQueryWidget(id: string, scope: CommonConstruct, props: LogQueryWidgetProps, logGroupNames: string[]) {
-    if (!props) throw `Widget props undefined for ${id}`
+    if (!props) throw new Error(`Widget props undefined for ${id}`)
     const widget = new watch.LogQueryWidget({
       ...props,
       logGroupNames,
@@ -600,7 +600,7 @@ export class CloudWatchManager {
     const alarms: watch.IAlarm[] = []
     if (alarmProps) {
       _.forEach(alarmProps, (alarmProp: watch.AlarmProps) => {
-        if (!alarmProp.alarmName) throw `Alarm name undefined for ${id}`
+        if (!alarmProp.alarmName) throw new Error(`Alarm name undefined for ${id}`)
         const alarmArn = `arn:aws:cloudwatch:${cdk.Stack.of(scope).region}:${cdk.Stack.of(scope).account}:alarm:${
           alarmProp.alarmName
         }`

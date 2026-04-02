@@ -30,7 +30,7 @@ export class CloudflareRecordManager {
    * @see [Pulumi Cloudflare Record]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/record/}
    */
   public createRecord(id: string, scope: CommonCloudflareConstruct, props: DnsRecordProps) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     const zoneId = props.zoneId
       ? props.zoneId

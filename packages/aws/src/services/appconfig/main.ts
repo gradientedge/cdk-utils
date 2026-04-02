@@ -43,7 +43,7 @@ export class AppConfigManager {
       case Architecture.X86_64:
         return ArnsByRegionForX86_64[scope.props.region]
       default:
-        throw `Invalid type ${type} specified`
+        throw new Error(`Invalid type ${type} specified`)
     }
   }
 
@@ -55,7 +55,7 @@ export class AppConfigManager {
    * @returns the appconfig application
    */
   public createApplication(id: string, scope: CommonConstruct, props: AppConfigProps): CfnApplication {
-    if (!props) throw `AppConfig props undefined for ${id}`
+    if (!props) throw new Error(`AppConfig props undefined for ${id}`)
 
     const application = new CfnApplication(scope, `${id}`, {
       ...props.application,
@@ -82,7 +82,7 @@ export class AppConfigManager {
     applicationId: string,
     props: AppConfigProps
   ): CfnEnvironment {
-    if (!props) throw `AppConfig props undefined for ${id}`
+    if (!props) throw new Error(`AppConfig props undefined for ${id}`)
 
     const environment = new CfnEnvironment(scope, `${id}`, {
       ...props.environment,
@@ -111,7 +111,7 @@ export class AppConfigManager {
     applicationId: string,
     props: AppConfigProps
   ): CfnConfigurationProfile {
-    if (!props) throw `AppConfig props undefined for ${id}`
+    if (!props) throw new Error(`AppConfig props undefined for ${id}`)
 
     const profile = new CfnConfigurationProfile(scope, `${id}`, {
       ...props.configurationProfile,
@@ -137,8 +137,8 @@ export class AppConfigManager {
    * @returns the appconfig deployment strategy
    */
   public createDeploymentStrategy(id: string, scope: CommonConstruct, props: AppConfigProps): DeploymentStrategy {
-    if (!props) throw `AppConfig props undefined for ${id}`
-    if (!props.deploymentStrategy) throw `AppConfig deploymentStrategy props undefined for ${id}`
+    if (!props) throw new Error(`AppConfig props undefined for ${id}`)
+    if (!props.deploymentStrategy) throw new Error(`AppConfig deploymentStrategy props undefined for ${id}`)
 
     const deploymentStrategy = new DeploymentStrategy(scope, `${id}`, {
       ...props,

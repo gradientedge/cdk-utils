@@ -29,8 +29,8 @@ export class WafManager {
    * @param props
    */
   public createIpSet(id: string, scope: CommonConstruct, props: WafIPSetProps) {
-    if (!props) throw `WAF Ip Set props undefined for ${id}`
-    if (!props.name) throw `WAF Ip Set name undefined for ${id}`
+    if (!props) throw new Error(`WAF Ip Set props undefined for ${id}`)
+    if (!props.name) throw new Error(`WAF Ip Set name undefined for ${id}`)
 
     const ipSet = new CfnIPSet(scope, `${id}`, {
       ...props,
@@ -51,8 +51,8 @@ export class WafManager {
    * @param props
    */
   public createWebAcl(id: string, scope: CommonConstruct, props: WafWebACLProps) {
-    if (!props) throw `WAF WebACL props undefined for ${id}`
-    if (!props.name) throw `WAF WebACL name undefined for ${id}`
+    if (!props) throw new Error(`WAF WebACL props undefined for ${id}`)
+    if (!props.name) throw new Error(`WAF WebACL name undefined for ${id}`)
 
     const webAcl = new CfnWebACL(scope, `${id}`, {
       ...props,

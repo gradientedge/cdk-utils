@@ -30,7 +30,7 @@ export class CloudflareArgoManager {
    * @see [Pulumi Cloudflare ArgoSmartRouting]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/argosmartrouting/}
    */
   public createArgoSmartRouting(id: string, scope: CommonCloudflareConstruct, props: ArgoSmartRoutingProps) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     const zoneId = props.zoneId
       ? props.zoneId
@@ -53,7 +53,7 @@ export class CloudflareArgoManager {
    * @see [Pulumi Cloudflare ArgoTieredCaching]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/argotieredcaching/}
    */
   public createArgoTieredCaching(id: string, scope: CommonCloudflareConstruct, props: ArgoTieredCachingProps) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     const zoneId = props.zoneId
       ? props.zoneId

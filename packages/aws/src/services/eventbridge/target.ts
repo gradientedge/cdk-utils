@@ -1,5 +1,5 @@
 import { ArnFormat, Stack } from 'aws-cdk-lib'
-import { IRule, IRuleTarget, RuleTargetConfig, RuleTargetInput } from 'aws-cdk-lib/aws-events'
+import { IRuleTarget, RuleTargetConfig, RuleTargetInput } from 'aws-cdk-lib/aws-events'
 import { TargetBaseProps, bindBaseTargetConfig } from 'aws-cdk-lib/aws-events-targets'
 import { ILogGroup } from 'aws-cdk-lib/aws-logs'
 
@@ -64,10 +64,8 @@ export class CloudWatchLogGroupNoPolicy implements IRuleTarget {
 
   /**
    * Returns a RuleTarget that can be used to log an event into a CloudWatch LogGroup
-   * @param _rule
-   * @param _id
    */
-  public bind(_rule: IRule, _id?: string): RuleTargetConfig {
+  public bind(): RuleTargetConfig {
     const logGroupStack = Stack.of(this.logGroup)
 
     return {

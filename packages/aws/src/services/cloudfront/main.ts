@@ -208,8 +208,8 @@ export class CloudFrontManager {
     accessPoint?: IAccessPoint,
     mountPath?: string
   ) {
-    if (!props) throw `EdgeFunction props undefined for ${id}`
-    if (!props.functionName) throw `EdgeFunction functionName undefined for ${id}`
+    if (!props) throw new Error(`EdgeFunction props undefined for ${id}`)
+    if (!props.functionName) throw new Error(`EdgeFunction functionName undefined for ${id}`)
 
     const functionName = scope.resourceNameFormatter.format(
       props.functionName,
@@ -294,8 +294,8 @@ export class CloudFrontManager {
    * @param props
    */
   public createCloudfrontFunction(id: string, scope: CommonConstruct, props: CloudfrontFunctionProps) {
-    if (!props) throw `CloudFront Function props undefined for ${id}`
-    if (!props.functionName) throw `CloudFront Function functionName undefined for ${id}`
+    if (!props) throw new Error(`CloudFront Function props undefined for ${id}`)
+    if (!props.functionName) throw new Error(`CloudFront Function functionName undefined for ${id}`)
 
     const cloudfrontFunction = new Function(scope, `${id}`, {
       ...props,

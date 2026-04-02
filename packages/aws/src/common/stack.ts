@@ -88,7 +88,8 @@ export class CommonStack extends Stack {
       const extraContextPath = path.join(appRoot.path, context)
 
       /* scenario where extra context is configured in cdk.json but absent in file system */
-      if (!fs.existsSync(extraContextPath)) throw `Extra context properties unavailable in path:${extraContextPath}`
+      if (!fs.existsSync(extraContextPath))
+        throw new Error(`Extra context properties unavailable in path:${extraContextPath}`)
 
       /* read the extra properties */
       const extraContextPropsBuffer = fs.readFileSync(extraContextPath)

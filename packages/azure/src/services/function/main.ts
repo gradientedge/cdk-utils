@@ -38,14 +38,14 @@ export class AzureFunctionManager {
     props: FunctionAppProps,
     resourceOptions?: ResourceOptions
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     // Get resource group name
     const resourceGroupName = scope.props.resourceGroupName
       ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
       : props.resourceGroupName
 
-    if (!resourceGroupName) throw `Resource group name undefined for ${id}`
+    if (!resourceGroupName) throw new Error(`Resource group name undefined for ${id}`)
 
     return new WebApp(
       `${id}-fa`,
@@ -82,7 +82,7 @@ export class AzureFunctionManager {
     props: FunctionProps,
     resourceOptions?: ResourceOptions
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     // Get resource group name
     const resourceGroupName = scope.props.resourceGroupName
@@ -117,14 +117,14 @@ export class AzureFunctionManager {
     props: FunctionAppFlexConsumptionProps,
     resourceOptions?: ResourceOptions
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     // Get resource group name
     const resourceGroupName = scope.props.resourceGroupName
       ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
       : props.resourceGroupName
 
-    if (!resourceGroupName) throw `Resource group name undefined for ${id}`
+    if (!resourceGroupName) throw new Error(`Resource group name undefined for ${id}`)
 
     const functionApp = new WebApp(
       `${id}-fc`,
@@ -230,14 +230,14 @@ export class AzureFunctionManager {
     props: FunctionAppFlexConsumptionProps,
     resourceOptions?: ResourceOptions
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     // Get resource group name
     const resourceGroupName = scope.props.resourceGroupName
       ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
       : props.resourceGroupName
 
-    if (!resourceGroupName) throw `Resource group name undefined for ${id}`
+    if (!resourceGroupName) throw new Error(`Resource group name undefined for ${id}`)
 
     return new Resource(
       `${id}-fc`,

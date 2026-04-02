@@ -53,7 +53,7 @@ export class CloudflareAccessManager {
    * @see [Pulumi Cloudflare Access Application]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/zerotrustaccessapplication/}
    */
   public createAccessApplication(id: string, scope: CommonCloudflareConstruct, props: ZeroTrustAccessApplicationProps) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     const zoneId = props.zoneId
       ? props.zoneId
@@ -85,7 +85,7 @@ export class CloudflareAccessManager {
     scope: CommonCloudflareConstruct,
     props: ZeroTrustAccessShortLivedCertificateProps
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     const zoneId = props.zoneId
       ? props.zoneId
@@ -111,7 +111,7 @@ export class CloudflareAccessManager {
    * @see [Pulumi Cloudflare Access Custom Page]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/zerotrustaccesscustompage/}
    */
   public createAccessCustomPage(id: string, scope: CommonCloudflareConstruct, props: ZeroTrustAccessCustomPageProps) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     return new ZeroTrustAccessCustomPage(
       `${id}`,
@@ -132,7 +132,7 @@ export class CloudflareAccessManager {
    * @see [Pulumi Cloudflare Access Group]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/zerotrustaccessgroup/}
    */
   public createAccessGroup(id: string, scope: CommonCloudflareConstruct, props: ZeroTrustAccessGroupProps) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     const zoneId = props.zoneId
       ? props.zoneId
@@ -163,7 +163,7 @@ export class CloudflareAccessManager {
     scope: CommonCloudflareConstruct,
     props: ZeroTrustAccessIdentityProviderProps
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     const zoneId = props.zoneId
       ? props.zoneId
@@ -195,7 +195,7 @@ export class CloudflareAccessManager {
     scope: CommonCloudflareConstruct,
     props: ZeroTrustAccessMtlsCertificateProps
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     const zoneId = props.zoneId
       ? props.zoneId
@@ -222,7 +222,7 @@ export class CloudflareAccessManager {
    * @see [Pulumi Cloudflare Zero Trust Organization]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/zerotrustorganization/}
    */
   public createAccessOrganization(id: string, scope: CommonCloudflareConstruct, props: ZeroTrustOrganizationProps) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     const zoneId = props.zoneId
       ? props.zoneId
@@ -249,7 +249,7 @@ export class CloudflareAccessManager {
    * @see [Pulumi Cloudflare Access Policy]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/zerotrustaccesspolicy/}
    */
   public createAccessPolicy(id: string, scope: CommonCloudflareConstruct, props: ZeroTrustAccessPolicyProps) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     return new ZeroTrustAccessPolicy(
       `${id}`,
@@ -270,7 +270,7 @@ export class CloudflareAccessManager {
    * @see [Pulumi Cloudflare Access Rule]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/accessrule/}
    */
   public createAccessRule(id: string, scope: CommonCloudflareConstruct, props: AccessRuleProps) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     const zoneId = props.zoneId
       ? props.zoneId
@@ -301,7 +301,7 @@ export class CloudflareAccessManager {
     scope: CommonCloudflareConstruct,
     props: ZeroTrustAccessServiceTokenProps
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     const zoneId = props.zoneId
       ? props.zoneId
@@ -329,7 +329,7 @@ export class CloudflareAccessManager {
    * @see [Pulumi Cloudflare Access Tag]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/zerotrustaccesstag/}
    */
   public createAccessTag(id: string, scope: CommonCloudflareConstruct, props: ZeroTrustAccessTagProps) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     return new ZeroTrustAccessTag(
       `${id}`,

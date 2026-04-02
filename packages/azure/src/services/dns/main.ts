@@ -37,14 +37,14 @@ export class AzureDnsManager {
     props: DnsZoneProps,
     resourceOptions?: ResourceOptions
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     // Get resource group name
     const resourceGroupName = scope.props.resourceGroupName
       ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
       : props.resourceGroupName
 
-    if (!resourceGroupName) throw `Resource group name undefined for ${id}`
+    if (!resourceGroupName) throw new Error(`Resource group name undefined for ${id}`)
 
     return new Zone(
       `${id}-dz`,
@@ -78,7 +78,7 @@ export class AzureDnsManager {
     props: DnsARecordProps,
     resourceOptions?: ResourceOptions
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     return new RecordSet(
       `${id}-da`,
@@ -108,7 +108,7 @@ export class AzureDnsManager {
     props: DnsCnameRecordProps,
     resourceOptions?: ResourceOptions
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     return new RecordSet(
       `${id}-dc`,
@@ -138,7 +138,7 @@ export class AzureDnsManager {
     props: DnsTxtRecordProps,
     resourceOptions?: ResourceOptions
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     return new RecordSet(
       `${id}-dt`,

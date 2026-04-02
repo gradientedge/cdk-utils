@@ -30,7 +30,7 @@ export class CloudflareFilterManager {
    * @see [Pulumi Cloudflare Filter]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/filter/}
    */
   public createFilter(id: string, scope: CommonCloudflareConstruct, props: FilterProps) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     const zoneId = props.zoneId
       ? props.zoneId

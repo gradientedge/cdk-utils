@@ -37,7 +37,7 @@ export class AzureMonitorManager {
     props: MonitorDiagnosticSettingProps,
     resourceOptions?: ResourceOptions
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     return new DiagnosticSetting(
       `${id}-ds`,

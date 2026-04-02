@@ -34,7 +34,7 @@ export class Route53Manager {
   public createHostedZone(id: string, scope: CommonConstruct, props: Route53Props) {
     let hostedZone: IHostedZone
 
-    if (!props) throw `Route53 props undefined for ${id}`
+    if (!props) throw new Error(`Route53 props undefined for ${id}`)
 
     if (props.useExistingHostedZone) {
       hostedZone = HostedZone.fromLookup(scope, `${id}`, {
@@ -100,8 +100,8 @@ export class Route53Manager {
     recordName?: string,
     skipStageFromRecord?: boolean
   ) {
-    if (!distribution) throw `Distribution undefined for ${id}`
-    if (!hostedZone) throw `HostedZone undefined for ${id}`
+    if (!distribution) throw new Error(`Distribution undefined for ${id}`)
+    if (!hostedZone) throw new Error(`HostedZone undefined for ${id}`)
 
     const aRecord = new ARecord(scope, `${id}`, {
       recordName:
@@ -132,8 +132,8 @@ export class Route53Manager {
     hostedZone?: IHostedZone,
     recordName?: string
   ) {
-    if (!distribution) throw `Distribution undefined for ${id}`
-    if (!hostedZone) throw `HostedZone undefined for ${id}`
+    if (!distribution) throw new Error(`Distribution undefined for ${id}`)
+    if (!hostedZone) throw new Error(`HostedZone undefined for ${id}`)
 
     const aRecord = new ARecord(scope, `${id}`, {
       recordName: recordName,

@@ -31,8 +31,8 @@ export class DynamodbManager {
    * @param props table props
    */
   public createTable(id: string, scope: CommonConstruct, props: TableProps) {
-    if (!props) throw `Table props undefined for ${id}`
-    if (!props.tableName) throw `Table tableName undefined for ${id}`
+    if (!props) throw new Error(`Table props undefined for ${id}`)
+    if (!props.tableName) throw new Error(`Table tableName undefined for ${id}`)
 
     const table = new Table(scope, `${id}`, {
       ...props,
@@ -60,8 +60,8 @@ export class DynamodbManager {
    * @param props table props
    */
   public createTableV2(id: string, scope: CommonConstruct, props: TablePropsV2) {
-    if (!props) throw `Table props undefined for ${id}`
-    if (!props.tableName) throw `Table tableName undefined for ${id}`
+    if (!props) throw new Error(`Table props undefined for ${id}`)
+    if (!props.tableName) throw new Error(`Table tableName undefined for ${id}`)
 
     const table = new TableV2(scope, `${id}`, {
       ...props,

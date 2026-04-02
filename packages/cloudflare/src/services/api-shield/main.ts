@@ -42,7 +42,7 @@ export class CloudflareApiShieldManager {
    * @see [Pulumi API Shield]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/apishield/}
    */
   public createApiShield(id: string, scope: CommonCloudflareConstruct, props: ApiShieldProps) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     const zoneId = props.zoneId
       ? props.zoneId
@@ -65,7 +65,7 @@ export class CloudflareApiShieldManager {
    * @see [Pulumi API Shield Schema]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/apishieldschema/}
    */
   public createApiShieldSchema(id: string, scope: CommonCloudflareConstruct, props: ApiShieldSchemaProps) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     const zoneId = props.zoneId
       ? props.zoneId
@@ -93,7 +93,7 @@ export class CloudflareApiShieldManager {
     scope: CommonCloudflareConstruct,
     props: ApiShieldSchemaValidationSettingsProps
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     const zoneId = props.zoneId
       ? props.zoneId
@@ -116,7 +116,7 @@ export class CloudflareApiShieldManager {
    * @see [Pulumi API Shield Operation]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/apishieldoperation/}
    */
   public createApiShieldOperation(id: string, scope: CommonCloudflareConstruct, props: ApiShieldOperationProps) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     const zoneId = props.zoneId
       ? props.zoneId
@@ -143,7 +143,7 @@ export class CloudflareApiShieldManager {
     scope: CommonCloudflareConstruct,
     props: ApiShieldOperationSchemaValidationSettingsProps
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     const zoneId = props.zoneId
       ? props.zoneId

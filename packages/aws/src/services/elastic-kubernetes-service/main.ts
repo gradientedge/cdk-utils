@@ -39,8 +39,8 @@ export class EksManager {
     image: DockerImageAsset,
     vpc: IVpc
   ) {
-    if (!props) throw `EksCluster props undefined for ${id}`
-    if (!props.clusterName) throw `EksCluster clusterName undefined for ${id}`
+    if (!props) throw new Error(`EksCluster props undefined for ${id}`)
+    if (!props.clusterName) throw new Error(`EksCluster clusterName undefined for ${id}`)
 
     const appLabel = { app: `${id}`.toLowerCase() }
 

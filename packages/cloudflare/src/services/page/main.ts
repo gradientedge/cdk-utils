@@ -31,7 +31,7 @@ export class CloudflarePageManager {
    * @see [Pulumi Cloudflare Pages Project]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/pagesproject/}
    */
   public createPagesProject(id: string, scope: CommonCloudflareConstruct, props: PagesProjectProps) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     return new PagesProject(
       `${id}`,
@@ -52,7 +52,7 @@ export class CloudflarePageManager {
    * @see [Pulumi Cloudflare Pages Domain]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/pagesdomain/}
    */
   public createPagesDomain(id: string, scope: CommonCloudflareConstruct, props: PagesDomainProps) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     return new PagesDomain(
       `${id}`,
@@ -73,7 +73,7 @@ export class CloudflarePageManager {
    * @see [Pulumi Cloudflare Page Rule]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/pagerule/}
    */
   public createPageRule(id: string, scope: CommonCloudflareConstruct, props: PageRuleProps) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     const zoneId = props.zoneId
       ? props.zoneId
@@ -89,7 +89,7 @@ export class CloudflarePageManager {
   }
 
   public deployPagesProject(id: string, scope: CommonCloudflareConstruct, props: PagesProjectDeployProps) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     const message = process.env.BUILD_NUMBER ?? props.message
     return new local.Command(

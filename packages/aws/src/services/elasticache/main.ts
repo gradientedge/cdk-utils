@@ -55,8 +55,8 @@ export class ElastiCacheManager {
     securityGroupIds: string[],
     logDeliveryConfigurations?: any
   ) {
-    if (!props) throw `ElastiCache props undefined for ${id}`
-    if (!props.clusterName) throw `ElastiCache clusterName undefined for ${id}`
+    if (!props) throw new Error(`ElastiCache props undefined for ${id}`)
+    if (!props.clusterName) throw new Error(`ElastiCache clusterName undefined for ${id}`)
 
     const subnetGroup = this.createElastiCacheSubnetGroup(`${id}-subnetGroup`, scope, subnetIds)
 
@@ -98,7 +98,7 @@ export class ElastiCacheManager {
     subnetIds: string[],
     securityGroupIds: string[]
   ) {
-    if (!props) throw `ElastiCache props undefined for ${id}`
+    if (!props) throw new Error(`ElastiCache props undefined for ${id}`)
 
     const subnetGroup = this.createElastiCacheSubnetGroup(`${id}-subnetGroup`, scope, subnetIds)
 

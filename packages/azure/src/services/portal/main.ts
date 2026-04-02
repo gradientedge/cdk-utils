@@ -42,7 +42,7 @@ export class AzurePortalManager {
     renderer?: AzureDashboardRenderer,
     resourceOptions?: ResourceOptions
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     const resourceGroup = scope.resourceGroupManager.resolveResourceGroup(
       scope,

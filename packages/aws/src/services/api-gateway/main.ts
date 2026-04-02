@@ -48,8 +48,8 @@ export class ApiManager {
    * @param lambdaFunction
    */
   public createLambdaRestApi(id: string, scope: CommonConstruct, props: LambdaRestApiProps, lambdaFunction: IFunction) {
-    if (!props) throw `Api props undefined for ${id}`
-    if (!props.restApiName) throw `Api restApiName undefined for ${id}`
+    if (!props) throw new Error(`Api props undefined for ${id}`)
+    if (!props.restApiName) throw new Error(`Api restApiName undefined for ${id}`)
 
     const restApiName = scope.resourceNameFormatter.format(
       props.restApiName,

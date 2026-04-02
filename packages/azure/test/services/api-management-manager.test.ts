@@ -214,12 +214,9 @@ describe('TestAzureApiManagementConstruct', () => {
   test('api management custom domain throws error as expected', () => {
     // Custom domains should be configured via hostnameConfigurations property
     // of ApiManagementService in Pulumi Azure Native
-    expect(() =>
-      stack.construct.apiManagementManager.createApiManagementCustomDomain('test-custom-domain', stack.construct, {
-        apiManagementId: 'test-id',
-        gateway: [{ hostName: 'test.example.com' }],
-      })
-    ).toThrow('Custom domains should be configured via the hostnameConfigurations property')
+    expect(() => stack.construct.apiManagementManager.createApiManagementCustomDomain()).toThrow(
+      'Custom domains should be configured via the hostnameConfigurations property'
+    )
   })
 })
 

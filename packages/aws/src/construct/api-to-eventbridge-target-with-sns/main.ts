@@ -235,7 +235,7 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
    */
   protected createApiDestinedLambdaFunction() {
     if (this.props.api.useExisting) return
-    if (!this.props.lambda || !this.props.lambda.source) throw 'Api Destined Lambda props undefined'
+    if (!this.props.lambda || !this.props.lambda.source) throw new Error('Api Destined Lambda props undefined')
 
     this.apiDestinedLambda.function = this.lambdaManager.createLambdaFunction(
       `${this.id}-lambda-destined`,
@@ -389,7 +389,7 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
    */
   protected createApiDestinedIntegrationRequestTemplates() {
     if (!this.props.api.withResource) return
-    if (!this.apiDestinedRestApi.topic) throw 'Topic undefined'
+    if (!this.apiDestinedRestApi.topic) throw new Error('Topic undefined')
     this.apiDestinedRestApi.integrationRequestTemplates = {
       'application/json': [
         'Action=Publish',
@@ -510,7 +510,7 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
       return
     }
 
-    if (!this.props.api.restApi?.restApiName) throw `RestApi name undefined for ${this.id}`
+    if (!this.props.api.restApi?.restApiName) throw new Error(`RestApi name undefined for ${this.id}`)
 
     const restApiName = this.resourceNameFormatter.format(
       this.props.api.restApi?.restApiName,

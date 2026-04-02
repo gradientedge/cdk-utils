@@ -43,7 +43,8 @@ export class CommonCloudflareStack extends ComponentResource {
     let projectProps: CommonCloudflareStackProps = props
     if (!projectProps) {
       const projectPropsPath = path.join(appRoot.path, 'pulumi.json')
-      if (!fs.existsSync(projectPropsPath)) throw `Context properties unavailable in path:${projectPropsPath}`
+      if (!fs.existsSync(projectPropsPath))
+        throw new Error(`Context properties unavailable in path:${projectPropsPath}`)
 
       const projectPropsBuffer = fs.readFileSync(projectPropsPath)
       projectProps = JSON.parse(projectPropsBuffer.toString('utf-8'))
@@ -77,7 +78,8 @@ export class CommonCloudflareStack extends ComponentResource {
       const extraContextPath = path.join(appRoot.path, context)
 
       /* scenario where extra context is configured but absent in file system */
-      if (!fs.existsSync(extraContextPath)) throw `Extra context properties unavailable in path:${extraContextPath}`
+      if (!fs.existsSync(extraContextPath))
+        throw new Error(`Extra context properties unavailable in path:${extraContextPath}`)
 
       /* read the extra properties */
       const extraContextPropsBuffer = fs.readFileSync(extraContextPath)

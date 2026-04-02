@@ -41,14 +41,14 @@ export class AzureApplicationInsightsManager {
     props: ApplicationInsightsProps,
     resourceOptions?: ResourceOptions
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     // Get resource group name
     const resourceGroupName = scope.props.resourceGroupName
       ? `${scope.props.resourceGroupName}-${scope.props.stage}`
       : props.resourceGroupName
 
-    if (!resourceGroupName) throw `Resource group name undefined for ${id}`
+    if (!resourceGroupName) throw new Error(`Resource group name undefined for ${id}`)
 
     const component = new Component(
       `${id}-ai`,
@@ -92,7 +92,7 @@ export class AzureApplicationInsightsManager {
     props: ComponentCurrentBillingFeatureProps,
     resourceOptions?: ResourceOptions
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     return new ComponentCurrentBillingFeature(`${id}`, props, { parent: scope, ...resourceOptions })
   }

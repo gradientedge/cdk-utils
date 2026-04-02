@@ -33,8 +33,8 @@ export class SqsManager {
    * @param deadLetterQueue
    */
   public createQueue(id: string, scope: CommonConstruct, props: QueueProps, deadLetterQueue?: IQueue) {
-    if (!props) throw `Queue props undefined for ${id}`
-    if (!props.queueName) throw `Queue queueName undefined for ${id}`
+    if (!props) throw new Error(`Queue props undefined for ${id}`)
+    if (!props.queueName) throw new Error(`Queue queueName undefined for ${id}`)
 
     let queueName = scope.resourceNameFormatter.format(props.queueName, scope.props.resourceNameOptions?.sqs)
     if (props.fifo) queueName += '.fifo'

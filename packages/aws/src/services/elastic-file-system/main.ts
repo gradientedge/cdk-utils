@@ -55,8 +55,8 @@ export class EfsManager {
     securityGroup?: ISecurityGroup,
     vpcSubnets?: SubnetSelection
   ) {
-    if (!props) throw `EFS props undefined for ${id}`
-    if (!props.fileSystemName) throw `EFS fileSystemName undefined for ${id}`
+    if (!props) throw new Error(`EFS props undefined for ${id}`)
+    if (!props.fileSystemName) throw new Error(`EFS fileSystemName undefined for ${id}`)
 
     const fileSystemId = props.provisionNewOnDeployment ? `${id}-${new Date().getMilliseconds()}` : `${id}`
     const fileSystem = new FileSystem(scope, `${fileSystemId}`, {
@@ -77,7 +77,8 @@ export class EfsManager {
     /* provision access points if specified */
     if (accessPointOptions && !_.isEmpty(accessPointOptions)) {
       for (const [index, accessPointOption] of accessPointOptions.entries()) {
-        if (!accessPointOption.path) throw `Undefined access point path for option: [${accessPointOption}], id: [${id}]`
+        if (!accessPointOption.path)
+          throw new Error(`Undefined access point path for option: [${accessPointOption}], id: [${id}]`)
         const accessPoint = fileSystem.addAccessPoint(`${id}-ap-${index}`, {
           createAcl: accessPointOption.createAcl ?? DEFAULT_CREATE_ACL,
           path: accessPointOption.path,

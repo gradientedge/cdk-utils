@@ -30,7 +30,7 @@ export class CloudflareRuleSetManager {
    * @see [Pulumi Cloudflare Ruleset]{@link https://www.pulumi.com/registry/packages//api-docs/ruleset/}
    */
   public createRuleSet(id: string, scope: CommonCloudflareConstruct, props: RulesetProps) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     const zoneId = props.zoneId
       ? props.zoneId

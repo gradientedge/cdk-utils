@@ -37,7 +37,7 @@ export class AzureResourceGroupManager {
     props: ResourceGroupProps,
     resourceOptions?: ResourceOptions
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     return new ResourceGroup(
       `${id}-rg`,
@@ -67,7 +67,7 @@ export class AzureResourceGroupManager {
     resourceGroupName: string,
     resourceOptions?: ResourceOptions
   ) {
-    if (!resourceGroupName) throw `Resource Group Name undefined`
+    if (!resourceGroupName) throw new Error(`Resource Group Name undefined`)
 
     return getResourceGroupOutput(
       {

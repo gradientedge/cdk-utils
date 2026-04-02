@@ -51,14 +51,14 @@ export class AzureServiceBusManager {
     props: ServiceBusNamespaceProps,
     resourceOptions?: ResourceOptions
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     // Get resource group name
     const resourceGroupName = scope.props.resourceGroupName
       ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
       : props.resourceGroupName
 
-    if (!resourceGroupName) throw `Resource group name undefined for ${id}`
+    if (!resourceGroupName) throw new Error(`Resource group name undefined for ${id}`)
 
     return new Namespace(
       `${id}-sn`,
@@ -98,7 +98,7 @@ export class AzureServiceBusManager {
     props: ServiceBusTopicProps,
     resourceOptions?: ResourceOptions
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     return new Topic(
       `${id}-st`,
@@ -129,7 +129,7 @@ export class AzureServiceBusManager {
     props: ServiceBusQueueProps,
     resourceOptions?: ResourceOptions
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     return new Queue(
       `${id}-sq`,
@@ -164,7 +164,7 @@ export class AzureServiceBusManager {
     props: ServiceBusSubscriptionProps,
     resourceOptions?: ResourceOptions
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     return new Subscription(
       `${id}-ss`,
@@ -194,7 +194,7 @@ export class AzureServiceBusManager {
     props: ResolveServicebusQueueProps,
     resourceOptions?: ResourceOptions
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     return getQueueOutput(
       {

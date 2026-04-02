@@ -44,11 +44,11 @@ export class EventManager {
    * @param props event bus properties
    */
   public createEventBus(id: string, scope: CommonConstruct, props: EventBusProps) {
-    if (!props) throw `EventBus props undefined for ${id}`
-    if (!props.eventBusName) throw `EventBus eventBusName undefined for ${id}`
+    if (!props) throw new Error(`EventBus props undefined for ${id}`)
+    if (!props.eventBusName) throw new Error(`EventBus eventBusName undefined for ${id}`)
 
     let eventBusName = props.eventBusName
-    if (eventBusName != 'default') {
+    if (eventBusName !== 'default') {
       eventBusName = scope.resourceNameFormatter.format(
         props.eventBusName,
         scope.props.resourceNameOptions?.eventbridgeBus
@@ -80,8 +80,8 @@ export class EventManager {
     eventBus?: IEventBus,
     targets?: IRuleTarget[]
   ) {
-    if (!props) throw `EventRule props undefined for ${id}`
-    if (!props.ruleName) throw `EventRule ruleName undefined for ${id}`
+    if (!props) throw new Error(`EventRule props undefined for ${id}`)
+    if (!props.ruleName) throw new Error(`EventRule ruleName undefined for ${id}`)
 
     const rule = new Rule(scope, `${id}`, {
       ...props,
@@ -126,8 +126,8 @@ export class EventManager {
     eventPattern?: any,
     scheduleExpression?: string
   ) {
-    if (!props) throw `EventRule props undefined for ${id}`
-    if (!props.name) throw `EventRule name undefined for ${id}`
+    if (!props) throw new Error(`EventRule props undefined for ${id}`)
+    if (!props.name) throw new Error(`EventRule name undefined for ${id}`)
 
     const eventRule = new CfnRule(scope, `${id}`, {
       ...props,
@@ -185,8 +185,8 @@ export class EventManager {
     role: Role | CfnRole,
     eventPattern?: any
   ) {
-    if (!props) throw `EventRule props undefined for ${id}`
-    if (!props.name) throw `EventRule name undefined for ${id}`
+    if (!props) throw new Error(`EventRule props undefined for ${id}`)
+    if (!props.name) throw new Error(`EventRule name undefined for ${id}`)
 
     const eventRule = new CfnRule(scope, `${id}`, {
       ...props,
@@ -231,8 +231,8 @@ export class EventManager {
     sourceQueue: IQueue,
     targetStepFunction: IStateMachine
   ) {
-    if (!props) throw `Pipe props undefined for ${id}`
-    if (!props.name) throw `Pipe name undefined for ${id}`
+    if (!props) throw new Error(`Pipe props undefined for ${id}`)
+    if (!props.name) throw new Error(`Pipe name undefined for ${id}`)
 
     const pipeRole = scope.iamManager.createRoleForSqsToSfnPipe(
       `${id}-role`,
@@ -291,8 +291,8 @@ export class EventManager {
     sourceQueue: IQueue,
     targetLambdaFunction: IFunction
   ) {
-    if (!props) throw `Pipe props undefined for ${id}`
-    if (!props.name) throw `Pipe name undefined for ${id}`
+    if (!props) throw new Error(`Pipe props undefined for ${id}`)
+    if (!props.name) throw new Error(`Pipe name undefined for ${id}`)
 
     const pipeRole = scope.iamManager.createRoleForSqsToLambdaPipe(
       `${id}-role`,
@@ -348,8 +348,8 @@ export class EventManager {
     sourceDynamoDbStreamArn: string,
     targetLambdaFunction: IFunction
   ) {
-    if (!props) throw `Pipe props undefined for ${id}`
-    if (!props.name) throw `Pipe name undefined for ${id}`
+    if (!props) throw new Error(`Pipe props undefined for ${id}`)
+    if (!props.name) throw new Error(`Pipe name undefined for ${id}`)
 
     const pipeRole = scope.iamManager.createRoleForDynamoDbToLambdaPipe(
       `${id}-role`,

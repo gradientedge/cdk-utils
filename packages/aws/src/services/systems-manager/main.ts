@@ -37,8 +37,8 @@ export class SsmManager {
    * @param props parameter props
    */
   public writeStringToParameters(id: string, scope: CommonConstruct, props: SSMStringParameterProps) {
-    if (!props) throw `Parameter props undefined for ${id}`
-    if (!props.parameterName) throw `Parameter parameterName undefined for ${id}`
+    if (!props) throw new Error(`Parameter props undefined for ${id}`)
+    if (!props.parameterName) throw new Error(`Parameter parameterName undefined for ${id}`)
 
     const parameter = new StringParameter(scope, `${id}`, {
       ...props,
@@ -59,7 +59,7 @@ export class SsmManager {
    * @param parameterName parameter name to lookup
    */
   public readStringParameter(id: string, scope: CommonConstruct, parameterName: string) {
-    if (!parameterName || parameterName == '') throw 'Invalid parameter name'
+    if (!parameterName || parameterName === '') throw new Error('Invalid parameter name')
 
     return StringParameter.valueFromLookup(
       scope,
@@ -75,8 +75,8 @@ export class SsmManager {
    * @param region region name to lookup parameter
    */
   public readStringParameterFromRegion(id: string, scope: CommonConstruct, parameterName: string, region: string) {
-    if (!parameterName || parameterName == '') throw `Invalid parameter name for ${id}`
-    if (!region || region == '') throw `Invalid region for ${id}`
+    if (!parameterName || parameterName === '') throw new Error(`Invalid parameter name for ${id}`)
+    if (!region || region === '') throw new Error(`Invalid region for ${id}`)
 
     return new SSMParameterReader(scope, `${id}`, {
       parameterName: scope.resourceNameFormatter.format(parameterName, scope.props.resourceNameOptions?.ssm),

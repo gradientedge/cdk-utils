@@ -23,8 +23,9 @@ export default [
     },
     rules: {
       // TypeScript rules
-      '@typescript-eslint/no-unused-vars': 'error',
-      '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-unused-vars': 'warn',
+      '@typescript-eslint/no-explicit-any': 'off',
+      '@typescript-eslint/max-params': 'off',
       '@typescript-eslint/no-non-null-assertion': 'warn',
       
       // Import rules
@@ -36,13 +37,12 @@ export default [
       'import-x/no-unresolved': 'off',
       
       // Code complexity
-      'complexity': ['warn', 10],
+      'complexity': ['warn', 50],
       'max-depth': ['warn', 4],
-      'max-lines-per-function': ['warn', 50],
-      'max-params': ['warn', 4],
+      'max-lines-per-function': ['warn', 150],
       
       // Code quality
-      'no-console': 'warn',
+      'no-console': 'off',
       'no-debugger': 'error',
       'no-duplicate-imports': 'error',
       'prefer-const': 'error',

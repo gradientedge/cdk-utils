@@ -108,8 +108,8 @@ export class LambdaManager {
     mountPath?: string,
     vpcSubnets?: SubnetSelection
   ) {
-    if (!props) throw `Lambda props undefined for ${id}`
-    if (!props.functionName) throw `Lambda functionName undefined for ${id}`
+    if (!props) throw new Error(`Lambda props undefined for ${id}`)
+    if (!props.functionName) throw new Error(`Lambda functionName undefined for ${id}`)
 
     const functionName = scope.resourceNameFormatter.format(
       props.functionName,
@@ -260,8 +260,8 @@ export class LambdaManager {
     mountPath?: string,
     vpcSubnets?: SubnetSelection
   ) {
-    if (!props) throw `Lambda props undefined for ${id}`
-    if (!props.functionName) throw `Lambda functionName undefined for ${id}`
+    if (!props) throw new Error(`Lambda props undefined for ${id}`)
+    if (!props.functionName) throw new Error(`Lambda functionName undefined for ${id}`)
 
     const functionName = scope.resourceNameFormatter.format(
       props.functionName,
@@ -329,7 +329,7 @@ export class LambdaManager {
     props: LambdaAliasProps,
     lambdaVersion: IVersion
   ) {
-    if (!props) throw `Lambda Alias props undefined for ${id}`
+    if (!props) throw new Error(`Lambda Alias props undefined for ${id}`)
 
     const lambdaFunctionAlias = new Alias(scope, `${id}`, {
       ...props,

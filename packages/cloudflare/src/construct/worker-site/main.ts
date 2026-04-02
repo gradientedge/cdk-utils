@@ -106,10 +106,9 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
   /**
    * @summary Resolve secrets from AWS Secrets Manager
    * @param secretName the secret name
-   * @param secretKey the secret key
    * @returns the secret value
    */
-  protected resolveSecretFromAWS(secretName: string, secretKey: string) {
+  protected resolveSecretFromAWS(secretName: string) {
     if (this.config.require('secretsProvider') !== 'aws') return
     const secret = aws.secretsmanager.getSecretOutput({ name: secretName })
     const secretVersion = aws.secretsmanager.getSecretVersionOutput({ secretId: secret.id })

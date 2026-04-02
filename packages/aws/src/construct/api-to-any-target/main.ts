@@ -120,7 +120,7 @@ export class ApiToAnyTarget extends CommonConstruct {
       return
     }
 
-    if (!this.props.api.restApi?.restApiName) throw `RestApi name undefined for ${this.id}`
+    if (!this.props.api.restApi?.restApiName) throw new Error(`RestApi name undefined for ${this.id}`)
 
     const restApiName = this.resourceNameFormatter.format(
       this.props.api.restApi?.restApiName,

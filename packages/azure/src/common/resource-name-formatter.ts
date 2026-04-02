@@ -37,7 +37,7 @@ export class AzureResourceNameFormatter {
     azureResourceNameElements.push(this.props.stage)
 
     return azureResourceNameElements
-      .filter(azureResourceNameElements => azureResourceNameElements != undefined)
+      .filter(azureResourceNameElements => azureResourceNameElements !== undefined)
       .join('-')
   }
 }

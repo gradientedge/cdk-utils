@@ -102,7 +102,7 @@ export class CommonAzureConstruct extends ComponentResource {
   }
 
   protected resolveStack(stackName: string) {
-    if (!stackName) throw 'Stack name undefined'
+    if (!stackName) throw new Error('Stack name undefined')
     return new pulumi.StackReference(stackName)
   }
 
@@ -122,7 +122,7 @@ export class CommonAzureConstruct extends ComponentResource {
 
   protected resolveCommonLogAnalyticsWorkspace() {
     if (!this.props.commonLogAnalyticsWorkspace || !this.props.commonLogAnalyticsWorkspace.workspaceName)
-      throw 'Props undefined for commonLogAnalyticsWorkspace'
+      throw new Error('Props undefined for commonLogAnalyticsWorkspace')
 
     this.commonLogAnalyticsWorkspace = getWorkspaceOutput({
       workspaceName: this.props.commonLogAnalyticsWorkspace.workspaceName,

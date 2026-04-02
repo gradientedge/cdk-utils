@@ -153,7 +153,7 @@ export class StaticSite extends CommonConstruct {
    * @summary Method to create a site cloudfront distribution
    */
   protected createSiteDistribution() {
-    if (!this.props.siteDistribution) throw 'SiteDistribution props undefined'
+    if (!this.props.siteDistribution) throw new Error('SiteDistribution props undefined')
 
     this.siteDistribution = this.cloudFrontManager.createDistributionWithS3Origin(
       `${this.id}-distribution`,

@@ -190,7 +190,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
    */
   protected createApiToEventBridgeTargetRule() {
     if (this.props.api.useExisting) return
-    if (!this.props.event.rule.ruleName) throw `Event ruleName undefined for ${this.id}`
+    if (!this.props.event.rule.ruleName) throw new Error(`Event ruleName undefined for ${this.id}`)
 
     this.props.event.rule = {
       eventPattern: {
@@ -217,7 +217,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
    * @summary Method to create a role for api integration
    */
   protected createApiToEventBridgeTargetRole() {
-    if (!this.apiToEventBridgeTargetRestApi.policy) throw 'Policy undefined'
+    if (!this.apiToEventBridgeTargetRestApi.policy) throw new Error('Policy undefined')
 
     this.apiToEventBridgeTargetRestApi.role = new Role(this, `${this.id}-rest-api-role`, {
       assumedBy: new ServicePrincipal('apigateway.amazonaws.com'),
@@ -368,7 +368,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
       return
     }
 
-    if (!this.props.api.restApi?.restApiName) throw `RestApi name undefined for ${this.id}`
+    if (!this.props.api.restApi?.restApiName) throw new Error(`RestApi name undefined for ${this.id}`)
 
     const restApiName = this.resourceNameFormatter.format(
       this.props.api.restApi?.restApiName,

@@ -90,7 +90,7 @@ export class S3Manager {
    * @param props bucket properties
    */
   public createS3Bucket(id: string, scope: CommonConstruct, props: S3BucketProps) {
-    if (!props) throw `S3 props undefined for ${id}`
+    if (!props) throw new Error(`S3 props undefined for ${id}`)
 
     let bucket: IBucket
 
@@ -209,8 +209,8 @@ export class S3Manager {
    * @param folders list of folder names to be created in the bucket
    */
   public createBucketFolders(id: string, scope: CommonConstruct, bucket: IBucket, folders: string[]) {
-    if (!folders || folders.length == 0) {
-      throw `Folder unspecified for ${id}`
+    if (!folders || folders.length === 0) {
+      throw new Error(`Folder unspecified for ${id}`)
     }
 
     _.forEach(folders, folder => {

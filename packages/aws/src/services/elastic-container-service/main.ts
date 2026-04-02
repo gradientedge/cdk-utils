@@ -46,7 +46,7 @@ export class EcsManager {
    * @param vpc
    */
   public createEcsCluster(id: string, scope: CommonConstruct, props: EcsClusterProps, vpc: IVpc) {
-    if (!props) throw `Ecs Cluster props undefined for ${id}`
+    if (!props) throw new Error(`Ecs Cluster props undefined for ${id}`)
 
     const ecsCluster = new Cluster(scope, `${id}`, {
       ...props,
@@ -91,7 +91,7 @@ export class EcsManager {
     secrets?: any,
     command?: string[]
   ) {
-    if (!props) throw `EcsTask props undefined for ${id}`
+    if (!props) throw new Error(`EcsTask props undefined for ${id}`)
 
     const ecsTask = new TaskDefinition(scope, `${id}`, {
       ...props,
@@ -149,11 +149,11 @@ export class EcsManager {
     cluster: ICluster,
     logGroup: ILogGroup
   ) {
-    if (!props) throw `Ecs Load balanced Fargate Service props undefined for ${id}`
-    if (!props.loadBalancerName) throw `Ecs loadBalancerName undefined for ${id}`
-    if (!props.serviceName) throw `Ecs serviceName undefined for ${id}`
+    if (!props) throw new Error(`Ecs Load balanced Fargate Service props undefined for ${id}`)
+    if (!props.loadBalancerName) throw new Error(`Ecs loadBalancerName undefined for ${id}`)
+    if (!props.serviceName) throw new Error(`Ecs serviceName undefined for ${id}`)
     if (!props.taskImageOptions)
-      throw `TaskImageOptions for Ecs Load balanced Fargate Service props undefined for ${id}`
+      throw new Error(`TaskImageOptions for Ecs Load balanced Fargate Service props undefined for ${id}`)
 
     const fargateService = new ApplicationLoadBalancedFargateService(scope, `${id}-ecs-service`, {
       ...props,

@@ -37,7 +37,7 @@ export class AzureSecurityCentermanager {
     props: DefenderForStorageProps,
     resourceOptions?: ResourceOptions
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     return new DefenderForStorage(`${id}`, props, { parent: scope, ...resourceOptions })
   }
