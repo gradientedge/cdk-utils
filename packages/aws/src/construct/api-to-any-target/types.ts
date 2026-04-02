@@ -17,6 +17,7 @@ import { IHostedZone } from 'aws-cdk-lib/aws-route53'
 import { CommonStackProps } from '../../common/index.js'
 import { AcmProps, RestApigProps } from '../../services/index.js'
 
+/** @category Interface */
 export interface ApiToAnyTargetRestApiType {
   accessLogGroup: LogGroup
   api: IRestApi
@@ -32,6 +33,7 @@ export interface ApiToAnyTargetRestApiType {
   resource: { [path: string]: Resource }
 }
 
+/** @category Interface */
 export interface ApiToAnyTargetRestApiResource {
   addProxy: boolean
   authorizer?: IAuthorizer
@@ -48,6 +50,7 @@ export interface ApiToAnyTargetRestApiResource {
   mockMethodResponses?: MethodResponse[]
 }
 
+/** @category Interface */
 export interface ApiToAnyTargetRestApiProps {
   certificate: AcmProps
   importedRestApiRef?: string
@@ -59,6 +62,7 @@ export interface ApiToAnyTargetRestApiProps {
   withResource?: boolean
 }
 
+/** @category Interface */
 export interface ApiToAnyTargetProps extends CommonStackProps {
   api: ApiToAnyTargetRestApiProps
   apiRootPaths?: string[]

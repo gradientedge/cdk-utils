@@ -4,6 +4,7 @@ import { BaseProps } from '@gradientedge/cdk-utils-common'
 
 import { AzureLocation, AzureRemoteBackend } from './constants.js'
 
+/** @category Interface */
 export interface AzureLocationConfig {
   id: string
   name: string
@@ -13,6 +14,7 @@ export interface AzureLocationConfig {
  * @interface CommonAzureStackProps
  * Common properties for Azure stack configuration using Pulumi
  */
+/** @category Interface */
 export interface CommonAzureStackProps extends BaseProps {
   stackName?: string
   resourceGroupName?: string
@@ -42,6 +44,7 @@ export interface CommonAzureStackProps extends BaseProps {
   msiEndpoint?: string
 }
 
+/** @category Interface */
 export interface AzureRemoteBackendProps {
   type: AzureRemoteBackend
   storageAccountName?: string
@@ -51,6 +54,7 @@ export interface AzureRemoteBackendProps {
   key?: string
 }
 
+/** @category Interface */
 export interface AzureResourceNameFormatterProps {
   exclude?: boolean
   globalPrefix?: boolean

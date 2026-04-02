@@ -44,6 +44,7 @@ export class EventTargetManager {
 /**
  * Customize the CloudWatch LogGroup Event Target
  */
+/** @category Interface */
 export interface LogGroupNoPolicyProps extends TargetBaseProps {
   /**
    * The event to send to the CloudWatch LogGroup

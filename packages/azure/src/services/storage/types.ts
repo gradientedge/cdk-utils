@@ -10,18 +10,24 @@ import {
 
 import { BaseAzureConfigProps } from '../../types/index.js'
 
+/** @category Interface */
 export interface StorageAccountProps extends StorageAccountArgs {
   blobProperties?: BlobServicePropertiesArgs
 }
 
+/** @category Interface */
 export interface StorageContainerProps extends BlobContainerArgs, BaseAzureConfigProps {}
 
+/** @category Interface */
 export interface StorageBlobProps extends BaseAzureConfigProps, BlobArgs {}
 
+/** @category Interface */
 export interface ManagementPolicyProps extends ManagementPolicyArgs {}
 
+/** @category Interface */
 export interface StorageTableProps extends TableArgs {}
 
+/** @category Interface */
 export interface ContainerSasTokenProps extends ListStorageAccountSASArgs {
   resourceGroupName: string
   containerName?: string

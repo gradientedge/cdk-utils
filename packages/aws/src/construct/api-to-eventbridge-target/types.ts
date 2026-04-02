@@ -24,6 +24,7 @@ import { AcmProps, EventRuleProps, LambdaProps, LogProps, RestApigProps } from '
 
 /**
  */
+/** @category Interface */
 export interface ApiToEventBridgeTargetEventType {
   eventBus: IEventBus
   logGroup: LogGroup
@@ -36,6 +37,7 @@ export interface ApiToEventBridgeTargetEventType {
 
 /**
  */
+/** @category Interface */
 export interface ApiToEventBridgeTargetRestApiType {
   accessLogGroup: LogGroup
   api: IRestApi
@@ -61,6 +63,7 @@ export interface ApiToEventBridgeTargetRestApiType {
 
 /**
  */
+/** @category Interface */
 export interface ApiToEventBridgeTargetRestApiProps {
   certificate: AcmProps
   errorResponseModel?: ModelOptions
@@ -80,6 +83,7 @@ export interface ApiToEventBridgeTargetRestApiProps {
 
 /**
  */
+/** @category Interface */
 export interface ApiToEventBridgeTargetLambdaProps {
   function: LambdaProps
   handler?: string
@@ -89,6 +93,7 @@ export interface ApiToEventBridgeTargetLambdaProps {
 
 /**
  */
+/** @category Interface */
 export interface ApiToEventBridgeTargetEventProps {
   eventBusName?: string
   logGroup?: LogProps
@@ -101,6 +106,7 @@ export interface ApiToEventBridgeTargetEventProps {
 
 /**
  */
+/** @category Interface */
 export interface ApiToEventBridgeTargetProps extends CommonStackProps {
   api: ApiToEventBridgeTargetRestApiProps
   apiRootPaths?: string[]

@@ -10,10 +10,12 @@ import {
   AzureRestApiProps,
 } from '../../index.js'
 
+/** @category Interface */
 export interface ApiManagementRestApiProps extends ApiManagementProps {
   useExistingApiManagement: boolean
 }
 
+/** @category Interface */
 export interface ApiManagementCors {
   enableCors: boolean
   allowCredentials: boolean
@@ -23,6 +25,7 @@ export interface ApiManagementCors {
   originSubdomain?: string
 }
 
+/** @category Interface */
 export interface AzureRestApiFunctionProps extends AzureRestApiProps, AzureFunctionAppProps {
   apiManagementBackend: ApiManagementBackendProps
   apiManagementApi: ApiManagementApiProps
@@ -31,6 +34,7 @@ export interface AzureRestApiFunctionProps extends AzureRestApiProps, AzureFunct
   apiManagementCors?: ApiManagementCors
 }
 
+/** @category Interface */
 export interface AzureApiFunction extends AzureApi {
   corsPolicyXmlContent?: string
   apiOperations: { [operation: string]: ApiOperation }

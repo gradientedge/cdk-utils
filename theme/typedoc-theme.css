@@ -9,7 +9,7 @@
   --color-text-aside: #1a1f36;
 
   /* Typography */
-  --font-family: "Avenir Next", Avenir, sans-serif;
+  --font-family: Avenir, sans-serif;
   --font-family-monospace: "SF Mono", Menlo, Monaco, Consolas, monospace;
 
   /* Code blocks */
@@ -90,7 +90,7 @@ nav.tsd-navigation .tsd-nav-link:hover {
 /* Signature / method name headers */
 .tsd-signature,
 .tsd-kind-icon ~ span {
-  font-family: "Avenir Next", Avenir, sans-serif;
+  font-family: Avenir, sans-serif;
 }
 
 /* Code blocks with dark background need white text */
@@ -123,7 +123,7 @@ thead {
 .tsd-comment h1,
 .tsd-comment h2,
 .tsd-comment h3 {
-  font-family: "Avenir Next", Avenir, sans-serif;
+  font-family: Avenir, sans-serif;
 }
 
 /* Black text for all light-background content areas */

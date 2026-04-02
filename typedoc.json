@@ -18,7 +18,7 @@
   "sort": ["kind", "alphabetical"],
   "categorizeByGroup": true,
   "groupOrder": ["Classes", "Interfaces", "Enumerations", "Type Aliases", "Functions", "Variables"],
-  "categoryOrder": ["Construct", "Service", "Common", "*"],
+  "categoryOrder": ["Construct", "Service", "Common", "Enum", "Interface", "Constant", "*"],
   "projectDocuments": ["./docs/Build.md", "./docs/CI-CD.md", "./docs/Development.md"],
   "customCss": "./theme/typedoc-theme.css",
   "customJs": "./theme/typedoc-custom.js",

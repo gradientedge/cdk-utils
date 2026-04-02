@@ -5,6 +5,7 @@ import { AcmProps, CloudfrontFunctionProps, DistributionProps, S3BucketProps } f
 
 /**
  */
+/** @category Interface */
 export interface StaticSiteProps extends CommonStackProps {
   logLevel: string
   nodeEnv: string

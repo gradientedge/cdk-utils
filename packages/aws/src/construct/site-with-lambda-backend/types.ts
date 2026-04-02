@@ -20,6 +20,7 @@ import { SiteWithLambdaBackendResponseHeaderPolicyType } from './constants.js'
 
 /**
  */
+/** @category Interface */
 export interface SiteWithLambdaBackendProps extends CommonStackProps {
   logLevel: string
   nodeEnv: string
@@ -45,19 +46,23 @@ export interface SiteWithLambdaBackendProps extends CommonStackProps {
   useExistingVpc: boolean
 }
 
+/** @category Interface */
 export interface SiteWithLambdaBackendResponseHeadersStrictTransportSecurity extends ResponseHeadersStrictTransportSecurity {
   accessControlMaxAgeInSeconds: number
 }
 
+/** @category Interface */
 export interface SiteWithLambdaBackendSecurityHeadersBehavior extends ResponseSecurityHeadersBehavior {
   strictTransportSecurity: SiteWithLambdaBackendResponseHeadersStrictTransportSecurity
 }
 
+/** @category Interface */
 export interface SiteWithLambdaBackendResponseHeadersPolicyProps extends ResponseHeadersPolicyProps {
   securityHeadersBehavior: SiteWithLambdaBackendSecurityHeadersBehavior
   type: SiteWithLambdaBackendResponseHeaderPolicyType
 }
 
+/** @category Interface */
 export interface SiteWithLambdaBackendCachePolicyProps extends CachePolicyProps {
   defaultTtlInSeconds: number
   minTtlInSeconds: number

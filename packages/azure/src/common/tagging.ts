@@ -7,6 +7,7 @@ import { RESOURCES_TO_EXCLUDE_TAGS } from './constants.js'
  * @param resourceType The Pulumi resource type (e.g., 'azure-native:resources:ResourceGroup')
  * @returns True if the resource supports tags, false otherwise
  */
+/** @category Constant */
 export function isTaggableResource(resourceType: string): boolean {
   // Extract the resource name from the type (e.g., 'ResourceGroup' from 'azure-native:resources:ResourceGroup')
   const resourceName = resourceType.split(':').pop() || ''
@@ -29,6 +30,7 @@ export function isTaggableResource(resourceType: string): boolean {
  * registerTagTransformation({ environment: 'production', team: 'platform' })
  * ```
  */
+/** @category Constant */
 export function registerTagTransformation(defaultTags: Record<string, string>, tagsToIgnore: string[] = []): void {
   pulumi.runtime.registerStackTransformation((args: pulumi.ResourceTransformationArgs) => {
     // Only process taggable resources
@@ -78,6 +80,7 @@ export function registerTagTransformation(defaultTags: Record<string, string>, t
  * const resourceGroupProps = applyTags(props, { environment: 'dev' })
  * ```
  */
+/** @category Constant */
 export function applyTags<T extends { tags?: Record<string, string> }>(
   props: T,
   defaultTags: Record<string, string>

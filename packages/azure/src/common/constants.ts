@@ -1,3 +1,4 @@
+/** @category Enum */
 export enum AzureRemoteBackend {
   azurerm = 'azurerm',
   pulumi = 'pulumi',
@@ -7,11 +8,13 @@ export enum AzureRemoteBackend {
 /**
  * List of Azure resources that excludes tags
  */
+/** @category Constant */
 export const RESOURCES_TO_EXCLUDE_TAGS = new Set(['ApiManagementNamedValue', 'Application', 'ServicePrincipal'])
 
 /**
  * @see https://learn.microsoft.com/en-us/azure/reliability/regions-list?tabs=all
  */
+/** @category Constant */
 export const AzureLocation = {
   // Americas
   BrazilSouth: 'brazilsouth',
@@ -90,4 +93,5 @@ export const AzureLocation = {
   WestIndia: 'westindia',
 } as const
 
+/** @category Interface */
 export type AzureLocation = (typeof AzureLocation)[keyof typeof AzureLocation]

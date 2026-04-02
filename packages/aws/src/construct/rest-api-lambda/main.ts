@@ -27,6 +27,7 @@ import { RestApiLambdaEnvironment, RestApiLambdaProps } from './types.js'
  *     this.initResources()
  *   }
  * }
+ * @category Construct
  */
 export abstract class RestApiLambda extends CommonConstruct {
   /* restApiLambda props */

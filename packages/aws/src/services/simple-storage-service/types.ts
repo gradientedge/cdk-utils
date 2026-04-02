@@ -5,6 +5,7 @@ import { TagProps } from '../../types/index.js'
 
 /**
  */
+/** @category Interface */
 export interface LifecycleRule extends s3.LifecycleRule {
   expirationInDays?: number
   noncurrentVersionExpirationInDays?: number
@@ -12,6 +13,7 @@ export interface LifecycleRule extends s3.LifecycleRule {
 
 /**
  */
+/** @category Interface */
 export interface BucketDeploymentProps extends s3deploy.BucketDeploymentProps {
   expirationInDays?: number
   noncurrentVersionExpirationInDays?: number
@@ -19,6 +21,7 @@ export interface BucketDeploymentProps extends s3deploy.BucketDeploymentProps {
 
 /**
  */
+/** @category Interface */
 export interface S3BucketProps extends s3.BucketProps {
   bucketName: string
   enableEventBridge?: boolean

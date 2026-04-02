@@ -1,6 +1,7 @@
 import { CommonCloudflareStackProps } from '../../common/index.js'
 import { PagesProjectProps, DnsRecordProps, ZoneProps } from '../../services/index.js'
 
+/** @category Interface */
 export interface CloudflarePagesStaticSiteProps extends CommonCloudflareStackProps {
   siteAssetDir: string
   siteBranch?: string

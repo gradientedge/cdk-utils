@@ -8,6 +8,7 @@ import { parse } from 'yaml'
 import { TemplateError } from './error.js'
 import { DashboardRenderer, MissingKeys, PaneTemplate, RenderParams } from './types.js'
 
+/** @category Service */
 export class AzureDashboardRenderer implements DashboardRenderer {
   private readonly paneTemplatePath: string
   private readonly outputDir: string

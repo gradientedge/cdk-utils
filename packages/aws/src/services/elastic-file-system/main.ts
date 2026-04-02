@@ -8,12 +8,14 @@ import { createCfnOutput } from '../../utils/index.js'
 
 import { EfsAccessPointOptions, EfsFileSystemProps } from './types.js'
 
+/** @category Constant */
 export const DEFAULT_CREATE_ACL = {
   ownerGid: '1000',
   ownerUid: '1000',
   permissions: '755',
 }
 
+/** @category Constant */
 export const DEFAULT_POSIX_USER = {
   gid: '1000',
   uid: '1000',

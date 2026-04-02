@@ -14,6 +14,7 @@ import { CommonConstruct } from '../common/index.js'
  * @param overrideId Flag which indicates whether to override the default logical id of the output
  * @returns The CloudFormation output
  */
+/** @category Constant */
 export function createCfnOutput(
   id: string,
   scope: CommonConstruct,
@@ -36,6 +37,7 @@ export function createCfnOutput(
 /**
  *
  */
+/** @category Constant */
 export function determineCredentials(): AwsCredentialIdentityProvider {
   if (process.env.AWS_PROFILE) return fromIni()
   return fromEnv()
@@ -55,6 +57,7 @@ const defaultResponseObject = {
 /**
  * @param error
  */
+/** @category Constant */
 export function redirectError(error: any) {
   console.error(error, error.message, error.stack)
   return Object.assign({}, defaultResponseObject, {
@@ -66,6 +69,7 @@ export function redirectError(error: any) {
 /**
  * @param message
  */
+/** @category Constant */
 export function redirectSuccess(message: any) {
   return Object.assign({}, defaultResponseObject, {
     body: JSON.stringify(Object.assign({}, { error: message, success: true })),

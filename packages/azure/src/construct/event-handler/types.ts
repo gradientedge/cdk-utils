@@ -13,27 +13,32 @@ import {
 } from '../../services/index.js'
 import { AzureFunctionAppProps } from '../function-app/index.js'
 
+/** @category Interface */
 export interface EventHandlerEventGridSubscriptionProps {
   dlqStorageAccount: StorageAccountProps
   dlqStorageContainer: StorageContainerProps
 }
 
+/** @category Interface */
 export interface EventHandlerEventGridSubscription {
   dlqStorageAccount: StorageAccount
   dlqStorageContainer: BlobContainer
   eventSubscription: EventSubscription
 }
 
+/** @category Interface */
 export interface EventHandlerServiceBusProps {
   namespace: ServiceBusNamespaceProps
   queue: ServiceBusQueueProps
 }
 
+/** @category Interface */
 export interface EventHandlerServiceBus {
   namespace: Namespace
   queue: Queue
 }
 
+/** @category Interface */
 export interface EventHandlerEventGridTopicProps extends EventgridTopicProps {
   useExistingTopic: boolean
   existingSubscriptionId?: string
@@ -41,6 +46,7 @@ export interface EventHandlerEventGridTopicProps extends EventgridTopicProps {
   existingResourceGroupName?: string
 }
 
+/** @category Interface */
 export interface AzureEventHandlerProps extends AzureFunctionAppProps {
   defender?: DefenderForStorageProps
   eventGridEventSubscription: EventgridEventSubscriptionProps

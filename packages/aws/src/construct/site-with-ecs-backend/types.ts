@@ -25,6 +25,7 @@ import { SiteResponseHeaderPolicyType } from './constants.js'
 
 /**
  */
+/** @category Interface */
 export interface SiteWithEcsBackendProps extends CommonStackProps {
   logLevel: string
   nodeEnv: string
@@ -53,19 +54,23 @@ export interface SiteWithEcsBackendProps extends CommonStackProps {
   useExistingVpc: boolean
 }
 
+/** @category Interface */
 export interface SiteResponseHeadersStrictTransportSecurity extends ResponseHeadersStrictTransportSecurity {
   accessControlMaxAgeInSeconds: number
 }
 
+/** @category Interface */
 export interface SiteSecurityHeadersBehavior extends ResponseSecurityHeadersBehavior {
   strictTransportSecurity: SiteResponseHeadersStrictTransportSecurity
 }
 
+/** @category Interface */
 export interface SiteResponseHeadersPolicyProps extends ResponseHeadersPolicyProps {
   securityHeadersBehavior: SiteSecurityHeadersBehavior
   type: SiteResponseHeaderPolicyType
 }
 
+/** @category Interface */
 export interface SiteCachePolicyProps extends CachePolicyProps {
   defaultTtlInSeconds: number
   minTtlInSeconds: number

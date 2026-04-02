@@ -17,6 +17,7 @@ import {
 
 import { CommonCloudflareStackProps } from './types.js'
 
+/** @category Common */
 export class CommonCloudflareConstruct extends ComponentResource {
   declare props: CommonCloudflareStackProps
   declare options?: ComponentResourceOptions

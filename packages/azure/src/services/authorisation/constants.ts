@@ -2,6 +2,7 @@
  * @summary Enumerations for publicly available built in RBAC roles
  * @see https://learn.microsoft.com/en-us/azure/role-based-access-control/built-in-roles
  */
+/** @category Enum */
 export enum RoleDefinitionId {
   APP_CONFIGURATION_DATA_READER = '/providers/Microsoft.Authorization/roleDefinitions/516239f1-63e1-4d78-a4de-a74fb236a071',
   APP_CONFIGURATION_DATA_OWNER = '/providers/Microsoft.Authorization/roleDefinitions/5ae67dd6-50cb-40e7-96ff-dc2bfa4b606b',

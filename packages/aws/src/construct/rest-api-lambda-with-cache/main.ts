@@ -26,6 +26,7 @@ import { RestApiLambdaWithCacheProps } from './types.js'
  *     this.initResources()
  *   }
  * }
+ * @category Construct
  */
 export abstract class RestApiLambdaWithCache extends RestApiLambda {
   /* restApiLambdaWithCache props */

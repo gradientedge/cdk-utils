@@ -9,12 +9,14 @@ import {
 /**
  *
  */
+/** @category Interface */
 export interface AppConfigDeploymentStrategyProps extends DeploymentStrategyProps {
   deploymentStrategyArn?: string
 }
 
 /**
  */
+/** @category Interface */
 export interface AppConfigProps {
   application: CfnApplicationProps
   configurationProfile: CfnConfigurationProfileProps

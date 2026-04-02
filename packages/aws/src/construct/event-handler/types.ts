@@ -15,6 +15,7 @@ import {
   VpcProps,
 } from '../../services/index.js'
 
+/** @category Interface */
 export interface EventHandlerProps extends CommonStackProps {
   eventBusName: string
   eventRetentionInDays: number
@@ -30,6 +31,7 @@ export interface EventHandlerProps extends CommonStackProps {
   workflowMapState: SfnMapProps
 }
 
+/** @category Interface */
 export interface EventHandlerType {
   archive: Archive
   ecsTargets: EcsTask[]

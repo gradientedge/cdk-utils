@@ -5,6 +5,7 @@ import { TagProps } from '../../types/index.js'
 
 /**
  */
+/** @category Interface */
 export interface SqsToSfnPipeProps extends CfnPipeProps {
   pipeFilterPattern?: any
   sfnInputTemplate?: string
@@ -15,6 +16,7 @@ export interface SqsToSfnPipeProps extends CfnPipeProps {
 
 /**
  */
+/** @category Interface */
 export interface SqsToLambdaPipeProps extends CfnPipeProps {
   pipeFilterPattern?: any
   sqsBatchSize?: number
@@ -24,12 +26,14 @@ export interface SqsToLambdaPipeProps extends CfnPipeProps {
 
 /**
  */
+/** @category Interface */
 export interface EventRuleProps extends EBRuleProps {
   tags?: TagProps[]
 }
 
 /**
  */
+/** @category Interface */
 export interface RuleProps extends CfnRuleProps {
   input?: string
   tags?: TagProps[]
@@ -37,11 +41,13 @@ export interface RuleProps extends CfnRuleProps {
 
 /**
  */
+/** @category Interface */
 export interface EventBusProps extends EBProps {}
 
 /**
  }
  */
+/** @category Interface */
 export interface DynamoDbToLambdaPipeProps extends CfnPipeProps {
   pipeFilterPattern?: any
   dynamoDbBatchSize?: number
