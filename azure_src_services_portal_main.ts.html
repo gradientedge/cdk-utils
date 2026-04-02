@@ -48,10 +48,13 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { Dashboard } from '@pulumi/azure-native/portal/index.js'
+            <pre class="prettyprint source linenums"><code>import fs from 'fs'
+
+import { Dashboard } from '@pulumi/azure-native/portal/index.js'
 import { ResourceOptions } from '@pulumi/pulumi'
-import fs from 'fs'
+
 import { CommonAzureConstruct } from '../../index.js'
+
 import { AzureDashboardRenderer } from './renderer.js'
 import { PortalDashboardProps } from './types.js'
 
@@ -89,7 +92,7 @@ export class AzurePortalManager {
     renderer?: AzureDashboardRenderer,
     resourceOptions?: ResourceOptions
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     const resourceGroup = scope.resourceGroupManager.resolveResourceGroup(
       scope,

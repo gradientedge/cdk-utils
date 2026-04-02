@@ -52,8 +52,10 @@
 import { Topic } from 'aws-cdk-lib/aws-sns'
 import { EmailSubscription, LambdaSubscription } from 'aws-cdk-lib/aws-sns-subscriptions'
 import _ from 'lodash'
+
 import { CommonConstruct } from '../../common/index.js'
 import { createCfnOutput } from '../../utils/index.js'
+
 import { SubscriptionProps } from './types.js'
 
 /**
@@ -86,8 +88,8 @@ export class SnsManager {
     props: SubscriptionProps,
     emails: string[]
   ) {
-    if (!props) throw `Subscription props undefined for ${id}`
-    if (!props.topicName) throw `Subscription topicName undefined for ${id}`
+    if (!props) throw new Error(`Subscription props undefined for ${id}`)
+    if (!props.topicName) throw new Error(`Subscription topicName undefined for ${id}`)
 
     const topic = new Topic(scope, id, {
       ...props,
@@ -118,8 +120,8 @@ export class SnsManager {
     props: SubscriptionProps,
     lambdaFunction: IFunction
   ) {
-    if (!props) throw `Subscription props undefined for ${id}`
-    if (!props.topicName) throw `Subscription topicName undefined for ${id}`
+    if (!props) throw new Error(`Subscription props undefined for ${id}`)
+    if (!props.topicName) throw new Error(`Subscription topicName undefined for ${id}`)
 
     const topic = new Topic(scope, id, {
       ...props,

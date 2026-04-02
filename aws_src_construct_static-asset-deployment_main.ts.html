@@ -48,16 +48,19 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { Fn } from 'aws-cdk-lib'
+            <pre class="prettyprint source linenums"><code>import path from 'path'
+
+import { Fn } from 'aws-cdk-lib'
 import { IBucket } from 'aws-cdk-lib/aws-s3'
 import { IDistribution, DistributionAttributes } from 'aws-cdk-lib/aws-cloudfront'
 import { Construct } from 'constructs'
 import { BucketDeployment, Source, BucketDeploymentProps, ISource } from 'aws-cdk-lib/aws-s3-deployment'
 import _ from 'lodash'
-import { CommonConstruct } from '../../common/index.js'
-import { StaticAssetDeploymentProps } from './types.js'
 import appRoot from 'app-root-path'
-import path from 'path'
+
+import { CommonConstruct } from '../../common/index.js'
+
+import { StaticAssetDeploymentProps } from './types.js'
 
 /**
  * @classdesc Provides a construct to create and deploy static assets into S3 bucket

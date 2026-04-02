@@ -50,7 +50,9 @@
         <article>
             <pre class="prettyprint source linenums"><code>import { Table, Workspace, WorkspaceSkuNameEnum } from '@pulumi/azure-native/operationalinsights/index.js'
 import { ResourceOptions } from '@pulumi/pulumi'
+
 import { CommonAzureConstruct } from '../../common/index.js'
+
 import { WorkspaceProps, WorkspaceTableProps } from './types.js'
 
 /**
@@ -85,14 +87,14 @@ export class AzureOperationalInsightsManager {
     props: WorkspaceProps,
     resourceOptions?: ResourceOptions
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     // Get resource group name
     const resourceGroupName = scope.props.resourceGroupName
       ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
       : props.resourceGroupName
 
-    if (!resourceGroupName) throw `Resource group name undefined for ${id}`
+    if (!resourceGroupName) throw new Error(`Resource group name undefined for ${id}`)
 
     return new Workspace(
       `${id}-lw`,
@@ -130,7 +132,7 @@ export class AzureOperationalInsightsManager {
     props: WorkspaceTableProps,
     resourceOptions?: ResourceOptions
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     return new Table(`${id}`, props, { parent: scope, ...resourceOptions })
   }

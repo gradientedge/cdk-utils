@@ -53,6 +53,7 @@ import { ResourceGroup } from '@pulumi/azure-native/resources/index.js'
 import * as pulumi from '@pulumi/pulumi'
 import { ComponentResource, ComponentResourceOptions, Output } from '@pulumi/pulumi'
 import { isDevStage, isPrdStage, isTestStage, isUatStage } from '@gradientedge/cdk-utils-common'
+
 import { AzureAuthorisationManager } from '../services/authorisation/main.js'
 import {
   AzureApiManagementManager,
@@ -73,6 +74,7 @@ import {
   AzureServiceBusManager,
   AzureStorageManager,
 } from '../services/index.js'
+
 import { AzureResourceNameFormatter } from './resource-name-formatter.js'
 import { CommonAzureStackProps } from './types.js'
 
@@ -150,7 +152,7 @@ export class CommonAzureConstruct extends ComponentResource {
   }
 
   protected resolveStack(stackName: string) {
-    if (!stackName) throw 'Stack name undefined'
+    if (!stackName) throw new Error('Stack name undefined')
     return new pulumi.StackReference(stackName)
   }
 
@@ -170,7 +172,7 @@ export class CommonAzureConstruct extends ComponentResource {
 
   protected resolveCommonLogAnalyticsWorkspace() {
     if (!this.props.commonLogAnalyticsWorkspace || !this.props.commonLogAnalyticsWorkspace.workspaceName)
-      throw 'Props undefined for commonLogAnalyticsWorkspace'
+      throw new Error('Props undefined for commonLogAnalyticsWorkspace')
 
     this.commonLogAnalyticsWorkspace = getWorkspaceOutput({
       workspaceName: this.props.commonLogAnalyticsWorkspace.workspaceName,

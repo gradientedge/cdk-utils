@@ -51,8 +51,10 @@
             <pre class="prettyprint source linenums"><code>import * as cdk from 'aws-cdk-lib'
 import * as logs from 'aws-cdk-lib/aws-logs'
 import _ from 'lodash'
+
 import { CommonConstruct } from '../../common/index.js'
 import * as utils from '../../utils/index.js'
+
 import { LogProps, MetricFilterProps } from './types.js'
 
 /**
@@ -80,7 +82,7 @@ export class LogManager {
    * @param logGroup
    */
   public createMetricFilter(id: string, scope: CommonConstruct, props: MetricFilterProps, logGroup: logs.ILogGroup) {
-    if (!props) throw `MetricFilter props undefined for ${id}`
+    if (!props) throw new Error(`MetricFilter props undefined for ${id}`)
 
     const metricFilter = new logs.MetricFilter(scope, `${id}`, {
       defaultValue: props.defaultValue,
@@ -109,8 +111,8 @@ export class LogManager {
    * @param props
    */
   public createCfnLogGroup(id: string, scope: CommonConstruct, props: LogProps) {
-    if (!props) throw `Logs props undefined for ${id}`
-    if (!props.logGroupName) throw `Logs logGroupName undefined for ${id}`
+    if (!props) throw new Error(`Logs props undefined for ${id}`)
+    if (!props.logGroupName) throw new Error(`Logs logGroupName undefined for ${id}`)
 
     const logGroup = new logs.CfnLogGroup(scope, `${id}`, {
       ...props,
@@ -136,8 +138,8 @@ export class LogManager {
    * @param props
    */
   public createLogGroup(id: string, scope: CommonConstruct, props: LogProps) {
-    if (!props) throw `Logs props undefined for ${id}`
-    if (!props.logGroupName) throw `Logs logGroupName undefined for ${id}`
+    if (!props) throw new Error(`Logs props undefined for ${id}`)
+    if (!props.logGroupName) throw new Error(`Logs logGroupName undefined for ${id}`)
 
     const logGroup = new logs.LogGroup(scope, `${id}`, {
       ...props,

@@ -53,8 +53,10 @@ import { getVaultOutput } from '@pulumi/azure-native/keyvault/index.js'
 import { listWebAppHostKeysOutput } from '@pulumi/azure-native/web/index.js'
 import * as pulumi from '@pulumi/pulumi'
 import _ from 'lodash'
+
 import { ApiManagementApiOperationProps, RoleDefinitionId } from '../../services/index.js'
 import { AzureFunctionApp } from '../function-app/index.js'
+
 import { AzureApiFunction, AzureRestApiFunctionProps } from './types.js'
 
 /**

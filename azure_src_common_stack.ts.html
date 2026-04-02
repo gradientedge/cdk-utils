@@ -48,12 +48,14 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { ComponentResource, ComponentResourceOptions, Config } from '@pulumi/pulumi'
-import appRoot from 'app-root-path'
-import fs from 'fs'
-import _ from 'lodash'
+            <pre class="prettyprint source linenums"><code>import fs from 'fs'
 import path from 'path'
+
+import { ComponentResource, ComponentResourceOptions, Config } from '@pulumi/pulumi'
+import appRoot from 'app-root-path'
+import _ from 'lodash'
 import { isDevStage } from '@gradientedge/cdk-utils-common'
+
 import { CommonAzureConstruct } from './construct.js'
 import { registerTagTransformation } from './tagging.js'
 import { CommonAzureStackProps } from './types.js'
@@ -126,7 +128,8 @@ export class CommonAzureStack extends ComponentResource {
       const extraContextPath = path.join(appRoot.path, context)
 
       /* scenario where extra context is configured but absent in file system */
-      if (!fs.existsSync(extraContextPath)) throw `Extra context properties unavailable in path:${extraContextPath}`
+      if (!fs.existsSync(extraContextPath))
+        throw new Error(`Extra context properties unavailable in path:${extraContextPath}`)
 
       /* read the extra properties */
       const extraContextPropsBuffer = fs.readFileSync(extraContextPath)

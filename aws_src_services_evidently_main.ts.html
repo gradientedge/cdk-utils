@@ -49,8 +49,10 @@
     <section>
         <article>
             <pre class="prettyprint source linenums"><code>import { CfnExperiment, CfnFeature, CfnLaunch, CfnProject, CfnSegment } from 'aws-cdk-lib/aws-evidently'
+
 import { CommonConstruct } from '../../common/index.js'
 import { createCfnOutput } from '../../utils/index.js'
+
 import {
   EvidentlyExperimentProps,
   EvidentlyFeatureProps,
@@ -83,8 +85,8 @@ export class EvidentlyManager {
    * @param props the project properties
    */
   public createProject(id: string, scope: CommonConstruct, props: EvidentlyProjectProps) {
-    if (!props) throw `EvidentlyProject props undefined for ${id}`
-    if (!props.name) throw `EvidentlyProject name undefined for ${id}`
+    if (!props) throw new Error(`EvidentlyProject props undefined for ${id}`)
+    if (!props.name) throw new Error(`EvidentlyProject name undefined for ${id}`)
 
     const project = new CfnProject(scope, `${id}`, {
       ...props,
@@ -103,7 +105,7 @@ export class EvidentlyManager {
    * @param props the feature properties
    */
   public createFeature(id: string, scope: CommonConstruct, props: EvidentlyFeatureProps) {
-    if (!props) throw `EvidentlyFeature props undefined for ${id}`
+    if (!props) throw new Error(`EvidentlyFeature props undefined for ${id}`)
 
     const feature = new CfnFeature(scope, `${id}`, props)
     createCfnOutput(`${id}-featureArn`, scope, feature.attrArn)
@@ -118,8 +120,8 @@ export class EvidentlyManager {
    * @param props the launch properties
    */
   public createLaunch(id: string, scope: CommonConstruct, props: EvidentlyLaunchProps) {
-    if (!props) throw `EvidentlyLaunch props undefined for ${id}`
-    if (!props.name) throw `EvidentlyLaunch name undefined for ${id}`
+    if (!props) throw new Error(`EvidentlyLaunch props undefined for ${id}`)
+    if (!props.name) throw new Error(`EvidentlyLaunch name undefined for ${id}`)
 
     const launch = new CfnLaunch(scope, `${id}`, {
       ...props,
@@ -138,8 +140,8 @@ export class EvidentlyManager {
    * @param props the experiment properties
    */
   public createExperiment(id: string, scope: CommonConstruct, props: EvidentlyExperimentProps) {
-    if (!props) throw `EvidentlyExperiment props undefined for ${id}`
-    if (!props.name) throw `EvidentlyExperiment name undefined for ${id}`
+    if (!props) throw new Error(`EvidentlyExperiment props undefined for ${id}`)
+    if (!props.name) throw new Error(`EvidentlyExperiment name undefined for ${id}`)
 
     const experiment = new CfnExperiment(scope, `${id}`, {
       ...props,
@@ -158,8 +160,8 @@ export class EvidentlyManager {
    * @param props the segment properties
    */
   public createSegment(id: string, scope: CommonConstruct, props: EvidentlySegmentProps) {
-    if (!props) throw `EvidentlySegment props undefined for ${id}`
-    if (!props.name) throw `EvidentlySegment name undefined for ${id}`
+    if (!props) throw new Error(`EvidentlySegment props undefined for ${id}`)
+    if (!props.name) throw new Error(`EvidentlySegment name undefined for ${id}`)
 
     const segment = new CfnSegment(scope, `${id}`, {
       ...props,

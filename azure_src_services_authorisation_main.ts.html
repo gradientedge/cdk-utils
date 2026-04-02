@@ -50,7 +50,9 @@
         <article>
             <pre class="prettyprint source linenums"><code>import { RoleAssignment } from '@pulumi/azure-native/authorization/index.js'
 import { Input, ResourceOptions } from '@pulumi/pulumi'
+
 import { CommonAzureConstruct } from '../../common/index.js'
+
 import { RoleDefinitionId } from './constants.js'
 import { RoleAssignmentProps } from './types.js'
 
@@ -86,7 +88,7 @@ export class AzureAuthorisationManager {
     props: RoleAssignmentProps,
     resourceOptions?: ResourceOptions
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     return new RoleAssignment(`${id}`, props, { parent: scope, ...resourceOptions })
   }

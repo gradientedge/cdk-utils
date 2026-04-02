@@ -48,9 +48,10 @@
     
     <section>
         <article>
-            <pre class="prettyprint source linenums"><code>import { Template } from 'aws-cdk-lib/assertions'
+            <pre class="prettyprint source linenums"><code>import fs from 'node:fs'
+
+import { Template } from 'aws-cdk-lib/assertions'
 import { stringify } from 'yaml'
-import fs from 'node:fs'
 
 /**
  * Write a template to a file

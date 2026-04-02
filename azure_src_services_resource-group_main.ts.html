@@ -50,7 +50,9 @@
         <article>
             <pre class="prettyprint source linenums"><code>import { getResourceGroupOutput, ResourceGroup } from '@pulumi/azure-native/resources/index.js'
 import { ResourceOptions } from '@pulumi/pulumi'
+
 import { CommonAzureConstruct } from '../../common/index.js'
+
 import { ResourceGroupProps } from './types.js'
 
 /**
@@ -85,7 +87,7 @@ export class AzureResourceGroupManager {
     props: ResourceGroupProps,
     resourceOptions?: ResourceOptions
   ) {
-    if (!props) throw `Props undefined for ${id}`
+    if (!props) throw new Error(`Props undefined for ${id}`)
 
     return new ResourceGroup(
       `${id}-rg`,
@@ -115,7 +117,7 @@ export class AzureResourceGroupManager {
     resourceGroupName: string,
     resourceOptions?: ResourceOptions
   ) {
-    if (!resourceGroupName) throw `Resource Group Name undefined`
+    if (!resourceGroupName) throw new Error(`Resource Group Name undefined`)
 
     return getResourceGroupOutput(
       {
