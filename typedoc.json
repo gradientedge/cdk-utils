@@ -8,6 +8,9 @@
   "readme": "README.md",
   "plugin": ["typedoc-plugin-mermaid"],
   "hideGenerator": true,
+  "favicon": "./img/logo.png",
+  "darkHighlightTheme": "github-dark",
+  "lightHighlightTheme": "github-light",
   "customFooterHtml": "© <span id=\"footer-year\"></span> GradientEdge. All rights reserved.",
   "excludePrivate": true,
   "excludeExternals": true,
@@ -21,7 +24,17 @@
   "categorizeByGroup": true,
   "groupOrder": ["Classes", "Interfaces", "Enumerations", "Type Aliases", "Functions", "Variables"],
   "categoryOrder": ["Construct", "Service", "Common", "Enum", "Interface", "Constant", "*"],
-  "projectDocuments": ["./docs/Build.md", "./docs/CI-CD.md", "./docs/Development.md"],
+  "projectDocuments": [
+    "./docs/Getting-Started.md",
+    "./docs/Architecture.md",
+    "./docs/Configuration.md",
+    "./docs/Creating-Custom-Constructs.md",
+    "./docs/Build.md",
+    "./docs/CI-CD.md",
+    "./docs/Development.md",
+    "./docs/Contributing.md",
+    "./docs/Releasing.md"
+  ],
   "customCss": "./theme/typedoc-theme.css",
   "customJs": "./theme/typedoc-custom.js",
   "blockTags": [

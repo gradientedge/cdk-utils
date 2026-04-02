@@ -27,53 +27,139 @@
 
 ## Introduction
 
-Toolkit for working with CDK Constructs ([AWS CDK][aws-cdk] & [Pulumi][pulumi]).
+A comprehensive toolkit for provisioning cloud infrastructure using [AWS CDK][aws-cdk] and [Pulumi][pulumi]. This monorepo provides high-level constructs, service managers, and common utilities that simplify infrastructure-as-code across AWS, Azure, and Cloudflare.
 
 For more details, see the full [API documentation](https://gradientedge.github.io/cdk-utils/).
 
+## Packages
+
+| Package                              | Description                                                 |
+| ------------------------------------ | ----------------------------------------------------------- |
+| `@gradientedge/cdk-utils-aws`        | AWS CDK constructs and service managers                     |
+| `@gradientedge/cdk-utils-azure`      | Azure Pulumi (Azure Native) constructs and service managers |
+| `@gradientedge/cdk-utils-cloudflare` | Cloudflare Pulumi constructs and service managers           |
+| `@gradientedge/cdk-utils-common`     | Shared utilities, types, and stage helpers                  |
+| `@gradientedge/cdk-utils`            | Umbrella package that re-exports all of the above           |
+
+## Prerequisites
+
+- [Node.js](https://nodejs.org/) >= 22
+- [pnpm](https://pnpm.io/) 10
+
 ## Installation
 
-### ![cmd]
-
-With **npm**:
-
-```shell
-npm install --save @gradientedge/cdk-utils
-```
-
-With **pnpm**:
+Install the umbrella package:
 
 ```shell
 pnpm add @gradientedge/cdk-utils
 ```
 
-### ![purescript]
-
-```
-"@gradientedge/cdk-utils": "latest"
-```
-
-## Testing
-
-To run test cases, use the following command:
+Or install individual packages as needed:
 
 ```shell
-pnpm run test
+pnpm add @gradientedge/cdk-utils-aws
+pnpm add @gradientedge/cdk-utils-azure
+pnpm add @gradientedge/cdk-utils-cloudflare
+pnpm add @gradientedge/cdk-utils-common
 ```
 
-To focus on the test and watch when you make changes, use the following command:
+## Quick Start
+
+### AWS
+
+```typescript
+import { CommonConstruct, CommonStackProps } from '@gradientedge/cdk-utils-aws'
+import { Construct } from 'constructs'
+
+class MyStack extends CommonConstruct {
+  constructor(parent: Construct, id: string, props: CommonStackProps) {
+    super(parent, id, props)
+    this.initResources()
+  }
+
+  protected initResources() {
+    this.lambdaManager.createLambdaFunction('MyFunction', this, functionProps)
+    this.s3Manager.createBucket('MyBucket', this, bucketProps)
+  }
+}
+```
+
+### Azure
+
+```typescript
+import { CommonAzureConstruct } from '@gradientedge/cdk-utils-azure'
+import * as pulumi from '@pulumi/pulumi'
+
+class MyAzureStack extends CommonAzureConstruct {
+  constructor(name: string, args: any, opts?: pulumi.ComponentResourceOptions) {
+    super(name, args, opts)
+    this.initResources()
+  }
+}
+```
+
+### Cloudflare
+
+```typescript
+import { CommonCloudflareConstruct } from '@gradientedge/cdk-utils-cloudflare'
+import * as pulumi from '@pulumi/pulumi'
+
+class MyCloudflareStack extends CommonCloudflareConstruct {
+  constructor(name: string, args: any, opts?: pulumi.ComponentResourceOptions) {
+    super(name, args, opts)
+    this.initResources()
+  }
+}
+```
+
+## Development
+
+### Setup
+
+```shell
+pnpm install
+pnpm build
+```
+
+### Testing
+
+Run the full test suite:
+
+```shell
+pnpm test
+```
+
+Watch mode for a specific test:
 
 ```shell
 pnpm test:watch static-asset-deployment-distribution-ref.test.ts
 ```
 
-### Toolkit
+### Validation
 
-There are common utilities that help with testing constructs which you can find in the [test tools](https://github.com/gradientedge/cdk-utils/tree/main/packages/aws/test/tools/cdk) directory.
+Run prettier, linting, and tests:
 
-### Debug
+```shell
+pnpm validate
+```
 
-There is a debug utility that can be used to print out the contents of a `template`. This is useful for debugging and understanding the structure which you can find in the [debug](https://github.com/gradientedge/cdk-utils/tree/main/packages/aws/test/tools/debug) directory.
+### Generate API Documentation
+
+```shell
+pnpm run docs
+```
+
+### Test Utilities
+
+There are common utilities that help with testing constructs in the [test tools](https://github.com/gradientedge/cdk-utils/tree/main/packages/aws/test/tools/cdk) directory. A [debug](https://github.com/gradientedge/cdk-utils/tree/main/packages/aws/test/tools/debug) utility is also available for printing template contents during development.
+
+## Contributing
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to contribute to this project.
+
+## License
+
+This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
 
 <!-- references -->
 
@@ -85,8 +171,6 @@ There is a debug utility that can be used to print out the contents of a `templa
 [cdk-badge]: https://img.shields.io/github/package-json/dependency-version/gradientedge/cdk-utils/aws-cdk-lib?filename=packages/aws/package.json
 [pulumi]: https://www.pulumi.com/docs/
 [cdk-url]: https://aws.amazon.com/cdk/
-[checks]: https://img.shields.io/github/checks-status/gradientedge/cdk-utils/main
-[cmd]: https://img.shields.io/badge/command--line-4D4D4D?logo=windows-terminal&style=for-the-badge
 [code-size]: https://img.shields.io/github/languages/code-size/gradientedge/cdk-utils
 [codecov-url]: https://app.codecov.io/gh/gradientedge/cdk-utils
 [coverage]: https://codecov.io/gh/gradientedge/cdk-utils/branch/main/graph/badge.svg
@@ -108,11 +192,9 @@ There is a debug utility that can be used to print out the contents of a `templa
 [last-commit]: https://img.shields.io/github/last-commit/gradientedge/cdk-utils
 [license]: https://img.shields.io/github/license/gradientedge/cdk-utils
 [license-url]: https://github.com/gradientedge/cdk-utils/blob/main/LICENSE
-[logo]: https://cdn.gradientedge.io/images/ge-logo-1200.png
 [maintained]: https://img.shields.io/badge/maintained-YES-green
 [node-badge]: https://img.shields.io/node/v/@gradientedge/cdk-utils
-[node-url]: https://nodejs.dev
-[purescript]: https://img.shields.io/badge/package.json-4D4D4D?logo=purescript
+[node-url]: https://nodejs.org/
 [release]: https://img.shields.io/github/release/gradientedge/cdk-utils.svg
 [release-url]: https://gradientedge.github.io/cdk-utils/
 [repo-url]: https://github.com/gradientedge/cdk-utils

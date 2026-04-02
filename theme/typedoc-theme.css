@@ -139,15 +139,13 @@ nav.tsd-navigation .tsd-nav-title {
   font-family: Avenir, sans-serif;
 }
 
-/* Code blocks with dark background need white text */
+/* Code blocks with dark background */
 pre,
 pre > code,
-pre code span,
 .tsd-description pre,
 .tsd-description pre code,
 .col-content pre,
-.col-content pre > code,
-.col-content pre code span {
+.col-content pre > code {
   background-color: #1a1f36;
   color: #a3acb9;
 }
@@ -350,7 +348,7 @@ td {
 [data-theme="dark"] .col-content h5,
 [data-theme="dark"] .col-content p,
 [data-theme="dark"] .col-content li,
-[data-theme="dark"] .col-content span,
+[data-theme="dark"] .col-content span:not([class^="hl-"]),
 [data-theme="dark"] .tsd-page-title,
 [data-theme="dark"] .tsd-page-title h1,
 [data-theme="dark"] .tsd-panel,
@@ -438,10 +436,8 @@ td {
 /* Dark mode — code blocks */
 [data-theme="dark"] pre,
 [data-theme="dark"] pre > code,
-[data-theme="dark"] pre code span,
 [data-theme="dark"] .col-content pre,
-[data-theme="dark"] .col-content pre > code,
-[data-theme="dark"] .col-content pre code span {
+[data-theme="dark"] .col-content pre > code {
   background-color: #0d1017;
   color: #c9d1d9;
 }
@@ -953,7 +949,7 @@ pre:hover {
 [data-theme="light"] .col-content li,
 [data-theme="light"] .col-content td,
 [data-theme="light"] .col-content th,
-[data-theme="light"] .col-content span,
+[data-theme="light"] .col-content span:not([class^="hl-"]),
 [data-theme="light"] .col-content .tsd-signature,
 [data-theme="light"] .col-content .tsd-kind-icon ~ span,
 [data-theme="light"] .tsd-page-title,
@@ -969,4 +965,220 @@ pre:hover {
 [data-theme="light"] .tsd-comment,
 [data-theme="light"] .tsd-comment p {
   color: #1a1f36;
+}
+
+/* ============================================
+   Footer Styling
+   ============================================ */
+
+footer {
+  background: linear-gradient(180deg, transparent, rgba(13, 16, 23, 0.5));
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 1.5rem 2rem;
+  text-align: center;
+}
+
+[data-theme="dark"] footer {
+  color: #6e7681;
+}
+
+[data-theme="dark"] footer p {
+  color: #6e7681;
+  font-size: 0.8rem;
+  letter-spacing: 0.03em;
+  margin: 0;
+}
+
+/* ============================================
+   Search Dialog Styling
+   ============================================ */
+
+[data-theme="dark"] #tsd-search {
+  background: #0f1221;
+  border: 1px solid rgba(88, 166, 255, 0.15);
+  border-radius: 12px;
+  box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6);
+  padding: 0.75rem;
+}
+
+[data-theme="dark"] #tsd-search-results {
+  background: #0f1221;
+  border-radius: 8px;
+}
+
+[data-theme="dark"] #tsd-search-results li {
+  color: #c9d1d9;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 0.5rem 0.75rem;
+  border-radius: 6px;
+  transition: background 0.2s ease;
+}
+
+[data-theme="dark"] #tsd-search-results li:hover,
+[data-theme="dark"] #tsd-search-results li:focus {
+  background: rgba(88, 166, 255, 0.08);
+}
+
+[data-theme="dark"] #tsd-search-results a {
+  color: #c9d1d9;
+}
+
+[data-theme="dark"] #tsd-search-status {
+  color: #6e7681;
+}
+
+/* ============================================
+   Custom Scrollbars
+   ============================================ */
+
+/* Sidebar scrollbar */
+[data-theme="dark"] .col-sidebar::-webkit-scrollbar,
+[data-theme="dark"] .site-menu::-webkit-scrollbar,
+[data-theme="dark"] nav.tsd-navigation::-webkit-scrollbar {
+  width: 6px;
+}
+
+[data-theme="dark"] .col-sidebar::-webkit-scrollbar-track,
+[data-theme="dark"] .site-menu::-webkit-scrollbar-track,
+[data-theme="dark"] nav.tsd-navigation::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+[data-theme="dark"] .col-sidebar::-webkit-scrollbar-thumb,
+[data-theme="dark"] .site-menu::-webkit-scrollbar-thumb,
+[data-theme="dark"] nav.tsd-navigation::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
+}
+
+[data-theme="dark"] .col-sidebar::-webkit-scrollbar-thumb:hover,
+[data-theme="dark"] .site-menu::-webkit-scrollbar-thumb:hover,
+[data-theme="dark"] nav.tsd-navigation::-webkit-scrollbar-thumb:hover {
+  background: rgba(88, 166, 255, 0.3);
+}
+
+/* Content scrollbar */
+[data-theme="dark"] .col-content::-webkit-scrollbar,
+[data-theme="dark"] ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+[data-theme="dark"] .col-content::-webkit-scrollbar-track,
+[data-theme="dark"] ::-webkit-scrollbar-track {
+  background: #0f1221;
+}
+
+[data-theme="dark"] .col-content::-webkit-scrollbar-thumb,
+[data-theme="dark"] ::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+}
+
+[data-theme="dark"] .col-content::-webkit-scrollbar-thumb:hover,
+[data-theme="dark"] ::-webkit-scrollbar-thumb:hover {
+  background: rgba(88, 166, 255, 0.25);
+}
+
+/* Firefox scrollbar */
+[data-theme="dark"] * {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.08) transparent;
+}
+
+/* ============================================
+   Syntax Highlighting Overrides
+   ============================================ */
+
+[data-theme="dark"] {
+  --hl-0: #B392F0;  /* function calls — purple */
+  --hl-1: #E1E4E8;  /* plain text */
+  --hl-2: #9ECBFF;  /* strings — light blue */
+  --hl-3: #79B8FF;  /* constants/numbers — blue */
+  --hl-4: #6A737D;  /* comments — gray */
+  --hl-5: #F97583;  /* keywords — red/pink */
+  --hl-6: #FFAB70;  /* types/classes — orange */
+  --hl-7: #FDAEB7;  /* regexp — soft red */
+  --code-background: #0d1017;
+}
+
+/* ============================================
+   Responsive — Mobile & Tablet
+   ============================================ */
+
+@media (max-width: 769px) {
+  .col-content {
+    padding: 1.5rem 1rem;
+    max-width: 100%;
+  }
+
+  h1, .tsd-page-title h1 {
+    font-size: 1.5rem;
+  }
+
+  h2, .tsd-accordion-summary h2 {
+    font-size: 1.25rem;
+  }
+
+  h3 {
+    font-size: 1.1rem;
+  }
+
+  /* Stack breadcrumb pills */
+  .tsd-breadcrumb {
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+  }
+
+  /* Compact member summaries */
+  [data-theme="dark"] .tsd-member-summary {
+    padding: 0.35rem 0.5rem;
+  }
+
+  /* Compact code blocks */
+  pre {
+    padding: 0.75rem;
+    font-size: 0.8rem;
+  }
+
+  /* Full-width images */
+  .tsd-description img[alt="Architecture"],
+  .tsd-comment img[alt="Architecture"] {
+    padding: 0.75rem;
+  }
+
+  /* Cards — reduce padding */
+  [data-theme="dark"] .tsd-panel-group.tsd-member-group {
+    padding: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  [data-theme="dark"] .tsd-member {
+    padding: 0.75rem 1rem;
+  }
+
+  /* Footer compact */
+  footer {
+    padding: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .col-content {
+    padding: 1rem 0.75rem;
+  }
+
+  h1, .tsd-page-title h1 {
+    font-size: 1.3rem;
+  }
+
+  .tsd-signature {
+    font-size: 0.8rem;
+  }
+
+  pre {
+    font-size: 0.75rem;
+    padding: 0.5rem;
+    border-radius: 6px;
+  }
 }
