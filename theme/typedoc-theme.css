@@ -83,8 +83,15 @@ nav.tsd-navigation .tsd-nav-link:hover {
   border-radius: 4px;
 }
 
-/* Hide header toolbar */
+/* Header toolbar — hide everything except search */
 .tsd-page-toolbar {
+  background: #0d1017;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.tsd-page-toolbar .title,
+.tsd-page-toolbar .tsd-widget.menu,
+.tsd-page-toolbar #tsd-toolbar-links {
   display: none;
 }
 
@@ -101,16 +108,44 @@ nav.tsd-navigation .tsd-nav-title {
   background-clip: text;
 }
 
-/* Sidebar — top project link gradient */
+/* Sidebar — no horizontal scroll */
+.col-sidebar,
+.site-menu,
+nav.tsd-navigation {
+  overflow-x: hidden;
+}
+
+.site-menu > nav.tsd-navigation > ul {
+  overflow-x: hidden;
+  word-break: break-word;
+}
+
+/* Sidebar — top project title */
 .site-menu > nav.tsd-navigation > a {
-  background: linear-gradient(135deg, #58a6ff, #a371f7);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  font-weight: 700;
-  font-size: 1rem;
-  padding: 1rem 0.75rem 0.75rem;
   display: block;
+  font-weight: 700;
+  font-size: 0.85rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 1.25rem 1rem 1rem;
+  color: #e6edf3 !important;
+  -webkit-text-fill-color: #e6edf3 !important;
+  position: relative;
+  border-bottom: none;
+  background: transparent;
+  transition: color 0.3s ease;
+}
+
+.site-menu > nav.tsd-navigation > a::after {
+  content: "";
+  display: block;
+  margin-top: 0.75rem;
+  height: 1px;
+  background: linear-gradient(90deg, #58a6ff, #a371f7, transparent);
+}
+
+.site-menu > nav.tsd-navigation > a:hover {
+  padding-left: 1rem;
 }
 
 /* Search input */
