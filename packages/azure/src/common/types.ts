@@ -11,7 +11,7 @@ export interface AzureLocationConfig {
 
 /**
  * @interface CommonAzureStackProps
- * @description Common properties for Azure stack configuration using Pulumi
+ * Common properties for Azure stack configuration using Pulumi
  */
 export interface CommonAzureStackProps extends BaseProps {
   stackName?: string

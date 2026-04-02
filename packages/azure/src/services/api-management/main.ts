@@ -36,7 +36,7 @@ import {
 } from './types.js'
 
 /**
- * @classdesc Provides operations on Azure API Management using Pulumi
+ * Provides operations on Azure API Management using Pulumi
  * - A new instance of this class is injected into {@link CommonAzureConstruct} constructor.
  * - If a custom construct extends {@link CommonAzureConstruct}, an instance is available within the context.
  * @example
@@ -51,6 +51,7 @@ import {
  *   }
  * }
  * ```
+ * @category Service
  */
 export class AzureApiManagementManager {
   /**
@@ -377,7 +378,7 @@ export class AzureApiManagementManager {
 
   /**
    * @summary Method to create a new API Management custom domain
-   * @note In Pulumi Azure Native, custom domains are configured as part of the API Management service resource,
+   * In Pulumi Azure Native, custom domains are configured as part of the API Management service resource,
    * not as a separate resource. Use the hostnameConfigurations property when creating the service.
    */
   public createApiManagementCustomDomain() {

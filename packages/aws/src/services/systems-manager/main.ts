@@ -12,7 +12,7 @@ import { createCfnOutput } from '../../utils/index.js'
 import { SSMParameterReaderProps, SSMStringParameterProps } from './types.js'
 
 /**
- * @classdesc Provides operations on AWS Systems Manager.
+ * Provides operations on AWS Systems Manager.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
  * @example
@@ -26,6 +26,7 @@ import { SSMParameterReaderProps, SSMStringParameterProps } from './types.js'
  *   }
  * }
  * @see [CDK Systems Manager Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_ssm-readme.html}
+ * @category Service
  */
 export class SsmManager {
   public static SECRETS_MODIFIED_TIMESTAMP_PARAM = 'secrets-last-modified-timestamp'
@@ -86,7 +87,8 @@ export class SsmManager {
 }
 
 /**
- * @classdesc Provides utilities to read same/cross region SSM parameters
+ * Provides utilities to read same/cross region SSM parameters
+ * @category Service
  */
 export class SSMParameterReader extends AwsCustomResource {
   constructor(scope: CommonConstruct, name: string, props: SSMParameterReaderProps) {

@@ -8,7 +8,7 @@ import { EventHandler } from '../event-handler/index.js'
 import { PipedEventHandlerProps } from './types.js'
 
 /**
- * @classdesc Provides a construct to create and deploy an EventBridge Piped Event Handler
+ * Provides a construct to create and deploy an EventBridge Piped Event Handler
  * @example
  * import { PipedEventHandler, PipedEventHandlerProps } '@gradientedge/cdk-utils'
  * import { Construct } from 'constructs'
@@ -21,6 +21,7 @@ import { PipedEventHandlerProps } from './types.js'
  *     this.initResources()
  *   }
  * }
+ * @category Construct
  */
 export class PipedEventHandler extends EventHandler {
   props: PipedEventHandlerProps

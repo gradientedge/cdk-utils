@@ -37,9 +37,9 @@ import { ApiDestinedLambdaType } from './types.js'
 
 /**
  * @deprecated Use ApiToEventBridgeTarget instead. This will be removed in a future release.
- * @classdesc Provides a construct to create and deploy API Gateway invocations to EventBridge
+ * Provides a construct to create and deploy API Gateway invocations to EventBridge
  *
- * <b>Architecture</b><br/> ![Architecture](./ApiToEventBridgeTargetWithSns.jpg)
+ * <b>Architecture</b><br/> ![Architecture](https://raw.githubusercontent.com/gradientedge/cdk-utils/main/img/ApiToEventBridgeTargetWithSns.jpg)
  * @example
  * import { ApiToEventBridgeTargetWithSns, ApiToEventBridgeTargetProps } '@gradientedge/cdk-utils'
  * import { Construct } from 'constructs'
@@ -52,6 +52,7 @@ import { ApiDestinedLambdaType } from './types.js'
  *     this.initResources()
  *   }
  * }
+ * @category Construct
  */
 export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
   props: ApiToEventBridgeTargetProps

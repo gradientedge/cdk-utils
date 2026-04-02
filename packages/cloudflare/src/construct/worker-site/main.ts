@@ -12,7 +12,7 @@ import { CommonCloudflareConstruct } from '../../common/index.js'
 import { CloudflareWorkerSiteProps } from './types.js'
 
 /**
- * @classdesc Provides a construct to create and deploy a cloudflare worker site
+ * Provides a construct to create and deploy a cloudflare worker site
  * @example
  * import { CloudflareWorkerSite, CloudflareWorkerSiteProps } '@gradientedge/cdk-utils'
  * import { Construct } from 'constructs'
@@ -25,6 +25,7 @@ import { CloudflareWorkerSiteProps } from './types.js'
  *     this.initResources()
  *   }
  * }
+ * @category Construct
  */
 export class CloudflareWorkerSite extends CommonCloudflareConstruct {
   declare props: CloudflareWorkerSiteProps

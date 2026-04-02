@@ -18,7 +18,8 @@ import { Topic } from 'aws-cdk-lib/aws-sns'
 import { ApiToLambdaTargetRestApiType } from './types.js'
 
 /**
- * @classdesc Provides a construct to contain api resources for ApiToLambdaTarget
+ * Provides a construct to contain api resources for ApiToLambdaTarget
+ * @category Construct
  */
 export class ApiToLambdaTargetRestApi implements ApiToLambdaTargetRestApiType {
   api: RestApi

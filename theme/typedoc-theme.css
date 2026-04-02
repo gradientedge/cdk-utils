@@ -1,0 +1,156 @@
+:root {
+  /* Sidebar / dark navy */
+  --color-background-secondary: #1a1f36;
+  --color-icon-background: #1a1f36;
+
+  /* Main content */
+  --color-background: #fff;
+  --color-text: #1a1f36;
+  --color-text-aside: #1a1f36;
+
+  /* Typography */
+  --font-family: "Avenir Next", Avenir, sans-serif;
+  --font-family-monospace: "SF Mono", Menlo, Monaco, Consolas, monospace;
+
+  /* Code blocks */
+  --color-code-background: #1a1f36;
+  --color-ts-keyword: #cdd3da;
+
+  /* Accent */
+  --color-accent: #4f566b;
+}
+
+/* Sidebar navigation — full height, flush to top and left */
+.col-sidebar,
+.col-sidebar .site-menu {
+  background-color: #1a1f36;
+  min-height: 100vh;
+  margin: 0;
+  padding-top: 0;
+  top: 0;
+}
+
+.col-sidebar {
+  padding-left: 0;
+  margin-left: 0;
+}
+
+.container {
+  padding-left: 0;
+  padding-right: 0;
+  max-width: none;
+}
+
+.container.container-main {
+  padding-top: 0;
+  margin-top: 0;
+  --dim-container-main-margin-y: 0rem;
+}
+
+.site-menu,
+.site-menu a,
+nav.tsd-navigation,
+nav.tsd-navigation a,
+nav.tsd-navigation span,
+nav.tsd-navigation summary,
+nav.tsd-navigation .tsd-nav-title,
+nav.tsd-navigation .tsd-nav-link,
+nav.tsd-navigation .tsd-accordion-summary {
+  background-color: #1a1f36;
+  color: #a3acb9;
+}
+
+.site-menu a:hover,
+.site-menu a:active,
+.site-menu a:focus,
+nav.tsd-navigation a:hover,
+nav.tsd-navigation a:active,
+nav.tsd-navigation a:focus,
+nav.tsd-navigation .tsd-nav-link:hover {
+  color: #cdd3da;
+}
+
+/* Hide header toolbar */
+.tsd-page-toolbar {
+  display: none;
+}
+
+/* Search input */
+#tsd-search input {
+  background-color: #4f566b;
+  border: 1px solid #1a1f36;
+  border-radius: 10px;
+  color: #a3acb9;
+}
+
+#tsd-search input::placeholder {
+  color: #a3acb9;
+}
+
+/* Signature / method name headers */
+.tsd-signature,
+.tsd-kind-icon ~ span {
+  font-family: "Avenir Next", Avenir, sans-serif;
+}
+
+/* Code blocks with dark background need white text */
+pre,
+pre > code,
+pre code span,
+.tsd-description pre,
+.tsd-description pre code,
+.col-content pre,
+.col-content pre > code,
+.col-content pre code span {
+  background-color: #1a1f36;
+  color: #a3acb9;
+}
+
+/* Image styling in descriptions */
+.tsd-description img,
+.tsd-comment img {
+  box-shadow: 0px 1px 12px rgba(0, 0, 0, 0.5);
+  max-width: 75%;
+}
+
+/* Table headers */
+thead {
+  height: 20px;
+  line-height: 20px;
+}
+
+/* User-facing text headings */
+.tsd-comment h1,
+.tsd-comment h2,
+.tsd-comment h3 {
+  font-family: "Avenir Next", Avenir, sans-serif;
+}
+
+/* Black text for all light-background content areas */
+.col-content,
+.col-content h1,
+.col-content h2,
+.col-content h3,
+.col-content h4,
+.col-content h5,
+.col-content p,
+.col-content li,
+.col-content td,
+.col-content th,
+.col-content span,
+.col-content .tsd-signature,
+.col-content .tsd-kind-icon ~ span,
+.tsd-page-title,
+.tsd-page-title h1,
+.tsd-panel,
+.tsd-panel p,
+.tsd-panel li,
+.tsd-typography,
+.tsd-typography p,
+.tsd-typography li,
+.tsd-description,
+.tsd-description p,
+.tsd-comment,
+.tsd-comment p {
+  color: #1a1f36;
+}

@@ -13,7 +13,7 @@ import { Handler } from './handler.js'
 import { EventHandlerProps } from './types.js'
 
 /**
- * @classdesc Provides a construct to create and deploy an EventBridge Event Handler
+ * Provides a construct to create and deploy an EventBridge Event Handler
  * @example
  * import { EventHandler, EventHandlerProps } '@gradientedge/cdk-utils'
  * import { Construct } from 'constructs'
@@ -26,6 +26,7 @@ import { EventHandlerProps } from './types.js'
  *     this.initResources()
  *   }
  * }
+ * @category Construct
  */
 export class EventHandler extends CommonConstruct {
   props: EventHandlerProps

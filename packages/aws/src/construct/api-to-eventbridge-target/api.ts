@@ -17,7 +17,8 @@ import { Topic } from 'aws-cdk-lib/aws-sns'
 import { ApiToEventBridgeTargetRestApiType } from './types.js'
 
 /**
- * @classdesc Provides a construct to contain api resources for ApiToEventBridgeTargetWithSns
+ * Provides a construct to contain api resources for ApiToEventBridgeTargetWithSns
+ * @category Construct
  */
 export class ApiToEventbridgeTargetRestApi implements ApiToEventBridgeTargetRestApiType {
   accessLogGroup: LogGroup

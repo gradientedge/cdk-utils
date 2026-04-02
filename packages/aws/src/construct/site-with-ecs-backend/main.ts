@@ -39,7 +39,7 @@ import { CommonConstruct } from '../../common/index.js'
 import { SiteCachePolicyProps, SiteResponseHeadersPolicyProps, SiteWithEcsBackendProps } from './types.js'
 
 /**
- * @classdesc Provides a construct to create and deploy a site hosted with an clustered ECS/ELB backend
+ * Provides a construct to create and deploy a site hosted with an clustered ECS/ELB backend
  * @example
  * import { SiteWithEcsBackend, SiteWithEcsBackendProps } '@gradientedge/cdk-utils'
  * import { Construct } from 'constructs'
@@ -52,6 +52,7 @@ import { SiteCachePolicyProps, SiteResponseHeadersPolicyProps, SiteWithEcsBacken
  *     this.initResources()
  *   }
  * }
+ * @category Construct
  */
 export class SiteWithEcsBackend extends CommonConstruct {
   /* site properties */

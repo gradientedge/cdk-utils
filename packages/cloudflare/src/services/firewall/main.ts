@@ -5,7 +5,7 @@ import { CommonCloudflareConstruct } from '../../common/index.js'
 import { FirewallRuleProps } from './types.js'
 
 /**
- * @classdesc Provides operations on Cloudflare Firewall Rules
+ * Provides operations on Cloudflare Firewall Rules
  * - A new instance of this class is injected into {@link CommonCloudflareConstruct} constructor.
  * - If a custom construct extends {@link CommonCloudflareConstruct}, an instance is available within the context.
  * @example
@@ -20,6 +20,7 @@ import { FirewallRuleProps } from './types.js'
  *   }
  * }
  * ```
+ * @category Service
  */
 export class CloudflareFirewallManager {
   /**

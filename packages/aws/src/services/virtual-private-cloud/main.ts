@@ -13,7 +13,7 @@ import { VpcProps } from './types.js'
 const CommonVpcIdentifier = 'CommonVpc'
 
 /**
- * @classdesc Provides operations on AWS VPC.
+ * Provides operations on AWS VPC.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
  * @example
@@ -27,6 +27,7 @@ const CommonVpcIdentifier = 'CommonVpc'
  *   }
  * }
  * @see [CDK VPC Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.@aws-cdk_aws-Vpc.html}
+ * @category Service
  */
 export class VpcManager {
   /**

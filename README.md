@@ -69,11 +69,11 @@ pnpm test:watch static-asset-deployment-distribution-ref.test.ts
 
 ### Toolkit
 
-There are common utilities that help with testing constructs which you can find in the [test tools](./src/test/tools/cdk) directory.
+There are common utilities that help with testing constructs which you can find in the [test tools](https://github.com/gradientedge/cdk-utils/tree/main/packages/aws/test/tools/cdk) directory.
 
 ### Debug
 
-There is a debug utility that can be used to print out the contents of a `template`. This is useful for debugging and understanding the structure which you can find in the [debug](./src/test/tools/debug) directory.
+There is a debug utility that can be used to print out the contents of a `template`. This is useful for debugging and understanding the structure which you can find in the [debug](https://github.com/gradientedge/cdk-utils/tree/main/packages/aws/test/tools/debug) directory.
 
 <!-- references -->
 

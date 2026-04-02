@@ -22,6 +22,7 @@ import { ElastiCacheProps, ReplicatedElastiCacheProps } from './types.js'
  *   }
  * }
  * @see [CDK ElastiCache Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_elasticache-readme.html}
+ * @category Service
  */
 export class ElastiCacheManager {
   /**

@@ -9,7 +9,7 @@ import { AzureDashboardRenderer } from './renderer.js'
 import { PortalDashboardProps } from './types.js'
 
 /**
- * @classdesc Provides operations on Azure Portal Dashboards using Pulumi
+ * Provides operations on Azure Portal Dashboards using Pulumi
  * - A new instance of this class is injected into {@link CommonAzureConstruct} constructor.
  * - If a custom construct extends {@link CommonAzureConstruct}, an instance is available within the context.
  * @example
@@ -24,6 +24,7 @@ import { PortalDashboardProps } from './types.js'
  *   }
  * }
  * ```
+ * @category Service
  */
 export class AzurePortalManager {
   /**

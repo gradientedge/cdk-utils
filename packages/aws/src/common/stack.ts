@@ -11,7 +11,7 @@ import { CommonStackProps } from './types.js'
 import { CommonConstruct } from './construct.js'
 
 /**
- * @classdesc Common stack to use as a base for all higher level constructs.
+ * Common stack to use as a base for all higher level constructs.
  * @example
  * import { CommonStack } from '@gradientedge/cdk-utils'
  *
@@ -21,6 +21,7 @@ import { CommonConstruct } from './construct.js'
  *     // provision resources
  *   }
  * }
+ * @category Common
  */
 export class CommonStack extends Stack {
   public static NODEJS_RUNTIME = Runtime.NODEJS_24_X

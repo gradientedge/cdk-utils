@@ -28,7 +28,7 @@ import { AzureAppConfigurationManager, RoleDefinitionId } from '../../services/i
 import { AzureFunctionAppProps } from './types.js'
 
 /**
- * @classdesc Provides a construct to create and deploy an Azure Function App with Flex Consumption hosting
+ * Provides a construct to create and deploy an Azure Function App with Flex Consumption hosting
  * @example
  * import { AzureFunctionApp, AzureFunctionAppProps } from '@gradientedge/cdk-utils'
  *
@@ -40,6 +40,7 @@ import { AzureFunctionAppProps } from './types.js'
  *     this.initResources()
  *   }
  * }
+ * @category Construct
  */
 export class AzureFunctionApp extends CommonAzureConstruct {
   props: AzureFunctionAppProps

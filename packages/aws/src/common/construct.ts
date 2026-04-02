@@ -39,8 +39,7 @@ import { ResourceNameFormatter } from './resource-name-formatter.js'
 import { CommonStackProps } from './types.js'
 
 /**
- * @subcategory Construct
- * @classdesc Common construct to use as a base for all higher level constructs.
+ * Common construct to use as a base for all higher level constructs.
  * @example
  * import { CommonConstruct } from '@gradientedge/cdk-utils';
  *
@@ -50,6 +49,7 @@ import { CommonStackProps } from './types.js'
  *     this.props = props;
  *   };
  * };
+ * @category Common
  */
 export class CommonConstruct extends Construct {
   props: CommonStackProps

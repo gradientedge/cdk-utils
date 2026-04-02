@@ -29,20 +29,21 @@ import {
 } from './types.js'
 
 /**
- * @classdesc Provides operations on Cloudflare Access
- * - A new instance of this class is injected into {@link CommonCloudflareComponent} constructor.
- * - If a custom component extends {@link CommonCloudflareComponent}, an instance is available within the context.
+ * Provides operations on Cloudflare Access
+ * - A new instance of this class is injected into {@link CommonCloudflareConstruct} constructor.
+ * - If a custom component extends {@link CommonCloudflareConstruct}, an instance is available within the context.
  * @example
  * ```
- * import { CommonCloudflareComponent, CloudflareAccessManager } from '@gradientedge/cdk-utils'
+ * import { CommonCloudflareConstruct, CloudflareAccessManager } from '@gradientedge/cdk-utils'
  *
- * class CustomComponent extends CommonCloudflareComponent {
+ * class CustomComponent extends CommonCloudflareConstruct {
  *   constructor(name: string, args: any, opts?: pulumi.ComponentResourceOptions) {
  *     super(name, args, opts)
  *     this.accessManager.createAccessApplication('MyAppAccess', this, props)
  *   }
  * }
  * ```
+ * @category Service
  */
 export class CloudflareAccessManager {
   /**

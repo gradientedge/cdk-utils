@@ -5,7 +5,8 @@ import { EventBridgeDestination } from 'aws-cdk-lib/aws-lambda-destinations'
 import { ApiDestinedLambdaEnvironment, ApiDestinedLambdaType } from './types.js'
 
 /**
- * @classdesc Provides a construct to contain lambda resources for ApiToEventBridgeTargetWithSns
+ * Provides a construct to contain lambda resources for ApiToEventBridgeTargetWithSns
+ * @category Construct
  */
 export class ApiDestinedLambda implements ApiDestinedLambdaType {
   destinationFailure: EventBridgeDestination

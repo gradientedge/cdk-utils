@@ -11,7 +11,7 @@ import { registerTagTransformation } from './tagging.js'
 import { CommonAzureStackProps } from './types.js'
 
 /**
- * @classdesc Common stack to use as a base for all higher level constructs using Pulumi
+ * Common stack to use as a base for all higher level constructs using Pulumi
  * @example
  * ```typescript
  * import { CommonAzureStack } from '@gradientedge/cdk-utils'
@@ -23,6 +23,7 @@ import { CommonAzureStackProps } from './types.js'
  *   }
  * }
  * ```
+ * @category Common
  */
 export class CommonAzureStack extends ComponentResource {
   public static NODEJS_RUNTIME = '22'

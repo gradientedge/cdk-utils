@@ -11,9 +11,9 @@ import { RestApiLambda } from '../rest-api-lambda/index.js'
 import { RestApiLambdaWithCacheProps } from './types.js'
 
 /**
- * @classdesc Provides a construct to create and deploy a RestApi API as Lambda with Caching
+ * Provides a construct to create and deploy a RestApi API as Lambda with Caching
  *
- * <b>Architecture</b><br/> ![Architecture](./RestApiLambda.jpg)
+ * <b>Architecture</b><br/> ![Architecture](https://raw.githubusercontent.com/gradientedge/cdk-utils/main/img/RestApiLambda.jpg)
  * @example
  * import { RestApiLambdaWithCacheProps } '@gradientedge/cdk-utils'
  * import { Construct } from 'constructs'

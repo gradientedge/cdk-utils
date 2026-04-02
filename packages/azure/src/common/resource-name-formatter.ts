@@ -1,10 +1,11 @@
 import { AzureResourceNameFormatterProps, CommonAzureStackProps } from '../index.js'
 
 /**
- * @classdesc Formats Azure resource names according to naming conventions
+ * Formats Azure resource names according to naming conventions
  * - Applies global/resource prefixes and suffixes
  * - Automatically appends stage to resource names
  * - Supports per-resource customization via options
+ * @category Common
  */
 export class AzureResourceNameFormatter {
   props: CommonAzureStackProps

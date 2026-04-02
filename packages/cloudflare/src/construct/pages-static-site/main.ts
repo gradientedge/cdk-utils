@@ -13,7 +13,7 @@ import { CommonCloudflareConstruct } from '../../common/index.js'
 import { CloudflarePagesStaticSiteProps } from './types.js'
 
 /**
- * @classdesc Provides a construct to create and deploy a cloudflare pages static site
+ * Provides a construct to create and deploy a cloudflare pages static site
  * @example
  * import { CloudflarePagesStaticSite, CloudflareStaticSiteProps } '@gradientedge/cdk-utils'
  * import { Construct } from 'constructs'
@@ -26,6 +26,7 @@ import { CloudflarePagesStaticSiteProps } from './types.js'
  *     this.initResources()
  *   }
  * }
+ * @category Construct
  */
 export class CloudflarePagesStaticSite extends CommonCloudflareConstruct {
   declare props: CloudflarePagesStaticSiteProps

@@ -8,7 +8,7 @@ import { createCfnOutput } from '../../utils/index.js'
 import { CloudTrailProps } from './types.js'
 
 /**
- * @classdesc Provides operations on AWS CloudTrail.
+ * Provides operations on AWS CloudTrail.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
  * @example
@@ -29,6 +29,7 @@ import { CloudTrailProps } from './types.js'
  *   }
  * }
  * @see [CDK CloudTrail Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_cloudtrail-readme.html}
+ * @category Service
  */
 export class CloudTrailManager {
   /**

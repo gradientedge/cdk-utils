@@ -3,7 +3,7 @@ import { AzureRestApi } from '../rest-api/main.js'
 import { AzureApiWithCache, AzureRestApiWithCacheProps } from './types.js'
 
 /**
- * @classdesc Provides a construct to create and deploy an Azure API Management service with Redis cache integration
+ * Provides a construct to create and deploy an Azure API Management service with Redis cache integration
  * @example
  * import { AzureRestApiWithCache, AzureRestApiWithCacheProps } from '@gradientedge/cdk-utils'
  *
@@ -15,6 +15,7 @@ import { AzureApiWithCache, AzureRestApiWithCacheProps } from './types.js'
  *     this.initResources()
  *   }
  * }
+ * @category Construct
  */
 export class AzureRestApiWithCache extends AzureRestApi {
   props: AzureRestApiWithCacheProps

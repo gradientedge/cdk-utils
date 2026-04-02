@@ -29,7 +29,7 @@ import {
 } from './types.js'
 
 /**
- * @classdesc Provides a construct to create and deploy a site hosted with an clustered ECS/ELB backend
+ * Provides a construct to create and deploy a site hosted with an clustered ECS/ELB backend
  * @example
  * import { SiteWithLambdaBackend, SiteWithLambdaBackendProps } '@gradientedge/cdk-utils'
  * import { Construct } from 'constructs'
@@ -42,6 +42,7 @@ import {
  *     this.initResources()
  *   }
  * }
+ * @category Construct
  */
 export class SiteWithLambdaBackend extends CommonConstruct {
   /* site properties */

@@ -25,7 +25,7 @@ import { CloudFrontManager } from '../cloudfront/index.js'
 import { LambdaAliasProps, LambdaEdgeProps, LambdaProps } from './types.js'
 
 /**
- * @classdesc Provides operations on AWS Lambda
+ * Provides operations on AWS Lambda
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
  * @example
@@ -39,6 +39,7 @@ import { LambdaAliasProps, LambdaEdgeProps, LambdaProps } from './types.js'
  *   }
  * }
  * @see [CDK Lambda Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_lambda-readme.html}
+ * @category Service
  */
 export class LambdaManager {
   /**

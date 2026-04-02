@@ -15,7 +15,7 @@ import { CommonConstruct } from '../../common/index.js'
 import { StaticSiteProps } from './types.js'
 
 /**
- * @classdesc Provides a construct to create and deploy a s3 hosted static site
+ * Provides a construct to create and deploy a s3 hosted static site
  * @example
  * import { StaticSite, StaticSiteProps } '@gradientedge/cdk-utils'
  * import { Construct } from 'constructs'
@@ -28,6 +28,7 @@ import { StaticSiteProps } from './types.js'
  *     this.initResources()
  *   }
  * }
+ * @category Construct
  */
 export class StaticSite extends CommonConstruct {
   /* static site properties */

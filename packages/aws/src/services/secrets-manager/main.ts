@@ -8,7 +8,7 @@ import { createCfnOutput, determineCredentials } from '../../utils/index.js'
 import { SecretBaseProps } from './types.js'
 
 /**
- * @classdesc Provides operations on AWS Secrets Manager.
+ * Provides operations on AWS Secrets Manager.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
  * @example
@@ -22,6 +22,7 @@ import { SecretBaseProps } from './types.js'
  *   }
  * }
  * @see [CDK Secrets Manager Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_secretsmanager-readme.html}
+ * @category Service
  */
 export class SecretsManager {
   /**

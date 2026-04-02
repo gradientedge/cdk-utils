@@ -20,7 +20,7 @@ export const DEFAULT_POSIX_USER = {
 }
 
 /**
- * @classdesc Provides operations on AWS Elastic File System.
+ * Provides operations on AWS Elastic File System.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
  * @example
@@ -34,6 +34,7 @@ export const DEFAULT_POSIX_USER = {
  *   }
  * }
  * @see [CDK EFS Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_efs-readme.html}
+ * @category Service
  */
 export class EfsManager {
   /**

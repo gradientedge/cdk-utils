@@ -10,7 +10,7 @@ import { CommonAzureConstruct } from '../../common/index.js'
 import { ApplicationInsightsProps, ComponentCurrentBillingFeatureProps } from './types.js'
 
 /**
- * @classdesc Provides operations on Azure Application Insights using Pulumi
+ * Provides operations on Azure Application Insights using Pulumi
  * - A new instance of this class is injected into {@link CommonAzureConstruct} constructor.
  * - If a custom construct extends {@link CommonAzureConstruct}, an instance is available within the context.
  * @example
@@ -25,6 +25,7 @@ import { ApplicationInsightsProps, ComponentCurrentBillingFeatureProps } from '.
  *   }
  * }
  * ```
+ * @category Service
  */
 export class AzureApplicationInsightsManager {
   /**

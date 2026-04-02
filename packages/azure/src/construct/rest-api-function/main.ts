@@ -10,7 +10,7 @@ import { AzureFunctionApp } from '../function-app/index.js'
 import { AzureApiFunction, AzureRestApiFunctionProps } from './types.js'
 
 /**
- * @classdesc Provides a construct to create and deploy an Azure Function App with API Management integration
+ * Provides a construct to create and deploy an Azure Function App with API Management integration
  * @example
  * import { AzureRestApiFunction, AzureRestApiFunctionProps } from '@gradientedge/cdk-utils'
  *
@@ -22,6 +22,7 @@ import { AzureApiFunction, AzureRestApiFunctionProps } from './types.js'
  *     this.initResources()
  *   }
  * }
+ * @category Construct
  */
 export class AzureRestApiFunction extends AzureFunctionApp {
   props: AzureRestApiFunctionProps

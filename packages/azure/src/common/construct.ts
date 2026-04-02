@@ -29,7 +29,7 @@ import { AzureResourceNameFormatter } from './resource-name-formatter.js'
 import { CommonAzureStackProps } from './types.js'
 
 /**
- * @classdesc Common Azure construct to use as a base for all higher level constructs using Pulumi
+ * Common Azure construct to use as a base for all higher level constructs using Pulumi
  * - Provides manager instances for all Azure services
  * - Handles resource naming conventions
  * - Manages common properties and utilities
@@ -44,6 +44,7 @@ import { CommonAzureStackProps } from './types.js'
  *   }
  * }
  * ```
+ * @category Common
  */
 export class CommonAzureConstruct extends ComponentResource {
   declare props: CommonAzureStackProps

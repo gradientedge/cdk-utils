@@ -80,7 +80,7 @@ export interface ApiToEventBridgeTargetRestApiProps {
 
 /**
  */
-interface ApiToEventBridgeTargetLambdaProps {
+export interface ApiToEventBridgeTargetLambdaProps {
   function: LambdaProps
   handler?: string
   layerSource?: AssetCode
@@ -89,7 +89,7 @@ interface ApiToEventBridgeTargetLambdaProps {
 
 /**
  */
-interface ApiToEventBridgeTargetEventProps {
+export interface ApiToEventBridgeTargetEventProps {
   eventBusName?: string
   logGroup?: LogProps
   logGroupFailure?: LogProps

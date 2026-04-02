@@ -4,7 +4,7 @@ import { BuildSpec, ComputeType, LinuxBuildImage, Project } from 'aws-cdk-lib/aw
 import { CommonConstruct } from '../../common/index.js'
 
 /**
- * @classdesc Provides operations on AWS Code Build.
+ * Provides operations on AWS Code Build.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
  * @example
@@ -18,6 +18,7 @@ import { CommonConstruct } from '../../common/index.js'
  *   }
  * }
  * @see [CDK Codebuild Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_codebuild-readme.html}
+ * @category Service
  */
 export class CodeBuildManager {
   /**
