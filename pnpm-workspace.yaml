@@ -1,3 +1,9 @@
 packages:
   - 'packages/*'
   - 'app/**'
+ignoredBuiltDependencies:
+  - '@pulumi/command'
+  - '@pulumi/std'
+  - esbuild
+  - protobufjs
+  - unrs-resolver

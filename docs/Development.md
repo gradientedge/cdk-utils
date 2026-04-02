@@ -175,8 +175,4 @@ Common types:
 | `test`     | Adding or updating tests                   |
 | `chore`    | Maintenance tasks (deps, CI, build, etc.)  |
 
-Commits are managed via [Commitizen](https://github.com/commitizen/cz-cli):
-
-```shell
-pnpm cz
-```
+Commit messages are validated automatically via a `commit-msg` hook using [commitlint](https://commitlint.js.org/).
