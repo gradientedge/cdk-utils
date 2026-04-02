@@ -7,19 +7,6 @@ settings:
 importers:
 
   .:
-    dependencies:
-      '@gradientedge/cdk-utils-aws':
-        specifier: workspace:*
-        version: link:packages/aws
-      '@gradientedge/cdk-utils-azure':
-        specifier: workspace:*
-        version: link:packages/azure
-      '@gradientedge/cdk-utils-cloudflare':
-        specifier: workspace:*
-        version: link:packages/cloudflare
-      '@gradientedge/cdk-utils-common':
-        specifier: workspace:*
-        version: link:packages/common
     devDependencies:
       '@babel/core':
         specifier: 7.29.0
@@ -218,6 +205,21 @@ importers:
       yaml:
         specifier: 2.8.3
         version: 2.8.3
+
+  packages/cdk-utils:
+    dependencies:
+      '@gradientedge/cdk-utils-aws':
+        specifier: workspace:*
+        version: link:../aws
+      '@gradientedge/cdk-utils-azure':
+        specifier: workspace:*
+        version: link:../azure
+      '@gradientedge/cdk-utils-cloudflare':
+        specifier: workspace:*
+        version: link:../cloudflare
+      '@gradientedge/cdk-utils-common':
+        specifier: workspace:*
+        version: link:../common
 
   packages/cloudflare:
     dependencies:

@@ -1,0 +1,44 @@
+{
+  "name": "@gradientedge/cdk-utils",
+  "version": "10.8.0",
+  "description": "Utilities for AWS CDK, Azure and Cloudflare Pulumi provisioning",
+  "type": "module",
+  "main": "dist/src/index.js",
+  "exports": {
+    ".": {
+      "import": "./dist/src/index.js",
+      "types": "./dist/src/index.d.ts"
+    }
+  },
+  "files": [
+    "dist/src/"
+  ],
+  "scripts": {
+    "build": "tsc",
+    "build:production": "tsc -p tsconfig.prd.json"
+  },
+  "dependencies": {
+    "@gradientedge/cdk-utils-aws": "workspace:*",
+    "@gradientedge/cdk-utils-azure": "workspace:*",
+    "@gradientedge/cdk-utils-cloudflare": "workspace:*",
+    "@gradientedge/cdk-utils-common": "workspace:*"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "license": "MIT",
+  "keywords": [
+    "gradientedge",
+    "cdk",
+    "pulumi"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/gradientedge/cdk-utils.git",
+    "directory": "packages/cdk-utils"
+  },
+  "bugs": {
+    "url": "https://github.com/gradientedge/cdk-utils/issues"
+  },
+  "homepage": "https://github.com/gradientedge/cdk-utils#readme"
+}

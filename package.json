@@ -1,19 +1,8 @@
 {
-  "name": "@gradientedge/cdk-utils",
-  "version": "10.8.0",
+  "name": "cdk-utils-root",
   "description": "Utilities for AWS CDK, Azure and Cloudflare Pulumi provisioning",
   "type": "module",
-  "main": "dist/index.js",
-  "exports": {
-    ".": {
-      "import": "./dist/index.js",
-      "types": "./dist/index.d.ts"
-    }
-  },
-  "files": [
-    "dist/",
-    "!dist/package.json"
-  ],
+  "private": true,
   "engines": {
     "node": ">=22 <=24",
     "pnpm": "=10"
@@ -34,8 +23,8 @@
   },
   "homepage": "https://github.com/gradientedge/cdk-utils#readme",
   "scripts": {
-    "build": "pnpm -r build && rimraf dist/ && tsc",
-    "build:production": "pnpm -r build:production && rimraf dist/ && tsc -p tsconfig.prd.json",
+    "build": "pnpm -r build",
+    "build:production": "pnpm -r build:production",
     "ci": "pnpm install --frozen-lockfile && pnpm build && pnpm validate && pnpm run docs",
     "cz": "cz",
     "docs": "rimraf api-docs && pnpm override:plugin:docs && jsdoc --pedantic -c jsdoc.json .",
@@ -51,12 +40,6 @@
     "validate": "pnpm prettier && pnpm lint && pnpm test",
     "prepare": "husky",
     "release": "changeset publish"
-  },
-  "dependencies": {
-    "@gradientedge/cdk-utils-aws": "workspace:*",
-    "@gradientedge/cdk-utils-azure": "workspace:*",
-    "@gradientedge/cdk-utils-cloudflare": "workspace:*",
-    "@gradientedge/cdk-utils-common": "workspace:*"
   },
   "devDependencies": {
     "@babel/core": "7.29.0",
