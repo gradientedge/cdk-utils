@@ -89,6 +89,45 @@
       "retentionInDays": 7
     }
   },
+  "testLambdaWithDlqRetries": {
+    "functionName": "test-lambda-with-dlq-retries",
+    "logRetentionInDays": 7,
+    "memorySize": 1024,
+    "timeoutInSecs": 60,
+    "deadLetterQueueEnabled": true,
+    "dlq": {
+      "visibilityTimeoutInSecs": 300,
+      "receiveMessageWaitTimeInSecs": 20,
+      "retentionInDays": 7,
+      "maxReceiveCount": 3,
+      "retriesEnabled": true,
+      "retryBatchSize": 5
+    },
+    "redriveq": {
+      "visibilityTimeoutInSecs": 300,
+      "receiveMessageWaitTimeInSecs": 20,
+      "retentionInDays": 7
+    }
+  },
+  "testDockerLambdaWithDlqRetries": {
+    "functionName": "test-docker-lambda-dlq-retries",
+    "logRetentionInDays": 7,
+    "memorySize": 1024,
+    "timeoutInSecs": 30,
+    "deadLetterQueueEnabled": true,
+    "dlq": {
+      "visibilityTimeoutInSecs": 300,
+      "receiveMessageWaitTimeInSecs": 20,
+      "retentionInDays": 7,
+      "maxReceiveCount": 3,
+      "retriesEnabled": true
+    },
+    "redriveq": {
+      "visibilityTimeoutInSecs": 300,
+      "receiveMessageWaitTimeInSecs": 20,
+      "retentionInDays": 7
+    }
+  },
   "testAnotherLambda": {
     "functionName": "test-another-lambda",
     "logRetentionInDays": 7,

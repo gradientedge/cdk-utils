@@ -193,3 +193,148 @@ describe('TestCloudflareWorkerManager', () => {
       })
   })
 })
+
+class TestWithZoneIdCloudflareStack extends CommonCloudflareStack {
+  declare props: TestCloudflareStackProps
+  declare construct: TestWithZoneIdConstruct
+
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestWithZoneIdConstruct(props.name, this.props)
+  }
+}
+
+class TestWithZoneIdConstruct extends CommonCloudflareConstruct {
+  declare props: TestCloudflareStackProps
+  zone: Zone
+  workersCustomDomain: WorkersCustomDomain
+  workersRoute: WorkersRoute
+  workersScript: WorkersScript
+  workersKvNamespace: WorkersKvNamespace
+
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, props)
+    this.zone = this.zoneManager.createZone(`test-zone-zid-${this.props.stage}`, this, this.props.testZone)
+    this.workersCustomDomain = this.workerManager.createWorkerDomain(
+      `test-worker-domain-zid-${this.props.stage}`,
+      this,
+      {
+        ...this.props.testWorkerDomain,
+        zoneId: this.zone.id,
+      }
+    )
+    this.workersRoute = this.workerManager.createWorkerRoute(`test-worker-route-zid-${this.props.stage}`, this, {
+      ...this.props.testWorkerRoute,
+      zoneId: this.zone.id,
+    })
+    this.workersScript = this.workerManager.createWorkerScript(`test-worker-script-zid-${this.props.stage}`, this, {
+      ...this.props.testWorkerScript,
+      content: fs.readFileSync('packages/cloudflare/test/common/sample.js', { encoding: 'utf8' }),
+      routes: [
+        {
+          ...this.props.testWorkerRoute,
+          zoneId: this.zone.id,
+        },
+      ],
+    })
+    this.workersKvNamespace = this.workerManager.createWorkersKvNamespace(
+      `test-workers-kv-ns-zid-${this.props.stage}`,
+      this,
+      this.props.testWorkersKvNamespace
+    )
+  }
+}
+
+describe('TestCloudflareWorkerManager - With explicit zoneId', () => {
+  let zoneIdStack: TestWithZoneIdCloudflareStack
+  test('provisions worker resources with explicit zoneId', () => {
+    zoneIdStack = new TestWithZoneIdCloudflareStack('test-zoneid-stack', testStackProps)
+    expect(zoneIdStack.construct.workersCustomDomain).toBeDefined()
+    expect(zoneIdStack.construct.workersRoute).toBeDefined()
+    expect(zoneIdStack.construct.workersScript).toBeDefined()
+    expect(zoneIdStack.construct.workersKvNamespace).toBeDefined()
+  })
+
+  test('worker domain uses provided zoneId', () => {
+    pulumi.all([zoneIdStack.construct.workersCustomDomain.zoneId]).apply(([zoneId]) => {
+      expect(zoneId).toEqual('test-zone-zid-dev-id')
+    })
+  })
+
+  test('worker route uses provided zoneId', () => {
+    pulumi.all([zoneIdStack.construct.workersRoute.zoneId]).apply(([zoneId]) => {
+      expect(zoneId).toEqual('test-zone-zid-dev-id')
+    })
+  })
+
+  test('worker script with routes creates routes', () => {
+    expect(zoneIdStack.construct.workersScript).toBeDefined()
+    pulumi.all([zoneIdStack.construct.workersScript.scriptName]).apply(([scriptName]) => {
+      expect(scriptName).toEqual('test-script-dev')
+    })
+  })
+})
+
+class TestNoAccountIdCloudflareStack extends CommonCloudflareStack {
+  declare props: TestCloudflareStackProps
+  declare construct: TestNoAccountIdConstruct
+
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestNoAccountIdConstruct(props.name, this.props)
+  }
+}
+
+class TestNoAccountIdConstruct extends CommonCloudflareConstruct {
+  declare props: TestCloudflareStackProps
+  zone: Zone
+  workersScript: WorkersScript
+  workersKvNamespace: WorkersKvNamespace
+  workersKv: WorkersKv
+  workersCronTrigger: WorkersCronTrigger
+
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, props)
+    this.zone = this.zoneManager.createZone(`test-zone-noacct-${this.props.stage}`, this, this.props.testZone)
+    this.workersScript = this.workerManager.createWorkerScript(`test-worker-script-noacct-${this.props.stage}`, this, {
+      ...this.props.testWorkerScript,
+      accountId: undefined as any,
+      content: fs.readFileSync('packages/cloudflare/test/common/sample.js', { encoding: 'utf8' }),
+    })
+    this.workersKvNamespace = this.workerManager.createWorkersKvNamespace(
+      `test-workers-kv-ns-noacct-${this.props.stage}`,
+      this,
+      {
+        ...this.props.testWorkersKvNamespace,
+        accountId: undefined as any,
+      }
+    )
+    this.workersKv = this.workerManager.createWorkersKv(`test-workers-kv-noacct-${this.props.stage}`, this, {
+      ...this.props.testWorkersKv,
+      accountId: undefined as any,
+      namespaceId: this.workersKvNamespace.id,
+    })
+    this.workersCronTrigger = this.workerManager.createWorkerCronTrigger(
+      `test-worker-trigger-noacct-${this.props.stage}`,
+      this,
+      {
+        ...this.props.testWorkerCronTrigger,
+        accountId: undefined as any,
+      }
+    )
+  }
+}
+
+describe('TestCloudflareWorkerManager - Without explicit accountId', () => {
+  test('provisions worker resources using fallback accountId', () => {
+    const noAcctStack = new TestNoAccountIdCloudflareStack('test-noacct-stack', testStackProps)
+    expect(noAcctStack.construct.workersScript).toBeDefined()
+    expect(noAcctStack.construct.workersKvNamespace).toBeDefined()
+    expect(noAcctStack.construct.workersKv).toBeDefined()
+    expect(noAcctStack.construct.workersCronTrigger).toBeDefined()
+
+    pulumi.all([noAcctStack.construct.workersScript.accountId]).apply(([accountId]) => {
+      expect(accountId).toEqual('123456789012')
+    })
+  })
+})

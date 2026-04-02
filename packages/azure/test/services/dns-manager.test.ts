@@ -228,3 +228,125 @@ describe('TestAzureDnsConstruct', () => {
       })
   })
 })
+
+/* --- Tests for default value fallback branches --- */
+
+class TestMinimalDnsConstruct extends CommonAzureConstruct {
+  declare props: TestAzureStackProps
+  dnsZone: Zone
+  dnsARecord: RecordSet
+  dnsCnameRecord: RecordSet
+  dnsTxtRecord: RecordSet
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+
+    // Zone with minimal props - exercises tags default
+    this.dnsZone = this.dnsManager.createDnsZone(`test-minimal-dns-zone-${this.props.stage}`, this, {
+      zoneName: 'test-minimal-dns-zone',
+      resourceGroupName: 'test-rg-dev',
+    } as any)
+
+    // A record with minimal props - exercises ttl/metadata defaults
+    this.dnsARecord = this.dnsManager.createDnsARecord(`test-minimal-a-record-${this.props.stage}`, this, {
+      relativeRecordSetName: 'test-minimal-a-record',
+      resourceGroupName: 'test-rg-dev',
+      zoneName: 'test-minimal-dns-zone-dev',
+      aRecords: [{ ipv4Address: '5.6.7.8' }],
+    } as any)
+
+    // CNAME record with minimal props - exercises ttl/metadata defaults
+    this.dnsCnameRecord = this.dnsManager.createDnsCnameRecord(`test-minimal-cname-${this.props.stage}`, this, {
+      relativeRecordSetName: 'test-minimal-cname',
+      resourceGroupName: 'test-rg-dev',
+      zoneName: 'test-minimal-dns-zone-dev',
+      cnameRecord: { cname: 'minimal.example.com' },
+    } as any)
+
+    // TXT record with minimal props - exercises ttl/metadata defaults
+    this.dnsTxtRecord = this.dnsManager.createDnsTxtRecord(`test-minimal-txt-${this.props.stage}`, this, {
+      relativeRecordSetName: 'test-minimal-txt',
+      resourceGroupName: 'test-rg-dev',
+      zoneName: 'test-minimal-dns-zone-dev',
+      txtRecords: [{ value: ['minimal-value'] }],
+    } as any)
+  }
+}
+
+class TestMinimalDnsStack extends CommonAzureStack {
+  declare props: TestAzureStackProps
+  declare construct: TestMinimalDnsConstruct
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestMinimalDnsConstruct(props.name, this.props)
+  }
+}
+
+const minimalDnsStack = new TestMinimalDnsStack('test-minimal-dns-stack', testStackProps)
+
+describe('TestAzureDnsConstruct - Default Values', () => {
+  test('dns zone uses default tags when not provided', () => {
+    pulumi.all([minimalDnsStack.construct.dnsZone.tags]).apply(([tags]) => {
+      expect(tags?.environment).toEqual('dev')
+    })
+  })
+
+  test('dns a record uses default ttl when not provided', () => {
+    pulumi.all([minimalDnsStack.construct.dnsARecord.ttl]).apply(([ttl]) => {
+      expect(ttl).toEqual(300)
+    })
+  })
+
+  test('dns a record uses default metadata when not provided', () => {
+    pulumi.all([minimalDnsStack.construct.dnsARecord.metadata]).apply(([metadata]) => {
+      expect(metadata?.environment).toEqual('dev')
+    })
+  })
+
+  test('dns cname record uses default ttl when not provided', () => {
+    pulumi.all([minimalDnsStack.construct.dnsCnameRecord.ttl]).apply(([ttl]) => {
+      expect(ttl).toEqual(300)
+    })
+  })
+
+  test('dns cname record uses default metadata when not provided', () => {
+    pulumi.all([minimalDnsStack.construct.dnsCnameRecord.metadata]).apply(([metadata]) => {
+      expect(metadata?.environment).toEqual('dev')
+    })
+  })
+
+  test('dns txt record uses default ttl when not provided', () => {
+    pulumi.all([minimalDnsStack.construct.dnsTxtRecord.ttl]).apply(([ttl]) => {
+      expect(ttl).toEqual(300)
+    })
+  })
+
+  test('dns txt record uses default metadata when not provided', () => {
+    pulumi.all([minimalDnsStack.construct.dnsTxtRecord.metadata]).apply(([metadata]) => {
+      expect(metadata?.environment).toEqual('dev')
+    })
+  })
+})
+
+describe('TestAzureDnsConstruct - Resource Group Fallback', () => {
+  test('createDnsZone throws when resourceGroupName is missing', () => {
+    expect(() => {
+      class NoRgDnsConstruct extends CommonAzureConstruct {
+        constructor(name: string, props: any) {
+          super(name, props)
+          this.dnsManager.createDnsZone('test-no-rg-dns', this, {
+            zoneName: 'test-no-rg-zone',
+          } as any)
+        }
+      }
+      class NoRgDnsStack extends CommonAzureStack {
+        constructor(name: string, props: any) {
+          super(name, { ...testStackProps, resourceGroupName: undefined })
+          new NoRgDnsConstruct(props.name, this.props)
+        }
+      }
+      new NoRgDnsStack('test-no-rg-dns-stack', testStackProps)
+    }).toThrow('Resource group name undefined for test-no-rg-dns')
+  })
+})

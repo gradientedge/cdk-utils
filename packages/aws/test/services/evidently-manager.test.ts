@@ -257,3 +257,269 @@ describe('TestEvidentlyConstruct', () => {
     })
   })
 })
+
+describe('TestEvidentlyConstructErrorHandling', () => {
+  test('throws error when project props are undefined', () => {
+    class TestErrorProjectStack extends CommonStack {
+      declare props: TestStackProps
+
+      constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
+        super(parent, name, props)
+        this.construct = new TestErrorProjectConstruct(this, testStackProps.name, this.props)
+      }
+
+      protected determineConstructProps(props: cdk.StackProps) {
+        return {
+          ...super.determineConstructProps(props),
+        }
+      }
+    }
+
+    class TestErrorProjectConstruct extends CommonConstruct {
+      declare props: TestStackProps
+
+      constructor(parent: Construct, name: string, props: TestStackProps) {
+        super(parent, name, props)
+        this.evidentlyManager.createProject('test-project-err', this, undefined as any)
+      }
+    }
+
+    const error = () => new TestErrorProjectStack(app, 'test-error-stack-project', testStackProps)
+    expect(error).toThrow('EvidentlyProject props undefined')
+  })
+
+  test('throws error when project name is undefined', () => {
+    class TestErrorProjectNameStack extends CommonStack {
+      declare props: TestStackProps
+
+      constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
+        super(parent, name, props)
+        this.construct = new TestErrorProjectNameConstruct(this, testStackProps.name, this.props)
+      }
+
+      protected determineConstructProps(props: cdk.StackProps) {
+        return {
+          ...super.determineConstructProps(props),
+        }
+      }
+    }
+
+    class TestErrorProjectNameConstruct extends CommonConstruct {
+      declare props: TestStackProps
+
+      constructor(parent: Construct, name: string, props: TestStackProps) {
+        super(parent, name, props)
+        this.evidentlyManager.createProject('test-project-name-err', this, { description: 'test' } as any)
+      }
+    }
+
+    const error = () => new TestErrorProjectNameStack(app, 'test-error-stack-project-name', testStackProps)
+    expect(error).toThrow('EvidentlyProject name undefined')
+  })
+
+  test('throws error when feature props are undefined', () => {
+    class TestErrorFeatureStack extends CommonStack {
+      declare props: TestStackProps
+
+      constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
+        super(parent, name, props)
+        this.construct = new TestErrorFeatureConstruct(this, testStackProps.name, this.props)
+      }
+
+      protected determineConstructProps(props: cdk.StackProps) {
+        return {
+          ...super.determineConstructProps(props),
+        }
+      }
+    }
+
+    class TestErrorFeatureConstruct extends CommonConstruct {
+      declare props: TestStackProps
+
+      constructor(parent: Construct, name: string, props: TestStackProps) {
+        super(parent, name, props)
+        this.evidentlyManager.createFeature('test-feature-err', this, undefined as any)
+      }
+    }
+
+    const error = () => new TestErrorFeatureStack(app, 'test-error-stack-feature', testStackProps)
+    expect(error).toThrow('EvidentlyFeature props undefined')
+  })
+
+  test('throws error when launch props are undefined', () => {
+    class TestErrorLaunchStack extends CommonStack {
+      declare props: TestStackProps
+
+      constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
+        super(parent, name, props)
+        this.construct = new TestErrorLaunchConstruct(this, testStackProps.name, this.props)
+      }
+
+      protected determineConstructProps(props: cdk.StackProps) {
+        return {
+          ...super.determineConstructProps(props),
+        }
+      }
+    }
+
+    class TestErrorLaunchConstruct extends CommonConstruct {
+      declare props: TestStackProps
+
+      constructor(parent: Construct, name: string, props: TestStackProps) {
+        super(parent, name, props)
+        this.evidentlyManager.createLaunch('test-launch-err', this, undefined as any)
+      }
+    }
+
+    const error = () => new TestErrorLaunchStack(app, 'test-error-stack-launch', testStackProps)
+    expect(error).toThrow('EvidentlyLaunch props undefined')
+  })
+
+  test('throws error when launch name is undefined', () => {
+    class TestErrorLaunchNameStack extends CommonStack {
+      declare props: TestStackProps
+
+      constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
+        super(parent, name, props)
+        this.construct = new TestErrorLaunchNameConstruct(this, testStackProps.name, this.props)
+      }
+
+      protected determineConstructProps(props: cdk.StackProps) {
+        return {
+          ...super.determineConstructProps(props),
+        }
+      }
+    }
+
+    class TestErrorLaunchNameConstruct extends CommonConstruct {
+      declare props: TestStackProps
+
+      constructor(parent: Construct, name: string, props: TestStackProps) {
+        super(parent, name, props)
+        this.evidentlyManager.createLaunch('test-launch-name-err', this, { description: 'test', project: 'arn' } as any)
+      }
+    }
+
+    const error = () => new TestErrorLaunchNameStack(app, 'test-error-stack-launch-name', testStackProps)
+    expect(error).toThrow('EvidentlyLaunch name undefined')
+  })
+
+  test('throws error when experiment props are undefined', () => {
+    class TestErrorExperimentStack extends CommonStack {
+      declare props: TestStackProps
+
+      constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
+        super(parent, name, props)
+        this.construct = new TestErrorExperimentConstruct(this, testStackProps.name, this.props)
+      }
+
+      protected determineConstructProps(props: cdk.StackProps) {
+        return {
+          ...super.determineConstructProps(props),
+        }
+      }
+    }
+
+    class TestErrorExperimentConstruct extends CommonConstruct {
+      declare props: TestStackProps
+
+      constructor(parent: Construct, name: string, props: TestStackProps) {
+        super(parent, name, props)
+        this.evidentlyManager.createExperiment('test-experiment-err', this, undefined as any)
+      }
+    }
+
+    const error = () => new TestErrorExperimentStack(app, 'test-error-stack-experiment', testStackProps)
+    expect(error).toThrow('EvidentlyExperiment props undefined')
+  })
+
+  test('throws error when experiment name is undefined', () => {
+    class TestErrorExperimentNameStack extends CommonStack {
+      declare props: TestStackProps
+
+      constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
+        super(parent, name, props)
+        this.construct = new TestErrorExperimentNameConstruct(this, testStackProps.name, this.props)
+      }
+
+      protected determineConstructProps(props: cdk.StackProps) {
+        return {
+          ...super.determineConstructProps(props),
+        }
+      }
+    }
+
+    class TestErrorExperimentNameConstruct extends CommonConstruct {
+      declare props: TestStackProps
+
+      constructor(parent: Construct, name: string, props: TestStackProps) {
+        super(parent, name, props)
+        this.evidentlyManager.createExperiment('test-experiment-name-err', this, {
+          description: 'test',
+          project: 'arn',
+        } as any)
+      }
+    }
+
+    const error = () => new TestErrorExperimentNameStack(app, 'test-error-stack-experiment-name', testStackProps)
+    expect(error).toThrow('EvidentlyExperiment name undefined')
+  })
+
+  test('throws error when segment props are undefined', () => {
+    class TestErrorSegmentStack extends CommonStack {
+      declare props: TestStackProps
+
+      constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
+        super(parent, name, props)
+        this.construct = new TestErrorSegmentConstruct(this, testStackProps.name, this.props)
+      }
+
+      protected determineConstructProps(props: cdk.StackProps) {
+        return {
+          ...super.determineConstructProps(props),
+        }
+      }
+    }
+
+    class TestErrorSegmentConstruct extends CommonConstruct {
+      declare props: TestStackProps
+
+      constructor(parent: Construct, name: string, props: TestStackProps) {
+        super(parent, name, props)
+        this.evidentlyManager.createSegment('test-segment-err', this, undefined as any)
+      }
+    }
+
+    const error = () => new TestErrorSegmentStack(app, 'test-error-stack-segment', testStackProps)
+    expect(error).toThrow('EvidentlySegment props undefined')
+  })
+
+  test('throws error when segment name is undefined', () => {
+    class TestErrorSegmentNameStack extends CommonStack {
+      declare props: TestStackProps
+
+      constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
+        super(parent, name, props)
+        this.construct = new TestErrorSegmentNameConstruct(this, testStackProps.name, this.props)
+      }
+
+      protected determineConstructProps(props: cdk.StackProps) {
+        return {
+          ...super.determineConstructProps(props),
+        }
+      }
+    }
+
+    class TestErrorSegmentNameConstruct extends CommonConstruct {
+      declare props: TestStackProps
+
+      constructor(parent: Construct, name: string, props: TestStackProps) {
+        super(parent, name, props)
+        this.evidentlyManager.createSegment('test-segment-name-err', this, { description: 'test' } as any)
+      }
+    }
+
+    const error = () => new TestErrorSegmentNameStack(app, 'test-error-stack-segment-name', testStackProps)
+    expect(error).toThrow('EvidentlySegment name undefined')
+  })
+})

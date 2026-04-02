@@ -12,6 +12,8 @@ interface TestStackProps extends CommonStackProps {
   testLambdaPython: any
   testLambdaWithConcurrency: any
   testLambdaWithDlq: any
+  testLambdaWithDlqRetries: any
+  testDockerLambdaWithDlqRetries: any
 }
 
 const testStackProps = {
@@ -47,6 +49,8 @@ class TestCommonStack extends CommonStack {
         testLambdaPython: this.node.tryGetContext('testLambdaPython'),
         testLambdaWithConcurrency: this.node.tryGetContext('testLambdaWithConcurrency'),
         testLambdaWithDlq: this.node.tryGetContext('testLambdaWithDlq'),
+        testLambdaWithDlqRetries: this.node.tryGetContext('testLambdaWithDlqRetries'),
+        testDockerLambdaWithDlqRetries: this.node.tryGetContext('testDockerLambdaWithDlqRetries'),
       },
     }
   }
@@ -102,6 +106,15 @@ class TestCommonConstruct extends CommonConstruct {
       new lambda.AssetCode('packages/aws/test/common/nodejs/lib')
     )
 
+    this.lambdaManager.createLambdaFunction(
+      'test-lambda-with-dlq-retries',
+      this,
+      this.props.testLambdaWithDlqRetries,
+      testRole,
+      [testLayer],
+      new lambda.AssetCode('packages/aws/test/common/nodejs/lib')
+    )
+
     this.lambdaManager.createEdgeFunction(
       'test-lambda-edge',
       this,
@@ -119,12 +132,22 @@ class TestCommonConstruct extends CommonConstruct {
       lambda.DockerImageCode.fromImageAsset('packages/aws/test/common/docker')
     )
 
+    this.lambdaManager.createLambdaDockerFunction(
+      'test-docker-lambda-dlq-retries',
+      this,
+      this.props.testDockerLambdaWithDlqRetries,
+      testRole,
+      lambda.DockerImageCode.fromImageAsset('packages/aws/test/common/docker')
+    )
+
     this.lambdaManager.createLambdaFunctionAlias(
       'test-lambda-alias',
       this,
       this.props.testLambdaAlias,
       testLambda.latestVersion
     )
+
+    this.lambdaManager.createWebAdapterLayer('test-web-adapter', this)
   }
 }
 
@@ -143,9 +166,10 @@ describe('TestLambdaConstruct', () => {
   test('synthesises as expected', () => {
     /* test if number of resources are correctly synthesised */
     template.resourceCountIs('AWS::Lambda::LayerVersion', 1)
-    template.resourceCountIs('AWS::Lambda::Function', 5)
-    template.resourceCountIs('AWS::SQS::Queue', 2)
+    template.resourceCountIs('AWS::Lambda::Function', 7)
+    template.resourceCountIs('AWS::SQS::Queue', 6)
     template.resourceCountIs('AWS::Lambda::Alias', 2)
+    template.resourceCountIs('AWS::Lambda::EventSourceMapping', 2)
   })
 })
 
@@ -169,6 +193,10 @@ describe('TestLambdaConstruct', () => {
     template.hasOutput('testLambdaDockerLambdaName', {})
     template.hasOutput('testLambdaWithConcurrencyLambdaArn', {})
     template.hasOutput('testLambdaWithConcurrencyLambdaName', {})
+    template.hasOutput('testLambdaWithDlqRetriesLambdaArn', {})
+    template.hasOutput('testLambdaWithDlqRetriesLambdaName', {})
+    template.hasOutput('testDockerLambdaDlqRetriesLambdaArn', {})
+    template.hasOutput('testDockerLambdaDlqRetriesLambdaName', {})
   })
 })
 
@@ -266,5 +294,204 @@ describe('TestLambdaConstruct', () => {
       ReceiveMessageWaitTimeSeconds: 20,
       VisibilityTimeout: 300,
     })
+  })
+})
+
+describe('TestLambdaConstructDlqRetries', () => {
+  test('provisions lambda with DLQ retries enabled as expected', () => {
+    template.hasResourceProperties('AWS::Lambda::Function', {
+      FunctionName: 'cdktest-test-lambda-with-dlq-retries-test',
+      MemorySize: 1024,
+      Timeout: 60,
+    })
+  })
+
+  test('provisions DLQ retry event source mapping for lambda', () => {
+    template.hasResourceProperties('AWS::Lambda::EventSourceMapping', {
+      BatchSize: 5,
+    })
+  })
+
+  test('provisions DLQ retry event source mapping for docker lambda with default batch size', () => {
+    template.hasResourceProperties('AWS::Lambda::EventSourceMapping', {
+      BatchSize: 1,
+    })
+  })
+})
+
+describe('TestLambdaConstructDockerDlqRetries', () => {
+  test('provisions docker lambda with DLQ retries as expected', () => {
+    template.hasResourceProperties('AWS::Lambda::Function', {
+      FunctionName: 'cdktest-test-docker-lambda-dlq-retries-test',
+      MemorySize: 1024,
+      Timeout: 30,
+    })
+  })
+})
+
+describe('TestLambdaConstructErrorHandling', () => {
+  test('throws error when lambda functionName is undefined', () => {
+    class TestErrorStack extends CommonStack {
+      declare props: TestStackProps
+
+      constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
+        super(parent, name, props)
+        this.construct = new TestErrorConstruct(this, testStackProps.name, this.props)
+      }
+
+      protected determineConstructProps(props: cdk.StackProps) {
+        return {
+          ...super.determineConstructProps(props),
+          testLambda: this.node.tryGetContext('testLambda'),
+        }
+      }
+    }
+
+    class TestErrorConstruct extends CommonConstruct {
+      declare props: TestStackProps
+
+      constructor(parent: Construct, name: string, props: TestStackProps) {
+        super(parent, name, props)
+        const testRole = this.iamManager.createRoleForLambda(
+          'test-role-err',
+          this,
+          new iam.PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this)] })
+        )
+        this.lambdaManager.createLambdaFunction(
+          'test-lambda-err',
+          this,
+          { memorySize: 1024 } as any,
+          testRole,
+          [],
+          new lambda.AssetCode('packages/aws/test/common/nodejs/lib')
+        )
+      }
+    }
+
+    const error = () => new TestErrorStack(app, 'test-error-stack-lambda-name', testStackProps)
+    expect(error).toThrow('Lambda functionName undefined')
+  })
+
+  test('throws error when docker lambda props are undefined', () => {
+    class TestErrorDockerStack extends CommonStack {
+      declare props: TestStackProps
+
+      constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
+        super(parent, name, props)
+        this.construct = new TestErrorDockerConstruct(this, testStackProps.name, this.props)
+      }
+
+      protected determineConstructProps(props: cdk.StackProps) {
+        return {
+          ...super.determineConstructProps(props),
+        }
+      }
+    }
+
+    class TestErrorDockerConstruct extends CommonConstruct {
+      declare props: TestStackProps
+
+      constructor(parent: Construct, name: string, props: TestStackProps) {
+        super(parent, name, props)
+        const testRole = this.iamManager.createRoleForLambda(
+          'test-role-docker-err',
+          this,
+          new iam.PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this)] })
+        )
+        this.lambdaManager.createLambdaDockerFunction(
+          'test-docker-err',
+          this,
+          undefined as any,
+          testRole,
+          lambda.DockerImageCode.fromImageAsset('packages/aws/test/common/docker')
+        )
+      }
+    }
+
+    const error = () => new TestErrorDockerStack(app, 'test-error-stack-docker', testStackProps)
+    expect(error).toThrow('Lambda props undefined')
+  })
+
+  test('throws error when docker lambda functionName is undefined', () => {
+    class TestErrorDockerNameStack extends CommonStack {
+      declare props: TestStackProps
+
+      constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
+        super(parent, name, props)
+        this.construct = new TestErrorDockerNameConstruct(this, testStackProps.name, this.props)
+      }
+
+      protected determineConstructProps(props: cdk.StackProps) {
+        return {
+          ...super.determineConstructProps(props),
+        }
+      }
+    }
+
+    class TestErrorDockerNameConstruct extends CommonConstruct {
+      declare props: TestStackProps
+
+      constructor(parent: Construct, name: string, props: TestStackProps) {
+        super(parent, name, props)
+        const testRole = this.iamManager.createRoleForLambda(
+          'test-role-docker-name-err',
+          this,
+          new iam.PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this)] })
+        )
+        this.lambdaManager.createLambdaDockerFunction(
+          'test-docker-name-err',
+          this,
+          { memorySize: 1024 } as any,
+          testRole,
+          lambda.DockerImageCode.fromImageAsset('packages/aws/test/common/docker')
+        )
+      }
+    }
+
+    const error = () => new TestErrorDockerNameStack(app, 'test-error-stack-docker-name', testStackProps)
+    expect(error).toThrow('Lambda functionName undefined')
+  })
+
+  test('throws error when lambda alias props are undefined', () => {
+    class TestErrorAliasStack extends CommonStack {
+      declare props: TestStackProps
+
+      constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
+        super(parent, name, props)
+        this.construct = new TestErrorAliasConstruct(this, testStackProps.name, this.props)
+      }
+
+      protected determineConstructProps(props: cdk.StackProps) {
+        return {
+          ...super.determineConstructProps(props),
+          testLambda: this.node.tryGetContext('testLambda'),
+        }
+      }
+    }
+
+    class TestErrorAliasConstruct extends CommonConstruct {
+      declare props: TestStackProps
+
+      constructor(parent: Construct, name: string, props: TestStackProps) {
+        super(parent, name, props)
+        const testRole = this.iamManager.createRoleForLambda(
+          'test-role-alias-err',
+          this,
+          new iam.PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this)] })
+        )
+        const testLambda = this.lambdaManager.createLambdaFunction(
+          'test-lambda-alias-err',
+          this,
+          this.props.testLambda,
+          testRole,
+          [],
+          new lambda.AssetCode('packages/aws/test/common/nodejs/lib')
+        )
+        this.lambdaManager.createLambdaFunctionAlias('test-alias-err', this, undefined as any, testLambda.latestVersion)
+      }
+    }
+
+    const error = () => new TestErrorAliasStack(app, 'test-error-stack-alias', testStackProps)
+    expect(error).toThrow('Lambda Alias props undefined')
   })
 })

@@ -234,3 +234,175 @@ describe('TestAzureEventgridConstruct', () => {
       })
   })
 })
+
+/* --- Tests for default value fallback branches --- */
+
+const capturedMinimalResources: Record<string, pulumi.runtime.MockResourceArgs> = {}
+
+class TestMinimalEventgridConstruct extends CommonAzureConstruct {
+  declare props: TestAzureStackProps
+  eventgridTopic: Topic
+  eventgridSubscription: EventSubscription
+  eventgridSystemTopic: SystemTopic
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+
+    // Topic with minimal props - exercises location/tags defaults
+    this.eventgridTopic = this.eventgridManager.createEventgridTopic(
+      `test-minimal-eg-topic-${this.props.stage}`,
+      this,
+      {
+        topicName: 'test-minimal-eg-topic',
+        resourceGroupName: 'test-rg-dev',
+      } as any
+    )
+
+    // Subscription with minimal props - exercises eventDeliverySchema/retryPolicy defaults
+    this.eventgridSubscription = this.eventgridManager.createEventgridSubscription(
+      `test-minimal-eg-sub-${this.props.stage}`,
+      this,
+      {
+        eventSubscriptionName: 'test-minimal-eg-sub',
+        scope:
+          '/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.EventGrid/topics/test-eg-topic-dev',
+        destination: {
+          endpointType: 'WebHook',
+          properties: { endpointUrl: 'https://test.example.com/webhook' },
+        },
+      } as any
+    )
+
+    // System topic with minimal props - exercises location/tags defaults
+    this.eventgridSystemTopic = this.eventgridManager.createEventgridSystemTopic(
+      `test-minimal-eg-sys-topic-${this.props.stage}`,
+      this,
+      {
+        systemTopicName: 'test-minimal-eg-sys-topic',
+        resourceGroupName: 'test-rg-dev',
+        source: '/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.Storage/storageAccounts/testsa',
+        topicType: 'Microsoft.Storage.StorageAccounts',
+      } as any
+    )
+  }
+}
+
+class TestMinimalEventgridStack extends CommonAzureStack {
+  declare props: TestAzureStackProps
+  declare construct: TestMinimalEventgridConstruct
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestMinimalEventgridConstruct(props.name, this.props)
+  }
+}
+
+const minimalEventgridStack = new TestMinimalEventgridStack('test-minimal-eg-stack', testStackProps)
+
+describe('TestAzureEventgridConstruct - Default Values', () => {
+  test('eventgrid topic uses default location from scope when not provided', () => {
+    pulumi.all([minimalEventgridStack.construct.eventgridTopic.location]).apply(([location]) => {
+      expect(location).toEqual('eastus')
+    })
+  })
+
+  test('eventgrid topic uses default tags when not provided', () => {
+    pulumi.all([minimalEventgridStack.construct.eventgridTopic.tags]).apply(([tags]) => {
+      expect(tags?.environment).toEqual('dev')
+    })
+  })
+
+  test('eventgrid subscription uses default eventDeliverySchema when not provided', () => {
+    pulumi.all([minimalEventgridStack.construct.eventgridSubscription.eventDeliverySchema]).apply(([schema]) => {
+      expect(schema).toEqual('CloudEventSchemaV1_0')
+    })
+  })
+
+  test('eventgrid subscription uses default retryPolicy when not provided', () => {
+    pulumi.all([minimalEventgridStack.construct.eventgridSubscription.retryPolicy]).apply(([retryPolicy]) => {
+      expect(retryPolicy?.eventTimeToLiveInMinutes).toEqual(1440)
+      expect(retryPolicy?.maxDeliveryAttempts).toEqual(7)
+    })
+  })
+
+  test('eventgrid system topic uses default location from scope when not provided', () => {
+    pulumi.all([minimalEventgridStack.construct.eventgridSystemTopic.location]).apply(([location]) => {
+      expect(location).toEqual('eastus')
+    })
+  })
+
+  test('eventgrid system topic uses default tags when not provided', () => {
+    pulumi.all([minimalEventgridStack.construct.eventgridSystemTopic.tags]).apply(([tags]) => {
+      expect(tags?.environment).toEqual('dev')
+    })
+  })
+})
+
+describe('TestAzureEventgridConstruct - Resource Group Fallback', () => {
+  test('createEventgridTopic throws when resourceGroupName is missing', () => {
+    expect(() => {
+      class NoRgEgConstruct extends CommonAzureConstruct {
+        constructor(name: string, props: any) {
+          super(name, props)
+          this.eventgridManager.createEventgridTopic('test-no-rg-eg-topic', this, {
+            topicName: 'test-no-rg-topic',
+          } as any)
+        }
+      }
+      class NoRgEgStack extends CommonAzureStack {
+        constructor(name: string, props: any) {
+          super(name, { ...testStackProps, resourceGroupName: undefined })
+          new NoRgEgConstruct(props.name, this.props)
+        }
+      }
+      new NoRgEgStack('test-no-rg-eg-stack', testStackProps)
+    }).toThrow('Resource group name undefined for test-no-rg-eg-topic')
+  })
+
+  test('createEventgridSystemTopic throws when resourceGroupName is missing', () => {
+    expect(() => {
+      class NoRgSysTopicConstruct extends CommonAzureConstruct {
+        constructor(name: string, props: any) {
+          super(name, props)
+          this.eventgridManager.createEventgridSystemTopic('test-no-rg-sys-topic', this, {
+            systemTopicName: 'test-no-rg-sys-topic',
+            source: '/subscriptions/test-sub',
+            topicType: 'Microsoft.Storage.StorageAccounts',
+          } as any)
+        }
+      }
+      class NoRgSysTopicStack extends CommonAzureStack {
+        constructor(name: string, props: any) {
+          super(name, { ...testStackProps, resourceGroupName: undefined })
+          new NoRgSysTopicConstruct(props.name, this.props)
+        }
+      }
+      new NoRgSysTopicStack('test-no-rg-sys-topic-stack', testStackProps)
+    }).toThrow('Resource group name undefined for test-no-rg-sys-topic')
+  })
+
+  test('createEventgridSystemTopicEventSubscription throws when resourceGroupName is missing', () => {
+    expect(() => {
+      class NoRgSysSubConstruct extends CommonAzureConstruct {
+        constructor(name: string, props: any) {
+          super(name, props)
+          this.eventgridManager.createEventgridSystemTopicEventSubscription(
+            'test-no-rg-sys-sub',
+            this,
+            {
+              eventSubscriptionName: 'test-no-rg-sys-sub',
+            } as any,
+            { name: 'test-topic' } as any
+          )
+        }
+      }
+      class NoRgSysSubStack extends CommonAzureStack {
+        constructor(name: string, props: any) {
+          super(name, { ...testStackProps, resourceGroupName: undefined })
+          new NoRgSysSubConstruct(props.name, this.props)
+        }
+      }
+      new NoRgSysSubStack('test-no-rg-sys-sub-stack', testStackProps)
+    }).toThrow('Resource group name undefined for test-no-rg-sys-sub')
+  })
+})

@@ -176,3 +176,98 @@ describe('TestAzureCommonConstruct - Different Stages', () => {
     expect(testStack.construct.isDevelopmentStage()).toBe(true)
   })
 })
+
+describe('TestAzureCommonConstruct - ResourceNameFormatter', () => {
+  test('format applies globalPrefix when option is set', () => {
+    const stackWithPrefix = new TestCommonStack('test-prefix-stack', {
+      ...testStackProps,
+      globalPrefix: 'ge',
+    })
+    const result = stackWithPrefix.construct.resourceNameFormatter.format('my-resource', {
+      globalPrefix: true,
+    })
+    expect(result).toContain('ge')
+    expect(result).toContain('my-resource')
+  })
+
+  test('format applies globalSuffix when option is set', () => {
+    const stackWithSuffix = new TestCommonStack('test-suffix-stack', {
+      ...testStackProps,
+      globalSuffix: 'v1',
+    })
+    const result = stackWithSuffix.construct.resourceNameFormatter.format('my-resource', {
+      globalSuffix: true,
+    })
+    expect(result).toContain('v1')
+    expect(result).toContain('my-resource')
+  })
+
+  test('format excludes prefix and suffix when exclude option is set', () => {
+    const stackForExclude = new TestCommonStack('test-exclude-stack', {
+      ...testStackProps,
+      resourcePrefix: 'pre',
+      resourceSuffix: 'suf',
+    })
+    const result = stackForExclude.construct.resourceNameFormatter.format('my-resource', {
+      exclude: true,
+    })
+    expect(result).not.toContain('pre')
+    expect(result).not.toContain('suf')
+    expect(result).toContain('my-resource')
+  })
+
+  test('format applies custom prefix and suffix', () => {
+    const result = stack.construct.resourceNameFormatter.format('my-resource', {
+      prefix: 'custom-pre',
+      suffix: 'custom-suf',
+    })
+    expect(result).toContain('custom-pre')
+    expect(result).toContain('custom-suf')
+    expect(result).toContain('my-resource')
+  })
+})
+
+describe('TestAzureCommonConstruct - Error Handling', () => {
+  test('resolveStack throws when stackName is empty', () => {
+    expect(() => {
+      stack.construct['resolveStack']('')
+    }).toThrow('Stack name undefined')
+  })
+
+  test('resolveStack creates stack reference with valid name', () => {
+    const stackRef = stack.construct['resolveStack']('valid-stack-name')
+    expect(stackRef).toBeDefined()
+  })
+
+  test('resolveCommonLogAnalyticsWorkspace throws when props are undefined', () => {
+    const originalProps = stack.construct.props.commonLogAnalyticsWorkspace
+    stack.construct.props.commonLogAnalyticsWorkspace = undefined
+    expect(() => {
+      stack.construct['resolveCommonLogAnalyticsWorkspace']()
+    }).toThrow('Props undefined for commonLogAnalyticsWorkspace')
+    stack.construct.props.commonLogAnalyticsWorkspace = originalProps
+  })
+
+  test('resolveCommonLogAnalyticsWorkspace throws when workspaceName is undefined', () => {
+    const originalProps = stack.construct.props.commonLogAnalyticsWorkspace
+    stack.construct.props.commonLogAnalyticsWorkspace = { resourceGroupName: 'test-rg' } as any
+    expect(() => {
+      stack.construct['resolveCommonLogAnalyticsWorkspace']()
+    }).toThrow('Props undefined for commonLogAnalyticsWorkspace')
+    stack.construct.props.commonLogAnalyticsWorkspace = originalProps
+  })
+
+  test('createResourceGroup creates resource group when not already set', () => {
+    const newStack = new TestCommonStack('test-rg-stack', testStackProps)
+    newStack.construct['createResourceGroup']()
+    expect(newStack.construct.resourceGroup).toBeDefined()
+  })
+
+  test('createResourceGroup skips creation when already set', () => {
+    const newStack = new TestCommonStack('test-rg-skip-stack', testStackProps)
+    newStack.construct['createResourceGroup']()
+    const firstRg = newStack.construct.resourceGroup
+    newStack.construct['createResourceGroup']()
+    expect(newStack.construct.resourceGroup).toBe(firstRg)
+  })
+})

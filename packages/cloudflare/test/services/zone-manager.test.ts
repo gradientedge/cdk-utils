@@ -205,3 +205,159 @@ describe('TestCloudflareZoneManager', () => {
       })
   })
 })
+
+class TestWithZoneIdCloudflareStack extends CommonCloudflareStack {
+  declare props: TestCloudflareStackProps
+  declare construct: TestWithZoneIdConstruct
+
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestWithZoneIdConstruct(props.name, this.props)
+  }
+}
+
+class TestWithZoneIdConstruct extends CommonCloudflareConstruct {
+  declare props: TestCloudflareStackProps
+  zone: Zone
+  zoneCacheReserve: ZoneCacheReserve
+  zoneCacheVariants: ZoneCacheVariants
+  zoneDnssec: ZoneDnssec
+  zoneHold: ZoneHold
+  zoneLockdown: ZoneLockdown
+  zoneSetting: ZoneSetting
+  zoneDnsSettings: ZoneSetting
+
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, props)
+    this.zone = this.zoneManager.createZone(`test-zone-zid-${this.props.stage}`, this, {
+      ...this.props.testZone,
+      account: { id: 'explicit-account' },
+    })
+    this.zoneCacheReserve = this.zoneManager.createZoneCacheReserve(
+      `test-zone-cache-reserve-zid-${this.props.stage}`,
+      this,
+      {
+        zoneId: this.zone.id,
+      }
+    )
+    this.zoneCacheVariants = this.zoneManager.createZoneCacheVariants(
+      `test-zone-cache-variants-zid-${this.props.stage}`,
+      this,
+      {
+        ...this.props.testZoneCacheVariants,
+        zoneId: this.zone.id,
+      }
+    )
+    this.zoneDnssec = this.zoneManager.createZoneDnssec(`test-zone-dnssec-zid-${this.props.stage}`, this, {
+      zoneId: this.zone.id,
+    })
+    this.zoneHold = this.zoneManager.createZoneHold(`test-zone-hold-zid-${this.props.stage}`, this, {
+      zoneId: this.zone.id,
+    })
+    this.zoneLockdown = this.zoneManager.createZoneLockdown(`test-zone-lockdown-zid-${this.props.stage}`, this, {
+      ...this.props.testZoneLockdown,
+      zoneId: this.zone.id,
+    })
+    this.zoneSetting = this.zoneManager.createZoneSetting(`test-zone-settings-zid-${this.props.stage}`, this, {
+      ...this.props.testZoneSetting,
+      zoneId: this.zone.id,
+    })
+    this.zoneDnsSettings = this.zoneManager.createZoneDnsSettings(
+      `test-zone-dns-settings-zid-${this.props.stage}`,
+      this,
+      {
+        ...this.props.testZoneSetting,
+        zoneId: this.zone.id,
+      }
+    )
+  }
+}
+
+describe('TestCloudflareZoneManager - With explicit zoneId', () => {
+  let zoneIdStack: TestWithZoneIdCloudflareStack
+  test('provisions zone resources with explicit zoneId', () => {
+    zoneIdStack = new TestWithZoneIdCloudflareStack('test-zoneid-stack', testStackProps)
+    expect(zoneIdStack.construct.zone).toBeDefined()
+    expect(zoneIdStack.construct.zoneCacheReserve).toBeDefined()
+    expect(zoneIdStack.construct.zoneCacheVariants).toBeDefined()
+    expect(zoneIdStack.construct.zoneDnssec).toBeDefined()
+    expect(zoneIdStack.construct.zoneHold).toBeDefined()
+    expect(zoneIdStack.construct.zoneLockdown).toBeDefined()
+    expect(zoneIdStack.construct.zoneSetting).toBeDefined()
+    expect(zoneIdStack.construct.zoneDnsSettings).toBeDefined()
+  })
+
+  test('zone cache variants uses provided zoneId', () => {
+    pulumi.all([zoneIdStack.construct.zoneCacheVariants.zoneId]).apply(([zoneId]) => {
+      expect(zoneId).toEqual('test-zone-zid-dev-id')
+    })
+  })
+
+  test('zone setting uses provided zoneId', () => {
+    pulumi.all([zoneIdStack.construct.zoneSetting.zoneId]).apply(([zoneId]) => {
+      expect(zoneId).toEqual('test-zone-zid-dev-id')
+    })
+  })
+})
+
+class TestNoZoneIdCloudflareStack extends CommonCloudflareStack {
+  declare props: TestCloudflareStackProps
+  declare construct: TestNoZoneIdConstruct
+
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestNoZoneIdConstruct(props.name, this.props)
+  }
+}
+
+class TestNoZoneIdConstruct extends CommonCloudflareConstruct {
+  declare props: TestCloudflareStackProps
+  zone: Zone
+  zoneDnssec: ZoneDnssec
+  zoneHold: ZoneHold
+  zoneLockdown: ZoneLockdown
+  zoneDnsSettings: ZoneSetting
+
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, props)
+    this.zone = this.zoneManager.createZone(`test-zone-nozid-${this.props.stage}`, this, this.props.testZone)
+    this.zoneDnssec = this.zoneManager.createZoneDnssec(`test-zone-dnssec-nozid-${this.props.stage}`, this, {} as any)
+    this.zoneHold = this.zoneManager.createZoneHold(`test-zone-hold-nozid-${this.props.stage}`, this, {} as any)
+    this.zoneLockdown = this.zoneManager.createZoneLockdown(`test-zone-lockdown-nozid-${this.props.stage}`, this, {
+      ...this.props.testZoneLockdown,
+    })
+    this.zoneDnsSettings = this.zoneManager.createZoneDnsSettings(
+      `test-zone-dns-settings-nozid-${this.props.stage}`,
+      this,
+      {
+        ...this.props.testZoneSetting,
+      }
+    )
+  }
+}
+
+describe('TestCloudflareZoneManager - Without explicit zoneId (fallback)', () => {
+  test('provisions zone resources with resolved zoneId', () => {
+    const noZoneIdStack = new TestNoZoneIdCloudflareStack('test-nozid-stack', testStackProps)
+    expect(noZoneIdStack.construct.zoneDnssec).toBeDefined()
+    expect(noZoneIdStack.construct.zoneHold).toBeDefined()
+    expect(noZoneIdStack.construct.zoneLockdown).toBeDefined()
+    expect(noZoneIdStack.construct.zoneDnsSettings).toBeDefined()
+  })
+})
+
+describe('TestCloudflareZoneManager - resolveZone', () => {
+  test('resolves zone with default options', () => {
+    const construct = stack.construct
+    const resolvedZone = construct.zoneManager.resolveZone('test-resolve-zone', construct)
+    expect(resolvedZone).toBeDefined()
+  })
+
+  test('resolves zone with custom filter name', () => {
+    const construct = stack.construct
+    const resolvedZone = construct.zoneManager.resolveZone('test-resolve-zone-custom', construct, {
+      filter: { name: 'custom.gradientedge.io' },
+    })
+    expect(resolvedZone).toBeDefined()
+  })
+})

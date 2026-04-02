@@ -32,6 +32,29 @@ interface TestStackProps extends CommonStackProps {
   testTable: TableProps
 }
 
+interface TestBranchCoverageStackProps extends CommonStackProps {
+  testAnotherLogGroup: any
+  testBranchCoverageWorkflow: any
+  testLambda: any
+  testSqs: any
+  testSubmitStepApi: any
+  testSubmitStepApiWithCustomRetries: any
+  testSubmitStepCreateSomething: any
+  testSubmitStepDeleteItemWithCustomRetries: any
+  testSubmitStepFailure: any
+  testSubmitStepGetItemWithCustomRetries: any
+  testSubmitStepLambdaWithCustomRetries: any
+  testSubmitStepLambdaWithEmptyRetries: any
+  testSubmitStepPutItemWithEmptyRetries: any
+  testSubmitStepSendMessageWithCustomRetries: any
+  testSubmitStepSfnExecutionWithCustomRetries: any
+  testSubmitStepSkippableLambdaNoSkip: any
+  testSubmitStepSkippableLambdaUndefinedSkip: any
+  testSubmitStepSuccess: any
+  testSubmitWorkflow: any
+  testTable: TableProps
+}
+
 const testStackProps = {
   domainName: 'gradientedge.io',
   env: {
@@ -284,9 +307,226 @@ class TestCommonConstruct extends CommonConstruct {
   }
 }
 
+class TestBranchCoverageStack extends CommonStack {
+  declare props: TestBranchCoverageStackProps
+
+  constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
+    super(parent, name, props)
+
+    this.construct = new TestBranchCoverageConstruct(this, testStackProps.name, this.props)
+  }
+
+  protected determineConstructProps(props: cdk.StackProps) {
+    return {
+      ...super.determineConstructProps(props),
+      ...{
+        testAnotherLogGroup: this.node.tryGetContext('testAnotherLogGroup'),
+        testBranchCoverageWorkflow: this.node.tryGetContext('testBranchCoverageWorkflow'),
+        testLambda: this.node.tryGetContext('testLambda'),
+        testSqs: this.node.tryGetContext('testSqs'),
+        testSubmitStepApi: this.node.tryGetContext('testSubmitStepApi'),
+        testSubmitStepApiWithCustomRetries: this.node.tryGetContext('testSubmitStepApiWithCustomRetries'),
+        testSubmitStepCreateSomething: this.node.tryGetContext('testSubmitStepCreateSomething'),
+        testSubmitStepDeleteItemWithCustomRetries: this.node.tryGetContext('testSubmitStepDeleteItemWithCustomRetries'),
+        testSubmitStepFailure: this.node.tryGetContext('testSubmitStepFailure'),
+        testSubmitStepGetItemWithCustomRetries: this.node.tryGetContext('testSubmitStepGetItemWithCustomRetries'),
+        testSubmitStepLambdaWithCustomRetries: this.node.tryGetContext('testSubmitStepLambdaWithCustomRetries'),
+        testSubmitStepLambdaWithEmptyRetries: this.node.tryGetContext('testSubmitStepLambdaWithEmptyRetries'),
+        testSubmitStepPutItemWithEmptyRetries: this.node.tryGetContext('testSubmitStepPutItemWithEmptyRetries'),
+        testSubmitStepSendMessageWithCustomRetries: this.node.tryGetContext(
+          'testSubmitStepSendMessageWithCustomRetries'
+        ),
+        testSubmitStepSfnExecutionWithCustomRetries: this.node.tryGetContext(
+          'testSubmitStepSfnExecutionWithCustomRetries'
+        ),
+        testSubmitStepSkippableLambdaNoSkip: this.node.tryGetContext('testSubmitStepSkippableLambdaNoSkip'),
+        testSubmitStepSkippableLambdaUndefinedSkip: this.node.tryGetContext(
+          'testSubmitStepSkippableLambdaUndefinedSkip'
+        ),
+        testSubmitStepSuccess: this.node.tryGetContext('testSubmitStepSuccess'),
+        testSubmitWorkflow: this.node.tryGetContext('testSubmitWorkflow'),
+        testTable: this.node.tryGetContext('testTable'),
+      },
+    }
+  }
+}
+
+class TestBranchCoverageConstruct extends CommonConstruct {
+  declare props: TestBranchCoverageStackProps
+
+  constructor(parent: Construct, name: string, props: TestBranchCoverageStackProps) {
+    super(parent, name, props)
+    const testLayer = this.lambdaManager.createLambdaLayer(
+      'test-lambda-layer',
+      this,
+      new lambda.AssetCode('packages/aws/test/common/nodejs/lib')
+    )
+    const testRole = this.iamManager.createRoleForLambda(
+      'test-role',
+      this,
+      new iam.PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this)] })
+    )
+    const testLambda = this.lambdaManager.createLambdaFunction(
+      'test-lambda',
+      this,
+      this.props.testLambda,
+      testRole,
+      [testLayer],
+      new lambda.AssetCode('packages/aws/test/common/nodejs/lib')
+    )
+
+    const api = this.apiManager.createLambdaRestApi(
+      'test-api',
+      this,
+      {
+        defaultCorsPreflightOptions: {
+          allowOrigins: apig.Cors.ALL_ORIGINS,
+        },
+        deploy: true,
+        deployOptions: {
+          description: `test - ${this.props.stage} stage`,
+          stageName: this.props.stage,
+        },
+        endpointConfiguration: {
+          types: [apig.EndpointType.REGIONAL],
+        },
+        handler: testLambda,
+        proxy: false,
+        restApiName: 'test-lambda-rest-api',
+      },
+      testLambda
+    )
+
+    const testLogGroup = this.logManager.createLogGroup('test-cfn-log', this, this.props.testAnotherLogGroup)
+    const testTable = this.dynamodbManager.createTable('test-table', this, this.props.testTable)
+    const testSqs = this.sqsManager.createQueue('test-sqs', this, this.props.testSqs)
+
+    /* Lambda step with custom retries */
+    const lambdaWithCustomRetries = this.sfnManager.createLambdaStep(
+      'test-lambda-custom-retries',
+      this,
+      this.props.testSubmitStepLambdaWithCustomRetries,
+      testLambda
+    )
+
+    /* Lambda step with empty retries array - exercises DEFAULT_RETRY_CONFIG fallback */
+    const lambdaWithEmptyRetries = this.sfnManager.createLambdaStep(
+      'test-lambda-empty-retries',
+      this,
+      this.props.testSubmitStepLambdaWithEmptyRetries,
+      testLambda
+    )
+
+    /* Skippable lambda step with skipExecution=false - exercises the LambdaInvoke branch */
+    const skippableLambdaNoSkip = this.sfnManager.createSkippableLambdaStep(
+      'test-skippable-no-skip',
+      this,
+      this.props.testSubmitStepSkippableLambdaNoSkip,
+      testLambda,
+      false
+    )
+
+    /* Skippable lambda step with skipExecution=undefined - exercises the LambdaInvoke branch */
+    const skippableLambdaUndefinedSkip = this.sfnManager.createSkippableLambdaStep(
+      'test-skippable-undefined-skip',
+      this,
+      this.props.testSubmitStepSkippableLambdaUndefinedSkip,
+      testLambda
+    )
+
+    /* DynamoDB get item with custom retries */
+    const getItemWithCustomRetries = this.sfnManager.createDynamoDbGetItemStep(
+      'test-ddb-get-custom-retries',
+      this,
+      this.props.testSubmitStepGetItemWithCustomRetries,
+      testTable,
+      { id: tasks.DynamoAttributeValue.fromString('test-custom') }
+    )
+
+    /* DynamoDB put item with empty retries - exercises DEFAULT_RETRY_CONFIG fallback */
+    const putItemWithEmptyRetries = this.sfnManager.createDynamoDbPutItemStep(
+      'test-ddb-put-empty-retries',
+      this,
+      this.props.testSubmitStepPutItemWithEmptyRetries,
+      testTable,
+      { id: tasks.DynamoAttributeValue.fromString('test-put-empty') }
+    )
+
+    /* DynamoDB delete item with custom retries */
+    const deleteItemWithCustomRetries = this.sfnManager.createDynamoDbDeleteItemStep(
+      'test-ddb-delete-custom-retries',
+      this,
+      this.props.testSubmitStepDeleteItemWithCustomRetries,
+      testTable,
+      { id: tasks.DynamoAttributeValue.fromString('test-delete-custom') }
+    )
+
+    /* SQS send message with custom retries */
+    const sendMessageWithCustomRetries = this.sfnManager.createSendSqsMessageStep(
+      'test-sqs-custom-retries',
+      this,
+      this.props.testSubmitStepSendMessageWithCustomRetries,
+      testSqs
+    )
+
+    /* API step with custom retries (no retries in config = default retries) */
+    const apiWithCustomRetries = this.sfnManager.createApiStep(
+      'test-api-custom-retries',
+      this,
+      this.props.testSubmitStepApiWithCustomRetries,
+      api
+    )
+
+    const testSubmitStepSuccess = this.sfnManager.createSuccessStep(
+      'test-success',
+      this,
+      this.props.testSubmitStepSuccess
+    )
+    const testSubmitStepFailure = this.sfnManager.createFailStep('test-failure', this, this.props.testSubmitStepFailure)
+
+    const testWorkflowIntegration = sfn.Chain.start(lambdaWithCustomRetries)
+      .next(lambdaWithEmptyRetries)
+      .next(skippableLambdaNoSkip)
+      .next(getItemWithCustomRetries)
+      .next(putItemWithEmptyRetries)
+      .next(deleteItemWithCustomRetries)
+      .next(sendMessageWithCustomRetries)
+      .next(apiWithCustomRetries)
+      .next(testSubmitStepSuccess)
+
+    const stateMachine = this.sfnManager.createStateMachine(
+      'test-branch-coverage-sfn',
+      this,
+      this.props.testBranchCoverageWorkflow,
+      testWorkflowIntegration,
+      testLogGroup
+    )
+
+    /* SFN execution step with custom retries */
+    const sfnExecutionWithCustomRetries = this.sfnManager.createSfnExecutionStep(
+      'test-sfn-execution-custom-retries',
+      this,
+      this.props.testSubmitStepSfnExecutionWithCustomRetries,
+      stateMachine
+    )
+    const secondWorkflow = sfn.Chain.start(sfnExecutionWithCustomRetries)
+    this.sfnManager.createStateMachine(
+      'test-branch-coverage-second-sfn',
+      this,
+      this.props.testSubmitWorkflow,
+      secondWorkflow,
+      testLogGroup
+    )
+  }
+}
+
 const app = new cdk.App({ context: testStackProps })
 const commonStack = new TestCommonStack(app, 'test-common-stack', testStackProps)
 const template = Template.fromStack(commonStack)
+
+const branchCoverageApp = new cdk.App({ context: testStackProps })
+const branchCoverageStack = new TestBranchCoverageStack(branchCoverageApp, 'test-branch-coverage-stack', testStackProps)
+const branchCoverageTemplate = Template.fromStack(branchCoverageStack)
 
 describe('TestSfnConstruct', () => {
   test('handles mis-configurations as expected', () => {
@@ -455,5 +695,93 @@ describe('TestSfnConstruct', () => {
       StateMachineName: 'cdktest-test-second-workflow-test',
       StateMachineType: 'STANDARD',
     })
+  })
+})
+
+describe('TestSfnConstruct - Branch Coverage', () => {
+  test('synthesises branch coverage stack as expected', () => {
+    branchCoverageTemplate.resourceCountIs('AWS::StepFunctions::StateMachine', 2)
+    branchCoverageTemplate.resourceCountIs('AWS::Lambda::Function', 1)
+    branchCoverageTemplate.resourceCountIs('AWS::DynamoDB::Table', 1)
+    branchCoverageTemplate.resourceCountIs('AWS::SQS::Queue', 1)
+  })
+
+  test('lambda step with custom retries uses provided retry configuration', () => {
+    branchCoverageTemplate.hasResourceProperties('AWS::StepFunctions::StateMachine', {
+      StateMachineName: 'cdktest-test-branch-coverage-workflow-test',
+    })
+  })
+
+  test('provisions branch coverage state machine with custom and default retry paths', () => {
+    const resources = branchCoverageTemplate.findResources('AWS::StepFunctions::StateMachine', {
+      Properties: {
+        StateMachineName: 'cdktest-test-branch-coverage-workflow-test',
+      },
+    })
+
+    const resourceKeys = Object.keys(resources)
+    expect(resourceKeys.length).toBe(1)
+
+    const stateMachine = resources[resourceKeys[0]]
+    const definitionParts = stateMachine.Properties.DefinitionString['Fn::Join'][1]
+
+    /* Verify the definition string contains expected step names */
+    const definitionStr = definitionParts.filter((part: any) => typeof part === 'string').join('')
+
+    /* Lambda step with custom retries should have custom retry config */
+    expect(definitionStr).toContain('step:Lambda With Custom Retries')
+    expect(definitionStr).toContain('"ErrorEquals":["States.TaskFailed"]')
+    expect(definitionStr).toContain('"IntervalSeconds":5')
+    expect(definitionStr).toContain('"MaxAttempts":3')
+    expect(definitionStr).toContain('"BackoffRate":3')
+
+    /* Lambda step with empty retries should fall back to DEFAULT_RETRY_CONFIG */
+    expect(definitionStr).toContain('step:Lambda With Empty Retries')
+    expect(definitionStr).toContain('"ErrorEquals":["States.ALL"]')
+    expect(definitionStr).toContain('"IntervalSeconds":30')
+    expect(definitionStr).toContain('"MaxAttempts":6')
+
+    /* Skippable lambda with skipExecution=false should be a Task (LambdaInvoke), not a Pass */
+    expect(definitionStr).toContain('"step:Skippable Lambda No Skip":{"Next":')
+    expect(definitionStr).toContain('Lambda step for step:Skippable Lambda No Skip')
+
+    /* DynamoDB get item with custom retries */
+    expect(definitionStr).toContain('step:Get Item Custom Retries')
+    expect(definitionStr).toContain('"IntervalSeconds":10')
+
+    /* DynamoDB put item with empty retries should use default */
+    expect(definitionStr).toContain('step:Put Item Empty Retries')
+
+    /* DynamoDB delete item with custom retries */
+    expect(definitionStr).toContain('step:Delete Item Custom Retries')
+
+    /* SQS send message with custom retries */
+    expect(definitionStr).toContain('step:Send Message Custom Retries')
+    expect(definitionStr).toContain('"IntervalSeconds":20')
+    expect(definitionStr).toContain('"MaxAttempts":5')
+
+    /* API step with default retries (no retries in config) */
+    expect(definitionStr).toContain('step:API With Custom Retries')
+  })
+
+  test('sfn execution step with custom retries uses provided retry configuration', () => {
+    const resources = branchCoverageTemplate.findResources('AWS::StepFunctions::StateMachine', {
+      Properties: {
+        StateMachineName: 'cdktest-test-workflow-test',
+      },
+    })
+
+    const resourceKeys = Object.keys(resources)
+    expect(resourceKeys.length).toBe(1)
+
+    const stateMachine = resources[resourceKeys[0]]
+    const definitionParts = stateMachine.Properties.DefinitionString['Fn::Join'][1]
+    const definitionStr = definitionParts.filter((part: any) => typeof part === 'string').join('')
+
+    /* SFN execution step with custom retries */
+    expect(definitionStr).toContain('test-sfn-execution-custom-retries')
+    expect(definitionStr).toContain('"ErrorEquals":["States.TaskFailed"]')
+    expect(definitionStr).toContain('"IntervalSeconds":10')
+    expect(definitionStr).toContain('"MaxAttempts":3')
   })
 })
