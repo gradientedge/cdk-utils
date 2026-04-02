@@ -152,11 +152,29 @@ pre code span,
   color: #a3acb9;
 }
 
-/* Image styling in descriptions */
-.tsd-description img,
-.tsd-comment img {
-  box-shadow: 0px 1px 12px rgba(0, 0, 0, 0.5);
-  max-width: 75%;
+/* Architecture images — card style (only alt="Architecture") */
+.tsd-description img[alt="Architecture"],
+.tsd-comment img[alt="Architecture"] {
+  max-width: 100%;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.4),
+    0 0 0 1px rgba(88, 166, 255, 0.06);
+  background: linear-gradient(135deg, rgba(20, 24, 41, 0.8), rgba(13, 16, 23, 0.9));
+  padding: 1.5rem;
+  margin: 1.5rem 0;
+  display: block;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+}
+
+.tsd-description img[alt="Architecture"]:hover,
+.tsd-comment img[alt="Architecture"]:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow:
+    0 8px 32px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(88, 166, 255, 0.15);
+  border-color: rgba(88, 166, 255, 0.2);
 }
 
 /* Table headers */
@@ -256,9 +274,13 @@ h4, h5, h6 {
 .tsd-breadcrumb {
   font-size: 0.8rem;
   letter-spacing: 0.02em;
-  text-transform: uppercase;
+  text-transform: none;
   opacity: 0.7;
   margin-bottom: 0.5rem;
+}
+
+.tsd-breadcrumb li:last-child::after {
+  content: "";
 }
 
 /* Sidebar typography — tighter for navigation */
@@ -497,10 +519,23 @@ td {
   color: #f85149;
 }
 
-/* Dark mode — images softer shadow */
-[data-theme="dark"] .tsd-description img,
-[data-theme="dark"] .tsd-comment img {
-  box-shadow: 0px 2px 16px rgba(0, 0, 0, 0.6);
+/* Dark mode — architecture images enhanced */
+[data-theme="dark"] .tsd-description img[alt="Architecture"],
+[data-theme="dark"] .tsd-comment img[alt="Architecture"] {
+  background: linear-gradient(135deg, rgba(20, 24, 41, 0.9), rgba(13, 16, 23, 0.95));
+  border-color: rgba(88, 166, 255, 0.08);
+  box-shadow:
+    0 4px 24px rgba(0, 0, 0, 0.5),
+    inset 0 1px 0 rgba(255, 255, 255, 0.03);
+}
+
+[data-theme="dark"] .tsd-description img[alt="Architecture"]:hover,
+[data-theme="dark"] .tsd-comment img[alt="Architecture"]:hover {
+  border-color: rgba(88, 166, 255, 0.25);
+  box-shadow:
+    0 8px 40px rgba(0, 0, 0, 0.6),
+    0 0 20px rgba(88, 166, 255, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
 /* Dark mode — settings panel */
@@ -860,17 +895,7 @@ pre:hover {
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.3);
 }
 
-/* Images — lift on hover */
-.tsd-description img,
-.tsd-comment img {
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.tsd-description img:hover,
-.tsd-comment img:hover {
-  transform: translateY(-2px);
-  box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.5);
-}
+/* Images — transitions handled in main image styling above */
 
 /* Kind icons — subtle pulse on hover */
 .tsd-kind-icon {
