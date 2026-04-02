@@ -205,3 +205,121 @@ describe('TestAzureCosmosDbConstruct', () => {
       })
   })
 })
+
+/* --- Tests for default value fallback branches --- */
+class TestMinimalCosmosConstruct extends CommonAzureConstruct {
+  declare props: TestAzureStackProps
+  cosmosDbAccount: DatabaseAccount
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    // CosmosDB account with minimal props - exercises location/tags/identity defaults
+    this.cosmosDbAccount = this.cosmosDbManager.createCosmosDbAccount(`test-minimal-cosmos-${this.props.stage}`, this, {
+      accountName: 'test-minimal-cosmos',
+      resourceGroupName: 'test-rg-dev',
+      databaseAccountOfferType: 'Standard',
+      consistencyPolicy: { defaultConsistencyLevel: 'Session' },
+      locations: [{ locationName: 'eastus', failoverPriority: 0 }],
+    } as any)
+  }
+}
+
+class TestMinimalCosmosStack extends CommonAzureStack {
+  declare props: TestAzureStackProps
+  declare construct: TestMinimalCosmosConstruct
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestMinimalCosmosConstruct(props.name, this.props)
+  }
+}
+
+const minimalCosmosStack = new TestMinimalCosmosStack('test-minimal-cosmos-stack', testStackProps)
+
+describe('TestAzureCosmosDbConstruct - Default Values', () => {
+  test('cosmosdb account uses default location from scope when not provided', () => {
+    pulumi.all([minimalCosmosStack.construct.cosmosDbAccount.location]).apply(([location]) => {
+      expect(location).toEqual('eastus')
+    })
+  })
+
+  test('cosmosdb account uses default tags when not provided', () => {
+    pulumi.all([minimalCosmosStack.construct.cosmosDbAccount.tags]).apply(([tags]) => {
+      expect(tags?.environment).toEqual('dev')
+    })
+  })
+
+  test('cosmosdb account uses default identity when not provided', () => {
+    pulumi.all([minimalCosmosStack.construct.cosmosDbAccount.identity]).apply(([identity]) => {
+      expect(identity?.type).toEqual('SystemAssigned')
+    })
+  })
+})
+
+describe('TestAzureCosmosDbConstruct - Resource Group Fallback', () => {
+  test('createCosmosDbAccount throws when resourceGroupName is missing', () => {
+    expect(() => {
+      class NoRgCosmosConstruct extends CommonAzureConstruct {
+        constructor(name: string, props: any) {
+          super(name, props)
+          this.cosmosDbManager.createCosmosDbAccount('test-no-rg-cosmos', this, {
+            accountName: 'test-no-rg-cosmos',
+            databaseAccountOfferType: 'Standard',
+            consistencyPolicy: { defaultConsistencyLevel: 'Session' },
+            locations: [{ locationName: 'eastus', failoverPriority: 0 }],
+          } as any)
+        }
+      }
+      class NoRgCosmosStack extends CommonAzureStack {
+        constructor(name: string, props: any) {
+          super(name, { ...testStackProps, resourceGroupName: undefined })
+          new NoRgCosmosConstruct(props.name, this.props)
+        }
+      }
+      new NoRgCosmosStack('test-no-rg-cosmos-stack', testStackProps)
+    }).toThrow('Resource group name undefined for test-no-rg-cosmos')
+  })
+
+  test('createCosmosDbDatabase throws when resourceGroupName is missing', () => {
+    expect(() => {
+      class NoRgDbConstruct extends CommonAzureConstruct {
+        constructor(name: string, props: any) {
+          super(name, props)
+          this.cosmosDbManager.createCosmosDbDatabase('test-no-rg-db', this, {
+            databaseName: 'test-db',
+            accountName: 'test-account',
+          } as any)
+        }
+      }
+      class NoRgDbStack extends CommonAzureStack {
+        constructor(name: string, props: any) {
+          super(name, { ...testStackProps, resourceGroupName: undefined })
+          new NoRgDbConstruct(props.name, this.props)
+        }
+      }
+      new NoRgDbStack('test-no-rg-db-stack', testStackProps)
+    }).toThrow('Resource group name undefined for test-no-rg-db')
+  })
+
+  test('createCosmosDbContainer throws when resourceGroupName is missing', () => {
+    expect(() => {
+      class NoRgContainerConstruct extends CommonAzureConstruct {
+        constructor(name: string, props: any) {
+          super(name, props)
+          this.cosmosDbManager.createCosmosDbContainer('test-no-rg-container', this, {
+            containerName: 'test-container',
+            accountName: 'test-account',
+            databaseName: 'test-db',
+          } as any)
+        }
+      }
+      class NoRgContainerStack extends CommonAzureStack {
+        constructor(name: string, props: any) {
+          super(name, { ...testStackProps, resourceGroupName: undefined })
+          new NoRgContainerConstruct(props.name, this.props)
+        }
+      }
+      new NoRgContainerStack('test-no-rg-container-stack', testStackProps)
+    }).toThrow('Resource group name undefined for test-no-rg-container')
+  })
+})

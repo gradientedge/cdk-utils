@@ -161,3 +161,53 @@ describe('TestCloudflareArgoManager', () => {
       })
   })
 })
+
+class TestWithZoneIdCloudflareStack extends CommonCloudflareStack {
+  declare props: TestCloudflareStackProps
+  declare construct: TestWithZoneIdConstruct
+
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestWithZoneIdConstruct(props.name, this.props)
+  }
+}
+
+class TestWithZoneIdConstruct extends CommonCloudflareConstruct {
+  declare props: TestCloudflareStackProps
+  zone: Zone
+  argoSmartRouting: ArgoSmartRouting
+  argoTieredCaching: ArgoTieredCaching
+
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, props)
+    this.zone = this.zoneManager.createZone(`test-zone-zid-${this.props.stage}`, this, this.props.testZone)
+    this.argoSmartRouting = this.argoManager.createArgoSmartRouting(`test-argo-zid-${this.props.stage}`, this, {
+      ...this.props.testArgo,
+      zoneId: this.zone.id,
+    })
+    this.argoTieredCaching = this.argoManager.createArgoTieredCaching(
+      `test-argo-tiered-caching-zid-${this.props.stage}`,
+      this,
+      {
+        ...this.props.testArgoTieredCaching,
+        zoneId: this.zone.id,
+      }
+    )
+  }
+}
+
+describe('TestCloudflareArgoManager - With explicit zoneId', () => {
+  test('provisions argo resources with explicit zoneId', () => {
+    const zoneIdStack = new TestWithZoneIdCloudflareStack('test-zoneid-stack', testStackProps)
+    expect(zoneIdStack.construct.argoSmartRouting).toBeDefined()
+    expect(zoneIdStack.construct.argoTieredCaching).toBeDefined()
+
+    pulumi.all([zoneIdStack.construct.argoSmartRouting.zoneId]).apply(([zoneId]) => {
+      expect(zoneId).toEqual('test-zone-zid-dev-id')
+    })
+
+    pulumi.all([zoneIdStack.construct.argoTieredCaching.zoneId]).apply(([zoneId]) => {
+      expect(zoneId).toEqual('test-zone-zid-dev-id')
+    })
+  })
+})

@@ -1,4 +1,5 @@
 import * as pulumi from '@pulumi/pulumi'
+import { vi } from 'vitest'
 import { CommonAzureConstruct, CommonAzureStack, CommonAzureStackProps } from '../../src/index.js'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
@@ -137,5 +138,147 @@ describe('TestAzureCommonStack - Config', () => {
   test('initializes config successfully', () => {
     const stack = new TestAzureStack('test-stack-config', testStackProps)
     expect(stack.config).toBeDefined()
+  })
+})
+
+describe('TestAzureCommonStack - Extra Contexts Edge Cases', () => {
+  test('throws when extra context file does not exist', () => {
+    const propsWithBadExtraContext = {
+      ...testStackProps,
+      extraContexts: ['packages/azure/test/common/config/nonexistent.json'],
+    }
+    pulumi.runtime.setAllConfig({
+      'project:stage': testStackProps.stage,
+      'project:stageContextPath': testStackProps.stageContextPath,
+      'project:extraContexts': JSON.stringify(propsWithBadExtraContext.extraContexts),
+    })
+
+    expect(() => new TestAzureStack('test-stack-bad-context', propsWithBadExtraContext)).toThrow(
+      'Extra context properties unavailable in path'
+    )
+
+    // Reset config for subsequent tests
+    pulumi.runtime.setAllConfig({
+      'project:stage': testStackProps.stage,
+      'project:stageContextPath': testStackProps.stageContextPath,
+      'project:extraContexts': JSON.stringify(testStackProps.extraContexts),
+    })
+  })
+
+  test('debug logging is triggered when debug=true and no extra contexts', () => {
+    const consoleSpy = vi.spyOn(console, 'debug').mockImplementation(() => {})
+    pulumi.runtime.setAllConfig({
+      'project:stage': testStackProps.stage,
+      'project:stageContextPath': testStackProps.stageContextPath,
+      'project:debug': 'true',
+    })
+
+    const stack = new TestAzureStack('test-stack-debug-no-extra', {
+      ...testStackProps,
+      extraContexts: undefined,
+      debug: true,
+    })
+    expect(stack.props).toBeDefined()
+
+    // Check that debug messages were logged
+    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('No additional contexts provided'))
+
+    consoleSpy.mockRestore()
+
+    // Reset config
+    pulumi.runtime.setAllConfig({
+      'project:stage': testStackProps.stage,
+      'project:stageContextPath': testStackProps.stageContextPath,
+      'project:extraContexts': JSON.stringify(testStackProps.extraContexts),
+    })
+  })
+
+  test('debug logging is triggered for dev stage detection', () => {
+    const consoleSpy = vi.spyOn(console, 'debug').mockImplementation(() => {})
+    pulumi.runtime.setAllConfig({
+      'project:stage': 'dev',
+      'project:stageContextPath': testStackProps.stageContextPath,
+      'project:extraContexts': JSON.stringify(testStackProps.extraContexts),
+      'project:debug': 'true',
+    })
+
+    const stack = new TestAzureStack('test-stack-dev-stage-debug', {
+      ...testStackProps,
+      debug: true,
+    })
+    expect(stack.props).toBeDefined()
+
+    // Dev stage should trigger the dev stage debug log
+    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('Development stage'))
+
+    consoleSpy.mockRestore()
+
+    // Reset config
+    pulumi.runtime.setAllConfig({
+      'project:stage': testStackProps.stage,
+      'project:stageContextPath': testStackProps.stageContextPath,
+      'project:extraContexts': JSON.stringify(testStackProps.extraContexts),
+    })
+  })
+
+  test('debug logging when adding extra context files', () => {
+    const consoleSpy = vi.spyOn(console, 'debug').mockImplementation(() => {})
+    pulumi.runtime.setAllConfig({
+      'project:stage': testStackProps.stage,
+      'project:stageContextPath': testStackProps.stageContextPath,
+      'project:extraContexts': JSON.stringify(testStackProps.extraContexts),
+      'project:debug': 'true',
+    })
+
+    const stack = new TestAzureStack('test-stack-debug-with-context', {
+      ...testStackProps,
+      debug: true,
+    })
+    expect(stack.props).toBeDefined()
+
+    // Should see "Adding additional contexts" log
+    expect(consoleSpy).toHaveBeenCalledWith(expect.stringContaining('Adding additional contexts provided in'))
+
+    consoleSpy.mockRestore()
+
+    // Reset config
+    pulumi.runtime.setAllConfig({
+      'project:stage': testStackProps.stage,
+      'project:stageContextPath': testStackProps.stageContextPath,
+      'project:extraContexts': JSON.stringify(testStackProps.extraContexts),
+    })
+  })
+
+  test('uses default stageContextPath when not specified', () => {
+    pulumi.runtime.setAllConfig({
+      'project:stage': 'nonexistent-stage',
+      'project:stageContextPath': 'packages/azure/test/common/env',
+    })
+
+    const stack = new TestAzureStack('test-stack-default-path', {
+      ...testStackProps,
+      stage: 'nonexistent-stage',
+      extraContexts: undefined,
+    })
+    expect(stack.props).toBeDefined()
+
+    // Reset config
+    pulumi.runtime.setAllConfig({
+      'project:stage': testStackProps.stage,
+      'project:stageContextPath': testStackProps.stageContextPath,
+      'project:extraContexts': JSON.stringify(testStackProps.extraContexts),
+    })
+  })
+})
+
+describe('TestAzureCommonStack - defaultTags', () => {
+  test('does not throw when defaultTags are undefined', () => {
+    const propsWithoutTags = {
+      ...testStackProps,
+      defaultTags: undefined,
+    }
+    const stack = new TestAzureStack('test-stack-undefined-tags', propsWithoutTags)
+    expect(stack.props).toBeDefined()
+    expect(stack.props.defaultTags).toBeUndefined()
   })
 })

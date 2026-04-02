@@ -28,5 +28,37 @@
       "detail-type": ["Test"]
     },
     "ruleName": "test-sqs-rule"
+  },
+  "testRuleWithTags": {
+    "enabled": true,
+    "eventPattern": {
+      "detail-type": ["TestTagged"]
+    },
+    "ruleName": "test-rule-with-tags",
+    "tags": [
+      {
+        "key": "RuleEnv",
+        "value": "test"
+      }
+    ]
+  },
+  "testLambdaRuleWithTags": {
+    "name": "test-lambda-rule-tags",
+    "state": "ENABLED",
+    "tags": [
+      {
+        "key": "LambdaRuleTag",
+        "value": "tagged"
+      }
+    ]
+  },
+  "testLambdaRuleWithSchedule": {
+    "name": "test-lambda-rule-schedule",
+    "state": "ENABLED"
+  },
+  "testLambdaRuleWithInput": {
+    "name": "test-lambda-rule-input",
+    "state": "ENABLED",
+    "input": "{\"key\":\"value\"}"
   }
 }

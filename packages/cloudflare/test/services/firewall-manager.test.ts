@@ -176,3 +176,39 @@ describe('TestCloudflareFirewallManager', () => {
       })
   })
 })
+
+class TestWithZoneIdCloudflareStack extends CommonCloudflareStack {
+  declare props: TestCloudflareStackProps
+  declare construct: TestWithZoneIdConstruct
+
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestWithZoneIdConstruct(props.name, this.props)
+  }
+}
+
+class TestWithZoneIdConstruct extends CommonCloudflareConstruct {
+  declare props: TestCloudflareStackProps
+  zone: Zone
+  firewallRule: FirewallRule
+
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, props)
+    this.zone = this.zoneManager.createZone(`test-zone-zid-${this.props.stage}`, this, this.props.testZone)
+    this.firewallRule = this.firewallManager.createFirewallRule(`test-firewall-rule-zid-${this.props.stage}`, this, {
+      ...this.props.testFirewallRule,
+      filter: this.props.testFilter,
+      zoneId: this.zone.id,
+    })
+  }
+}
+
+describe('TestCloudflareFirewallManager - With explicit zoneId', () => {
+  test('provisions firewall rule with explicit zoneId', () => {
+    const zoneIdStack = new TestWithZoneIdCloudflareStack('test-zoneid-stack', testStackProps)
+    expect(zoneIdStack.construct.firewallRule).toBeDefined()
+    pulumi.all([zoneIdStack.construct.firewallRule.zoneId]).apply(([zoneId]) => {
+      expect(zoneId).toEqual('test-zone-zid-dev-id')
+    })
+  })
+})

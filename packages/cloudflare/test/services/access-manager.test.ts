@@ -569,3 +569,182 @@ describe('TestCloudflareAccessManager', () => {
       })
   })
 })
+
+class TestWithZoneIdCloudflareStack extends CommonCloudflareStack {
+  declare props: TestCloudflareStackProps
+  declare construct: TestWithZoneIdConstruct
+
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestWithZoneIdConstruct(props.name, this.props)
+  }
+}
+
+class TestWithZoneIdConstruct extends CommonCloudflareConstruct {
+  declare props: TestCloudflareStackProps
+  zone: Zone
+  accessApp: ZeroTrustAccessApplication
+  accessGroup: ZeroTrustAccessGroup
+  accessRule: AccessRule
+  accessServiceToken: ZeroTrustAccessServiceToken
+  accessOrganisation: ZeroTrustOrganization
+  accessMTLS: ZeroTrustAccessMtlsCertificate
+  accessIdp: ZeroTrustAccessIdentityProvider
+  accessCert: ZeroTrustAccessShortLivedCertificate
+
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, props)
+    this.zone = this.zoneManager.createZone(`test-zone-${this.props.stage}`, this, this.props.testZone)
+    this.accessApp = this.accessManager.createAccessApplication(`test-access-app-zid-${this.props.stage}`, this, {
+      ...this.props.testAccessApplication,
+      zoneId: this.zone.id,
+    })
+    this.accessGroup = this.accessManager.createAccessGroup(`test-access-grp-zid-${this.props.stage}`, this, {
+      ...this.props.testAccessGroup,
+      zoneId: this.zone.id,
+    })
+    this.accessRule = this.accessManager.createAccessRule(`test-access-rule-zid-${this.props.stage}`, this, {
+      ...this.props.testAccessRuleChallenge,
+      zoneId: this.zone.id,
+    })
+    this.accessServiceToken = this.accessManager.createAccessServiceToken(
+      `test-access-ser-token-zid-${this.props.stage}`,
+      this,
+      {
+        ...this.props.testAccessServiceToken,
+        zoneId: this.zone.id,
+      }
+    )
+    this.accessOrganisation = this.accessManager.createAccessOrganization(
+      `test-access-org-zid-${this.props.stage}`,
+      this,
+      {
+        ...this.props.testAccessOrganisation,
+        zoneId: this.zone.id,
+      }
+    )
+    this.accessMTLS = this.accessManager.createAccessMutualTlsCertificate(
+      `test-access-mtls-zid-${this.props.stage}`,
+      this,
+      {
+        ...this.props.testAccessMTlsCertificate,
+        certificate: fs.readFileSync('packages/cloudflare/test/common/sample.pem', { encoding: 'utf8' }),
+        zoneId: this.zone.id,
+      }
+    )
+    this.accessIdp = this.accessManager.createAccessIdentityProvider(`test-access-idp-zid-${this.props.stage}`, this, {
+      ...this.props.testAccessOTPIdentityProvider,
+      zoneId: this.zone.id,
+    })
+    this.accessCert = this.accessManager.createAccessShortLivedCertificate(
+      `test-access-cert-zid-${this.props.stage}`,
+      this,
+      {
+        appId: this.accessApp.id,
+        zoneId: this.zone.id,
+      }
+    )
+  }
+}
+
+describe('TestCloudflareAccessManager - With explicit zoneId', () => {
+  let zoneIdStack: TestWithZoneIdCloudflareStack
+  test('provisions resources with explicit zoneId', () => {
+    zoneIdStack = new TestWithZoneIdCloudflareStack('test-zoneid-stack', testStackProps)
+    expect(zoneIdStack.construct.accessApp).toBeDefined()
+    expect(zoneIdStack.construct.accessGroup).toBeDefined()
+    expect(zoneIdStack.construct.accessRule).toBeDefined()
+    expect(zoneIdStack.construct.accessServiceToken).toBeDefined()
+    expect(zoneIdStack.construct.accessOrganisation).toBeDefined()
+    expect(zoneIdStack.construct.accessMTLS).toBeDefined()
+    expect(zoneIdStack.construct.accessIdp).toBeDefined()
+    expect(zoneIdStack.construct.accessCert).toBeDefined()
+  })
+
+  test('access application uses provided zoneId', () => {
+    pulumi.all([zoneIdStack.construct.accessApp.zoneId]).apply(([zoneId]) => {
+      expect(zoneId).toEqual('test-zone-dev-id')
+    })
+  })
+
+  test('access group uses provided zoneId', () => {
+    pulumi.all([zoneIdStack.construct.accessGroup.zoneId]).apply(([zoneId]) => {
+      expect(zoneId).toEqual('test-zone-dev-id')
+    })
+  })
+
+  test('access rule uses provided zoneId', () => {
+    pulumi.all([zoneIdStack.construct.accessRule.zoneId]).apply(([zoneId]) => {
+      expect(zoneId).toEqual('test-zone-dev-id')
+    })
+  })
+})
+
+class TestWithAccountIdCloudflareStack extends CommonCloudflareStack {
+  declare props: TestCloudflareStackProps
+  declare construct: TestWithAccountIdConstruct
+
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestWithAccountIdConstruct(props.name, this.props)
+  }
+}
+
+class TestWithAccountIdConstruct extends CommonCloudflareConstruct {
+  declare props: TestCloudflareStackProps
+  accessPolicy: ZeroTrustAccessPolicy
+  accessRule: AccessRule
+  accessServiceToken: ZeroTrustAccessServiceToken
+  accessTag: ZeroTrustAccessTag
+  accessCustomPage: ZeroTrustAccessCustomPage
+
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, props)
+    this.accessPolicy = this.accessManager.createAccessPolicy(`test-access-policy-acct-${this.props.stage}`, this, {
+      ...this.props.testAccessPolicy,
+      accountId: 'explicit-account-id',
+    })
+    this.accessRule = this.accessManager.createAccessRule(`test-access-rule-acct-${this.props.stage}`, this, {
+      ...this.props.testAccessRuleChallenge,
+      accountId: 'explicit-account-id',
+      zoneId: 'explicit-zone-id',
+    })
+    this.accessServiceToken = this.accessManager.createAccessServiceToken(
+      `test-access-ser-token-acct-${this.props.stage}`,
+      this,
+      {
+        ...this.props.testAccessServiceToken,
+        accountId: 'explicit-account-id',
+        zoneId: 'explicit-zone-id',
+      }
+    )
+    this.accessTag = this.accessManager.createAccessTag(`test-access-tag-acct-${this.props.stage}`, this, {
+      ...this.props.testAccessTag,
+      accountId: 'explicit-account-id',
+    })
+    this.accessCustomPage = this.accessManager.createAccessCustomPage(
+      `test-access-custom-page-acct-${this.props.stage}`,
+      this,
+      {
+        ...this.props.testAccessCustomPage,
+        accountId: 'explicit-account-id',
+        customHtml: '<p>Forbidden</p>',
+      }
+    )
+  }
+}
+
+describe('TestCloudflareAccessManager - With explicit accountId', () => {
+  test('provisions resources with explicit accountId', () => {
+    const acctStack = new TestWithAccountIdCloudflareStack('test-acct-stack', testStackProps)
+    expect(acctStack.construct.accessPolicy).toBeDefined()
+    expect(acctStack.construct.accessRule).toBeDefined()
+    expect(acctStack.construct.accessServiceToken).toBeDefined()
+    expect(acctStack.construct.accessTag).toBeDefined()
+    expect(acctStack.construct.accessCustomPage).toBeDefined()
+
+    pulumi.all([acctStack.construct.accessPolicy.accountId]).apply(([accountId]) => {
+      expect(accountId).toEqual('explicit-account-id')
+    })
+  })
+})

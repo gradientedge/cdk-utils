@@ -39,6 +39,44 @@ class TestCommonCloudflareStack extends CommonCloudflareStack {
   }
 }
 
+class TestExistingZoneCloudflareStack extends CommonCloudflareStack {
+  declare props: TestCloudflareStackProps
+  declare construct: TestExistingZoneConstruct
+
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestExistingZoneConstruct(props.name, this.props)
+  }
+
+  protected determineConstructProps(props: TestCloudflareStackProps) {
+    return {
+      ...super.determineConstructProps(props),
+      siteAssetDir: `packages/cloudflare/test/common/sample.html`,
+      siteSubDomain: `test.app`,
+      useExistingZone: true,
+    }
+  }
+}
+
+class TestCustomBranchCloudflareStack extends CommonCloudflareStack {
+  declare props: TestCloudflareStackProps
+  declare construct: TestCommonConstruct
+
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestCommonConstruct(props.name, this.props)
+  }
+
+  protected determineConstructProps(props: TestCloudflareStackProps) {
+    return {
+      ...super.determineConstructProps(props),
+      siteAssetDir: `packages/cloudflare/test/common/sample.html`,
+      siteSubDomain: `test.app`,
+      siteBranch: 'develop',
+    }
+  }
+}
+
 class TestInvalidCommonCloudflareStack extends CommonCloudflareStack {
   declare props: TestCloudflareStackProps
 
@@ -56,6 +94,15 @@ class TestInvalidCommonCloudflareStack extends CommonCloudflareStack {
 }
 
 class TestCommonConstruct extends CloudflarePagesStaticSite {
+  declare props: TestCloudflareStackProps
+
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, props)
+    this.initResources()
+  }
+}
+
+class TestExistingZoneConstruct extends CloudflarePagesStaticSite {
   declare props: TestCloudflareStackProps
 
   constructor(name: string, props: TestCloudflareStackProps) {
@@ -181,5 +228,26 @@ describe('TestCloudflarePagesStaticSite', () => {
         expect(content).toEqual('example.gradientedge.io')
         expect(zoneId).toEqual('test-common-stack-site-record-data-zone')
       })
+  })
+})
+
+describe('TestCloudflarePagesStaticSite - useExistingZone', () => {
+  test('resolves existing zone when useExistingZone is true', () => {
+    const existingZoneStack = new TestExistingZoneCloudflareStack('test-existing-zone-stack', testStackProps)
+    expect(existingZoneStack.construct.siteZone).toBeDefined()
+    pulumi
+      .all([existingZoneStack.construct.siteZone.id, existingZoneStack.construct.siteZone.urn])
+      .apply(([id, urn]) => {
+        expect(id).toBeDefined()
+        expect(urn).toBeDefined()
+      })
+  })
+})
+
+describe('TestCloudflarePagesStaticSite - Custom Branch', () => {
+  test('deploys with custom siteBranch', () => {
+    const customBranchStack = new TestCustomBranchCloudflareStack('test-custom-branch-stack', testStackProps)
+    expect(customBranchStack.construct.sitePagesProject).toBeDefined()
+    expect(customBranchStack.construct.siteZone).toBeDefined()
   })
 })

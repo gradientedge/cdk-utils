@@ -191,3 +191,87 @@ describe('TestAzureStorageConstruct', () => {
     })
   })
 })
+
+/* --- Tests for default value fallback branches --- */
+
+class TestMinimalStorageConstruct extends CommonAzureConstruct {
+  declare props: TestAzureStackProps
+  storageAccount: StorageAccount
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    // StorageAccount with minimal props - exercises sku/kind/location/tags/allowBlobPublicAccess/deleteRetentionPolicy defaults
+    this.storageAccount = this.storageManager.createStorageAccount(`test-minimal-storage-${this.props.stage}`, this, {
+      accountName: 'test-minimal-storage',
+      resourceGroupName: 'test-rg-dev',
+    } as any)
+  }
+}
+
+class TestMinimalStorageStack extends CommonAzureStack {
+  declare props: TestAzureStackProps
+  declare construct: TestMinimalStorageConstruct
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestMinimalStorageConstruct(props.name, this.props)
+  }
+}
+
+const minimalStorageStack = new TestMinimalStorageStack('test-minimal-storage-stack', testStackProps)
+
+describe('TestAzureStorageConstruct - Default Values', () => {
+  test('storage account uses default sku when not provided', () => {
+    pulumi.all([minimalStorageStack.construct.storageAccount.sku]).apply(([sku]) => {
+      expect(sku?.name).toEqual('Standard_LRS')
+    })
+  })
+
+  test('storage account uses default kind when not provided', () => {
+    pulumi.all([minimalStorageStack.construct.storageAccount.kind]).apply(([kind]) => {
+      expect(kind).toEqual('StorageV2')
+    })
+  })
+
+  test('storage account uses default location from scope when not provided', () => {
+    pulumi.all([minimalStorageStack.construct.storageAccount.location]).apply(([location]) => {
+      expect(location).toEqual('eastus')
+    })
+  })
+
+  test('storage account uses default tags when not provided', () => {
+    pulumi.all([minimalStorageStack.construct.storageAccount.tags]).apply(([tags]) => {
+      expect(tags?.environment).toEqual('dev')
+    })
+  })
+
+  test('storage account uses default allowBlobPublicAccess when not provided', () => {
+    pulumi
+      .all([minimalStorageStack.construct.storageAccount.allowBlobPublicAccess])
+      .apply(([allowBlobPublicAccess]) => {
+        expect(allowBlobPublicAccess).toEqual(false)
+      })
+  })
+})
+
+describe('TestAzureStorageConstruct - Error Handling', () => {
+  test('createManagementPolicy throws when props are undefined', () => {
+    expect(() => {
+      minimalStorageStack.construct.storageManager.createManagementPolicy(
+        'test-mp-err',
+        minimalStorageStack.construct,
+        undefined as any
+      )
+    }).toThrow('Props undefined for test-mp-err')
+  })
+
+  test('createTable throws when props are undefined', () => {
+    expect(() => {
+      minimalStorageStack.construct.storageManager.createTable(
+        'test-table-err',
+        minimalStorageStack.construct,
+        undefined as any
+      )
+    }).toThrow('Props undefined for test-table-err')
+  })
+})

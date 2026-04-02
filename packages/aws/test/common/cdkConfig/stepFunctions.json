@@ -115,5 +115,105 @@
   },
   "testWorkflowMapState": {
     "maxConcurrency": 1
+  },
+  "testSubmitStepLambdaWithCustomRetries": {
+    "name": "step:Lambda With Custom Retries",
+    "outputPath": "$.Payload",
+    "retries": [
+      {
+        "backoffRate": 3,
+        "errors": ["States.TaskFailed"],
+        "intervalInSecs": 5,
+        "maxAttempts": 3
+      },
+      {
+        "backoffRate": 2,
+        "errors": ["States.Timeout"],
+        "intervalInSecs": 15,
+        "maxAttempts": 4
+      }
+    ]
+  },
+  "testSubmitStepLambdaWithEmptyRetries": {
+    "name": "step:Lambda With Empty Retries",
+    "outputPath": "$.Payload",
+    "retries": []
+  },
+  "testSubmitStepSkippableLambdaNoSkip": {
+    "name": "step:Skippable Lambda No Skip",
+    "outputPath": "$.Payload"
+  },
+  "testSubmitStepSkippableLambdaUndefinedSkip": {
+    "name": "step:Skippable Lambda Undefined Skip",
+    "outputPath": "$.Payload"
+  },
+  "testSubmitStepGetItemWithCustomRetries": {
+    "name": "step:Get Item Custom Retries",
+    "outputPath": "$.Payload",
+    "retries": [
+      {
+        "backoffRate": 1.5,
+        "errors": ["States.TaskFailed"],
+        "intervalInSecs": 10,
+        "maxAttempts": 2
+      }
+    ]
+  },
+  "testSubmitStepApiWithCustomRetries": {
+    "name": "step:API With Custom Retries"
+  },
+  "testSubmitStepSendMessageWithCustomRetries": {
+    "messageBody": {
+      "test": true
+    },
+    "messageGroupId": "test-custom",
+    "name": "step:Send Message Custom Retries",
+    "outputPath": "$.Payload",
+    "retries": [
+      {
+        "backoffRate": 2,
+        "errors": ["States.TaskFailed"],
+        "intervalInSecs": 20,
+        "maxAttempts": 5
+      }
+    ]
+  },
+  "testSubmitStepSfnExecutionWithCustomRetries": {
+    "associateWithParent": false,
+    "name": "test-sfn-custom-retries",
+    "retries": [
+      {
+        "backoffRate": 2,
+        "errors": ["States.TaskFailed"],
+        "intervalInSecs": 10,
+        "maxAttempts": 3
+      }
+    ]
+  },
+  "testSubmitStepPutItemWithEmptyRetries": {
+    "name": "step:Put Item Empty Retries",
+    "outputPath": "$.Payload",
+    "retries": []
+  },
+  "testSubmitStepDeleteItemWithCustomRetries": {
+    "name": "step:Delete Item Custom Retries",
+    "outputPath": "$.Payload",
+    "retries": [
+      {
+        "backoffRate": 2,
+        "errors": ["States.TaskFailed"],
+        "intervalInSecs": 5,
+        "maxAttempts": 2
+      }
+    ]
+  },
+  "testBranchCoverageWorkflow": {
+    "logs": {
+      "includeExecutionData": true,
+      "level": "ALL"
+    },
+    "stateMachineName": "test-branch-coverage-workflow",
+    "stateMachineType": "STANDARD",
+    "tracingEnabled": false
   }
 }

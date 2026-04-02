@@ -21,13 +21,13 @@
   },
   "dependencies": {
     "@gradientedge/cdk-utils-common": "workspace:*",
-    "@pulumi/archive": "^0.3.7",
-    "@pulumi/azure-native": "^3.16.0",
-    "@pulumi/pulumi": "^3.228.0",
-    "@types/lodash": "^4.17.24",
-    "app-root-path": "^3.1.0",
-    "lodash": "^4.17.23",
-    "yaml": "^2.8.3"
+    "@pulumi/archive": "0.3.7",
+    "@pulumi/azure-native": "3.16.0",
+    "@pulumi/pulumi": "3.228.0",
+    "@types/lodash": "4.17.24",
+    "app-root-path": "3.1.0",
+    "lodash": "4.17.23",
+    "yaml": "2.8.3"
   },
   "publishConfig": {
     "access": "public"

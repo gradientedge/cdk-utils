@@ -22,174 +22,174 @@ importers:
         version: link:packages/common
     devDependencies:
       '@babel/core':
-        specifier: ^7.29.0
+        specifier: 7.29.0
         version: 7.29.0
       '@babel/eslint-parser':
-        specifier: ^7.28.6
+        specifier: 7.28.6
         version: 7.28.6(@babel/core@7.29.0)(eslint@10.1.0(jiti@2.5.1))
       '@changesets/changelog-github':
-        specifier: ^0.6.0
+        specifier: 0.6.0
         version: 0.6.0(encoding@0.1.13)
       '@changesets/cli':
-        specifier: ^2.30.0
+        specifier: 2.30.0
         version: 2.30.0(@types/node@25.5.0)
       '@eslint/config-array':
-        specifier: ^0.23.3
+        specifier: 0.23.3
         version: 0.23.3
       '@eslint/object-schema':
-        specifier: ^3.0.3
+        specifier: 3.0.3
         version: 3.0.3
       '@types/node':
-        specifier: ^25.5.0
+        specifier: 25.5.0
         version: 25.5.0
       '@typescript-eslint/eslint-plugin':
-        specifier: ^8.58.0
+        specifier: 8.58.0
         version: 8.58.0(@typescript-eslint/parser@8.58.0(eslint@10.1.0(jiti@2.5.1))(typescript@6.0.2))(eslint@10.1.0(jiti@2.5.1))(typescript@6.0.2)
       '@typescript-eslint/parser':
-        specifier: ^8.58.0
+        specifier: 8.58.0
         version: 8.58.0(eslint@10.1.0(jiti@2.5.1))(typescript@6.0.2)
       '@vitest/coverage-v8':
-        specifier: ^4.1.2
+        specifier: 4.1.2
         version: 4.1.2(vitest@4.1.2(@opentelemetry/api@1.9.0)(@types/node@25.5.0)(vite@7.3.1(@types/node@25.5.0)(jiti@2.5.1)(yaml@2.8.3)))
       aws-cdk:
-        specifier: ^2.1115.1
+        specifier: 2.1115.1
         version: 2.1115.1
       better-docs:
-        specifier: ^2.7.3
+        specifier: 2.7.3
         version: 2.7.3(prop-types@15.8.1)(react-dom@17.0.2(react@17.0.2))(react@17.0.2)
       commitizen:
-        specifier: ^4.3.1
+        specifier: 4.3.1
         version: 4.3.1(@types/node@25.5.0)(typescript@6.0.2)
       docdash:
-        specifier: ^2.0.2
+        specifier: 2.0.2
         version: 2.0.2
       dotenv:
-        specifier: ^17.3.1
+        specifier: 17.3.1
         version: 17.3.1
       esbuild:
-        specifier: ^0.27.4
+        specifier: 0.27.4
         version: 0.27.4
       eslint:
-        specifier: ^10.1.0
+        specifier: 10.1.0
         version: 10.1.0(jiti@2.5.1)
       eslint-config-prettier:
-        specifier: ^10.1.8
+        specifier: 10.1.8
         version: 10.1.8(eslint@10.1.0(jiti@2.5.1))
       eslint-plugin-import:
-        specifier: ^2.32.0
+        specifier: 2.32.0
         version: 2.32.0(@typescript-eslint/parser@8.58.0(eslint@10.1.0(jiti@2.5.1))(typescript@6.0.2))(eslint@10.1.0(jiti@2.5.1))
       eslint-plugin-jsdoc:
-        specifier: ^62.8.1
+        specifier: 62.8.1
         version: 62.8.1(eslint@10.1.0(jiti@2.5.1))
       husky:
-        specifier: ^9.1.7
+        specifier: 9.1.7
         version: 9.1.7
       jsdoc:
-        specifier: ^4.0.5
+        specifier: 4.0.5
         version: 4.0.5
       jsdoc-babel:
-        specifier: ^0.5.0
+        specifier: 0.5.0
         version: 0.5.0(@babel/core@7.29.0)
       jsdoc-mermaid:
-        specifier: ^1.0.0
+        specifier: 1.0.0
         version: 1.0.0
       jsdoc-plugin-typescript:
-        specifier: ^3.2.0
+        specifier: 3.2.0
         version: 3.2.0
       jsdoc-to-markdown:
-        specifier: ^9.1.3
+        specifier: 9.1.3
         version: 9.1.3
       prettier:
-        specifier: ^3.8.1
+        specifier: 3.8.1
         version: 3.8.1
       prettier-plugin-organize-imports:
-        specifier: ^4.3.0
+        specifier: 4.3.0
         version: 4.3.0(prettier@3.8.1)(typescript@6.0.2)
       rimraf:
-        specifier: ^6.1.3
+        specifier: 6.1.3
         version: 6.1.3
       rollup:
-        specifier: ^4.60.1
+        specifier: 4.60.1
         version: 4.60.1
       taffydb:
-        specifier: ^2.7.3
+        specifier: 2.7.3
         version: 2.7.3
       ts-md5:
-        specifier: ^2.0.1
+        specifier: 2.0.1
         version: 2.0.1
       ts-node:
-        specifier: ^10.9.2
+        specifier: 10.9.2
         version: 10.9.2(@types/node@25.5.0)(typescript@6.0.2)
       typescript:
         specifier: 6.0.2
         version: 6.0.2
       vitest:
-        specifier: ^4.1.2
+        specifier: 4.1.2
         version: 4.1.2(@opentelemetry/api@1.9.0)(@types/node@25.5.0)(vite@7.3.1(@types/node@25.5.0)(jiti@2.5.1)(yaml@2.8.3))
       yaml:
-        specifier: ^2.8.3
+        specifier: 2.8.3
         version: 2.8.3
     optionalDependencies:
       prop-types:
-        specifier: ^15.8.1
+        specifier: 15.8.1
         version: 15.8.1
       react:
-        specifier: ^17.0.0
+        specifier: 17.0.2
         version: 17.0.2
       react-dom:
-        specifier: ^17.0.0
+        specifier: 17.0.2
         version: 17.0.2(react@17.0.2)
 
   app/api-destined-function:
     dependencies:
       '@types/uuid':
-        specifier: ^11.0.0
+        specifier: 11.0.0
         version: 11.0.0
       uuid:
-        specifier: ^13.0.0
+        specifier: 13.0.0
         version: 13.0.0
     devDependencies:
       mkdirp:
-        specifier: ^3.0.1
+        specifier: 3.0.1
         version: 3.0.1
       rimraf:
-        specifier: ^6.1.3
+        specifier: 6.1.3
         version: 6.1.3
 
   packages/aws:
     dependencies:
       '@aws-sdk/client-secrets-manager':
-        specifier: ^3.1021.0
+        specifier: 3.1021.0
         version: 3.1021.0
       '@aws-sdk/credential-providers':
-        specifier: ^3.1021.0
+        specifier: 3.1021.0
         version: 3.1021.0
       '@aws-sdk/types':
-        specifier: ^3.973.6
+        specifier: 3.973.6
         version: 3.973.6
       '@gradientedge/cdk-utils-common':
         specifier: workspace:*
         version: link:../common
       '@types/lodash':
-        specifier: ^4.17.24
+        specifier: 4.17.24
         version: 4.17.24
       app-root-path:
-        specifier: ^3.1.0
+        specifier: 3.1.0
         version: 3.1.0
       aws-cdk-lib:
-        specifier: ^2.246.0
+        specifier: 2.246.0
         version: 2.246.0(constructs@10.6.0)
       constructs:
-        specifier: ^10.6.0
+        specifier: 10.6.0
         version: 10.6.0
       lodash:
-        specifier: ^4.17.23
+        specifier: 4.17.23
         version: 4.17.23
       moment:
-        specifier: ^2.30.1
+        specifier: 2.30.1
         version: 2.30.1
       uuid:
-        specifier: ^13.0.0
+        specifier: 13.0.0
         version: 13.0.0
 
   packages/azure:
@@ -198,25 +198,25 @@ importers:
         specifier: workspace:*
         version: link:../common
       '@pulumi/archive':
-        specifier: ^0.3.7
+        specifier: 0.3.7
         version: 0.3.7(ts-node@10.9.2(@types/node@25.5.0)(typescript@4.9.5))(typescript@4.9.5)
       '@pulumi/azure-native':
-        specifier: ^3.16.0
+        specifier: 3.16.0
         version: 3.16.0(ts-node@10.9.2(@types/node@25.5.0)(typescript@4.9.5))(typescript@4.9.5)
       '@pulumi/pulumi':
-        specifier: ^3.228.0
+        specifier: 3.228.0
         version: 3.228.0(ts-node@10.9.2(@types/node@25.5.0)(typescript@4.9.5))(typescript@4.9.5)
       '@types/lodash':
-        specifier: ^4.17.24
+        specifier: 4.17.24
         version: 4.17.24
       app-root-path:
-        specifier: ^3.1.0
+        specifier: 3.1.0
         version: 3.1.0
       lodash:
-        specifier: ^4.17.23
+        specifier: 4.17.23
         version: 4.17.23
       yaml:
-        specifier: ^2.8.3
+        specifier: 2.8.3
         version: 2.8.3
 
   packages/cloudflare:
@@ -225,43 +225,43 @@ importers:
         specifier: workspace:*
         version: link:../common
       '@pulumi/aws':
-        specifier: ^7.24.0
+        specifier: 7.24.0
         version: 7.24.0(ts-node@10.9.2(@types/node@25.5.0)(typescript@4.9.5))(typescript@4.9.5)
       '@pulumi/azure-native':
-        specifier: ^3.16.0
+        specifier: 3.16.0
         version: 3.16.0(ts-node@10.9.2(@types/node@25.5.0)(typescript@4.9.5))(typescript@4.9.5)
       '@pulumi/cloudflare':
-        specifier: ^6.13.1
+        specifier: 6.13.1
         version: 6.13.1(ts-node@10.9.2(@types/node@25.5.0)(typescript@4.9.5))(typescript@4.9.5)
       '@pulumi/command':
-        specifier: ^1.2.1
+        specifier: 1.2.1
         version: 1.2.1(ts-node@10.9.2(@types/node@25.5.0)(typescript@4.9.5))(typescript@4.9.5)
       '@pulumi/pulumi':
-        specifier: ^3.228.0
+        specifier: 3.228.0
         version: 3.228.0(ts-node@10.9.2(@types/node@25.5.0)(typescript@4.9.5))(typescript@4.9.5)
       '@pulumi/std':
-        specifier: ^2.3.2
+        specifier: 2.3.2
         version: 2.3.2(ts-node@10.9.2(@types/node@25.5.0)(typescript@4.9.5))(typescript@4.9.5)
       '@types/lodash':
-        specifier: ^4.17.24
+        specifier: 4.17.24
         version: 4.17.24
       app-root-path:
-        specifier: ^3.1.0
+        specifier: 3.1.0
         version: 3.1.0
       lodash:
-        specifier: ^4.17.23
+        specifier: 4.17.23
         version: 4.17.23
 
   packages/common:
     dependencies:
       '@types/lodash':
-        specifier: ^4.17.24
+        specifier: 4.17.24
         version: 4.17.24
       constructs:
         specifier: ^10.6.0
         version: 10.6.0
       lodash:
-        specifier: ^4.17.23
+        specifier: 4.17.23
         version: 4.17.23
 
 packages:
@@ -404,10 +404,6 @@ packages:
     resolution: {integrity: sha512-C0NBLsIqzDIae8HFw9YIrIBsbc0xTiOtt7fAukGPnqQ/+zZNaq+4jhuccltK0QuWHBnNm/a6kLIRA6GFiM10eg==}
     engines: {node: '>=18.0.0'}
 
-  '@babel/code-frame@7.28.6':
-    resolution: {integrity: sha512-JYgintcMjRiCvS8mMECzaEn+m3PfoQiyqukOMCCVQtoJGYJw8j/8LBJEiqkHLkfwCcs74E3pbAUFNg7d9VNJ+Q==}
-    engines: {node: '>=6.9.0'}
-
   '@babel/code-frame@7.29.0':
     resolution: {integrity: sha512-9NhCeYjq9+3uxgdtp20LSiJXJvN0FeCtNGpJxuMFZ1Kv3cWUNb6DOhJwUvcVCzKGR66cw4njwM6hrJLqgOwbcw==}
     engines: {node: '>=6.9.0'}
@@ -426,14 +422,6 @@ packages:
     peerDependencies:
       '@babel/core': ^7.11.0
       eslint: ^7.5.0 || ^8.0.0 || ^9.0.0
-
-  '@babel/generator@7.28.3':
-    resolution: {integrity: sha512-3lSpxGgvnmZznmBkCRnVREPUFJv2wrv9iAoFDvADJc0ypmdOxdUtcLeBgBJ6zE0PMeTKnxeQzyk0xTBq4Ep7zw==}
-    engines: {node: '>=6.9.0'}
-
-  '@babel/generator@7.28.6':
-    resolution: {integrity: sha512-lOoVRwADj8hjf7al89tvQ2a1lf53Z+7tiXMgpZJL3maQPDxh0DgLMN62B2MKUOFcoodBHLMbDM6WAbKgNy5Suw==}
-    engines: {node: '>=6.9.0'}
 
   '@babel/generator@7.29.1':
     resolution: {integrity: sha512-qsaF+9Qcm2Qv8SRIMMscAvG4O3lJ0F1GuMo5HR/Bp02LopNgnZBC/EkbevHFeGs4ls/oPz9v+Bsmzbkbe+0dUw==}
@@ -461,10 +449,6 @@ packages:
     resolution: {integrity: sha512-qMlSxKbpRlAridDExk92nSobyDdpPijUq2DW6oDnUqd0iOGxmQjyqhMIihI9+zv4LPyZdRje2cavWPbCbWm3eA==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/helper-validator-identifier@7.27.1':
-    resolution: {integrity: sha512-D2hP9eA+Sqx1kBZgzxZh0y1trbuU+JoDkiEwqhQ36nodYqJwyEIhPSdMNd7lOm/4io72luTPWH20Yda0xOuUow==}
-    engines: {node: '>=6.9.0'}
-
   '@babel/helper-validator-identifier@7.28.5':
     resolution: {integrity: sha512-qSs4ifwzKJSV39ucNjsvc6WVHs6b7S03sOh2OcHF9UHfVPqWWALUsNUVzhSBiItjRZoLHx7nIarVjqKVusUZ1Q==}
     engines: {node: '>=6.9.0'}
@@ -476,16 +460,6 @@ packages:
   '@babel/helpers@7.28.6':
     resolution: {integrity: sha512-xOBvwq86HHdB7WUDTfKfT/Vuxh7gElQ+Sfti2Cy6yIWNW05P8iUslOVcZ4/sKbE+/jQaukQAdz/gf3724kYdqw==}
     engines: {node: '>=6.9.0'}
-
-  '@babel/parser@7.28.4':
-    resolution: {integrity: sha512-yZbBqeM6TkpP9du/I2pUZnJsRMGGvOuIrhjzC1AwHwW+6he4mni6Bp/m8ijn0iOuZuPI2BfkCoSRunpyjnrQKg==}
-    engines: {node: '>=6.0.0'}
-    hasBin: true
-
-  '@babel/parser@7.28.6':
-    resolution: {integrity: sha512-TeR9zWR18BvbfPmGbLampPMW+uW1NZnJlRuuHso8i87QZNq2JRF9i6RgxRqtEq+wQGsS19NNTWr2duhnE49mfQ==}
-    engines: {node: '>=6.0.0'}
-    hasBin: true
 
   '@babel/parser@7.29.2':
     resolution: {integrity: sha512-4GgRzy/+fsBa72/RZVJmGKPmZu9Byn8o4MoLpmNe1m8ZfYnz5emHLQz3U4gLud6Zwl0RZIcgiLD7Uq7ySFuDLA==}
@@ -500,20 +474,8 @@ packages:
     resolution: {integrity: sha512-YA6Ma2KsCdGb+WC6UpBVFJGXL58MDA6oyONbjyF/+5sBgxY/dwkhLogbMT2GXXyU84/IhRw/2D1Os1B/giz+BQ==}
     engines: {node: '>=6.9.0'}
 
-  '@babel/traverse@7.28.6':
-    resolution: {integrity: sha512-fgWX62k02qtjqdSNTAGxmKYY/7FSL9WAS1o2Hu5+I5m9T0yxZzr4cnrfXQ/MX0rIifthCSs6FKTlzYbJcPtMNg==}
-    engines: {node: '>=6.9.0'}
-
   '@babel/traverse@7.29.0':
     resolution: {integrity: sha512-4HPiQr0X7+waHfyXPZpWPfWL/J7dcN1mx9gL6WdQVMbPnF3+ZhSMs8tCxN7oHddJE9fhNE7+lxdnlyemKfJRuA==}
-    engines: {node: '>=6.9.0'}
-
-  '@babel/types@7.28.4':
-    resolution: {integrity: sha512-bkFqkLhh3pMBUQQkpVgWDWq/lqzc2678eUyDlTBhRqhCHFguYYGM0Efga7tYk4TogG/3x0EEl66/OQ+WGbWB/Q==}
-    engines: {node: '>=6.9.0'}
-
-  '@babel/types@7.28.6':
-    resolution: {integrity: sha512-0ZrskXVEHSWIqZM/sQZ4EV3jZJXRkio/WCxaqKZP1g//CEWEPSfeZFcms4XeKBCHU0ZKnIkdJeU/kF+eRp5lBg==}
     engines: {node: '>=6.9.0'}
 
   '@babel/types@7.29.0':
@@ -1610,10 +1572,6 @@ packages:
       eslint: ^8.57.0 || ^9.0.0 || ^10.0.0
       typescript: '>=4.8.4 <6.1.0'
 
-  '@typescript-eslint/types@8.57.1':
-    resolution: {integrity: sha512-S29BOBPJSFUiblEl6RzPPjJt6w25A6XsBqRVDt53tA/tlL8q7ceQNZHTjPeONt/3S7KRI4quk+yP9jK2WjBiPQ==}
-    engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
-
   '@typescript-eslint/types@8.58.0':
     resolution: {integrity: sha512-O9CjxypDT89fbHxRfETNoAnHj/i6IpRK0CvbVN3qibxlLdo5p5hcLmUuCCrHMpxiWSwKyI8mCP7qRNYuOJ0Uww==}
     engines: {node: ^18.18.0 || ^20.9.0 || >=21.1.0}
@@ -1704,11 +1662,6 @@ packages:
 
   acorn@4.0.13:
     resolution: {integrity: sha512-fu2ygVGuMmlzG8ZeRJ0bvR41nsAkxxhbyk8bZ1SS521Z7vmgJFTQQlfz/Mp/nJexGBz+v8sC9bM6+lNgskt4Ug==}
-    engines: {node: '>=0.4.0'}
-    hasBin: true
-
-  acorn@8.15.0:
-    resolution: {integrity: sha512-NZyJarBfL7nWwIq+FDL6Zp/yHEhePMNnnJ0y3qfieCrmNvYct8uvtiV41UvlSe6apAfk0fY1FbWx+NwfmpvtTg==}
     engines: {node: '>=0.4.0'}
     hasBin: true
 
@@ -2674,7 +2627,7 @@ packages:
 
   glob@7.2.3:
     resolution: {integrity: sha512-nFR0zLpU2YCaRxwoCJvL6UvCH2JFyFVIvwTLsIf21AuHlMskA1hhTdk+LlYJtOlYt9v6dvszD2BGRqBL+iQK9Q==}
-    deprecated: Glob versions prior to v9 are no longer supported
+    deprecated: Old versions of glob are not supported, and contain widely publicized security vulnerabilities, which have been fixed in the current version. Please update. Support for old versions may be purchased (at exorbitant rates) by contacting i@izs.me
 
   global-directory@4.0.1:
     resolution: {integrity: sha512-wHTUcDUoZ1H5/0iVqEudYW4/kAlN5cZ3j/bXn0Dpbizl9iaUVeWSHqiOjsgk6OW2bkLclbBjzewBz6weQ1zA2Q==}
@@ -3050,10 +3003,6 @@ packages:
 
   js-yaml@3.14.2:
     resolution: {integrity: sha512-PMSmkqxr106Xa156c2M265Z+FTrPl+oxd/rgOQy2tijQeK5TxQ43psO1ZCwhVOSdnn+RzkzlRz/eY4BgJBYVpg==}
-    hasBin: true
-
-  js-yaml@4.1.0:
-    resolution: {integrity: sha512-wpxZs9NoxZaJESJGIZTyDEaYpl0FKSA+FB9aJiyemKhMwkxQg63h4T1KJgUGHpTqPDNRcmmYLugrRjJlBtWvRA==}
     hasBin: true
 
   js-yaml@4.1.1:
@@ -3975,11 +3924,6 @@ packages:
 
   semver@6.3.1:
     resolution: {integrity: sha512-BR7VvDCVHO+q2xBEWskxS6DJE1qRnb7DxzUrogb71CWoSficBxYsiAGd+Kl0mmq/MprG9yArRkyrQxTO6XjMzA==}
-    hasBin: true
-
-  semver@7.7.3:
-    resolution: {integrity: sha512-SdsKMrI9TdgjdweUSR9MweHA4EJ8YxHn8DFaDisvhVlUOe4BF1tLD7GAj0lIqWVl+dPb/rExr0Btby5loQm20Q==}
-    engines: {node: '>=10'}
     hasBin: true
 
   semver@7.7.4:
@@ -5043,12 +4987,6 @@ snapshots:
 
   '@aws/lambda-invoke-store@0.2.2': {}
 
-  '@babel/code-frame@7.28.6':
-    dependencies:
-      '@babel/helper-validator-identifier': 7.28.5
-      js-tokens: 4.0.0
-      picocolors: 1.1.1
-
   '@babel/code-frame@7.29.0':
     dependencies:
       '@babel/helper-validator-identifier': 7.28.5
@@ -5084,22 +5022,6 @@ snapshots:
       eslint: 10.1.0(jiti@2.5.1)
       eslint-visitor-keys: 2.1.0
       semver: 6.3.1
-
-  '@babel/generator@7.28.3':
-    dependencies:
-      '@babel/parser': 7.28.6
-      '@babel/types': 7.28.6
-      '@jridgewell/gen-mapping': 0.3.13
-      '@jridgewell/trace-mapping': 0.3.31
-      jsesc: 3.1.0
-
-  '@babel/generator@7.28.6':
-    dependencies:
-      '@babel/parser': 7.28.6
-      '@babel/types': 7.28.6
-      '@jridgewell/gen-mapping': 0.3.13
-      '@jridgewell/trace-mapping': 0.3.31
-      jsesc: 3.1.0
 
   '@babel/generator@7.29.1':
     dependencies:
@@ -5137,8 +5059,6 @@ snapshots:
 
   '@babel/helper-string-parser@7.27.1': {}
 
-  '@babel/helper-validator-identifier@7.27.1': {}
-
   '@babel/helper-validator-identifier@7.28.5': {}
 
   '@babel/helper-validator-option@7.27.1': {}
@@ -5147,14 +5067,6 @@ snapshots:
     dependencies:
       '@babel/template': 7.28.6
       '@babel/types': 7.29.0
-
-  '@babel/parser@7.28.4':
-    dependencies:
-      '@babel/types': 7.28.4
-
-  '@babel/parser@7.28.6':
-    dependencies:
-      '@babel/types': 7.28.6
 
   '@babel/parser@7.29.2':
     dependencies:
@@ -5168,18 +5080,6 @@ snapshots:
       '@babel/parser': 7.29.2
       '@babel/types': 7.29.0
 
-  '@babel/traverse@7.28.6':
-    dependencies:
-      '@babel/code-frame': 7.28.6
-      '@babel/generator': 7.28.6
-      '@babel/helper-globals': 7.28.0
-      '@babel/parser': 7.28.6
-      '@babel/template': 7.28.6
-      '@babel/types': 7.28.6
-      debug: 4.4.3
-    transitivePeerDependencies:
-      - supports-color
-
   '@babel/traverse@7.29.0':
     dependencies:
       '@babel/code-frame': 7.29.0
@@ -5191,16 +5091,6 @@ snapshots:
       debug: 4.4.3
     transitivePeerDependencies:
       - supports-color
-
-  '@babel/types@7.28.4':
-    dependencies:
-      '@babel/helper-string-parser': 7.27.1
-      '@babel/helper-validator-identifier': 7.27.1
-
-  '@babel/types@7.28.6':
-    dependencies:
-      '@babel/helper-string-parser': 7.27.1
-      '@babel/helper-validator-identifier': 7.28.5
 
   '@babel/types@7.29.0':
     dependencies:
@@ -5418,7 +5308,7 @@ snapshots:
   '@es-joy/jsdoccomment@0.84.0':
     dependencies:
       '@types/estree': 1.0.8
-      '@typescript-eslint/types': 8.57.1
+      '@typescript-eslint/types': 8.58.0
       comment-parser: 1.4.5
       esquery: 1.7.0
       jsdoc-type-pratt-parser: 7.1.1
@@ -6526,8 +6416,6 @@ snapshots:
     transitivePeerDependencies:
       - supports-color
 
-  '@typescript-eslint/types@8.57.1': {}
-
   '@typescript-eslint/types@8.58.0': {}
 
   '@typescript-eslint/typescript-estree@8.58.0(typescript@6.0.2)':
@@ -6634,13 +6522,11 @@ snapshots:
 
   acorn-walk@8.3.4:
     dependencies:
-      acorn: 8.15.0
+      acorn: 8.16.0
 
   acorn@3.3.0: {}
 
   acorn@4.0.13: {}
-
-  acorn@8.15.0: {}
 
   acorn@8.16.0: {}
 
@@ -7106,7 +6992,7 @@ snapshots:
     dependencies:
       env-paths: 2.2.1
       import-fresh: 3.3.1
-      js-yaml: 4.1.0
+      js-yaml: 4.1.1
       parse-json: 5.2.0
     optionalDependencies:
       typescript: 6.0.2
@@ -7540,8 +7426,8 @@ snapshots:
 
   estree-to-babel@3.2.1:
     dependencies:
-      '@babel/traverse': 7.28.6
-      '@babel/types': 7.28.6
+      '@babel/traverse': 7.29.0
+      '@babel/types': 7.29.0
       c8: 7.14.0
     transitivePeerDependencies:
       - supports-color
@@ -8162,11 +8048,6 @@ snapshots:
       argparse: 1.0.10
       esprima: 4.0.1
 
-  js-yaml@4.1.0:
-    dependencies:
-      argparse: 2.0.1
-    optional: true
-
   js-yaml@4.1.1:
     dependencies:
       argparse: 2.0.1
@@ -8224,7 +8105,7 @@ snapshots:
 
   jsdoc@4.0.5:
     dependencies:
-      '@babel/parser': 7.28.4
+      '@babel/parser': 7.29.2
       '@jsdoc/salty': 0.2.9
       '@types/markdown-it': 14.1.2
       bluebird: 3.7.2
@@ -8550,7 +8431,7 @@ snapshots:
   normalize-package-data@6.0.2:
     dependencies:
       hosted-git-info: 7.0.2
-      semver: 7.7.3
+      semver: 7.7.4
       validate-npm-package-license: 3.0.4
 
   normalize-url@6.1.0: {}
@@ -8758,7 +8639,7 @@ snapshots:
 
   parse-json@5.2.0:
     dependencies:
-      '@babel/code-frame': 7.28.6
+      '@babel/code-frame': 7.29.0
       error-ex: 1.3.2
       json-parse-even-better-errors: 2.3.1
       lines-and-columns: 1.2.4
@@ -8960,7 +8841,7 @@ snapshots:
   react-docgen@5.4.3:
     dependencies:
       '@babel/core': 7.29.0
-      '@babel/generator': 7.28.3
+      '@babel/generator': 7.29.1
       '@babel/runtime': 7.28.4
       ast-types: 0.14.2
       commander: 2.20.3
@@ -9170,8 +9051,6 @@ snapshots:
       object-assign: 4.1.1
 
   semver@6.3.1: {}
-
-  semver@7.7.3: {}
 
   semver@7.7.4: {}
 
@@ -9474,7 +9353,7 @@ snapshots:
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
       '@types/node': 25.5.0
-      acorn: 8.15.0
+      acorn: 8.16.0
       acorn-walk: 8.3.4
       arg: 4.1.3
       create-require: 1.1.1
@@ -9493,7 +9372,7 @@ snapshots:
       '@tsconfig/node14': 1.0.3
       '@tsconfig/node16': 1.0.4
       '@types/node': 25.5.0
-      acorn: 8.15.0
+      acorn: 8.16.0
       acorn-walk: 8.3.4
       arg: 4.1.3
       create-require: 1.1.1
@@ -9682,8 +9561,8 @@ snapshots:
 
   vue-docgen-api@3.26.0:
     dependencies:
-      '@babel/parser': 7.28.4
-      '@babel/types': 7.28.4
+      '@babel/parser': 7.29.2
+      '@babel/types': 7.29.0
       ast-types: 0.12.4
       hash-sum: 1.0.2
       lru-cache: 4.1.5

@@ -1,3 +1,4 @@
+import { Resource } from '@pulumi/azure-native/resources/index.js'
 import { WebApp, WebAppFunction } from '@pulumi/azure-native/web/index.js'
 import * as pulumi from '@pulumi/pulumi'
 import {
@@ -227,5 +228,201 @@ describe('TestAzureFunctionConstruct', () => {
     expect(config.scaleAndConcurrency.instanceMemoryMB).toEqual(2048)
     expect(config.scaleAndConcurrency.maximumInstanceCount).toEqual(100)
     expect(config.siteUpdateStrategy.type).toEqual('RollingUpdate')
+  })
+})
+
+/* --- Tests for default value fallback branches --- */
+
+interface TestMinimalAzureStackProps extends CommonAzureStackProps {
+  testFunctionAppMinimal: FunctionAppProps
+  testFunctionMinimal: FunctionProps
+  testFunctionAppFlexConsumptionMinimal: FunctionAppFlexConsumptionProps
+  testFunctionAppFlexConsumptionResource: FunctionAppFlexConsumptionProps
+  testAttribute?: string
+}
+
+class TestMinimalConstruct extends CommonAzureConstruct {
+  declare props: TestMinimalAzureStackProps
+  functionApp: WebApp
+  functionWithEnabled: WebAppFunction
+  functionAppFlexConsumption: WebApp
+  functionAppFlexConsumptionResource: Resource
+
+  constructor(name: string, props: TestMinimalAzureStackProps) {
+    super(name, props)
+
+    // FunctionApp with minimal props - exercises location/kind/identity/tags defaults
+    this.functionApp = this.functionManager.createFunctionApp(`test-minimal-fa-${this.props.stage}`, this, {
+      name: 'test-minimal-function-app',
+      resourceGroupName: 'test-rg-dev',
+      serverFarmId: '/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.Web/serverfarms/test-asp',
+    } as any)
+
+    // Function with enabled=true to exercise the `enabled !== undefined` branch
+    this.functionWithEnabled = this.functionManager.createFunction(`test-enabled-fn-${this.props.stage}`, this, {
+      name: 'test-enabled-function',
+      functionAppId: '/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.Web/sites/test-fa',
+      enabled: true,
+    })
+
+    // FlexConsumption with minimal props - no runtime, no scaleAndConcurrency, no functionAppConfig, no siteConfig
+    this.functionAppFlexConsumption = this.functionManager.createFunctionAppFlexConsumption(
+      `test-minimal-flex-${this.props.stage}`,
+      this,
+      {
+        name: 'test-minimal-flex-consumption',
+        resourceGroupName: 'test-rg-dev',
+        serverFarmId: '/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.Web/serverfarms/test-asp',
+      } as any
+    )
+
+    // FlexConsumptionResource with minimal props
+    this.functionAppFlexConsumptionResource = this.functionManager.createFunctionAppFlexConsumptionResource(
+      `test-minimal-flex-resource-${this.props.stage}`,
+      this,
+      {
+        name: 'test-minimal-flex-resource',
+        resourceGroupName: 'test-rg-dev',
+        serverFarmId: '/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.Web/serverfarms/test-asp',
+      } as any
+    )
+  }
+}
+
+class TestMinimalCommonStack extends CommonAzureStack {
+  declare props: TestMinimalAzureStackProps
+  declare construct: TestMinimalConstruct
+
+  constructor(name: string, props: TestMinimalAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestMinimalConstruct(props.name, this.props as any)
+  }
+}
+
+const minimalStack = new TestMinimalCommonStack('test-minimal-stack', testStackProps)
+
+describe('TestAzureFunctionConstruct - Default Value Branches', () => {
+  test('function app uses default location from scope when not provided', () => {
+    pulumi.all([minimalStack.construct.functionApp.location]).apply(([location]) => {
+      expect(location).toEqual('eastus')
+    })
+  })
+
+  test('function app uses default kind when not provided', () => {
+    pulumi.all([minimalStack.construct.functionApp.kind]).apply(([kind]) => {
+      expect(kind).toEqual('functionapp,linux')
+    })
+  })
+
+  test('function app uses default tags when not provided', () => {
+    pulumi.all([minimalStack.construct.functionApp.tags]).apply(([tags]) => {
+      expect(tags?.environment).toEqual('dev')
+    })
+  })
+
+  test('function with enabled=true sets isDisabled to false', () => {
+    const fnArgs = capturedResources['test-enabled-fn-dev-fc']
+    expect(fnArgs).toBeDefined()
+    expect(fnArgs.inputs.isDisabled).toEqual(false)
+  })
+
+  test('flex consumption app uses default runtime, scaleAndConcurrency, and siteConfig', () => {
+    const flexArgs = capturedResources['test-minimal-flex-dev-fc']
+    expect(flexArgs).toBeDefined()
+    expect(flexArgs.inputs.kind).toEqual('functionapp,linux')
+    expect(flexArgs.inputs.httpsOnly).toEqual(true)
+    expect(flexArgs.inputs.functionAppConfig.runtime.name).toEqual('node')
+    expect(flexArgs.inputs.functionAppConfig.runtime.version).toEqual('22')
+    expect(flexArgs.inputs.functionAppConfig.scaleAndConcurrency.instanceMemoryMB).toEqual(4096)
+    expect(flexArgs.inputs.functionAppConfig.scaleAndConcurrency.maximumInstanceCount).toEqual(40)
+    expect(flexArgs.inputs.siteConfig.http20Enabled).toEqual(true)
+    expect(flexArgs.inputs.siteConfig.linuxFxVersion).toEqual('node|22')
+  })
+
+  test('flex consumption deployment uses default values', () => {
+    const deploymentArgs = capturedResources['test-minimal-flex-dev-deployment']
+    expect(deploymentArgs).toBeDefined()
+    const config = deploymentArgs.inputs.properties.template.resources[0].properties.functionAppConfig
+    expect(config.runtime.name).toEqual('node')
+    expect(config.runtime.version).toEqual('22')
+    expect(config.scaleAndConcurrency.instanceMemoryMB).toEqual(4096)
+    expect(config.scaleAndConcurrency.maximumInstanceCount).toEqual(40)
+  })
+
+  test('flex consumption resource uses default values', () => {
+    const resourceArgs = capturedResources['test-minimal-flex-resource-dev-fc']
+    expect(resourceArgs).toBeDefined()
+    expect(resourceArgs.inputs.kind).toEqual('functionapp,linux')
+    expect(resourceArgs.inputs.properties.httpsOnly).toEqual(true)
+    expect(resourceArgs.inputs.properties.functionAppConfig.runtime.name).toEqual('node')
+    expect(resourceArgs.inputs.properties.functionAppConfig.runtime.version).toEqual('22')
+    expect(resourceArgs.inputs.properties.functionAppConfig.scaleAndConcurrency.instanceMemoryMB).toEqual(4096)
+    expect(resourceArgs.inputs.properties.functionAppConfig.scaleAndConcurrency.maximumInstanceCount).toEqual(40)
+    expect(resourceArgs.inputs.properties.functionAppConfig.siteUpdateStrategy.type).toEqual('RollingUpdate')
+  })
+})
+
+describe('TestAzureFunctionConstruct - Error Handling', () => {
+  test('createFunctionApp throws when resourceGroupName is missing from both scope and props', () => {
+    expect(() => {
+      class NoRgConstruct extends CommonAzureConstruct {
+        constructor(name: string, props: any) {
+          super(name, props)
+          this.functionManager.createFunctionApp('test-no-rg', this, {
+            name: 'test-no-rg-fa',
+            serverFarmId: '/subscriptions/test-sub/resourceGroups/test-rg/providers/Microsoft.Web/serverfarms/test-asp',
+          } as any)
+        }
+      }
+      class NoRgStack extends CommonAzureStack {
+        constructor(name: string, props: any) {
+          super(name, { ...testStackProps, resourceGroupName: undefined })
+          new NoRgConstruct(props.name, this.props)
+        }
+      }
+      new NoRgStack('test-no-rg-stack', testStackProps)
+    }).toThrow('Resource group name undefined for test-no-rg')
+  })
+
+  test('createFunctionAppFlexConsumption throws when resourceGroupName is missing', () => {
+    expect(() => {
+      class NoRgFlexConstruct extends CommonAzureConstruct {
+        constructor(name: string, props: any) {
+          super(name, props)
+          this.functionManager.createFunctionAppFlexConsumption('test-no-rg-flex', this, {
+            name: 'test-no-rg-flex-fa',
+            serverFarmId: '/subscriptions/test-sub/resourceGroups/test-rg/providers/Microsoft.Web/serverfarms/test-asp',
+          } as any)
+        }
+      }
+      class NoRgFlexStack extends CommonAzureStack {
+        constructor(name: string, props: any) {
+          super(name, { ...testStackProps, resourceGroupName: undefined })
+          new NoRgFlexConstruct(props.name, this.props)
+        }
+      }
+      new NoRgFlexStack('test-no-rg-flex-stack', testStackProps)
+    }).toThrow('Resource group name undefined for test-no-rg-flex')
+  })
+
+  test('createFunctionAppFlexConsumptionResource throws when resourceGroupName is missing', () => {
+    expect(() => {
+      class NoRgFlexResConstruct extends CommonAzureConstruct {
+        constructor(name: string, props: any) {
+          super(name, props)
+          this.functionManager.createFunctionAppFlexConsumptionResource('test-no-rg-flex-res', this, {
+            name: 'test-no-rg-flex-res-fa',
+            serverFarmId: '/subscriptions/test-sub/resourceGroups/test-rg/providers/Microsoft.Web/serverfarms/test-asp',
+          } as any)
+        }
+      }
+      class NoRgFlexResStack extends CommonAzureStack {
+        constructor(name: string, props: any) {
+          super(name, { ...testStackProps, resourceGroupName: undefined })
+          new NoRgFlexResConstruct(props.name, this.props)
+        }
+      }
+      new NoRgFlexResStack('test-no-rg-flex-res-stack', testStackProps)
+    }).toThrow('Resource group name undefined for test-no-rg-flex-res')
   })
 })

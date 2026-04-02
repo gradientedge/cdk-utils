@@ -1,5 +1,6 @@
-import { describe, expect, test } from 'vitest'
-import { applyTags, isTaggableResource } from '../../src/common/tagging.js'
+import * as pulumi from '@pulumi/pulumi'
+import { afterEach, describe, expect, test, vi } from 'vitest'
+import { applyTags, isTaggableResource, registerTagTransformation } from '../../src/common/tagging.js'
 
 describe('isTaggableResource', () => {
   test('returns false for resources in exclusion list', () => {
@@ -156,5 +157,183 @@ describe('applyTags', () => {
         existing2: 'tag2',
       },
     })
+  })
+})
+
+describe('registerTagTransformation', () => {
+  afterEach(() => {
+    vi.restoreAllMocks()
+  })
+
+  test('registers a stack transformation with default tags', () => {
+    const registerSpy = vi.spyOn(pulumi.runtime, 'registerStackTransformation').mockImplementation(() => {})
+    registerTagTransformation({ environment: 'production', team: 'platform' })
+    expect(registerSpy).toHaveBeenCalledOnce()
+    expect(registerSpy).toHaveBeenCalledWith(expect.any(Function))
+  })
+
+  test('transformation merges default tags with resource tags for taggable resources', () => {
+    let capturedTransformation: (args: pulumi.ResourceTransformationArgs) => any
+    vi.spyOn(pulumi.runtime, 'registerStackTransformation').mockImplementation((fn: any) => {
+      capturedTransformation = fn
+    })
+
+    registerTagTransformation({ environment: 'production', team: 'platform' })
+
+    const result = capturedTransformation!({
+      type: 'azure-native:resources:ResourceGroup',
+      name: 'test-rg',
+      props: { tags: { app: 'myapp' } },
+      opts: {},
+      resource: {} as any,
+    })
+
+    expect(result).toBeDefined()
+    expect(result!.props.tags).toEqual({
+      environment: 'production',
+      team: 'platform',
+      app: 'myapp',
+    })
+  })
+
+  test('transformation applies default tags when resource has no tags', () => {
+    let capturedTransformation: (args: pulumi.ResourceTransformationArgs) => any
+    vi.spyOn(pulumi.runtime, 'registerStackTransformation').mockImplementation((fn: any) => {
+      capturedTransformation = fn
+    })
+
+    registerTagTransformation({ environment: 'production' })
+
+    const result = capturedTransformation!({
+      type: 'azure-native:resources:ResourceGroup',
+      name: 'test-rg',
+      props: {},
+      opts: {},
+      resource: {} as any,
+    })
+
+    expect(result).toBeDefined()
+    expect(result!.props.tags).toEqual({
+      environment: 'production',
+    })
+  })
+
+  test('resource tags take precedence over default tags', () => {
+    let capturedTransformation: (args: pulumi.ResourceTransformationArgs) => any
+    vi.spyOn(pulumi.runtime, 'registerStackTransformation').mockImplementation((fn: any) => {
+      capturedTransformation = fn
+    })
+
+    registerTagTransformation({ environment: 'production' })
+
+    const result = capturedTransformation!({
+      type: 'azure-native:resources:ResourceGroup',
+      name: 'test-rg',
+      props: { tags: { environment: 'staging' } },
+      opts: {},
+      resource: {} as any,
+    })
+
+    expect(result).toBeDefined()
+    expect(result!.props.tags.environment).toEqual('staging')
+  })
+
+  test('transformation returns undefined for non-taggable resources', () => {
+    let capturedTransformation: (args: pulumi.ResourceTransformationArgs) => any
+    vi.spyOn(pulumi.runtime, 'registerStackTransformation').mockImplementation((fn: any) => {
+      capturedTransformation = fn
+    })
+
+    registerTagTransformation({ environment: 'production' })
+
+    const result = capturedTransformation!({
+      type: 'azure-native:apimanagement:ApiManagementNamedValue',
+      name: 'test-nv',
+      props: {},
+      opts: {},
+      resource: {} as any,
+    })
+
+    expect(result).toBeUndefined()
+  })
+
+  test('transformation returns undefined when props is null', () => {
+    let capturedTransformation: (args: pulumi.ResourceTransformationArgs) => any
+    vi.spyOn(pulumi.runtime, 'registerStackTransformation').mockImplementation((fn: any) => {
+      capturedTransformation = fn
+    })
+
+    registerTagTransformation({ environment: 'production' })
+
+    const result = capturedTransformation!({
+      type: 'azure-native:resources:ResourceGroup',
+      name: 'test-rg',
+      props: null as any,
+      opts: {},
+      resource: {} as any,
+    })
+
+    expect(result).toBeUndefined()
+  })
+
+  test('transformation handles tagsToIgnore parameter', () => {
+    let capturedTransformation: (args: pulumi.ResourceTransformationArgs) => any
+    vi.spyOn(pulumi.runtime, 'registerStackTransformation').mockImplementation((fn: any) => {
+      capturedTransformation = fn
+    })
+
+    registerTagTransformation({ environment: 'production' }, ['managedBy', 'createdAt'])
+
+    const result = capturedTransformation!({
+      type: 'azure-native:resources:ResourceGroup',
+      name: 'test-rg',
+      props: { tags: { app: 'myapp' } },
+      opts: {},
+      resource: {} as any,
+    })
+
+    expect(result).toBeDefined()
+    expect(result!.opts.ignoreChanges).toEqual(['tags.managedBy', 'tags.createdAt'])
+  })
+
+  test('transformation merges tagsToIgnore with existing ignoreChanges', () => {
+    let capturedTransformation: (args: pulumi.ResourceTransformationArgs) => any
+    vi.spyOn(pulumi.runtime, 'registerStackTransformation').mockImplementation((fn: any) => {
+      capturedTransformation = fn
+    })
+
+    registerTagTransformation({ environment: 'production' }, ['managedBy'])
+
+    const result = capturedTransformation!({
+      type: 'azure-native:resources:ResourceGroup',
+      name: 'test-rg',
+      props: { tags: {} },
+      opts: { ignoreChanges: ['location'] },
+      resource: {} as any,
+    })
+
+    expect(result).toBeDefined()
+    expect(result!.opts.ignoreChanges).toEqual(['location', 'tags.managedBy'])
+  })
+
+  test('transformation does not modify opts when tagsToIgnore is empty', () => {
+    let capturedTransformation: (args: pulumi.ResourceTransformationArgs) => any
+    vi.spyOn(pulumi.runtime, 'registerStackTransformation').mockImplementation((fn: any) => {
+      capturedTransformation = fn
+    })
+
+    registerTagTransformation({ environment: 'production' }, [])
+
+    const originalOpts = { parent: undefined }
+    const result = capturedTransformation!({
+      type: 'azure-native:resources:ResourceGroup',
+      name: 'test-rg',
+      props: {},
+      opts: originalOpts,
+      resource: {} as any,
+    })
+
+    expect(result).toBeDefined()
+    expect(result!.opts).toBe(originalOpts)
   })
 })

@@ -243,3 +243,36 @@ describe('TestCloudflarePagesManager', () => {
       })
   })
 })
+
+class TestWithZoneIdCloudflareStack extends CommonCloudflareStack {
+  declare props: TestCloudflareStackProps
+  declare construct: TestWithZoneIdConstruct
+
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestWithZoneIdConstruct(props.name, this.props)
+  }
+}
+
+class TestWithZoneIdConstruct extends CommonCloudflareConstruct {
+  declare props: TestCloudflareStackProps
+  pageRule: PageRule
+
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, props)
+    this.pageRule = this.pageManager.createPageRule(`test-page-rule-zid-${this.props.stage}`, this, {
+      ...this.props.testPageRule,
+      zoneId: 'explicit-zone-id',
+    })
+  }
+}
+
+describe('TestCloudflarePagesManager - With explicit zoneId', () => {
+  test('provisions page rule with explicit zoneId', () => {
+    const zoneIdStack = new TestWithZoneIdCloudflareStack('test-zoneid-stack', testStackProps)
+    expect(zoneIdStack.construct.pageRule).toBeDefined()
+    pulumi.all([zoneIdStack.construct.pageRule.zoneId]).apply(([zoneId]) => {
+      expect(zoneId).toEqual('explicit-zone-id')
+    })
+  })
+})

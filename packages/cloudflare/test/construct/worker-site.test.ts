@@ -39,6 +39,45 @@ class TestCommonCloudflareStack extends CommonCloudflareStack {
   }
 }
 
+class TestExistingZoneCloudflareStack extends CommonCloudflareStack {
+  declare props: TestCloudflareStackProps
+  declare construct: TestExistingZoneConstruct
+
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestExistingZoneConstruct(props.name, this.props)
+  }
+
+  protected determineConstructProps(props: TestCloudflareStackProps) {
+    return {
+      ...super.determineConstructProps(props),
+      siteWorkerAsset: `packages/cloudflare/test/common/sample.html`,
+      siteSubDomain: `test.app`,
+      useExistingZone: true,
+    }
+  }
+}
+
+class TestNoRuleSetCloudflareStack extends CommonCloudflareStack {
+  declare props: TestCloudflareStackProps
+  declare construct: TestNoRuleSetConstruct
+
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestNoRuleSetConstruct(props.name, this.props)
+  }
+
+  protected determineConstructProps(props: TestCloudflareStackProps) {
+    return {
+      ...super.determineConstructProps(props),
+      siteWorkerAsset: `packages/cloudflare/test/common/sample.html`,
+      siteSubDomain: `test.app`,
+      siteRuleSet: undefined,
+      siteZoneSetting: undefined,
+    }
+  }
+}
+
 class TestInvalidCommonCloudflareStack extends CommonCloudflareStack {
   declare props: TestCloudflareStackProps
 
@@ -56,6 +95,24 @@ class TestInvalidCommonCloudflareStack extends CommonCloudflareStack {
 }
 
 class TestCommonConstruct extends CloudflareWorkerSite {
+  declare props: TestCloudflareStackProps
+
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, props)
+    this.initResources()
+  }
+}
+
+class TestExistingZoneConstruct extends CloudflareWorkerSite {
+  declare props: TestCloudflareStackProps
+
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, props)
+    this.initResources()
+  }
+}
+
+class TestNoRuleSetConstruct extends CloudflareWorkerSite {
   declare props: TestCloudflareStackProps
 
   constructor(name: string, props: TestCloudflareStackProps) {
@@ -204,5 +261,26 @@ describe('TestCloudflareWorkerSite', () => {
         expect(value).toEqual('on')
         expect(zoneId).toEqual('test-common-stack-zone-setting-data-zone')
       })
+  })
+})
+
+describe('TestCloudflareWorkerSite - useExistingZone', () => {
+  test('resolves existing zone when useExistingZone is true', () => {
+    const existingZoneStack = new TestExistingZoneCloudflareStack('test-existing-zone-stack', testStackProps)
+    expect(existingZoneStack.construct.siteZone).toBeDefined()
+    pulumi
+      .all([existingZoneStack.construct.siteZone.id, existingZoneStack.construct.siteZone.urn])
+      .apply(([id, urn]) => {
+        expect(id).toBeDefined()
+        expect(urn).toBeDefined()
+      })
+  })
+})
+
+describe('TestCloudflareWorkerSite - No RuleSet or ZoneSetting', () => {
+  test('skips ruleset and zone setting when not provided', () => {
+    const noRuleSetStack = new TestNoRuleSetCloudflareStack('test-no-ruleset-stack', testStackProps)
+    expect(noRuleSetStack.construct.siteRuleSet).toBeUndefined()
+    expect(noRuleSetStack.construct.siteZoneSetting).toBeUndefined()
   })
 })

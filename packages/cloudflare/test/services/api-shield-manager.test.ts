@@ -295,3 +295,90 @@ describe('TestCloudflareApiShieldManager', () => {
       })
   })
 })
+
+class TestWithZoneIdCloudflareStack extends CommonCloudflareStack {
+  declare props: TestCloudflareStackProps
+  declare construct: TestWithZoneIdConstruct
+
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestWithZoneIdConstruct(props.name, this.props)
+  }
+}
+
+class TestWithZoneIdConstruct extends CommonCloudflareConstruct {
+  declare props: TestCloudflareStackProps
+  zone: Zone
+  apiShield: ApiShield
+  apiShieldSchema: ApiShieldSchema
+  apiShieldSchemaValidationSettings: ApiShieldSchemaValidationSettings
+  apiShieldOperation: ApiShieldOperation
+  apiShieldOperationSchemaValidationSettings: ApiShieldOperationSchemaValidationSettings
+
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, props)
+    this.zone = this.zoneManager.createZone(`test-zone-zid-${this.props.stage}`, this, this.props.testZone)
+    this.apiShield = this.apiShieldManager.createApiShield(`test-api-shield-zid-${this.props.stage}`, this, {
+      ...this.props.testApiShield,
+      zoneId: this.zone.id,
+    })
+    this.apiShieldSchema = this.apiShieldManager.createApiShieldSchema(
+      `test-api-shield-sch-zid-${this.props.stage}`,
+      this,
+      {
+        ...this.props.testApiShieldSchema,
+        file: fs.readFileSync('packages/cloudflare/test/common/sample.json', { encoding: 'utf8' }),
+        zoneId: this.zone.id,
+      }
+    )
+    this.apiShieldSchemaValidationSettings = this.apiShieldManager.createApiShieldSchemaValidationSettings(
+      `test-api-shield-val-zid-${this.props.stage}`,
+      this,
+      {
+        ...this.props.testApiShieldSchemaValidationSettings,
+        zoneId: this.zone.id,
+      }
+    )
+    this.apiShieldOperation = this.apiShieldManager.createApiShieldOperation(
+      `test-api-shield-op-zid-${this.props.stage}`,
+      this,
+      {
+        ...this.props.testApiShieldOperation,
+        zoneId: this.zone.id,
+      }
+    )
+    this.apiShieldOperationSchemaValidationSettings =
+      this.apiShieldManager.createApiShieldOperationSchemaValidationSettings(
+        `test-api-shield-op-val-zid-${this.props.stage}`,
+        this,
+        {
+          ...this.props.testApiShieldOperationSchemaValidationSettings,
+          operationId: this.apiShieldOperation.id,
+          zoneId: this.zone.id,
+        }
+      )
+  }
+}
+
+describe('TestCloudflareApiShieldManager - With explicit zoneId', () => {
+  test('provisions api shield resources with explicit zoneId', () => {
+    const zoneIdStack = new TestWithZoneIdCloudflareStack('test-zoneid-stack', testStackProps)
+    expect(zoneIdStack.construct.apiShield).toBeDefined()
+    expect(zoneIdStack.construct.apiShieldSchema).toBeDefined()
+    expect(zoneIdStack.construct.apiShieldSchemaValidationSettings).toBeDefined()
+    expect(zoneIdStack.construct.apiShieldOperation).toBeDefined()
+    expect(zoneIdStack.construct.apiShieldOperationSchemaValidationSettings).toBeDefined()
+
+    pulumi.all([zoneIdStack.construct.apiShield.zoneId]).apply(([zoneId]) => {
+      expect(zoneId).toEqual('test-zone-zid-dev-id')
+    })
+
+    pulumi.all([zoneIdStack.construct.apiShieldSchema.zoneId]).apply(([zoneId]) => {
+      expect(zoneId).toEqual('test-zone-zid-dev-id')
+    })
+
+    pulumi.all([zoneIdStack.construct.apiShieldOperation.zoneId]).apply(([zoneId]) => {
+      expect(zoneId).toEqual('test-zone-zid-dev-id')
+    })
+  })
+})

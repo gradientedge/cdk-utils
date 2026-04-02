@@ -23,8 +23,8 @@
     "constructs": "^10.6.0"
   },
   "dependencies": {
-    "@types/lodash": "^4.17.24",
-    "lodash": "^4.17.23"
+    "@types/lodash": "4.17.24",
+    "lodash": "4.17.23"
   },
   "publishConfig": {
     "access": "public"
