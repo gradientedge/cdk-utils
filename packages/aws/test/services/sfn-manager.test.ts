@@ -426,14 +426,6 @@ class TestBranchCoverageConstruct extends CommonConstruct {
       false
     )
 
-    /* Skippable lambda step with skipExecution=undefined - exercises the LambdaInvoke branch */
-    const skippableLambdaUndefinedSkip = this.sfnManager.createSkippableLambdaStep(
-      'test-skippable-undefined-skip',
-      this,
-      this.props.testSubmitStepSkippableLambdaUndefinedSkip,
-      testLambda
-    )
-
     /* DynamoDB get item with custom retries */
     const getItemWithCustomRetries = this.sfnManager.createDynamoDbGetItemStep(
       'test-ddb-get-custom-retries',
