@@ -25,7 +25,6 @@ export default [
       // TypeScript rules
       '@typescript-eslint/no-unused-vars': 'error',
       '@typescript-eslint/no-explicit-any': 'warn',
-      '@typescript-eslint/prefer-const': 'error',
       '@typescript-eslint/no-non-null-assertion': 'warn',
       
       // Import rules
