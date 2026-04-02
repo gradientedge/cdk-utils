@@ -82,7 +82,7 @@ There is a debug utility that can be used to print out the contents of a `templa
 [aws-cli-url]: https://aws.amazon.com/cli/
 [builds]: https://img.shields.io/github/actions/workflow/status/gradientedge/cdk-utils/ci.yml?branch=main
 [builds-url]: https://github.com/gradientedge/cdk-utils/actions
-[cdk-badge]: https://img.shields.io/github/package-json/dependency-version/gradientedge/cdk-utils/aws-cdk-lib
+[cdk-badge]: https://img.shields.io/github/package-json/dependency-version/gradientedge/cdk-utils/aws-cdk-lib?filename=packages/aws/package.json
 [pulumi]: https://www.pulumi.com/docs/
 [cdk-url]: https://aws.amazon.com/cdk/
 [checks]: https://img.shields.io/github/checks-status/gradientedge/cdk-utils/main
@@ -99,9 +99,9 @@ There is a debug utility that can be used to print out the contents of a `templa
 [issues-url]: https://github.com/gradientedge/cdk-utils/issues
 [pr]: https://img.shields.io/github/issues-pr/gradientedge/cdk-utils.svg
 [pr-url]: https://github.com/gradientedge/cdk-utils/pulls
-[pulumi-badge]: https://img.shields.io/github/package-json/dependency-version/gradientedge/cdk-utils/@pulumi/pulumi
-[pulumi-azure-badge]: https://img.shields.io/github/package-json/dependency-version/gradientedge/cdk-utils/@pulumi/azure-native
-[pulumi-cloudflare-badge]: https://img.shields.io/github/package-json/dependency-version/gradientedge/cdk-utils/@pulumi/cloudflare
+[pulumi-badge]: https://img.shields.io/github/package-json/dependency-version/gradientedge/cdk-utils/@pulumi/pulumi?filename=packages/azure/package.json
+[pulumi-azure-badge]: https://img.shields.io/github/package-json/dependency-version/gradientedge/cdk-utils/@pulumi/azure-native?filename=packages/azure/package.json
+[pulumi-cloudflare-badge]: https://img.shields.io/github/package-json/dependency-version/gradientedge/cdk-utils/@pulumi/cloudflare?filename=packages/cloudflare/package.json
 [pulumi-url]: https://www.pulumi.com/
 [pulumi-azure-url]: https://www.pulumi.com/registry/packages/azure-native/
 [pulumi-cloudflare-url]: https://www.pulumi.com/registry/packages/cloudflare/
