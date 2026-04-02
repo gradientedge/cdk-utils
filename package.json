@@ -14,8 +14,14 @@
   },
   "keywords": [
     "gradientedge",
+    "aws",
+    "azure",
+    "cloudflare",
     "cdk",
-    "pulumi"
+    "aws-cdk",
+    "pulumi",
+    "iac",
+    "typescript"
   ],
   "license": "MIT",
   "bugs": {

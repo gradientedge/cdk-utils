@@ -1199,23 +1199,6 @@ footer {
 }
 
 /* ============================================
-   Sidebar Logo
-   ============================================ */
-
-.sidebar-logo {
-  display: block;
-  width: 40px;
-  height: auto;
-  margin: 1rem auto 0.25rem;
-  opacity: 0.9;
-  transition: opacity 0.3s ease;
-}
-
-.sidebar-logo:hover {
-  opacity: 1;
-}
-
-/* ============================================
    Back-to-Top Button
    ============================================ */
 

@@ -26,6 +26,13 @@
     "@types/lodash": "4.17.24",
     "lodash": "4.18.1"
   },
+  "keywords": [
+    "gradientedge",
+    "cdk",
+    "pulumi",
+    "iac",
+    "typescript"
+  ],
   "publishConfig": {
     "access": "public"
   },
