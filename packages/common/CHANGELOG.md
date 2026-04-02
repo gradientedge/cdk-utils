@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-common
 
+## 2.0.0
+
+### Major Changes
+
+- [`ec83082`](https://github.com/gradientedge/cdk-utils/commit/ec8308216d364948d822c1441cd215d8412c25c8) Thanks [@despock](https://github.com/despock)! - feat: testing root package bump
+
 ## 1.0.1
 
 ### Patch Changes
