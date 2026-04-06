@@ -21,7 +21,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-secrets-manager": "3.1023.0",
-    "@aws-sdk/credential-providers": "3.1023.0",
+    "@aws-sdk/credential-providers": "3.1024.0",
     "@aws-sdk/types": "3.973.6",
     "@gradientedge/cdk-utils-common": "workspace:*",
     "@types/lodash": "4.17.24",
