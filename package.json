@@ -51,7 +51,7 @@
     "@commitlint/cli": "^20.5.0",
     "@commitlint/config-conventional": "^20.5.0",
     "@eslint/config-array": "0.23.3",
-    "@eslint/object-schema": "3.0.3",
+    "@eslint/object-schema": "3.0.4",
     "@types/node": "25.5.0",
     "@typescript-eslint/eslint-plugin": "8.58.0",
     "@typescript-eslint/parser": "8.58.0",
