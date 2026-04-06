@@ -39,8 +39,8 @@ importers:
         specifier: 4.1.2
         version: 4.1.2(vitest@4.1.2(@opentelemetry/api@1.9.1)(@types/node@25.5.0)(vite@8.0.3(@emnapi/core@1.9.2)(@emnapi/runtime@1.9.2)(@types/node@25.5.0)(esbuild@0.27.7)(jiti@2.6.1)(yaml@2.8.3)))
       aws-cdk:
-        specifier: 2.1116.0
-        version: 2.1116.0
+        specifier: 2.1117.0
+        version: 2.1117.0
       dotenv:
         specifier: 17.4.0
         version: 17.4.0
@@ -1918,8 +1918,8 @@ packages:
       - yaml
       - mime-types
 
-  aws-cdk@2.1116.0:
-    resolution: {integrity: sha512-CMB+FUnuuFDgsb3U3TId6JEKpA0vRErpjX2pMR44qxilisKyU8/Z4pJTH1KVRQtXQbLKIXpq73LUVkyIv1jmKQ==}
+  aws-cdk@2.1117.0:
+    resolution: {integrity: sha512-2NbSDDw8LTkGv0uhEDffttmNvgyTAWV5EkLkyPUGAGECzBdwCmbgmRxSoUhbzxZ0XEd1eaqbdVTFRWgtsbj31g==}
     engines: {node: '>= 18.0.0'}
     hasBin: true
 
@@ -5724,7 +5724,7 @@ snapshots:
       '@aws-cdk/cloud-assembly-schema': 53.12.0
       constructs: 10.6.0
 
-  aws-cdk@2.1116.0: {}
+  aws-cdk@2.1117.0: {}
 
   balanced-match@4.0.4: {}
 
