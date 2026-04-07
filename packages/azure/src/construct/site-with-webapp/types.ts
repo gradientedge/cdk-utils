@@ -19,7 +19,7 @@ export interface SiteProps {
 /** @category Interface */
 export interface SiteWithWebAppProps extends CommonAzureStackProps {
   deploySource: string
-  nodeOptions: string
+  nodeOptions?: string
   nodeEnv?: string
   packageName: string
   site: SiteProps

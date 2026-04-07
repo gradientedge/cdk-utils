@@ -7,6 +7,7 @@ import {
   listStorageAccountSAS,
   ManagementPolicy,
   Permissions,
+  PublicAccess,
   Services,
   SignedResourceTypes,
   SkuName,
@@ -133,6 +134,7 @@ export class AzureStorageManager {
           scope.props.resourceNameOptions?.storageContainer
         ),
         accountName: props.accountName,
+        publicAccess: props.publicAccess ?? PublicAccess.None,
         resourceGroupName,
       },
       { parent: scope, ...resourceOptions }
