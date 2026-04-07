@@ -160,3 +160,16 @@ describe('TestCloudflareCommonConstruct - Different Stages', () => {
     expect(stack.construct.zoneManager).toBeDefined()
   })
 })
+
+describe('TestCloudflareCommonConstruct - Error Handling', () => {
+  test('resolveStack throws when stackName is empty', () => {
+    expect(() => {
+      stack.construct['resolveStack']('')
+    }).toThrow('Stack name undefined')
+  })
+
+  test('resolveStack creates stack reference with valid name', () => {
+    const stackRef = stack.construct['resolveStack']('valid-stack-name')
+    expect(stackRef).toBeDefined()
+  })
+})

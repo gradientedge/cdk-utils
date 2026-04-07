@@ -1,6 +1,7 @@
-import { Provider as CloudflareProvider } from '@pulumi/cloudflare'
-import { ComponentResource, ComponentResourceOptions, Config } from '@pulumi/pulumi'
 import { isDevStage, isPrdStage, isTestStage, isUatStage } from '@gradientedge/cdk-utils-common'
+import { Provider as CloudflareProvider } from '@pulumi/cloudflare'
+import * as pulumi from '@pulumi/pulumi'
+import { ComponentResource, ComponentResourceOptions, Config } from '@pulumi/pulumi'
 
 import {
   CloudflareAccessManager,
@@ -57,6 +58,11 @@ export class CommonCloudflareConstruct extends ComponentResource {
     this.config = new Config()
     this.determineFullyQualifiedDomain()
     this.provider = new CloudflareProvider(`${this.id}-provider`, this.props, options)
+  }
+
+  protected resolveStack(stackName: string) {
+    if (!stackName) throw new Error('Stack name undefined')
+    return new pulumi.StackReference(stackName)
   }
 
   /**
