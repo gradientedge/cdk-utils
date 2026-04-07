@@ -1,5 +1,17 @@
 # @gradientedge/cdk-utils
 
+## 11.4.0
+
+### Minor Changes
+
+- [`a6fc13c`](https://github.com/gradientedge/cdk-utils/commit/a6fc13c913fa7c48e7fd91c7198fdec6ad9e7b09) Thanks [@despock](https://github.com/despock)! - switching to optional get instead of require
+
+### Patch Changes
+
+- Updated dependencies [[`a6fc13c`](https://github.com/gradientedge/cdk-utils/commit/a6fc13c913fa7c48e7fd91c7198fdec6ad9e7b09)]:
+  - @gradientedge/cdk-utils-cloudflare@2.3.0
+  - @gradientedge/cdk-utils-azure@2.3.0
+
 ## 11.3.0
 
 ### Minor Changes
