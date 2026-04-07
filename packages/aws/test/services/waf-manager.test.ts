@@ -80,6 +80,32 @@ describe('TestWafConstruct', () => {
     const error = () => new TestInvalidCommonStack(app, 'test-invalid-stack', testStackProps)
     expect(error).toThrow('WAF WebACL props undefined')
   })
+
+  test('throws error when ip set name is undefined', () => {
+    const testStack = new TestCommonStack(app, 'test-error-ipset-name', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.wafManager.createIpSet('test-no-name', testConstruct, {
+        addresses: [],
+        ipAddressVersion: 'IPV4',
+        scope: 'REGIONAL',
+      } as any)
+    }).toThrow('WAF Ip Set name undefined for test-no-name')
+  })
+
+  test('throws error when web acl name is undefined', () => {
+    const testStack = new TestCommonStack(app, 'test-error-webacl-name', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.wafManager.createWebAcl('test-no-name', testConstruct, {
+        defaultAction: {},
+        scope: 'CLOUDFRONT',
+        visibilityConfig: {},
+      } as any)
+    }).toThrow('WAF WebACL name undefined for test-no-name')
+  })
 })
 
 describe('TestWafConstruct', () => {

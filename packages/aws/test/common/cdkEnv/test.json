@@ -1,6 +1,10 @@
 {
   "apiSubDomain": "api",
   "logLevel": "debug",
+  "nestedConfig": {
+    "key1": "value1",
+    "key2": "value2"
+  },
   "nodeEnv": "development",
   "resourcePrefix": "cdktest",
   "siteSubDomain": "site",

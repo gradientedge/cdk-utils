@@ -77,3 +77,35 @@ describe('TestCommonConstruct', () => {
     })
   })
 })
+
+describe('ResourceNameFormatter', () => {
+  test('formats with exclude option', () => {
+    const construct = commonStack.construct as TestCommonConstruct
+    const result = construct.resourceNameFormatter.format('my-resource', { exclude: true })
+    expect(result).toContain('my-resource')
+    expect(result).toContain('test')
+  })
+
+  test('formats with globalPrefix option', () => {
+    const construct = commonStack.construct as TestCommonConstruct
+    const result = construct.resourceNameFormatter.format('my-resource', { globalPrefix: true })
+    expect(result).toContain('my-resource')
+  })
+
+  test('formats with globalSuffix option', () => {
+    const construct = commonStack.construct as TestCommonConstruct
+    const result = construct.resourceNameFormatter.format('my-resource', { globalSuffix: true })
+    expect(result).toContain('my-resource')
+  })
+
+  test('formats with custom prefix and suffix', () => {
+    const construct = commonStack.construct as TestCommonConstruct
+    const result = construct.resourceNameFormatter.format('my-resource', {
+      prefix: 'custom-prefix',
+      suffix: 'custom-suffix',
+    })
+    expect(result).toContain('custom-prefix')
+    expect(result).toContain('custom-suffix')
+    expect(result).toContain('my-resource')
+  })
+})

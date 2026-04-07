@@ -121,3 +121,87 @@ describe('TestS3Manager', () => {
     })
   })
 })
+
+/* Test S3 with lifecycle rules and bucket folders */
+const testS3LifecycleProps = {
+  ...testStackProps,
+  name: 'test-s3-lifecycle-stack',
+}
+
+class TestS3LifecycleStack extends CommonStack {
+  declare props: TestStackProps
+
+  constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
+    super(parent, name, props)
+    this.construct = new TestS3LifecycleConstruct(this, testS3LifecycleProps.name, this.props)
+  }
+
+  protected determineConstructProps(props: cdk.StackProps) {
+    return {
+      ...super.determineConstructProps(props),
+      ...{
+        testBucket: this.node.tryGetContext('siteBucket'),
+        testLogBucket: this.node.tryGetContext('siteLogBucket'),
+      },
+    }
+  }
+}
+
+class TestS3LifecycleConstruct extends CommonConstruct {
+  declare props: TestStackProps
+
+  constructor(parent: Construct, name: string, props: TestStackProps) {
+    super(parent, name, props)
+
+    const bucket = this.s3Manager.createS3Bucket('test-lifecycle-bucket', this, {
+      ...this.props.testBucket,
+      lifecycleRules: [
+        {
+          enabled: true,
+          expirationInDays: 30,
+          noncurrentVersionExpirationInDays: 7,
+          id: 'test-rule',
+        },
+      ],
+    })
+
+    this.s3Manager.createBucketFolders('test-folders', this, bucket, ['data', 'uploads'])
+  }
+}
+
+const appS3Lifecycle = new cdk.App({ context: testS3LifecycleProps })
+const stackS3Lifecycle = new TestS3LifecycleStack(appS3Lifecycle, 'test-s3-lifecycle-stack', testS3LifecycleProps)
+const templateS3Lifecycle = Template.fromStack(stackS3Lifecycle)
+
+describe('TestS3ManagerLifecycle', () => {
+  test('provisions bucket with lifecycle rules', () => {
+    templateS3Lifecycle.hasResourceProperties('AWS::S3::Bucket', {
+      LifecycleConfiguration: {
+        Rules: [
+          {
+            ExpirationInDays: 30,
+            NoncurrentVersionExpiration: {
+              NoncurrentDays: 7,
+            },
+            Status: 'Enabled',
+          },
+        ],
+      },
+    })
+  })
+
+  test('provisions bucket folders', () => {
+    templateS3Lifecycle.resourceCountIs('Custom::CDKBucketDeployment', 2)
+  })
+})
+
+describe('TestS3Manager - Error Handling', () => {
+  test('throws error when folders are empty', () => {
+    const testStack = new TestCommonStack(app, 'test-error-folders', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.s3Manager.createBucketFolders('test-no-folders', testConstruct, {} as any, [])
+    }).toThrow('Folder unspecified for test-no-folders')
+  })
+})

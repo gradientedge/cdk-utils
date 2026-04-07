@@ -172,3 +172,96 @@ describe('TestAzureLinuxWebAppConstruct', () => {
       })
   })
 })
+
+/* --- Tests for default value fallback branches in createLinuxWebApp --- */
+
+class TestMinimalWebAppConstruct extends CommonAzureConstruct {
+  declare props: TestAzureStackProps
+  appServicePlan: AppServicePlan
+  linuxWebApp: WebApp
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.appServicePlan = this.appServiceManager.createAppServicePlan(
+      `test-minimal-asp-${this.props.stage}`,
+      this,
+      this.props.testAppServicePlan
+    )
+
+    // Create a web app with minimal props to exercise default branches
+    this.linuxWebApp = this.appServiceManager.createLinuxWebApp(`test-minimal-lwa-${this.props.stage}`, this, {
+      name: 'test-minimal-web-app',
+      resourceGroupName: 'test-rg-dev',
+      serverFarmId: '/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.Web/serverfarms/test',
+    } as any)
+  }
+}
+
+class TestMinimalWebAppStack extends CommonAzureStack {
+  declare props: TestAzureStackProps
+  declare construct: TestMinimalWebAppConstruct
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestMinimalWebAppConstruct(props.name, this.props)
+  }
+}
+
+const minimalWebAppStack = new TestMinimalWebAppStack('test-minimal-web-app-stack', testStackProps)
+
+describe('TestAzureLinuxWebAppConstruct - Default Values', () => {
+  test('linux web app uses default httpsOnly when not provided', () => {
+    pulumi.all([minimalWebAppStack.construct.linuxWebApp.httpsOnly]).apply(([httpsOnly]) => {
+      expect(httpsOnly).toEqual(true)
+    })
+  })
+
+  test('linux web app uses default kind when not provided', () => {
+    pulumi.all([minimalWebAppStack.construct.linuxWebApp.kind]).apply(([kind]) => {
+      expect(kind).toEqual('app,linux')
+    })
+  })
+
+  test('linux web app uses default identity when not provided', () => {
+    pulumi.all([minimalWebAppStack.construct.linuxWebApp.identity]).apply(([identity]) => {
+      expect(identity?.type).toEqual('SystemAssigned')
+    })
+  })
+
+  test('linux web app uses default tags when not provided', () => {
+    pulumi.all([minimalWebAppStack.construct.linuxWebApp.tags]).apply(([tags]) => {
+      expect(tags?.environment).toEqual('dev')
+    })
+  })
+})
+
+/* --- Tests for resource group fallback in createLinuxWebApp --- */
+
+describe('TestAzureLinuxWebAppConstruct - Error Handling', () => {
+  test('createLinuxWebApp throws when props are undefined', () => {
+    expect(() => {
+      stack.construct.appServiceManager.createLinuxWebApp('test-lwa-err', stack.construct, undefined as any)
+    }).toThrow('Props undefined for test-lwa-err')
+  })
+
+  test('createLinuxWebApp throws when resourceGroupName is missing', () => {
+    expect(() => {
+      class NoRgWebAppConstruct extends CommonAzureConstruct {
+        constructor(name: string, props: any) {
+          super(name, props)
+          this.appServiceManager.createLinuxWebApp('test-no-rg-lwa', this, {
+            name: 'test-no-rg-web-app',
+            serverFarmId: '/some/id',
+          } as any)
+        }
+      }
+      class NoRgWebAppStack extends CommonAzureStack {
+        constructor(name: string, props: any) {
+          super(name, { ...testStackProps, resourceGroupName: undefined })
+          new NoRgWebAppConstruct(props.name, this.props)
+        }
+      }
+      new NoRgWebAppStack('test-no-rg-lwa-stack', testStackProps)
+    }).toThrow('Resource group name undefined for test-no-rg-lwa')
+  })
+})

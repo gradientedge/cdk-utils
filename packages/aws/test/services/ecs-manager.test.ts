@@ -290,11 +290,67 @@ describe('TestEcsConstructWithOptions', () => {
   })
 })
 
-describe.skip('TestEcsConstructLoadBalancedService', () => {
-  // Skipped due to CDK health check configuration issue in test environment
-  // The actual implementation has been tested through error handling tests
+describe('TestEcsConstructLoadBalancedService', () => {
+  let stackLB: CommonStack
+  let templateLB: Template
+
+  beforeAll(() => {
+    class TestStackLB extends CommonStack {
+      declare props: TestStackProps
+
+      constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
+        super(parent, name, props)
+        this.construct = new TestConstructLB(this, testStackProps.name, this.props)
+      }
+
+      protected determineConstructProps(props: cdk.StackProps) {
+        return {
+          ...super.determineConstructProps(props),
+          ...{
+            testCluster: this.node.tryGetContext('testCluster'),
+            testFargateService: this.node.tryGetContext('testFargateService'),
+            testLogGroup: this.node.tryGetContext('testLogGroup'),
+            testVpc: this.node.tryGetContext('testVpc'),
+          },
+        }
+      }
+    }
+
+    class TestConstructLB extends CommonConstruct {
+      declare props: TestStackProps
+
+      constructor(parent: Construct, name: string, props: TestStackProps) {
+        super(parent, name, props)
+        const testVpc = this.vpcManager.createCommonVpc(`${name}-vpc`, this, this.props.testVpc)
+        const testCluster = this.ecsManager.createEcsCluster('test-cluster-lb', this, this.props.testCluster, testVpc)
+        const testImage = ecs.ContainerImage.fromAsset('packages/aws/test/common/docker')
+        const testLogGroup = this.logManager.createLogGroup('test-log-group-lb', this, this.props.testLogGroup)
+        this.ecsManager.createLoadBalancedFargateService(
+          'test-fargate-service',
+          this,
+          {
+            loadBalancerName: 'test-lb',
+            serviceName: 'test-service',
+            assignPublicIp: false,
+            taskImageOptions: {
+              containerPort: 80,
+              image: testImage,
+            },
+          } as any,
+          testCluster,
+          testLogGroup
+        )
+      }
+    }
+
+    const appLB = new cdk.App({ context: testStackProps })
+    stackLB = new TestStackLB(appLB, 'test-stack-lb', testStackProps)
+    templateLB = Template.fromStack(stackLB)
+  })
+
   test('provisions load balanced fargate service as expected', () => {
-    // This test would verify the load balanced service creation
+    templateLB.resourceCountIs('AWS::ECS::Service', 1)
+    templateLB.resourceCountIs('AWS::ElasticLoadBalancingV2::LoadBalancer', 1)
   })
 })
 

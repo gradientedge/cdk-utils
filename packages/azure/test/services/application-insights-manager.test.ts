@@ -139,3 +139,57 @@ describe('TestAzureApplicationInsightsConstruct', () => {
       })
   })
 })
+
+/* --- Tests for billingFeatures branch --- */
+
+class TestConstructWithBilling extends CommonAzureConstruct {
+  declare props: TestAzureStackProps
+  applicationInsights: Component
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.applicationInsights = this.applicationInsightsManager.createComponent(
+      `test-application-insights-billing-${this.props.stage}`,
+      this,
+      {
+        ...this.props.testApplicationInsights,
+        billingFeatures: {
+          resourceName: 'test-billing-feature',
+          resourceGroupName: 'test-rg-dev',
+        },
+      }
+    )
+  }
+}
+
+class TestStackWithBilling extends CommonAzureStack {
+  declare props: TestAzureStackProps
+  declare construct: TestConstructWithBilling
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestConstructWithBilling(props.name, this.props)
+  }
+}
+
+const stackWithBilling = new TestStackWithBilling('test-billing-stack', testStackProps)
+
+describe('TestAzureApplicationInsightsWithBillingFeatures', () => {
+  test('provisions application insights with billing features', () => {
+    expect(stackWithBilling.construct.applicationInsights).toBeDefined()
+  })
+})
+
+/* --- Tests for createComponentCurrentBillingFeature error handling --- */
+
+describe('TestAzureApplicationInsightsConstruct - createComponentCurrentBillingFeature', () => {
+  test('throws when props are undefined', () => {
+    expect(() => {
+      stack.construct.applicationInsightsManager.createComponentCurrentBillingFeature(
+        'test-billing-err',
+        stack.construct,
+        undefined as any
+      )
+    }).toThrow('Props undefined for test-billing-err')
+  })
+})

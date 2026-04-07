@@ -88,6 +88,77 @@ describe('TestSqsConstruct', () => {
   })
 })
 
+/* Test SQS with tags and DLQ without dlq props */
+const testSqsTagsProps = {
+  ...testStackProps,
+  name: 'test-sqs-tags-stack',
+}
+
+class TestSqsTagsStack extends CommonStack {
+  declare props: TestStackProps
+
+  constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
+    super(parent, name, props)
+    this.construct = new TestSqsTagsConstruct(this, testSqsTagsProps.name, this.props)
+  }
+
+  protected determineConstructProps(props: cdk.StackProps) {
+    return {
+      ...super.determineConstructProps(props),
+      ...{
+        testLambdaWithDlq: this.node.tryGetContext('testLambdaWithDlq'),
+        testSqs: this.node.tryGetContext('testSqs'),
+      },
+    }
+  }
+}
+
+class TestSqsTagsConstruct extends CommonConstruct {
+  declare props: TestStackProps
+
+  constructor(parent: Construct, name: string, props: TestStackProps) {
+    super(parent, name, props)
+
+    this.sqsManager.createQueue('test-sqs-tags', this, {
+      ...this.props.testSqs,
+      tags: [
+        { key: 'QueueTag1', value: 'QueueValue1' },
+        { key: 'QueueTag2', value: 'QueueValue2' },
+      ],
+    })
+    /* create DLQ without dlq props on the lambda props */
+    const redriveQueue = this.sqsManager.createRedriveQueueForLambda('test-rdq2', this, this.props.testLambdaWithDlq)
+    this.sqsManager.createDeadLetterQueueForLambda(
+      'test-dlq-no-props',
+      this,
+      { functionName: 'test-lambda-no-dlq-props' } as any,
+      redriveQueue
+    )
+  }
+}
+
+const appSqsTags = new cdk.App({ context: testSqsTagsProps })
+const stackSqsTags = new TestSqsTagsStack(appSqsTags, 'test-sqs-tags-stack', testSqsTagsProps)
+const templateSqsTags = Template.fromStack(stackSqsTags)
+
+describe('TestSqsTagsConstruct', () => {
+  test('provisions queue with tags as expected', () => {
+    templateSqsTags.hasResourceProperties('AWS::SQS::Queue', {
+      QueueName: 'cdktest-test-sqs-test',
+      Tags: [
+        { Key: 'QueueTag1', Value: 'QueueValue1' },
+        { Key: 'QueueTag2', Value: 'QueueValue2' },
+      ],
+    })
+  })
+
+  test('provisions dead letter queue without dlq props', () => {
+    templateSqsTags.hasResourceProperties('AWS::SQS::Queue', {
+      QueueName: 'cdktest-test-lambda-no-dlq-props-dlq-test',
+    })
+  })
+})
+
 describe('TestSqsConstruct', () => {
   test('synthesises as expected', () => {
     /* test if number of resources are correctly synthesised */

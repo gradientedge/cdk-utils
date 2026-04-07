@@ -252,6 +252,14 @@ pulumi.runtime.setMocks({
       name = args.name
     } else if (args.type === 'pulumi:providers:azure-native') {
       name = args.name
+    } else if (args.type === 'azure-native:web:AppServicePlan') {
+      name = args.inputs.name
+    } else if (args.type === 'azure-native:appconfiguration:ConfigurationStore') {
+      name = args.inputs.configStoreName
+    } else if (args.type === 'azure-native:web:WebApp') {
+      name = args.inputs.name
+    } else if (args.type === 'azure-native:authorization:RoleAssignment') {
+      name = args.name
     }
 
     return {
@@ -271,6 +279,17 @@ pulumi.runtime.setMocks({
         id: 'existing-topic-id',
         name: args.inputs.topicName,
         endpoint: 'https://existing-topic.endpoint.com',
+      }
+    }
+    if (args.token === 'azure-native:storage:listStorageAccountKeys') {
+      return { keys: [{ value: 'mock-storage-key' }] }
+    }
+    if (args.token.includes('archive')) {
+      return {
+        source: args.inputs.sourceDir ?? 'dist',
+        outputPath: args.inputs.outputPath ?? 'dist/app.zip',
+        outputSize: 1024,
+        outputBase64sha256: 'mock-hash',
       }
     }
     return args.inputs
@@ -446,5 +465,58 @@ describe('TestAzureEventHandlerWithDefenderConstruct', () => {
     expect(stackWithDefender.construct.eventGridTopic).toBeDefined()
     expect(stackWithDefender.construct.dataStorageAccount).toBeDefined()
     expect(stackWithDefender.construct.props.defender).toBeDefined()
+  })
+})
+
+/* --- Test for full initResources flow covering lines 41-52 --- */
+
+const testStackFullProps: TestAzureStackProps = {
+  domainName: 'gradientedge.io',
+  extraContexts: [
+    'packages/azure/test/common/config/dummy.json',
+    'packages/azure/test/common/config/event-handler-full.json',
+  ],
+  location: AzureLocation.EastUS,
+  name: 'test-common-stack',
+  resourceGroupName: 'test-rg',
+  skipStageForARecords: false,
+  stage: 'dev',
+  stageContextPath: 'packages/azure/test/common/env',
+} as TestAzureStackProps
+
+class TestEventHandlerFullConstruct extends AzureEventHandler {
+  declare props: AzureEventHandlerProps & TestAzureStackProps
+
+  constructor(name: string, props: AzureEventHandlerProps & TestAzureStackProps) {
+    super(name, props)
+    this.props = props
+    this.eventGridEventSubscription = {} as EventHandlerEventGridSubscription
+    this.serviceBus = {} as EventHandlerServiceBus
+    this.appConnectionStrings = []
+    this.initResources()
+  }
+}
+
+class TestCommonStackFull extends CommonAzureStack {
+  declare props: AzureEventHandlerProps & TestAzureStackProps
+  declare construct: TestEventHandlerFullConstruct
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackFullProps)
+    this.construct = new TestEventHandlerFullConstruct(`${props.name}-full`, this.props)
+  }
+}
+
+pulumi.runtime.setConfig('project:extraContexts', JSON.stringify(testStackFullProps.extraContexts))
+const stackFull = new TestCommonStackFull('test-full-stack', testStackFullProps)
+
+describe('TestAzureEventHandlerFullConstruct', () => {
+  test('full initResources covers resolveApplicationInsights and super.initResources', () => {
+    expect(stackFull).toBeDefined()
+    expect(stackFull.construct).toBeDefined()
+    expect(stackFull.construct.eventGridEventSubscription).toBeDefined()
+    expect(stackFull.construct.serviceBus).toBeDefined()
+    expect(stackFull.construct.eventGridTopic).toBeDefined()
+    expect(stackFull.construct.applicationInsights).toBeDefined()
   })
 })

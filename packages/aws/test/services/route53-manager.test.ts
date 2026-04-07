@@ -173,3 +173,41 @@ describe('TestRoute53Construct', () => {
     })
   })
 })
+
+describe('TestRoute53Construct - Error Handling', () => {
+  test('throws error when distribution is undefined for createCloudFrontTargetARecord', () => {
+    const testStack = new TestCommonStack(app, 'test-error-dist', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.route53Manager.createCloudFrontTargetARecord('test-no-dist', testConstruct, undefined)
+    }).toThrow('Distribution undefined for test-no-dist')
+  })
+
+  test('throws error when hostedZone is undefined for createCloudFrontTargetARecord', () => {
+    const testStack = new TestCommonStack(app, 'test-error-hz', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.route53Manager.createCloudFrontTargetARecord('test-no-hz', testConstruct, {} as any, undefined)
+    }).toThrow('HostedZone undefined for test-no-hz')
+  })
+
+  test('throws error when distribution is undefined for createCloudFrontTargetARecordV2', () => {
+    const testStack = new TestCommonStack(app, 'test-error-dist-v2', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.route53Manager.createCloudFrontTargetARecordV2('test-no-dist-v2', testConstruct, undefined)
+    }).toThrow('Distribution undefined for test-no-dist-v2')
+  })
+
+  test('throws error when hostedZone is undefined for createCloudFrontTargetARecordV2', () => {
+    const testStack = new TestCommonStack(app, 'test-error-hz-v2', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.route53Manager.createCloudFrontTargetARecordV2('test-no-hz-v2', testConstruct, {} as any, undefined)
+    }).toThrow('HostedZone undefined for test-no-hz-v2')
+  })
+})

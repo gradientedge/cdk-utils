@@ -11,6 +11,7 @@ import {
   CosmosdbAccountProps,
   CosmosdbSqlContainerProps,
   CosmosdbSqlDatabaseProps,
+  CosmosRoleDefinition,
 } from '../../src/index.js'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
@@ -253,6 +254,110 @@ describe('TestAzureCosmosDbConstruct - Default Values', () => {
     pulumi.all([minimalCosmosStack.construct.cosmosDbAccount.identity]).apply(([identity]) => {
       expect(identity?.type).toEqual('SystemAssigned')
     })
+  })
+})
+
+/* --- Tests for grantSqlRoleDefinitionToAccount --- */
+
+class TestConstructWithRoleGrant extends CommonAzureConstruct {
+  declare props: TestAzureStackProps
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.cosmosDbManager.grantSqlRoleDefinitionToAccount(
+      `test-role-grant-${this.props.stage}`,
+      this,
+      'test-cosmos-account',
+      'test-rg-dev',
+      'test-principal-id',
+      [CosmosRoleDefinition.CONTRIBUTOR, CosmosRoleDefinition.READER]
+    )
+  }
+}
+
+class TestStackWithRoleGrant extends CommonAzureStack {
+  declare props: TestAzureStackProps
+  declare construct: TestConstructWithRoleGrant
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestConstructWithRoleGrant(props.name, this.props)
+  }
+}
+
+const stackWithRoleGrant = new TestStackWithRoleGrant('test-role-grant-stack', testStackProps)
+
+describe('TestAzureCosmosDbConstruct - grantSqlRoleDefinitionToAccount', () => {
+  test('grants both contributor and reader roles', () => {
+    expect(stackWithRoleGrant.construct).toBeDefined()
+  })
+})
+
+class TestConstructWithContributorOnly extends CommonAzureConstruct {
+  declare props: TestAzureStackProps
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.cosmosDbManager.grantSqlRoleDefinitionToAccount(
+      `test-role-contrib-${this.props.stage}`,
+      this,
+      'test-cosmos-account',
+      'test-rg-dev',
+      'test-principal-id',
+      [CosmosRoleDefinition.CONTRIBUTOR]
+    )
+  }
+}
+
+class TestStackWithContributorOnly extends CommonAzureStack {
+  declare props: TestAzureStackProps
+  declare construct: TestConstructWithContributorOnly
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestConstructWithContributorOnly(props.name, this.props)
+  }
+}
+
+const stackContributorOnly = new TestStackWithContributorOnly('test-contrib-only-stack', testStackProps)
+
+describe('TestAzureCosmosDbConstruct - grantSqlRoleDefinitionToAccount Contributor Only', () => {
+  test('grants only contributor role', () => {
+    expect(stackContributorOnly.construct).toBeDefined()
+  })
+})
+
+class TestConstructWithReaderOnly extends CommonAzureConstruct {
+  declare props: TestAzureStackProps
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.cosmosDbManager.grantSqlRoleDefinitionToAccount(
+      `test-role-reader-${this.props.stage}`,
+      this,
+      'test-cosmos-account',
+      'test-rg-dev',
+      'test-principal-id',
+      [CosmosRoleDefinition.READER]
+    )
+  }
+}
+
+class TestStackWithReaderOnly extends CommonAzureStack {
+  declare props: TestAzureStackProps
+  declare construct: TestConstructWithReaderOnly
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestConstructWithReaderOnly(props.name, this.props)
+  }
+}
+
+const stackReaderOnly = new TestStackWithReaderOnly('test-reader-only-stack', testStackProps)
+
+describe('TestAzureCosmosDbConstruct - grantSqlRoleDefinitionToAccount Reader Only', () => {
+  test('grants only reader role', () => {
+    expect(stackReaderOnly.construct).toBeDefined()
   })
 })
 

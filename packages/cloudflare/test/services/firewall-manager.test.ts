@@ -212,3 +212,12 @@ describe('TestCloudflareFirewallManager - With explicit zoneId', () => {
     })
   })
 })
+
+describe('TestCloudflareFirewallManager - Undefined props', () => {
+  test('throws error when firewall rule props are undefined', () => {
+    const construct = stack.construct
+    expect(() =>
+      construct.firewallManager.createFirewallRule('test-firewall-no-props', construct, undefined as any)
+    ).toThrow('Props undefined for test-firewall-no-props')
+  })
+})

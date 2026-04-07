@@ -128,3 +128,77 @@ describe('TestOperationalInsightsConstruct', () => {
       })
   })
 })
+
+/* --- Tests for createTable method --- */
+
+import { Table } from '@pulumi/azure-native/operationalinsights/index.js'
+import { WorkspaceTableProps } from '../../src/index.js'
+
+class TestConstructWithTable extends CommonAzureConstruct {
+  declare props: TestAzureStackProps
+  workspace: Workspace
+  table: Table
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.workspace = this.operationalInsightsManager.createWorkspace(
+      `test-workspace-table-${this.props.stage}`,
+      this,
+      this.props.testWorkspace
+    )
+    this.table = this.operationalInsightsManager.createTable(`test-table-${this.props.stage}`, this, {
+      tableName: 'test-log-table',
+      workspaceName: this.workspace.name,
+      resourceGroupName: 'test-rg-dev',
+    } as WorkspaceTableProps)
+  }
+}
+
+class TestStackWithTable extends CommonAzureStack {
+  declare props: TestAzureStackProps
+  declare construct: TestConstructWithTable
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestConstructWithTable(props.name, this.props)
+  }
+}
+
+const stackWithTable = new TestStackWithTable('test-table-stack', testStackProps)
+
+describe('TestOperationalInsightsConstruct - Resource Group Fallback', () => {
+  test('createWorkspace throws when resourceGroupName is missing', () => {
+    expect(() => {
+      class NoRgOiConstruct extends CommonAzureConstruct {
+        constructor(name: string, props: any) {
+          super(name, props)
+          this.operationalInsightsManager.createWorkspace('test-no-rg-ws', this, {
+            workspaceName: 'test-no-rg-workspace',
+          } as any)
+        }
+      }
+      class NoRgOiStack extends CommonAzureStack {
+        constructor(name: string, props: any) {
+          super(name, { ...testStackProps, resourceGroupName: undefined })
+          new NoRgOiConstruct(props.name, this.props)
+        }
+      }
+      new NoRgOiStack('test-no-rg-oi-stack', testStackProps)
+    }).toThrow('Resource group name undefined for test-no-rg-ws')
+  })
+})
+
+describe('TestOperationalInsightsConstruct - createTable', () => {
+  test('provisions workspace table as expected', () => {
+    expect(stackWithTable.construct.table).toBeDefined()
+    pulumi.all([stackWithTable.construct.table.id]).apply(([id]) => {
+      expect(id).toBeDefined()
+    })
+  })
+
+  test('throws when props are undefined', () => {
+    expect(() => {
+      stack.construct.operationalInsightsManager.createTable('test-table-err', stack.construct, undefined as any)
+    }).toThrow('Props undefined for test-table-err')
+  })
+})

@@ -329,6 +329,158 @@ template: |
       expect(parsed.lenses['0'].parts['0']).toBeDefined()
     })
 
+    test('renders pane with array containing numeric values via getValue', () => {
+      const paneYaml = `dimensions:
+  height: 4
+properties:
+  yIndex: "Y index"
+  items: "desc"
+variables: {}
+template: |
+  {"parts": [{"position": {"y": {{yIndex}}}, "items": "{{items}}"}]}
+`
+      fs.writeFileSync(path.join(tmpDir, 'num-array-pane.yaml'), paneYaml)
+
+      const renderer = new AzureDashboardRenderer(tmpDir, tmpDir)
+      const result = renderer.render({
+        panes: [
+          {
+            id: 'num-array-pane',
+            properties: {
+              items: [42, 'hello'] as any,
+            },
+          },
+        ],
+        variables: {},
+        properties: {},
+      })
+
+      const parsed = JSON.parse(result)
+      expect(parsed.lenses['0'].parts['0']).toBeDefined()
+    })
+
+    test('renders pane with host-formatted property via getValue', () => {
+      const paneYaml = `dimensions:
+  height: 4
+properties:
+  yIndex: "Y index"
+  hostValue: "A host value"
+variables: {}
+template: |
+  {"parts": [{"position": {"y": {{yIndex}}}, "host": "{{hostValue}}"}]}
+`
+      fs.writeFileSync(path.join(tmpDir, 'host-pane.yaml'), paneYaml)
+
+      const renderer = new AzureDashboardRenderer(tmpDir, tmpDir)
+      const result = renderer.render({
+        panes: [
+          {
+            id: 'host-pane',
+            properties: {
+              hostValue: 'myUrl:host' as any,
+            },
+          },
+        ],
+        variables: {},
+        properties: { myUrl: 'https://example.com/path' } as any,
+      })
+
+      const parsed = JSON.parse(result)
+      expect(parsed.lenses['0'].parts['0'].host).toBe('example.com:443')
+    })
+
+    test('renders pane with http host-formatted property via getValue', () => {
+      const paneYaml = `dimensions:
+  height: 4
+properties:
+  yIndex: "Y index"
+  hostValue: "A host value"
+variables: {}
+template: |
+  {"parts": [{"position": {"y": {{yIndex}}}, "host": "{{hostValue}}"}]}
+`
+      fs.writeFileSync(path.join(tmpDir, 'http-host-pane.yaml'), paneYaml)
+
+      const renderer = new AzureDashboardRenderer(tmpDir, tmpDir)
+      const result = renderer.render({
+        panes: [
+          {
+            id: 'http-host-pane',
+            properties: {
+              hostValue: 'myUrl:host' as any,
+            },
+          },
+        ],
+        variables: {},
+        properties: { myUrl: 'http://example.com/path' } as any,
+      })
+
+      const parsed = JSON.parse(result)
+      expect(parsed.lenses['0'].parts['0'].host).toBe('example.com:80')
+    })
+
+    test('renders pane with property referencing colon formatter but non-host', () => {
+      const paneYaml = `dimensions:
+  height: 4
+properties:
+  yIndex: "Y index"
+  otherVal: "some val"
+variables: {}
+template: |
+  {"parts": [{"position": {"y": {{yIndex}}}, "val": "{{otherVal}}"}]}
+`
+      fs.writeFileSync(path.join(tmpDir, 'colon-pane.yaml'), paneYaml)
+
+      const renderer = new AzureDashboardRenderer(tmpDir, tmpDir)
+      const result = renderer.render({
+        panes: [
+          {
+            id: 'colon-pane',
+            properties: {
+              otherVal: 'myKey:other' as any,
+            },
+          },
+        ],
+        variables: {},
+        properties: { myKey: 'some-value' } as any,
+      })
+
+      const parsed = JSON.parse(result)
+      expect(parsed.lenses['0'].parts['0'].val).toBe('some-value')
+    })
+
+    test('getValue returns empty string on error in catch block', () => {
+      const paneYaml = `dimensions:
+  height: 4
+properties:
+  yIndex: "Y index"
+  badHost: "bad host val"
+variables: {}
+template: |
+  {"parts": [{"position": {"y": {{yIndex}}}, "host": "{{badHost}}"}]}
+`
+      fs.writeFileSync(path.join(tmpDir, 'bad-host-pane.yaml'), paneYaml)
+      const consoleSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+      const renderer = new AzureDashboardRenderer(tmpDir, tmpDir)
+      const result = renderer.render({
+        panes: [
+          {
+            id: 'bad-host-pane',
+            properties: {
+              badHost: 'nonExistent:host' as any,
+            },
+          },
+        ],
+        variables: {},
+        properties: {} as any,
+      })
+
+      const parsed = JSON.parse(result)
+      expect(parsed.lenses['0'].parts['0'].host).toBe('')
+      expect(consoleSpy).toHaveBeenCalled()
+    })
+
     test('increments yIndex for multiple panes', () => {
       const paneYaml = `dimensions:
   height: 5

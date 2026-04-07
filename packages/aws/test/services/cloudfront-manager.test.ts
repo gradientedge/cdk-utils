@@ -284,3 +284,70 @@ describe('TestCloudFrontConstruct', () => {
     })
   })
 })
+
+/* Test edge function with tags */
+const testEdgeTagsProps = {
+  ...testStackProps,
+  name: 'test-cf-edge-tags-stack',
+}
+
+class TestEdgeTagsStack extends CommonStack {
+  declare props: TestStackProps
+
+  constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
+    super(parent, name, props)
+    this.construct = new TestEdgeTagsConstruct(this, testEdgeTagsProps.name, this.props)
+  }
+
+  protected determineConstructProps(props: cdk.StackProps) {
+    return {
+      ...super.determineConstructProps(props),
+      ...{
+        testLambdaEdge: this.node.tryGetContext('testLambdaEdge'),
+      },
+    }
+  }
+}
+
+class TestEdgeTagsConstruct extends CommonConstruct {
+  declare props: TestStackProps
+
+  constructor(parent: Construct, name: string, props: TestStackProps) {
+    super(parent, name, props)
+    const testRole = this.iamManager.createRoleForLambda(
+      'test-role',
+      this,
+      new iam.PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this)] })
+    )
+    this.lambdaManager.createEdgeFunction(
+      'test-edge-with-tags',
+      this,
+      {
+        ...this.props.testLambdaEdge,
+        tags: [
+          { key: 'EdgeTag1', value: 'EdgeValue1' },
+          { key: 'EdgeTag2', value: 'EdgeValue2' },
+        ],
+      },
+      [],
+      new lambda.AssetCode('packages/aws/test/common/nodejs/lib'),
+      testRole
+    )
+  }
+}
+
+const appEdgeTags = new cdk.App({ context: testEdgeTagsProps })
+const stackEdgeTags = new TestEdgeTagsStack(appEdgeTags, 'test-cf-edge-tags-stack', testEdgeTagsProps)
+const templateEdgeTags = Template.fromStack(stackEdgeTags)
+
+describe('TestCloudFrontEdgeTags', () => {
+  test('provisions edge function with tags', () => {
+    templateEdgeTags.hasResourceProperties('AWS::Lambda::Function', {
+      FunctionName: 'cdktest-test-lambda-edge-test',
+      Tags: [
+        { Key: 'EdgeTag1', Value: 'EdgeValue1' },
+        { Key: 'EdgeTag2', Value: 'EdgeValue2' },
+      ],
+    })
+  })
+})

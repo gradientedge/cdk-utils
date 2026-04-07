@@ -222,3 +222,40 @@ describe('TestAzureRestApiWithCacheConstruct', () => {
     })
   })
 })
+
+/* --- Test for full initResources() flow --- */
+
+class TestRestApiWithCacheFullConstruct extends AzureRestApiWithCache {
+  declare props: AzureRestApiWithCacheProps & TestAzureStackProps
+
+  constructor(name: string, props: AzureRestApiWithCacheProps & TestAzureStackProps) {
+    super(name, props)
+    this.props = props
+    this.api = {} as AzureApiWithCache
+    this.initResources()
+  }
+}
+
+class TestCommonStackFull extends CommonAzureStack {
+  declare props: any
+  declare construct: TestRestApiWithCacheFullConstruct
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestRestApiWithCacheFullConstruct(`${props.name}-full`, this.props)
+  }
+}
+
+pulumi.runtime.setConfig('project:extraContexts', JSON.stringify(testStackProps.extraContexts))
+const stackFull = new TestCommonStackFull('test-full-stack', testStackProps)
+
+describe('TestAzureRestApiWithCacheFullConstruct', () => {
+  test('full initResources covers super.initResources and cache methods', () => {
+    expect(stackFull).toBeDefined()
+    expect(stackFull.construct).toBeDefined()
+    expect(stackFull.construct.api).toBeDefined()
+    expect(stackFull.construct.api.redis).toBeDefined()
+    expect(stackFull.construct.api.redisNamedValueSecret).toBeDefined()
+    expect(stackFull.construct.api.redisNamedValue).toBeDefined()
+  })
+})

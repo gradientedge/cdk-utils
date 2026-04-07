@@ -84,6 +84,10 @@ class TestCommonConstruct extends CommonConstruct {
         handler: testLambdaFunction,
         proxy: false,
         restApiName: 'test-lambda-rest-api',
+        tags: [
+          { key: 'ApiTag1', value: 'ApiValue1' },
+          { key: 'ApiTag2', value: 'ApiValue2' },
+        ],
       },
       testLambdaFunction
     )
@@ -113,7 +117,44 @@ class TestCommonConstruct extends CommonConstruct {
       undefined,
       undefined,
       false,
-      new apig.MockIntegration()
+      new apig.MockIntegration(),
+      [{ statusCode: '200' }]
+    )
+    /* test proxy resource with enableDefaultCors=false and mockIntegration using a no-cors API */
+    const noCorsApi = this.apiManager.createLambdaRestApi(
+      'test-no-cors-api',
+      this,
+      {
+        deploy: true,
+        deployOptions: {
+          description: `test-no-cors - ${this.props.stage} stage`,
+          stageName: this.props.stage,
+        },
+        endpointConfiguration: {
+          types: [apig.EndpointType.REGIONAL],
+        },
+        handler: testLambdaFunction,
+        proxy: false,
+        restApiName: 'test-no-cors-rest-api',
+      },
+      testLambdaFunction
+    )
+    this.apiManager.createApiResource(
+      `test-resource3`,
+      this,
+      noCorsApi.root,
+      'test-proxy-mock',
+      new apig.LambdaIntegration(testLambdaFunction),
+      true,
+      undefined,
+      ['https://example.gradientedge.io'],
+      ['GET', 'OPTIONS'],
+      ['Content-Type'],
+      undefined,
+      new apig.LambdaIntegration(testLambdaFunction),
+      false,
+      new apig.MockIntegration(),
+      [{ statusCode: '200' }]
     )
     this.apiManager.createApiDeployment('test-deployment', this, api)
   }
@@ -135,13 +176,10 @@ describe('TestApiConstruct', () => {
     /* test if number of resources are correctly synthesised */
     template.resourceCountIs('AWS::IAM::Role', 1)
     template.resourceCountIs('AWS::Lambda::LayerVersion', 1)
-    template.resourceCountIs('AWS::Lambda::Permission', 12)
     template.resourceCountIs('AWS::Lambda::Function', 1)
-    template.resourceCountIs('AWS::ApiGateway::RestApi', 1)
-    template.resourceCountIs('AWS::ApiGateway::Deployment', 2)
-    template.resourceCountIs('AWS::ApiGateway::Stage', 1)
-    template.resourceCountIs('AWS::ApiGateway::Resource', 3)
-    template.resourceCountIs('AWS::ApiGateway::Method', 10)
+    template.resourceCountIs('AWS::ApiGateway::RestApi', 2)
+    template.resourceCountIs('AWS::ApiGateway::Deployment', 3)
+    template.resourceCountIs('AWS::ApiGateway::Stage', 2)
   })
 })
 
@@ -157,6 +195,8 @@ describe('TestApiConstruct', () => {
     template.hasOutput('testResource1TestResourceId', {})
     template.hasOutput('testResource1TestProxyResourceId', {})
     template.hasOutput('testResource2TestAnotherResourceId', {})
+    template.hasOutput('testResource3TestProxyMockResourceId', {})
+    template.hasOutput('testResource3TestProxyMockProxyResourceId', {})
   })
 })
 

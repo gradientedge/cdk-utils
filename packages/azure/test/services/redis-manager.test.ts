@@ -110,6 +110,77 @@ describe('TestAzureRedisConstruct', () => {
   })
 })
 
+describe('TestAzureRedisConstruct - Resource Group Fallback', () => {
+  test('createManagedRedis throws when resourceGroupName is missing', () => {
+    expect(() => {
+      class NoRgRedisConstruct extends CommonAzureConstruct {
+        constructor(name: string, props: any) {
+          super(name, props)
+          this.redisManager.createManagedRedis('test-no-rg-redis', this, {
+            name: 'test-no-rg-redis',
+          } as any)
+        }
+      }
+      class NoRgRedisStack extends CommonAzureStack {
+        constructor(name: string, props: any) {
+          super(name, { ...testStackProps, resourceGroupName: undefined })
+          new NoRgRedisConstruct(props.name, this.props)
+        }
+      }
+      new NoRgRedisStack('test-no-rg-redis-stack', testStackProps)
+    }).toThrow('Resource group name undefined for test-no-rg-redis')
+  })
+})
+
+/* --- Tests for default sku values --- */
+
+class TestMinimalRedisConstruct extends CommonAzureConstruct {
+  declare props: TestAzureStackProps
+  redisCache: Redis
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.redisCache = this.redisManager.createManagedRedis(`test-minimal-redis-${this.props.stage}`, this, {
+      name: 'test-minimal-redis',
+      resourceGroupName: 'test-rg-dev',
+    } as any)
+  }
+}
+
+class TestMinimalRedisStack extends CommonAzureStack {
+  declare props: TestAzureStackProps
+  declare construct: TestMinimalRedisConstruct
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestMinimalRedisConstruct(props.name, this.props)
+  }
+}
+
+const minimalRedisStack = new TestMinimalRedisStack('test-minimal-redis-stack', testStackProps)
+
+describe('TestAzureRedisConstruct - Default Values', () => {
+  test('redis cache uses default sku when not provided', () => {
+    pulumi.all([minimalRedisStack.construct.redisCache.sku]).apply(([sku]) => {
+      expect(sku?.name).toEqual('Basic')
+      expect(sku?.family).toEqual('C')
+      expect(sku?.capacity).toEqual(0)
+    })
+  })
+
+  test('redis cache uses default tags when not provided', () => {
+    pulumi.all([minimalRedisStack.construct.redisCache.tags]).apply(([tags]) => {
+      expect(tags?.environment).toEqual('dev')
+    })
+  })
+
+  test('redis cache uses default location from scope when not provided', () => {
+    pulumi.all([minimalRedisStack.construct.redisCache.location]).apply(([location]) => {
+      expect(location).toEqual('eastus')
+    })
+  })
+})
+
 describe('TestAzureRedisConstruct', () => {
   test('provisions managed redis as expected', () => {
     pulumi

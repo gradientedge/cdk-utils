@@ -14,6 +14,8 @@ import {
 } from '@pulumi/cloudflare'
 import * as pulumi from '@pulumi/pulumi'
 import fs from 'fs'
+import path from 'path'
+import appRoot from 'app-root-path'
 import {
   AccessRuleProps,
   CommonCloudflareConstruct,
@@ -126,7 +128,9 @@ class TestCommonConstruct extends CommonCloudflareConstruct {
       this,
       {
         ...this.props.testAccessCustomPage,
-        customHtml: fs.readFileSync('packages/cloudflare/test/common/sample.html', { encoding: 'utf8' }),
+        customHtml: fs.readFileSync(path.join(appRoot.path, 'packages/cloudflare/test/common/sample.html'), {
+          encoding: 'utf8',
+        }),
       }
     )
     this.accessGroup = this.accessManager.createAccessGroup(
@@ -149,7 +153,9 @@ class TestCommonConstruct extends CommonCloudflareConstruct {
       this,
       {
         ...this.props.testAccessMTlsCertificate,
-        certificate: fs.readFileSync('packages/cloudflare/test/common/sample.pem', { encoding: 'utf8' }),
+        certificate: fs.readFileSync(path.join(appRoot.path, 'packages/cloudflare/test/common/sample.pem'), {
+          encoding: 'utf8',
+        }),
       }
     )
     this.accessOrganisation = this.accessManager.createAccessOrganization(
@@ -628,7 +634,9 @@ class TestWithZoneIdConstruct extends CommonCloudflareConstruct {
       this,
       {
         ...this.props.testAccessMTlsCertificate,
-        certificate: fs.readFileSync('packages/cloudflare/test/common/sample.pem', { encoding: 'utf8' }),
+        certificate: fs.readFileSync(path.join(appRoot.path, 'packages/cloudflare/test/common/sample.pem'), {
+          encoding: 'utf8',
+        }),
         zoneId: this.zone.id,
       }
     )
@@ -746,5 +754,77 @@ describe('TestCloudflareAccessManager - With explicit accountId', () => {
     pulumi.all([acctStack.construct.accessPolicy.accountId]).apply(([accountId]) => {
       expect(accountId).toEqual('explicit-account-id')
     })
+  })
+})
+
+describe('TestCloudflareAccessManager - Undefined props', () => {
+  test('throws error when access policy props are undefined', () => {
+    const construct = stack.construct
+    expect(() =>
+      construct.accessManager.createAccessPolicy('test-policy-no-props', construct, undefined as any)
+    ).toThrow('Props undefined for test-policy-no-props')
+  })
+
+  test('throws error when access rule props are undefined', () => {
+    const construct = stack.construct
+    expect(() => construct.accessManager.createAccessRule('test-rule-no-props', construct, undefined as any)).toThrow(
+      'Props undefined for test-rule-no-props'
+    )
+  })
+
+  test('throws error when access service token props are undefined', () => {
+    const construct = stack.construct
+    expect(() =>
+      construct.accessManager.createAccessServiceToken('test-svc-token-no-props', construct, undefined as any)
+    ).toThrow('Props undefined for test-svc-token-no-props')
+  })
+
+  test('throws error when access tag props are undefined', () => {
+    const construct = stack.construct
+    expect(() => construct.accessManager.createAccessTag('test-tag-no-props', construct, undefined as any)).toThrow(
+      'Props undefined for test-tag-no-props'
+    )
+  })
+
+  test('throws error when access group props are undefined', () => {
+    const construct = stack.construct
+    expect(() => construct.accessManager.createAccessGroup('test-grp-no-props', construct, undefined as any)).toThrow(
+      'Props undefined for test-grp-no-props'
+    )
+  })
+
+  test('throws error when access identity provider props are undefined', () => {
+    const construct = stack.construct
+    expect(() =>
+      construct.accessManager.createAccessIdentityProvider('test-idp-no-props', construct, undefined as any)
+    ).toThrow('Props undefined for test-idp-no-props')
+  })
+
+  test('throws error when access mutual tls certificate props are undefined', () => {
+    const construct = stack.construct
+    expect(() =>
+      construct.accessManager.createAccessMutualTlsCertificate('test-mtls-no-props', construct, undefined as any)
+    ).toThrow('Props undefined for test-mtls-no-props')
+  })
+
+  test('throws error when access organization props are undefined', () => {
+    const construct = stack.construct
+    expect(() =>
+      construct.accessManager.createAccessOrganization('test-org-no-props', construct, undefined as any)
+    ).toThrow('Props undefined for test-org-no-props')
+  })
+
+  test('throws error when access short lived certificate props are undefined', () => {
+    const construct = stack.construct
+    expect(() =>
+      construct.accessManager.createAccessShortLivedCertificate('test-cert-no-props', construct, undefined as any)
+    ).toThrow('Props undefined for test-cert-no-props')
+  })
+
+  test('throws error when access custom page props are undefined', () => {
+    const construct = stack.construct
+    expect(() =>
+      construct.accessManager.createAccessCustomPage('test-page-no-props', construct, undefined as any)
+    ).toThrow('Props undefined for test-page-no-props')
   })
 })
