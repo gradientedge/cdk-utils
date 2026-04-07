@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.2.0
+
+### Minor Changes
+
+- [`35a0776`](https://github.com/gradientedge/cdk-utils/commit/35a0776dad5b08cd63a90fffa8bbb162a6ad593a) Thanks [@despock](https://github.com/despock)! - converting nodeOptions to be optional
+
 ## 2.1.0
 
 ### Minor Changes
