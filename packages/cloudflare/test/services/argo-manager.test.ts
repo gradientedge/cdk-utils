@@ -162,6 +162,15 @@ describe('TestCloudflareArgoManager', () => {
   })
 })
 
+describe('TestCloudflareArgoManager - Undefined props', () => {
+  test('throws error when argo tiered caching props are undefined', () => {
+    const construct = stack.construct
+    expect(() =>
+      construct.argoManager.createArgoTieredCaching('test-argo-tc-no-props', construct, undefined as any)
+    ).toThrow('Props undefined for test-argo-tc-no-props')
+  })
+})
+
 class TestWithZoneIdCloudflareStack extends CommonCloudflareStack {
   declare props: TestCloudflareStackProps
   declare construct: TestWithZoneIdConstruct

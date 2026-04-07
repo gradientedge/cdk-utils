@@ -275,3 +275,101 @@ describe('TestCommonStackDefaultStackName', () => {
     expect(stackDefaultName.props.name).toEqual('cdk-utils')
   })
 })
+
+describe('TestCommonStackWithDebug', () => {
+  test('handles debug mode for extra contexts', () => {
+    const debugProps = {
+      debug: true,
+      domainName: 'gradientedge.io',
+      extraContexts: ['packages/aws/test/common/cdkConfig/dummy.json'],
+      name: 'test-debug',
+      region: 'eu-west-1',
+      stackName: 'test-debug',
+      stage: 'test',
+      stageContextPath: 'packages/aws/test/common/cdkEnv',
+    }
+
+    class TestStackDebug extends CommonStack {
+      constructor(parent: cdk.App, name: string, props: any) {
+        super(parent, name, debugProps)
+      }
+    }
+
+    const appDebug = new cdk.App({ context: debugProps })
+    const stackDebug = new TestStackDebug(appDebug, 'test-debug-stack', debugProps)
+
+    expect(stackDebug.props.stage).toEqual('test')
+  })
+
+  test('handles debug mode without extra contexts', () => {
+    const debugNoExtraProps = {
+      debug: true,
+      domainName: 'gradientedge.io',
+      name: 'test-debug-no-extra',
+      region: 'eu-west-1',
+      stackName: 'test-debug-no-extra',
+      stage: 'test',
+    }
+
+    class TestStackDebugNoExtra extends CommonStack {
+      constructor(parent: cdk.App, name: string, props: any) {
+        super(parent, name, debugNoExtraProps)
+      }
+    }
+
+    const appDebugNoExtra = new cdk.App({ context: debugNoExtraProps })
+    const stackDebugNoExtra = new TestStackDebugNoExtra(appDebugNoExtra, 'test-debug-no-extra-stack', debugNoExtraProps)
+
+    expect(stackDebugNoExtra.props.name).toEqual('test-debug-no-extra')
+  })
+
+  test('handles debug mode with missing stage context file', () => {
+    const debugMissingStageProps = {
+      debug: true,
+      domainName: 'gradientedge.io',
+      name: 'test-debug-missing',
+      region: 'eu-west-1',
+      stackName: 'test-debug-missing',
+      stage: 'nonexistent-stage',
+      stageContextPath: 'packages/aws/test/common/cdkEnv',
+    }
+
+    class TestStackDebugMissing extends CommonStack {
+      constructor(parent: cdk.App, name: string, props: any) {
+        super(parent, name, debugMissingStageProps)
+      }
+    }
+
+    const appDebugMissing = new cdk.App({ context: debugMissingStageProps })
+    const stackDebugMissing = new TestStackDebugMissing(
+      appDebugMissing,
+      'test-debug-missing-stack',
+      debugMissingStageProps
+    )
+
+    expect(stackDebugMissing.props.stage).toEqual('nonexistent-stage')
+  })
+
+  test('handles debug mode with dev stage', () => {
+    const debugDevProps = {
+      debug: true,
+      domainName: 'gradientedge.io',
+      name: 'test-debug-dev',
+      region: 'eu-west-1',
+      stackName: 'test-debug-dev',
+      stage: 'dev',
+      stageContextPath: 'packages/aws/test/common/cdkEnv',
+    }
+
+    class TestStackDebugDev extends CommonStack {
+      constructor(parent: cdk.App, name: string, props: any) {
+        super(parent, name, debugDevProps)
+      }
+    }
+
+    const appDebugDev = new cdk.App({ context: debugDevProps })
+    const stackDebugDev = new TestStackDebugDev(appDebugDev, 'test-debug-dev-stack', debugDevProps)
+
+    expect(stackDebugDev.props.stage).toEqual('dev')
+  })
+})

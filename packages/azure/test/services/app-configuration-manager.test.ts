@@ -139,3 +139,66 @@ describe('TestAzureAppConfigurationConstruct', () => {
       })
   })
 })
+
+/* --- Tests for resource group name fallback and static methods --- */
+
+import { AzureAppConfigurationManager } from '../../src/index.js'
+
+describe('TestAzureAppConfigurationConstruct - Resource Group Fallback', () => {
+  test('createConfigurationStore throws when resourceGroupName is missing', () => {
+    expect(() => {
+      class NoRgAppConfigConstruct extends CommonAzureConstruct {
+        constructor(name: string, props: any) {
+          super(name, props)
+          this.appConfigurationManager.createConfigurationStore('test-no-rg-ac', this, {
+            configStoreName: 'test-no-rg-ac',
+          } as any)
+        }
+      }
+      class NoRgAppConfigStack extends CommonAzureStack {
+        constructor(name: string, props: any) {
+          super(name, { ...testStackProps, resourceGroupName: undefined })
+          new NoRgAppConfigConstruct(props.name, this.props)
+        }
+      }
+      new NoRgAppConfigStack('test-no-rg-ac-stack', testStackProps)
+    }).toThrow('Resource group name undefined for test-no-rg-ac')
+  })
+})
+
+describe('AzureAppConfigurationManager - Static Methods', () => {
+  test('hasCosmosDependencies returns false for null/undefined', () => {
+    expect(AzureAppConfigurationManager.hasCosmosDependencies(null)).toBe(false)
+    expect(AzureAppConfigurationManager.hasCosmosDependencies(undefined)).toBe(false)
+    expect(AzureAppConfigurationManager.hasCosmosDependencies('string')).toBe(false)
+  })
+
+  test('hasCosmosDependencies returns true when databaseName is present', () => {
+    expect(AzureAppConfigurationManager.hasCosmosDependencies({ databaseName: 'mydb' })).toBe(true)
+  })
+
+  test('hasCosmosDependencies returns true when tableName is present', () => {
+    expect(AzureAppConfigurationManager.hasCosmosDependencies({ tableName: 'mytable' })).toBe(true)
+  })
+
+  test('hasCosmosDependencies returns true for nested objects with cosmos dependencies', () => {
+    expect(AzureAppConfigurationManager.hasCosmosDependencies({ nested: { databaseName: 'mydb' } })).toBe(true)
+  })
+
+  test('hasCosmosDependencies returns false for nested objects without cosmos dependencies', () => {
+    expect(AzureAppConfigurationManager.hasCosmosDependencies({ nested: { key: 'value' } })).toBe(false)
+  })
+
+  test('hasEventGridTargets returns true when eventGridTargets is present', () => {
+    expect(AzureAppConfigurationManager.hasEventGridTargets({ eventGridTargets: [] })).toBe(true)
+  })
+
+  test('hasEventGridTargets returns falsy for null/undefined', () => {
+    expect(AzureAppConfigurationManager.hasEventGridTargets(null)).toBeFalsy()
+    expect(AzureAppConfigurationManager.hasEventGridTargets(undefined)).toBeFalsy()
+  })
+
+  test('hasEventGridTargets returns falsy for non-object', () => {
+    expect(AzureAppConfigurationManager.hasEventGridTargets('string')).toBeFalsy()
+  })
+})

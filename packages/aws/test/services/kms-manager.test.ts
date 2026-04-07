@@ -68,6 +68,15 @@ describe('TestKmsConstruct', () => {
     const error = () => new TestInvalidCommonStack(app, 'test-invalid-stack', testStackProps)
     expect(error).toThrow('KMS Key props undefined')
   })
+
+  test('throws error when alias is undefined', () => {
+    const testStack = new TestCommonStack(app, 'test-error-alias', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.kmsManager.createKey('test-no-alias', testConstruct, { enableKeyRotation: true } as any)
+    }).toThrow('KMS Key alias undefined for test-no-alias')
+  })
 })
 
 describe('TestKmsConstruct', () => {

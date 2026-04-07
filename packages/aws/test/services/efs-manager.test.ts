@@ -90,6 +90,44 @@ describe('TestEfsManager', () => {
   })
 })
 
+describe('TestEfsManager - Error Handling', () => {
+  test('throws error when access point path is undefined', () => {
+    class TestEfsErrorStack extends CommonStack {
+      declare props: TestStackProps
+
+      constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
+        super(parent, name, props)
+        this.construct = new TestEfsErrorConstruct(this, testStackProps.name, this.props)
+      }
+
+      protected determineConstructProps(props: cdk.StackProps) {
+        return {
+          ...super.determineConstructProps(props),
+          ...{
+            testFileSystem: this.node.tryGetContext('testFileSystem'),
+            testVpc: this.node.tryGetContext('testVpc'),
+          },
+        }
+      }
+    }
+
+    class TestEfsErrorConstruct extends CommonConstruct {
+      declare props: TestStackProps
+
+      constructor(parent: Construct, name: string, props: TestStackProps) {
+        super(parent, name, props)
+        const testVpc = this.vpcManager.createVpc('test-vpc', this, this.props.testVpc)
+        this.efsManager.createFileSystem('test-file-system-err', this, this.props.testFileSystem, testVpc, [
+          { createAcl: undefined, posixUser: undefined },
+        ])
+      }
+    }
+
+    const error = () => new TestEfsErrorStack(app, 'test-efs-error-stack', testStackProps)
+    expect(error).toThrow('Undefined access point path')
+  })
+})
+
 describe('TestEfsManager', () => {
   test('synthesises as expected', () => {
     /* test if number of resources are correctly synthesised */

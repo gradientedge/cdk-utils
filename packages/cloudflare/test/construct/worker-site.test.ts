@@ -127,6 +127,7 @@ pulumi.runtime.setAllConfig({
   'project:stage': testStackProps.stage,
   'project:stageContextPath': testStackProps.stageContextPath,
   'project:extraContexts': JSON.stringify(testStackProps.extraContexts),
+  'project:secretsProvider': 'none',
 })
 
 pulumi.runtime.setMocks({
@@ -284,5 +285,56 @@ describe('TestCloudflareWorkerSite - No RuleSet or ZoneSetting', () => {
     const noRuleSetStack = new TestNoRuleSetCloudflareStack('test-no-ruleset-stack', testStackProps)
     expect(noRuleSetStack.construct.siteRuleSet).toBeUndefined()
     expect(noRuleSetStack.construct.siteZoneSetting).toBeUndefined()
+  })
+})
+
+class TestSecretsConstruct extends CloudflareWorkerSite {
+  declare props: TestCloudflareStackProps
+
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, props)
+    this.initResources()
+  }
+
+  public testResolveSecretFromAWS(secretName: string) {
+    return this.resolveSecretFromAWS(secretName)
+  }
+
+  public testResolveSecretFromAzure(resourceGroupName: string, keyVaultName: string, secretKey: string) {
+    return this.resolveSecretFromAzure(resourceGroupName, keyVaultName, secretKey)
+  }
+}
+
+class TestSecretsCloudflareStack extends CommonCloudflareStack {
+  declare props: TestCloudflareStackProps
+  declare construct: TestSecretsConstruct
+
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestSecretsConstruct(props.name, this.props)
+  }
+
+  protected determineConstructProps(props: TestCloudflareStackProps) {
+    return {
+      ...super.determineConstructProps(props),
+      siteWorkerAsset: path.join(appRoot.path, `packages/cloudflare/test/common/sample.html`),
+      siteSubDomain: `test.app`,
+    }
+  }
+}
+
+describe('TestCloudflareWorkerSite - resolveSecretFromAWS', () => {
+  test('returns undefined when secretsProvider is not aws', () => {
+    const secretsStack = new TestSecretsCloudflareStack('test-secrets-aws-stack', testStackProps)
+    const result = secretsStack.construct.testResolveSecretFromAWS('my-secret')
+    expect(result).toBeUndefined()
+  })
+})
+
+describe('TestCloudflareWorkerSite - resolveSecretFromAzure', () => {
+  test('returns undefined when secretsProvider is not azure', () => {
+    const secretsStack = new TestSecretsCloudflareStack('test-secrets-azure-stack', testStackProps)
+    const result = secretsStack.construct.testResolveSecretFromAzure('my-rg', 'my-vault', 'my-secret')
+    expect(result).toBeUndefined()
   })
 })

@@ -102,6 +102,19 @@ describe('TestAzureResourceGroupConstruct', () => {
   })
 })
 
+describe('TestAzureResourceGroupConstruct - resolveResourceGroup', () => {
+  test('resolveResourceGroup throws when resourceGroupName is empty', () => {
+    expect(() => {
+      stack.construct.resourceGroupManager.resolveResourceGroup(stack.construct, '')
+    }).toThrow('Resource Group Name undefined')
+  })
+
+  test('resolveResourceGroup resolves an existing resource group', () => {
+    const result = stack.construct.resourceGroupManager.resolveResourceGroup(stack.construct, 'test-rg')
+    expect(result).toBeDefined()
+  })
+})
+
 describe('TestAzureResourceGroupConstruct', () => {
   test('provisions resource group as expected', () => {
     pulumi

@@ -71,6 +71,28 @@ describe('TestDynamodbConstruct', () => {
     const error = () => new TestInvalidCommonStack(app, 'test-invalid-stack', testStackProps)
     expect(error).toThrow('Table props undefined')
   })
+
+  test('throws error when tableName is undefined for createTable', () => {
+    const testStack = new TestCommonStack(app, 'test-error-table-name', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.dynamodbManager.createTable('test-no-name', testConstruct, {
+        partitionKey: { name: 'id', type: 'S' },
+      } as any)
+    }).toThrow('Table tableName undefined for test-no-name')
+  })
+
+  test('throws error when tableName is undefined for createTableV2', () => {
+    const testStack = new TestCommonStack(app, 'test-error-table-v2-name', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.dynamodbManager.createTableV2('test-no-name-v2', testConstruct, {
+        partitionKey: { name: 'id', type: 'S' },
+      } as any)
+    }).toThrow('Table tableName undefined for test-no-name-v2')
+  })
 })
 
 describe('TestDynamodbConstruct', () => {

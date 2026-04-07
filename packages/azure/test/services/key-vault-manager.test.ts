@@ -141,3 +141,89 @@ describe('TestAzureKeyVaultConstruct', () => {
       })
   })
 })
+
+/* --- Tests for resource group fallback and createKeyVaultSecret --- */
+
+import { Secret } from '@pulumi/azure-native/keyvault/index.js'
+import { SecretProps } from '../../src/index.js'
+
+class TestConstructWithSecret extends CommonAzureConstruct {
+  declare props: TestAzureStackProps
+  keyVault: Vault
+  keyVaultSecret: Secret
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.keyVault = this.keyVaultManager.createKeyVault(
+      `test-key-vault-secret-${this.props.stage}`,
+      this,
+      this.props.testKeyVault
+    )
+    this.keyVaultSecret = this.keyVaultManager.createKeyVaultSecret(`test-secret-${this.props.stage}`, this, {
+      vaultName: 'test-key-vault-dev',
+      secretName: 'test-secret',
+      resourceGroupName: 'test-rg-dev',
+      properties: {
+        value: 'test-secret-value',
+      },
+    } as SecretProps)
+  }
+}
+
+class TestStackWithSecret extends CommonAzureStack {
+  declare props: TestAzureStackProps
+  declare construct: TestConstructWithSecret
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestConstructWithSecret(props.name, this.props)
+  }
+}
+
+const stackWithSecret = new TestStackWithSecret('test-secret-stack', testStackProps)
+
+describe('TestAzureKeyVaultConstruct - createKeyVaultSecret', () => {
+  test('provisions key vault secret as expected', () => {
+    expect(stackWithSecret.construct.keyVaultSecret).toBeDefined()
+    pulumi.all([stackWithSecret.construct.keyVaultSecret.id]).apply(([id]) => {
+      expect(id).toBeDefined()
+    })
+  })
+
+  test('throws when props are undefined for createKeyVaultSecret', () => {
+    expect(() => {
+      stack.construct.keyVaultManager.createKeyVaultSecret('test-secret-err', stack.construct, undefined as any)
+    }).toThrow('Props undefined for test-secret-err')
+  })
+})
+
+describe('TestAzureKeyVaultConstruct - Resource Group Fallback', () => {
+  test('createKeyVault throws when resourceGroupName is missing', () => {
+    expect(() => {
+      class NoRgKvConstruct extends CommonAzureConstruct {
+        constructor(name: string, props: any) {
+          super(name, props)
+          this.keyVaultManager.createKeyVault('test-no-rg-kv', this, {
+            vaultName: 'test-no-rg-kv',
+            properties: {
+              tenantId: '00000000-0000-0000-0000-000000000000',
+              sku: { family: 'A', name: 'standard' },
+            },
+          } as any)
+        }
+      }
+      class NoRgKvStack extends CommonAzureStack {
+        constructor(name: string, props: any) {
+          super(name, { ...testStackProps, resourceGroupName: undefined })
+          new NoRgKvConstruct(props.name, this.props)
+        }
+      }
+      new NoRgKvStack('test-no-rg-kv-stack', testStackProps)
+    }).toThrow('Resource group name undefined for test-no-rg-kv')
+  })
+
+  test('resolveKeyVault resolves an existing vault', () => {
+    const result = stack.construct.keyVaultManager.resolveKeyVault(stack.construct, 'test-vault', 'test-rg-dev')
+    expect(result).toBeDefined()
+  })
+})

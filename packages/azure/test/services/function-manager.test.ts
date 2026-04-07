@@ -362,6 +362,34 @@ describe('TestAzureFunctionConstruct - Default Value Branches', () => {
   })
 })
 
+describe('TestAzureFunctionConstruct - Props Undefined', () => {
+  test('createFunction throws when props are undefined', () => {
+    expect(() => {
+      stack.construct.functionManager.createFunction('test-fn-err', stack.construct, undefined as any)
+    }).toThrow('Props undefined for test-fn-err')
+  })
+
+  test('createFunctionAppFlexConsumption throws when props are undefined', () => {
+    expect(() => {
+      stack.construct.functionManager.createFunctionAppFlexConsumption(
+        'test-flex-err',
+        stack.construct,
+        undefined as any
+      )
+    }).toThrow('Props undefined for test-flex-err')
+  })
+
+  test('createFunctionAppFlexConsumptionResource throws when props are undefined', () => {
+    expect(() => {
+      stack.construct.functionManager.createFunctionAppFlexConsumptionResource(
+        'test-flex-res-err',
+        stack.construct,
+        undefined as any
+      )
+    }).toThrow('Props undefined for test-flex-res-err')
+  })
+})
+
 describe('TestAzureFunctionConstruct - Error Handling', () => {
   test('createFunctionApp throws when resourceGroupName is missing from both scope and props', () => {
     expect(() => {

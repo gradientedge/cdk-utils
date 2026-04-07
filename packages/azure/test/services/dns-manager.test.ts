@@ -329,6 +329,26 @@ describe('TestAzureDnsConstruct - Default Values', () => {
   })
 })
 
+describe('TestAzureDnsConstruct - Props Undefined', () => {
+  test('createDnsARecord throws when props are undefined', () => {
+    expect(() => {
+      stack.construct.dnsManager.createDnsARecord('test-a-err', stack.construct, undefined as any)
+    }).toThrow('Props undefined for test-a-err')
+  })
+
+  test('createDnsCnameRecord throws when props are undefined', () => {
+    expect(() => {
+      stack.construct.dnsManager.createDnsCnameRecord('test-cname-err', stack.construct, undefined as any)
+    }).toThrow('Props undefined for test-cname-err')
+  })
+
+  test('createDnsTxtRecord throws when props are undefined', () => {
+    expect(() => {
+      stack.construct.dnsManager.createDnsTxtRecord('test-txt-err', stack.construct, undefined as any)
+    }).toThrow('Props undefined for test-txt-err')
+  })
+})
+
 describe('TestAzureDnsConstruct - Resource Group Fallback', () => {
   test('createDnsZone throws when resourceGroupName is missing', () => {
     expect(() => {

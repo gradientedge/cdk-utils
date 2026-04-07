@@ -107,6 +107,31 @@ describe('TestSnsConstruct', () => {
     const error = () => new TestInvalidCommonStack(app, 'test-invalid-stack', testStackProps)
     expect(error).toThrow('Subscription props undefined')
   })
+
+  test('throws error when email service topicName is undefined', () => {
+    const testStack = new TestCommonStack(app, 'test-error-email-topic', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.snsManager.createEmailNotificationService('test-no-topic', testConstruct, { fifo: false } as any, [
+        'test@test.com',
+      ])
+    }).toThrow('Subscription topicName undefined for test-no-topic')
+  })
+
+  test('throws error when lambda service topicName is undefined', () => {
+    const testStack = new TestCommonStack(app, 'test-error-lambda-topic', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.snsManager.createLambdaNotificationService(
+        'test-no-lambda-topic',
+        testConstruct,
+        { fifo: false } as any,
+        {} as any
+      )
+    }).toThrow('Subscription topicName undefined for test-no-lambda-topic')
+  })
 })
 
 describe('TestSnsConstruct', () => {

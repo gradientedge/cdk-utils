@@ -233,3 +233,92 @@ describe('TestPipedEventHandler', () => {
     })
   })
 })
+
+/* Test PipedEventHandler without pipe configs (covers early return paths) */
+const testNoPipeStackProps = {
+  ...testStackProps,
+  name: 'test-no-pipe-stack',
+}
+
+class TestNoPipeCommonStack extends CommonStack {
+  declare props: TestStackProps
+
+  constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
+    super(parent, name, props)
+    this.construct = new TestNoPipePipedEventHandler(this, testNoPipeStackProps.name, this.props)
+  }
+
+  protected determineConstructProps(props: cdk.StackProps) {
+    return {
+      ...super.determineConstructProps(props),
+      eventRetentionInDays: 7,
+      eventRule: this.node.tryGetContext('testRule'),
+      pipedDlq: this.node.tryGetContext('testPipedDlq'),
+      pipedQueue: this.node.tryGetContext('testPipedQueue'),
+      testLambda: this.node.tryGetContext('testLambda'),
+      workflow: this.node.tryGetContext('testSubmitWorkflow'),
+      workflowLog: this.node.tryGetContext('testLogGroup'),
+      workflowMapState: this.node.tryGetContext('testWorkflowMapState'),
+      workflowStepSuccess: this.node.tryGetContext('testSubmitStepSuccess'),
+    }
+  }
+}
+
+class TestNoPipePipedEventHandler extends PipedEventHandler {
+  declare props: TestStackProps
+  workflowStepSuccess: Succeed
+  testLambda: IFunction
+
+  constructor(parent: Construct, id: string, props: TestStackProps) {
+    super(parent, id, props)
+    this.props = props
+    this.id = 'test'
+    this.initResources()
+  }
+
+  public initResources() {
+    const testPolicy = new PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this)] })
+    const testRole = this.iamManager.createRoleForEcsExecution('test-role', this, testPolicy)
+    this.testLambda = this.lambdaManager.createLambdaFunction(
+      'test-lambda',
+      this,
+      this.props.testLambda,
+      testRole,
+      [],
+      new AssetCode('packages/aws/test/common/nodejs/lib')
+    )
+    super.initResources()
+  }
+
+  protected createWorkflowSteps() {
+    super.createWorkflowSteps()
+    this.workflowStepSuccess = this.sfnManager.createSuccessStep(
+      `${this.id}-workflow-complete`,
+      this,
+      this.props.workflowStepSuccess
+    )
+  }
+
+  protected createWorkflowDefinition() {
+    this.handler.eventWorkflowDefinition = Chain.start(this.workflowStepSuccess)
+    super.createWorkflowDefinition()
+  }
+
+  protected createWorkflowPolicy() {
+    this.handler.workflowPolicy = new PolicyDocument({
+      statements: [this.iamManager.statementForInvokeLambda([this.testLambda.functionArn])],
+    })
+  }
+}
+
+const appNoPipe = new cdk.App({ context: testNoPipeStackProps })
+const stackNoPipe = new TestNoPipeCommonStack(appNoPipe, 'test-no-pipe-stack', testNoPipeStackProps)
+const templateNoPipe = Template.fromStack(stackNoPipe)
+
+describe('TestPipedEventHandlerNoPipes', () => {
+  test('synthesises without pipes when configs are missing', () => {
+    templateNoPipe.resourceCountIs('AWS::Pipes::Pipe', 0)
+    templateNoPipe.resourceCountIs('AWS::SQS::Queue', 2)
+    templateNoPipe.resourceCountIs('AWS::StepFunctions::StateMachine', 1)
+  })
+})

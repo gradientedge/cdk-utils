@@ -250,6 +250,31 @@ describe('TestCloudflareCommonStack - No extra contexts with debug', () => {
   })
 })
 
+class TestExposedStack extends CommonCloudflareStack {
+  declare props: TestCloudflareStackProps
+
+  constructor(name: string, props: TestCloudflareStackProps) {
+    super(name, props)
+  }
+
+  public callDetermineConstructProps(props: any) {
+    return this.determineConstructProps(props)
+  }
+}
+
+describe('TestCloudflareCommonStack - Null props fallback', () => {
+  test('throws error when props is null and pulumi.json is missing', () => {
+    pulumi.runtime.setAllConfig({
+      'project:stage': testStackProps.stage,
+      'project:stageContextPath': testStackProps.stageContextPath,
+      'project:extraContexts': JSON.stringify(testStackProps.extraContexts),
+      'project:debug': 'true',
+    })
+    const stack = new TestExposedStack('test-stack-exposed', testStackProps)
+    expect(() => stack.callDetermineConstructProps(null)).toThrow('Context properties unavailable in path')
+  })
+})
+
 describe('TestCloudflareCommonStack - Stage context missing with debug', () => {
   test('logs debug messages when stage context file is missing with debug enabled', () => {
     const consoleDebugSpy = vi.spyOn(console, 'debug').mockImplementation(() => {})

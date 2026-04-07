@@ -225,3 +225,90 @@ describe('TestRestApiLambdaConstruct', () => {
     })
   })
 })
+
+/* Test RestApiLambda with layers and no apiRootPaths (default base path mapping) */
+const testRestApiNoPathsProps = {
+  apiSubDomain: 'api',
+  domainName: 'gradientedge.io',
+  extraContexts: [
+    'packages/aws/test/common/cdkConfig/dummy.json',
+    'packages/aws/test/common/cdkConfig/certificates.json',
+    'packages/aws/test/common/cdkConfig/lambdas.json',
+  ],
+  name: 'test-restapi-no-paths-stack',
+  region: 'eu-west-1',
+  stackName: 'test',
+  stage: 'test',
+  stageContextPath: 'packages/aws/test/common/cdkEnv',
+}
+
+class TestNoPathsCommonStack extends CommonStack {
+  declare props: TestRestApiLambdaProps
+
+  constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
+    super(parent, name, props)
+    this.construct = new TestNoPathsRestApiConstruct(this, testRestApiNoPathsProps.name, this.props)
+  }
+
+  protected determineConstructProps(props: cdk.StackProps) {
+    return {
+      ...super.determineConstructProps(props),
+      ...{
+        apiSubDomain: this.node.tryGetContext('apiSubDomain'),
+        logLevel: this.node.tryGetContext('logLevel'),
+        nodeEnv: this.node.tryGetContext('nodeEnv'),
+        restApiCertificate: this.node.tryGetContext('restApiCertificate'),
+        restApiLambda: this.node.tryGetContext('restApiLambda'),
+        timezone: this.node.tryGetContext('timezone'),
+      },
+    }
+  }
+}
+
+class TestNoPathsRestApiConstruct extends RestApiLambda {
+  declare props: TestRestApiLambdaProps
+
+  constructor(parent: Construct, id: string, props: TestRestApiLambdaProps) {
+    super(parent, id, props)
+    this.props = props
+    this.id = 'test-restapi-no-paths'
+
+    this.props.restApiSource = new lambda.AssetCode('packages/aws/test/common/nodejs/lib')
+    this.props.restApiLambdaLayerSources = [new lambda.AssetCode('packages/aws/test/common/nodejs/lib')]
+    this.props.restApi = {
+      defaultCorsPreflightOptions: {
+        allowOrigins: apig.Cors.ALL_ORIGINS,
+      },
+      deploy: true,
+      deployOptions: {
+        description: `${this.id} - ${this.props.stage} stage`,
+        stageName: this.props.stage,
+      },
+      endpointConfiguration: {
+        types: [apig.EndpointType.REGIONAL],
+      },
+      handler: this.restApiLambdaFunction,
+      proxy: true,
+      restApiName: 'test-lambda-rest-api-no-paths',
+    }
+
+    this.initResources()
+  }
+
+  protected createRestApiResources(): void {}
+}
+
+const appNoPaths = new cdk.App({ context: testRestApiNoPathsProps })
+const stackNoPaths = new TestNoPathsCommonStack(appNoPaths, 'test-restapi-no-paths-stack', testRestApiNoPathsProps)
+const templateNoPaths = Template.fromStack(stackNoPaths)
+
+describe('TestRestApiLambdaNoPathsConstruct', () => {
+  test('synthesises with default base path mapping and layers', () => {
+    templateNoPaths.resourceCountIs('AWS::ApiGateway::BasePathMapping', 1)
+    templateNoPaths.resourceCountIs('AWS::Lambda::LayerVersion', 1)
+  })
+
+  test('provisions lambda layer as expected', () => {
+    templateNoPaths.resourceCountIs('AWS::Lambda::LayerVersion', 1)
+  })
+})

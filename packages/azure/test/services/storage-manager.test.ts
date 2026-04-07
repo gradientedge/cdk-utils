@@ -254,6 +254,38 @@ describe('TestAzureStorageConstruct - Default Values', () => {
   })
 })
 
+describe('TestAzureStorageConstruct - Props Undefined Error Handling', () => {
+  test('createStorageAccount throws when props are undefined', () => {
+    expect(() => {
+      minimalStorageStack.construct.storageManager.createStorageAccount(
+        'test-sa-err',
+        minimalStorageStack.construct,
+        undefined as any
+      )
+    }).toThrow('Props undefined for test-sa-err')
+  })
+
+  test('createStorageContainer throws when props are undefined', () => {
+    expect(() => {
+      minimalStorageStack.construct.storageManager.createStorageContainer(
+        'test-sc-err',
+        minimalStorageStack.construct,
+        undefined as any
+      )
+    }).toThrow('Props undefined for test-sc-err')
+  })
+
+  test('createStorageBlob throws when props are undefined', () => {
+    expect(() => {
+      minimalStorageStack.construct.storageManager.createStorageBlob(
+        'test-sb-err',
+        minimalStorageStack.construct,
+        undefined as any
+      )
+    }).toThrow('Props undefined for test-sb-err')
+  })
+})
+
 describe('TestAzureStorageConstruct - Error Handling', () => {
   test('createManagementPolicy throws when props are undefined', () => {
     expect(() => {

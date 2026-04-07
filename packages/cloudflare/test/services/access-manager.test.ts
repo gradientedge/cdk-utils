@@ -785,4 +785,46 @@ describe('TestCloudflareAccessManager - Undefined props', () => {
       'Props undefined for test-tag-no-props'
     )
   })
+
+  test('throws error when access group props are undefined', () => {
+    const construct = stack.construct
+    expect(() => construct.accessManager.createAccessGroup('test-grp-no-props', construct, undefined as any)).toThrow(
+      'Props undefined for test-grp-no-props'
+    )
+  })
+
+  test('throws error when access identity provider props are undefined', () => {
+    const construct = stack.construct
+    expect(() =>
+      construct.accessManager.createAccessIdentityProvider('test-idp-no-props', construct, undefined as any)
+    ).toThrow('Props undefined for test-idp-no-props')
+  })
+
+  test('throws error when access mutual tls certificate props are undefined', () => {
+    const construct = stack.construct
+    expect(() =>
+      construct.accessManager.createAccessMutualTlsCertificate('test-mtls-no-props', construct, undefined as any)
+    ).toThrow('Props undefined for test-mtls-no-props')
+  })
+
+  test('throws error when access organization props are undefined', () => {
+    const construct = stack.construct
+    expect(() =>
+      construct.accessManager.createAccessOrganization('test-org-no-props', construct, undefined as any)
+    ).toThrow('Props undefined for test-org-no-props')
+  })
+
+  test('throws error when access short lived certificate props are undefined', () => {
+    const construct = stack.construct
+    expect(() =>
+      construct.accessManager.createAccessShortLivedCertificate('test-cert-no-props', construct, undefined as any)
+    ).toThrow('Props undefined for test-cert-no-props')
+  })
+
+  test('throws error when access custom page props are undefined', () => {
+    const construct = stack.construct
+    expect(() =>
+      construct.accessManager.createAccessCustomPage('test-page-no-props', construct, undefined as any)
+    ).toThrow('Props undefined for test-page-no-props')
+  })
 })

@@ -132,3 +132,72 @@ describe('TestElastiCacheConstruct', () => {
     })
   })
 })
+
+/* Test ElastiCache with tags */
+const testElastiCacheTagsProps = {
+  ...testStackProps,
+  name: 'test-elasticache-tags-stack',
+}
+
+class TestElastiCacheTagsStack extends CommonStack {
+  declare props: TestStackProps
+
+  constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
+    super(parent, name, props)
+    this.construct = new TestElastiCacheTagsConstruct(this, testElastiCacheTagsProps.name, this.props)
+  }
+
+  protected determineConstructProps(props: cdk.StackProps) {
+    return {
+      ...super.determineConstructProps(props),
+      ...{
+        testElastiCache: this.node.tryGetContext('testElastiCache'),
+        testVpc: this.node.tryGetContext('testVpc'),
+      },
+    }
+  }
+}
+
+class TestElastiCacheTagsConstruct extends CommonConstruct {
+  declare props: TestStackProps
+
+  constructor(parent: Construct, name: string, props: TestStackProps) {
+    super(parent, name, props)
+    const testVpc = this.vpcManager.createCommonVpc(`${name}-vpc`, this, this.props.testVpc)
+
+    this.elasticacheManager.createElastiCache(
+      'test-elasticache-tags',
+      this,
+      {
+        ...this.props.testElastiCache,
+        tags: [
+          { key: 'CacheTag1', value: 'CacheValue1' },
+          { key: 'CacheTag2', value: 'CacheValue2' },
+        ],
+      },
+      testVpc.privateSubnets.map(subnet => subnet.subnetId),
+      [testVpc.vpcDefaultSecurityGroup]
+    )
+  }
+}
+
+const appElastiCacheTags = new cdk.App({ context: testElastiCacheTagsProps })
+const stackElastiCacheTags = new TestElastiCacheTagsStack(
+  appElastiCacheTags,
+  'test-elasticache-tags-stack',
+  testElastiCacheTagsProps
+)
+const templateElastiCacheTags = Template.fromStack(stackElastiCacheTags)
+
+describe('TestElastiCacheWithTags', () => {
+  test('provisions elasticache with tags', () => {
+    templateElastiCacheTags.hasResourceProperties('AWS::ElastiCache::CacheCluster', {
+      ClusterName: 'cdktest-test-elasticache-cluster-test',
+      Engine: 'redis',
+      Tags: [
+        { Key: 'CacheTag1', Value: 'CacheValue1' },
+        { Key: 'CacheTag2', Value: 'CacheValue2' },
+      ],
+    })
+  })
+})

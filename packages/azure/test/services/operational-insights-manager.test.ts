@@ -166,6 +166,28 @@ class TestStackWithTable extends CommonAzureStack {
 
 const stackWithTable = new TestStackWithTable('test-table-stack', testStackProps)
 
+describe('TestOperationalInsightsConstruct - Resource Group Fallback', () => {
+  test('createWorkspace throws when resourceGroupName is missing', () => {
+    expect(() => {
+      class NoRgOiConstruct extends CommonAzureConstruct {
+        constructor(name: string, props: any) {
+          super(name, props)
+          this.operationalInsightsManager.createWorkspace('test-no-rg-ws', this, {
+            workspaceName: 'test-no-rg-workspace',
+          } as any)
+        }
+      }
+      class NoRgOiStack extends CommonAzureStack {
+        constructor(name: string, props: any) {
+          super(name, { ...testStackProps, resourceGroupName: undefined })
+          new NoRgOiConstruct(props.name, this.props)
+        }
+      }
+      new NoRgOiStack('test-no-rg-oi-stack', testStackProps)
+    }).toThrow('Resource group name undefined for test-no-rg-ws')
+  })
+})
+
 describe('TestOperationalInsightsConstruct - createTable', () => {
   test('provisions workspace table as expected', () => {
     expect(stackWithTable.construct.table).toBeDefined()

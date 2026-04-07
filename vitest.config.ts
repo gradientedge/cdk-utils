@@ -18,8 +18,8 @@ export default defineConfig({
           statements: 80,
         },
         perFile: true,
-        lines: 80,
-        statements: 80,
+        lines: 90,
+        statements: 90,
       },
       exclude: [
         '**/*.d.ts',

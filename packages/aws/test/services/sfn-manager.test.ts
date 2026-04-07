@@ -775,3 +775,148 @@ describe('TestSfnConstruct - Branch Coverage', () => {
     expect(definitionStr).toContain('"MaxAttempts":3')
   })
 })
+
+describe('TestSfnConstruct - MapState', () => {
+  test('creates a map state', () => {
+    const testStack = new TestCommonStack(app, 'test-map-state-stack', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    const mapState = testConstruct.sfnManager.createMapState('test-map', testConstruct, {
+      maxConcurrency: 5,
+    })
+
+    expect(mapState).toBeDefined()
+  })
+})
+
+describe('TestSfnConstruct - Error Handling', () => {
+  test('throws error when state machine props undefined', () => {
+    const testStack = new TestCommonStack(app, 'test-sfn-err-1', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+    const succeed = new sfn.Succeed(testConstruct, 'success')
+    const logGroup = testConstruct.logManager.createLogGroup('test-log', testConstruct, { logGroupName: 'test' })
+
+    expect(() => {
+      testConstruct.sfnManager.createStateMachine('test-sm', testConstruct, null as any, succeed, logGroup)
+    }).toThrow('State Machine props undefined for test-sm')
+  })
+
+  test('throws error when state machine name undefined', () => {
+    const testStack = new TestCommonStack(app, 'test-sfn-err-2', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+    const succeed = new sfn.Succeed(testConstruct, 'success')
+    const logGroup = testConstruct.logManager.createLogGroup('test-log', testConstruct, { logGroupName: 'test' })
+
+    expect(() => {
+      testConstruct.sfnManager.createStateMachine('test-sm', testConstruct, {} as any, succeed, logGroup)
+    }).toThrow('State Machine stateMachineName undefined for test-sm')
+  })
+
+  test('throws error when success step props undefined', () => {
+    const testStack = new TestCommonStack(app, 'test-sfn-err-3', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.sfnManager.createSuccessStep('test-step', testConstruct, null as any)
+    }).toThrow('Step props undefined for test-step')
+  })
+
+  test('throws error when fail step props undefined', () => {
+    const testStack = new TestCommonStack(app, 'test-sfn-err-4', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.sfnManager.createFailStep('test-step', testConstruct, null as any)
+    }).toThrow('Step props undefined for test-step')
+  })
+
+  test('throws error when pass step props undefined', () => {
+    const testStack = new TestCommonStack(app, 'test-sfn-err-5', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.sfnManager.createPassStep('test-step', testConstruct, null as any)
+    }).toThrow('Step props undefined for test-step')
+  })
+
+  test('throws error when parallel step props undefined', () => {
+    const testStack = new TestCommonStack(app, 'test-sfn-err-6', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.sfnManager.createParallelStep('test-step', testConstruct, null as any)
+    }).toThrow('Step props undefined for test-step')
+  })
+
+  test('throws error when choice step props undefined', () => {
+    const testStack = new TestCommonStack(app, 'test-sfn-err-7', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.sfnManager.createChoiceStep('test-step', testConstruct, null as any)
+    }).toThrow('Step props undefined for test-step')
+  })
+
+  test('throws error when dynamodb get item step props undefined', () => {
+    const testStack = new TestCommonStack(app, 'test-sfn-err-8', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.sfnManager.createDynamoDbGetItemStep('test-step', testConstruct, null as any, {} as any, {})
+    }).toThrow('Step props undefined for test-step')
+  })
+
+  test('throws error when dynamodb put item step props undefined', () => {
+    const testStack = new TestCommonStack(app, 'test-sfn-err-9', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.sfnManager.createDynamoDbPutItemStep('test-step', testConstruct, null as any, {} as any, {})
+    }).toThrow('Step props undefined for test-step')
+  })
+
+  test('throws error when dynamodb delete item step props undefined', () => {
+    const testStack = new TestCommonStack(app, 'test-sfn-err-10', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.sfnManager.createDynamoDbDeleteItemStep('test-step', testConstruct, null as any, {} as any, {})
+    }).toThrow('Step props undefined for test-step')
+  })
+
+  test('throws error when sqs send message step props undefined', () => {
+    const testStack = new TestCommonStack(app, 'test-sfn-err-11', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.sfnManager.createSendSqsMessageStep('test-step', testConstruct, null as any, {} as any)
+    }).toThrow('Step props undefined for test-step')
+  })
+
+  test('throws error when lambda step props undefined', () => {
+    const testStack = new TestCommonStack(app, 'test-sfn-err-12', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.sfnManager.createLambdaStep('test-step', testConstruct, null as any, {} as any)
+    }).toThrow('Step props undefined for test-step')
+  })
+
+  test('throws error when api step props undefined', () => {
+    const testStack = new TestCommonStack(app, 'test-sfn-err-13', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.sfnManager.createApiStep('test-step', testConstruct, null as any, {} as any)
+    }).toThrow('Step props undefined for test-step')
+  })
+
+  test('throws error when skippable lambda step props undefined', () => {
+    const testStack = new TestCommonStack(app, 'test-sfn-err-14', testStackProps)
+    const testConstruct = new CommonConstruct(testStack, 'test-construct', testStackProps as any)
+
+    expect(() => {
+      testConstruct.sfnManager.createSkippableLambdaStep('test-step', testConstruct, null as any, {} as any)
+    }).toThrow('Step props undefined for test-step')
+  })
+})

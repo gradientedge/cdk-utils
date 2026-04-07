@@ -235,6 +235,43 @@ describe('TestAzureEventgridConstruct', () => {
   })
 })
 
+/* --- Tests for props undefined error throws --- */
+
+describe('TestAzureEventgridConstruct - Props Undefined', () => {
+  test('createEventgridSubscription throws when props are undefined', () => {
+    expect(() => {
+      stack.construct.eventgridManager.createEventgridSubscription('test-sub-err', stack.construct, undefined as any)
+    }).toThrow('Props undefined for test-sub-err')
+  })
+
+  test('createEventgridSystemTopic throws when props are undefined', () => {
+    expect(() => {
+      stack.construct.eventgridManager.createEventgridSystemTopic(
+        'test-sys-topic-err',
+        stack.construct,
+        undefined as any
+      )
+    }).toThrow('Props undefined for test-sys-topic-err')
+  })
+
+  test('createEventgridSystemTopicEventSubscription throws when props are undefined', () => {
+    expect(() => {
+      stack.construct.eventgridManager.createEventgridSystemTopicEventSubscription(
+        'test-sys-sub-err',
+        stack.construct,
+        undefined as any,
+        { name: 'test-topic' } as any
+      )
+    }).toThrow('Props undefined for test-sys-sub-err')
+  })
+
+  test('resolveEventgridTopic throws when props are undefined', () => {
+    expect(() => {
+      stack.construct.eventgridManager.resolveEventgridTopic('test-resolve-err', stack.construct, undefined as any)
+    }).toThrow('Props undefined for test-resolve-err')
+  })
+})
+
 /* --- Tests for default value fallback branches --- */
 class TestMinimalEventgridConstruct extends CommonAzureConstruct {
   declare props: TestAzureStackProps

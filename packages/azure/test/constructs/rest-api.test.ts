@@ -437,6 +437,62 @@ describe('TestAzureRestApiNoInsightsConstruct', () => {
   })
 })
 
+/* --- Test for useExistingApiManagement early return branches --- */
+
+class TestRestApiExistingFullConstruct extends AzureRestApi {
+  declare props: AzureRestApiProps & TestAzureStackProps
+
+  constructor(name: string, props: AzureRestApiProps & TestAzureStackProps) {
+    super(name, props)
+    this.props = props
+    this.api = {} as AzureApi
+    this.initResources()
+  }
+
+  public initResources() {
+    this.createResourceGroup()
+    this.resolveApiKeyVault()
+    this.resolveCommonLogAnalyticsWorkspace()
+    this.resolveApplicationInsights()
+    this.createApiManagement()
+    // These should early-return because useExistingApiManagement is true
+    this.createNamespaceSecretRole()
+    this.createNamespaceSecret()
+    this.createSubscriptionKeySecret()
+    this.createApiManagementLogger()
+    this.createApiDiagnostic()
+    this.createDiagnosticLog()
+  }
+}
+
+class TestCommonStackExistingFull extends CommonAzureStack {
+  declare props: CommonAzureStackProps
+  declare construct: TestRestApiExistingFullConstruct
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.construct = new TestRestApiExistingFullConstruct(
+      `${props.name}-existing-full`,
+      this.props as AzureRestApiProps & TestAzureStackProps
+    )
+  }
+}
+
+pulumi.runtime.setConfig('project:extraContexts', JSON.stringify(testStackProps.extraContexts))
+const stackExistingFull = new TestCommonStackExistingFull('test-existing-full-stack', testStackProps)
+
+describe('TestAzureRestApiExistingFullConstruct', () => {
+  test('early returns from methods when useExistingApiManagement is true', () => {
+    expect(stackExistingFull).toBeDefined()
+    expect(stackExistingFull.construct).toBeDefined()
+    expect(stackExistingFull.construct.api).toBeDefined()
+    // Verify methods early returned - no namedValueRoleAssignment, namedValueSecret, or logger should be set
+    expect(stackExistingFull.construct.api.namedValueRoleAssignment).toBeUndefined()
+    expect(stackExistingFull.construct.api.namedValueSecret).toBeUndefined()
+    expect(stackExistingFull.construct.api.logger).toBeUndefined()
+  })
+})
+
 /* --- Test for full initResources flow covering lines 42-52 --- */
 
 class TestRestApiFullConstruct extends AzureRestApi {

@@ -366,6 +366,44 @@ class TestWithZoneIdConstruct extends CommonCloudflareConstruct {
   }
 }
 
+describe('TestCloudflareApiShieldManager - Undefined props', () => {
+  test('throws error when api shield schema props are undefined', () => {
+    const construct = stack.construct
+    expect(() =>
+      construct.apiShieldManager.createApiShieldSchema('test-schema-no-props', construct, undefined as any)
+    ).toThrow('Props undefined for test-schema-no-props')
+  })
+
+  test('throws error when api shield schema validation settings props are undefined', () => {
+    const construct = stack.construct
+    expect(() =>
+      construct.apiShieldManager.createApiShieldSchemaValidationSettings(
+        'test-val-no-props',
+        construct,
+        undefined as any
+      )
+    ).toThrow('Props undefined for test-val-no-props')
+  })
+
+  test('throws error when api shield operation props are undefined', () => {
+    const construct = stack.construct
+    expect(() =>
+      construct.apiShieldManager.createApiShieldOperation('test-op-no-props', construct, undefined as any)
+    ).toThrow('Props undefined for test-op-no-props')
+  })
+
+  test('throws error when api shield operation schema validation settings props are undefined', () => {
+    const construct = stack.construct
+    expect(() =>
+      construct.apiShieldManager.createApiShieldOperationSchemaValidationSettings(
+        'test-op-val-no-props',
+        construct,
+        undefined as any
+      )
+    ).toThrow('Props undefined for test-op-val-no-props')
+  })
+})
+
 describe('TestCloudflareApiShieldManager - With explicit zoneId', () => {
   test('provisions api shield resources with explicit zoneId', () => {
     const zoneIdStack = new TestWithZoneIdCloudflareStack('test-zoneid-stack', testStackProps)

@@ -154,3 +154,62 @@ describe('TestApplicationConfiguration', () => {
     })
   })
 })
+
+/* Test with existing deployment strategy ARN */
+const testAppConfigWithArnProps = {
+  domainName: 'gradientedge.io',
+  extraContexts: ['packages/aws/test/common/cdkConfig/configs.json'],
+  name: 'test-appconfig-arn-stack',
+  region: 'eu-west-1',
+  stackName: 'test',
+  stage: 'test',
+  stageContextPath: 'packages/aws/test/common/cdkEnv',
+}
+
+class TestArnCommonStack extends CommonStack {
+  declare props: TestRestApiLambdaProps
+
+  constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
+    super(parent, name, props)
+    this.construct = new TestArnApplicationConfiguration(this, testAppConfigWithArnProps.name, this.props)
+  }
+
+  protected determineConstructProps(props: cdk.StackProps) {
+    const appConfig = this.node.tryGetContext('app')
+    return {
+      ...super.determineConstructProps(props),
+      ...{
+        appConfig: {
+          ...appConfig,
+          deploymentStrategy: {
+            ...appConfig.deploymentStrategy,
+            deploymentStrategyArn: 'arn:aws:appconfig:eu-west-1:123456789:deploymentstrategy/test-strategy',
+          },
+        },
+        appConfigContent: { test: 'value' },
+      },
+    }
+  }
+}
+
+class TestArnApplicationConfiguration extends ApplicationConfiguration {
+  constructor(parent: Construct, id: string, props: TestRestApiLambdaProps) {
+    super(parent, id, props)
+    this.props = props
+    this.id = 'test-appconfig-arn'
+    this.initResources()
+  }
+}
+
+const appArn = new cdk.App({ context: testAppConfigWithArnProps })
+const stackArn = new TestArnCommonStack(appArn, 'test-appconfig-arn-stack', testAppConfigWithArnProps)
+const templateArn = Template.fromStack(stackArn)
+
+describe('TestApplicationConfigurationWithExistingArn', () => {
+  test('uses existing deployment strategy ARN', () => {
+    templateArn.resourceCountIs('AWS::AppConfig::Application', 1)
+    templateArn.resourceCountIs('AWS::AppConfig::Deployment', 1)
+    /* Should not create a new deployment strategy since ARN is provided */
+    templateArn.resourceCountIs('AWS::AppConfig::DeploymentStrategy', 0)
+  })
+})

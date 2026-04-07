@@ -632,3 +632,66 @@ describe('TestCloudWatchConstruct - Error Handling', () => {
     }).toThrow('Widget props undefined for test-cache-widget-no-props')
   })
 })
+
+/* Test dashboard with START_TODAY and END_TODAY time ranges */
+const testDashboardTimeRangeProps = {
+  ...testStackProps,
+  name: 'test-cw-time-range-stack',
+}
+
+class TestTimeRangeStack extends CommonStack {
+  declare props: TestStackProps
+
+  constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
+    super(parent, name, props)
+    this.construct = new TestTimeRangeConstruct(this, testDashboardTimeRangeProps.name, this.props)
+  }
+
+  protected determineConstructProps(props: cdk.StackProps) {
+    return {
+      ...super.determineConstructProps(props),
+      ...{
+        testDashboard: this.node.tryGetContext('testDashboard'),
+        testLogGroup: this.node.tryGetContext('testLogGroup'),
+      },
+    }
+  }
+}
+
+class TestTimeRangeConstruct extends CommonConstruct {
+  declare props: TestStackProps
+
+  constructor(parent: Construct, name: string, props: TestStackProps) {
+    super(parent, name, props)
+
+    /* create alarm status widget via createWidget to hit determineAlarms */
+    const alarmStatusWidget = this.cloudWatchManager.createWidget('test-alarm-status-via-create', this, {
+      type: 'AlarmStatus',
+      title: 'Alarms via createWidget',
+      width: 6,
+      height: 6,
+      alarmProps: [{ alarmName: 'test-alarm-via-widget' }],
+    } as any)
+
+    this.cloudWatchManager.createDashboard(
+      'test-dashboard-time-range',
+      this,
+      {
+        ...this.props.testDashboard,
+        start: 'START_TODAY',
+        end: 'END_TODAY',
+      },
+      [[alarmStatusWidget]]
+    )
+  }
+}
+
+const appTimeRange = new cdk.App({ context: testDashboardTimeRangeProps })
+const stackTimeRange = new TestTimeRangeStack(appTimeRange, 'test-cw-time-range-stack', testDashboardTimeRangeProps)
+const templateTimeRange = Template.fromStack(stackTimeRange)
+
+describe('TestCloudWatchTimeRange', () => {
+  test('provisions dashboard with time ranges', () => {
+    templateTimeRange.resourceCountIs('AWS::CloudWatch::Dashboard', 1)
+  })
+})
