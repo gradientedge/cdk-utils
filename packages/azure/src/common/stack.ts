@@ -54,8 +54,8 @@ export class CommonAzureStack extends ComponentResource {
     return {
       ...props,
       extraContexts: this.config.getObject('extraContexts'),
-      stage: this.config.require('stage'),
-      stageContextPath: this.config.require('stageContextPath'),
+      stage: this.config.get('stage'),
+      stageContextPath: this.config.get('stageContextPath'),
       ...this.determineExtraContexts(),
       ...this.determineStageContexts(),
     }
@@ -102,11 +102,11 @@ export class CommonAzureStack extends ComponentResource {
    */
   protected determineStageContexts() {
     const debug = this.config.getBoolean('debug')
-    const stage = this.config.require('stage')
+    const stage = this.config.get('stage')
     const stageContextPath = this.config.get('stageContextPath')
     const stageContextFilePath = path.join(appRoot.path, stageContextPath ?? 'env', `${stage}.json`)
 
-    if (isDevStage(stage)) {
+    if (stage && isDevStage(stage)) {
       if (debug) console.debug(`Development stage. Using default stage context properties`)
     }
 
