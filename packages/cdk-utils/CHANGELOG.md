@@ -1,5 +1,16 @@
 # @gradientedge/cdk-utils
 
+## 11.2.0
+
+### Minor Changes
+
+- [#982](https://github.com/gradientedge/cdk-utils/pull/982) [`f41c410`](https://github.com/gradientedge/cdk-utils/commit/f41c4102a57fc5d2752d1068db5eaa2521f53e34) Thanks [@despock](https://github.com/despock)! - adding stack resolver to common construct
+
+### Patch Changes
+
+- Updated dependencies [[`f41c410`](https://github.com/gradientedge/cdk-utils/commit/f41c4102a57fc5d2752d1068db5eaa2521f53e34)]:
+  - @gradientedge/cdk-utils-cloudflare@2.2.0
+
 ## 11.1.0
 
 ### Minor Changes
