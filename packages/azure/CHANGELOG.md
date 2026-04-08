@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.4.0
+
+### Minor Changes
+
+- [`ab0cfe7`](https://github.com/gradientedge/cdk-utils/commit/ab0cfe72c2a3e1127c9f90a5f04ba689c788f24c) Thanks [@despock](https://github.com/despock)! - update to component resource prefixes
+
 ## 2.3.0
 
 ### Minor Changes
