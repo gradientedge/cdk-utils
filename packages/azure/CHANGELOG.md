@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.5.0
+
+### Minor Changes
+
+- [`114da3a`](https://github.com/gradientedge/cdk-utils/commit/114da3adb6576d57035077c7b9d9a463e6fb9887) Thanks [@despock](https://github.com/despock)! - making common workspace optional
+
 ## 2.4.0
 
 ### Minor Changes
