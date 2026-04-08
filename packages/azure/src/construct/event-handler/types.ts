@@ -1,8 +1,8 @@
 import { EventSubscription } from '@pulumi/azure-native/eventgrid/index.js'
 import { Namespace, Queue } from '@pulumi/azure-native/servicebus/index.js'
 import { BlobContainer, StorageAccount } from '@pulumi/azure-native/storage/index.js'
-
 import { Input } from '@pulumi/pulumi'
+
 import {
   DefenderForStorageProps,
   EventgridEventSubscriptionProps,
