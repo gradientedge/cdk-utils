@@ -89,7 +89,7 @@ export class AzureAuthorisationManager {
   public grantRoleAssignmentToEventgridTopic(
     id: string,
     scope: CommonAzureConstruct,
-    topicName: string,
+    topicName: Input<string>,
     resourceGroupName: Input<string>,
     principalId: Input<string>,
     roleDefinitionId: RoleDefinitionId,

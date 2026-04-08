@@ -1,4 +1,5 @@
 import { Topic } from '@pulumi/azure-native/eventgrid/index.js'
+import { Namespace, Queue } from '@pulumi/azure-native/servicebus/index.js'
 import * as pulumi from '@pulumi/pulumi'
 import {
   AzureEventHandler,
@@ -281,6 +282,19 @@ pulumi.runtime.setMocks({
         endpoint: 'https://existing-topic.endpoint.com',
       }
     }
+    if (args.token === 'azure-native:servicebus:getNamespace') {
+      return {
+        id: 'existing-namespace-id',
+        name: args.inputs.namespaceName,
+        location: 'eastus',
+      }
+    }
+    if (args.token === 'azure-native:servicebus:getQueue') {
+      return {
+        id: 'existing-queue-id',
+        name: args.inputs.queueName,
+      }
+    }
     if (args.token === 'azure-native:storage:listStorageAccountKeys') {
       return { keys: [{ value: 'mock-storage-key' }] }
     }
@@ -370,7 +384,7 @@ describe('TestAzureEventHandlerConstruct', () => {
     pulumi
       .all([
         stack.construct.serviceBus.namespace.id,
-        stack.construct.serviceBus.namespace.urn,
+        (stack.construct.serviceBus.namespace as Namespace).urn,
         stack.construct.serviceBus.namespace.name,
         stack.construct.serviceBus.namespace.tags,
       ])
@@ -390,7 +404,7 @@ describe('TestAzureEventHandlerConstruct', () => {
     pulumi
       .all([
         stack.construct.serviceBus.queue.id,
-        stack.construct.serviceBus.queue.urn,
+        (stack.construct.serviceBus.queue as Queue).urn,
         stack.construct.serviceBus.queue.name,
       ])
       .apply(([id, urn, name]) => {
@@ -518,5 +532,119 @@ describe('TestAzureEventHandlerFullConstruct', () => {
     expect(stackFull.construct.serviceBus).toBeDefined()
     expect(stackFull.construct.eventGridTopic).toBeDefined()
     expect(stackFull.construct.applicationInsights).toBeDefined()
+  })
+})
+
+/* --- Tests for useExisting service bus flow --- */
+
+const testStackUseExistingProps: TestAzureStackProps = {
+  domainName: 'gradientedge.io',
+  extraContexts: [
+    'packages/azure/test/common/config/dummy.json',
+    'packages/azure/test/common/config/event-handler-use-existing.json',
+  ],
+  location: AzureLocation.EastUS,
+  name: 'test-common-stack',
+  resourceGroupName: 'test-rg',
+  skipStageForARecords: false,
+  stage: 'dev',
+  stageContextPath: 'packages/azure/test/common/env',
+} as TestAzureStackProps
+
+class TestEventHandlerUseExistingConstruct extends AzureEventHandler {
+  declare props: AzureEventHandlerProps & TestAzureStackProps
+
+  constructor(name: string, props: AzureEventHandlerProps & TestAzureStackProps) {
+    super(name, props)
+    this.props = props
+    this.eventGridEventSubscription = {} as EventHandlerEventGridSubscription
+    this.serviceBus = {} as EventHandlerServiceBus
+    this.initResources()
+  }
+
+  public initResources() {
+    this.createResourceGroup()
+    this.resolveCommonLogAnalyticsWorkspace()
+    this.createEventGridSubscriptionDlqStorageAccount()
+    this.createEventGridSubscriptionDlqStorageContainer()
+    this.createServiceBusNamespace()
+    this.createServiceBusQueue()
+    this.createEventGrid()
+    this.createEventGridEventSubscription()
+    this.createServiceBusDiagnosticLog()
+  }
+}
+
+class TestCommonStackUseExisting extends CommonAzureStack {
+  declare props: AzureEventHandlerProps & TestAzureStackProps
+  declare construct: TestEventHandlerUseExistingConstruct
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackUseExistingProps)
+    this.construct = new TestEventHandlerUseExistingConstruct(`${props.name}-use-existing`, this.props)
+  }
+}
+
+pulumi.runtime.setConfig('project:extraContexts', JSON.stringify(testStackUseExistingProps.extraContexts))
+const stackUseExisting = new TestCommonStackUseExisting('test-use-existing-stack', testStackUseExistingProps)
+
+describe('TestAzureEventHandlerUseExistingConstruct', () => {
+  test('synthesises with useExisting service bus as expected', () => {
+    expect(stackUseExisting).toBeDefined()
+    expect(stackUseExisting.construct).toBeDefined()
+    expect(stackUseExisting.construct.props.serviceBus.useExisting).toEqual(true)
+    expect(stackUseExisting.construct.serviceBus).toBeDefined()
+    expect(stackUseExisting.construct.eventGridTopic).toBeDefined()
+  })
+
+  test('skips dlq storage account creation when useExisting is true', () => {
+    expect(stackUseExisting.construct.eventGridEventSubscription.dlqStorageAccount).toBeUndefined()
+  })
+
+  test('skips dlq storage container creation when useExisting is true', () => {
+    expect(stackUseExisting.construct.eventGridEventSubscription.dlqStorageContainer).toBeUndefined()
+  })
+
+  test('skips event grid event subscription creation when useExisting is true', () => {
+    expect(stackUseExisting.construct.eventGridEventSubscription.eventSubscription).toBeUndefined()
+  })
+
+  test('resolves existing service bus namespace via getNamespaceOutput', () => {
+    pulumi
+      .all([stackUseExisting.construct.serviceBus.namespace.id, stackUseExisting.construct.serviceBus.namespace.name])
+      .apply(([id, name]) => {
+        expect(id).toEqual('existing-namespace-id')
+        expect(name).toEqual('test-existing-sb-ns')
+      })
+  })
+
+  test('resolves existing service bus queue via getQueueOutput', () => {
+    pulumi
+      .all([stackUseExisting.construct.serviceBus.queue.id, stackUseExisting.construct.serviceBus.queue.name])
+      .apply(([id, name]) => {
+        expect(id).toEqual('existing-queue-id')
+        expect(name).toEqual('test-existing-sb-queue')
+      })
+  })
+})
+
+/* --- Tests for createFunctionAppSiteConfig --- */
+
+describe('TestAzureEventHandlerFullConstruct', () => {
+  test('createFunctionAppSiteConfig sets EVENT_INGEST_QUEUE_NAME environment variable', () => {
+    pulumi.all([stackFull.construct.serviceBus.queue.name]).apply(([queueName]) => {
+      expect(stackFull.construct.appEnvironmentVariables).toBeDefined()
+      expect(stackFull.construct.appEnvironmentVariables.EVENT_INGEST_QUEUE_NAME).toEqual(queueName)
+    })
+  })
+
+  test('createFunctionAppSiteConfig sets EVENT_INGEST_SERVICE_BUS connection string', () => {
+    expect(stackFull.construct.appConnectionStrings).toBeDefined()
+    expect(stackFull.construct.appConnectionStrings.length).toBeGreaterThanOrEqual(1)
+    const serviceBusConn = stackFull.construct.appConnectionStrings.find(
+      (cs: { name: string }) => cs.name === 'EVENT_INGEST_SERVICE_BUS'
+    )
+    expect(serviceBusConn).toBeDefined()
+    expect(serviceBusConn.type).toEqual('ServiceBus')
   })
 })
