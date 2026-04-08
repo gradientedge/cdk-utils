@@ -81,7 +81,7 @@ export class AzureEventHandler extends AzureFunctionApp {
       this,
       {
         ...this.props.eventGridSubscription.dlqStorageContainer,
-        accountName: this.eventGridEventSubscription.dlqStorageAccount.name,
+        accountName: this.eventGridEventSubscription.dlqStorageAccount!.name,
         containerName: 'eventgrid-subscription-dlq-container',
         resourceGroupName: this.resourceGroup.name,
       }
@@ -201,9 +201,9 @@ export class AzureEventHandler extends AzureFunctionApp {
           resourceId: this.serviceBus.queue.id,
         },
         deadLetterDestination: {
-          blobContainerName: this.eventGridEventSubscription.dlqStorageContainer.name,
+          blobContainerName: this.eventGridEventSubscription.dlqStorageContainer!.name,
           endpointType: 'StorageBlob',
-          resourceId: this.eventGridEventSubscription.dlqStorageAccount.id,
+          resourceId: this.eventGridEventSubscription.dlqStorageAccount!.id,
         },
       },
       { dependsOn: [this.eventGridTopic as unknown as Resource] }
@@ -272,5 +272,15 @@ export class AzureEventHandler extends AzureFunctionApp {
         type: 'ServiceBus',
       },
     ]
+  }
+
+  protected dashboardVariables(): Record<string, any> {
+    const variables = super.dashboardVariables()
+    return {
+      ...variables,
+      servicebusNamespaceName: this.serviceBus.namespace.name,
+      eventHandlerEventgridTopic: this.eventGridTopic.name,
+      eventGridEventSubscriptionName: this.eventGridEventSubscription.eventSubscription?.name,
+    }
   }
 }
