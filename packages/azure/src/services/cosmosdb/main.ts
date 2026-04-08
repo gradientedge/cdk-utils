@@ -200,7 +200,7 @@ export class AzureCosmosDbManager {
   public resolveSqlRoleDefinition(
     scope: CommonAzureConstruct,
     accountName: Input<string>,
-    resourceGroupName: string,
+    resourceGroupName: Input<string>,
     roleDefinitionId: string,
     resourceOptions?: ResourceOptions
   ) {

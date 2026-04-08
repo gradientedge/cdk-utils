@@ -12,8 +12,8 @@ import {
 
 /** @category Interface */
 export interface ApiAuthKeyVault {
-  name: string
-  resourceGroupName: string
+  name: Input<string>
+  resourceGroupName: Input<string>
 }
 
 /** @category Interface */

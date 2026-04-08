@@ -12,10 +12,11 @@ import {
   NamedValueArgs,
   SubscriptionArgs,
 } from '@pulumi/azure-native/apimanagement/index.js'
+import { Input } from '@pulumi/pulumi'
 
 /** @category Interface */
 export interface ApiManagementProps extends ApiManagementServiceArgs {
-  certificateKeyVaultId?: string
+  certificateKeyVaultId?: Input<string>
   apiStackName?: string
   useExistingApiManagement?: boolean
 }
