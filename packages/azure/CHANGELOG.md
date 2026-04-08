@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.7.0
+
+### Minor Changes
+
+- [`7305763`](https://github.com/gradientedge/cdk-utils/commit/7305763881de7ede02fc973028f36d5a89c54b3d) Thanks [@despock](https://github.com/despock)! - resolving invalid stackName references
+
 ## 2.6.0
 
 ### Minor Changes
