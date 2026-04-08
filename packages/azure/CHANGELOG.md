@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.9.0
+
+### Minor Changes
+
+- [#992](https://github.com/gradientedge/cdk-utils/pull/992) [`a136ae6`](https://github.com/gradientedge/cdk-utils/commit/a136ae6bd388b3b77e8d95d9b064d7a574b62316) Thanks [@despock](https://github.com/despock)! - adding support for event handler dashboard variables
+
 ## 2.8.0
 
 ### Minor Changes
