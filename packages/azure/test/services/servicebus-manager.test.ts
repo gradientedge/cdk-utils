@@ -182,7 +182,7 @@ describe('TestAzureServicebusConstruct', () => {
       .apply(([id, urn, name, location, sku, identity, tags]) => {
         expect(id).toEqual('test-servicebus-namespace-dev-sn-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:servicebus:Namespace::test-servicebus-namespace-dev-sn'
+          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:servicebus:Namespace::test-servicebus-namespace-dev-sn'
         )
         expect(name).toEqual('test-servicebus-namespace-dev')
         expect(location).toEqual('eastus')
@@ -204,7 +204,7 @@ describe('TestAzureServicebusConstruct', () => {
       .apply(([id, urn, name]) => {
         expect(id).toEqual('test-servicebus-topic-dev-st-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:servicebus:Topic::test-servicebus-topic-dev-st'
+          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:servicebus:Topic::test-servicebus-topic-dev-st'
         )
         expect(name).toEqual('test-servicebus-topic-dev')
       })
@@ -224,7 +224,7 @@ describe('TestAzureServicebusConstruct', () => {
       .apply(([id, urn, name, requiresDuplicateDetection, deadLetteringOnMessageExpiration]) => {
         expect(id).toEqual('test-servicebus-queue-dev-sq-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:servicebus:Queue::test-servicebus-queue-dev-sq'
+          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:servicebus:Queue::test-servicebus-queue-dev-sq'
         )
         expect(name).toEqual('test-servicebus-queue-dev')
         expect(requiresDuplicateDetection).toEqual(true)
@@ -245,7 +245,7 @@ describe('TestAzureServicebusConstruct', () => {
       .apply(([id, urn, name, maxDeliveryCount]) => {
         expect(id).toEqual('test-servicebus-subscription-dev-ss-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:servicebus:Subscription::test-servicebus-subscription-dev-ss'
+          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:servicebus:Subscription::test-servicebus-subscription-dev-ss'
         )
         expect(name).toEqual('test-servicebus-subscription-dev')
         expect(maxDeliveryCount).toEqual(1)

@@ -154,7 +154,7 @@ describe('TestAzureDnsConstruct', () => {
       .apply(([id, urn, name, location, tags]) => {
         expect(id).toEqual('test-dns-zone-dev-dz-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:dns:Zone::test-dns-zone-dev-dz'
+          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:dns:Zone::test-dns-zone-dev-dz'
         )
         expect(name).toEqual('test-dns-zone-dev')
         expect(location).toEqual('global')
@@ -176,7 +176,7 @@ describe('TestAzureDnsConstruct', () => {
       .apply(([id, urn, name, aRecords, ttl]) => {
         expect(id).toEqual('test-dns-a-record-dev-da-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:dns:RecordSet::test-dns-a-record-dev-da'
+          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:dns:RecordSet::test-dns-a-record-dev-da'
         )
         expect(name).toEqual('test-a-record')
         expect(aRecords).toEqual([{ ipv4Address: '1.2.3.4' }])
@@ -198,7 +198,7 @@ describe('TestAzureDnsConstruct', () => {
       .apply(([id, urn, name, cnameRecord, ttl]) => {
         expect(id).toEqual('test-dns-cname-record-dev-dc-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:dns:RecordSet::test-dns-cname-record-dev-dc'
+          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:dns:RecordSet::test-dns-cname-record-dev-dc'
         )
         expect(name).toEqual('test-cname-record')
         expect(cnameRecord).toEqual({ cname: 'test.example.com' })
@@ -220,7 +220,7 @@ describe('TestAzureDnsConstruct', () => {
       .apply(([id, urn, name, txtRecords, ttl]) => {
         expect(id).toEqual('test-dns-txt-record-dev-dt-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:dns:RecordSet::test-dns-txt-record-dev-dt'
+          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:dns:RecordSet::test-dns-txt-record-dev-dt'
         )
         expect(name).toEqual('test-txt-record')
         expect(txtRecords).toEqual([{ value: ['test-record'] }])

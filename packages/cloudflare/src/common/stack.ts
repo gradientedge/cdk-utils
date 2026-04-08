@@ -28,7 +28,7 @@ export class CommonCloudflareStack extends ComponentResource {
   config: Config
 
   constructor(name: string, props: CommonCloudflareStackProps, options?: ComponentResourceOptions) {
-    super(`custom:cloudflare:Stack:${name}`, name, props, options)
+    super(`stack:${name}`, name, props, options)
 
     /* initialise config */
     this.config = new Config()

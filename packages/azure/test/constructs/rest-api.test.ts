@@ -295,7 +295,7 @@ describe('TestAzureRestApiConstruct', () => {
       .apply(([id, urn, name, tags]) => {
         expect(id).toEqual('test-common-stack-rg-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:resources:ResourceGroup::test-common-stack-rg'
+          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:resources:ResourceGroup::test-common-stack-rg'
         )
         expect(name).toBeDefined()
         expect(tags?.environment).toEqual('dev')

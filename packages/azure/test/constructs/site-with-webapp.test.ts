@@ -160,7 +160,7 @@ describe('TestSiteWithWebAppConstruct', () => {
       .apply(([id, urn, name, tags]) => {
         expect(id).toEqual('test-common-stack-app-service-plan-as-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:web:AppServicePlan::test-common-stack-app-service-plan-as'
+          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:web:AppServicePlan::test-common-stack-app-service-plan-as'
         )
         expect(name).toEqual('test-site-plan-dev')
         expect(tags?.environment).toEqual('dev')
@@ -178,7 +178,7 @@ describe('TestSiteWithWebAppConstruct', () => {
       .apply(([id, urn, name, tags]) => {
         expect(id).toEqual('test-common-stack-storage-account-sa-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:storage:StorageAccount::test-common-stack-storage-account-sa'
+          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:storage:StorageAccount::test-common-stack-storage-account-sa'
         )
         expect(name).toBeDefined()
         expect(tags?.environment).toEqual('dev')
@@ -195,7 +195,7 @@ describe('TestSiteWithWebAppConstruct', () => {
       .apply(([id, urn, name]) => {
         expect(id).toEqual('test-common-stack-storage-deployment-container-sc-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:storage:BlobContainer::test-common-stack-storage-deployment-container-sc'
+          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:storage:BlobContainer::test-common-stack-storage-deployment-container-sc'
         )
         expect(name).toBeDefined()
       })

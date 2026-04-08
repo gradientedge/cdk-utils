@@ -101,7 +101,7 @@ describe('TestCloudflareRuleSetManager', () => {
       .apply(([id, urn, name, account]) => {
         expect(id).toEqual('test-zone-dev-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::cloudflare:test-common-stack$cloudflare:index/zone:Zone::test-zone-dev'
+          'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zone:Zone::test-zone-dev'
         )
         expect(name).toEqual('gradientedge.io')
         expect(account.id).toEqual('test-account')
@@ -122,7 +122,7 @@ describe('TestCloudflareRuleSetManager', () => {
       .apply(([id, urn, name, rules]) => {
         expect(id).toEqual('test-rule-set-dev-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::cloudflare:test-common-stack$cloudflare:index/ruleset:Ruleset::test-rule-set-dev'
+          'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/ruleset:Ruleset::test-rule-set-dev'
         )
         expect(name).toEqual('testRuleSet')
         expect(rules).toEqual({

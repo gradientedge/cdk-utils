@@ -120,7 +120,7 @@ describe('TestOperationalInsightsConstruct', () => {
       .apply(([id, urn, name, location, tags]) => {
         expect(id).toEqual('test-workspace-dev-lw-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:operationalinsights:Workspace::test-workspace-dev-lw'
+          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:operationalinsights:Workspace::test-workspace-dev-lw'
         )
         expect(name).toEqual('test-workspace-dev')
         expect(location).toEqual('eastus')

@@ -197,7 +197,7 @@ describe('TestAzureRedisConstruct', () => {
       .apply(([id, urn, name, location, sku, tlsVersion, nonSslPort, tags]) => {
         expect(id).toEqual('test-redis-cache-dev-rc-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:redis:Redis::test-redis-cache-dev-rc'
+          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:redis:Redis::test-redis-cache-dev-rc'
         )
         expect(name).toEqual('test-redis-cache-dev')
         expect(location).toEqual('eastus')

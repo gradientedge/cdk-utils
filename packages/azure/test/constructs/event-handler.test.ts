@@ -339,7 +339,7 @@ describe('TestAzureEventHandlerConstruct', () => {
       .apply(([id, urn, name, tags]) => {
         expect(id).toEqual('test-common-stack-eventgrid-subscription-dlq-storage-account-sa-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:storage:StorageAccount::test-common-stack-eventgrid-subscription-dlq-storage-account-sa'
+          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:storage:StorageAccount::test-common-stack-eventgrid-subscription-dlq-storage-account-sa'
         )
         expect(name).toBeDefined()
         expect(tags?.environment).toEqual('dev')
@@ -358,7 +358,7 @@ describe('TestAzureEventHandlerConstruct', () => {
       .apply(([id, urn, name]) => {
         expect(id).toEqual('test-common-stack-eventgrid-subscription-dlq-container-sc-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:storage:BlobContainer::test-common-stack-eventgrid-subscription-dlq-container-sc'
+          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:storage:BlobContainer::test-common-stack-eventgrid-subscription-dlq-container-sc'
         )
         expect(name).toBeDefined()
       })
@@ -377,7 +377,7 @@ describe('TestAzureEventHandlerConstruct', () => {
       .apply(([id, urn, name, tags]) => {
         expect(id).toEqual('test-common-stack-sn-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:servicebus:Namespace::test-common-stack-sn'
+          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:servicebus:Namespace::test-common-stack-sn'
         )
         expect(name).toEqual('test-event-handler-sb-ns-dev')
         expect(tags?.environment).toEqual('dev')
@@ -396,7 +396,7 @@ describe('TestAzureEventHandlerConstruct', () => {
       .apply(([id, urn, name]) => {
         expect(id).toEqual('test-common-stack-sq-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:servicebus:Queue::test-common-stack-sq'
+          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:servicebus:Queue::test-common-stack-sq'
         )
         expect(name).toEqual('test-event-handler-sb-queue-dev')
       })
@@ -411,7 +411,7 @@ describe('TestAzureEventHandlerConstruct', () => {
       .apply(([id, urn, name, location, tags]) => {
         expect(id).toEqual('test-common-stack-et-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:eventgrid:Topic::test-common-stack-et'
+          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:eventgrid:Topic::test-common-stack-et'
         )
         expect(name).toEqual('test-event-handler-topic-dev')
         expect(location).toEqual('eastus')
@@ -431,7 +431,7 @@ describe('TestAzureEventHandlerConstruct', () => {
       .apply(([id, urn, name]) => {
         expect(id).toEqual('test-common-stack-es-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:eventgrid:EventSubscription::test-common-stack-es'
+          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:eventgrid:EventSubscription::test-common-stack-es'
         )
         expect(name).toEqual('test-event-handler-subscription-dev')
       })

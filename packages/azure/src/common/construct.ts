@@ -74,7 +74,7 @@ export class CommonAzureConstruct extends ComponentResource {
   commonLogAnalyticsWorkspace: Workspace | Output<GetWorkspaceResult>
 
   constructor(name: string, props: CommonAzureStackProps, options?: ComponentResourceOptions) {
-    super(`azure:${name}`, name, props, options)
+    super(`construct:${name}`, name, props, options)
     this.props = props
     this.options = options
     this.id = name

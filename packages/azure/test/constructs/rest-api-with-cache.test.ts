@@ -145,7 +145,7 @@ describe('TestAzureRestApiWithCacheConstruct', () => {
       .apply(([id, urn, name, tags]) => {
         expect(id).toEqual('test-common-stack-rg-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:resources:ResourceGroup::test-common-stack-rg'
+          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:resources:ResourceGroup::test-common-stack-rg'
         )
         expect(name).toBeDefined()
         expect(tags?.environment).toEqual('dev')
@@ -165,7 +165,7 @@ describe('TestAzureRestApiWithCacheConstruct', () => {
       .apply(([id, urn, name, tags]) => {
         expect(id).toEqual('test-common-stack-am-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:apimanagement:ApiManagementService::test-common-stack-am'
+          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:apimanagement:ApiManagementService::test-common-stack-am'
         )
         expect(name).toBeDefined()
         expect(tags?.environment).toEqual('dev')
@@ -185,7 +185,7 @@ describe('TestAzureRestApiWithCacheConstruct', () => {
       .apply(([id, urn, name, tags]) => {
         expect(id).toEqual('test-common-stack-rc-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:redis:Redis::test-common-stack-rc'
+          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:redis:Redis::test-common-stack-rc'
         )
         expect(name).toBeDefined()
         expect(tags?.environment).toEqual('dev')

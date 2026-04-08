@@ -142,7 +142,7 @@ describe('TestAzureStorageConstruct', () => {
       .apply(([id, urn, name, location, sku, tags]) => {
         expect(id).toEqual('test-storage-account-dev-sa-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:storage:StorageAccount::test-storage-account-dev-sa'
+          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:storage:StorageAccount::test-storage-account-dev-sa'
         )
         expect(name).toEqual('teststorageaccountdev')
         expect(location).toEqual('eastus')
@@ -163,7 +163,7 @@ describe('TestAzureStorageConstruct', () => {
       .apply(([id, urn, name]) => {
         expect(id).toEqual('test-storage-container-dev-sc-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:storage:BlobContainer::test-storage-container-dev-sc'
+          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:storage:BlobContainer::test-storage-container-dev-sc'
         )
         expect(name).toEqual('test-storage-container-dev')
       })
@@ -177,7 +177,7 @@ describe('TestAzureStorageConstruct', () => {
       .apply(([id, urn, name]) => {
         expect(id).toEqual('test-storage-blob-dev-sb-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:storage:Blob::test-storage-blob-dev-sb'
+          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:storage:Blob::test-storage-blob-dev-sb'
         )
         expect(name).toEqual('test-storage-blob-dev')
       })

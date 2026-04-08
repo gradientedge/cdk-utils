@@ -170,7 +170,7 @@ describe('TestAzureApiManagementConstruct', () => {
       .apply(([id, urn, name, location, sku, tags]) => {
         expect(id).toEqual('test-api-management-dev-am-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::azure:test-common-stack$azure-native:apimanagement:ApiManagementService::test-api-management-dev-am'
+          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:apimanagement:ApiManagementService::test-api-management-dev-am'
         )
         expect(name).toEqual('test-api-management-dev')
         expect(location).toEqual('eastus')

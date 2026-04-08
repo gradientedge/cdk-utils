@@ -33,7 +33,7 @@ export class CommonAzureStack extends ComponentResource {
   config: Config
 
   constructor(name: string, props: CommonAzureStackProps, options?: ComponentResourceOptions) {
-    super(`custom:azure:Stack:${name}`, name, props, options)
+    super(`stack:${name}`, name, props, options)
 
     /* initialise config */
     this.config = new Config()

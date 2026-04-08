@@ -116,7 +116,7 @@ describe('TestCloudflareArgoManager', () => {
       .apply(([id, urn, name, account]) => {
         expect(id).toEqual('test-zone-dev-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::cloudflare:test-common-stack$cloudflare:index/zone:Zone::test-zone-dev'
+          'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zone:Zone::test-zone-dev'
         )
         expect(name).toEqual('gradientedge.io')
         expect(account.id).toEqual('test-account')
@@ -136,7 +136,7 @@ describe('TestCloudflareArgoManager', () => {
       .apply(([id, urn, value]) => {
         expect(id).toEqual('test-argo-dev-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::cloudflare:test-common-stack$cloudflare:index/argoSmartRouting:ArgoSmartRouting::test-argo-dev'
+          'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/argoSmartRouting:ArgoSmartRouting::test-argo-dev'
         )
         expect(value).toEqual('on')
       })
@@ -155,7 +155,7 @@ describe('TestCloudflareArgoManager', () => {
       .apply(([id, urn, value]) => {
         expect(id).toEqual('test-argo-tiered-caching-dev-id')
         expect(urn).toEqual(
-          'urn:pulumi:stack::project::cloudflare:test-common-stack$cloudflare:index/argoTieredCaching:ArgoTieredCaching::test-argo-tiered-caching-dev'
+          'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/argoTieredCaching:ArgoTieredCaching::test-argo-tiered-caching-dev'
         )
         expect(value).toEqual('on')
       })
