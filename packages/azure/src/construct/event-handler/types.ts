@@ -22,9 +22,9 @@ export interface EventHandlerEventGridSubscriptionProps {
 
 /** @category Interface */
 export interface EventHandlerEventGridSubscription {
-  dlqStorageAccount: StorageAccount
-  dlqStorageContainer: BlobContainer
-  eventSubscription: EventSubscription
+  dlqStorageAccount?: StorageAccount
+  dlqStorageContainer?: BlobContainer
+  eventSubscription?: EventSubscription
 }
 
 /** @category Interface */

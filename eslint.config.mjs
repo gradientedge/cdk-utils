@@ -26,7 +26,6 @@ export default [
       '@typescript-eslint/no-unused-vars': 'warn',
       '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/max-params': 'off',
-      '@typescript-eslint/no-non-null-assertion': 'warn',
       
       // Import rules
       'import-x/order': ['error', {

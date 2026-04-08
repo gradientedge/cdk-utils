@@ -345,10 +345,10 @@ describe('TestAzureEventHandlerConstruct', () => {
   test('provisions dlq storage account as expected', () => {
     pulumi
       .all([
-        stack.construct.eventGridEventSubscription.dlqStorageAccount.id,
-        stack.construct.eventGridEventSubscription.dlqStorageAccount.urn,
-        stack.construct.eventGridEventSubscription.dlqStorageAccount.name,
-        stack.construct.eventGridEventSubscription.dlqStorageAccount.tags,
+        stack.construct.eventGridEventSubscription.dlqStorageAccount!.id,
+        stack.construct.eventGridEventSubscription.dlqStorageAccount!.urn,
+        stack.construct.eventGridEventSubscription.dlqStorageAccount!.name,
+        stack.construct.eventGridEventSubscription.dlqStorageAccount!.tags,
       ])
       .apply(([id, urn, name, tags]) => {
         expect(id).toEqual('test-common-stack-eventgrid-subscription-dlq-storage-account-sa-id')
@@ -365,9 +365,9 @@ describe('TestAzureEventHandlerConstruct', () => {
   test('provisions dlq storage container as expected', () => {
     pulumi
       .all([
-        stack.construct.eventGridEventSubscription.dlqStorageContainer.id,
-        stack.construct.eventGridEventSubscription.dlqStorageContainer.urn,
-        stack.construct.eventGridEventSubscription.dlqStorageContainer.name,
+        stack.construct.eventGridEventSubscription.dlqStorageContainer!.id,
+        stack.construct.eventGridEventSubscription.dlqStorageContainer!.urn,
+        stack.construct.eventGridEventSubscription.dlqStorageContainer!.name,
       ])
       .apply(([id, urn, name]) => {
         expect(id).toEqual('test-common-stack-eventgrid-subscription-dlq-container-sc-id')
@@ -438,9 +438,9 @@ describe('TestAzureEventHandlerConstruct', () => {
   test('provisions event grid event subscription as expected', () => {
     pulumi
       .all([
-        stack.construct.eventGridEventSubscription.eventSubscription.id,
-        stack.construct.eventGridEventSubscription.eventSubscription.urn,
-        stack.construct.eventGridEventSubscription.eventSubscription.name,
+        stack.construct.eventGridEventSubscription.eventSubscription!.id,
+        stack.construct.eventGridEventSubscription.eventSubscription!.urn,
+        stack.construct.eventGridEventSubscription.eventSubscription!.name,
       ])
       .apply(([id, urn, name]) => {
         expect(id).toEqual('test-common-stack-es-id')
