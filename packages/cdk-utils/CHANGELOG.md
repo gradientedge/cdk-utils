@@ -1,5 +1,17 @@
 # @gradientedge/cdk-utils
 
+## 11.5.0
+
+### Minor Changes
+
+- [`ab0cfe7`](https://github.com/gradientedge/cdk-utils/commit/ab0cfe72c2a3e1127c9f90a5f04ba689c788f24c) Thanks [@despock](https://github.com/despock)! - update to component resource prefixes
+
+### Patch Changes
+
+- Updated dependencies [[`ab0cfe7`](https://github.com/gradientedge/cdk-utils/commit/ab0cfe72c2a3e1127c9f90a5f04ba689c788f24c)]:
+  - @gradientedge/cdk-utils-cloudflare@2.4.0
+  - @gradientedge/cdk-utils-azure@2.4.0
+
 ## 11.4.0
 
 ### Minor Changes
