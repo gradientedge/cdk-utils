@@ -58,7 +58,7 @@ export class AzureAuthorisationManager {
     id: string,
     scope: CommonAzureConstruct,
     vaultName: string,
-    resourceGroupName: string,
+    resourceGroupName: Input<string>,
     principalId: Input<string>,
     roleDefinitionId: RoleDefinitionId,
     resourceOptions?: ResourceOptions
@@ -90,7 +90,7 @@ export class AzureAuthorisationManager {
     id: string,
     scope: CommonAzureConstruct,
     topicName: string,
-    resourceGroupName: string,
+    resourceGroupName: Input<string>,
     principalId: Input<string>,
     roleDefinitionId: RoleDefinitionId,
     resourceOptions?: ResourceOptions

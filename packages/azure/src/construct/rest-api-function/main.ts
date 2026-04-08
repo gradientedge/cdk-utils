@@ -128,7 +128,7 @@ export class AzureRestApiFunction extends AzureFunctionApp {
         this,
         {
           ...this.props.apiManagement,
-          serviceName: this.props.stackName,
+          serviceName: this.id,
           location: this.resourceGroup.location,
           resourceGroupName: this.resourceGroup.name,
           hostnameConfigurations,
@@ -167,7 +167,7 @@ export class AzureRestApiFunction extends AzureFunctionApp {
 
     this.api.backend = this.apiManagementManager.createBackend(this.id, this, {
       ...this.props.apiManagementBackend,
-      title: this.props.stackName,
+      title: this.id,
       resourceGroupName: this.api.resourceGroupName,
       serviceName: this.api.name,
       url: pulumi.interpolate`https://${this.app.name}.azurewebsites.net/${this.props.apiManagementBackend.backendUrlPath}`,
@@ -186,7 +186,7 @@ export class AzureRestApiFunction extends AzureFunctionApp {
   protected createApiManagementRoutes() {
     this.api.managementApi = this.apiManagementManager.createApi(`${this.id}-apim-api`, this, {
       ...this.props.apiManagementApi,
-      displayName: this.props.apiManagementApi.displayName ?? this.props.stackName,
+      displayName: this.props.apiManagementApi.displayName ?? this.id,
       serviceName: this.api.name,
       resourceGroupName: this.api.resourceGroupName,
       isCurrent: this.props.apiManagementApi.isCurrent ?? true,

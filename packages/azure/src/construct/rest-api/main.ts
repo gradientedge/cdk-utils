@@ -102,7 +102,7 @@ export class AzureRestApi extends CommonAzureConstruct {
         this,
         {
           ...this.props.apiManagement,
-          serviceName: this.props.stackName,
+          serviceName: this.id,
           location: this.resourceGroup.location,
           resourceGroupName: this.resourceGroup.name,
           hostnameConfigurations,
@@ -159,7 +159,7 @@ export class AzureRestApi extends CommonAzureConstruct {
       this,
       {
         vaultName: this.api.authKeyVault.name,
-        secretName: `${this.applicationInsights.name}-${this.props.stackName}-key`,
+        secretName: `${this.applicationInsights.name}-${this.id}-key`,
         resourceGroupName: this.resourceGroup.name,
         properties: {
           value: this.applicationInsights.instrumentationKey,
@@ -185,7 +185,7 @@ export class AzureRestApi extends CommonAzureConstruct {
 
     this.keyVaultManager.createKeyVaultSecret(`${this.id}-key-vault-api-subscription-key-secret`, this, {
       vaultName: this.api.authKeyVault.name,
-      secretName: `${this.props.stackName}-subscription-key`,
+      secretName: `${this.id}-subscription-key`,
       resourceGroupName: this.resourceGroup.name,
       properties: {
         value: apiManagementSubscription.primaryKey.apply(key => key ?? ''),
@@ -244,7 +244,7 @@ export class AzureRestApi extends CommonAzureConstruct {
 
     this.monitorManager.createMonitorDiagnosticSettings(`${this.id}-apim-diagnostic`, this, {
       ...this.props.apiManagementDiagnosticSettings,
-      name: `${this.props.stackName}-api-management`,
+      name: `${this.id}-api-management`,
       resourceUri: this.api.apim.id,
       workspaceId: this.commonLogAnalyticsWorkspace.id,
     })

@@ -189,7 +189,7 @@ export class AzureEventHandler extends AzureFunctionApp {
    */
   protected createServiceBusDiagnosticLog() {
     this.monitorManager.createMonitorDiagnosticSettings(this.id, this, {
-      name: `${this.props.stackName}-servicebus`,
+      name: `${this.id}-servicebus`,
       resourceUri: this.serviceBus.namespace.id,
       workspaceId: this.commonLogAnalyticsWorkspace.id,
       logAnalyticsDestinationType: 'Dedicated',

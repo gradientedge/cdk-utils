@@ -1,5 +1,5 @@
 import { getVaultOutput, Secret, SkuFamily, SkuName, Vault } from '@pulumi/azure-native/keyvault/index.js'
-import { ResourceOptions } from '@pulumi/pulumi'
+import { Input, ResourceOptions } from '@pulumi/pulumi'
 
 import { CommonAzureConstruct } from '../../common/index.js'
 
@@ -107,7 +107,7 @@ export class AzureKeyVaultManager {
   public resolveKeyVault(
     scope: CommonAzureConstruct,
     vaultName: string,
-    resourceGroupName: string,
+    resourceGroupName: Input<string>,
     resourceOptions?: ResourceOptions
   ) {
     return getVaultOutput({ vaultName, resourceGroupName }, { parent: scope, ...resourceOptions })

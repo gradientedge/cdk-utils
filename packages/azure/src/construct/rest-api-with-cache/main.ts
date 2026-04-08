@@ -47,7 +47,7 @@ export class AzureRestApiWithCache extends AzureRestApi {
       this,
       {
         ...this.props.apiManagementManagedRedis,
-        name: this.props.stackName,
+        name: this.id,
         location: this.resourceGroup.location,
         resourceGroupName: this.resourceGroup.name,
       },
