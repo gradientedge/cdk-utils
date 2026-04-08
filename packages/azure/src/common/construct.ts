@@ -122,8 +122,7 @@ export class CommonAzureConstruct extends ComponentResource {
   }
 
   protected resolveCommonLogAnalyticsWorkspace() {
-    if (!this.props.commonLogAnalyticsWorkspace || !this.props.commonLogAnalyticsWorkspace.workspaceName)
-      throw new Error('Props undefined for commonLogAnalyticsWorkspace')
+    if (!this.props.commonLogAnalyticsWorkspace || !this.props.commonLogAnalyticsWorkspace.workspaceName) return
 
     this.commonLogAnalyticsWorkspace = getWorkspaceOutput({
       workspaceName: this.props.commonLogAnalyticsWorkspace.workspaceName,

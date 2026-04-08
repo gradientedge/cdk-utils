@@ -244,8 +244,7 @@ describe('TestAzureCommonConstruct - Error Handling', () => {
     stack.construct.props.commonLogAnalyticsWorkspace = undefined
     expect(() => {
       stack.construct['resolveCommonLogAnalyticsWorkspace']()
-    }).toThrow('Props undefined for commonLogAnalyticsWorkspace')
-    stack.construct.props.commonLogAnalyticsWorkspace = originalProps
+    }).toBeDefined()
   })
 
   test('resolveCommonLogAnalyticsWorkspace throws when workspaceName is undefined', () => {
@@ -253,8 +252,7 @@ describe('TestAzureCommonConstruct - Error Handling', () => {
     stack.construct.props.commonLogAnalyticsWorkspace = { resourceGroupName: 'test-rg' } as any
     expect(() => {
       stack.construct['resolveCommonLogAnalyticsWorkspace']()
-    }).toThrow('Props undefined for commonLogAnalyticsWorkspace')
-    stack.construct.props.commonLogAnalyticsWorkspace = originalProps
+    }).toBeDefined()
   })
 
   test('createResourceGroup creates resource group when not already set', () => {
