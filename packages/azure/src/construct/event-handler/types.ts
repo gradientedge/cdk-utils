@@ -1,7 +1,7 @@
 import { EventSubscription } from '@pulumi/azure-native/eventgrid/index.js'
-import { Namespace, Queue } from '@pulumi/azure-native/servicebus/index.js'
+import { GetNamespaceResult, GetQueueResult, Namespace, Queue } from '@pulumi/azure-native/servicebus/index.js'
 import { BlobContainer, StorageAccount } from '@pulumi/azure-native/storage/index.js'
-import { Input } from '@pulumi/pulumi'
+import { Input, Output } from '@pulumi/pulumi'
 
 import {
   DefenderForStorageProps,
@@ -31,12 +31,13 @@ export interface EventHandlerEventGridSubscription {
 export interface EventHandlerServiceBusProps {
   namespace: ServiceBusNamespaceProps
   queue: ServiceBusQueueProps
+  useExisting?: boolean
 }
 
 /** @category Interface */
 export interface EventHandlerServiceBus {
-  namespace: Namespace
-  queue: Queue
+  namespace: Namespace | Output<GetNamespaceResult>
+  queue: Queue | Output<GetQueueResult>
 }
 
 /** @category Interface */
