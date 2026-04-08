@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.6.0
+
+### Minor Changes
+
+- [`0bd17e3`](https://github.com/gradientedge/cdk-utils/commit/0bd17e37b3df392150f977d83a4250d00812639b) Thanks [@despock](https://github.com/despock)! - adding support for i/o wrap/unwrap
+
 ## 2.5.0
 
 ### Minor Changes
