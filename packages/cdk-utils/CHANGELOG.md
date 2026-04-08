@@ -1,5 +1,16 @@
 # @gradientedge/cdk-utils
 
+## 11.9.0
+
+### Minor Changes
+
+- [#990](https://github.com/gradientedge/cdk-utils/pull/990) [`ee85cee`](https://github.com/gradientedge/cdk-utils/commit/ee85ceed1156a0a5b3e6253a267b2939cff8850f) Thanks [@despock](https://github.com/despock)! - adding support for event handler with existing service bus
+
+### Patch Changes
+
+- Updated dependencies [[`ee85cee`](https://github.com/gradientedge/cdk-utils/commit/ee85ceed1156a0a5b3e6253a267b2939cff8850f)]:
+  - @gradientedge/cdk-utils-azure@2.8.0
+
 ## 11.8.0
 
 ### Minor Changes
