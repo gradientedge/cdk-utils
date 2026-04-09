@@ -28,7 +28,7 @@ import { Site, SiteWithWebAppProps } from './types.js'
 export class SiteWithWebApp extends CommonAzureConstruct {
   props: SiteWithWebAppProps
   applicationInsights: Output<GetComponentResult>
-  site: Site
+  site: Site = {} as Site
 
   constructor(id: string, props: SiteWithWebAppProps) {
     super(id, props)
