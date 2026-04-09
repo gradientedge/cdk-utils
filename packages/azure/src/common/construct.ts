@@ -111,7 +111,7 @@ export class CommonAzureConstruct extends ComponentResource {
     if (this.resourceGroup) return
 
     this.resourceGroup = this.resourceGroupManager.createResourceGroup(`${this.id}`, this, {
-      resourceGroupName: this.id,
+      resourceGroupName: this.props.resourceGroupName ?? this.id,
       location: this.props.location,
     })
 
