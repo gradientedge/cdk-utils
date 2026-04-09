@@ -1,12 +1,12 @@
-import { Redis, SkuFamily, SkuName } from '@pulumi/azure-native/redis/index.js'
+import { Database, RedisEnterprise, SkuName } from '@pulumi/azure-native/redisenterprise/index.js'
 import { ResourceOptions } from '@pulumi/pulumi'
 
 import { CommonAzureConstruct } from '../../common/index.js'
 
-import { RedisProps } from './types.js'
+import { ManagedRedisResult, RedisDatabaseProps, RedisEnterpriseClusterProps } from './types.js'
 
 /**
- * Provides operations on Azure Redis using Pulumi
+ * Provides operations on Azure Managed Redis (Enterprise) using Pulumi
  * - A new instance of this class is injected into {@link CommonAzureConstruct} constructor.
  * - If a custom construct extends {@link CommonAzureConstruct}, an instance is available within the context.
  * @example
@@ -17,7 +17,7 @@ import { RedisProps } from './types.js'
  *   constructor(name: string, props: CommonAzureStackProps) {
  *     super(name, props)
  *     this.props = props
- *     this.redisManager.createManagedRedis('MyManagedRedis', this, props)
+ *     this.redisManager.createManagedRedis('MyManagedRedis', this, { cluster: clusterProps, database: databaseProps })
  *   }
  * }
  * ```
@@ -25,45 +25,61 @@ import { RedisProps } from './types.js'
  */
 export class AzureRedisManager {
   /**
-   * @summary Method to create a new managed redis cache
+   * @summary Method to create a new Azure Managed Redis (Enterprise) cluster with a database
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props redis cache properties
+   * @param clusterProps redis enterprise cluster properties
+   * @param databaseProps optional redis database properties (created with defaults if omitted)
    * @param resourceOptions Optional settings to control resource behaviour
-   * @see [Pulumi Azure Native Redis]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/cache/redis/}
+   * @see [Pulumi Azure Native Redis Enterprise]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/redisenterprise/redisenterprise/}
    */
   public createManagedRedis(
     id: string,
     scope: CommonAzureConstruct,
-    props: RedisProps,
+    clusterProps: RedisEnterpriseClusterProps,
+    databaseProps?: Partial<RedisDatabaseProps>,
     resourceOptions?: ResourceOptions
-  ) {
-    if (!props) throw new Error(`Props undefined for ${id}`)
+  ): ManagedRedisResult {
+    if (!clusterProps) throw new Error(`Props undefined for ${id}`)
 
     // Get resource group name
     const resourceGroupName = scope.props.resourceGroupName
       ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-      : props.resourceGroupName
+      : clusterProps.resourceGroupName
 
     if (!resourceGroupName) throw new Error(`Resource group name undefined for ${id}`)
 
-    return new Redis(
+    const cluster = new RedisEnterprise(
       `${id}-rc`,
       {
-        ...props,
-        name: scope.resourceNameFormatter.format(props.name?.toString(), scope.props.resourceNameOptions?.managedRedis),
-        location: props.location ?? scope.props.location,
+        ...clusterProps,
+        clusterName: scope.resourceNameFormatter.format(
+          clusterProps.clusterName?.toString(),
+          scope.props.resourceNameOptions?.managedRedis
+        ),
+        location: clusterProps.location ?? scope.props.location,
         resourceGroupName: resourceGroupName,
-        sku: props.sku ?? {
-          name: SkuName.Basic,
-          family: SkuFamily.C,
-          capacity: 0,
+        sku: clusterProps.sku ?? {
+          name: SkuName.Balanced_B0,
         },
-        tags: props.tags ?? {
+        tags: clusterProps.tags ?? {
           environment: scope.props.stage,
         },
       },
       { parent: scope, ...resourceOptions }
     )
+
+    const database = new Database(
+      `${id}-db`,
+      {
+        ...databaseProps,
+        clusterName: cluster.name,
+        resourceGroupName: resourceGroupName,
+        databaseName: databaseProps?.databaseName ?? 'default',
+      },
+      { parent: scope, dependsOn: [cluster], ...resourceOptions }
+    )
+
+    return { cluster, database }
   }
 }

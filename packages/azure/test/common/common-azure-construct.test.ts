@@ -1,5 +1,6 @@
 import { Blob, BlobContainer, StorageAccount } from '@pulumi/azure-native/storage/index.js'
 import * as pulumi from '@pulumi/pulumi'
+import { outputToPromise } from '../helpers.js'
 import {
   CommonAzureConstruct,
   CommonAzureStack,
@@ -103,39 +104,45 @@ describe('TestAzureCommonConstruct', () => {
 
 describe('TestAzureCommonConstruct', () => {
   expect(stack.construct.storageAccount).toBeDefined()
-  test('provisions storage account as expected', () => {
-    pulumi
-      .all([
-        stack.construct.storageAccount.id,
-        stack.construct.storageAccount.name,
-        stack.construct.storageAccount.location,
-        stack.construct.storageAccount.tags,
-      ])
-      .apply(([id, name, location, tags]) => {
-        expect(id).toEqual('test-storage-account-dev-sa-id')
-        expect(name).toBeDefined()
-        expect(tags?.environment).toEqual('dev')
-      })
+  test('provisions storage account as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.storageAccount.id,
+          stack.construct.storageAccount.name,
+          stack.construct.storageAccount.location,
+          stack.construct.storageAccount.tags,
+        ])
+        .apply(([id, name, location, tags]) => {
+          expect(id).toEqual('test-storage-account-dev-sa-id')
+          expect(name).toBeDefined()
+          expect(tags?.environment).toEqual('dev')
+        })
+    )
   })
 })
 
 describe('TestAzureCommonConstruct', () => {
   expect(stack.construct.storageContainer).toBeDefined()
-  test('provisions storage container as expected', () => {
-    pulumi.all([stack.construct.storageContainer.id, stack.construct.storageContainer.name]).apply(([id, name]) => {
-      expect(id).toEqual('test-storage-container-dev-sc-id')
-      expect(name).toBeDefined()
-    })
+  test('provisions storage container as expected', async () => {
+    await outputToPromise(
+      pulumi.all([stack.construct.storageContainer.id, stack.construct.storageContainer.name]).apply(([id, name]) => {
+        expect(id).toEqual('test-storage-container-dev-sc-id')
+        expect(name).toBeDefined()
+      })
+    )
   })
 })
 
 describe('TestAzureCommonConstruct', () => {
   expect(stack.construct.storageBlob).toBeDefined()
-  test('provisions storage blob as expected', () => {
-    pulumi.all([stack.construct.storageBlob.id, stack.construct.storageBlob.name]).apply(([id, name]) => {
-      expect(id).toEqual('test-storage-blob-dev-sb-id')
-      expect(name).toBeDefined()
-    })
+  test('provisions storage blob as expected', async () => {
+    await outputToPromise(
+      pulumi.all([stack.construct.storageBlob.id, stack.construct.storageBlob.name]).apply(([id, name]) => {
+        expect(id).toEqual('test-storage-blob-dev-sb-id')
+        expect(name).toBeDefined()
+      })
+    )
   })
 })
 

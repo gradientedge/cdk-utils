@@ -13,6 +13,7 @@ import {
   CosmosdbSqlDatabaseProps,
   CosmosRoleDefinition,
 } from '../../src/index.js'
+import { outputToPromise } from '../helpers.js'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
   testCosmosDbAccount: CosmosdbAccountProps
@@ -143,67 +144,73 @@ describe('TestAzureCosmosDbConstruct', () => {
 })
 
 describe('TestAzureCosmosDbConstruct', () => {
-  test('provisions cosmosdb account as expected', () => {
-    pulumi
-      .all([
-        stack.construct.cosmosDbAccount.id,
-        stack.construct.cosmosDbAccount.urn,
-        stack.construct.cosmosDbAccount.name,
-        stack.construct.cosmosDbAccount.location,
-        stack.construct.cosmosDbAccount.consistencyPolicy,
-        stack.construct.cosmosDbAccount.tags,
-      ])
-      .apply(([id, urn, name, location, consistencyPolicy, tags]) => {
-        expect(id).toEqual('test-cosmosdb-account-dev-ca-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:cosmosdb:DatabaseAccount::test-cosmosdb-account-dev-ca'
-        )
-        expect(name).toEqual('test-cosmosdb-account-dev')
-        expect(location).toEqual('eastus')
-        expect(consistencyPolicy).toEqual({ defaultConsistencyLevel: 'Strong' })
-        expect(tags?.environment).toEqual('dev')
-      })
-  })
-})
-
-describe('TestAzureCosmosDbConstruct', () => {
-  test('provisions cosmosdb database as expected', () => {
-    pulumi
-      .all([
-        stack.construct.cosmosDbDatabase.id,
-        stack.construct.cosmosDbDatabase.urn,
-        stack.construct.cosmosDbDatabase.name,
-      ])
-      .apply(([id, urn, name]) => {
-        expect(id).toEqual('test-cosmosdb-database-dev-cd-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:cosmosdb:SqlResourceSqlDatabase::test-cosmosdb-database-dev-cd'
-        )
-        expect(name).toEqual('test-cosmosdb-database-dev')
-      })
-  })
-})
-
-describe('TestAzureCosmosDbConstruct', () => {
-  test('provisions cosmosdb container as expected', () => {
-    pulumi
-      .all([
-        stack.construct.cosmosDbContainer.id,
-        stack.construct.cosmosDbContainer.urn,
-        stack.construct.cosmosDbContainer.name,
-        stack.construct.cosmosDbContainer.resource,
-      ])
-      .apply(([id, urn, name, resource]) => {
-        expect(id).toEqual('test-cosmosdb-container-dev-cc-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:cosmosdb:SqlResourceSqlContainer::test-cosmosdb-container-dev-cc'
-        )
-        expect(name).toEqual('test-cosmosdb-container-dev')
-        expect(resource).toEqual({
-          id: 'test-cosmosdb-container',
-          partitionKey: { kind: 'Hash', paths: ['/testPartitionKey'] },
+  test('provisions cosmosdb account as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.cosmosDbAccount.id,
+          stack.construct.cosmosDbAccount.urn,
+          stack.construct.cosmosDbAccount.name,
+          stack.construct.cosmosDbAccount.location,
+          stack.construct.cosmosDbAccount.consistencyPolicy,
+          stack.construct.cosmosDbAccount.tags,
+        ])
+        .apply(([id, urn, name, location, consistencyPolicy, tags]) => {
+          expect(id).toEqual('test-cosmosdb-account-dev-ca-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:cosmosdb:DatabaseAccount::test-cosmosdb-account-dev-ca'
+          )
+          expect(name).toEqual('test-cosmosdb-account-dev')
+          expect(location).toEqual('eastus')
+          expect(consistencyPolicy).toEqual({ defaultConsistencyLevel: 'Strong' })
+          expect(tags?.environment).toEqual('dev')
         })
-      })
+    )
+  })
+})
+
+describe('TestAzureCosmosDbConstruct', () => {
+  test('provisions cosmosdb database as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.cosmosDbDatabase.id,
+          stack.construct.cosmosDbDatabase.urn,
+          stack.construct.cosmosDbDatabase.name,
+        ])
+        .apply(([id, urn, name]) => {
+          expect(id).toEqual('test-cosmosdb-database-dev-cd-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:cosmosdb:SqlResourceSqlDatabase::test-cosmosdb-database-dev-cd'
+          )
+          expect(name).toEqual('test-cosmosdb-database-dev')
+        })
+    )
+  })
+})
+
+describe('TestAzureCosmosDbConstruct', () => {
+  test('provisions cosmosdb container as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.cosmosDbContainer.id,
+          stack.construct.cosmosDbContainer.urn,
+          stack.construct.cosmosDbContainer.name,
+          stack.construct.cosmosDbContainer.resource,
+        ])
+        .apply(([id, urn, name, resource]) => {
+          expect(id).toEqual('test-cosmosdb-container-dev-cc-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:cosmosdb:SqlResourceSqlContainer::test-cosmosdb-container-dev-cc'
+          )
+          expect(name).toEqual('test-cosmosdb-container-dev')
+          expect(resource).toEqual({
+            id: 'test-cosmosdb-container',
+            partitionKey: { kind: 'Hash', paths: ['/testPartitionKey'] },
+          })
+        })
+    )
   })
 })
 
@@ -238,22 +245,28 @@ class TestMinimalCosmosStack extends CommonAzureStack {
 const minimalCosmosStack = new TestMinimalCosmosStack('test-minimal-cosmos-stack', testStackProps)
 
 describe('TestAzureCosmosDbConstruct - Default Values', () => {
-  test('cosmosdb account uses default location from scope when not provided', () => {
-    pulumi.all([minimalCosmosStack.construct.cosmosDbAccount.location]).apply(([location]) => {
-      expect(location).toEqual('eastus')
-    })
+  test('cosmosdb account uses default location from scope when not provided', async () => {
+    await outputToPromise(
+      pulumi.all([minimalCosmosStack.construct.cosmosDbAccount.location]).apply(([location]) => {
+        expect(location).toEqual('eastus')
+      })
+    )
   })
 
-  test('cosmosdb account uses default tags when not provided', () => {
-    pulumi.all([minimalCosmosStack.construct.cosmosDbAccount.tags]).apply(([tags]) => {
-      expect(tags?.environment).toEqual('dev')
-    })
+  test('cosmosdb account uses default tags when not provided', async () => {
+    await outputToPromise(
+      pulumi.all([minimalCosmosStack.construct.cosmosDbAccount.tags]).apply(([tags]) => {
+        expect(tags?.environment).toEqual('dev')
+      })
+    )
   })
 
-  test('cosmosdb account uses default identity when not provided', () => {
-    pulumi.all([minimalCosmosStack.construct.cosmosDbAccount.identity]).apply(([identity]) => {
-      expect(identity?.type).toEqual('SystemAssigned')
-    })
+  test('cosmosdb account uses default identity when not provided', async () => {
+    await outputToPromise(
+      pulumi.all([minimalCosmosStack.construct.cosmosDbAccount.identity]).apply(([identity]) => {
+        expect(identity?.type).toEqual('SystemAssigned')
+      })
+    )
   })
 })
 

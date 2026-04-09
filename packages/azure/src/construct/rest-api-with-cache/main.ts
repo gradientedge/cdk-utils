@@ -1,9 +1,12 @@
+import { listDatabaseKeysOutput } from '@pulumi/azure-native/redisenterprise/index.js'
+import * as pulumi from '@pulumi/pulumi'
+
 import { AzureRestApi } from '../rest-api/main.js'
 
 import { AzureApiWithCache, AzureRestApiWithCacheProps } from './types.js'
 
 /**
- * Provides a construct to create and deploy an Azure API Management service with Redis cache integration
+ * Provides a construct to create and deploy an Azure API Management service with Azure Managed Redis (Enterprise) cache integration
  * @example
  * import { AzureRestApiWithCache, AzureRestApiWithCacheProps } from '@gradientedge/cdk-utils'
  *
@@ -39,38 +42,56 @@ export class AzureRestApiWithCache extends AzureRestApi {
   }
 
   /**
-   * @summary Method to create the managed Redis cache instance
+   * @summary Method to create the Azure Managed Redis (Enterprise) cluster and database
    */
   protected createRedisCache() {
-    this.api.redis = this.redisManager.createManagedRedis(
+    const result = this.redisManager.createManagedRedis(
       this.id,
       this,
       {
         ...this.props.apiManagementManagedRedis,
-        name: this.id,
+        clusterName: this.id,
         location: this.resourceGroup.location,
         resourceGroupName: this.resourceGroup.name,
       },
+      this.props.apiManagementManagedRedisDatabase,
       { ignoreChanges: ['location'] }
     )
+    this.api.redisCluster = result.cluster
+    this.api.redisDatabase = result.database
   }
 
   /**
    * @summary Method to create the Redis cache connection string secret in Key Vault
    */
   protected createRedisCacheSecret() {
+    const connectionString = pulumi
+      .all([
+        this.api.redisCluster.hostName,
+        this.api.redisCluster.name,
+        this.api.redisDatabase.name,
+        this.resourceGroup.name,
+      ])
+      .apply(([hostName, clusterName, databaseName, resourceGroupName]) =>
+        listDatabaseKeysOutput({
+          clusterName,
+          databaseName,
+          resourceGroupName,
+        }).apply(keys => `${hostName}:10000,password=${keys.primaryKey},ssl=True,abortConnect=False`)
+      )
+
     this.api.redisNamedValueSecret = this.keyVaultManager.createKeyVaultSecret(
       `${this.id}-key-vault-redis-namespace-secret`,
       this,
       {
         vaultName: this.api.authKeyVault.name,
-        secretName: `${this.api.redis.name}key`,
+        secretName: `${this.api.redisCluster.name}key`,
         resourceGroupName: this.resourceGroup.name,
         properties: {
-          value: `${this.api.redis.name}:10000,password=${this.api.redis.accessKeys.primaryKey},ssl=True,abortConnect=False`,
+          value: connectionString,
         },
       },
-      { dependsOn: [this.api.redis, this.api.namedValueRoleAssignment] }
+      { dependsOn: [this.api.redisCluster, this.api.redisDatabase, this.api.namedValueRoleAssignment] }
     )
   }
 
@@ -79,10 +100,10 @@ export class AzureRestApiWithCache extends AzureRestApi {
    */
   protected createRedisCacheNamespace() {
     this.api.redisNamedValue = this.apiManagementManager.createNamedValue(`${this.id}-redis-nv`, this, {
-      displayName: `${this.api.redis.name}key`,
+      displayName: `${this.api.redisCluster.name}key`,
       resourceGroupName: this.resourceGroup.name,
       serviceName: this.api.apim.name,
-      namedValueId: `${this.api.redis.name}key`,
+      namedValueId: `${this.api.redisCluster.name}key`,
       secret: true,
       keyVault: {
         secretIdentifier: this.api.redisNamedValueSecret.id,
@@ -97,9 +118,9 @@ export class AzureRestApiWithCache extends AzureRestApi {
     this.apiManagementManager.createCache(`${this.id}-am-redis-cache`, this, {
       serviceName: this.api.apim.name,
       connectionString: `{{${this.api.redisNamedValue.name}}}`,
-      cacheId: this.api.redis.id,
+      cacheId: this.api.redisCluster.id,
       resourceGroupName: this.resourceGroup.name,
-      useFromLocation: this.api.redis.location,
+      useFromLocation: this.api.redisCluster.location,
       description: `Redis cache for ${this.api.apim.name}`,
     })
   }

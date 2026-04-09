@@ -1,5 +1,6 @@
 import { Namespace, Queue, Subscription, Topic } from '@pulumi/azure-native/servicebus/index.js'
 import * as pulumi from '@pulumi/pulumi'
+import { outputToPromise } from '../helpers.js'
 import {
   CommonAzureConstruct,
   CommonAzureStack,
@@ -168,88 +169,96 @@ describe('TestAzureServicebusConstruct', () => {
 })
 
 describe('TestAzureServicebusConstruct', () => {
-  test('provisions servicebus namespace as expected', () => {
-    pulumi
-      .all([
-        stack.construct.serviceBusNamespace.id,
-        stack.construct.serviceBusNamespace.urn,
-        stack.construct.serviceBusNamespace.name,
-        stack.construct.serviceBusNamespace.location,
-        stack.construct.serviceBusNamespace.sku,
-        stack.construct.serviceBusNamespace.identity,
-        stack.construct.serviceBusNamespace.tags,
-      ])
-      .apply(([id, urn, name, location, sku, identity, tags]) => {
-        expect(id).toEqual('test-servicebus-namespace-dev-sn-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:servicebus:Namespace::test-servicebus-namespace-dev-sn'
-        )
-        expect(name).toEqual('test-servicebus-namespace-dev')
-        expect(location).toEqual('eastus')
-        expect(sku).toEqual({ name: 'Standard' })
-        expect(identity).toEqual({ type: 'SystemAssigned' })
-        expect(tags?.environment).toEqual('dev')
-      })
+  test('provisions servicebus namespace as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.serviceBusNamespace.id,
+          stack.construct.serviceBusNamespace.urn,
+          stack.construct.serviceBusNamespace.name,
+          stack.construct.serviceBusNamespace.location,
+          stack.construct.serviceBusNamespace.sku,
+          stack.construct.serviceBusNamespace.identity,
+          stack.construct.serviceBusNamespace.tags,
+        ])
+        .apply(([id, urn, name, location, sku, identity, tags]) => {
+          expect(id).toEqual('test-servicebus-namespace-dev-sn-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:servicebus:Namespace::test-servicebus-namespace-dev-sn'
+          )
+          expect(name).toEqual('test-servicebus-namespace-dev')
+          expect(location).toEqual('eastus')
+          expect(sku).toEqual({ name: 'Standard' })
+          expect(identity).toEqual({ type: 'SystemAssigned' })
+          expect(tags?.environment).toEqual('dev')
+        })
+    )
   })
 })
 
 describe('TestAzureServicebusConstruct', () => {
-  test('provisions servicebus topic as expected', () => {
-    pulumi
-      .all([
-        stack.construct.serviceBusTopic.id,
-        stack.construct.serviceBusTopic.urn,
-        stack.construct.serviceBusTopic.name,
-      ])
-      .apply(([id, urn, name]) => {
-        expect(id).toEqual('test-servicebus-topic-dev-st-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:servicebus:Topic::test-servicebus-topic-dev-st'
-        )
-        expect(name).toEqual('test-servicebus-topic-dev')
-      })
+  test('provisions servicebus topic as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.serviceBusTopic.id,
+          stack.construct.serviceBusTopic.urn,
+          stack.construct.serviceBusTopic.name,
+        ])
+        .apply(([id, urn, name]) => {
+          expect(id).toEqual('test-servicebus-topic-dev-st-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:servicebus:Topic::test-servicebus-topic-dev-st'
+          )
+          expect(name).toEqual('test-servicebus-topic-dev')
+        })
+    )
   })
 })
 
 describe('TestAzureServicebusConstruct', () => {
-  test('provisions servicebus queue as expected', () => {
-    pulumi
-      .all([
-        stack.construct.serviceBusQueue.id,
-        stack.construct.serviceBusQueue.urn,
-        stack.construct.serviceBusQueue.name,
-        stack.construct.serviceBusQueue.requiresDuplicateDetection,
-        stack.construct.serviceBusQueue.deadLetteringOnMessageExpiration,
-      ])
-      .apply(([id, urn, name, requiresDuplicateDetection, deadLetteringOnMessageExpiration]) => {
-        expect(id).toEqual('test-servicebus-queue-dev-sq-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:servicebus:Queue::test-servicebus-queue-dev-sq'
-        )
-        expect(name).toEqual('test-servicebus-queue-dev')
-        expect(requiresDuplicateDetection).toEqual(true)
-        expect(deadLetteringOnMessageExpiration).toEqual(true)
-      })
+  test('provisions servicebus queue as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.serviceBusQueue.id,
+          stack.construct.serviceBusQueue.urn,
+          stack.construct.serviceBusQueue.name,
+          stack.construct.serviceBusQueue.requiresDuplicateDetection,
+          stack.construct.serviceBusQueue.deadLetteringOnMessageExpiration,
+        ])
+        .apply(([id, urn, name, requiresDuplicateDetection, deadLetteringOnMessageExpiration]) => {
+          expect(id).toEqual('test-servicebus-queue-dev-sq-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:servicebus:Queue::test-servicebus-queue-dev-sq'
+          )
+          expect(name).toEqual('test-servicebus-queue-dev')
+          expect(requiresDuplicateDetection).toEqual(true)
+          expect(deadLetteringOnMessageExpiration).toEqual(true)
+        })
+    )
   })
 })
 
 describe('TestAzureServicebusConstruct', () => {
-  test('provisions servicebus subscription as expected', () => {
-    pulumi
-      .all([
-        stack.construct.serviceBusSubscription.id,
-        stack.construct.serviceBusSubscription.urn,
-        stack.construct.serviceBusSubscription.name,
-        stack.construct.serviceBusSubscription.maxDeliveryCount,
-      ])
-      .apply(([id, urn, name, maxDeliveryCount]) => {
-        expect(id).toEqual('test-servicebus-subscription-dev-ss-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:servicebus:Subscription::test-servicebus-subscription-dev-ss'
-        )
-        expect(name).toEqual('test-servicebus-subscription-dev')
-        expect(maxDeliveryCount).toEqual(1)
-      })
+  test('provisions servicebus subscription as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.serviceBusSubscription.id,
+          stack.construct.serviceBusSubscription.urn,
+          stack.construct.serviceBusSubscription.name,
+          stack.construct.serviceBusSubscription.maxDeliveryCount,
+        ])
+        .apply(([id, urn, name, maxDeliveryCount]) => {
+          expect(id).toEqual('test-servicebus-subscription-dev-ss-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:servicebus:Subscription::test-servicebus-subscription-dev-ss'
+          )
+          expect(name).toEqual('test-servicebus-subscription-dev')
+          expect(maxDeliveryCount).toEqual(1)
+        })
+    )
   })
 })
 
@@ -347,42 +356,50 @@ class TestMinimalServiceBusStack extends CommonAzureStack {
 const minimalSbStack = new TestMinimalServiceBusStack('test-minimal-sb-stack', testStackProps)
 
 describe('TestAzureServicebusConstruct - Default Values', () => {
-  test('provisions namespace with default identity, sku and tags', () => {
-    pulumi
-      .all([
-        minimalSbStack.construct.serviceBusNamespace.identity,
-        minimalSbStack.construct.serviceBusNamespace.sku,
-        minimalSbStack.construct.serviceBusNamespace.tags,
-      ])
-      .apply(([identity, sku, tags]) => {
-        expect(identity?.type).toEqual('SystemAssigned')
-        expect(sku?.name).toEqual('Standard')
-        expect(tags?.environment).toEqual('dev')
-      })
+  test('provisions namespace with default identity, sku and tags', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          minimalSbStack.construct.serviceBusNamespace.identity,
+          minimalSbStack.construct.serviceBusNamespace.sku,
+          minimalSbStack.construct.serviceBusNamespace.tags,
+        ])
+        .apply(([identity, sku, tags]) => {
+          expect(identity?.type).toEqual('SystemAssigned')
+          expect(sku?.name).toEqual('Standard')
+          expect(tags?.environment).toEqual('dev')
+        })
+    )
   })
 
   test('provisions topic as expected', () => {
     expect(minimalSbStack.construct.serviceBusTopic).toBeDefined()
   })
 
-  test('provisions queue with default values', () => {
-    pulumi
-      .all([
-        minimalSbStack.construct.serviceBusQueue.requiresDuplicateDetection,
-        minimalSbStack.construct.serviceBusQueue.deadLetteringOnMessageExpiration,
-        minimalSbStack.construct.serviceBusQueue.duplicateDetectionHistoryTimeWindow,
-      ])
-      .apply(([requiresDuplicateDetection, deadLetteringOnMessageExpiration, duplicateDetectionHistoryTimeWindow]) => {
-        expect(requiresDuplicateDetection).toEqual(true)
-        expect(deadLetteringOnMessageExpiration).toEqual(true)
-        expect(duplicateDetectionHistoryTimeWindow).toEqual('PT1M')
-      })
+  test('provisions queue with default values', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          minimalSbStack.construct.serviceBusQueue.requiresDuplicateDetection,
+          minimalSbStack.construct.serviceBusQueue.deadLetteringOnMessageExpiration,
+          minimalSbStack.construct.serviceBusQueue.duplicateDetectionHistoryTimeWindow,
+        ])
+        .apply(
+          ([requiresDuplicateDetection, deadLetteringOnMessageExpiration, duplicateDetectionHistoryTimeWindow]) => {
+            expect(requiresDuplicateDetection).toEqual(true)
+            expect(deadLetteringOnMessageExpiration).toEqual(true)
+            expect(duplicateDetectionHistoryTimeWindow).toEqual('PT1M')
+          }
+        )
+    )
   })
 
-  test('provisions subscription with default maxDeliveryCount', () => {
-    pulumi.all([minimalSbStack.construct.serviceBusSubscription.maxDeliveryCount]).apply(([maxDeliveryCount]) => {
-      expect(maxDeliveryCount).toEqual(1)
-    })
+  test('provisions subscription with default maxDeliveryCount', async () => {
+    await outputToPromise(
+      pulumi.all([minimalSbStack.construct.serviceBusSubscription.maxDeliveryCount]).apply(([maxDeliveryCount]) => {
+        expect(maxDeliveryCount).toEqual(1)
+      })
+    )
   })
 })
 

@@ -1,4 +1,5 @@
 import * as pulumi from '@pulumi/pulumi'
+import { outputToPromise } from '../helpers.js'
 import {
   AzureApi,
   AzureLocation,
@@ -284,22 +285,24 @@ describe('TestAzureRestApiConstruct', () => {
 })
 
 describe('TestAzureRestApiConstruct', () => {
-  test('provisions resource group as expected', () => {
-    pulumi
-      .all([
-        stack.construct.resourceGroup.id,
-        stack.construct.resourceGroup.urn,
-        stack.construct.resourceGroup.name,
-        stack.construct.resourceGroup.tags,
-      ])
-      .apply(([id, urn, name, tags]) => {
-        expect(id).toEqual('test-common-stack-rg-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:resources:ResourceGroup::test-common-stack-rg'
-        )
-        expect(name).toBeDefined()
-        expect(tags?.environment).toEqual('dev')
-      })
+  test('provisions resource group as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.resourceGroup.id,
+          stack.construct.resourceGroup.urn,
+          stack.construct.resourceGroup.name,
+          stack.construct.resourceGroup.tags,
+        ])
+        .apply(([id, urn, name, tags]) => {
+          expect(id).toEqual('test-common-stack-rg-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:resources:ResourceGroup::test-common-stack-rg'
+          )
+          expect(name).toBeDefined()
+          expect(tags?.environment).toEqual('dev')
+        })
+    )
   })
 })
 
@@ -335,41 +338,53 @@ describe('TestAzureRestApiNewApiConstruct', () => {
 })
 
 describe('TestAzureRestApiNewApiConstruct', () => {
-  test('provisions new api management service as expected', () => {
-    pulumi
-      .all([stackNewApi.construct.api.apim.id, stackNewApi.construct.api.apim.urn, stackNewApi.construct.api.apim.name])
-      .apply(([id, urn, name]) => {
-        expect(id).toBeDefined()
-        expect(urn).toBeDefined()
-        expect(name).toBeDefined()
-      })
+  test('provisions new api management service as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stackNewApi.construct.api.apim.id,
+          stackNewApi.construct.api.apim.urn,
+          stackNewApi.construct.api.apim.name,
+        ])
+        .apply(([id, urn, name]) => {
+          expect(id).toBeDefined()
+          expect(urn).toBeDefined()
+          expect(name).toBeDefined()
+        })
+    )
   })
 })
 
 describe('TestAzureRestApiNewApiConstruct', () => {
-  test('creates namespace secret role as expected', () => {
+  test('creates namespace secret role as expected', async () => {
     expect(stackNewApi.construct.api.namedValueRoleAssignment).toBeDefined()
-    pulumi.all([stackNewApi.construct.api.namedValueRoleAssignment.id]).apply(([id]) => {
-      expect(id).toBeDefined()
-    })
+    await outputToPromise(
+      pulumi.all([stackNewApi.construct.api.namedValueRoleAssignment.id]).apply(([id]) => {
+        expect(id).toBeDefined()
+      })
+    )
   })
 })
 
 describe('TestAzureRestApiNewApiConstruct', () => {
-  test('creates namespace secret as expected', () => {
+  test('creates namespace secret as expected', async () => {
     expect(stackNewApi.construct.api.namedValueSecret).toBeDefined()
-    pulumi.all([stackNewApi.construct.api.namedValueSecret.id]).apply(([id]) => {
-      expect(id).toBeDefined()
-    })
+    await outputToPromise(
+      pulumi.all([stackNewApi.construct.api.namedValueSecret.id]).apply(([id]) => {
+        expect(id).toBeDefined()
+      })
+    )
   })
 })
 
 describe('TestAzureRestApiNewApiConstruct', () => {
-  test('creates api management logger as expected', () => {
+  test('creates api management logger as expected', async () => {
     expect(stackNewApi.construct.api.logger).toBeDefined()
-    pulumi.all([stackNewApi.construct.api.logger.id]).apply(([id]) => {
-      expect(id).toBeDefined()
-    })
+    await outputToPromise(
+      pulumi.all([stackNewApi.construct.api.logger.id]).apply(([id]) => {
+        expect(id).toBeDefined()
+      })
+    )
   })
 })
 
@@ -399,18 +414,20 @@ describe('TestRestApiNewApiWithCertConstruct', () => {
 })
 
 describe('TestRestApiNewApiWithCertConstruct', () => {
-  test('provisions api management service as expected', () => {
-    pulumi
-      .all([
-        stackNewApiWithCert.construct.api.apim.id,
-        stackNewApiWithCert.construct.api.apim.urn,
-        stackNewApiWithCert.construct.api.apim.name,
-      ])
-      .apply(([id, urn, name]) => {
-        expect(id).toBeDefined()
-        expect(urn).toBeDefined()
-        expect(name).toBeDefined()
-      })
+  test('provisions api management service as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stackNewApiWithCert.construct.api.apim.id,
+          stackNewApiWithCert.construct.api.apim.urn,
+          stackNewApiWithCert.construct.api.apim.name,
+        ])
+        .apply(([id, urn, name]) => {
+          expect(id).toBeDefined()
+          expect(urn).toBeDefined()
+          expect(name).toBeDefined()
+        })
+    )
   })
 })
 

@@ -1,9 +1,15 @@
-import { Redis } from '@pulumi/azure-native/redis/index.js'
 import * as pulumi from '@pulumi/pulumi'
-import { CommonAzureConstruct, CommonAzureStack, CommonAzureStackProps, RedisProps } from '../../src/index.js'
+import {
+  CommonAzureConstruct,
+  CommonAzureStack,
+  CommonAzureStackProps,
+  ManagedRedisResult,
+  RedisEnterpriseClusterProps,
+} from '../../src/index.js'
+import { outputToPromise } from '../helpers.js'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
-  testRedisCache: RedisProps
+  testRedisCache: RedisEnterpriseClusterProps
   testAttribute?: string
 }
 
@@ -47,11 +53,11 @@ class TestInvalidCommonStack extends CommonAzureStack {
 
 class TestCommonConstruct extends CommonAzureConstruct {
   declare props: TestAzureStackProps
-  redisCache: Redis
+  redisResult: ManagedRedisResult
 
   constructor(name: string, props: TestAzureStackProps) {
     super(name, props)
-    this.redisCache = this.redisManager.createManagedRedis(
+    this.redisResult = this.redisManager.createManagedRedis(
       `test-redis-cache-${this.props.stage}`,
       this,
       this.props.testRedisCache
@@ -72,8 +78,10 @@ pulumi.runtime.setMocks({
     // Return different names based on resource type
     if (args.type === 'azure-native:resources:ResourceGroup') {
       name = args.inputs.resourceGroupName
-    } else if (args.type === 'azure-native:redis:Redis') {
-      name = args.inputs.name
+    } else if (args.type === 'azure-native:redisenterprise:RedisEnterprise') {
+      name = args.inputs.clusterName
+    } else if (args.type === 'azure-native:redisenterprise:Database') {
+      name = args.inputs.databaseName
     }
 
     return {
@@ -106,7 +114,9 @@ describe('TestAzureRedisConstruct', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
     expect(stack.construct).toBeDefined()
-    expect(stack.construct.redisCache).toBeDefined()
+    expect(stack.construct.redisResult).toBeDefined()
+    expect(stack.construct.redisResult.cluster).toBeDefined()
+    expect(stack.construct.redisResult.database).toBeDefined()
   })
 })
 
@@ -117,7 +127,7 @@ describe('TestAzureRedisConstruct - Resource Group Fallback', () => {
         constructor(name: string, props: any) {
           super(name, props)
           this.redisManager.createManagedRedis('test-no-rg-redis', this, {
-            name: 'test-no-rg-redis',
+            sku: { name: 'Balanced_B0' },
           } as any)
         }
       }
@@ -136,13 +146,14 @@ describe('TestAzureRedisConstruct - Resource Group Fallback', () => {
 
 class TestMinimalRedisConstruct extends CommonAzureConstruct {
   declare props: TestAzureStackProps
-  redisCache: Redis
+  redisResult: ManagedRedisResult
 
   constructor(name: string, props: TestAzureStackProps) {
     super(name, props)
-    this.redisCache = this.redisManager.createManagedRedis(`test-minimal-redis-${this.props.stage}`, this, {
-      name: 'test-minimal-redis',
+    this.redisResult = this.redisManager.createManagedRedis(`test-minimal-redis-${this.props.stage}`, this, {
+      clusterName: 'test-minimal-redis',
       resourceGroupName: 'test-rg-dev',
+      sku: { name: 'Balanced_B0' },
     } as any)
   }
 }
@@ -160,51 +171,66 @@ class TestMinimalRedisStack extends CommonAzureStack {
 const minimalRedisStack = new TestMinimalRedisStack('test-minimal-redis-stack', testStackProps)
 
 describe('TestAzureRedisConstruct - Default Values', () => {
-  test('redis cache uses default sku when not provided', () => {
-    pulumi.all([minimalRedisStack.construct.redisCache.sku]).apply(([sku]) => {
-      expect(sku?.name).toEqual('Basic')
-      expect(sku?.family).toEqual('C')
-      expect(sku?.capacity).toEqual(0)
-    })
+  test('redis cluster uses default sku when not provided', async () => {
+    await outputToPromise(
+      pulumi.all([minimalRedisStack.construct.redisResult.cluster.sku]).apply(([sku]) => {
+        expect(sku?.name).toEqual('Balanced_B0')
+      })
+    )
   })
 
-  test('redis cache uses default tags when not provided', () => {
-    pulumi.all([minimalRedisStack.construct.redisCache.tags]).apply(([tags]) => {
-      expect(tags?.environment).toEqual('dev')
-    })
+  test('redis cluster uses default tags when not provided', async () => {
+    await outputToPromise(
+      pulumi.all([minimalRedisStack.construct.redisResult.cluster.tags]).apply(([tags]) => {
+        expect(tags?.environment).toEqual('dev')
+      })
+    )
   })
 
-  test('redis cache uses default location from scope when not provided', () => {
-    pulumi.all([minimalRedisStack.construct.redisCache.location]).apply(([location]) => {
-      expect(location).toEqual('eastus')
-    })
+  test('redis cluster uses default location from scope when not provided', async () => {
+    await outputToPromise(
+      pulumi.all([minimalRedisStack.construct.redisResult.cluster.location]).apply(([location]) => {
+        expect(location).toEqual('eastus')
+      })
+    )
   })
 })
 
 describe('TestAzureRedisConstruct', () => {
-  test('provisions managed redis as expected', () => {
-    pulumi
-      .all([
-        stack.construct.redisCache.id,
-        stack.construct.redisCache.urn,
-        stack.construct.redisCache.name,
-        stack.construct.redisCache.location,
-        stack.construct.redisCache.sku,
-        stack.construct.redisCache.minimumTlsVersion,
-        stack.construct.redisCache.enableNonSslPort,
-        stack.construct.redisCache.tags,
-      ])
-      .apply(([id, urn, name, location, sku, tlsVersion, nonSslPort, tags]) => {
-        expect(id).toEqual('test-redis-cache-dev-rc-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:redis:Redis::test-redis-cache-dev-rc'
-        )
-        expect(name).toEqual('test-redis-cache-dev')
-        expect(location).toEqual('eastus')
-        expect(sku).toEqual({ capacity: 2, family: 'C', name: 'Basic' })
-        expect(tlsVersion).toEqual('1.2')
-        expect(nonSslPort).toEqual(false)
-        expect(tags?.environment).toEqual('dev')
-      })
+  test('provisions managed redis as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.redisResult.cluster.id,
+          stack.construct.redisResult.cluster.urn,
+          stack.construct.redisResult.cluster.name,
+          stack.construct.redisResult.cluster.location,
+          stack.construct.redisResult.cluster.sku,
+          stack.construct.redisResult.cluster.minimumTlsVersion,
+          stack.construct.redisResult.cluster.tags,
+        ])
+        .apply(([id, urn, name, location, sku, tlsVersion, tags]) => {
+          expect(id).toEqual('test-redis-cache-dev-rc-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:redisenterprise:RedisEnterprise::test-redis-cache-dev-rc'
+          )
+          expect(name).toEqual('test-redis-cache-dev')
+          expect(location).toEqual('eastus')
+          expect(sku).toEqual({ name: 'Balanced_B0' })
+          expect(tlsVersion).toEqual('1.2')
+          expect(tags?.environment).toEqual('dev')
+        })
+    )
+  })
+
+  test('provisions redis database as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([stack.construct.redisResult.database.id, stack.construct.redisResult.database.name])
+        .apply(([id, name]) => {
+          expect(id).toEqual('test-redis-cache-dev-db-id')
+          expect(name).toEqual('default')
+        })
+    )
   })
 })

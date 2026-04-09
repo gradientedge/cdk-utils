@@ -1,5 +1,6 @@
 import { ConfigurationStore } from '@pulumi/azure-native/appconfiguration/index.js'
 import * as pulumi from '@pulumi/pulumi'
+import { outputToPromise } from '../helpers.js'
 import {
   AzureFunctionApp,
   AzureFunctionAppProps,
@@ -301,48 +302,56 @@ describe('TestAzureFunctionAppConstruct', () => {
     expect(stack.construct.appCodeArchiveFile).toBeDefined()
   })
 
-  test('provisions app service plan as expected', () => {
-    pulumi
-      .all([
-        stack.construct.appServicePlan.id,
-        stack.construct.appServicePlan.urn,
-        stack.construct.appServicePlan.name,
-        stack.construct.appServicePlan.tags,
-      ])
-      .apply(([id, urn, name, tags]) => {
-        expect(id).toEqual('test-common-stack-app-service-plan-as-id')
-        expect(urn).toBeDefined()
-        expect(name).toEqual('test-common-stack-dev')
+  test('provisions app service plan as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.appServicePlan.id,
+          stack.construct.appServicePlan.urn,
+          stack.construct.appServicePlan.name,
+          stack.construct.appServicePlan.tags,
+        ])
+        .apply(([id, urn, name, tags]) => {
+          expect(id).toEqual('test-common-stack-app-service-plan-as-id')
+          expect(urn).toBeDefined()
+          expect(name).toEqual('test-common-stack-dev')
+          expect(tags?.environment).toEqual('dev')
+        })
+    )
+  })
+
+  test('provisions app configuration as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          (stack.construct.appConfig as ConfigurationStore).id,
+          (stack.construct.appConfig as ConfigurationStore).urn,
+          (stack.construct.appConfig as ConfigurationStore).name,
+        ])
+        .apply(([id, urn, name]) => {
+          expect(id).toEqual('test-common-stack-app-configuration-ac-id')
+          expect(urn).toBeDefined()
+          expect(name).toEqual('test-app-config-dev')
+        })
+    )
+  })
+
+  test('provisions app storage account as expected', async () => {
+    await outputToPromise(
+      pulumi.all([stack.construct.appStorageAccount.id, stack.construct.appStorageAccount.tags]).apply(([id, tags]) => {
+        expect(id).toEqual('test-common-stack-storage-account-sa-id')
         expect(tags?.environment).toEqual('dev')
       })
+    )
   })
 
-  test('provisions app configuration as expected', () => {
-    pulumi
-      .all([
-        (stack.construct.appConfig as ConfigurationStore).id,
-        (stack.construct.appConfig as ConfigurationStore).urn,
-        (stack.construct.appConfig as ConfigurationStore).name,
-      ])
-      .apply(([id, urn, name]) => {
-        expect(id).toEqual('test-common-stack-app-configuration-ac-id')
+  test('provisions function app as expected', async () => {
+    await outputToPromise(
+      pulumi.all([stack.construct.app.id, stack.construct.app.urn]).apply(([id, urn]) => {
+        expect(id).toBeDefined()
         expect(urn).toBeDefined()
-        expect(name).toEqual('test-app-config-dev')
       })
-  })
-
-  test('provisions app storage account as expected', () => {
-    pulumi.all([stack.construct.appStorageAccount.id, stack.construct.appStorageAccount.tags]).apply(([id, tags]) => {
-      expect(id).toEqual('test-common-stack-storage-account-sa-id')
-      expect(tags?.environment).toEqual('dev')
-    })
-  })
-
-  test('provisions function app as expected', () => {
-    pulumi.all([stack.construct.app.id, stack.construct.app.urn]).apply(([id, urn]) => {
-      expect(id).toBeDefined()
-      expect(urn).toBeDefined()
-    })
+    )
   })
 })
 
@@ -355,10 +364,12 @@ describe('TestAzureFunctionAppWithOverridesConstruct', () => {
     expect(stackWithOverrides.construct.props.useConfigOverride).toEqual(true)
   })
 
-  test('creates function dashboard as expected', () => {
-    pulumi.all([stackWithOverrides.construct.functionDashboard.id]).apply(([id]) => {
-      expect(id).toBeDefined()
-    })
+  test('creates function dashboard as expected', async () => {
+    await outputToPromise(
+      pulumi.all([stackWithOverrides.construct.functionDashboard.id]).apply(([id]) => {
+        expect(id).toBeDefined()
+      })
+    )
   })
 })
 

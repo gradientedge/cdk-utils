@@ -15,7 +15,8 @@ import {
   Protocol,
   Subscription,
 } from '@pulumi/azure-native/apimanagement/index.js'
-import * as redis from '@pulumi/azure-native/redis/index.js'
+import { Database, listDatabaseKeysOutput, RedisEnterprise } from '@pulumi/azure-native/redisenterprise/index.js'
+import * as pulumi from '@pulumi/pulumi'
 import { ResourceOptions } from '@pulumi/pulumi'
 
 import { CommonAzureConstruct } from '../../common/index.js'
@@ -60,7 +61,7 @@ export class AzureApiManagementManager {
    * @param scope scope in which this resource is defined
    * @param props API Management properties
    * @param applicationInsightsKey Optional Application Insights instrumentation key for logging
-   * @param externalRedisCache Optional external Redis cache for API Management caching
+   * @param externalRedisCache Optional external Azure Managed Redis (Enterprise) cluster and database for API Management caching
    * @param resourceOptions Optional settings to control resource behaviour
    * @see [Pulumi Azure Native API Management]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/apimanagement/apimanagementservice/}
    */
@@ -69,7 +70,7 @@ export class AzureApiManagementManager {
     scope: CommonAzureConstruct,
     props: ApiManagementProps,
     applicationInsightsKey?: string,
-    externalRedisCache?: redis.Redis,
+    externalRedisCache?: { cluster: RedisEnterprise; database: Database },
     resourceOptions?: ResourceOptions
   ) {
     if (!props) throw new Error(`Props undefined for ${id}`)
@@ -120,8 +121,19 @@ export class AzureApiManagementManager {
       )
     }
 
-    // Create Redis cache connection if external Redis is provided
+    // Create Redis cache connection if external Azure Managed Redis (Enterprise) is provided
     if (externalRedisCache) {
+      const { cluster, database } = externalRedisCache
+      const connectionString = pulumi
+        .all([cluster.hostName, cluster.name, database.name])
+        .apply(([hostName, clusterName, databaseName]) =>
+          listDatabaseKeysOutput({
+            clusterName,
+            databaseName,
+            resourceGroupName,
+          }).apply(keys => `${hostName}:10000,password=${keys.primaryKey},ssl=True,abortConnect=False`)
+        )
+
       new Cache(
         `${id}-am-redis-cache`,
         {
@@ -131,14 +143,11 @@ export class AzureApiManagementManager {
           ),
           serviceName: apiManagementService.name,
           resourceGroupName: resourceGroupName,
-          connectionString: externalRedisCache.hostName.apply(
-            hostName =>
-              `${hostName}:10000,password=${externalRedisCache.accessKeys.apply(k => k?.primaryKey)},ssl=True,abortConnect=False`
-          ),
-          useFromLocation: externalRedisCache.location,
-          resourceId: externalRedisCache.id,
+          connectionString: connectionString,
+          useFromLocation: cluster.location,
+          resourceId: cluster.id,
         },
-        { parent: scope, dependsOn: apiManagementService }
+        { parent: scope, dependsOn: [apiManagementService, cluster, database] }
       )
     }
 

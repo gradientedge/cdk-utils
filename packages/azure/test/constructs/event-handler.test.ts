@@ -1,6 +1,7 @@
 import { Topic } from '@pulumi/azure-native/eventgrid/index.js'
 import { Namespace, Queue } from '@pulumi/azure-native/servicebus/index.js'
 import * as pulumi from '@pulumi/pulumi'
+import { outputToPromise } from '../helpers.js'
 import {
   AzureEventHandler,
   AzureEventHandlerProps,
@@ -342,113 +343,125 @@ describe('TestAzureEventHandlerConstruct', () => {
 })
 
 describe('TestAzureEventHandlerConstruct', () => {
-  test('provisions dlq storage account as expected', () => {
-    pulumi
-      .all([
-        stack.construct.eventGridEventSubscription.dlqStorageAccount!.id,
-        stack.construct.eventGridEventSubscription.dlqStorageAccount!.urn,
-        stack.construct.eventGridEventSubscription.dlqStorageAccount!.name,
-        stack.construct.eventGridEventSubscription.dlqStorageAccount!.tags,
-      ])
-      .apply(([id, urn, name, tags]) => {
-        expect(id).toEqual('test-common-stack-eventgrid-subscription-dlq-storage-account-sa-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:storage:StorageAccount::test-common-stack-eventgrid-subscription-dlq-storage-account-sa'
-        )
-        expect(name).toBeDefined()
-        expect(tags?.environment).toEqual('dev')
-      })
+  test('provisions dlq storage account as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.eventGridEventSubscription.dlqStorageAccount!.id,
+          stack.construct.eventGridEventSubscription.dlqStorageAccount!.urn,
+          stack.construct.eventGridEventSubscription.dlqStorageAccount!.name,
+          stack.construct.eventGridEventSubscription.dlqStorageAccount!.tags,
+        ])
+        .apply(([id, urn, name, tags]) => {
+          expect(id).toEqual('test-common-stack-eventgrid-subscription-dlq-storage-account-sa-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:storage:StorageAccount::test-common-stack-eventgrid-subscription-dlq-storage-account-sa'
+          )
+          expect(name).toBeDefined()
+          expect(tags?.environment).toEqual('dev')
+        })
+    )
   })
 })
 
 describe('TestAzureEventHandlerConstruct', () => {
-  test('provisions dlq storage container as expected', () => {
-    pulumi
-      .all([
-        stack.construct.eventGridEventSubscription.dlqStorageContainer!.id,
-        stack.construct.eventGridEventSubscription.dlqStorageContainer!.urn,
-        stack.construct.eventGridEventSubscription.dlqStorageContainer!.name,
-      ])
-      .apply(([id, urn, name]) => {
-        expect(id).toEqual('test-common-stack-eventgrid-subscription-dlq-container-sc-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:storage:BlobContainer::test-common-stack-eventgrid-subscription-dlq-container-sc'
-        )
-        expect(name).toBeDefined()
-      })
+  test('provisions dlq storage container as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.eventGridEventSubscription.dlqStorageContainer!.id,
+          stack.construct.eventGridEventSubscription.dlqStorageContainer!.urn,
+          stack.construct.eventGridEventSubscription.dlqStorageContainer!.name,
+        ])
+        .apply(([id, urn, name]) => {
+          expect(id).toEqual('test-common-stack-eventgrid-subscription-dlq-container-sc-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:storage:BlobContainer::test-common-stack-eventgrid-subscription-dlq-container-sc'
+          )
+          expect(name).toBeDefined()
+        })
+    )
   })
 })
 
 describe('TestAzureEventHandlerConstruct', () => {
-  test('provisions service bus namespace as expected', () => {
-    pulumi
-      .all([
-        stack.construct.serviceBus.namespace.id,
-        (stack.construct.serviceBus.namespace as Namespace).urn,
-        stack.construct.serviceBus.namespace.name,
-        stack.construct.serviceBus.namespace.tags,
-      ])
-      .apply(([id, urn, name, tags]) => {
-        expect(id).toEqual('test-common-stack-sn-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:servicebus:Namespace::test-common-stack-sn'
-        )
-        expect(name).toEqual('test-event-handler-sb-ns-dev')
-        expect(tags?.environment).toEqual('dev')
-      })
+  test('provisions service bus namespace as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.serviceBus.namespace.id,
+          (stack.construct.serviceBus.namespace as Namespace).urn,
+          stack.construct.serviceBus.namespace.name,
+          stack.construct.serviceBus.namespace.tags,
+        ])
+        .apply(([id, urn, name, tags]) => {
+          expect(id).toEqual('test-common-stack-sn-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:servicebus:Namespace::test-common-stack-sn'
+          )
+          expect(name).toEqual('test-event-handler-sb-ns-dev')
+          expect(tags?.environment).toEqual('dev')
+        })
+    )
   })
 })
 
 describe('TestAzureEventHandlerConstruct', () => {
-  test('provisions service bus queue as expected', () => {
-    pulumi
-      .all([
-        stack.construct.serviceBus.queue.id,
-        (stack.construct.serviceBus.queue as Queue).urn,
-        stack.construct.serviceBus.queue.name,
-      ])
-      .apply(([id, urn, name]) => {
-        expect(id).toEqual('test-common-stack-sq-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:servicebus:Queue::test-common-stack-sq'
-        )
-        expect(name).toEqual('test-event-handler-sb-queue-dev')
-      })
+  test('provisions service bus queue as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.serviceBus.queue.id,
+          (stack.construct.serviceBus.queue as Queue).urn,
+          stack.construct.serviceBus.queue.name,
+        ])
+        .apply(([id, urn, name]) => {
+          expect(id).toEqual('test-common-stack-sq-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:servicebus:Queue::test-common-stack-sq'
+          )
+          expect(name).toEqual('test-event-handler-sb-queue-dev')
+        })
+    )
   })
 })
 
 describe('TestAzureEventHandlerConstruct', () => {
-  test('provisions event grid topic as expected', () => {
+  test('provisions event grid topic as expected', async () => {
     const topic = stack.construct.eventGridTopic as Topic
-    pulumi
-      .all([topic.id, topic.urn, topic.name, topic.location, topic.tags])
-      .apply(([id, urn, name, location, tags]) => {
-        expect(id).toEqual('test-common-stack-et-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:eventgrid:Topic::test-common-stack-et'
-        )
-        expect(name).toEqual('test-event-handler-topic-dev')
-        expect(location).toEqual('eastus')
-        expect(tags?.environment).toEqual('dev')
-      })
+    await outputToPromise(
+      pulumi
+        .all([topic.id, topic.urn, topic.name, topic.location, topic.tags])
+        .apply(([id, urn, name, location, tags]) => {
+          expect(id).toEqual('test-common-stack-et-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:eventgrid:Topic::test-common-stack-et'
+          )
+          expect(name).toEqual('test-event-handler-topic-dev')
+          expect(location).toEqual('eastus')
+          expect(tags?.environment).toEqual('dev')
+        })
+    )
   })
 })
 
 describe('TestAzureEventHandlerConstruct', () => {
-  test('provisions event grid event subscription as expected', () => {
-    pulumi
-      .all([
-        stack.construct.eventGridEventSubscription.eventSubscription!.id,
-        stack.construct.eventGridEventSubscription.eventSubscription!.urn,
-        stack.construct.eventGridEventSubscription.eventSubscription!.name,
-      ])
-      .apply(([id, urn, name]) => {
-        expect(id).toEqual('test-common-stack-es-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:eventgrid:EventSubscription::test-common-stack-es'
-        )
-        expect(name).toEqual('test-event-handler-subscription-dev')
-      })
+  test('provisions event grid event subscription as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.eventGridEventSubscription.eventSubscription!.id,
+          stack.construct.eventGridEventSubscription.eventSubscription!.urn,
+          stack.construct.eventGridEventSubscription.eventSubscription!.name,
+        ])
+        .apply(([id, urn, name]) => {
+          expect(id).toEqual('test-common-stack-es-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:eventgrid:EventSubscription::test-common-stack-es'
+          )
+          expect(name).toEqual('test-event-handler-subscription-dev')
+        })
+    )
   })
 })
 
@@ -609,33 +622,44 @@ describe('TestAzureEventHandlerUseExistingConstruct', () => {
     expect(stackUseExisting.construct.eventGridEventSubscription.eventSubscription).toBeUndefined()
   })
 
-  test('resolves existing service bus namespace via getNamespaceOutput', () => {
-    pulumi
-      .all([stackUseExisting.construct.serviceBus.namespace.id, stackUseExisting.construct.serviceBus.namespace.name])
-      .apply(([id, name]) => {
-        expect(id).toEqual('existing-namespace-id')
-        expect(name).toEqual('test-existing-sb-ns')
-      })
+  test('resolves existing service bus namespace via getNamespaceOutput', async () => {
+    await outputToPromise(
+      pulumi
+        .all([stackUseExisting.construct.serviceBus.namespace.id, stackUseExisting.construct.serviceBus.namespace.name])
+        .apply(([id, name]) => {
+          expect(id).toEqual('existing-namespace-id')
+          expect(name).toEqual('test-existing-sb-ns')
+        })
+    )
   })
 
-  test('resolves existing service bus queue via getQueueOutput', () => {
-    pulumi
-      .all([stackUseExisting.construct.serviceBus.queue.id, stackUseExisting.construct.serviceBus.queue.name])
-      .apply(([id, name]) => {
-        expect(id).toEqual('existing-queue-id')
-        expect(name).toEqual('test-existing-sb-queue')
-      })
+  test('resolves existing service bus queue via getQueueOutput', async () => {
+    await outputToPromise(
+      pulumi
+        .all([stackUseExisting.construct.serviceBus.queue.id, stackUseExisting.construct.serviceBus.queue.name])
+        .apply(([id, name]) => {
+          expect(id).toEqual('existing-queue-id')
+          expect(name).toEqual('test-existing-sb-queue')
+        })
+    )
   })
 })
 
 /* --- Tests for createFunctionAppSiteConfig --- */
 
 describe('TestAzureEventHandlerFullConstruct', () => {
-  test('createFunctionAppSiteConfig sets EVENT_INGEST_QUEUE_NAME environment variable', () => {
-    pulumi.all([stackFull.construct.serviceBus.queue.name]).apply(([queueName]) => {
-      expect(stackFull.construct.appEnvironmentVariables).toBeDefined()
-      expect(stackFull.construct.appEnvironmentVariables.EVENT_INGEST_QUEUE_NAME).toEqual(queueName)
-    })
+  test('createFunctionAppSiteConfig sets EVENT_INGEST_QUEUE_NAME environment variable', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stackFull.construct.serviceBus.queue.name,
+          stackFull.construct.appEnvironmentVariables.EVENT_INGEST_QUEUE_NAME,
+        ])
+        .apply(([queueName, envVarValue]) => {
+          expect(stackFull.construct.appEnvironmentVariables).toBeDefined()
+          expect(envVarValue).toEqual(queueName)
+        })
+    )
   })
 
   test('createFunctionAppSiteConfig sets EVENT_INGEST_SERVICE_BUS connection string', () => {

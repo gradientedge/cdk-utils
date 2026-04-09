@@ -1,6 +1,7 @@
 import { Vault } from '@pulumi/azure-native/keyvault/index.js'
 import * as pulumi from '@pulumi/pulumi'
 import { CommonAzureConstruct, CommonAzureStack, CommonAzureStackProps, KeyVaultProps } from '../../src/index.js'
+import { outputToPromise } from '../helpers.js'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
   testKeyVault: KeyVaultProps
@@ -108,37 +109,39 @@ describe('TestAzureKeyVaultConstruct', () => {
 })
 
 describe('TestAzureKeyVaultConstruct', () => {
-  test('provisions key vault as expected', () => {
-    pulumi
-      .all([
-        stack.construct.keyVault.id,
-        stack.construct.keyVault.urn,
-        stack.construct.keyVault.name,
-        stack.construct.keyVault.location,
-        stack.construct.keyVault.properties,
-        stack.construct.keyVault.tags,
-      ])
-      .apply(([id, urn, name, location, properties, tags]) => {
-        expect(id).toEqual('test-key-vault-dev-kv-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:keyvault:Vault::test-key-vault-dev-kv'
-        )
-        expect(name).toEqual('test-key-vault-dev')
-        expect(location).toEqual('eastus')
-        expect(properties).toEqual({
-          enablePurgeProtection: true,
-          enableRbacAuthorization: true,
-          enableSoftDelete: true,
-          enabledForDeployment: false,
-          enabledForDiskEncryption: false,
-          enabledForTemplateDeployment: false,
-          publicNetworkAccess: 'enabled',
-          sku: { family: 'A', name: 'standard' },
-          softDeleteRetentionInDays: 90,
-          tenantId: '00000000-0000-0000-0000-000000000000',
+  test('provisions key vault as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.keyVault.id,
+          stack.construct.keyVault.urn,
+          stack.construct.keyVault.name,
+          stack.construct.keyVault.location,
+          stack.construct.keyVault.properties,
+          stack.construct.keyVault.tags,
+        ])
+        .apply(([id, urn, name, location, properties, tags]) => {
+          expect(id).toEqual('test-key-vault-dev-kv-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:keyvault:Vault::test-key-vault-dev-kv'
+          )
+          expect(name).toEqual('test-key-vault-dev')
+          expect(location).toEqual('eastus')
+          expect(properties).toEqual({
+            enablePurgeProtection: true,
+            enableRbacAuthorization: true,
+            enableSoftDelete: true,
+            enabledForDeployment: false,
+            enabledForDiskEncryption: false,
+            enabledForTemplateDeployment: false,
+            publicNetworkAccess: 'enabled',
+            sku: { family: 'A', name: 'standard' },
+            softDeleteRetentionInDays: 90,
+            tenantId: '00000000-0000-0000-0000-000000000000',
+          })
+          expect(tags?.environment).toEqual('dev')
         })
-        expect(tags?.environment).toEqual('dev')
-      })
+    )
   })
 })
 
@@ -183,11 +186,13 @@ class TestStackWithSecret extends CommonAzureStack {
 const stackWithSecret = new TestStackWithSecret('test-secret-stack', testStackProps)
 
 describe('TestAzureKeyVaultConstruct - createKeyVaultSecret', () => {
-  test('provisions key vault secret as expected', () => {
+  test('provisions key vault secret as expected', async () => {
     expect(stackWithSecret.construct.keyVaultSecret).toBeDefined()
-    pulumi.all([stackWithSecret.construct.keyVaultSecret.id]).apply(([id]) => {
-      expect(id).toBeDefined()
-    })
+    await outputToPromise(
+      pulumi.all([stackWithSecret.construct.keyVaultSecret.id]).apply(([id]) => {
+        expect(id).toBeDefined()
+      })
+    )
   })
 
   test('throws when props are undefined for createKeyVaultSecret', () => {

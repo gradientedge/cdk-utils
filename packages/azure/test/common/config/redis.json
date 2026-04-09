@@ -1,13 +1,10 @@
 {
   "testRedisCache": {
-    "name": "test-redis-cache",
+    "clusterName": "test-redis-cache",
     "resourceGroupName": "test-rg-dev",
     "sku": {
-      "capacity": 2,
-      "family": "C",
-      "name": "Basic"
+      "name": "Balanced_B0"
     },
-    "enableNonSslPort": false,
     "minimumTlsVersion": "1.2"
   }
 }

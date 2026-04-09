@@ -1,5 +1,6 @@
 import { ConfigurationStore } from '@pulumi/azure-native/appconfiguration/index.js'
 import * as pulumi from '@pulumi/pulumi'
+import { outputToPromise } from '../helpers.js'
 import {
   AzureApiFunction,
   AzureLocation,
@@ -358,78 +359,86 @@ describe('TestAzureRestApiFunctionConstruct', () => {
 })
 
 describe('TestAzureRestApiFunctionConstruct', () => {
-  test('provisions app service plan as expected', () => {
-    pulumi
-      .all([
-        stack.construct.appServicePlan.id,
-        stack.construct.appServicePlan.urn,
-        stack.construct.appServicePlan.name,
-        stack.construct.appServicePlan.tags,
-      ])
-      .apply(([id, urn, name, tags]) => {
-        expect(id).toEqual('test-common-stack-app-service-plan-as-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:web:AppServicePlan::test-common-stack-app-service-plan-as'
-        )
-        expect(name).toEqual('test-common-stack-dev')
-        expect(tags?.environment).toEqual('dev')
-      })
+  test('provisions app service plan as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.appServicePlan.id,
+          stack.construct.appServicePlan.urn,
+          stack.construct.appServicePlan.name,
+          stack.construct.appServicePlan.tags,
+        ])
+        .apply(([id, urn, name, tags]) => {
+          expect(id).toEqual('test-common-stack-app-service-plan-as-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:web:AppServicePlan::test-common-stack-app-service-plan-as'
+          )
+          expect(name).toEqual('test-common-stack-dev')
+          expect(tags?.environment).toEqual('dev')
+        })
+    )
   })
 })
 
 describe('TestAzureRestApiFunctionConstruct', () => {
-  test('provisions app configuration as expected', () => {
-    pulumi
-      .all([
-        (stack.construct.appConfig as ConfigurationStore).id,
-        (stack.construct.appConfig as ConfigurationStore).urn,
-        (stack.construct.appConfig as ConfigurationStore).name,
-      ])
-      .apply(([id, urn, name]) => {
-        expect(id).toEqual('test-common-stack-app-configuration-ac-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:appconfiguration:ConfigurationStore::test-common-stack-app-configuration-ac'
-        )
-        expect(name).toEqual('test-rest-api-func-config-dev')
-      })
+  test('provisions app configuration as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          (stack.construct.appConfig as ConfigurationStore).id,
+          (stack.construct.appConfig as ConfigurationStore).urn,
+          (stack.construct.appConfig as ConfigurationStore).name,
+        ])
+        .apply(([id, urn, name]) => {
+          expect(id).toEqual('test-common-stack-app-configuration-ac-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:appconfiguration:ConfigurationStore::test-common-stack-app-configuration-ac'
+          )
+          expect(name).toEqual('test-rest-api-func-config-dev')
+        })
+    )
   })
 })
 
 describe('TestAzureRestApiFunctionConstruct', () => {
-  test('provisions app storage account as expected', () => {
-    pulumi
-      .all([
-        stack.construct.appStorageAccount.id,
-        stack.construct.appStorageAccount.urn,
-        stack.construct.appStorageAccount.name,
-        stack.construct.appStorageAccount.tags,
-      ])
-      .apply(([id, urn, name, tags]) => {
-        expect(id).toEqual('test-common-stack-storage-account-sa-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:storage:StorageAccount::test-common-stack-storage-account-sa'
-        )
-        expect(name).toBeDefined()
-        expect(tags?.environment).toEqual('dev')
-      })
+  test('provisions app storage account as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.appStorageAccount.id,
+          stack.construct.appStorageAccount.urn,
+          stack.construct.appStorageAccount.name,
+          stack.construct.appStorageAccount.tags,
+        ])
+        .apply(([id, urn, name, tags]) => {
+          expect(id).toEqual('test-common-stack-storage-account-sa-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:storage:StorageAccount::test-common-stack-storage-account-sa'
+          )
+          expect(name).toBeDefined()
+          expect(tags?.environment).toEqual('dev')
+        })
+    )
   })
 })
 
 describe('TestAzureRestApiFunctionConstruct', () => {
-  test('provisions deployment storage container as expected', () => {
-    pulumi
-      .all([
-        stack.construct.appDeploymentStorageContainer.id,
-        stack.construct.appDeploymentStorageContainer.urn,
-        stack.construct.appDeploymentStorageContainer.name,
-      ])
-      .apply(([id, urn, name]) => {
-        expect(id).toEqual('test-common-stack-storage-deployment-container-sc-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:storage:BlobContainer::test-common-stack-storage-deployment-container-sc'
-        )
-        expect(name).toBeDefined()
-      })
+  test('provisions deployment storage container as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.appDeploymentStorageContainer.id,
+          stack.construct.appDeploymentStorageContainer.urn,
+          stack.construct.appDeploymentStorageContainer.name,
+        ])
+        .apply(([id, urn, name]) => {
+          expect(id).toEqual('test-common-stack-storage-deployment-container-sc-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:storage:BlobContainer::test-common-stack-storage-deployment-container-sc'
+          )
+          expect(name).toBeDefined()
+        })
+    )
   })
 })
 
@@ -440,11 +449,13 @@ describe('TestAzureRestApiFunctionConstruct', () => {
 })
 
 describe('TestAzureRestApiFunctionConstruct', () => {
-  test('creates namespace secret as expected', () => {
+  test('creates namespace secret as expected', async () => {
     expect(stack.construct.api.namedValueSecret).toBeDefined()
-    pulumi.all([stack.construct.api.namedValueSecret.id]).apply(([id]) => {
-      expect(id).toBeDefined()
-    })
+    await outputToPromise(
+      pulumi.all([stack.construct.api.namedValueSecret.id]).apply(([id]) => {
+        expect(id).toBeDefined()
+      })
+    )
   })
 })
 
@@ -479,14 +490,20 @@ describe('TestAzureRestApiFunctionNewApiConstruct', () => {
 })
 
 describe('TestAzureRestApiFunctionNewApiConstruct', () => {
-  test('provisions new api management service as expected', () => {
-    pulumi
-      .all([stackNewApi.construct.api.apim.id, stackNewApi.construct.api.apim.urn, stackNewApi.construct.api.apim.name])
-      .apply(([id, urn, name]) => {
-        expect(id).toBeDefined()
-        expect(urn).toBeDefined()
-        expect(name).toBeDefined()
-      })
+  test('provisions new api management service as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stackNewApi.construct.api.apim.id,
+          stackNewApi.construct.api.apim.urn,
+          stackNewApi.construct.api.apim.name,
+        ])
+        .apply(([id, urn, name]) => {
+          expect(id).toBeDefined()
+          expect(urn).toBeDefined()
+          expect(name).toBeDefined()
+        })
+    )
   })
 })
 

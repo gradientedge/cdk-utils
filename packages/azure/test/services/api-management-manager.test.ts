@@ -4,8 +4,9 @@ import {
   Backend,
   GetApiManagementServiceResult,
 } from '@pulumi/azure-native/apimanagement/index.js'
-import * as redis from '@pulumi/azure-native/redis/index.js'
+import * as redisenterprise from '@pulumi/azure-native/redisenterprise/index.js'
 import * as pulumi from '@pulumi/pulumi'
+import { outputToPromise } from '../helpers.js'
 import {
   ApiManagementApiProps,
   ApiManagementBackendProps,
@@ -157,26 +158,28 @@ describe('TestAzureApiManagementConstruct', () => {
 })
 
 describe('TestAzureApiManagementConstruct', () => {
-  test('provisions api management as expected', () => {
-    pulumi
-      .all([
-        stack.construct.apiManagementService.id,
-        stack.construct.apiManagementService.urn,
-        stack.construct.apiManagementService.name,
-        stack.construct.apiManagementService.location,
-        stack.construct.apiManagementService.sku,
-        stack.construct.apiManagementService.tags,
-      ])
-      .apply(([id, urn, name, location, sku, tags]) => {
-        expect(id).toEqual('test-api-management-dev-am-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:apimanagement:ApiManagementService::test-api-management-dev-am'
-        )
-        expect(name).toEqual('test-api-management-dev')
-        expect(location).toEqual('eastus')
-        expect(sku).toEqual({ capacity: 1, name: 'Developer' })
-        expect(tags?.environment).toEqual('dev')
-      })
+  test('provisions api management as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.apiManagementService.id,
+          stack.construct.apiManagementService.urn,
+          stack.construct.apiManagementService.name,
+          stack.construct.apiManagementService.location,
+          stack.construct.apiManagementService.sku,
+          stack.construct.apiManagementService.tags,
+        ])
+        .apply(([id, urn, name, location, sku, tags]) => {
+          expect(id).toEqual('test-api-management-dev-am-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:apimanagement:ApiManagementService::test-api-management-dev-am'
+          )
+          expect(name).toEqual('test-api-management-dev')
+          expect(location).toEqual('eastus')
+          expect(sku).toEqual({ capacity: 1, name: 'Developer' })
+          expect(tags?.environment).toEqual('dev')
+        })
+    )
   })
 })
 
@@ -253,28 +256,38 @@ describe('TestAzureApiManagementWithLogger', () => {
   })
 })
 
-// Test for API Management with external Redis cache
+// Test for API Management with external Azure Managed Redis (Enterprise) cache
 class TestConstructWithRedis extends CommonAzureConstruct {
   declare props: TestAzureStackProps
   apiManagementService: ApiManagementService
-  redisCache: redis.Redis
+  redisCluster: redisenterprise.RedisEnterprise
+  redisDatabase: redisenterprise.Database
 
   constructor(name: string, props: TestAzureStackProps) {
     super(name, props)
-    // Create a mock Redis cache
-    this.redisCache = new redis.Redis(
-      'test-redis',
+    // Create a mock Redis Enterprise cluster
+    this.redisCluster = new redisenterprise.RedisEnterprise(
+      'test-redis-cluster',
       {
-        name: 'test-redis-cache',
+        clusterName: 'test-redis-cache',
         resourceGroupName: props.resourceGroupName!,
         location: props.location!,
         sku: {
-          name: 'Basic',
-          family: 'C',
-          capacity: 0,
+          name: 'Balanced_B0',
         },
       },
       { parent: this }
+    )
+
+    // Create a mock Redis Enterprise database
+    this.redisDatabase = new redisenterprise.Database(
+      'test-redis-db',
+      {
+        clusterName: this.redisCluster.name,
+        resourceGroupName: props.resourceGroupName!,
+        databaseName: 'default',
+      },
+      { parent: this, dependsOn: [this.redisCluster] }
     )
 
     this.apiManagementService = this.apiManagementManager.createApiManagementService(
@@ -282,7 +295,7 @@ class TestConstructWithRedis extends CommonAzureConstruct {
       this,
       this.props.testApiManagement,
       undefined,
-      this.redisCache
+      { cluster: this.redisCluster, database: this.redisDatabase }
     )
   }
 }
@@ -298,10 +311,11 @@ class TestStackWithRedis extends CommonAzureStack {
 }
 
 describe('TestAzureApiManagementWithRedis', () => {
-  test('provisions api management with external redis cache', () => {
+  test('provisions api management with external redis enterprise cache', () => {
     const stackWithRedis = new TestStackWithRedis('test-stack-with-redis', testStackProps)
     expect(stackWithRedis.construct.apiManagementService).toBeDefined()
-    expect(stackWithRedis.construct.redisCache).toBeDefined()
+    expect(stackWithRedis.construct.redisCluster).toBeDefined()
+    expect(stackWithRedis.construct.redisDatabase).toBeDefined()
   })
 })
 
@@ -618,11 +632,13 @@ class TestStackWithPolicy extends CommonAzureStack {
 }
 
 describe('TestAzureApiManagementWithPolicy', () => {
-  test('provisions api policy as expected', () => {
+  test('provisions api policy as expected', async () => {
     const stackWithPolicy = new TestStackWithPolicy('test-stack-with-policy', testStackProps)
     expect(stackWithPolicy.construct.apiPolicy).toBeDefined()
-    pulumi.all([stackWithPolicy.construct.apiPolicy.id]).apply(([id]) => {
-      expect(id).toBeDefined()
-    })
+    await outputToPromise(
+      pulumi.all([stackWithPolicy.construct.apiPolicy.id]).apply(([id]) => {
+        expect(id).toBeDefined()
+      })
+    )
   })
 })
