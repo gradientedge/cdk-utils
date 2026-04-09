@@ -208,8 +208,7 @@ export class AzureEventHandler extends AzureFunctionApp {
           endpointType: 'StorageBlob',
           resourceId: this.eventGridEventSubscription.dlqStorageAccount?.id,
         },
-      },
-      { dependsOn: [this.eventGridTopic as unknown as Resource] }
+      }
     )
   }
 
