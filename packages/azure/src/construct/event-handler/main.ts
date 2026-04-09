@@ -57,7 +57,7 @@ export class AzureEventHandler extends AzureFunctionApp {
    * @summary Method to create the dead-letter queue storage account for EventGrid subscriptions
    */
   protected createEventGridSubscriptionDlqStorageAccount() {
-    if (this.props.serviceBus.useExisting) return
+    if (!this.props.eventGridSubscription.dlqStorageAccount) return
 
     this.eventGridEventSubscription.dlqStorageAccount = this.storageManager.createStorageAccount(
       `${this.id}-eventgrid-subscription-dlq-storage-account`,
@@ -74,7 +74,7 @@ export class AzureEventHandler extends AzureFunctionApp {
    * @summary Method to create the dead-letter queue storage container for EventGrid subscriptions
    */
   protected createEventGridSubscriptionDlqStorageContainer() {
-    if (this.props.serviceBus.useExisting) return
+    if (!this.eventGridEventSubscription.dlqStorageAccount) return
 
     this.eventGridEventSubscription.dlqStorageContainer = this.storageManager.createStorageContainer(
       `${this.id}-eventgrid-subscription-dlq-container`,
