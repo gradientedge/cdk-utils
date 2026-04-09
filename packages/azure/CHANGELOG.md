@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.10.0
+
+### Minor Changes
+
+- [`a3a7fec`](https://github.com/gradientedge/cdk-utils/commit/a3a7fec09144fb5d6a0a2b44d656ac3acaa7bc20) Thanks [@despock](https://github.com/despock)! - adding default resolution for resource group name
+
 ## 2.9.0
 
 ### Minor Changes
