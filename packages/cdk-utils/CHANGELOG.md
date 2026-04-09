@@ -1,5 +1,18 @@
 # @gradientedge/cdk-utils
 
+## 11.13.0
+
+### Minor Changes
+
+- [`2aaa2ba`](https://github.com/gradientedge/cdk-utils/commit/2aaa2bac6eb7ddcd4d996a4beaf049170900f6fa) Thanks [@despock](https://github.com/despock)! - bumping dependencies
+
+### Patch Changes
+
+- [`6c946fe`](https://github.com/gradientedge/cdk-utils/commit/6c946fe35d6e837aba102c0f43cc8199edc4dbe4) Thanks [@despock](https://github.com/despock)! - fix: invalid dependsOn resource
+
+- Updated dependencies [[`2aaa2ba`](https://github.com/gradientedge/cdk-utils/commit/2aaa2bac6eb7ddcd4d996a4beaf049170900f6fa), [`6c946fe`](https://github.com/gradientedge/cdk-utils/commit/6c946fe35d6e837aba102c0f43cc8199edc4dbe4)]:
+  - @gradientedge/cdk-utils-azure@2.12.0
+
 ## 11.12.1
 
 ### Patch Changes
