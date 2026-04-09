@@ -29,8 +29,8 @@ export interface EventHandlerEventGridSubscription {
 
 /** @category Interface */
 export interface EventHandlerServiceBusProps {
-  namespace: ServiceBusNamespaceProps
-  queue: ServiceBusQueueProps
+  namespace?: ServiceBusNamespaceProps
+  queue?: ServiceBusQueueProps
   useExisting?: boolean
 }
 
@@ -51,8 +51,8 @@ export interface EventHandlerEventGridTopicProps extends EventgridTopicProps {
 /** @category Interface */
 export interface AzureEventHandlerProps extends AzureFunctionAppProps {
   defender?: DefenderForStorageProps
-  eventGridEventSubscription: EventgridEventSubscriptionProps
+  eventGridEventSubscription?: EventgridEventSubscriptionProps
   eventGridSubscription: EventHandlerEventGridSubscriptionProps
   eventGridTopic: EventHandlerEventGridTopicProps
-  serviceBus: EventHandlerServiceBusProps
+  serviceBus?: EventHandlerServiceBusProps
 }

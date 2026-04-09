@@ -26,12 +26,13 @@ import { AzureApiFunction, AzureRestApiFunctionProps } from './types.js'
  */
 export class AzureRestApiFunction extends AzureFunctionApp {
   props: AzureRestApiFunctionProps
-  api: AzureApiFunction
+  api: AzureApiFunction = {} as AzureApiFunction
 
   constructor(id: string, props: AzureRestApiFunctionProps) {
     super(id, props)
     this.props = props
     this.id = id
+    this.api.apiOperations = {}
   }
 
   /**

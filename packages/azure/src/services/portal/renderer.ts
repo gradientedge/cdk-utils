@@ -26,7 +26,7 @@ export class AzureDashboardRenderer implements DashboardRenderer {
   }
 
   public getMissingProperties(template: PaneTemplate, properties: RenderParams['properties'] = []): MissingKeys {
-    const keys = Object.keys(template.properties).filter(key => !(key in properties))
+    const keys = Object.keys(template.properties ?? {}).filter(key => !(key in properties))
     return {
       keys,
       hasMissingKeys: keys.length !== 0,
@@ -34,7 +34,7 @@ export class AzureDashboardRenderer implements DashboardRenderer {
   }
 
   public getMissingVariables(template: PaneTemplate, variables: RenderParams['variables']): MissingKeys {
-    const keys = Object.keys(template.variables).filter(key => !(key in variables))
+    const keys = Object.keys(template.variables ?? {}).filter(key => !(key in variables))
     return {
       keys,
       hasMissingKeys: keys.length !== 0,

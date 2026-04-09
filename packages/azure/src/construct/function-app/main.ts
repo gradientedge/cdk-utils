@@ -53,8 +53,8 @@ export class AzureFunctionApp extends CommonAzureConstruct {
   appConfig: ConfigurationStore | Output<GetConfigurationStoreResult>
   appCodeArchiveFile: Output<archive.GetFileResult>
   appConfigHash: string
-  appKeyVaultsByResourceGroup: Map<string, Set<string>>
-  appConnectionStrings: any[]
+  appKeyVaultsByResourceGroup: Map<string, Set<string>> = {} as Map<string, Set<string>>
+  appConnectionStrings: any[] = []
   appConfigPrefix?: string
   appConfigurationsParsedConfig: any
   appConfigurationsOriginalParsedConfig: any
@@ -331,7 +331,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
       this,
       {
         ...this.props.functionApp,
-        name: this.props.functionApp.app.name ?? this.id,
+        name: this.props.functionApp.app?.name ?? this.id,
         serverFarmId: this.appServicePlan.id,
         resourceGroupName: this.resourceGroup.name,
         functionAppConfig: {
@@ -371,7 +371,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
             this.appConnectionStrings.map(cs => [cs.name, { type: cs.type, value: cs.value }])
           ),
         },
-        httpsOnly: this.props.functionApp.app.httpsOnly ?? true,
+        httpsOnly: this.props.functionApp.app?.httpsOnly ?? true,
       },
       { ...resourceOptions }
     )
@@ -485,7 +485,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
       resourceGroupName: this.resourceGroup.name,
       variables: this.dashboardVariables(),
       panes: this.props.functionApp.dashboard.panes,
-      properties: this.appConfigurationsOriginalParsedConfig.appConfig,
+      properties: this.appConfigurationsOriginalParsedConfig?.appConfig,
     })
   }
 }

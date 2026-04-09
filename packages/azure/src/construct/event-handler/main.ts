@@ -33,6 +33,8 @@ export class AzureEventHandler extends AzureFunctionApp {
     super(id, props)
     this.props = props
     this.id = id
+    this.eventGridEventSubscription = {} as EventHandlerEventGridSubscription
+    this.serviceBus = {} as EventHandlerServiceBus
   }
 
   /**
@@ -57,7 +59,7 @@ export class AzureEventHandler extends AzureFunctionApp {
    * @summary Method to create the dead-letter queue storage account for EventGrid subscriptions
    */
   protected createEventGridSubscriptionDlqStorageAccount() {
-    if (!this.props.eventGridSubscription.dlqStorageAccount) return
+    if (!this.props.eventGridSubscription || !this.props.eventGridSubscription.dlqStorageAccount) return
 
     this.eventGridEventSubscription.dlqStorageAccount = this.storageManager.createStorageAccount(
       `${this.id}-eventgrid-subscription-dlq-storage-account`,
@@ -74,7 +76,7 @@ export class AzureEventHandler extends AzureFunctionApp {
    * @summary Method to create the dead-letter queue storage container for EventGrid subscriptions
    */
   protected createEventGridSubscriptionDlqStorageContainer() {
-    if (!this.eventGridEventSubscription.dlqStorageAccount) return
+    if (!this.eventGridEventSubscription || !this.eventGridEventSubscription.dlqStorageAccount) return
 
     this.eventGridEventSubscription.dlqStorageContainer = this.storageManager.createStorageContainer(
       `${this.id}-eventgrid-subscription-dlq-container`,
@@ -92,7 +94,7 @@ export class AzureEventHandler extends AzureFunctionApp {
    * @summary Method to create the Service Bus namespace
    */
   protected createServiceBusNamespace() {
-    if (this.props.serviceBus.useExisting && this.props.serviceBus.namespace.namespaceName) {
+    if (this.props.serviceBus?.useExisting && this.props.serviceBus?.namespace?.namespaceName) {
       this.serviceBus.namespace = getNamespaceOutput({
         namespaceName: this.props.serviceBus.namespace.namespaceName,
         resourceGroupName: this.props.serviceBus.namespace.resourceGroupName,
@@ -102,8 +104,8 @@ export class AzureEventHandler extends AzureFunctionApp {
         this.id,
         this,
         {
-          ...this.props.serviceBus.namespace,
-          namespaceName: this.props.serviceBus.namespace.namespaceName ?? this.id,
+          ...this.props.serviceBus?.namespace,
+          namespaceName: this.props.serviceBus?.namespace?.namespaceName ?? this.id,
           resourceGroupName: this.resourceGroup.name,
         },
         { ignoreChanges: ['location'] }
@@ -120,9 +122,9 @@ export class AzureEventHandler extends AzureFunctionApp {
    */
   protected createServiceBusQueue() {
     if (
-      this.props.serviceBus.useExisting &&
-      this.props.serviceBus.namespace.namespaceName &&
-      this.props.serviceBus.queue.queueName
+      this.props.serviceBus?.useExisting &&
+      this.props.serviceBus?.namespace?.namespaceName &&
+      this.props.serviceBus?.queue?.queueName
     ) {
       this.serviceBus.queue = getQueueOutput({
         namespaceName: this.props.serviceBus.namespace.namespaceName,
@@ -131,9 +133,10 @@ export class AzureEventHandler extends AzureFunctionApp {
       })
     } else {
       this.serviceBus.queue = this.serviceBusManager.createServiceBusQueue(this.id, this, {
-        ...this.props.serviceBus.queue,
-        queueName: this.props.serviceBus.queue.queueName ?? this.id,
+        ...this.props.serviceBus?.queue,
+        queueName: this.props.serviceBus?.queue?.queueName ?? this.id,
         namespaceName: this.serviceBus.namespace.name,
+        resourceGroupName: this.resourceGroup.name,
       })
     }
 
@@ -187,23 +190,23 @@ export class AzureEventHandler extends AzureFunctionApp {
    * @summary Method to create the EventGrid event subscription with Service Bus queue destination
    */
   protected createEventGridEventSubscription() {
-    if (this.props.serviceBus.useExisting) return
+    if (this.props.serviceBus?.useExisting || !this.eventGridEventSubscription.dlqStorageAccount) return
 
     this.eventGridEventSubscription.eventSubscription = this.eventgridManager.createEventgridSubscription(
       this.id,
       this,
       {
         ...this.props.eventGridEventSubscription,
-        eventSubscriptionName: this.props.eventGridEventSubscription.eventSubscriptionName ?? this.id,
+        eventSubscriptionName: this.props.eventGridEventSubscription?.eventSubscriptionName ?? this.id,
         scope: this.eventGridTopic.id,
         destination: {
           endpointType: 'ServiceBusQueue',
           resourceId: this.serviceBus.queue.id,
         },
         deadLetterDestination: {
-          blobContainerName: this.eventGridEventSubscription.dlqStorageContainer!.name,
+          blobContainerName: this.eventGridEventSubscription.dlqStorageContainer?.name,
           endpointType: 'StorageBlob',
-          resourceId: this.eventGridEventSubscription.dlqStorageAccount!.id,
+          resourceId: this.eventGridEventSubscription.dlqStorageAccount?.id,
         },
       },
       { dependsOn: [this.eventGridTopic as unknown as Resource] }
@@ -214,7 +217,7 @@ export class AzureEventHandler extends AzureFunctionApp {
    * @summary Method to create diagnostic log settings for the Service Bus namespace
    */
   protected createServiceBusDiagnosticLog() {
-    if (this.props.serviceBus.useExisting) return
+    if (this.props.serviceBus?.useExisting) return
 
     this.monitorManager.createMonitorDiagnosticSettings(this.id, this, {
       name: `${this.id}-servicebus`,
@@ -265,7 +268,7 @@ export class AzureEventHandler extends AzureFunctionApp {
       {
         name: 'EVENT_INGEST_SERVICE_BUS',
         value: listNamespaceKeysOutput({
-          resourceGroupName: this.props.serviceBus.namespace.resourceGroupName,
+          resourceGroupName: this.props.serviceBus?.namespace?.resourceGroupName ?? this.resourceGroup.name,
           namespaceName: this.serviceBus.namespace.name,
           authorizationRuleName: 'RootManageSharedAccessKey',
         }).primaryConnectionString,

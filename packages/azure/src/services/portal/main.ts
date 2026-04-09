@@ -60,7 +60,7 @@ export class AzurePortalManager {
     const templateFile = dashboardRenderer.renderToFile(dashboardName, props)
     const template = fs.readFileSync(templateFile, 'utf-8')
     const content = Object.entries(props.variables).reduce(
-      (result, [key, value]) => result.replaceAll(`\${${key}}`, String(value)),
+      (result, [key, value]) => result.replaceAll(`\${${key}}`, JSON.stringify(String(value)).slice(1, -1)),
       template
     )
 

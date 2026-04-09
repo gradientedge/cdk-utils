@@ -78,7 +78,7 @@ export class AzureAppConfigurationManager {
   static hasCosmosDependencies = (obj: any): boolean => {
     if (!obj || typeof obj !== 'object') return false
     if ('databaseName' in obj || 'tableName' in obj) return true
-    return Object.values(obj).some(val => this.hasCosmosDependencies(val))
+    return Object.values(obj).some(v => this.hasCosmosDependencies(v))
   }
 
   /**
@@ -87,7 +87,9 @@ export class AzureAppConfigurationManager {
    */
   static hasEventGridTargets(obj: any): boolean {
     return (
-      obj && typeof obj === 'object' && ('eventGridTargets' in obj || Object.values(obj).some(this.hasEventGridTargets))
+      obj &&
+      typeof obj === 'object' &&
+      ('eventGridTargets' in obj || Object.values(obj).some(v => this.hasEventGridTargets(v)))
     )
   }
 }

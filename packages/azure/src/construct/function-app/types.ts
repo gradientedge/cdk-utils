@@ -16,7 +16,7 @@ export interface OtelProps {
 
 /** @category Interface */
 export interface FunctionAppProperties {
-  app: FunctionAppFlexConsumptionProps
+  app?: FunctionAppFlexConsumptionProps
   appConfiguration: AppConfigurationProps
   dashboard: PortalDashboardProps
   deploymentStorageContainer: StorageContainerProps

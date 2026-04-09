@@ -26,7 +26,7 @@ import { AzureApi, AzureRestApiProps } from './types.js'
  */
 export class AzureRestApi extends CommonAzureConstruct {
   props: AzureRestApiProps
-  api: AzureApi
+  api: AzureApi = {} as AzureApi
   applicationInsights: Output<GetComponentResult>
 
   constructor(id: string, props: AzureRestApiProps) {
