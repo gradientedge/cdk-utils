@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.12.1
+
+### Patch Changes
+
+- [`9eac92a`](https://github.com/gradientedge/cdk-utils/commit/9eac92a3a6dacb6bc7f332710d2212bf3dd44953) Thanks [@despock](https://github.com/despock)! - fix: initialising site
+
 ## 2.12.0
 
 ### Minor Changes
