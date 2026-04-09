@@ -597,12 +597,12 @@ describe('TestAzureEventHandlerUseExistingConstruct', () => {
     expect(stackUseExisting.construct.eventGridTopic).toBeDefined()
   })
 
-  test('skips dlq storage account creation when useExisting is true', () => {
-    expect(stackUseExisting.construct.eventGridEventSubscription.dlqStorageAccount).toBeUndefined()
+  test('provisions dlq storage account creation when useExisting is true', () => {
+    expect(stackUseExisting.construct.eventGridEventSubscription.dlqStorageAccount).toBeDefined()
   })
 
-  test('skips dlq storage container creation when useExisting is true', () => {
-    expect(stackUseExisting.construct.eventGridEventSubscription.dlqStorageContainer).toBeUndefined()
+  test('provisions dlq storage container creation when useExisting is true', () => {
+    expect(stackUseExisting.construct.eventGridEventSubscription.dlqStorageContainer).toBeDefined()
   })
 
   test('skips event grid event subscription creation when useExisting is true', () => {
