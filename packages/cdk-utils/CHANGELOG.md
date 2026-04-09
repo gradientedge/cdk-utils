@@ -1,5 +1,16 @@
 # @gradientedge/cdk-utils
 
+## 11.14.0
+
+### Minor Changes
+
+- [#1000](https://github.com/gradientedge/cdk-utils/pull/1000) [`854828e`](https://github.com/gradientedge/cdk-utils/commit/854828e9f1c68b62429398387068e44dfb020d9c) Thanks [@despock](https://github.com/despock)! - feat: switching to azure managed redis
+
+### Patch Changes
+
+- Updated dependencies [[`854828e`](https://github.com/gradientedge/cdk-utils/commit/854828e9f1c68b62429398387068e44dfb020d9c)]:
+  - @gradientedge/cdk-utils-azure@2.13.0
+
 ## 11.13.1
 
 ### Patch Changes
