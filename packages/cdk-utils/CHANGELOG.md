@@ -1,5 +1,16 @@
 # @gradientedge/cdk-utils
 
+## 11.12.0
+
+### Minor Changes
+
+- [#995](https://github.com/gradientedge/cdk-utils/pull/995) [`20708f6`](https://github.com/gradientedge/cdk-utils/commit/20708f62aecd52d12fd6dbac8110007f1e011a48) Thanks [@despock](https://github.com/despock)! - updated entry criteria for event handler resources
+
+### Patch Changes
+
+- Updated dependencies [[`20708f6`](https://github.com/gradientedge/cdk-utils/commit/20708f62aecd52d12fd6dbac8110007f1e011a48)]:
+  - @gradientedge/cdk-utils-azure@2.11.0
+
 ## 11.11.0
 
 ### Minor Changes
