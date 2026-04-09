@@ -1,4 +1,5 @@
 import * as pulumi from '@pulumi/pulumi'
+import { outputToPromise } from '../helpers.js'
 import {
   AzureApiWithCache,
   AzureLocation,
@@ -79,8 +80,10 @@ pulumi.runtime.setMocks({
       name = args.inputs.resourceGroupName
     } else if (args.type === 'azure-native:apimanagement:ApiManagementService') {
       name = args.inputs.serviceName
-    } else if (args.type === 'azure-native:redis:Redis') {
-      name = args.inputs.name
+    } else if (args.type === 'azure-native:redisenterprise:RedisEnterprise') {
+      name = args.inputs.clusterName
+    } else if (args.type === 'azure-native:redisenterprise:Database') {
+      name = args.inputs.databaseName
     } else if (args.type === 'azure-native:monitor:DiagnosticSetting') {
       name = args.inputs.name
     } else if (args.type === 'azure-native:authorization:RoleAssignment') {
@@ -105,12 +108,15 @@ pulumi.runtime.setMocks({
         ...args.inputs,
         name,
         identity: { principalId: 'mock-principal-id' },
-        accessKeys: { primaryKey: 'mock-redis-primary-key' },
+        hostName: 'test-redis-cache.redisenterprise.cache.azure.net',
         location: 'eastus',
       },
     }
   },
   call: (args: pulumi.runtime.MockCallArgs) => {
+    if (args.token === 'azure-native:redisenterprise:listDatabaseKeys') {
+      return { primaryKey: 'mock-redis-primary-key', secondaryKey: 'mock-redis-secondary-key' }
+    }
     return args.inputs
   },
 })
@@ -134,62 +140,79 @@ describe('TestAzureRestApiWithCacheConstruct', () => {
 })
 
 describe('TestAzureRestApiWithCacheConstruct', () => {
-  test('provisions resource group as expected', () => {
-    pulumi
-      .all([
-        stack.construct.resourceGroup.id,
-        stack.construct.resourceGroup.urn,
-        stack.construct.resourceGroup.name,
-        stack.construct.resourceGroup.tags,
-      ])
-      .apply(([id, urn, name, tags]) => {
-        expect(id).toEqual('test-common-stack-rg-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:resources:ResourceGroup::test-common-stack-rg'
-        )
-        expect(name).toBeDefined()
-        expect(tags?.environment).toEqual('dev')
-      })
+  test('provisions resource group as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.resourceGroup.id,
+          stack.construct.resourceGroup.urn,
+          stack.construct.resourceGroup.name,
+          stack.construct.resourceGroup.tags,
+        ])
+        .apply(([id, urn, name, tags]) => {
+          expect(id).toEqual('test-common-stack-rg-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:resources:ResourceGroup::test-common-stack-rg'
+          )
+          expect(name).toBeDefined()
+          expect(tags?.environment).toEqual('dev')
+        })
+    )
   })
 })
 
 describe('TestAzureRestApiWithCacheConstruct', () => {
-  test('provisions api management service as expected', () => {
-    pulumi
-      .all([
-        stack.construct.api.apim.id,
-        stack.construct.api.apim.urn,
-        stack.construct.api.apim.name,
-        stack.construct.api.apim.tags,
-      ])
-      .apply(([id, urn, name, tags]) => {
-        expect(id).toEqual('test-common-stack-am-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:apimanagement:ApiManagementService::test-common-stack-am'
-        )
-        expect(name).toBeDefined()
-        expect(tags?.environment).toEqual('dev')
-      })
+  test('provisions api management service as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.api.apim.id,
+          stack.construct.api.apim.urn,
+          stack.construct.api.apim.name,
+          stack.construct.api.apim.tags,
+        ])
+        .apply(([id, urn, name, tags]) => {
+          expect(id).toEqual('test-common-stack-am-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:apimanagement:ApiManagementService::test-common-stack-am'
+          )
+          expect(name).toBeDefined()
+          expect(tags?.environment).toEqual('dev')
+        })
+    )
   })
 })
 
 describe('TestAzureRestApiWithCacheConstruct', () => {
-  test('provisions redis cache as expected', () => {
-    pulumi
-      .all([
-        stack.construct.api.redis.id,
-        stack.construct.api.redis.urn,
-        stack.construct.api.redis.name,
-        stack.construct.api.redis.tags,
-      ])
-      .apply(([id, urn, name, tags]) => {
-        expect(id).toEqual('test-common-stack-rc-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:redis:Redis::test-common-stack-rc'
-        )
-        expect(name).toBeDefined()
-        expect(tags?.environment).toEqual('dev')
+  test('provisions redis enterprise cluster as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.api.redisCluster.id,
+          stack.construct.api.redisCluster.urn,
+          stack.construct.api.redisCluster.name,
+          stack.construct.api.redisCluster.tags,
+        ])
+        .apply(([id, urn, name, tags]) => {
+          expect(id).toEqual('test-common-stack-rc-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:redisenterprise:RedisEnterprise::test-common-stack-rc'
+          )
+          expect(name).toBeDefined()
+          expect(tags?.environment).toEqual('dev')
+        })
+    )
+  })
+})
+
+describe('TestAzureRestApiWithCacheConstruct', () => {
+  test('provisions redis enterprise database as expected', async () => {
+    expect(stack.construct.api.redisDatabase).toBeDefined()
+    await outputToPromise(
+      pulumi.all([stack.construct.api.redisDatabase.id]).apply(([id]) => {
+        expect(id).toBeDefined()
       })
+    )
   })
 })
 
@@ -206,20 +229,24 @@ describe('TestAzureRestApiWithCacheConstruct', () => {
 })
 
 describe('TestAzureRestApiWithCacheConstruct', () => {
-  test('provisions redis cache secret as expected', () => {
+  test('provisions redis cache secret as expected', async () => {
     expect(stack.construct.api.redisNamedValueSecret).toBeDefined()
-    pulumi.all([stack.construct.api.redisNamedValueSecret.id]).apply(([id]) => {
-      expect(id).toBeDefined()
-    })
+    await outputToPromise(
+      pulumi.all([stack.construct.api.redisNamedValueSecret.id]).apply(([id]) => {
+        expect(id).toBeDefined()
+      })
+    )
   })
 })
 
 describe('TestAzureRestApiWithCacheConstruct', () => {
-  test('provisions redis cache namespace as expected', () => {
+  test('provisions redis cache namespace as expected', async () => {
     expect(stack.construct.api.redisNamedValue).toBeDefined()
-    pulumi.all([stack.construct.api.redisNamedValue.id]).apply(([id]) => {
-      expect(id).toBeDefined()
-    })
+    await outputToPromise(
+      pulumi.all([stack.construct.api.redisNamedValue.id]).apply(([id]) => {
+        expect(id).toBeDefined()
+      })
+    )
   })
 })
 
@@ -254,7 +281,8 @@ describe('TestAzureRestApiWithCacheFullConstruct', () => {
     expect(stackFull).toBeDefined()
     expect(stackFull.construct).toBeDefined()
     expect(stackFull.construct.api).toBeDefined()
-    expect(stackFull.construct.api.redis).toBeDefined()
+    expect(stackFull.construct.api.redisCluster).toBeDefined()
+    expect(stackFull.construct.api.redisDatabase).toBeDefined()
     expect(stackFull.construct.api.redisNamedValueSecret).toBeDefined()
     expect(stackFull.construct.api.redisNamedValue).toBeDefined()
   })

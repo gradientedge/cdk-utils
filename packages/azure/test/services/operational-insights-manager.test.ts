@@ -1,6 +1,7 @@
 import * as pulumi from '@pulumi/pulumi'
 import { CommonAzureConstruct, CommonAzureStack, CommonAzureStackProps, WorkspaceProps } from '../../src/index.js'
 import { Workspace } from '@pulumi/azure-native/operationalinsights/index.js'
+import { outputToPromise } from '../helpers.js'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
   testWorkspace: WorkspaceProps
@@ -108,24 +109,26 @@ describe('TestOperationalInsightsConstruct', () => {
 })
 
 describe('TestOperationalInsightsConstruct', () => {
-  test('provisions workspace as expected', () => {
-    pulumi
-      .all([
-        stack.construct.workspace.id,
-        stack.construct.workspace.urn,
-        stack.construct.workspace.name,
-        stack.construct.workspace.location,
-        stack.construct.workspace.tags,
-      ])
-      .apply(([id, urn, name, location, tags]) => {
-        expect(id).toEqual('test-workspace-dev-lw-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:operationalinsights:Workspace::test-workspace-dev-lw'
-        )
-        expect(name).toEqual('test-workspace-dev')
-        expect(location).toEqual('eastus')
-        expect(tags?.environment).toEqual('dev')
-      })
+  test('provisions workspace as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.workspace.id,
+          stack.construct.workspace.urn,
+          stack.construct.workspace.name,
+          stack.construct.workspace.location,
+          stack.construct.workspace.tags,
+        ])
+        .apply(([id, urn, name, location, tags]) => {
+          expect(id).toEqual('test-workspace-dev-lw-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:operationalinsights:Workspace::test-workspace-dev-lw'
+          )
+          expect(name).toEqual('test-workspace-dev')
+          expect(location).toEqual('eastus')
+          expect(tags?.environment).toEqual('dev')
+        })
+    )
   })
 })
 
@@ -189,11 +192,13 @@ describe('TestOperationalInsightsConstruct - Resource Group Fallback', () => {
 })
 
 describe('TestOperationalInsightsConstruct - createTable', () => {
-  test('provisions workspace table as expected', () => {
+  test('provisions workspace table as expected', async () => {
     expect(stackWithTable.construct.table).toBeDefined()
-    pulumi.all([stackWithTable.construct.table.id]).apply(([id]) => {
-      expect(id).toBeDefined()
-    })
+    await outputToPromise(
+      pulumi.all([stackWithTable.construct.table.id]).apply(([id]) => {
+        expect(id).toBeDefined()
+      })
+    )
   })
 
   test('throws when props are undefined', () => {

@@ -6,6 +6,7 @@ import {
   CommonAzureStackProps,
   DefenderForStorageProps,
 } from '../../src/index.js'
+import { outputToPromise } from '../helpers.js'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
   testAttribute?: string
@@ -70,11 +71,13 @@ pulumi.runtime.setMocks({
 const stack = new TestCommonStack('test-common-stack', testStackProps)
 
 describe('TestAzureSecurityCenterManager', () => {
-  test('provisions defender for storage as expected', () => {
+  test('provisions defender for storage as expected', async () => {
     expect(stack.construct.defenderForStorage).toBeDefined()
-    pulumi.all([stack.construct.defenderForStorage.id]).apply(([id]) => {
-      expect(id).toBeDefined()
-    })
+    await outputToPromise(
+      pulumi.all([stack.construct.defenderForStorage.id]).apply(([id]) => {
+        expect(id).toBeDefined()
+      })
+    )
   })
 
   test('throws when props are undefined', () => {

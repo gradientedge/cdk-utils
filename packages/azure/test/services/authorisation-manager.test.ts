@@ -1,6 +1,7 @@
 import { RoleAssignment } from '@pulumi/azure-native/authorization/index.js'
 import * as pulumi from '@pulumi/pulumi'
 import { CommonAzureConstruct, CommonAzureStack, CommonAzureStackProps, RoleDefinitionId } from '../../src/index.js'
+import { outputToPromise } from '../helpers.js'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
   testAttribute?: string
@@ -101,28 +102,36 @@ describe('TestAzureAuthorisationConstruct', () => {
 })
 
 describe('TestAzureAuthorisationConstruct', () => {
-  test('provisions role assignment as expected', () => {
-    pulumi.all([stack.construct.roleAssignment.id]).apply(([id]) => {
-      expect(id).toBeDefined()
-    })
+  test('provisions role assignment as expected', async () => {
+    await outputToPromise(
+      pulumi.all([stack.construct.roleAssignment.id]).apply(([id]) => {
+        expect(id).toBeDefined()
+      })
+    )
   })
 
-  test('provisions storage table role assignment as expected', () => {
-    pulumi.all([stack.construct.storageTableRole.id]).apply(([id]) => {
-      expect(id).toBeDefined()
-    })
+  test('provisions storage table role assignment as expected', async () => {
+    await outputToPromise(
+      pulumi.all([stack.construct.storageTableRole.id]).apply(([id]) => {
+        expect(id).toBeDefined()
+      })
+    )
   })
 
-  test('provisions storage account role assignment as expected', () => {
-    pulumi.all([stack.construct.storageAccountRole.id]).apply(([id]) => {
-      expect(id).toBeDefined()
-    })
+  test('provisions storage account role assignment as expected', async () => {
+    await outputToPromise(
+      pulumi.all([stack.construct.storageAccountRole.id]).apply(([id]) => {
+        expect(id).toBeDefined()
+      })
+    )
   })
 
-  test('provisions app configuration role assignment as expected', () => {
-    pulumi.all([stack.construct.appConfigRole.id]).apply(([id]) => {
-      expect(id).toBeDefined()
-    })
+  test('provisions app configuration role assignment as expected', async () => {
+    await outputToPromise(
+      pulumi.all([stack.construct.appConfigRole.id]).apply(([id]) => {
+        expect(id).toBeDefined()
+      })
+    )
   })
 })
 

@@ -1,18 +1,20 @@
 import { NamedValue } from '@pulumi/azure-native/apimanagement/index.js'
 import { Secret } from '@pulumi/azure-native/keyvault/index.js'
-import { Redis } from '@pulumi/azure-native/redis/index.js'
+import { Database, RedisEnterprise } from '@pulumi/azure-native/redisenterprise/index.js'
 
-import { RedisProps } from '../../index.js'
+import { RedisDatabaseProps, RedisEnterpriseClusterProps } from '../../index.js'
 import { AzureApi, AzureRestApiProps } from '../index.js'
 
 /** @category Interface */
 export interface AzureRestApiWithCacheProps extends AzureRestApiProps {
-  apiManagementManagedRedis: RedisProps
+  apiManagementManagedRedis: RedisEnterpriseClusterProps
+  apiManagementManagedRedisDatabase?: Partial<RedisDatabaseProps>
 }
 
 /** @category Interface */
 export interface AzureApiWithCache extends AzureApi {
-  redis: Redis
+  redisCluster: RedisEnterprise
+  redisDatabase: Database
   redisNamedValueSecret: Secret
   redisNamedValue: NamedValue
 }

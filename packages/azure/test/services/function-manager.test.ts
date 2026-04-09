@@ -9,6 +9,7 @@ import {
   FunctionAppProps,
   FunctionProps,
 } from '../../src/index.js'
+import { outputToPromise } from '../helpers.js'
 
 const capturedResources: Record<string, pulumi.runtime.MockResourceArgs> = {}
 
@@ -139,73 +140,81 @@ describe('TestAzureFunctionConstruct', () => {
 })
 
 describe('TestAzureFunctionConstruct', () => {
-  test('provisions function app as expected', () => {
-    pulumi
-      .all([
-        stack.construct.functionApp.id,
-        stack.construct.functionApp.urn,
-        stack.construct.functionApp.name,
-        stack.construct.functionApp.location,
-        stack.construct.functionApp.kind,
-      ])
-      .apply(([id, urn, name, location, kind]) => {
-        expect(id).toEqual('test-function-app-dev-fa-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:web:WebApp::test-function-app-dev-fa'
-        )
-        expect(name).toEqual('test-function-app-dev')
-        expect(location).toEqual('eastus')
-        expect(kind).toEqual('functionapp')
-      })
+  test('provisions function app as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.functionApp.id,
+          stack.construct.functionApp.urn,
+          stack.construct.functionApp.name,
+          stack.construct.functionApp.location,
+          stack.construct.functionApp.kind,
+        ])
+        .apply(([id, urn, name, location, kind]) => {
+          expect(id).toEqual('test-function-app-dev-fa-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:web:WebApp::test-function-app-dev-fa'
+          )
+          expect(name).toEqual('test-function-app-dev')
+          expect(location).toEqual('eastus')
+          expect(kind).toEqual('functionapp')
+        })
+    )
   })
 })
 
 describe('TestAzureFunctionConstruct', () => {
-  test('provisions function as expected', () => {
-    pulumi
-      .all([stack.construct.function.id, stack.construct.function.urn, stack.construct.function.name])
-      .apply(([id, urn, name]) => {
-        expect(id).toEqual('test-function-dev-fc-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:web:WebAppFunction::test-function-dev-fc'
-        )
-        expect(name).toEqual('test-function-dev')
-      })
+  test('provisions function as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([stack.construct.function.id, stack.construct.function.urn, stack.construct.function.name])
+        .apply(([id, urn, name]) => {
+          expect(id).toEqual('test-function-dev-fc-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:web:WebAppFunction::test-function-dev-fc'
+          )
+          expect(name).toEqual('test-function-dev')
+        })
+    )
   })
 })
 
 describe('TestAzureFunctionConstruct', () => {
-  test('provisions flex consumption function app as expected', () => {
-    pulumi
-      .all([
-        stack.construct.functionAppFlexConsumption.id,
-        stack.construct.functionAppFlexConsumption.urn,
-        stack.construct.functionAppFlexConsumption.name,
-        stack.construct.functionAppFlexConsumption.location,
-        stack.construct.functionAppFlexConsumption.kind,
-        stack.construct.functionAppFlexConsumption.functionAppConfig,
-      ])
-      .apply(([id, urn, name, location, kind, functionAppConfig]) => {
-        expect(id).toEqual('test-function-app-flex-consumption-dev-fc-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:web:WebApp::test-function-app-flex-consumption-dev-fc'
-        )
-        expect(name).toEqual('test-function-app-flex-consumption-dev')
-        expect(location).toEqual('eastus')
-        expect(kind).toEqual('functionapp')
-      })
+  test('provisions flex consumption function app as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.functionAppFlexConsumption.id,
+          stack.construct.functionAppFlexConsumption.urn,
+          stack.construct.functionAppFlexConsumption.name,
+          stack.construct.functionAppFlexConsumption.location,
+          stack.construct.functionAppFlexConsumption.kind,
+          stack.construct.functionAppFlexConsumption.functionAppConfig,
+        ])
+        .apply(([id, urn, name, location, kind, functionAppConfig]) => {
+          expect(id).toEqual('test-function-app-flex-consumption-dev-fc-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:web:WebApp::test-function-app-flex-consumption-dev-fc'
+          )
+          expect(name).toEqual('test-function-app-flex-consumption-dev')
+          expect(location).toEqual('eastus')
+          expect(kind).toEqual('functionapp')
+        })
+    )
   })
 })
 
 describe('TestAzureFunctionConstruct', () => {
-  test('flex consumption function app has correct functionAppConfig', () => {
-    pulumi.all([stack.construct.functionAppFlexConsumption.functionAppConfig]).apply(([functionAppConfig]) => {
-      expect(functionAppConfig).toBeDefined()
-      expect(functionAppConfig?.runtime?.name).toEqual('node')
-      expect(functionAppConfig?.runtime?.version).toEqual('22')
-      expect(functionAppConfig?.scaleAndConcurrency?.instanceMemoryMB).toEqual(2048)
-      expect(functionAppConfig?.scaleAndConcurrency?.maximumInstanceCount).toEqual(100)
-    })
+  test('flex consumption function app has correct functionAppConfig', async () => {
+    await outputToPromise(
+      pulumi.all([stack.construct.functionAppFlexConsumption.functionAppConfig]).apply(([functionAppConfig]) => {
+        expect(functionAppConfig).toBeDefined()
+        expect(functionAppConfig?.runtime?.name).toEqual('node')
+        expect(functionAppConfig?.runtime?.version).toEqual('22')
+        expect(functionAppConfig?.scaleAndConcurrency?.instanceMemoryMB).toEqual(2048)
+        expect(functionAppConfig?.scaleAndConcurrency?.maximumInstanceCount).toEqual(100)
+      })
+    )
   })
 
   test('flex consumption deployment has correct settings', () => {
@@ -302,22 +311,28 @@ class TestMinimalCommonStack extends CommonAzureStack {
 const minimalStack = new TestMinimalCommonStack('test-minimal-stack', testStackProps)
 
 describe('TestAzureFunctionConstruct - Default Value Branches', () => {
-  test('function app uses default location from scope when not provided', () => {
-    pulumi.all([minimalStack.construct.functionApp.location]).apply(([location]) => {
-      expect(location).toEqual('eastus')
-    })
+  test('function app uses default location from scope when not provided', async () => {
+    await outputToPromise(
+      pulumi.all([minimalStack.construct.functionApp.location]).apply(([location]) => {
+        expect(location).toEqual('eastus')
+      })
+    )
   })
 
-  test('function app uses default kind when not provided', () => {
-    pulumi.all([minimalStack.construct.functionApp.kind]).apply(([kind]) => {
-      expect(kind).toEqual('functionapp,linux')
-    })
+  test('function app uses default kind when not provided', async () => {
+    await outputToPromise(
+      pulumi.all([minimalStack.construct.functionApp.kind]).apply(([kind]) => {
+        expect(kind).toEqual('functionapp,linux')
+      })
+    )
   })
 
-  test('function app uses default tags when not provided', () => {
-    pulumi.all([minimalStack.construct.functionApp.tags]).apply(([tags]) => {
-      expect(tags?.environment).toEqual('dev')
-    })
+  test('function app uses default tags when not provided', async () => {
+    await outputToPromise(
+      pulumi.all([minimalStack.construct.functionApp.tags]).apply(([tags]) => {
+        expect(tags?.environment).toEqual('dev')
+      })
+    )
   })
 
   test('function with enabled=true sets isDisabled to false', () => {

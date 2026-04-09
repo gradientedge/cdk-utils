@@ -9,6 +9,7 @@ import {
   DnsTxtRecordProps,
   DnsZoneProps,
 } from '../../src/index.js'
+import { outputToPromise } from '../helpers.js'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
   testDnsZone: DnsZoneProps
@@ -142,90 +143,98 @@ describe('TestAzureDnsConstruct', () => {
 })
 
 describe('TestAzureDnsConstruct', () => {
-  test('provisions dns zone as expected', () => {
-    pulumi
-      .all([
-        stack.construct.dnsZone.id,
-        stack.construct.dnsZone.urn,
-        stack.construct.dnsZone.name,
-        stack.construct.dnsZone.location,
-        stack.construct.dnsZone.tags,
-      ])
-      .apply(([id, urn, name, location, tags]) => {
-        expect(id).toEqual('test-dns-zone-dev-dz-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:dns:Zone::test-dns-zone-dev-dz'
-        )
-        expect(name).toEqual('test-dns-zone-dev')
-        expect(location).toEqual('global')
-        expect(tags?.environment).toEqual('dev')
-      })
+  test('provisions dns zone as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.dnsZone.id,
+          stack.construct.dnsZone.urn,
+          stack.construct.dnsZone.name,
+          stack.construct.dnsZone.location,
+          stack.construct.dnsZone.tags,
+        ])
+        .apply(([id, urn, name, location, tags]) => {
+          expect(id).toEqual('test-dns-zone-dev-dz-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:dns:Zone::test-dns-zone-dev-dz'
+          )
+          expect(name).toEqual('test-dns-zone-dev')
+          expect(location).toEqual('global')
+          expect(tags?.environment).toEqual('dev')
+        })
+    )
   })
 })
 
 describe('TestAzureDnsConstruct', () => {
-  test('provisions dns a record as expected', () => {
-    pulumi
-      .all([
-        stack.construct.dnsARecord.id,
-        stack.construct.dnsARecord.urn,
-        stack.construct.dnsARecord.name,
-        stack.construct.dnsARecord.aRecords,
-        stack.construct.dnsARecord.ttl,
-      ])
-      .apply(([id, urn, name, aRecords, ttl]) => {
-        expect(id).toEqual('test-dns-a-record-dev-da-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:dns:RecordSet::test-dns-a-record-dev-da'
-        )
-        expect(name).toEqual('test-a-record')
-        expect(aRecords).toEqual([{ ipv4Address: '1.2.3.4' }])
-        expect(ttl).toEqual(300)
-      })
+  test('provisions dns a record as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.dnsARecord.id,
+          stack.construct.dnsARecord.urn,
+          stack.construct.dnsARecord.name,
+          stack.construct.dnsARecord.aRecords,
+          stack.construct.dnsARecord.ttl,
+        ])
+        .apply(([id, urn, name, aRecords, ttl]) => {
+          expect(id).toEqual('test-dns-a-record-dev-da-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:dns:RecordSet::test-dns-a-record-dev-da'
+          )
+          expect(name).toEqual('test-a-record')
+          expect(aRecords).toEqual([{ ipv4Address: '1.2.3.4' }])
+          expect(ttl).toEqual(300)
+        })
+    )
   })
 })
 
 describe('TestAzureDnsConstruct', () => {
-  test('provisions dns cname record as expected', () => {
-    pulumi
-      .all([
-        stack.construct.dnsCnameRecord.id,
-        stack.construct.dnsCnameRecord.urn,
-        stack.construct.dnsCnameRecord.name,
-        stack.construct.dnsCnameRecord.cnameRecord,
-        stack.construct.dnsCnameRecord.ttl,
-      ])
-      .apply(([id, urn, name, cnameRecord, ttl]) => {
-        expect(id).toEqual('test-dns-cname-record-dev-dc-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:dns:RecordSet::test-dns-cname-record-dev-dc'
-        )
-        expect(name).toEqual('test-cname-record')
-        expect(cnameRecord).toEqual({ cname: 'test.example.com' })
-        expect(ttl).toEqual(300)
-      })
+  test('provisions dns cname record as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.dnsCnameRecord.id,
+          stack.construct.dnsCnameRecord.urn,
+          stack.construct.dnsCnameRecord.name,
+          stack.construct.dnsCnameRecord.cnameRecord,
+          stack.construct.dnsCnameRecord.ttl,
+        ])
+        .apply(([id, urn, name, cnameRecord, ttl]) => {
+          expect(id).toEqual('test-dns-cname-record-dev-dc-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:dns:RecordSet::test-dns-cname-record-dev-dc'
+          )
+          expect(name).toEqual('test-cname-record')
+          expect(cnameRecord).toEqual({ cname: 'test.example.com' })
+          expect(ttl).toEqual(300)
+        })
+    )
   })
 })
 
 describe('TestAzureDnsConstruct', () => {
-  test('provisions dns txt record as expected', () => {
-    pulumi
-      .all([
-        stack.construct.dnsTxtRecord.id,
-        stack.construct.dnsTxtRecord.urn,
-        stack.construct.dnsTxtRecord.name,
-        stack.construct.dnsTxtRecord.txtRecords,
-        stack.construct.dnsTxtRecord.ttl,
-      ])
-      .apply(([id, urn, name, txtRecords, ttl]) => {
-        expect(id).toEqual('test-dns-txt-record-dev-dt-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:dns:RecordSet::test-dns-txt-record-dev-dt'
-        )
-        expect(name).toEqual('test-txt-record')
-        expect(txtRecords).toEqual([{ value: ['test-record'] }])
-        expect(ttl).toEqual(300)
-      })
+  test('provisions dns txt record as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.dnsTxtRecord.id,
+          stack.construct.dnsTxtRecord.urn,
+          stack.construct.dnsTxtRecord.name,
+          stack.construct.dnsTxtRecord.txtRecords,
+          stack.construct.dnsTxtRecord.ttl,
+        ])
+        .apply(([id, urn, name, txtRecords, ttl]) => {
+          expect(id).toEqual('test-dns-txt-record-dev-dt-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:dns:RecordSet::test-dns-txt-record-dev-dt'
+          )
+          expect(name).toEqual('test-txt-record')
+          expect(txtRecords).toEqual([{ value: ['test-record'] }])
+          expect(ttl).toEqual(300)
+        })
+    )
   })
 })
 
@@ -286,46 +295,60 @@ class TestMinimalDnsStack extends CommonAzureStack {
 const minimalDnsStack = new TestMinimalDnsStack('test-minimal-dns-stack', testStackProps)
 
 describe('TestAzureDnsConstruct - Default Values', () => {
-  test('dns zone uses default tags when not provided', () => {
-    pulumi.all([minimalDnsStack.construct.dnsZone.tags]).apply(([tags]) => {
-      expect(tags?.environment).toEqual('dev')
-    })
+  test('dns zone uses default tags when not provided', async () => {
+    await outputToPromise(
+      pulumi.all([minimalDnsStack.construct.dnsZone.tags]).apply(([tags]) => {
+        expect(tags?.environment).toEqual('dev')
+      })
+    )
   })
 
-  test('dns a record uses default ttl when not provided', () => {
-    pulumi.all([minimalDnsStack.construct.dnsARecord.ttl]).apply(([ttl]) => {
-      expect(ttl).toEqual(300)
-    })
+  test('dns a record uses default ttl when not provided', async () => {
+    await outputToPromise(
+      pulumi.all([minimalDnsStack.construct.dnsARecord.ttl]).apply(([ttl]) => {
+        expect(ttl).toEqual(300)
+      })
+    )
   })
 
-  test('dns a record uses default metadata when not provided', () => {
-    pulumi.all([minimalDnsStack.construct.dnsARecord.metadata]).apply(([metadata]) => {
-      expect(metadata?.environment).toEqual('dev')
-    })
+  test('dns a record uses default metadata when not provided', async () => {
+    await outputToPromise(
+      pulumi.all([minimalDnsStack.construct.dnsARecord.metadata]).apply(([metadata]) => {
+        expect(metadata?.environment).toEqual('dev')
+      })
+    )
   })
 
-  test('dns cname record uses default ttl when not provided', () => {
-    pulumi.all([minimalDnsStack.construct.dnsCnameRecord.ttl]).apply(([ttl]) => {
-      expect(ttl).toEqual(300)
-    })
+  test('dns cname record uses default ttl when not provided', async () => {
+    await outputToPromise(
+      pulumi.all([minimalDnsStack.construct.dnsCnameRecord.ttl]).apply(([ttl]) => {
+        expect(ttl).toEqual(300)
+      })
+    )
   })
 
-  test('dns cname record uses default metadata when not provided', () => {
-    pulumi.all([minimalDnsStack.construct.dnsCnameRecord.metadata]).apply(([metadata]) => {
-      expect(metadata?.environment).toEqual('dev')
-    })
+  test('dns cname record uses default metadata when not provided', async () => {
+    await outputToPromise(
+      pulumi.all([minimalDnsStack.construct.dnsCnameRecord.metadata]).apply(([metadata]) => {
+        expect(metadata?.environment).toEqual('dev')
+      })
+    )
   })
 
-  test('dns txt record uses default ttl when not provided', () => {
-    pulumi.all([minimalDnsStack.construct.dnsTxtRecord.ttl]).apply(([ttl]) => {
-      expect(ttl).toEqual(300)
-    })
+  test('dns txt record uses default ttl when not provided', async () => {
+    await outputToPromise(
+      pulumi.all([minimalDnsStack.construct.dnsTxtRecord.ttl]).apply(([ttl]) => {
+        expect(ttl).toEqual(300)
+      })
+    )
   })
 
-  test('dns txt record uses default metadata when not provided', () => {
-    pulumi.all([minimalDnsStack.construct.dnsTxtRecord.metadata]).apply(([metadata]) => {
-      expect(metadata?.environment).toEqual('dev')
-    })
+  test('dns txt record uses default metadata when not provided', async () => {
+    await outputToPromise(
+      pulumi.all([minimalDnsStack.construct.dnsTxtRecord.metadata]).apply(([metadata]) => {
+        expect(metadata?.environment).toEqual('dev')
+      })
+    )
   })
 })
 

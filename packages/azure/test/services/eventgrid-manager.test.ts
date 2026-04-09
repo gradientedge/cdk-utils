@@ -14,6 +14,7 @@ import {
   EventgridSystemTopicProps,
   EventgridTopicProps,
 } from '../../src/index.js'
+import { outputToPromise } from '../helpers.js'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
   testEventgridTopic: EventgridTopicProps
@@ -156,82 +157,90 @@ describe('TestAzureEventgridConstruct', () => {
 })
 
 describe('TestAzureEventgridConstruct', () => {
-  test('provisions eventgrid topic as expected', () => {
-    pulumi
-      .all([
-        stack.construct.eventgridTopic.id,
-        stack.construct.eventgridTopic.urn,
-        stack.construct.eventgridTopic.name,
-        stack.construct.eventgridTopic.location,
-        stack.construct.eventgridTopic.tags,
-      ])
-      .apply(([id, urn, name, location, tags]) => {
-        expect(id).toEqual('test-eventgrid-topic-dev-et-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:eventgrid:Topic::test-eventgrid-topic-dev-et'
-        )
-        expect(name).toEqual('test-eventgrid-topic-dev')
-        expect(location).toEqual('eastus')
-        expect(tags?.environment).toEqual('dev')
-      })
+  test('provisions eventgrid topic as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.eventgridTopic.id,
+          stack.construct.eventgridTopic.urn,
+          stack.construct.eventgridTopic.name,
+          stack.construct.eventgridTopic.location,
+          stack.construct.eventgridTopic.tags,
+        ])
+        .apply(([id, urn, name, location, tags]) => {
+          expect(id).toEqual('test-eventgrid-topic-dev-et-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:eventgrid:Topic::test-eventgrid-topic-dev-et'
+          )
+          expect(name).toEqual('test-eventgrid-topic-dev')
+          expect(location).toEqual('eastus')
+          expect(tags?.environment).toEqual('dev')
+        })
+    )
   })
 })
 
 describe('TestAzureEventgridConstruct', () => {
-  test('provisions eventgrid subscription as expected', () => {
-    pulumi
-      .all([
-        stack.construct.eventgridSubscription.id,
-        stack.construct.eventgridSubscription.urn,
-        stack.construct.eventgridSubscription.name,
-      ])
-      .apply(([id, urn, name]) => {
-        expect(id).toEqual('test-eventgrid-subscription-dev-es-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:eventgrid:EventSubscription::test-eventgrid-subscription-dev-es'
-        )
-        expect(name).toEqual('test-eventgrid-subscription-dev')
-      })
+  test('provisions eventgrid subscription as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.eventgridSubscription.id,
+          stack.construct.eventgridSubscription.urn,
+          stack.construct.eventgridSubscription.name,
+        ])
+        .apply(([id, urn, name]) => {
+          expect(id).toEqual('test-eventgrid-subscription-dev-es-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:eventgrid:EventSubscription::test-eventgrid-subscription-dev-es'
+          )
+          expect(name).toEqual('test-eventgrid-subscription-dev')
+        })
+    )
   })
 })
 
 describe('TestAzureEventgridConstruct', () => {
-  test('provisions eventgrid topic as expected', () => {
-    pulumi
-      .all([
-        stack.construct.eventgridSystemTopic.id,
-        stack.construct.eventgridSystemTopic.urn,
-        stack.construct.eventgridSystemTopic.name,
-        stack.construct.eventgridSystemTopic.location,
-        stack.construct.eventgridSystemTopic.tags,
-      ])
-      .apply(([id, urn, name, location, tags]) => {
-        expect(id).toEqual('test-eventgrid-system-topic-dev-est-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:eventgrid:SystemTopic::test-eventgrid-system-topic-dev-est'
-        )
-        expect(name).toEqual('test-eventgrid-system-topic-dev')
-        expect(location).toEqual('eastus')
-        expect(tags?.environment).toEqual('dev')
-      })
+  test('provisions eventgrid topic as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.eventgridSystemTopic.id,
+          stack.construct.eventgridSystemTopic.urn,
+          stack.construct.eventgridSystemTopic.name,
+          stack.construct.eventgridSystemTopic.location,
+          stack.construct.eventgridSystemTopic.tags,
+        ])
+        .apply(([id, urn, name, location, tags]) => {
+          expect(id).toEqual('test-eventgrid-system-topic-dev-est-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:eventgrid:SystemTopic::test-eventgrid-system-topic-dev-est'
+          )
+          expect(name).toEqual('test-eventgrid-system-topic-dev')
+          expect(location).toEqual('eastus')
+          expect(tags?.environment).toEqual('dev')
+        })
+    )
   })
 })
 
 describe('TestAzureEventgridConstruct', () => {
-  test('provisions eventgrid subscription as expected', () => {
-    pulumi
-      .all([
-        stack.construct.eventgridSystemEventSubscription.id,
-        stack.construct.eventgridSystemEventSubscription.urn,
-        stack.construct.eventgridSystemEventSubscription.name,
-      ])
-      .apply(([id, urn, name]) => {
-        expect(id).toEqual('test-eventgrid-subscription-dev-ests-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:eventgrid:SystemTopicEventSubscription::test-eventgrid-subscription-dev-ests'
-        )
-        expect(name).toEqual('test-eventgrid-system-subscription-dev')
-      })
+  test('provisions eventgrid subscription as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.eventgridSystemEventSubscription.id,
+          stack.construct.eventgridSystemEventSubscription.urn,
+          stack.construct.eventgridSystemEventSubscription.name,
+        ])
+        .apply(([id, urn, name]) => {
+          expect(id).toEqual('test-eventgrid-subscription-dev-ests-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:eventgrid:SystemTopicEventSubscription::test-eventgrid-subscription-dev-ests'
+          )
+          expect(name).toEqual('test-eventgrid-system-subscription-dev')
+        })
+    )
   })
 })
 
@@ -334,41 +343,53 @@ class TestMinimalEventgridStack extends CommonAzureStack {
 const minimalEventgridStack = new TestMinimalEventgridStack('test-minimal-eg-stack', testStackProps)
 
 describe('TestAzureEventgridConstruct - Default Values', () => {
-  test('eventgrid topic uses default location from scope when not provided', () => {
-    pulumi.all([minimalEventgridStack.construct.eventgridTopic.location]).apply(([location]) => {
-      expect(location).toEqual('eastus')
-    })
+  test('eventgrid topic uses default location from scope when not provided', async () => {
+    await outputToPromise(
+      pulumi.all([minimalEventgridStack.construct.eventgridTopic.location]).apply(([location]) => {
+        expect(location).toEqual('eastus')
+      })
+    )
   })
 
-  test('eventgrid topic uses default tags when not provided', () => {
-    pulumi.all([minimalEventgridStack.construct.eventgridTopic.tags]).apply(([tags]) => {
-      expect(tags?.environment).toEqual('dev')
-    })
+  test('eventgrid topic uses default tags when not provided', async () => {
+    await outputToPromise(
+      pulumi.all([minimalEventgridStack.construct.eventgridTopic.tags]).apply(([tags]) => {
+        expect(tags?.environment).toEqual('dev')
+      })
+    )
   })
 
-  test('eventgrid subscription uses default eventDeliverySchema when not provided', () => {
-    pulumi.all([minimalEventgridStack.construct.eventgridSubscription.eventDeliverySchema]).apply(([schema]) => {
-      expect(schema).toEqual('CloudEventSchemaV1_0')
-    })
+  test('eventgrid subscription uses default eventDeliverySchema when not provided', async () => {
+    await outputToPromise(
+      pulumi.all([minimalEventgridStack.construct.eventgridSubscription.eventDeliverySchema]).apply(([schema]) => {
+        expect(schema).toEqual('CloudEventSchemaV1_0')
+      })
+    )
   })
 
-  test('eventgrid subscription uses default retryPolicy when not provided', () => {
-    pulumi.all([minimalEventgridStack.construct.eventgridSubscription.retryPolicy]).apply(([retryPolicy]) => {
-      expect(retryPolicy?.eventTimeToLiveInMinutes).toEqual(1440)
-      expect(retryPolicy?.maxDeliveryAttempts).toEqual(7)
-    })
+  test('eventgrid subscription uses default retryPolicy when not provided', async () => {
+    await outputToPromise(
+      pulumi.all([minimalEventgridStack.construct.eventgridSubscription.retryPolicy]).apply(([retryPolicy]) => {
+        expect(retryPolicy?.eventTimeToLiveInMinutes).toEqual(1440)
+        expect(retryPolicy?.maxDeliveryAttempts).toEqual(7)
+      })
+    )
   })
 
-  test('eventgrid system topic uses default location from scope when not provided', () => {
-    pulumi.all([minimalEventgridStack.construct.eventgridSystemTopic.location]).apply(([location]) => {
-      expect(location).toEqual('eastus')
-    })
+  test('eventgrid system topic uses default location from scope when not provided', async () => {
+    await outputToPromise(
+      pulumi.all([minimalEventgridStack.construct.eventgridSystemTopic.location]).apply(([location]) => {
+        expect(location).toEqual('eastus')
+      })
+    )
   })
 
-  test('eventgrid system topic uses default tags when not provided', () => {
-    pulumi.all([minimalEventgridStack.construct.eventgridSystemTopic.tags]).apply(([tags]) => {
-      expect(tags?.environment).toEqual('dev')
-    })
+  test('eventgrid system topic uses default tags when not provided', async () => {
+    await outputToPromise(
+      pulumi.all([minimalEventgridStack.construct.eventgridSystemTopic.tags]).apply(([tags]) => {
+        expect(tags?.environment).toEqual('dev')
+      })
+    )
   })
 })
 

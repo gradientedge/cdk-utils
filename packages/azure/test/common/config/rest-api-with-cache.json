@@ -33,12 +33,10 @@
     ]
   },
   "apiManagementManagedRedis": {
-    "name": "test-redis-cache",
+    "clusterName": "test-redis-cache",
     "resourceGroupName": "test-rg-dev",
     "sku": {
-      "name": "Basic",
-      "family": "C",
-      "capacity": 0
+      "name": "Balanced_B0"
     }
   },
   "commonLogAnalyticsWorkspace": {

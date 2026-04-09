@@ -7,6 +7,7 @@ import {
   LinuxWebAppProps,
   ServicePlanProps,
 } from '../../src/index.js'
+import { outputToPromise } from '../helpers.js'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
   testAppServicePlan: ServicePlanProps
@@ -124,52 +125,56 @@ describe('TestAzureAppServiceConstruct', () => {
 })
 
 describe('TestAzureAppServiceConstruct', () => {
-  test('provisions app service plan as expected', () => {
-    pulumi
-      .all([
-        stack.construct.appServicePlan.id,
-        stack.construct.appServicePlan.urn,
-        stack.construct.appServicePlan.name,
-        stack.construct.appServicePlan.location,
-        stack.construct.appServicePlan.sku,
-        stack.construct.appServicePlan.tags,
-      ])
-      .apply(([id, urn, name, location, sku, tags]) => {
-        expect(id).toEqual('test-app-service-plan-dev-as-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:web:AppServicePlan::test-app-service-plan-dev-as'
-        )
-        expect(name).toEqual('test-app-service-plan-dev')
-        expect(location).toEqual('eastus')
-        expect(sku).toEqual({ name: 'B1', tier: 'Basic' })
-        expect(tags?.environment).toEqual('dev')
-      })
+  test('provisions app service plan as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.appServicePlan.id,
+          stack.construct.appServicePlan.urn,
+          stack.construct.appServicePlan.name,
+          stack.construct.appServicePlan.location,
+          stack.construct.appServicePlan.sku,
+          stack.construct.appServicePlan.tags,
+        ])
+        .apply(([id, urn, name, location, sku, tags]) => {
+          expect(id).toEqual('test-app-service-plan-dev-as-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:web:AppServicePlan::test-app-service-plan-dev-as'
+          )
+          expect(name).toEqual('test-app-service-plan-dev')
+          expect(location).toEqual('eastus')
+          expect(sku).toEqual({ name: 'B1', tier: 'Basic' })
+          expect(tags?.environment).toEqual('dev')
+        })
+    )
   })
 })
 
 describe('TestAzureLinuxWebAppConstruct', () => {
-  test('provisions linux web app as expected', () => {
-    pulumi
-      .all([
-        stack.construct.linuxWebApp.id,
-        stack.construct.linuxWebApp.urn,
-        stack.construct.linuxWebApp.name,
-        stack.construct.linuxWebApp.location,
-        stack.construct.linuxWebApp.enabled,
-        stack.construct.linuxWebApp.httpsOnly,
-        stack.construct.linuxWebApp.tags,
-      ])
-      .apply(([id, urn, name, location, enabled, httpsOnly, tags]) => {
-        expect(id).toEqual('test-linux-web-app-dev-lwa-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:web:WebApp::test-linux-web-app-dev-lwa'
-        )
-        expect(name).toEqual('test-linux-web-app-dev')
-        expect(location).toEqual('eastus')
-        expect(enabled).toEqual(true)
-        expect(httpsOnly).toEqual(true)
-        expect(tags?.environment).toEqual('dev')
-      })
+  test('provisions linux web app as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.linuxWebApp.id,
+          stack.construct.linuxWebApp.urn,
+          stack.construct.linuxWebApp.name,
+          stack.construct.linuxWebApp.location,
+          stack.construct.linuxWebApp.enabled,
+          stack.construct.linuxWebApp.httpsOnly,
+          stack.construct.linuxWebApp.tags,
+        ])
+        .apply(([id, urn, name, location, enabled, httpsOnly, tags]) => {
+          expect(id).toEqual('test-linux-web-app-dev-lwa-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:web:WebApp::test-linux-web-app-dev-lwa'
+          )
+          expect(name).toEqual('test-linux-web-app-dev')
+          expect(location).toEqual('eastus')
+          expect(enabled).toEqual(true)
+          expect(httpsOnly).toEqual(true)
+          expect(tags?.environment).toEqual('dev')
+        })
+    )
   })
 })
 
@@ -210,28 +215,36 @@ class TestMinimalWebAppStack extends CommonAzureStack {
 const minimalWebAppStack = new TestMinimalWebAppStack('test-minimal-web-app-stack', testStackProps)
 
 describe('TestAzureLinuxWebAppConstruct - Default Values', () => {
-  test('linux web app uses default httpsOnly when not provided', () => {
-    pulumi.all([minimalWebAppStack.construct.linuxWebApp.httpsOnly]).apply(([httpsOnly]) => {
-      expect(httpsOnly).toEqual(true)
-    })
+  test('linux web app uses default httpsOnly when not provided', async () => {
+    await outputToPromise(
+      pulumi.all([minimalWebAppStack.construct.linuxWebApp.httpsOnly]).apply(([httpsOnly]) => {
+        expect(httpsOnly).toEqual(true)
+      })
+    )
   })
 
-  test('linux web app uses default kind when not provided', () => {
-    pulumi.all([minimalWebAppStack.construct.linuxWebApp.kind]).apply(([kind]) => {
-      expect(kind).toEqual('app,linux')
-    })
+  test('linux web app uses default kind when not provided', async () => {
+    await outputToPromise(
+      pulumi.all([minimalWebAppStack.construct.linuxWebApp.kind]).apply(([kind]) => {
+        expect(kind).toEqual('app,linux')
+      })
+    )
   })
 
-  test('linux web app uses default identity when not provided', () => {
-    pulumi.all([minimalWebAppStack.construct.linuxWebApp.identity]).apply(([identity]) => {
-      expect(identity?.type).toEqual('SystemAssigned')
-    })
+  test('linux web app uses default identity when not provided', async () => {
+    await outputToPromise(
+      pulumi.all([minimalWebAppStack.construct.linuxWebApp.identity]).apply(([identity]) => {
+        expect(identity?.type).toEqual('SystemAssigned')
+      })
+    )
   })
 
-  test('linux web app uses default tags when not provided', () => {
-    pulumi.all([minimalWebAppStack.construct.linuxWebApp.tags]).apply(([tags]) => {
-      expect(tags?.environment).toEqual('dev')
-    })
+  test('linux web app uses default tags when not provided', async () => {
+    await outputToPromise(
+      pulumi.all([minimalWebAppStack.construct.linuxWebApp.tags]).apply(([tags]) => {
+        expect(tags?.environment).toEqual('dev')
+      })
+    )
   })
 })
 

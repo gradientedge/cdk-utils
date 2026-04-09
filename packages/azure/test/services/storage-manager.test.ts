@@ -1,5 +1,6 @@
 import { Blob, BlobContainer, StorageAccount } from '@pulumi/azure-native/storage/index.js'
 import * as pulumi from '@pulumi/pulumi'
+import { outputToPromise } from '../helpers.js'
 import {
   CommonAzureConstruct,
   CommonAzureStack,
@@ -129,66 +130,74 @@ describe('TestAzureStorageConstruct', () => {
 })
 
 describe('TestAzureStorageConstruct', () => {
-  test('provisions storage account as expected', () => {
-    pulumi
-      .all([
-        stack.construct.storageAccount.id,
-        stack.construct.storageAccount.urn,
-        stack.construct.storageAccount.name,
-        stack.construct.storageAccount.location,
-        stack.construct.storageAccount.sku,
-        stack.construct.storageAccount.tags,
-      ])
-      .apply(([id, urn, name, location, sku, tags]) => {
-        expect(id).toEqual('test-storage-account-dev-sa-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:storage:StorageAccount::test-storage-account-dev-sa'
-        )
-        expect(name).toEqual('teststorageaccountdev')
-        expect(location).toEqual('eastus')
-        expect(sku).toEqual({ name: 'Standard_LRS' })
-        expect(tags?.environment).toEqual('dev')
-      })
+  test('provisions storage account as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.storageAccount.id,
+          stack.construct.storageAccount.urn,
+          stack.construct.storageAccount.name,
+          stack.construct.storageAccount.location,
+          stack.construct.storageAccount.sku,
+          stack.construct.storageAccount.tags,
+        ])
+        .apply(([id, urn, name, location, sku, tags]) => {
+          expect(id).toEqual('test-storage-account-dev-sa-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:storage:StorageAccount::test-storage-account-dev-sa'
+          )
+          expect(name).toEqual('teststorageaccountdev')
+          expect(location).toEqual('eastus')
+          expect(sku).toEqual({ name: 'Standard_LRS' })
+          expect(tags?.environment).toEqual('dev')
+        })
+    )
   })
 })
 
 describe('TestAzureStorageConstruct', () => {
-  test('provisions storage container as expected', () => {
-    pulumi
-      .all([
-        stack.construct.storageContainer.id,
-        stack.construct.storageContainer.urn,
-        stack.construct.storageContainer.name,
-      ])
-      .apply(([id, urn, name]) => {
-        expect(id).toEqual('test-storage-container-dev-sc-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:storage:BlobContainer::test-storage-container-dev-sc'
-        )
-        expect(name).toEqual('test-storage-container-dev')
-      })
+  test('provisions storage container as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.storageContainer.id,
+          stack.construct.storageContainer.urn,
+          stack.construct.storageContainer.name,
+        ])
+        .apply(([id, urn, name]) => {
+          expect(id).toEqual('test-storage-container-dev-sc-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:storage:BlobContainer::test-storage-container-dev-sc'
+          )
+          expect(name).toEqual('test-storage-container-dev')
+        })
+    )
   })
 })
 
 describe('TestAzureStorageConstruct', () => {
-  test('provisions storage blob as expected', () => {
-    pulumi
-      .all([stack.construct.storageBlob.id, stack.construct.storageBlob.urn, stack.construct.storageBlob.name])
-      .apply(([id, urn, name]) => {
-        expect(id).toEqual('test-storage-blob-dev-sb-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:storage:Blob::test-storage-blob-dev-sb'
-        )
-        expect(name).toEqual('test-storage-blob-dev')
-      })
+  test('provisions storage blob as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([stack.construct.storageBlob.id, stack.construct.storageBlob.urn, stack.construct.storageBlob.name])
+        .apply(([id, urn, name]) => {
+          expect(id).toEqual('test-storage-blob-dev-sb-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:storage:Blob::test-storage-blob-dev-sb'
+          )
+          expect(name).toEqual('test-storage-blob-dev')
+        })
+    )
   })
 })
 
 describe('TestAzureStorageConstruct', () => {
-  test('provisions container SAS token as expected', () => {
-    pulumi.all([stack.construct.sasToken]).apply(([token]) => {
-      expect(token).toEqual('mock-sas-token-value')
-    })
+  test('provisions container SAS token as expected', async () => {
+    await outputToPromise(
+      pulumi.all([stack.construct.sasToken]).apply(([token]) => {
+        expect(token).toEqual('mock-sas-token-value')
+      })
+    )
   })
 })
 
@@ -221,36 +230,46 @@ class TestMinimalStorageStack extends CommonAzureStack {
 const minimalStorageStack = new TestMinimalStorageStack('test-minimal-storage-stack', testStackProps)
 
 describe('TestAzureStorageConstruct - Default Values', () => {
-  test('storage account uses default sku when not provided', () => {
-    pulumi.all([minimalStorageStack.construct.storageAccount.sku]).apply(([sku]) => {
-      expect(sku?.name).toEqual('Standard_LRS')
-    })
-  })
-
-  test('storage account uses default kind when not provided', () => {
-    pulumi.all([minimalStorageStack.construct.storageAccount.kind]).apply(([kind]) => {
-      expect(kind).toEqual('StorageV2')
-    })
-  })
-
-  test('storage account uses default location from scope when not provided', () => {
-    pulumi.all([minimalStorageStack.construct.storageAccount.location]).apply(([location]) => {
-      expect(location).toEqual('eastus')
-    })
-  })
-
-  test('storage account uses default tags when not provided', () => {
-    pulumi.all([minimalStorageStack.construct.storageAccount.tags]).apply(([tags]) => {
-      expect(tags?.environment).toEqual('dev')
-    })
-  })
-
-  test('storage account uses default allowBlobPublicAccess when not provided', () => {
-    pulumi
-      .all([minimalStorageStack.construct.storageAccount.allowBlobPublicAccess])
-      .apply(([allowBlobPublicAccess]) => {
-        expect(allowBlobPublicAccess).toEqual(false)
+  test('storage account uses default sku when not provided', async () => {
+    await outputToPromise(
+      pulumi.all([minimalStorageStack.construct.storageAccount.sku]).apply(([sku]) => {
+        expect(sku?.name).toEqual('Standard_LRS')
       })
+    )
+  })
+
+  test('storage account uses default kind when not provided', async () => {
+    await outputToPromise(
+      pulumi.all([minimalStorageStack.construct.storageAccount.kind]).apply(([kind]) => {
+        expect(kind).toEqual('StorageV2')
+      })
+    )
+  })
+
+  test('storage account uses default location from scope when not provided', async () => {
+    await outputToPromise(
+      pulumi.all([minimalStorageStack.construct.storageAccount.location]).apply(([location]) => {
+        expect(location).toEqual('eastus')
+      })
+    )
+  })
+
+  test('storage account uses default tags when not provided', async () => {
+    await outputToPromise(
+      pulumi.all([minimalStorageStack.construct.storageAccount.tags]).apply(([tags]) => {
+        expect(tags?.environment).toEqual('dev')
+      })
+    )
+  })
+
+  test('storage account uses default allowBlobPublicAccess when not provided', async () => {
+    await outputToPromise(
+      pulumi
+        .all([minimalStorageStack.construct.storageAccount.allowBlobPublicAccess])
+        .apply(([allowBlobPublicAccess]) => {
+          expect(allowBlobPublicAccess).toEqual(false)
+        })
+    )
   })
 })
 
@@ -355,17 +374,21 @@ class TestStackWithMgmtPolicy extends CommonAzureStack {
 const stackWithMgmtPolicy = new TestStackWithMgmtPolicy('test-mgmt-policy-stack', testStackProps)
 
 describe('TestAzureStorageConstruct - ManagementPolicy and Table', () => {
-  test('provisions management policy as expected', () => {
+  test('provisions management policy as expected', async () => {
     expect(stackWithMgmtPolicy.construct.managementPolicy).toBeDefined()
-    pulumi.all([stackWithMgmtPolicy.construct.managementPolicy.id]).apply(([id]) => {
-      expect(id).toBeDefined()
-    })
+    await outputToPromise(
+      pulumi.all([stackWithMgmtPolicy.construct.managementPolicy.id]).apply(([id]) => {
+        expect(id).toBeDefined()
+      })
+    )
   })
 
-  test('provisions storage table as expected', () => {
+  test('provisions storage table as expected', async () => {
     expect(stackWithMgmtPolicy.construct.storageTable).toBeDefined()
-    pulumi.all([stackWithMgmtPolicy.construct.storageTable.id]).apply(([id]) => {
-      expect(id).toBeDefined()
-    })
+    await outputToPromise(
+      pulumi.all([stackWithMgmtPolicy.construct.storageTable.id]).apply(([id]) => {
+        expect(id).toBeDefined()
+      })
+    )
   })
 })
