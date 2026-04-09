@@ -8,6 +8,7 @@ import {
   CommonCloudflareStackProps,
   ZoneProps,
 } from '../../src/index.js'
+import { outputToPromise } from '../helpers.js'
 
 interface TestCloudflareStackProps extends CommonCloudflareStackProps {
   testZone: ZoneProps
@@ -110,55 +111,66 @@ describe('TestCloudflareArgoManager', () => {
 
 describe('TestCloudflareArgoManager', () => {
   expect(stack.construct.zone).toBeDefined()
-  test('provisions zone as expected', () => {
-    pulumi
-      .all([stack.construct.zone.id, stack.construct.zone.urn, stack.construct.zone.name, stack.construct.zone.account])
-      .apply(([id, urn, name, account]) => {
-        expect(id).toEqual('test-zone-dev-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zone:Zone::test-zone-dev'
-        )
-        expect(name).toEqual('gradientedge.io')
-        expect(account.id).toEqual('test-account')
-      })
+  test('provisions zone as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.zone.id,
+          stack.construct.zone.urn,
+          stack.construct.zone.name,
+          stack.construct.zone.account,
+        ])
+        .apply(([id, urn, name, account]) => {
+          expect(id).toEqual('test-zone-dev-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zone:Zone::test-zone-dev'
+          )
+          expect(name).toEqual('gradientedge.io')
+          expect(account.id).toEqual('test-account')
+        })
+    )
   })
 })
 
 describe('TestCloudflareArgoManager', () => {
   expect(stack.construct.argoSmartRouting).toBeDefined()
-  test('provisions argo smart routing as expected', () => {
-    pulumi
-      .all([
-        stack.construct.argoSmartRouting.id,
-        stack.construct.argoSmartRouting.urn,
-        stack.construct.argoSmartRouting.value,
-      ])
-      .apply(([id, urn, value]) => {
-        expect(id).toEqual('test-argo-dev-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/argoSmartRouting:ArgoSmartRouting::test-argo-dev'
-        )
-        expect(value).toEqual('on')
-      })
+  test('provisions argo smart routing as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.argoSmartRouting.id,
+          stack.construct.argoSmartRouting.urn,
+          stack.construct.argoSmartRouting.value,
+        ])
+        .apply(([id, urn, value]) => {
+          expect(id).toEqual('test-argo-dev-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/argoSmartRouting:ArgoSmartRouting::test-argo-dev'
+          )
+          expect(value).toEqual('on')
+        })
+    )
   })
 })
 
 describe('TestCloudflareArgoManager', () => {
   expect(stack.construct.argoTieredCaching).toBeDefined()
-  test('provisions argo tiered caching as expected', () => {
-    pulumi
-      .all([
-        stack.construct.argoTieredCaching.id,
-        stack.construct.argoTieredCaching.urn,
-        stack.construct.argoTieredCaching.value,
-      ])
-      .apply(([id, urn, value]) => {
-        expect(id).toEqual('test-argo-tiered-caching-dev-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/argoTieredCaching:ArgoTieredCaching::test-argo-tiered-caching-dev'
-        )
-        expect(value).toEqual('on')
-      })
+  test('provisions argo tiered caching as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.argoTieredCaching.id,
+          stack.construct.argoTieredCaching.urn,
+          stack.construct.argoTieredCaching.value,
+        ])
+        .apply(([id, urn, value]) => {
+          expect(id).toEqual('test-argo-tiered-caching-dev-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/argoTieredCaching:ArgoTieredCaching::test-argo-tiered-caching-dev'
+          )
+          expect(value).toEqual('on')
+        })
+    )
   })
 })
 
@@ -206,17 +218,21 @@ class TestWithZoneIdConstruct extends CommonCloudflareConstruct {
 }
 
 describe('TestCloudflareArgoManager - With explicit zoneId', () => {
-  test('provisions argo resources with explicit zoneId', () => {
+  test('provisions argo resources with explicit zoneId', async () => {
     const zoneIdStack = new TestWithZoneIdCloudflareStack('test-zoneid-stack', testStackProps)
     expect(zoneIdStack.construct.argoSmartRouting).toBeDefined()
     expect(zoneIdStack.construct.argoTieredCaching).toBeDefined()
 
-    pulumi.all([zoneIdStack.construct.argoSmartRouting.zoneId]).apply(([zoneId]) => {
-      expect(zoneId).toEqual('test-zone-zid-dev-id')
-    })
+    await outputToPromise(
+      pulumi.all([zoneIdStack.construct.argoSmartRouting.zoneId]).apply(([zoneId]) => {
+        expect(zoneId).toEqual('test-zone-zid-dev-id')
+      })
+    )
 
-    pulumi.all([zoneIdStack.construct.argoTieredCaching.zoneId]).apply(([zoneId]) => {
-      expect(zoneId).toEqual('test-zone-zid-dev-id')
-    })
+    await outputToPromise(
+      pulumi.all([zoneIdStack.construct.argoTieredCaching.zoneId]).apply(([zoneId]) => {
+        expect(zoneId).toEqual('test-zone-zid-dev-id')
+      })
+    )
   })
 })

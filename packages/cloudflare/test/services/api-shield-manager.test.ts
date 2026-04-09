@@ -10,6 +10,7 @@ import * as pulumi from '@pulumi/pulumi'
 import fs from 'fs'
 import path from 'path'
 import appRoot from 'app-root-path'
+import { outputToPromise } from '../helpers.js'
 import {
   ApiShieldOperationProps,
   ApiShieldOperationSchemaValidationSettingsProps,
@@ -152,151 +153,170 @@ describe('TestCloudflareApiShieldManager', () => {
 })
 
 describe('TestCloudflareApiShieldManager', () => {
-  test('is initialised as expected', () => {
+  test('is initialised as expected', async () => {
     /* test if the created stack have the right properties injected */
     expect(stack.props).toHaveProperty('testAttribute')
     expect(stack.props.testAttribute).toEqual('success')
-    pulumi.all([stack.urn]).apply(([urn]) => {
-      expect(urn).toEqual('urn:pulumi:stack::project::stack:test-stack::test-stack')
-    })
+    await outputToPromise(
+      pulumi.all([stack.urn]).apply(([urn]) => {
+        expect(urn).toEqual('urn:pulumi:stack::project::stack:test-stack::test-stack')
+      })
+    )
   })
 })
 
 describe('TestCloudflareApiShieldManager', () => {
   expect(stack.construct.zone).toBeDefined()
-  test('provisions zone as expected', () => {
-    pulumi
-      .all([stack.construct.zone.id, stack.construct.zone.urn, stack.construct.zone.name, stack.construct.zone.account])
-      .apply(([id, urn, name, account]) => {
-        expect(id).toEqual('test-zone-dev-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zone:Zone::test-zone-dev'
-        )
-        expect(name).toEqual('gradientedge.io')
-        expect(account.id).toEqual('test-account')
-      })
+  test('provisions zone as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.zone.id,
+          stack.construct.zone.urn,
+          stack.construct.zone.name,
+          stack.construct.zone.account,
+        ])
+        .apply(([id, urn, name, account]) => {
+          expect(id).toEqual('test-zone-dev-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zone:Zone::test-zone-dev'
+          )
+          expect(name).toEqual('gradientedge.io')
+          expect(account.id).toEqual('test-account')
+        })
+    )
   })
 })
 
 describe('TestCloudflareApiShieldManager', () => {
   expect(stack.construct.apiShield).toBeDefined()
-  test('provisions api shield as expected', () => {
-    pulumi
-      .all([
-        stack.construct.apiShield.id,
-        stack.construct.apiShield.urn,
-        stack.construct.apiShield.authIdCharacteristics,
-        stack.construct.apiShield.zoneId,
-      ])
-      .apply(([id, urn, authIdCharacteristics, zoneId]) => {
-        expect(id).toEqual('test-api-shield-dev-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/apiShield:ApiShield::test-api-shield-dev'
-        )
-        expect(authIdCharacteristics).toEqual([
-          {
-            name: 'test-api-shield',
-            type: 'header',
-          },
+  test('provisions api shield as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.apiShield.id,
+          stack.construct.apiShield.urn,
+          stack.construct.apiShield.authIdCharacteristics,
+          stack.construct.apiShield.zoneId,
         ])
-        expect(zoneId).toEqual('test-api-shield-dev-data-zone')
-      })
+        .apply(([id, urn, authIdCharacteristics, zoneId]) => {
+          expect(id).toEqual('test-api-shield-dev-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/apiShield:ApiShield::test-api-shield-dev'
+          )
+          expect(authIdCharacteristics).toEqual([
+            {
+              name: 'test-api-shield',
+              type: 'header',
+            },
+          ])
+          expect(zoneId).toEqual('test-api-shield-dev-data-zone')
+        })
+    )
   })
 })
 
 describe('TestCloudflareApiShieldManager', () => {
   expect(stack.construct.apiShieldSchema).toBeDefined()
-  test('provisions api shield schema as expected', () => {
-    pulumi
-      .all([
-        stack.construct.apiShieldSchema.id,
-        stack.construct.apiShieldSchema.urn,
-        stack.construct.apiShieldSchema.file,
-        stack.construct.apiShieldSchema.kind,
-        stack.construct.apiShieldSchema.name,
-        stack.construct.apiShieldSchema.zoneId,
-      ])
-      .apply(([id, urn, file, kind, name, zoneId]) => {
-        expect(id).toEqual('test-api-shield-sch-dev-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/apiShieldSchema:ApiShieldSchema::test-api-shield-sch-dev'
-        )
-        expect(file).toEqual('{\n  "test": true,\n  "hello": "world"\n}\n')
-        expect(kind).toEqual('openapi_v3')
-        expect(name).toEqual('test-api-dev')
-        expect(zoneId).toEqual('test-api-shield-sch-dev-data-zone')
-      })
+  test('provisions api shield schema as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.apiShieldSchema.id,
+          stack.construct.apiShieldSchema.urn,
+          stack.construct.apiShieldSchema.file,
+          stack.construct.apiShieldSchema.kind,
+          stack.construct.apiShieldSchema.name,
+          stack.construct.apiShieldSchema.zoneId,
+        ])
+        .apply(([id, urn, file, kind, name, zoneId]) => {
+          expect(id).toEqual('test-api-shield-sch-dev-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/apiShieldSchema:ApiShieldSchema::test-api-shield-sch-dev'
+          )
+          expect(file).toEqual('{\n  "test": true,\n  "hello": "world"\n}\n')
+          expect(kind).toEqual('openapi_v3')
+          expect(name).toEqual('test-api-dev')
+          expect(zoneId).toEqual('test-api-shield-sch-dev-data-zone')
+        })
+    )
   })
 })
 
 describe('TestCloudflareApiShieldManager', () => {
   expect(stack.construct.apiShieldSchemaValidationSettings).toBeDefined()
-  test('provisions api shield schema validation settings as expected', () => {
-    pulumi
-      .all([
-        stack.construct.apiShieldSchemaValidationSettings.id,
-        stack.construct.apiShieldSchemaValidationSettings.urn,
-        stack.construct.apiShieldSchemaValidationSettings.validationDefaultMitigationAction,
-        stack.construct.apiShieldSchemaValidationSettings.validationOverrideMitigationAction,
-        stack.construct.apiShieldSchemaValidationSettings.zoneId,
-      ])
-      .apply(([id, urn, validationDefaultMitigationAction, validationOverrideMitigationAction, zoneId]) => {
-        expect(id).toEqual('test-api-shield-val-dev-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/apiShieldSchemaValidationSettings:ApiShieldSchemaValidationSettings::test-api-shield-val-dev'
-        )
-        expect(validationDefaultMitigationAction).toEqual('log')
-        expect(validationOverrideMitigationAction).toEqual('none')
-        expect(zoneId).toEqual('test-api-shield-val-dev-data-zone')
-      })
+  test('provisions api shield schema validation settings as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.apiShieldSchemaValidationSettings.id,
+          stack.construct.apiShieldSchemaValidationSettings.urn,
+          stack.construct.apiShieldSchemaValidationSettings.validationDefaultMitigationAction,
+          stack.construct.apiShieldSchemaValidationSettings.validationOverrideMitigationAction,
+          stack.construct.apiShieldSchemaValidationSettings.zoneId,
+        ])
+        .apply(([id, urn, validationDefaultMitigationAction, validationOverrideMitigationAction, zoneId]) => {
+          expect(id).toEqual('test-api-shield-val-dev-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/apiShieldSchemaValidationSettings:ApiShieldSchemaValidationSettings::test-api-shield-val-dev'
+          )
+          expect(validationDefaultMitigationAction).toEqual('log')
+          expect(validationOverrideMitigationAction).toEqual('none')
+          expect(zoneId).toEqual('test-api-shield-val-dev-data-zone')
+        })
+    )
   })
 })
 
 describe('TestCloudflareApiShieldManager', () => {
   expect(stack.construct.apiShieldOperation).toBeDefined()
-  test('provisions api shield operation as expected', () => {
-    pulumi
-      .all([
-        stack.construct.apiShieldOperation.id,
-        stack.construct.apiShieldOperation.urn,
-        stack.construct.apiShieldOperation.endpoint,
-        stack.construct.apiShieldOperation.host,
-        stack.construct.apiShieldOperation.method,
-        stack.construct.apiShieldOperation.zoneId,
-      ])
-      .apply(([id, urn, endpoint, host, method, zoneId]) => {
-        expect(id).toEqual('test-api-shield-op-dev-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/apiShieldOperation:ApiShieldOperation::test-api-shield-op-dev'
-        )
-        expect(endpoint).toEqual('/product')
-        expect(host).toEqual('api.gradientedge.io')
-        expect(method).toEqual('GET')
-        expect(zoneId).toEqual('test-api-shield-op-dev-data-zone')
-      })
+  test('provisions api shield operation as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.apiShieldOperation.id,
+          stack.construct.apiShieldOperation.urn,
+          stack.construct.apiShieldOperation.endpoint,
+          stack.construct.apiShieldOperation.host,
+          stack.construct.apiShieldOperation.method,
+          stack.construct.apiShieldOperation.zoneId,
+        ])
+        .apply(([id, urn, endpoint, host, method, zoneId]) => {
+          expect(id).toEqual('test-api-shield-op-dev-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/apiShieldOperation:ApiShieldOperation::test-api-shield-op-dev'
+          )
+          expect(endpoint).toEqual('/product')
+          expect(host).toEqual('api.gradientedge.io')
+          expect(method).toEqual('GET')
+          expect(zoneId).toEqual('test-api-shield-op-dev-data-zone')
+        })
+    )
   })
 })
 
 describe('TestCloudflareApiShieldManager', () => {
   expect(stack.construct.apiShieldOperationSchemaValidationSettings).toBeDefined()
-  test('provisions api shield operation schema validation settings as expected', () => {
-    pulumi
-      .all([
-        stack.construct.apiShieldOperationSchemaValidationSettings.id,
-        stack.construct.apiShieldOperationSchemaValidationSettings.urn,
-        stack.construct.apiShieldOperationSchemaValidationSettings.mitigationAction,
-        stack.construct.apiShieldOperationSchemaValidationSettings.operationId,
-        stack.construct.apiShieldOperationSchemaValidationSettings.zoneId,
-      ])
-      .apply(([id, urn, mitigationAction, operationId, zoneId]) => {
-        expect(id).toEqual('test-api-shield-op-val-dev-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/apiShieldOperationSchemaValidationSettings:ApiShieldOperationSchemaValidationSettings::test-api-shield-op-val-dev'
-        )
-        expect(mitigationAction).toEqual('block')
-        expect(operationId).toEqual('test-api-shield-op-dev-id')
-        expect(zoneId).toEqual('test-api-shield-op-val-dev-data-zone')
-      })
+  test('provisions api shield operation schema validation settings as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.apiShieldOperationSchemaValidationSettings.id,
+          stack.construct.apiShieldOperationSchemaValidationSettings.urn,
+          stack.construct.apiShieldOperationSchemaValidationSettings.mitigationAction,
+          stack.construct.apiShieldOperationSchemaValidationSettings.operationId,
+          stack.construct.apiShieldOperationSchemaValidationSettings.zoneId,
+        ])
+        .apply(([id, urn, mitigationAction, operationId, zoneId]) => {
+          expect(id).toEqual('test-api-shield-op-val-dev-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/apiShieldOperationSchemaValidationSettings:ApiShieldOperationSchemaValidationSettings::test-api-shield-op-val-dev'
+          )
+          expect(mitigationAction).toEqual('block')
+          expect(operationId).toEqual('test-api-shield-op-dev-id')
+          expect(zoneId).toEqual('test-api-shield-op-val-dev-data-zone')
+        })
+    )
   })
 })
 
@@ -405,7 +425,7 @@ describe('TestCloudflareApiShieldManager - Undefined props', () => {
 })
 
 describe('TestCloudflareApiShieldManager - With explicit zoneId', () => {
-  test('provisions api shield resources with explicit zoneId', () => {
+  test('provisions api shield resources with explicit zoneId', async () => {
     const zoneIdStack = new TestWithZoneIdCloudflareStack('test-zoneid-stack', testStackProps)
     expect(zoneIdStack.construct.apiShield).toBeDefined()
     expect(zoneIdStack.construct.apiShieldSchema).toBeDefined()
@@ -413,16 +433,22 @@ describe('TestCloudflareApiShieldManager - With explicit zoneId', () => {
     expect(zoneIdStack.construct.apiShieldOperation).toBeDefined()
     expect(zoneIdStack.construct.apiShieldOperationSchemaValidationSettings).toBeDefined()
 
-    pulumi.all([zoneIdStack.construct.apiShield.zoneId]).apply(([zoneId]) => {
-      expect(zoneId).toEqual('test-zone-zid-dev-id')
-    })
+    await outputToPromise(
+      pulumi.all([zoneIdStack.construct.apiShield.zoneId]).apply(([zoneId]) => {
+        expect(zoneId).toEqual('test-zone-zid-dev-id')
+      })
+    )
 
-    pulumi.all([zoneIdStack.construct.apiShieldSchema.zoneId]).apply(([zoneId]) => {
-      expect(zoneId).toEqual('test-zone-zid-dev-id')
-    })
+    await outputToPromise(
+      pulumi.all([zoneIdStack.construct.apiShieldSchema.zoneId]).apply(([zoneId]) => {
+        expect(zoneId).toEqual('test-zone-zid-dev-id')
+      })
+    )
 
-    pulumi.all([zoneIdStack.construct.apiShieldOperation.zoneId]).apply(([zoneId]) => {
-      expect(zoneId).toEqual('test-zone-zid-dev-id')
-    })
+    await outputToPromise(
+      pulumi.all([zoneIdStack.construct.apiShieldOperation.zoneId]).apply(([zoneId]) => {
+        expect(zoneId).toEqual('test-zone-zid-dev-id')
+      })
+    )
   })
 })

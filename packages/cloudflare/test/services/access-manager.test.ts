@@ -32,6 +32,7 @@ import {
   ZeroTrustOrganizationProps,
   ZoneProps,
 } from '../../src/index.js'
+import { outputToPromise } from '../helpers.js'
 
 interface TestCloudflareStackProps extends CommonCloudflareStackProps {
   testZone: ZoneProps
@@ -218,361 +219,405 @@ describe('TestCloudflareAccessManager', () => {
 })
 
 describe('TestCloudflareAccessManager', () => {
-  test('is initialised as expected', () => {
+  test('is initialised as expected', async () => {
     /* test if the created stack have the right properties injected */
     expect(stack.props).toHaveProperty('testAttribute')
     expect(stack.props.testAttribute).toEqual('success')
-    pulumi.all([stack.urn]).apply(([urn]) => {
-      expect(urn).toEqual('urn:pulumi:stack::project::stack:test-stack::test-stack')
-    })
+    await outputToPromise(
+      pulumi.all([stack.urn]).apply(([urn]) => {
+        expect(urn).toEqual('urn:pulumi:stack::project::stack:test-stack::test-stack')
+      })
+    )
   })
 })
 
 describe('TestCloudflareAccessManager', () => {
   expect(stack.construct.zone).toBeDefined()
-  test('provisions zone as expected', () => {
-    pulumi
-      .all([stack.construct.zone.id, stack.construct.zone.urn, stack.construct.zone.name, stack.construct.zone.account])
-      .apply(([id, urn, name, account]) => {
-        expect(id).toEqual('test-zone-dev-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zone:Zone::test-zone-dev'
-        )
-        expect(name).toEqual('gradientedge.io')
-        expect(account.id).toEqual('test-account')
-      })
-  })
-})
-
-describe('TestCloudflareAccessManager', () => {
-  test('provisions access application as expected', () => {
-    expect(stack.construct.accessApp).toBeDefined()
-    pulumi
-      .all([
-        stack.construct.accessApp.id,
-        stack.construct.accessApp.urn,
-        stack.construct.accessApp.name,
-        stack.construct.accessApp.domain,
-        stack.construct.accessApp.sessionDuration,
-        stack.construct.accessApp.type,
-        stack.construct.accessApp.zoneId,
-        stack.construct.accessApp.corsHeaders,
-      ])
-      .apply(([id, urn, name, domain, sessionDuration, type, zoneId, corsHeaders]) => {
-        expect(id).toEqual('test-access-app-dev-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zeroTrustAccessApplication:ZeroTrustAccessApplication::test-access-app-dev'
-        )
-        expect(name).toEqual('test-app-dev')
-        expect(domain).toEqual('myapp-gradientedge.io')
-        expect(sessionDuration).toEqual('24h')
-        expect(type).toEqual('self_hosted')
-        expect(zoneId).toEqual('test-access-app-dev-data-zone')
-        expect(corsHeaders).toEqual({
-          allowAllHeaders: true,
-          allowCredentials: true,
-          allowedOrigins: ['https://example.gradientedge.io'],
-          maxAge: 10,
-        })
-      })
-  })
-})
-
-describe('TestCloudflareAccessManager', () => {
-  test('provisions ca certificate as expected', () => {
-    expect(stack.construct.accessApp).toBeDefined()
-    pulumi
-      .all([
-        stack.construct.accessCertificate.id,
-        stack.construct.accessCertificate.urn,
-        stack.construct.accessCertificate.accountId,
-        stack.construct.accessCertificate.appId,
-        stack.construct.accessCertificate.zoneId,
-      ])
-      .apply(([id, urn, accountId, appId, zoneId]) => {
-        expect(id).toEqual('test-access-ca-cert-dev-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zeroTrustAccessShortLivedCertificate:ZeroTrustAccessShortLivedCertificate::test-access-ca-cert-dev'
-        )
-        expect(appId).toEqual('test-access-app-dev-id')
-        expect(zoneId).toEqual('test-access-ca-cert-dev-data-zone')
-      })
-  })
-})
-
-describe('TestCloudflareAccessManager', () => {
-  test('provisions access custom page as expected', () => {
-    expect(stack.construct.accessCustomPage).toBeDefined()
-    pulumi
-      .all([
-        stack.construct.accessCustomPage.id,
-        stack.construct.accessCustomPage.urn,
-        stack.construct.accessCustomPage.name,
-        stack.construct.accessCustomPage.type,
-        stack.construct.accessCustomPage.customHtml,
-      ])
-      .apply(([id, urn, name, type, customHtml]) => {
-        expect(id).toEqual('test-access-custom-page-dev-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zeroTrustAccessCustomPage:ZeroTrustAccessCustomPage::test-access-custom-page-dev'
-        )
-        expect(name).toEqual('403-dev')
-        expect(type).toEqual('forbidden')
-        expect(customHtml).toEqual(
-          "<!doctype html>\n<html>\n  <head>\n    <title>403 Forbidden</title>\n  </head>\n  <body>\n    <h1>403 Forbidden</h1>\n    <p>Sorry, you don't have access to this resource.</p>\n  </body>\n</html>\n"
-        )
-      })
-  })
-})
-
-describe('TestCloudflareAccessManager', () => {
-  test('provisions access group as expected', () => {
-    expect(stack.construct.accessGroup).toBeDefined()
-    pulumi
-      .all([
-        stack.construct.accessGroup.id,
-        stack.construct.accessGroup.urn,
-        stack.construct.accessGroup.name,
-        stack.construct.accessGroup.zoneId,
-        stack.construct.accessGroup.includes,
-      ])
-      .apply(([id, urn, name, zoneId, includes]) => {
-        expect(id).toEqual('test-access-grp-dev-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zeroTrustAccessGroup:ZeroTrustAccessGroup::test-access-grp-dev'
-        )
-        expect(includes).toEqual([
-          {
-            email: {
-              email: 'test@gradientedge.io',
-            },
-          },
+  test('provisions zone as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.zone.id,
+          stack.construct.zone.urn,
+          stack.construct.zone.name,
+          stack.construct.zone.account,
         ])
-        expect(name).toEqual('test-group - DEV')
-        expect(zoneId).toEqual('test-access-grp-dev-data-zone')
-      })
-  })
-})
-
-describe('TestCloudflareAccessManager', () => {
-  test('provisions access identity provider OTP as expected', () => {
-    expect(stack.construct.accessIdentityProviderOTP).toBeDefined()
-    pulumi
-      .all([
-        stack.construct.accessIdentityProviderOTP.id,
-        stack.construct.accessIdentityProviderOTP.urn,
-        stack.construct.accessIdentityProviderOTP.name,
-        stack.construct.accessIdentityProviderOTP.type,
-        stack.construct.accessIdentityProviderOTP.zoneId,
-      ])
-      .apply(([id, urn, name, type, zoneId]) => {
-        expect(id).toEqual('test-access-idp-otp-dev-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zeroTrustAccessIdentityProvider:ZeroTrustAccessIdentityProvider::test-access-idp-otp-dev'
-        )
-        expect(name).toEqual('test-idp-otp-dev')
-        expect(type).toEqual('onetimepin')
-        expect(zoneId).toEqual('test-access-idp-otp-dev-data-zone')
-      })
-  })
-})
-
-describe('TestCloudflareAccessManager', () => {
-  test('provisions access identity provider SAML as expected', () => {
-    expect(stack.construct.accessIdentityProviderSAML).toBeDefined()
-    pulumi
-      .all([
-        stack.construct.accessIdentityProviderSAML.id,
-        stack.construct.accessIdentityProviderSAML.urn,
-        stack.construct.accessIdentityProviderSAML.name,
-        stack.construct.accessIdentityProviderSAML.type,
-        stack.construct.accessIdentityProviderSAML.zoneId,
-      ])
-      .apply(([id, urn, name, type, zoneId]) => {
-        expect(id).toEqual('test-access-idp-saml-dev-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zeroTrustAccessIdentityProvider:ZeroTrustAccessIdentityProvider::test-access-idp-saml-dev'
-        )
-        expect(name).toEqual('test-idp-saml-dev')
-        expect(type).toEqual('saml')
-        expect(zoneId).toEqual('test-access-idp-saml-dev-data-zone')
-      })
-  })
-})
-
-describe('TestCloudflareAccessManager', () => {
-  test('provisions access mTLS certificate as expected', () => {
-    expect(stack.construct.accessMTLS).toBeDefined()
-    pulumi
-      .all([
-        stack.construct.accessMTLS.id,
-        stack.construct.accessMTLS.urn,
-        stack.construct.accessMTLS.name,
-        stack.construct.accessMTLS.zoneId,
-        stack.construct.accessMTLS.associatedHostnames,
-        stack.construct.accessMTLS.certificate,
-      ])
-      .apply(([id, urn, name, zoneId, associatedHostnames, certificate]) => {
-        expect(id).toEqual('test-access-mtls-dev-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zeroTrustAccessMtlsCertificate:ZeroTrustAccessMtlsCertificate::test-access-mtls-dev'
-        )
-        expect(name).toEqual('test-mtls-cert-dev')
-        expect(zoneId).toEqual('test-access-mtls-dev-data-zone')
-        expect(associatedHostnames).toEqual(['test.gradientedge.io'])
-        expect(certificate).toEqual(
-          '-----BEGIN CERTIFICATE-----\nMIIDtzCCAp+gAwIBAgIUMPxgg0ZUXMgZuijIGEZnl4Yf9YswDQYJKoZIhvcNAQEL\nBQAwazELMAkGA1UEBhMCR0IxEzARBgNVBAgMClNvbWUtU3RhdGUxDzANBgNVBAcM\nBkxvbmRvbjEhMB8GA1UECgwYSW50ZXJuZXQgV2lkZ2l0cyBQdHkgTHRkMRMwEQYD\nVQQDDApleGFtcGxlLmlvMB4XDTIzMTEyMjEwMjEwMVoXDTI0MTEyMTEwMjEwMVow\nazELMAkGA1UEBhMCR0IxEzARBgNVBAgMClNvbWUtU3RhdGUxDzANBgNVBAcMBkxv\nbmRvbjEhMB8GA1UECgwYSW50ZXJuZXQgV2lkZ2l0cyBQdHkgTHRkMRMwEQYDVQQD\nDApleGFtcGxlLmlvMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkZXE\njgNIkA7eqXFmR5NNd87K0UpUxDlVm9lRdKFNPAcuaMK/APEx4nIIEIMSUa2d9V9E\nxNXzSPz96S1li+kzVT9wkh7UYVo1jhod1UmIFw6JTovH2iGldzTo7XXcS2UT2pml\nHZLBr8VsDlseuzqA6EaErDsRZk6aZ2BGVmdhAanDnjzY5nO+XTpmcBS1u5TTNKQ6\nikhAhF7hNvHRbsZRbwXaMdUkEUPS+2lkCoSwo8UJJLpJlbD5RvnIRmyKClpLWBNZ\nwr0W4lyL0RGqUX8TqmZN/LmKW5GFOlLQID+4Xx8FDQEby8eEhAmg8I3SX1Ui4bY3\nR5Oa2+uxOcL1wj0hIQIDAQABo1MwUTAdBgNVHQ4EFgQUF2ZOdkKBfHsVWvgldNTU\n9oKAMtUwHwYDVR0jBBgwFoAUF2ZOdkKBfHsVWvgldNTU9oKAMtUwDwYDVR0TAQH/\nBAUwAwEB/zANBgkqhkiG9w0BAQsFAAOCAQEAVM1NGKM2rUFQ7IOOAcjLNoNNxz39\ntdbv0pHA+domm0FDXwDt3/fJL1qyUSMRJflnmqcIyT9+7a43nj42ip7NqbUh0B7X\nKxWR9vqajL49Eb6+nO0V8dVi9DJzqLxF2aQNMQ8KBtI2NZdaNGVJIqajgXr4fJ/G\nTlko8IAooQk+E2Ov4U/vwE1ISqVeuBsI0bTHMap9+1q+rWy8blmv5m8LZi8f/q7F\nZGXKnWWCm9TqsTf38xesu7osXtUM8+10FY4EWlh1mWBy2SeVgdgAkJACM4LGamFA\nymD5YcAsI4/RIGzp/JMjJpvhFdBbvZkxH3XIcNZ7rfeCEN5mVKJW/B1OEg==\n-----END CERTIFICATE-----\n-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQCRlcSOA0iQDt6p\ncWZHk013zsrRSlTEOVWb2VF0oU08By5owr8A8THicggQgxJRrZ31X0TE1fNI/P3p\nLWWL6TNVP3CSHtRhWjWOGh3VSYgXDolOi8faIaV3NOjtddxLZRPamaUdksGvxWwO\nWx67OoDoRoSsOxFmTppnYEZWZ2EBqcOePNjmc75dOmZwFLW7lNM0pDqKSECEXuE2\n8dFuxlFvBdox1SQRQ9L7aWQKhLCjxQkkukmVsPlG+chGbIoKWktYE1nCvRbiXIvR\nEapRfxOqZk38uYpbkYU6UtAgP7hfHwUNARvLx4SECaDwjdJfVSLhtjdHk5rb67E5\nwvXCPSEhAgMBAAECggEACW3GO55Z0j6sTBQUmDkhkMtbVl+2irjd4wiZnnCd9G/Q\noSdPwItefDh/bjZW9uREMTKY3RiwN39vIG14wK17Th+cNlJ51c5GXqwxV3F6N2gR\nG32xFV8NfOF33n0+JcHnncZKq9Yn5i7mly1umZip5aE/kXoH3/TiSiSxmYH7heR0\nQZkkS+jsFPhjD6nhz0xDDJiY/1cCQ0sUvRne4G1kqN8J0Z7FMrg7cb5wZVDMRc1S\n1px6xGjSOMnMgPYRvCxEPw7Pge3J+XYg4EIiDkeU5XmtXPsNsZR5iVgoAnfgrU/N\n1oiFNYZtohl8M4NHcZy6I1C23iWAL+plJ6zOyiNmEwKBgQDNTZA+sfAg4iTLXyFg\ncgyFv5tEb2qgd1cWomFNbFyQ8ckc+EKhR7xwv1P1VXXCnqcWjqizmb0uOJpczvU6\nVPXv7kFg0CK5cnngkSFi7VimACbqvXDk8n5XI9x9xiDDEUwOZsPzs+1KGj41Cd0K\nHkRtnOjEOQF3YmLm3v1l+iPY5wKBgQC1iRLHjsKFwQUEhWOMOMqJLQrLlnpAtRpd\nrHEncMzm3NolQX+F7JM5tKCBsMtnVZG16jeACW1RENgmRYWvK4P/DdbDb28JIlD2\nMigMveNZbS0IMdbDlte0PEwUvAQrmtCxVDimDgsSi2HLcAZ1wIb3q9Oe2lE4pleZ\nxJf/PnPMtwKBgQCwg56geOanryfJf2o3/PbNS/dYOJ8phlHnUQdtxNw1dtzePokz\nF3VqTuYFyktsYHHykAd2G5mvEtWNNBdd5sxpVKT7cxhX75fgP4fAAac1Wm4bZ3OY\nNPHxRBEARofGj6mfvDV/49QB4VxYx7k3SNy2jbEHfKfJGFtGerTNp+qIQwKBgQCg\nCPIsSLdF0M6KmMkUgbBTVAjzR3oI918B+5ZZbcDFOSd6to4kU1XLBmiFTIVUWIQ2\n+f7peeYMFCxpONrMfTFFNT8CVYduZvk2wSq7aN83I98SHVW2YZFRS+LKWKHYiwe1\nfIjgIvsx4vxYqy6Wuh6B0tGhddcqeMI7Rau1kanmawKBgQCQE/orMbiFQ5ahEJsc\nCeX4ZId/12bWDtjjy/krQ7F7da0CRAnYsC9MqW+Zc4uvylNhPvRKKPLaF3XZPHvO\nn/ulnABB3u1RDx0Q9VFFs4DlgGxZEnC5aGiCaCBqk9RpFcqNWMBJfOWvHfnT1DtD\nZBR/sYHXYZuRdIzorWIxVZdMDw==\n-----END PRIVATE KEY-----'
-        )
-      })
-  })
-})
-
-describe('TestCloudflareAccessManager', () => {
-  test('provisions access organisation as expected', () => {
-    expect(stack.construct.accessOrganisation).toBeDefined()
-    pulumi
-      .all([
-        stack.construct.accessOrganisation.id,
-        stack.construct.accessOrganisation.urn,
-        stack.construct.accessOrganisation.name,
-        stack.construct.accessOrganisation.zoneId,
-        stack.construct.accessOrganisation.authDomain,
-        stack.construct.accessOrganisation.autoRedirectToIdentity,
-        stack.construct.accessOrganisation.isUiReadOnly,
-        stack.construct.accessOrganisation.userSeatExpirationInactiveTime,
-      ])
-      .apply(
-        ([id, urn, name, zoneId, authDomain, autoRedirectToIdentity, isUiReadOnly, userSeatExpirationInactiveTime]) => {
-          expect(id).toEqual('test-access-org-dev-id')
+        .apply(([id, urn, name, account]) => {
+          expect(id).toEqual('test-zone-dev-id')
           expect(urn).toEqual(
-            'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zeroTrustOrganization:ZeroTrustOrganization::test-access-org-dev'
+            'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zone:Zone::test-zone-dev'
           )
-          expect(name).toEqual('test-org-dev')
-          expect(zoneId).toEqual('test-access-org-dev-data-zone')
-          expect(authDomain).toEqual('test.gradientedge.io')
-          expect(autoRedirectToIdentity).toEqual(false)
-          expect(isUiReadOnly).toEqual(false)
-          expect(userSeatExpirationInactiveTime).toEqual('720h')
-        }
-      )
+          expect(name).toEqual('gradientedge.io')
+          expect(account.id).toEqual('test-account')
+        })
+    )
   })
 })
 
 describe('TestCloudflareAccessManager', () => {
-  test('provisions access policies as expected', () => {
+  test('provisions access application as expected', async () => {
+    expect(stack.construct.accessApp).toBeDefined()
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.accessApp.id,
+          stack.construct.accessApp.urn,
+          stack.construct.accessApp.name,
+          stack.construct.accessApp.domain,
+          stack.construct.accessApp.sessionDuration,
+          stack.construct.accessApp.type,
+          stack.construct.accessApp.zoneId,
+          stack.construct.accessApp.corsHeaders,
+        ])
+        .apply(([id, urn, name, domain, sessionDuration, type, zoneId, corsHeaders]) => {
+          expect(id).toEqual('test-access-app-dev-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zeroTrustAccessApplication:ZeroTrustAccessApplication::test-access-app-dev'
+          )
+          expect(name).toEqual('test-app-dev')
+          expect(domain).toEqual('myapp-gradientedge.io')
+          expect(sessionDuration).toEqual('24h')
+          expect(type).toEqual('self_hosted')
+          expect(zoneId).toEqual('test-access-app-dev-data-zone')
+          expect(corsHeaders).toEqual({
+            allowAllHeaders: true,
+            allowCredentials: true,
+            allowedOrigins: ['https://example.gradientedge.io'],
+            maxAge: 10,
+          })
+        })
+    )
+  })
+})
+
+describe('TestCloudflareAccessManager', () => {
+  test('provisions ca certificate as expected', async () => {
+    expect(stack.construct.accessApp).toBeDefined()
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.accessCertificate.id,
+          stack.construct.accessCertificate.urn,
+          stack.construct.accessCertificate.accountId,
+          stack.construct.accessCertificate.appId,
+          stack.construct.accessCertificate.zoneId,
+        ])
+        .apply(([id, urn, accountId, appId, zoneId]) => {
+          expect(id).toEqual('test-access-ca-cert-dev-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zeroTrustAccessShortLivedCertificate:ZeroTrustAccessShortLivedCertificate::test-access-ca-cert-dev'
+          )
+          expect(appId).toEqual('test-access-app-dev-id')
+          expect(zoneId).toEqual('test-access-ca-cert-dev-data-zone')
+        })
+    )
+  })
+})
+
+describe('TestCloudflareAccessManager', () => {
+  test('provisions access custom page as expected', async () => {
+    expect(stack.construct.accessCustomPage).toBeDefined()
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.accessCustomPage.id,
+          stack.construct.accessCustomPage.urn,
+          stack.construct.accessCustomPage.name,
+          stack.construct.accessCustomPage.type,
+          stack.construct.accessCustomPage.customHtml,
+        ])
+        .apply(([id, urn, name, type, customHtml]) => {
+          expect(id).toEqual('test-access-custom-page-dev-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zeroTrustAccessCustomPage:ZeroTrustAccessCustomPage::test-access-custom-page-dev'
+          )
+          expect(name).toEqual('403-dev')
+          expect(type).toEqual('forbidden')
+          expect(customHtml).toEqual(
+            "<!doctype html>\n<html>\n  <head>\n    <title>403 Forbidden</title>\n  </head>\n  <body>\n    <h1>403 Forbidden</h1>\n    <p>Sorry, you don't have access to this resource.</p>\n  </body>\n</html>\n"
+          )
+        })
+    )
+  })
+})
+
+describe('TestCloudflareAccessManager', () => {
+  test('provisions access group as expected', async () => {
+    expect(stack.construct.accessGroup).toBeDefined()
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.accessGroup.id,
+          stack.construct.accessGroup.urn,
+          stack.construct.accessGroup.name,
+          stack.construct.accessGroup.zoneId,
+          stack.construct.accessGroup.includes,
+        ])
+        .apply(([id, urn, name, zoneId, includes]) => {
+          expect(id).toEqual('test-access-grp-dev-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zeroTrustAccessGroup:ZeroTrustAccessGroup::test-access-grp-dev'
+          )
+          expect(includes).toEqual([
+            {
+              email: {
+                email: 'test@gradientedge.io',
+              },
+            },
+          ])
+          expect(name).toEqual('test-group - DEV')
+          expect(zoneId).toEqual('test-access-grp-dev-data-zone')
+        })
+    )
+  })
+})
+
+describe('TestCloudflareAccessManager', () => {
+  test('provisions access identity provider OTP as expected', async () => {
+    expect(stack.construct.accessIdentityProviderOTP).toBeDefined()
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.accessIdentityProviderOTP.id,
+          stack.construct.accessIdentityProviderOTP.urn,
+          stack.construct.accessIdentityProviderOTP.name,
+          stack.construct.accessIdentityProviderOTP.type,
+          stack.construct.accessIdentityProviderOTP.zoneId,
+        ])
+        .apply(([id, urn, name, type, zoneId]) => {
+          expect(id).toEqual('test-access-idp-otp-dev-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zeroTrustAccessIdentityProvider:ZeroTrustAccessIdentityProvider::test-access-idp-otp-dev'
+          )
+          expect(name).toEqual('test-idp-otp-dev')
+          expect(type).toEqual('onetimepin')
+          expect(zoneId).toEqual('test-access-idp-otp-dev-data-zone')
+        })
+    )
+  })
+})
+
+describe('TestCloudflareAccessManager', () => {
+  test('provisions access identity provider SAML as expected', async () => {
+    expect(stack.construct.accessIdentityProviderSAML).toBeDefined()
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.accessIdentityProviderSAML.id,
+          stack.construct.accessIdentityProviderSAML.urn,
+          stack.construct.accessIdentityProviderSAML.name,
+          stack.construct.accessIdentityProviderSAML.type,
+          stack.construct.accessIdentityProviderSAML.zoneId,
+        ])
+        .apply(([id, urn, name, type, zoneId]) => {
+          expect(id).toEqual('test-access-idp-saml-dev-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zeroTrustAccessIdentityProvider:ZeroTrustAccessIdentityProvider::test-access-idp-saml-dev'
+          )
+          expect(name).toEqual('test-idp-saml-dev')
+          expect(type).toEqual('saml')
+          expect(zoneId).toEqual('test-access-idp-saml-dev-data-zone')
+        })
+    )
+  })
+})
+
+describe('TestCloudflareAccessManager', () => {
+  test('provisions access mTLS certificate as expected', async () => {
+    expect(stack.construct.accessMTLS).toBeDefined()
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.accessMTLS.id,
+          stack.construct.accessMTLS.urn,
+          stack.construct.accessMTLS.name,
+          stack.construct.accessMTLS.zoneId,
+          stack.construct.accessMTLS.associatedHostnames,
+          stack.construct.accessMTLS.certificate,
+        ])
+        .apply(([id, urn, name, zoneId, associatedHostnames, certificate]) => {
+          expect(id).toEqual('test-access-mtls-dev-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zeroTrustAccessMtlsCertificate:ZeroTrustAccessMtlsCertificate::test-access-mtls-dev'
+          )
+          expect(name).toEqual('test-mtls-cert-dev')
+          expect(zoneId).toEqual('test-access-mtls-dev-data-zone')
+          expect(associatedHostnames).toEqual(['test.gradientedge.io'])
+          expect(certificate).toEqual(
+            '-----BEGIN CERTIFICATE-----\nMIIDtzCCAp+gAwIBAgIUMPxgg0ZUXMgZuijIGEZnl4Yf9YswDQYJKoZIhvcNAQEL\nBQAwazELMAkGA1UEBhMCR0IxEzARBgNVBAgMClNvbWUtU3RhdGUxDzANBgNVBAcM\nBkxvbmRvbjEhMB8GA1UECgwYSW50ZXJuZXQgV2lkZ2l0cyBQdHkgTHRkMRMwEQYD\nVQQDDApleGFtcGxlLmlvMB4XDTIzMTEyMjEwMjEwMVoXDTI0MTEyMTEwMjEwMVow\nazELMAkGA1UEBhMCR0IxEzARBgNVBAgMClNvbWUtU3RhdGUxDzANBgNVBAcMBkxv\nbmRvbjEhMB8GA1UECgwYSW50ZXJuZXQgV2lkZ2l0cyBQdHkgTHRkMRMwEQYDVQQD\nDApleGFtcGxlLmlvMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAkZXE\njgNIkA7eqXFmR5NNd87K0UpUxDlVm9lRdKFNPAcuaMK/APEx4nIIEIMSUa2d9V9E\nxNXzSPz96S1li+kzVT9wkh7UYVo1jhod1UmIFw6JTovH2iGldzTo7XXcS2UT2pml\nHZLBr8VsDlseuzqA6EaErDsRZk6aZ2BGVmdhAanDnjzY5nO+XTpmcBS1u5TTNKQ6\nikhAhF7hNvHRbsZRbwXaMdUkEUPS+2lkCoSwo8UJJLpJlbD5RvnIRmyKClpLWBNZ\nwr0W4lyL0RGqUX8TqmZN/LmKW5GFOlLQID+4Xx8FDQEby8eEhAmg8I3SX1Ui4bY3\nR5Oa2+uxOcL1wj0hIQIDAQABo1MwUTAdBgNVHQ4EFgQUF2ZOdkKBfHsVWvgldNTU\n9oKAMtUwHwYDVR0jBBgwFoAUF2ZOdkKBfHsVWvgldNTU9oKAMtUwDwYDVR0TAQH/\nBAUwAwEB/zANBgkqhkiG9w0BAQsFAAOCAQEAVM1NGKM2rUFQ7IOOAcjLNoNNxz39\ntdbv0pHA+domm0FDXwDt3/fJL1qyUSMRJflnmqcIyT9+7a43nj42ip7NqbUh0B7X\nKxWR9vqajL49Eb6+nO0V8dVi9DJzqLxF2aQNMQ8KBtI2NZdaNGVJIqajgXr4fJ/G\nTlko8IAooQk+E2Ov4U/vwE1ISqVeuBsI0bTHMap9+1q+rWy8blmv5m8LZi8f/q7F\nZGXKnWWCm9TqsTf38xesu7osXtUM8+10FY4EWlh1mWBy2SeVgdgAkJACM4LGamFA\nymD5YcAsI4/RIGzp/JMjJpvhFdBbvZkxH3XIcNZ7rfeCEN5mVKJW/B1OEg==\n-----END CERTIFICATE-----\n-----BEGIN PRIVATE KEY-----\nMIIEvwIBADANBgkqhkiG9w0BAQEFAASCBKkwggSlAgEAAoIBAQCRlcSOA0iQDt6p\ncWZHk013zsrRSlTEOVWb2VF0oU08By5owr8A8THicggQgxJRrZ31X0TE1fNI/P3p\nLWWL6TNVP3CSHtRhWjWOGh3VSYgXDolOi8faIaV3NOjtddxLZRPamaUdksGvxWwO\nWx67OoDoRoSsOxFmTppnYEZWZ2EBqcOePNjmc75dOmZwFLW7lNM0pDqKSECEXuE2\n8dFuxlFvBdox1SQRQ9L7aWQKhLCjxQkkukmVsPlG+chGbIoKWktYE1nCvRbiXIvR\nEapRfxOqZk38uYpbkYU6UtAgP7hfHwUNARvLx4SECaDwjdJfVSLhtjdHk5rb67E5\nwvXCPSEhAgMBAAECggEACW3GO55Z0j6sTBQUmDkhkMtbVl+2irjd4wiZnnCd9G/Q\noSdPwItefDh/bjZW9uREMTKY3RiwN39vIG14wK17Th+cNlJ51c5GXqwxV3F6N2gR\nG32xFV8NfOF33n0+JcHnncZKq9Yn5i7mly1umZip5aE/kXoH3/TiSiSxmYH7heR0\nQZkkS+jsFPhjD6nhz0xDDJiY/1cCQ0sUvRne4G1kqN8J0Z7FMrg7cb5wZVDMRc1S\n1px6xGjSOMnMgPYRvCxEPw7Pge3J+XYg4EIiDkeU5XmtXPsNsZR5iVgoAnfgrU/N\n1oiFNYZtohl8M4NHcZy6I1C23iWAL+plJ6zOyiNmEwKBgQDNTZA+sfAg4iTLXyFg\ncgyFv5tEb2qgd1cWomFNbFyQ8ckc+EKhR7xwv1P1VXXCnqcWjqizmb0uOJpczvU6\nVPXv7kFg0CK5cnngkSFi7VimACbqvXDk8n5XI9x9xiDDEUwOZsPzs+1KGj41Cd0K\nHkRtnOjEOQF3YmLm3v1l+iPY5wKBgQC1iRLHjsKFwQUEhWOMOMqJLQrLlnpAtRpd\nrHEncMzm3NolQX+F7JM5tKCBsMtnVZG16jeACW1RENgmRYWvK4P/DdbDb28JIlD2\nMigMveNZbS0IMdbDlte0PEwUvAQrmtCxVDimDgsSi2HLcAZ1wIb3q9Oe2lE4pleZ\nxJf/PnPMtwKBgQCwg56geOanryfJf2o3/PbNS/dYOJ8phlHnUQdtxNw1dtzePokz\nF3VqTuYFyktsYHHykAd2G5mvEtWNNBdd5sxpVKT7cxhX75fgP4fAAac1Wm4bZ3OY\nNPHxRBEARofGj6mfvDV/49QB4VxYx7k3SNy2jbEHfKfJGFtGerTNp+qIQwKBgQCg\nCPIsSLdF0M6KmMkUgbBTVAjzR3oI918B+5ZZbcDFOSd6to4kU1XLBmiFTIVUWIQ2\n+f7peeYMFCxpONrMfTFFNT8CVYduZvk2wSq7aN83I98SHVW2YZFRS+LKWKHYiwe1\nfIjgIvsx4vxYqy6Wuh6B0tGhddcqeMI7Rau1kanmawKBgQCQE/orMbiFQ5ahEJsc\nCeX4ZId/12bWDtjjy/krQ7F7da0CRAnYsC9MqW+Zc4uvylNhPvRKKPLaF3XZPHvO\nn/ulnABB3u1RDx0Q9VFFs4DlgGxZEnC5aGiCaCBqk9RpFcqNWMBJfOWvHfnT1DtD\nZBR/sYHXYZuRdIzorWIxVZdMDw==\n-----END PRIVATE KEY-----'
+          )
+        })
+    )
+  })
+})
+
+describe('TestCloudflareAccessManager', () => {
+  test('provisions access organisation as expected', async () => {
+    expect(stack.construct.accessOrganisation).toBeDefined()
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.accessOrganisation.id,
+          stack.construct.accessOrganisation.urn,
+          stack.construct.accessOrganisation.name,
+          stack.construct.accessOrganisation.zoneId,
+          stack.construct.accessOrganisation.authDomain,
+          stack.construct.accessOrganisation.autoRedirectToIdentity,
+          stack.construct.accessOrganisation.isUiReadOnly,
+          stack.construct.accessOrganisation.userSeatExpirationInactiveTime,
+        ])
+        .apply(
+          ([
+            id,
+            urn,
+            name,
+            zoneId,
+            authDomain,
+            autoRedirectToIdentity,
+            isUiReadOnly,
+            userSeatExpirationInactiveTime,
+          ]) => {
+            expect(id).toEqual('test-access-org-dev-id')
+            expect(urn).toEqual(
+              'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zeroTrustOrganization:ZeroTrustOrganization::test-access-org-dev'
+            )
+            expect(name).toEqual('test-org-dev')
+            expect(zoneId).toEqual('test-access-org-dev-data-zone')
+            expect(authDomain).toEqual('test.gradientedge.io')
+            expect(autoRedirectToIdentity).toEqual(false)
+            expect(isUiReadOnly).toEqual(false)
+            expect(userSeatExpirationInactiveTime).toEqual('720h')
+          }
+        )
+    )
+  })
+})
+
+describe('TestCloudflareAccessManager', () => {
+  test('provisions access policies as expected', async () => {
     expect(stack.construct.accessPolicy).toBeDefined()
-    pulumi
-      .all([
-        stack.construct.accessPolicy.id,
-        stack.construct.accessPolicy.urn,
-        stack.construct.accessPolicy.name,
-        stack.construct.accessPolicy.decision,
-        stack.construct.accessPolicy.includes,
-        stack.construct.accessPolicy.requires,
-      ])
-      .apply(([id, urn, name, decision, includes, requires]) => {
-        expect(id).toEqual('test-access-policy-dev-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zeroTrustAccessPolicy:ZeroTrustAccessPolicy::test-access-policy-dev'
-        )
-        expect(name).toEqual('test-policy-props-dev')
-        expect(decision).toEqual('allow')
-        expect(includes).toEqual([
-          {
-            email: {
-              email: 'test@gradientedge.io',
-            },
-          },
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.accessPolicy.id,
+          stack.construct.accessPolicy.urn,
+          stack.construct.accessPolicy.name,
+          stack.construct.accessPolicy.decision,
+          stack.construct.accessPolicy.includes,
+          stack.construct.accessPolicy.requires,
         ])
-        expect(requires).toEqual([
-          {
-            email: {
-              email: 'test@gradientedge.io',
+        .apply(([id, urn, name, decision, includes, requires]) => {
+          expect(id).toEqual('test-access-policy-dev-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zeroTrustAccessPolicy:ZeroTrustAccessPolicy::test-access-policy-dev'
+          )
+          expect(name).toEqual('test-policy-props-dev')
+          expect(decision).toEqual('allow')
+          expect(includes).toEqual([
+            {
+              email: {
+                email: 'test@gradientedge.io',
+              },
             },
-          },
-        ])
-      })
+          ])
+          expect(requires).toEqual([
+            {
+              email: {
+                email: 'test@gradientedge.io',
+              },
+            },
+          ])
+        })
+    )
   })
 })
 
 describe('TestCloudflareAccessManager', () => {
-  test('provisions access challenge rule as expected', () => {
+  test('provisions access challenge rule as expected', async () => {
     expect(stack.construct.accessRuleChallenge).toBeDefined()
-    pulumi
-      .all([
-        stack.construct.accessRuleChallenge.id,
-        stack.construct.accessRuleChallenge.urn,
-        stack.construct.accessRuleChallenge.mode,
-        stack.construct.accessRuleChallenge.zoneId,
-        stack.construct.accessRuleChallenge.notes,
-      ])
-      .apply(([id, urn, mode, zoneId, notes]) => {
-        expect(id).toEqual('test-access-rule-ch-dev-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/accessRule:AccessRule::test-access-rule-ch-dev'
-        )
-        expect(mode).toEqual('challenge')
-        expect(zoneId).toEqual('test-access-rule-ch-dev-data-zone')
-        expect(notes).toEqual('Requests coming from known for exit nodes')
-      })
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.accessRuleChallenge.id,
+          stack.construct.accessRuleChallenge.urn,
+          stack.construct.accessRuleChallenge.mode,
+          stack.construct.accessRuleChallenge.zoneId,
+          stack.construct.accessRuleChallenge.notes,
+        ])
+        .apply(([id, urn, mode, zoneId, notes]) => {
+          expect(id).toEqual('test-access-rule-ch-dev-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/accessRule:AccessRule::test-access-rule-ch-dev'
+          )
+          expect(mode).toEqual('challenge')
+          expect(zoneId).toEqual('test-access-rule-ch-dev-data-zone')
+          expect(notes).toEqual('Requests coming from known for exit nodes')
+        })
+    )
   })
-  test('provisions access challenge whitelist as expected', () => {
+  test('provisions access challenge whitelist as expected', async () => {
     expect(stack.construct.accessRuleWhitelist).toBeDefined()
-    pulumi
-      .all([
-        stack.construct.accessRuleWhitelist.id,
-        stack.construct.accessRuleWhitelist.urn,
-        stack.construct.accessRuleWhitelist.mode,
-        stack.construct.accessRuleWhitelist.zoneId,
-        stack.construct.accessRuleWhitelist.notes,
-      ])
-      .apply(([id, urn, mode, zoneId, notes]) => {
-        expect(id).toEqual('test-access-rule-wl-dev-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/accessRule:AccessRule::test-access-rule-wl-dev'
-        )
-        expect(mode).toEqual('whitelist')
-        expect(zoneId).toEqual('test-access-rule-wl-dev-data-zone')
-        expect(notes).toEqual('Requests coming from Australia')
-      })
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.accessRuleWhitelist.id,
+          stack.construct.accessRuleWhitelist.urn,
+          stack.construct.accessRuleWhitelist.mode,
+          stack.construct.accessRuleWhitelist.zoneId,
+          stack.construct.accessRuleWhitelist.notes,
+        ])
+        .apply(([id, urn, mode, zoneId, notes]) => {
+          expect(id).toEqual('test-access-rule-wl-dev-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/accessRule:AccessRule::test-access-rule-wl-dev'
+          )
+          expect(mode).toEqual('whitelist')
+          expect(zoneId).toEqual('test-access-rule-wl-dev-data-zone')
+          expect(notes).toEqual('Requests coming from Australia')
+        })
+    )
   })
 })
 
 describe('TestCloudflareAccessManager', () => {
-  test('provisions access service token as expected', () => {
+  test('provisions access service token as expected', async () => {
     expect(stack.construct.accessServiceToken).toBeDefined()
-    pulumi
-      .all([
-        stack.construct.accessServiceToken.id,
-        stack.construct.accessServiceToken.urn,
-        stack.construct.accessServiceToken.name,
-        stack.construct.accessServiceToken.zoneId,
-        stack.construct.accessServiceToken.duration,
-      ])
-      .apply(([id, urn, name, zoneId, duration]) => {
-        expect(id).toEqual('test-access-ser-token-dev-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zeroTrustAccessServiceToken:ZeroTrustAccessServiceToken::test-access-ser-token-dev'
-        )
-        expect(name).toEqual('test-service-token-dev')
-        expect(zoneId).toEqual('test-access-ser-token-dev-data-zone')
-        expect(duration).toEqual('300ms')
-      })
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.accessServiceToken.id,
+          stack.construct.accessServiceToken.urn,
+          stack.construct.accessServiceToken.name,
+          stack.construct.accessServiceToken.zoneId,
+          stack.construct.accessServiceToken.duration,
+        ])
+        .apply(([id, urn, name, zoneId, duration]) => {
+          expect(id).toEqual('test-access-ser-token-dev-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zeroTrustAccessServiceToken:ZeroTrustAccessServiceToken::test-access-ser-token-dev'
+          )
+          expect(name).toEqual('test-service-token-dev')
+          expect(zoneId).toEqual('test-access-ser-token-dev-data-zone')
+          expect(duration).toEqual('300ms')
+        })
+    )
   })
 })
 
 describe('TestCloudflareAccessManager', () => {
-  test('provisions access tag as expected', () => {
+  test('provisions access tag as expected', async () => {
     expect(stack.construct.accessTag).toBeDefined()
-    pulumi
-      .all([stack.construct.accessTag.id, stack.construct.accessTag.urn, stack.construct.accessTag.name])
-      .apply(([id, urn, name]) => {
-        expect(id).toEqual('test-access-tag-dev-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zeroTrustAccessTag:ZeroTrustAccessTag::test-access-tag-dev'
-        )
-        expect(name).toEqual('test-tag-dev')
-      })
+    await outputToPromise(
+      pulumi
+        .all([stack.construct.accessTag.id, stack.construct.accessTag.urn, stack.construct.accessTag.name])
+        .apply(([id, urn, name]) => {
+          expect(id).toEqual('test-access-tag-dev-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zeroTrustAccessTag:ZeroTrustAccessTag::test-access-tag-dev'
+          )
+          expect(name).toEqual('test-tag-dev')
+        })
+    )
   })
 })
 
@@ -669,22 +714,28 @@ describe('TestCloudflareAccessManager - With explicit zoneId', () => {
     expect(zoneIdStack.construct.accessCert).toBeDefined()
   })
 
-  test('access application uses provided zoneId', () => {
-    pulumi.all([zoneIdStack.construct.accessApp.zoneId]).apply(([zoneId]) => {
-      expect(zoneId).toEqual('test-zone-dev-id')
-    })
+  test('access application uses provided zoneId', async () => {
+    await outputToPromise(
+      pulumi.all([zoneIdStack.construct.accessApp.zoneId]).apply(([zoneId]) => {
+        expect(zoneId).toEqual('test-zone-dev-id')
+      })
+    )
   })
 
-  test('access group uses provided zoneId', () => {
-    pulumi.all([zoneIdStack.construct.accessGroup.zoneId]).apply(([zoneId]) => {
-      expect(zoneId).toEqual('test-zone-dev-id')
-    })
+  test('access group uses provided zoneId', async () => {
+    await outputToPromise(
+      pulumi.all([zoneIdStack.construct.accessGroup.zoneId]).apply(([zoneId]) => {
+        expect(zoneId).toEqual('test-zone-dev-id')
+      })
+    )
   })
 
-  test('access rule uses provided zoneId', () => {
-    pulumi.all([zoneIdStack.construct.accessRule.zoneId]).apply(([zoneId]) => {
-      expect(zoneId).toEqual('test-zone-dev-id')
-    })
+  test('access rule uses provided zoneId', async () => {
+    await outputToPromise(
+      pulumi.all([zoneIdStack.construct.accessRule.zoneId]).apply(([zoneId]) => {
+        expect(zoneId).toEqual('test-zone-dev-id')
+      })
+    )
   })
 })
 
@@ -743,7 +794,7 @@ class TestWithAccountIdConstruct extends CommonCloudflareConstruct {
 }
 
 describe('TestCloudflareAccessManager - With explicit accountId', () => {
-  test('provisions resources with explicit accountId', () => {
+  test('provisions resources with explicit accountId', async () => {
     const acctStack = new TestWithAccountIdCloudflareStack('test-acct-stack', testStackProps)
     expect(acctStack.construct.accessPolicy).toBeDefined()
     expect(acctStack.construct.accessRule).toBeDefined()
@@ -751,9 +802,11 @@ describe('TestCloudflareAccessManager - With explicit accountId', () => {
     expect(acctStack.construct.accessTag).toBeDefined()
     expect(acctStack.construct.accessCustomPage).toBeDefined()
 
-    pulumi.all([acctStack.construct.accessPolicy.accountId]).apply(([accountId]) => {
-      expect(accountId).toEqual('explicit-account-id')
-    })
+    await outputToPromise(
+      pulumi.all([acctStack.construct.accessPolicy.accountId]).apply(([accountId]) => {
+        expect(accountId).toEqual('explicit-account-id')
+      })
+    )
   })
 })
 

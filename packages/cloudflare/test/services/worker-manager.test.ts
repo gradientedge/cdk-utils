@@ -24,6 +24,7 @@ import {
   WorkersKvProps,
   ZoneProps,
 } from '../../src/index.js'
+import { outputToPromise } from '../helpers.js'
 
 interface TestCloudflareStackProps extends CommonCloudflareStackProps {
   testZone: ZoneProps
@@ -159,42 +160,51 @@ describe('TestCloudflareWorkerManager', () => {
 
 describe('TestCloudflareWorkerManager', () => {
   expect(stack.construct.zone).toBeDefined()
-  test('provisions zone as expected', () => {
-    pulumi
-      .all([stack.construct.zone.id, stack.construct.zone.urn, stack.construct.zone.name, stack.construct.zone.account])
-      .apply(([id, urn, name, account]) => {
-        expect(id).toEqual('test-zone-dev-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zone:Zone::test-zone-dev'
-        )
-        expect(name).toEqual('gradientedge.io')
-        expect(account.id).toEqual('test-account')
-      })
+  test('provisions zone as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.zone.id,
+          stack.construct.zone.urn,
+          stack.construct.zone.name,
+          stack.construct.zone.account,
+        ])
+        .apply(([id, urn, name, account]) => {
+          expect(id).toEqual('test-zone-dev-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zone:Zone::test-zone-dev'
+          )
+          expect(name).toEqual('gradientedge.io')
+          expect(account.id).toEqual('test-account')
+        })
+    )
   })
 })
 
 describe('TestCloudflareWorkerManager', () => {
   expect(stack.construct.workersCustomDomain).toBeDefined()
-  test('provisions workers custom domain as expected', () => {
-    pulumi
-      .all([
-        stack.construct.workersCustomDomain.id,
-        stack.construct.workersCustomDomain.urn,
-        stack.construct.workersCustomDomain.accountId,
-        stack.construct.workersCustomDomain.hostname,
-        stack.construct.workersCustomDomain.service,
-        stack.construct.workersCustomDomain.zoneId,
-      ])
-      .apply(([id, urn, accountId, hostname, service, zoneId]) => {
-        expect(id).toEqual('test-worker-domain-dev-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/workersCustomDomain:WorkersCustomDomain::test-worker-domain-dev'
-        )
-        expect(accountId).toEqual('test-account')
-        expect(hostname).toEqual('test.gradientedge.io')
-        expect(service).toEqual('product-service')
-        expect(zoneId).toEqual('test-worker-domain-dev-data-zone')
-      })
+  test('provisions workers custom domain as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.workersCustomDomain.id,
+          stack.construct.workersCustomDomain.urn,
+          stack.construct.workersCustomDomain.accountId,
+          stack.construct.workersCustomDomain.hostname,
+          stack.construct.workersCustomDomain.service,
+          stack.construct.workersCustomDomain.zoneId,
+        ])
+        .apply(([id, urn, accountId, hostname, service, zoneId]) => {
+          expect(id).toEqual('test-worker-domain-dev-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/workersCustomDomain:WorkersCustomDomain::test-worker-domain-dev'
+          )
+          expect(accountId).toEqual('test-account')
+          expect(hostname).toEqual('test.gradientedge.io')
+          expect(service).toEqual('product-service')
+          expect(zoneId).toEqual('test-worker-domain-dev-data-zone')
+        })
+    )
   })
 })
 
@@ -261,23 +271,29 @@ describe('TestCloudflareWorkerManager - With explicit zoneId', () => {
     expect(zoneIdStack.construct.workersKvNamespace).toBeDefined()
   })
 
-  test('worker domain uses provided zoneId', () => {
-    pulumi.all([zoneIdStack.construct.workersCustomDomain.zoneId]).apply(([zoneId]) => {
-      expect(zoneId).toEqual('test-zone-zid-dev-id')
-    })
+  test('worker domain uses provided zoneId', async () => {
+    await outputToPromise(
+      pulumi.all([zoneIdStack.construct.workersCustomDomain.zoneId]).apply(([zoneId]) => {
+        expect(zoneId).toEqual('test-zone-zid-dev-id')
+      })
+    )
   })
 
-  test('worker route uses provided zoneId', () => {
-    pulumi.all([zoneIdStack.construct.workersRoute.zoneId]).apply(([zoneId]) => {
-      expect(zoneId).toEqual('test-zone-zid-dev-id')
-    })
+  test('worker route uses provided zoneId', async () => {
+    await outputToPromise(
+      pulumi.all([zoneIdStack.construct.workersRoute.zoneId]).apply(([zoneId]) => {
+        expect(zoneId).toEqual('test-zone-zid-dev-id')
+      })
+    )
   })
 
-  test('worker script with routes creates routes', () => {
+  test('worker script with routes creates routes', async () => {
     expect(zoneIdStack.construct.workersScript).toBeDefined()
-    pulumi.all([zoneIdStack.construct.workersScript.scriptName]).apply(([scriptName]) => {
-      expect(scriptName).toEqual('test-script-dev')
-    })
+    await outputToPromise(
+      pulumi.all([zoneIdStack.construct.workersScript.scriptName]).apply(([scriptName]) => {
+        expect(scriptName).toEqual('test-script-dev')
+      })
+    )
   })
 })
 
@@ -334,16 +350,18 @@ class TestNoAccountIdConstruct extends CommonCloudflareConstruct {
 }
 
 describe('TestCloudflareWorkerManager - Without explicit accountId', () => {
-  test('provisions worker resources using fallback accountId', () => {
+  test('provisions worker resources using fallback accountId', async () => {
     const noAcctStack = new TestNoAccountIdCloudflareStack('test-noacct-stack', testStackProps)
     expect(noAcctStack.construct.workersScript).toBeDefined()
     expect(noAcctStack.construct.workersKvNamespace).toBeDefined()
     expect(noAcctStack.construct.workersKv).toBeDefined()
     expect(noAcctStack.construct.workersCronTrigger).toBeDefined()
 
-    pulumi.all([noAcctStack.construct.workersScript.accountId]).apply(([accountId]) => {
-      expect(accountId).toEqual('123456789012')
-    })
+    await outputToPromise(
+      pulumi.all([noAcctStack.construct.workersScript.accountId]).apply(([accountId]) => {
+        expect(accountId).toEqual('123456789012')
+      })
+    )
   })
 })
 
@@ -394,12 +412,14 @@ class TestProductionConstruct extends CommonCloudflareConstruct {
 }
 
 describe('TestCloudflareWorkerManager - Production stage KV namespace', () => {
-  test('uses title without stage suffix in production', () => {
+  test('uses title without stage suffix in production', async () => {
     const prdConstruct = new TestProductionConstruct('test-prd-construct', stack.props as any)
     expect(prdConstruct.workersKvNamespace).toBeDefined()
     expect(prdConstruct.isProductionStage()).toBe(true)
-    pulumi.all([prdConstruct.workersKvNamespace.title]).apply(([title]) => {
-      expect(title).toEqual('test-namespace')
-    })
+    await outputToPromise(
+      pulumi.all([prdConstruct.workersKvNamespace.title]).apply(([title]) => {
+        expect(title).toEqual('test-namespace')
+      })
+    )
   })
 })

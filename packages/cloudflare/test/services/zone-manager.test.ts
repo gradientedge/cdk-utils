@@ -17,6 +17,7 @@ import {
   ZoneProps,
   ZoneSettingProps,
 } from '../../src/index.js'
+import { outputToPromise } from '../helpers.js'
 
 interface TestCloudflareStackProps extends CommonCloudflareStackProps {
   testZone: ZoneProps
@@ -140,69 +141,80 @@ describe('TestCloudflareZoneManager', () => {
 
 describe('TestCloudflareZoneManager', () => {
   expect(stack.construct.zone).toBeDefined()
-  test('provisions zone as expected', () => {
-    pulumi
-      .all([stack.construct.zone.id, stack.construct.zone.urn, stack.construct.zone.name, stack.construct.zone.account])
-      .apply(([id, urn, name, account]) => {
-        expect(id).toEqual('test-zone-dev-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zone:Zone::test-zone-dev'
-        )
-        expect(name).toEqual('gradientedge.io')
-        expect(account.id).toEqual('test-account')
-      })
+  test('provisions zone as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.zone.id,
+          stack.construct.zone.urn,
+          stack.construct.zone.name,
+          stack.construct.zone.account,
+        ])
+        .apply(([id, urn, name, account]) => {
+          expect(id).toEqual('test-zone-dev-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zone:Zone::test-zone-dev'
+          )
+          expect(name).toEqual('gradientedge.io')
+          expect(account.id).toEqual('test-account')
+        })
+    )
   })
 })
 
 describe('TestCloudflareZoneManager', () => {
   expect(stack.construct.zoneCacheReserve).toBeDefined()
-  test('provisions zone cache reserve as expected', () => {
-    pulumi
-      .all([
-        stack.construct.zoneCacheReserve.id,
-        stack.construct.zoneCacheReserve.urn,
-        stack.construct.zoneCacheReserve.zoneId,
-      ])
-      .apply(([id, urn, zoneId]) => {
-        expect(id).toEqual('test-zone-cache-reserve-dev-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zoneCacheReserve:ZoneCacheReserve::test-zone-cache-reserve-dev'
-        )
-        expect(zoneId).toEqual('test-zone-dev-id')
-      })
+  test('provisions zone cache reserve as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.zoneCacheReserve.id,
+          stack.construct.zoneCacheReserve.urn,
+          stack.construct.zoneCacheReserve.zoneId,
+        ])
+        .apply(([id, urn, zoneId]) => {
+          expect(id).toEqual('test-zone-cache-reserve-dev-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zoneCacheReserve:ZoneCacheReserve::test-zone-cache-reserve-dev'
+          )
+          expect(zoneId).toEqual('test-zone-dev-id')
+        })
+    )
   })
 })
 
 describe('TestCloudflareZoneManager', () => {
   expect(stack.construct.zoneCacheVariants).toBeDefined()
-  test('provisions zone cache variants as expected', () => {
-    pulumi
-      .all([
-        stack.construct.zoneCacheVariants.id,
-        stack.construct.zoneCacheVariants.urn,
-        stack.construct.zoneCacheVariants.value,
-        stack.construct.zoneCacheVariants.zoneId,
-      ])
-      .apply(([id, urn, value, zoneId]) => {
-        expect(id).toEqual('test-zone-cache-variants-dev-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zoneCacheVariants:ZoneCacheVariants::test-zone-cache-variants-dev'
-        )
-        expect(value).toEqual({
-          avif: ['image/avif', 'image/webp'],
-          bmp: ['image/bmp', 'image/webp'],
-          gif: ['image/gif', 'image/webp'],
-          jp2: ['image/jp2', 'image/webp'],
-          jpeg: ['image/jpeg', 'image/webp'],
-          jpg: ['image/jpg', 'image/webp'],
-          jpg2: ['image/jpg2', 'image/webp'],
-          png: ['image/png', 'image/webp'],
-          tif: ['image/tif', 'image/webp'],
-          tiff: ['image/tiff', 'image/webp'],
-          webp: ['image/jpeg', 'image/webp'],
+  test('provisions zone cache variants as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.zoneCacheVariants.id,
+          stack.construct.zoneCacheVariants.urn,
+          stack.construct.zoneCacheVariants.value,
+          stack.construct.zoneCacheVariants.zoneId,
+        ])
+        .apply(([id, urn, value, zoneId]) => {
+          expect(id).toEqual('test-zone-cache-variants-dev-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zoneCacheVariants:ZoneCacheVariants::test-zone-cache-variants-dev'
+          )
+          expect(value).toEqual({
+            avif: ['image/avif', 'image/webp'],
+            bmp: ['image/bmp', 'image/webp'],
+            gif: ['image/gif', 'image/webp'],
+            jp2: ['image/jp2', 'image/webp'],
+            jpeg: ['image/jpeg', 'image/webp'],
+            jpg: ['image/jpg', 'image/webp'],
+            jpg2: ['image/jpg2', 'image/webp'],
+            png: ['image/png', 'image/webp'],
+            tif: ['image/tif', 'image/webp'],
+            tiff: ['image/tiff', 'image/webp'],
+            webp: ['image/jpeg', 'image/webp'],
+          })
+          expect(zoneId).toEqual('test-zone-cache-variants-dev-data-zone')
         })
-        expect(zoneId).toEqual('test-zone-cache-variants-dev-data-zone')
-      })
+    )
   })
 })
 
@@ -287,16 +299,20 @@ describe('TestCloudflareZoneManager - With explicit zoneId', () => {
     expect(zoneIdStack.construct.zoneDnsSettings).toBeDefined()
   })
 
-  test('zone cache variants uses provided zoneId', () => {
-    pulumi.all([zoneIdStack.construct.zoneCacheVariants.zoneId]).apply(([zoneId]) => {
-      expect(zoneId).toEqual('test-zone-zid-dev-id')
-    })
+  test('zone cache variants uses provided zoneId', async () => {
+    await outputToPromise(
+      pulumi.all([zoneIdStack.construct.zoneCacheVariants.zoneId]).apply(([zoneId]) => {
+        expect(zoneId).toEqual('test-zone-zid-dev-id')
+      })
+    )
   })
 
-  test('zone setting uses provided zoneId', () => {
-    pulumi.all([zoneIdStack.construct.zoneSetting.zoneId]).apply(([zoneId]) => {
-      expect(zoneId).toEqual('test-zone-zid-dev-id')
-    })
+  test('zone setting uses provided zoneId', async () => {
+    await outputToPromise(
+      pulumi.all([zoneIdStack.construct.zoneSetting.zoneId]).apply(([zoneId]) => {
+        expect(zoneId).toEqual('test-zone-zid-dev-id')
+      })
+    )
   })
 })
 

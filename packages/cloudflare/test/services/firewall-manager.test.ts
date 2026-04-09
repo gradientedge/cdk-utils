@@ -8,6 +8,7 @@ import {
   ZoneProps,
 } from '../../src/index.js'
 import { FirewallRuleProps } from '../../src/services/firewall/index.js'
+import { outputToPromise } from '../helpers.js'
 
 interface TestCloudflareStackProps extends CommonCloudflareStackProps {
   testZone: ZoneProps
@@ -106,74 +107,85 @@ describe('TestCloudflareFirewallManager', () => {
 
 describe('TestCloudflareFirewallManager', () => {
   expect(stack.construct.zone).toBeDefined()
-  test('provisions zone as expected', () => {
-    pulumi
-      .all([stack.construct.zone.id, stack.construct.zone.urn, stack.construct.zone.name, stack.construct.zone.account])
-      .apply(([id, urn, name, account]) => {
-        expect(id).toEqual('test-zone-dev-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zone:Zone::test-zone-dev'
-        )
-        expect(name).toEqual('gradientedge.io')
-        expect(account.id).toEqual('test-account')
-      })
-  })
-})
-
-describe('TestCloudflareFirewallManager', () => {
-  expect(stack.construct.filter).toBeDefined()
-  test('provisions filter as expected', () => {
-    pulumi
-      .all([
-        stack.construct.filter.id,
-        stack.construct.filter.urn,
-        stack.construct.filter.bodies,
-        stack.construct.filter.expression,
-      ])
-      .apply(([id, urn, bodies, expression]) => {
-        expect(id).toEqual('test-filter-dev-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/filter:Filter::test-filter-dev'
-        )
-        expect(bodies).toEqual([
-          {
-            description: 'Site break-in attempts that are outside of the office',
-            expression:
-              '(http.request.uri.path ~ ".*wp-login.php" or http.request.uri.path ~ ".*xmlrpc.php") and ip.src ne 192.0.2.1',
-            paused: false,
-          },
+  test('provisions zone as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.zone.id,
+          stack.construct.zone.urn,
+          stack.construct.zone.name,
+          stack.construct.zone.account,
         ])
-      })
+        .apply(([id, urn, name, account]) => {
+          expect(id).toEqual('test-zone-dev-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zone:Zone::test-zone-dev'
+          )
+          expect(name).toEqual('gradientedge.io')
+          expect(account.id).toEqual('test-account')
+        })
+    )
   })
 })
 
 describe('TestCloudflareFirewallManager', () => {
   expect(stack.construct.filter).toBeDefined()
-  test('provisions firewall rule as expected', () => {
-    pulumi
-      .all([
-        stack.construct.firewallRule.id,
-        stack.construct.firewallRule.urn,
-        stack.construct.firewallRule.filter,
-        stack.construct.firewallRule.zoneId,
-      ])
-      .apply(([id, urn, filter, zoneId]) => {
-        expect(id).toEqual('test-firewall-rule-dev-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/firewallRule:FirewallRule::test-firewall-rule-dev'
-        )
-        expect(filter).toEqual({
-          bodies: [
+  test('provisions filter as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.filter.id,
+          stack.construct.filter.urn,
+          stack.construct.filter.bodies,
+          stack.construct.filter.expression,
+        ])
+        .apply(([id, urn, bodies, expression]) => {
+          expect(id).toEqual('test-filter-dev-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/filter:Filter::test-filter-dev'
+          )
+          expect(bodies).toEqual([
             {
               description: 'Site break-in attempts that are outside of the office',
               expression:
                 '(http.request.uri.path ~ ".*wp-login.php" or http.request.uri.path ~ ".*xmlrpc.php") and ip.src ne 192.0.2.1',
               paused: false,
             },
-          ],
+          ])
         })
-        expect(zoneId).toEqual('test-firewall-rule-dev-data-zone')
-      })
+    )
+  })
+})
+
+describe('TestCloudflareFirewallManager', () => {
+  expect(stack.construct.filter).toBeDefined()
+  test('provisions firewall rule as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.firewallRule.id,
+          stack.construct.firewallRule.urn,
+          stack.construct.firewallRule.filter,
+          stack.construct.firewallRule.zoneId,
+        ])
+        .apply(([id, urn, filter, zoneId]) => {
+          expect(id).toEqual('test-firewall-rule-dev-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/firewallRule:FirewallRule::test-firewall-rule-dev'
+          )
+          expect(filter).toEqual({
+            bodies: [
+              {
+                description: 'Site break-in attempts that are outside of the office',
+                expression:
+                  '(http.request.uri.path ~ ".*wp-login.php" or http.request.uri.path ~ ".*xmlrpc.php") and ip.src ne 192.0.2.1',
+                paused: false,
+              },
+            ],
+          })
+          expect(zoneId).toEqual('test-firewall-rule-dev-data-zone')
+        })
+    )
   })
 })
 
@@ -204,12 +216,14 @@ class TestWithZoneIdConstruct extends CommonCloudflareConstruct {
 }
 
 describe('TestCloudflareFirewallManager - With explicit zoneId', () => {
-  test('provisions firewall rule with explicit zoneId', () => {
+  test('provisions firewall rule with explicit zoneId', async () => {
     const zoneIdStack = new TestWithZoneIdCloudflareStack('test-zoneid-stack', testStackProps)
     expect(zoneIdStack.construct.firewallRule).toBeDefined()
-    pulumi.all([zoneIdStack.construct.firewallRule.zoneId]).apply(([zoneId]) => {
-      expect(zoneId).toEqual('test-zone-zid-dev-id')
-    })
+    await outputToPromise(
+      pulumi.all([zoneIdStack.construct.firewallRule.zoneId]).apply(([zoneId]) => {
+        expect(zoneId).toEqual('test-zone-zid-dev-id')
+      })
+    )
   })
 })
 

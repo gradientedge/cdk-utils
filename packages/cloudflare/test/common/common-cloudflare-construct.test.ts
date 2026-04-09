@@ -6,6 +6,7 @@ import {
   CommonCloudflareStackProps,
   ZoneProps,
 } from '../../src/index.js'
+import { outputToPromise } from '../helpers.js'
 
 interface TestCloudflareStackProps extends CommonCloudflareStackProps {
   testZone: ZoneProps
@@ -76,36 +77,45 @@ let stack = new TestCommonCloudflareStack('test-stack', testStackProps)
 
 describe('TestCloudflareCommonConstruct', () => {
   expect(stack.construct.zone).toBeDefined()
-  test('provisions zone as expected', () => {
-    pulumi
-      .all([stack.construct.zone.id, stack.construct.zone.urn, stack.construct.zone.name, stack.construct.zone.account])
-      .apply(([id, urn, name, account]) => {
-        expect(id).toEqual('test-zone-dev-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zone:Zone::test-zone-dev'
-        )
-        expect(name).toEqual('gradientedge.io')
-        expect(account.id).toEqual('test-account')
-      })
+  test('provisions zone as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.zone.id,
+          stack.construct.zone.urn,
+          stack.construct.zone.name,
+          stack.construct.zone.account,
+        ])
+        .apply(([id, urn, name, account]) => {
+          expect(id).toEqual('test-zone-dev-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zone:Zone::test-zone-dev'
+          )
+          expect(name).toEqual('gradientedge.io')
+          expect(account.id).toEqual('test-account')
+        })
+    )
   })
 })
 
 describe('TestCloudflareCommonConstruct', () => {
   expect(stack.construct.zoneCacheReserve).toBeDefined()
-  test('provisions zone cache reserve as expected', () => {
-    pulumi
-      .all([
-        stack.construct.zoneCacheReserve.id,
-        stack.construct.zoneCacheReserve.urn,
-        stack.construct.zoneCacheReserve.zoneId,
-      ])
-      .apply(([id, urn, zoneId]) => {
-        expect(id).toEqual('test-zone-cache-reserve-dev-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zoneCacheReserve:ZoneCacheReserve::test-zone-cache-reserve-dev'
-        )
-        expect(zoneId).toEqual('test-zone-dev-id')
-      })
+  test('provisions zone cache reserve as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.zoneCacheReserve.id,
+          stack.construct.zoneCacheReserve.urn,
+          stack.construct.zoneCacheReserve.zoneId,
+        ])
+        .apply(([id, urn, zoneId]) => {
+          expect(id).toEqual('test-zone-cache-reserve-dev-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zoneCacheReserve:ZoneCacheReserve::test-zone-cache-reserve-dev'
+          )
+          expect(zoneId).toEqual('test-zone-dev-id')
+        })
+    )
   })
 })
 
