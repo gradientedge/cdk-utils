@@ -1,5 +1,14 @@
 # @gradientedge/cdk-utils
 
+## 11.12.1
+
+### Patch Changes
+
+- [`ff9a8f9`](https://github.com/gradientedge/cdk-utils/commit/ff9a8f9630cc4566b651904a490fcaf7471a27ed) Thanks [@despock](https://github.com/despock)! - hardening optional properties usage
+
+- Updated dependencies [[`ff9a8f9`](https://github.com/gradientedge/cdk-utils/commit/ff9a8f9630cc4566b651904a490fcaf7471a27ed)]:
+  - @gradientedge/cdk-utils-azure@2.11.1
+
 ## 11.12.0
 
 ### Minor Changes
