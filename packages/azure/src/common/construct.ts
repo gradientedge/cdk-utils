@@ -115,6 +115,8 @@ export class CommonAzureConstruct extends ComponentResource {
       location: this.props.location,
     })
 
+    this.props.resourceGroupName = this.resourceNameFormatter.format(this.props.resourceGroupName ?? this.id)
+
     this.registerOutputs({
       resourceGroupId: this.resourceGroup.id,
       resourceGroupName: this.resourceGroup.name,
