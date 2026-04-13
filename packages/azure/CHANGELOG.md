@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.16.0
+
+### Minor Changes
+
+- [`5ee21bc`](https://github.com/gradientedge/cdk-utils/commit/5ee21bc75cfc73831a8c25e8ae1c9cf38866fd42) Thanks [@despock](https://github.com/despock)! - feat: resolving priority of resource group name
+
 ## 2.15.0
 
 ### Minor Changes
