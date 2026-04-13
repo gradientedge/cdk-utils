@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.14.0
+
+### Minor Changes
+
+- [`f688860`](https://github.com/gradientedge/cdk-utils/commit/f688860fa0a57bb5c72c010d6b328616564325f4) Thanks [@despock](https://github.com/despock)! - feat: adding resolved stack references to exclusion list
+
 ## 2.13.0
 
 ### Minor Changes
