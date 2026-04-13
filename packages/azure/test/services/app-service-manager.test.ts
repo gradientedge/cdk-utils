@@ -248,33 +248,10 @@ describe('TestAzureLinuxWebAppConstruct - Default Values', () => {
   })
 })
 
-/* --- Tests for resource group fallback in createLinuxWebApp --- */
-
 describe('TestAzureLinuxWebAppConstruct - Error Handling', () => {
   test('createLinuxWebApp throws when props are undefined', () => {
     expect(() => {
       stack.construct.appServiceManager.createLinuxWebApp('test-lwa-err', stack.construct, undefined as any)
     }).toThrow('Props undefined for test-lwa-err')
-  })
-
-  test('createLinuxWebApp throws when resourceGroupName is missing', () => {
-    expect(() => {
-      class NoRgWebAppConstruct extends CommonAzureConstruct {
-        constructor(name: string, props: any) {
-          super(name, props)
-          this.appServiceManager.createLinuxWebApp('test-no-rg-lwa', this, {
-            name: 'test-no-rg-web-app',
-            serverFarmId: '/some/id',
-          } as any)
-        }
-      }
-      class NoRgWebAppStack extends CommonAzureStack {
-        constructor(name: string, props: any) {
-          super(name, { ...testStackProps, resourceGroupName: undefined })
-          new NoRgWebAppConstruct(props.name, this.props)
-        }
-      }
-      new NoRgWebAppStack('test-no-rg-lwa-stack', testStackProps)
-    }).toThrow('Resource group name undefined for test-no-rg-lwa')
   })
 })

@@ -41,11 +41,8 @@ export class AzureOperationalInsightsManager {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
     // Get resource group name
-    const resourceGroupName = scope.props.resourceGroupName
-      ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-      : props.resourceGroupName
-
-    if (!resourceGroupName) throw new Error(`Resource group name undefined for ${id}`)
+    const resourceGroupName =
+      props.resourceGroupName ?? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
 
     return new Workspace(
       `${id}-lw`,
@@ -56,13 +53,15 @@ export class AzureOperationalInsightsManager {
           scope.props.resourceNameOptions?.logAnalyticsWorkspace
         ),
         location: props.location ?? scope.props.location,
-        resourceGroupName: resourceGroupName,
+        resourceGroupName,
         sku: props.sku ?? {
           name: WorkspaceSkuNameEnum.PerGB2018,
         },
         retentionInDays: props.retentionInDays ?? 30,
-        tags: props.tags ?? {
+        tags: {
           environment: scope.props.stage,
+          ...scope.props.defaultTags,
+          ...props.tags,
         },
       },
       { parent: scope, ...resourceOptions }

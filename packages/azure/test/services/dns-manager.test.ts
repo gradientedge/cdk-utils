@@ -371,25 +371,3 @@ describe('TestAzureDnsConstruct - Props Undefined', () => {
     }).toThrow('Props undefined for test-txt-err')
   })
 })
-
-describe('TestAzureDnsConstruct - Resource Group Fallback', () => {
-  test('createDnsZone throws when resourceGroupName is missing', () => {
-    expect(() => {
-      class NoRgDnsConstruct extends CommonAzureConstruct {
-        constructor(name: string, props: any) {
-          super(name, props)
-          this.dnsManager.createDnsZone('test-no-rg-dns', this, {
-            zoneName: 'test-no-rg-zone',
-          } as any)
-        }
-      }
-      class NoRgDnsStack extends CommonAzureStack {
-        constructor(name: string, props: any) {
-          super(name, { ...testStackProps, resourceGroupName: undefined })
-          new NoRgDnsConstruct(props.name, this.props)
-        }
-      }
-      new NoRgDnsStack('test-no-rg-dns-stack', testStackProps)
-    }).toThrow('Resource group name undefined for test-no-rg-dns')
-  })
-})

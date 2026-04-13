@@ -1,5 +1,5 @@
 import { input } from '@pulumi/azure-native/types/index.js'
-import { WebAppArgs } from '@pulumi/azure-native/web/index.js'
+import { WebAppArgs, WebAppFunctionArgs } from '@pulumi/azure-native/web/index.js'
 
 /** @category Interface */
 export interface FunctionAppProps extends WebAppArgs {
@@ -7,7 +7,7 @@ export interface FunctionAppProps extends WebAppArgs {
 }
 
 /** @category Interface */
-export interface FunctionProps {
+export interface FunctionProps extends WebAppFunctionArgs {
   name: string
   functionAppId: string
   language?: string

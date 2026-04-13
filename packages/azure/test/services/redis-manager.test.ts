@@ -120,28 +120,6 @@ describe('TestAzureRedisConstruct', () => {
   })
 })
 
-describe('TestAzureRedisConstruct - Resource Group Fallback', () => {
-  test('createManagedRedis throws when resourceGroupName is missing', () => {
-    expect(() => {
-      class NoRgRedisConstruct extends CommonAzureConstruct {
-        constructor(name: string, props: any) {
-          super(name, props)
-          this.redisManager.createManagedRedis('test-no-rg-redis', this, {
-            sku: { name: 'Balanced_B0' },
-          } as any)
-        }
-      }
-      class NoRgRedisStack extends CommonAzureStack {
-        constructor(name: string, props: any) {
-          super(name, { ...testStackProps, resourceGroupName: undefined })
-          new NoRgRedisConstruct(props.name, this.props)
-        }
-      }
-      new NoRgRedisStack('test-no-rg-redis-stack', testStackProps)
-    }).toThrow('Resource group name undefined for test-no-rg-redis')
-  })
-})
-
 /* --- Tests for default sku values --- */
 
 class TestMinimalRedisConstruct extends CommonAzureConstruct {

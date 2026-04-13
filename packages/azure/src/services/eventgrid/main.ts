@@ -55,11 +55,8 @@ export class AzureEventgridManager {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
     // Get resource group name
-    const resourceGroupName = scope.props.resourceGroupName
-      ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-      : props.resourceGroupName
-
-    if (!resourceGroupName) throw new Error(`Resource group name undefined for ${id}`)
+    const resourceGroupName =
+      props.resourceGroupName ?? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
 
     return new Topic(
       `${id}-et`,
@@ -70,9 +67,11 @@ export class AzureEventgridManager {
           scope.props.resourceNameOptions?.eventGridTopic
         ),
         location: props.location ?? scope.props.location,
-        resourceGroupName: resourceGroupName,
-        tags: props.tags ?? {
+        resourceGroupName,
+        tags: {
           environment: scope.props.stage,
+          ...scope.props.defaultTags,
+          ...props.tags,
         },
       },
       { parent: scope, ...resourceOptions }
@@ -101,9 +100,10 @@ export class AzureEventgridManager {
           props.topicName?.toString(),
           scope.props.resourceNameOptions?.eventGridTopic
         ),
-        resourceGroupName: scope.props.resourceGroupName
-          ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-          : props.resourceGroupName,
+        resourceGroupName:
+          (props.resourceGroupName ?? scope.props.resourceGroupName)
+            ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
+            : props.resourceGroupName,
       },
       { parent: scope, ...resourceOptions }
     )
@@ -159,11 +159,8 @@ export class AzureEventgridManager {
   ) {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
-    const resourceGroupName = scope.props.resourceGroupName
-      ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-      : props.resourceGroupName
-
-    if (!resourceGroupName) throw new Error(`Resource group name undefined for ${id}`)
+    const resourceGroupName =
+      props.resourceGroupName ?? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
 
     return new SystemTopic(
       `${id}-est`,
@@ -174,9 +171,11 @@ export class AzureEventgridManager {
           scope.props.resourceNameOptions?.eventGridSystemTopic
         ),
         location: props.location ?? scope.props.location,
-        resourceGroupName: resourceGroupName,
-        tags: props.tags ?? {
+        resourceGroupName,
+        tags: {
           environment: scope.props.stage,
+          ...scope.props.defaultTags,
+          ...props.tags,
         },
       },
       { parent: scope, ...resourceOptions }
@@ -201,11 +200,8 @@ export class AzureEventgridManager {
   ) {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
-    const resourceGroupName = scope.props.resourceGroupName
-      ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-      : props.resourceGroupName
-
-    if (!resourceGroupName) throw new Error(`Resource group name undefined for ${id}`)
+    const resourceGroupName =
+      props.resourceGroupName ?? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
 
     return new SystemTopicEventSubscription(
       `${id}-ests`,
@@ -216,7 +212,7 @@ export class AzureEventgridManager {
           scope.props.resourceNameOptions?.eventGridSystemTopicEventSubscription
         ),
         systemTopicName: systemTopic.name,
-        resourceGroupName: props.resourceGroupName ?? resourceGroupName,
+        resourceGroupName,
       },
       { parent: scope, ...resourceOptions }
     )

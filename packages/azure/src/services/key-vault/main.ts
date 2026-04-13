@@ -41,11 +41,8 @@ export class AzureKeyVaultManager {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
     // Get resource group name
-    const resourceGroupName = scope.props.resourceGroupName
-      ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-      : props.resourceGroupName
-
-    if (!resourceGroupName) throw new Error(`Resource group name undefined for ${id}`)
+    const resourceGroupName =
+      props.resourceGroupName ?? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
 
     return new Vault(
       `${id}-kv`,
@@ -56,7 +53,7 @@ export class AzureKeyVaultManager {
           scope.props.resourceNameOptions?.keyVault
         ),
         location: props.location ?? scope.props.location,
-        resourceGroupName: resourceGroupName,
+        resourceGroupName,
         properties: {
           ...(props.properties as any),
           sku: (props.properties as any)?.sku ?? {
@@ -69,8 +66,10 @@ export class AzureKeyVaultManager {
           softDeleteRetentionInDays: (props.properties as any)?.softDeleteRetentionInDays ?? 90,
           enablePurgeProtection: (props.properties as any)?.enablePurgeProtection ?? true,
         },
-        tags: props.tags ?? {
+        tags: {
           environment: scope.props.stage,
+          ...scope.props.defaultTags,
+          ...props.tags,
         },
       },
       { parent: scope, ...resourceOptions }

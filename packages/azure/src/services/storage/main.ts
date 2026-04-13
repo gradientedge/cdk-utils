@@ -63,9 +63,8 @@ export class AzureStorageManager {
   ) {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
-    const resourceGroupName = scope.props.resourceGroupName
-      ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-      : `${props.resourceGroupName}`
+    const resourceGroupName =
+      props.resourceGroupName ?? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
 
     const storageAccount = new StorageAccount(
       `${id}-sa`,
@@ -82,8 +81,10 @@ export class AzureStorageManager {
         },
         kind: props.kind ?? Kind.StorageV2,
         location: props.location ?? scope.props.location,
-        tags: props.tags ?? {
+        tags: {
           environment: scope.props.stage,
+          ...scope.props.defaultTags,
+          ...props.tags,
         },
       },
       { parent: scope, ...resourceOptions }

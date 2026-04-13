@@ -140,31 +140,9 @@ describe('TestAzureAppConfigurationConstruct', () => {
   })
 })
 
-/* --- Tests for resource group name fallback and static methods --- */
+/* --- Tests for static methods --- */
 
 import { AzureAppConfigurationManager } from '../../src/index.js'
-
-describe('TestAzureAppConfigurationConstruct - Resource Group Fallback', () => {
-  test('createConfigurationStore throws when resourceGroupName is missing', () => {
-    expect(() => {
-      class NoRgAppConfigConstruct extends CommonAzureConstruct {
-        constructor(name: string, props: any) {
-          super(name, props)
-          this.appConfigurationManager.createConfigurationStore('test-no-rg-ac', this, {
-            configStoreName: 'test-no-rg-ac',
-          } as any)
-        }
-      }
-      class NoRgAppConfigStack extends CommonAzureStack {
-        constructor(name: string, props: any) {
-          super(name, { ...testStackProps, resourceGroupName: undefined })
-          new NoRgAppConfigConstruct(props.name, this.props)
-        }
-      }
-      new NoRgAppConfigStack('test-no-rg-ac-stack', testStackProps)
-    }).toThrow('Resource group name undefined for test-no-rg-ac')
-  })
-})
 
 describe('AzureAppConfigurationManager - Static Methods', () => {
   test('hasCosmosDependencies returns false for null/undefined', () => {

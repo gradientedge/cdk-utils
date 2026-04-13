@@ -46,11 +46,8 @@ export class AzureAppServiceManager {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
     // Get resource group name
-    const resourceGroupName = scope.props.resourceGroupName
-      ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-      : props.resourceGroupName
-
-    if (!resourceGroupName) throw new Error(`Resource group name undefined for ${id}`)
+    const resourceGroupName =
+      props.resourceGroupName ?? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
 
     return new AppServicePlan(
       `${id}-as`,
@@ -60,7 +57,7 @@ export class AzureAppServiceManager {
           props.name?.toString(),
           scope.props.resourceNameOptions?.appServicePlan
         ),
-        resourceGroupName: resourceGroupName,
+        resourceGroupName,
         location: props.location ?? scope.props.location,
         sku: props.sku ?? {
           name: 'FC1',
@@ -68,8 +65,10 @@ export class AzureAppServiceManager {
         },
         reserved: props.reserved ?? true,
         zoneRedundant: props.zoneRedundant ?? true,
-        tags: props.tags ?? {
+        tags: {
           environment: scope.props.stage,
+          ...scope.props.defaultTags,
+          ...props.tags,
         },
       },
       { parent: scope, ...resourceOptions }
@@ -93,18 +92,15 @@ export class AzureAppServiceManager {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
     // Get resource group name
-    const resourceGroupName = scope.props.resourceGroupName
-      ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-      : props.resourceGroupName
-
-    if (!resourceGroupName) throw new Error(`Resource group name undefined for ${id}`)
+    const resourceGroupName =
+      props.resourceGroupName ?? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
 
     return new WebApp(
       `${id}-lwa`,
       {
         ...props,
         name: scope.resourceNameFormatter.format(props.name?.toString(), scope.props.resourceNameOptions?.linuxWebApp),
-        resourceGroupName: resourceGroupName,
+        resourceGroupName,
         location: props.location ?? scope.props.location,
         httpsOnly: props.httpsOnly ?? true,
         kind: props.kind ?? 'app,linux',
@@ -116,8 +112,10 @@ export class AzureAppServiceManager {
           linuxFxVersion: 'NODE|22-lts',
           minTlsVersion: SupportedTlsVersions.SupportedTlsVersions_1_3,
         },
-        tags: props.tags ?? {
+        tags: {
           environment: scope.props.stage,
+          ...scope.props.defaultTags,
+          ...props.tags,
         },
       },
       { parent: scope, ...resourceOptions }

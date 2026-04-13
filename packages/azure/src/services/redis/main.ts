@@ -43,11 +43,8 @@ export class AzureRedisManager {
     if (!clusterProps) throw new Error(`Props undefined for ${id}`)
 
     // Get resource group name
-    const resourceGroupName = scope.props.resourceGroupName
-      ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-      : clusterProps.resourceGroupName
-
-    if (!resourceGroupName) throw new Error(`Resource group name undefined for ${id}`)
+    const resourceGroupName =
+      clusterProps.resourceGroupName ?? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
 
     const cluster = new RedisEnterprise(
       `${id}-rc`,
@@ -58,7 +55,7 @@ export class AzureRedisManager {
           scope.props.resourceNameOptions?.managedRedis
         ),
         location: clusterProps.location ?? scope.props.location,
-        resourceGroupName: resourceGroupName,
+        resourceGroupName,
         sku: clusterProps.sku ?? {
           name: SkuName.Balanced_B0,
         },
@@ -74,7 +71,7 @@ export class AzureRedisManager {
       {
         ...databaseProps,
         clusterName: cluster.name,
-        resourceGroupName: resourceGroupName,
+        resourceGroupName,
         databaseName: databaseProps?.databaseName ?? 'default',
       },
       { parent: scope, dependsOn: [cluster], ...resourceOptions }

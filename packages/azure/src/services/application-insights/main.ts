@@ -45,9 +45,10 @@ export class AzureApplicationInsightsManager {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
     // Get resource group name
-    const resourceGroupName = scope.props.resourceGroupName
-      ? `${scope.props.resourceGroupName}-${scope.props.stage}`
-      : props.resourceGroupName
+    const resourceGroupName =
+      (props.resourceGroupName ?? scope.props.resourceGroupName)
+        ? `${scope.props.resourceGroupName}-${scope.props.stage}`
+        : props.resourceGroupName
 
     if (!resourceGroupName) throw new Error(`Resource group name undefined for ${id}`)
 
@@ -59,11 +60,13 @@ export class AzureApplicationInsightsManager {
           props.resourceName?.toString(),
           scope.props.resourceNameOptions?.applicationInsights
         ),
-        resourceGroupName: resourceGroupName,
+        resourceGroupName,
         applicationType: (props.applicationType as any) ?? ApplicationType.Web,
         kind: props.kind ?? 'web',
-        tags: props.tags ?? {
+        tags: {
           environment: scope.props.stage,
+          ...scope.props.defaultTags,
+          ...props.tags,
         },
       },
       { parent: scope, ...resourceOptions }

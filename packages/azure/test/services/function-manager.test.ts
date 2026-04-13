@@ -271,6 +271,7 @@ class TestMinimalConstruct extends CommonAzureConstruct {
     this.functionWithEnabled = this.functionManager.createFunction(`test-enabled-fn-${this.props.stage}`, this, {
       name: 'test-enabled-function',
       functionAppId: '/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.Web/sites/test-fa',
+      resourceGroupName: 'test-rg-dev',
       enabled: true,
     })
 
@@ -402,70 +403,5 @@ describe('TestAzureFunctionConstruct - Props Undefined', () => {
         undefined as any
       )
     }).toThrow('Props undefined for test-flex-res-err')
-  })
-})
-
-describe('TestAzureFunctionConstruct - Error Handling', () => {
-  test('createFunctionApp throws when resourceGroupName is missing from both scope and props', () => {
-    expect(() => {
-      class NoRgConstruct extends CommonAzureConstruct {
-        constructor(name: string, props: any) {
-          super(name, props)
-          this.functionManager.createFunctionApp('test-no-rg', this, {
-            name: 'test-no-rg-fa',
-            serverFarmId: '/subscriptions/test-sub/resourceGroups/test-rg/providers/Microsoft.Web/serverfarms/test-asp',
-          } as any)
-        }
-      }
-      class NoRgStack extends CommonAzureStack {
-        constructor(name: string, props: any) {
-          super(name, { ...testStackProps, resourceGroupName: undefined })
-          new NoRgConstruct(props.name, this.props)
-        }
-      }
-      new NoRgStack('test-no-rg-stack', testStackProps)
-    }).toThrow('Resource group name undefined for test-no-rg')
-  })
-
-  test('createFunctionAppFlexConsumption throws when resourceGroupName is missing', () => {
-    expect(() => {
-      class NoRgFlexConstruct extends CommonAzureConstruct {
-        constructor(name: string, props: any) {
-          super(name, props)
-          this.functionManager.createFunctionAppFlexConsumption('test-no-rg-flex', this, {
-            name: 'test-no-rg-flex-fa',
-            serverFarmId: '/subscriptions/test-sub/resourceGroups/test-rg/providers/Microsoft.Web/serverfarms/test-asp',
-          } as any)
-        }
-      }
-      class NoRgFlexStack extends CommonAzureStack {
-        constructor(name: string, props: any) {
-          super(name, { ...testStackProps, resourceGroupName: undefined })
-          new NoRgFlexConstruct(props.name, this.props)
-        }
-      }
-      new NoRgFlexStack('test-no-rg-flex-stack', testStackProps)
-    }).toThrow('Resource group name undefined for test-no-rg-flex')
-  })
-
-  test('createFunctionAppFlexConsumptionResource throws when resourceGroupName is missing', () => {
-    expect(() => {
-      class NoRgFlexResConstruct extends CommonAzureConstruct {
-        constructor(name: string, props: any) {
-          super(name, props)
-          this.functionManager.createFunctionAppFlexConsumptionResource('test-no-rg-flex-res', this, {
-            name: 'test-no-rg-flex-res-fa',
-            serverFarmId: '/subscriptions/test-sub/resourceGroups/test-rg/providers/Microsoft.Web/serverfarms/test-asp',
-          } as any)
-        }
-      }
-      class NoRgFlexResStack extends CommonAzureStack {
-        constructor(name: string, props: any) {
-          super(name, { ...testStackProps, resourceGroupName: undefined })
-          new NoRgFlexResConstruct(props.name, this.props)
-        }
-      }
-      new NoRgFlexResStack('test-no-rg-flex-res-stack', testStackProps)
-    }).toThrow('Resource group name undefined for test-no-rg-flex-res')
   })
 })

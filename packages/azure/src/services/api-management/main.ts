@@ -76,11 +76,8 @@ export class AzureApiManagementManager {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
     // Get resource group name
-    const resourceGroupName = scope.props.resourceGroupName
-      ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-      : props.resourceGroupName
-
-    if (!resourceGroupName) throw new Error(`Resource group name undefined for ${id}`)
+    const resourceGroupName =
+      props.resourceGroupName ?? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
 
     const apiManagementService = new ApiManagementService(
       `${id}-am`,
@@ -90,12 +87,14 @@ export class AzureApiManagementManager {
           props.serviceName?.toString(),
           scope.props.resourceNameOptions?.apiManagement
         ),
-        resourceGroupName: resourceGroupName,
+        resourceGroupName,
         location: props.location ?? scope.props.location,
         publisherEmail: props.publisherEmail ?? 'noreply@example.com',
         publisherName: props.publisherName ?? 'Default Publisher',
-        tags: props.tags ?? {
+        tags: {
           environment: scope.props.stage,
+          ...scope.props.defaultTags,
+          ...props.tags,
         },
       },
       { parent: scope, ...resourceOptions }
@@ -110,7 +109,7 @@ export class AzureApiManagementManager {
             props.serviceName?.toString(),
             scope.props.resourceNameOptions?.apiManagementLogger
           ),
-          resourceGroupName: resourceGroupName,
+          resourceGroupName,
           serviceName: apiManagementService.name,
           loggerType: LoggerType.ApplicationInsights,
           credentials: {
@@ -142,7 +141,7 @@ export class AzureApiManagementManager {
             scope.props.resourceNameOptions?.apiManagementRedisCache
           ),
           serviceName: apiManagementService.name,
-          resourceGroupName: resourceGroupName,
+          resourceGroupName,
           connectionString: connectionString,
           useFromLocation: cluster.location,
           resourceId: cluster.id,
@@ -172,10 +171,7 @@ export class AzureApiManagementManager {
 
     return getApiManagementServiceOutput(
       {
-        serviceName: scope.resourceNameFormatter.format(
-          props.serviceName?.toString(),
-          scope.props.resourceNameOptions?.dataAzurermApiManagement
-        ),
+        serviceName: scope.resourceNameFormatter.format(props.serviceName?.toString()),
         resourceGroupName: scope.props.resourceGroupName
           ? `${scope.props.resourceGroupName}-${scope.props.stage}`
           : props.resourceGroupName,

@@ -41,11 +41,8 @@ export class AzureDnsManager {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
     // Get resource group name
-    const resourceGroupName = scope.props.resourceGroupName
-      ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-      : props.resourceGroupName
-
-    if (!resourceGroupName) throw new Error(`Resource group name undefined for ${id}`)
+    const resourceGroupName =
+      props.resourceGroupName ?? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
 
     return new Zone(
       `${id}-dz`,
@@ -55,10 +52,12 @@ export class AzureDnsManager {
           props.zoneName?.toString(),
           scope.props.resourceNameOptions?.dnsZone
         ),
-        resourceGroupName: resourceGroupName,
+        resourceGroupName,
         location: 'global', // DNS zones are always global
-        tags: props.tags ?? {
+        tags: {
           environment: scope.props.stage,
+          ...scope.props.defaultTags,
+          ...props.tags,
         },
       },
       { parent: scope, ...resourceOptions }

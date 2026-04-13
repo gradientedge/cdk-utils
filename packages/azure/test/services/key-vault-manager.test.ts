@@ -203,30 +203,6 @@ describe('TestAzureKeyVaultConstruct - createKeyVaultSecret', () => {
 })
 
 describe('TestAzureKeyVaultConstruct - Resource Group Fallback', () => {
-  test('createKeyVault throws when resourceGroupName is missing', () => {
-    expect(() => {
-      class NoRgKvConstruct extends CommonAzureConstruct {
-        constructor(name: string, props: any) {
-          super(name, props)
-          this.keyVaultManager.createKeyVault('test-no-rg-kv', this, {
-            vaultName: 'test-no-rg-kv',
-            properties: {
-              tenantId: '00000000-0000-0000-0000-000000000000',
-              sku: { family: 'A', name: 'standard' },
-            },
-          } as any)
-        }
-      }
-      class NoRgKvStack extends CommonAzureStack {
-        constructor(name: string, props: any) {
-          super(name, { ...testStackProps, resourceGroupName: undefined })
-          new NoRgKvConstruct(props.name, this.props)
-        }
-      }
-      new NoRgKvStack('test-no-rg-kv-stack', testStackProps)
-    }).toThrow('Resource group name undefined for test-no-rg-kv')
-  })
-
   test('resolveKeyVault resolves an existing vault', () => {
     const result = stack.construct.keyVaultManager.resolveKeyVault(stack.construct, 'test-vault', 'test-rg-dev')
     expect(result).toBeDefined()

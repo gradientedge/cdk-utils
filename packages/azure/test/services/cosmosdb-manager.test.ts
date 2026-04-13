@@ -124,6 +124,18 @@ describe('TestAzureCosmosDbConstruct', () => {
     const error = () => new TestInvalidCommonStack('test-invalid-stack', testStackProps)
     expect(error).toThrow('Props undefined for test-cosmosdb-account-dev')
   })
+
+  test('createCosmosDbDatabase throws when props are undefined', () => {
+    expect(() => {
+      stack.construct.cosmosDbManager.createCosmosDbDatabase('test-db-err', stack.construct, undefined as any)
+    }).toThrow('Props undefined for test-db-err')
+  })
+
+  test('createCosmosDbContainer throws when props are undefined', () => {
+    expect(() => {
+      stack.construct.cosmosDbManager.createCosmosDbContainer('test-container-err', stack.construct, undefined as any)
+    }).toThrow('Props undefined for test-container-err')
+  })
 })
 
 describe('TestAzureCosmosDbConstruct', () => {
@@ -371,73 +383,5 @@ const stackReaderOnly = new TestStackWithReaderOnly('test-reader-only-stack', te
 describe('TestAzureCosmosDbConstruct - grantSqlRoleDefinitionToAccount Reader Only', () => {
   test('grants only reader role', () => {
     expect(stackReaderOnly.construct).toBeDefined()
-  })
-})
-
-describe('TestAzureCosmosDbConstruct - Resource Group Fallback', () => {
-  test('createCosmosDbAccount throws when resourceGroupName is missing', () => {
-    expect(() => {
-      class NoRgCosmosConstruct extends CommonAzureConstruct {
-        constructor(name: string, props: any) {
-          super(name, props)
-          this.cosmosDbManager.createCosmosDbAccount('test-no-rg-cosmos', this, {
-            accountName: 'test-no-rg-cosmos',
-            databaseAccountOfferType: 'Standard',
-            consistencyPolicy: { defaultConsistencyLevel: 'Session' },
-            locations: [{ locationName: 'eastus', failoverPriority: 0 }],
-          } as any)
-        }
-      }
-      class NoRgCosmosStack extends CommonAzureStack {
-        constructor(name: string, props: any) {
-          super(name, { ...testStackProps, resourceGroupName: undefined })
-          new NoRgCosmosConstruct(props.name, this.props)
-        }
-      }
-      new NoRgCosmosStack('test-no-rg-cosmos-stack', testStackProps)
-    }).toThrow('Resource group name undefined for test-no-rg-cosmos')
-  })
-
-  test('createCosmosDbDatabase throws when resourceGroupName is missing', () => {
-    expect(() => {
-      class NoRgDbConstruct extends CommonAzureConstruct {
-        constructor(name: string, props: any) {
-          super(name, props)
-          this.cosmosDbManager.createCosmosDbDatabase('test-no-rg-db', this, {
-            databaseName: 'test-db',
-            accountName: 'test-account',
-          } as any)
-        }
-      }
-      class NoRgDbStack extends CommonAzureStack {
-        constructor(name: string, props: any) {
-          super(name, { ...testStackProps, resourceGroupName: undefined })
-          new NoRgDbConstruct(props.name, this.props)
-        }
-      }
-      new NoRgDbStack('test-no-rg-db-stack', testStackProps)
-    }).toThrow('Resource group name undefined for test-no-rg-db')
-  })
-
-  test('createCosmosDbContainer throws when resourceGroupName is missing', () => {
-    expect(() => {
-      class NoRgContainerConstruct extends CommonAzureConstruct {
-        constructor(name: string, props: any) {
-          super(name, props)
-          this.cosmosDbManager.createCosmosDbContainer('test-no-rg-container', this, {
-            containerName: 'test-container',
-            accountName: 'test-account',
-            databaseName: 'test-db',
-          } as any)
-        }
-      }
-      class NoRgContainerStack extends CommonAzureStack {
-        constructor(name: string, props: any) {
-          super(name, { ...testStackProps, resourceGroupName: undefined })
-          new NoRgContainerConstruct(props.name, this.props)
-        }
-      }
-      new NoRgContainerStack('test-no-rg-container-stack', testStackProps)
-    }).toThrow('Resource group name undefined for test-no-rg-container')
   })
 })

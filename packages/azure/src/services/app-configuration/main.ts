@@ -41,11 +41,8 @@ export class AzureAppConfigurationManager {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
     // Get resource group name
-    const resourceGroupName = scope.props.resourceGroupName
-      ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-      : props.resourceGroupName
-
-    if (!resourceGroupName) throw new Error(`Resource group name undefined for ${id}`)
+    const resourceGroupName =
+      props.resourceGroupName ?? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
 
     return new ConfigurationStore(
       `${id}-ac`,
@@ -55,7 +52,7 @@ export class AzureAppConfigurationManager {
           props.configStoreName?.toString(),
           scope.props.resourceNameOptions?.appConfiguration
         ),
-        resourceGroupName: resourceGroupName,
+        resourceGroupName,
         location: props.location ?? scope.props.location,
         identity: props.identity ?? {
           type: IdentityType.SystemAssigned,
@@ -63,8 +60,10 @@ export class AzureAppConfigurationManager {
         sku: props.sku ?? {
           name: 'standard',
         },
-        tags: props.tags ?? {
+        tags: {
           environment: scope.props.stage,
+          ...scope.props.defaultTags,
+          ...props.tags,
         },
       },
       { parent: scope, ...resourceOptions }

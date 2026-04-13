@@ -55,11 +55,8 @@ export class AzureCosmosDbManager {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
     // Get resource group name
-    const resourceGroupName = scope.props.resourceGroupName
-      ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-      : props.resourceGroupName
-
-    if (!resourceGroupName) throw new Error(`Resource group name undefined for ${id}`)
+    const resourceGroupName =
+      props.resourceGroupName ?? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
 
     return new DatabaseAccount(
       `${id}-ca`,
@@ -70,9 +67,11 @@ export class AzureCosmosDbManager {
           scope.props.resourceNameOptions?.cosmosDbAccount
         ),
         location: props.location ?? scope.props.location,
-        resourceGroupName: resourceGroupName,
-        tags: props.tags ?? {
+        resourceGroupName,
+        tags: {
           environment: scope.props.stage,
+          ...scope.props.defaultTags,
+          ...props.tags,
         },
         identity: props.identity ?? {
           type: ResourceIdentityType.SystemAssigned,
@@ -99,11 +98,8 @@ export class AzureCosmosDbManager {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
     // Get resource group name
-    const resourceGroupName = scope.props.resourceGroupName
-      ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-      : props.resourceGroupName
-
-    if (!resourceGroupName) throw new Error(`Resource group name undefined for ${id}`)
+    const resourceGroupName =
+      props.resourceGroupName ?? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
 
     return new SqlResourceSqlDatabase(
       `${id}-cd`,
@@ -113,7 +109,7 @@ export class AzureCosmosDbManager {
           props.databaseName?.toString(),
           scope.props.resourceNameOptions?.cosmosDbSqlDatabase
         ),
-        resourceGroupName: resourceGroupName,
+        resourceGroupName,
       },
       { parent: scope, ...resourceOptions }
     )
@@ -136,9 +132,10 @@ export class AzureCosmosDbManager {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
     // Get resource group name
-    const resourceGroupName = scope.props.resourceGroupName
-      ? `${scope.props.resourceGroupName}-${scope.props.stage}`
-      : props.resourceGroupName
+    const resourceGroupName =
+      (props.resourceGroupName ?? scope.props.resourceGroupName)
+        ? `${scope.props.resourceGroupName}-${scope.props.stage}`
+        : props.resourceGroupName
 
     if (!resourceGroupName) throw new Error(`Resource group name undefined for ${id}`)
 
@@ -150,7 +147,7 @@ export class AzureCosmosDbManager {
           props.containerName?.toString(),
           scope.props.resourceNameOptions?.cosmosDbSqlContainer
         ),
-        resourceGroupName: resourceGroupName,
+        resourceGroupName,
       },
       { parent: scope, ...resourceOptions }
     )
@@ -245,7 +242,7 @@ export class AzureCosmosDbManager {
         scope,
         {
           accountName: cosmosDbAccount.name,
-          resourceGroupName: resourceGroupName,
+          resourceGroupName,
           roleDefinitionId: cosmosdbSqlRoleDefinitionContributor.id,
           principalId,
           scope: cosmosDbAccount.id,
@@ -268,7 +265,7 @@ export class AzureCosmosDbManager {
         scope,
         {
           accountName: cosmosDbAccount.name,
-          resourceGroupName: resourceGroupName,
+          resourceGroupName,
           roleDefinitionId: cosmosdbSqlRoleDefinitionReader.id,
           principalId,
           scope: cosmosDbAccount.id,

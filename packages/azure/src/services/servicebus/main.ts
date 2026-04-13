@@ -55,11 +55,8 @@ export class AzureServiceBusManager {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
     // Get resource group name
-    const resourceGroupName = scope.props.resourceGroupName
-      ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-      : props.resourceGroupName
-
-    if (!resourceGroupName) throw new Error(`Resource group name undefined for ${id}`)
+    const resourceGroupName =
+      props.resourceGroupName ?? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
 
     return new Namespace(
       `${id}-sn`,
@@ -69,7 +66,7 @@ export class AzureServiceBusManager {
           props.namespaceName?.toString(),
           scope.props.resourceNameOptions?.serviceBusNamespace
         ),
-        resourceGroupName: resourceGroupName,
+        resourceGroupName,
         location: props.location ?? scope.props.location,
         identity: props.identity ?? {
           type: ManagedServiceIdentityType.SystemAssigned,
@@ -77,8 +74,10 @@ export class AzureServiceBusManager {
         sku: props.sku ?? {
           name: SkuName.Standard,
         },
-        tags: props.tags ?? {
+        tags: {
           environment: scope.props.stage,
+          ...scope.props.defaultTags,
+          ...props.tags,
         },
       },
       { parent: scope, ...resourceOptions }
@@ -109,8 +108,6 @@ export class AzureServiceBusManager {
           props.topicName?.toString(),
           scope.props.resourceNameOptions?.serviceBusTopic
         ),
-        namespaceName: props.namespaceName,
-        resourceGroupName: props.resourceGroupName,
       },
       { parent: scope, ...resourceOptions }
     )
@@ -140,8 +137,6 @@ export class AzureServiceBusManager {
           props.queueName?.toString(),
           scope.props.resourceNameOptions?.serviceBusQueue
         ),
-        namespaceName: props.namespaceName,
-        resourceGroupName: props.resourceGroupName,
         duplicateDetectionHistoryTimeWindow: props.duplicateDetectionHistoryTimeWindow ?? 'PT1M',
         requiresDuplicateDetection: props.requiresDuplicateDetection ?? true,
         deadLetteringOnMessageExpiration: props.deadLetteringOnMessageExpiration ?? true,

@@ -42,25 +42,24 @@ export class AzureFunctionManager {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
     // Get resource group name
-    const resourceGroupName = scope.props.resourceGroupName
-      ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-      : props.resourceGroupName
-
-    if (!resourceGroupName) throw new Error(`Resource group name undefined for ${id}`)
+    const resourceGroupName =
+      props.resourceGroupName ?? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
 
     return new WebApp(
       `${id}-fa`,
       {
         ...props,
         name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.linuxFunctionApp),
-        resourceGroupName: resourceGroupName,
+        resourceGroupName,
         location: props.location ?? scope.props.location,
         kind: props.kind ?? 'functionapp,linux',
         identity: props.identity ?? {
           type: ManagedServiceIdentityType.SystemAssigned,
         },
-        tags: props.tags ?? {
+        tags: {
           environment: scope.props.stage,
+          ...scope.props.defaultTags,
+          ...props.tags,
         },
       },
       { parent: scope, ...resourceOptions }
@@ -86,15 +85,14 @@ export class AzureFunctionManager {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
     // Get resource group name
-    const resourceGroupName = scope.props.resourceGroupName
-      ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-      : ''
+    const resourceGroupName =
+      props.resourceGroupName ?? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
 
     return new WebAppFunction(
       `${id}-fc`,
       {
         name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.functionAppFunction),
-        resourceGroupName: resourceGroupName,
+        resourceGroupName,
         functionAppId: props.functionAppId,
         config: props.configJson,
         isDisabled: props.enabled !== undefined ? !props.enabled : false,
@@ -121,11 +119,8 @@ export class AzureFunctionManager {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
     // Get resource group name
-    const resourceGroupName = scope.props.resourceGroupName
-      ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-      : props.resourceGroupName
-
-    if (!resourceGroupName) throw new Error(`Resource group name undefined for ${id}`)
+    const resourceGroupName =
+      props.resourceGroupName ?? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
 
     const functionApp = new WebApp(
       `${id}-fc`,
@@ -133,7 +128,7 @@ export class AzureFunctionManager {
         ...props,
         name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.functionApp),
         location: props.location ?? scope.props.location,
-        resourceGroupName: resourceGroupName,
+        resourceGroupName,
         kind: props.kind ?? 'functionapp,linux',
         httpsOnly: props.httpsOnly ?? true,
         identity: props.identity ?? {
@@ -155,8 +150,10 @@ export class AzureFunctionManager {
           http20Enabled: true,
           linuxFxVersion: `${props.runtime?.name ?? 'node'}|${props.runtime?.version ?? CommonAzureStack.NODEJS_RUNTIME}`,
         },
-        tags: props.tags ?? {
+        tags: {
           environment: scope.props.stage,
+          ...scope.props.defaultTags,
+          ...props.tags,
         },
       },
       { parent: scope, ...resourceOptions }
@@ -167,7 +164,7 @@ export class AzureFunctionManager {
     new Deployment(
       `${id}-deployment`,
       {
-        resourceGroupName: resourceGroupName,
+        resourceGroupName,
         properties: {
           mode: DeploymentMode.Incremental,
           template: {
@@ -234,11 +231,8 @@ export class AzureFunctionManager {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
     // Get resource group name
-    const resourceGroupName = scope.props.resourceGroupName
-      ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-      : props.resourceGroupName
-
-    if (!resourceGroupName) throw new Error(`Resource group name undefined for ${id}`)
+    const resourceGroupName =
+      props.resourceGroupName ?? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
 
     return new Resource(
       `${id}-fc`,
@@ -271,7 +265,7 @@ export class AzureFunctionManager {
             },
           },
         },
-        resourceGroupName: resourceGroupName,
+        resourceGroupName,
         resourceName: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.functionApp),
         resourceProviderNamespace: 'Microsoft.Web',
         resourceType: 'sites',
