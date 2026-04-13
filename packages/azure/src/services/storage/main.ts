@@ -122,9 +122,8 @@ export class AzureStorageManager {
   ) {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
-    const resourceGroupName = scope.props.resourceGroupName
-      ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-      : `${props.resourceGroupName}`
+    const resourceGroupName =
+      props.resourceGroupName ?? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
 
     return new BlobContainer(
       `${id}-sc`,
@@ -158,9 +157,8 @@ export class AzureStorageManager {
   ) {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
-    const resourceGroupName = scope.props.resourceGroupName
-      ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-      : `${props.resourceGroupName}`
+    const resourceGroupName =
+      props.resourceGroupName ?? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
 
     return new Blob(
       `${id}-sb`,
@@ -201,9 +199,8 @@ export class AzureStorageManager {
     props: ContainerSasTokenProps,
     storageAccount: StorageAccount
   ) {
-    const resourceGroupName = scope.props.resourceGroupName
-      ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-      : `${props.resourceGroupName}`
+    const resourceGroupName =
+      props.resourceGroupName ?? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
 
     return pulumi
       .all([storageAccount.name])
