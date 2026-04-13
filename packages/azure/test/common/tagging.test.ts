@@ -9,6 +9,21 @@ describe('isTaggableResource', () => {
     expect(isTaggableResource('azure-native:authorization:ServicePrincipal')).toBe(false)
   })
 
+  test('returns false for azuread provider resources', () => {
+    expect(isTaggableResource('azuread:index:Application')).toBe(false)
+    expect(isTaggableResource('azuread:index:ServicePrincipal')).toBe(false)
+  })
+
+  test('returns false for random provider resources', () => {
+    expect(isTaggableResource('random:index:RandomId')).toBe(false)
+    expect(isTaggableResource('random:index:RandomString')).toBe(false)
+  })
+
+  test('returns false for pulumi provider resources', () => {
+    expect(isTaggableResource('pulumi:providers:azure-native')).toBe(false)
+    expect(isTaggableResource('pulumi:pulumi:StackReference')).toBe(false)
+  })
+
   test('returns true for resources not in exclusion list', () => {
     expect(isTaggableResource('azure-native:resources:ResourceGroup')).toBe(true)
     expect(isTaggableResource('azure-native:storage:StorageAccount')).toBe(true)

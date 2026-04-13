@@ -9,6 +9,11 @@ import { RESOURCES_TO_EXCLUDE_TAGS } from './constants.js'
  */
 /** @category Constant */
 export function isTaggableResource(resourceType: string): boolean {
+  // Entire providers that don't support tags
+  if (resourceType.startsWith('azuread:')) return false
+  if (resourceType.startsWith('random:')) return false
+  if (resourceType.startsWith('pulumi:')) return false
+
   // Extract the resource name from the type (e.g., 'ResourceGroup' from 'azure-native:resources:ResourceGroup')
   const resourceName = resourceType.split(':').pop() || ''
 

@@ -1,10 +1,10 @@
-import fs from 'fs'
-import path from 'path'
+import fs, { readFileSync, statSync } from 'fs'
+import path, { dirname, join } from 'path'
 
+import { isDevStage } from '@gradientedge/cdk-utils-common'
 import { ComponentResource, ComponentResourceOptions, Config } from '@pulumi/pulumi'
 import appRoot from 'app-root-path'
 import _ from 'lodash'
-import { isDevStage } from '@gradientedge/cdk-utils-common'
 
 import { CommonAzureConstruct } from './construct.js'
 import { registerTagTransformation } from './tagging.js'
@@ -31,6 +31,7 @@ export class CommonAzureStack extends ComponentResource {
   construct: CommonAzureConstruct
   props: CommonAzureStackProps
   config: Config
+  outputs?: Record<string, unknown>
 
   constructor(name: string, props: CommonAzureStackProps, options?: ComponentResourceOptions) {
     super(`stack:${name}`, name, props, options)
@@ -133,5 +134,30 @@ export class CommonAzureStack extends ComponentResource {
     const subDomain = this.props.subDomain
 
     return subDomain ? `${subDomain}.${domainName}` : domainName
+  }
+
+  protected static determineEnvironmentProperty() {
+    const config = new Config()
+    const stageContextPath = config.get('stageContextPath')
+    let dir = process.cwd()
+    for (let i = 0; i < 6; i++) {
+      try {
+        if (statSync(join(dir, `${stageContextPath}`)).isDirectory()) return dir
+      } catch {
+        /* keep walking */
+      }
+      dir = dirname(dir)
+    }
+    throw new Error('Could not locate infrastructure root (pulumi-env/ not found)')
+  }
+
+  protected static getEnvironmentProperty(property: string) {
+    const config = new Config()
+    const stage = config.get('stage')
+    const stageContextPath = config.get('stageContextPath')
+    const envConfig = JSON.parse(
+      readFileSync(join(this.determineEnvironmentProperty(), `${stageContextPath}`, `${stage}.json`), 'utf8')
+    )
+    return envConfig[property]
   }
 }

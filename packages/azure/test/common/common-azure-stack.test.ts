@@ -271,6 +271,61 @@ describe('TestAzureCommonStack - Extra Contexts Edge Cases', () => {
   })
 })
 
+describe('TestAzureCommonStack - Environment Property Static Methods', () => {
+  test('determineEnvironmentProperty returns directory containing stage context path', () => {
+    pulumi.runtime.setAllConfig({
+      'project:stage': 'dev',
+      'project:stageContextPath': 'packages/azure/test/common/env',
+    })
+
+    const result = (CommonAzureStack as any).determineEnvironmentProperty()
+    expect(typeof result).toBe('string')
+    expect(result.length).toBeGreaterThan(0)
+
+    // Reset config
+    pulumi.runtime.setAllConfig({
+      'project:stage': testStackProps.stage,
+      'project:stageContextPath': testStackProps.stageContextPath,
+      'project:extraContexts': JSON.stringify(testStackProps.extraContexts),
+    })
+  })
+
+  test('determineEnvironmentProperty throws when stage context path is not found', () => {
+    pulumi.runtime.setAllConfig({
+      'project:stage': 'dev',
+      'project:stageContextPath': 'some/non/existent/directory/xyz',
+    })
+
+    expect(() => (CommonAzureStack as any).determineEnvironmentProperty()).toThrow(
+      'Could not locate infrastructure root'
+    )
+
+    // Reset config
+    pulumi.runtime.setAllConfig({
+      'project:stage': testStackProps.stage,
+      'project:stageContextPath': testStackProps.stageContextPath,
+      'project:extraContexts': JSON.stringify(testStackProps.extraContexts),
+    })
+  })
+
+  test('getEnvironmentProperty reads property from environment config file', () => {
+    pulumi.runtime.setAllConfig({
+      'project:stage': 'dev',
+      'project:stageContextPath': 'packages/azure/test/common/env',
+    })
+
+    const result = (CommonAzureStack as any).getEnvironmentProperty('testAttribute')
+    expect(result).toBe('success')
+
+    // Reset config
+    pulumi.runtime.setAllConfig({
+      'project:stage': testStackProps.stage,
+      'project:stageContextPath': testStackProps.stageContextPath,
+      'project:extraContexts': JSON.stringify(testStackProps.extraContexts),
+    })
+  })
+})
+
 describe('TestAzureCommonStack - defaultTags', () => {
   test('does not throw when defaultTags are undefined', () => {
     const propsWithoutTags = {

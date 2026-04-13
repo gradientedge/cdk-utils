@@ -1,8 +1,8 @@
+import { isDevStage, isPrdStage, isTestStage, isUatStage } from '@gradientedge/cdk-utils-common'
 import { getWorkspaceOutput, GetWorkspaceResult, Workspace } from '@pulumi/azure-native/operationalinsights/index.js'
 import { ResourceGroup } from '@pulumi/azure-native/resources/index.js'
 import * as pulumi from '@pulumi/pulumi'
 import { ComponentResource, ComponentResourceOptions, Output } from '@pulumi/pulumi'
-import { isDevStage, isPrdStage, isTestStage, isUatStage } from '@gradientedge/cdk-utils-common'
 
 import { AzureAuthorisationManager } from '../services/authorisation/main.js'
 import {
@@ -104,7 +104,9 @@ export class CommonAzureConstruct extends ComponentResource {
 
   protected resolveStack(stackName: string) {
     if (!stackName) throw new Error('Stack name undefined')
-    return new pulumi.StackReference(stackName)
+    return new pulumi.StackReference(stackName, {
+      name: stackName,
+    })
   }
 
   protected createResourceGroup() {
