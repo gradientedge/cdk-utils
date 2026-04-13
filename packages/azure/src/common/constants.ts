@@ -9,7 +9,12 @@ export enum AzureRemoteBackend {
  * List of Azure resources that excludes tags
  */
 /** @category Constant */
-export const RESOURCES_TO_EXCLUDE_TAGS = new Set(['ApiManagementNamedValue', 'Application', 'ServicePrincipal'])
+export const RESOURCES_TO_EXCLUDE_TAGS = new Set([
+  'ApiManagementNamedValue',
+  'Application',
+  'ServicePrincipal',
+  'StackReference',
+])
 
 /**
  * @see https://learn.microsoft.com/en-us/azure/reliability/regions-list?tabs=all
