@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.15.0
+
+### Minor Changes
+
+- [`f742b15`](https://github.com/gradientedge/cdk-utils/commit/f742b151bcab65a8787782d00b1e8fc92a1bd47c) Thanks [@despock](https://github.com/despock)! - feat: setting resource group name in props after creation
+
 ## 2.14.0
 
 ### Minor Changes
