@@ -1,6 +1,6 @@
 {
   "name": "@gradientedge/cdk-utils",
-  "version": "11.17.0",
+  "version": "11.18.0",
   "description": "Utilities for AWS CDK, Azure and Cloudflare Pulumi provisioning",
   "type": "module",
   "main": "dist/src/index.js",
