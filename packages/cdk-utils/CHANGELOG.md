@@ -1,5 +1,18 @@
 # @gradientedge/cdk-utils
 
+## 11.18.0
+
+### Minor Changes
+
+- [`4feda2b`](https://github.com/gradientedge/cdk-utils/commit/4feda2b4011e9a09f88d99320777cd7319553ba6) Thanks [@despock](https://github.com/despock)! - feat: adding stack resolver and output helpers
+
+- [`2acedb1`](https://github.com/gradientedge/cdk-utils/commit/2acedb1466e865774c7e9c37687e0e978af7313d) Thanks [@despock](https://github.com/despock)! - feat: resolving priority of resource group name
+
+### Patch Changes
+
+- Updated dependencies [[`4feda2b`](https://github.com/gradientedge/cdk-utils/commit/4feda2b4011e9a09f88d99320777cd7319553ba6), [`2acedb1`](https://github.com/gradientedge/cdk-utils/commit/2acedb1466e865774c7e9c37687e0e978af7313d)]:
+  - @gradientedge/cdk-utils-azure@2.17.0
+
 ## 11.17.0
 
 ### Minor Changes
