@@ -1,5 +1,16 @@
 # @gradientedge/cdk-utils
 
+## 11.20.0
+
+### Minor Changes
+
+- [`7dfe391`](https://github.com/gradientedge/cdk-utils/commit/7dfe391857e9899dd520999ef27c826c2d561c51) Thanks [@despock](https://github.com/despock)! - feat: preserving parent stacks output prior to register
+
+### Patch Changes
+
+- Updated dependencies [[`7dfe391`](https://github.com/gradientedge/cdk-utils/commit/7dfe391857e9899dd520999ef27c826c2d561c51)]:
+  - @gradientedge/cdk-utils-azure@2.19.0
+
 ## 11.19.0
 
 ### Minor Changes
