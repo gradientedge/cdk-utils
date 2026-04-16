@@ -308,6 +308,7 @@ export class AzureRestApiFunction extends AzureFunctionApp {
         <inbound>
           <base />
           ${this.api.corsPolicyXmlContent ?? ''}
+          ${this.api.validateJwtPolicyXmlContent ?? ''}
           <set-backend-service backend-id="${this.api.backend.name}" />
           <set-header name="traceparent" exists-action="override">
             <value>@(context.Request.Headers.GetValueOrDefault("traceparent", ""))</value>

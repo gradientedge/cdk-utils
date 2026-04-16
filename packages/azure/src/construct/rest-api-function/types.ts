@@ -36,9 +36,10 @@ export interface AzureRestApiFunctionProps extends AzureRestApiProps, AzureFunct
 
 /** @category Interface */
 export interface AzureApiFunction extends AzureApi {
-  corsPolicyXmlContent?: string
   apiOperations: { [operation: string]: ApiOperation }
-  managementApi: Api
   backend: Backend
+  corsPolicyXmlContent?: string
+  managementApi: Api
   namedValue: NamedValue
+  validateJwtPolicyXmlContent?: string
 }

@@ -44,6 +44,9 @@ export class CommonAzureStack extends ComponentResource {
     if (this.props.defaultTags) {
       registerTagTransformation(this.props.defaultTags)
     }
+
+    this.createConstruct()
+    this.registerOutputs()
   }
 
   /**
@@ -124,6 +127,18 @@ export class CommonAzureStack extends ComponentResource {
 
     /* parse as JSON properties */
     return JSON.parse(stageContextPropsBuffer.toString('utf-8'))
+  }
+
+  protected createConstruct() {}
+
+  protected registerOutputs() {
+    if (this.construct && this.construct.resourceGroup) {
+      this.outputs = {
+        resourceGroupId: this.construct.resourceGroup.id,
+        resourceGroupName: this.construct.resourceGroup.name,
+      }
+      super.registerOutputs(this.outputs)
+    }
   }
 
   /**
