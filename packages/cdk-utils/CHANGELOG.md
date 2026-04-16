@@ -1,5 +1,16 @@
 # @gradientedge/cdk-utils
 
+## 11.19.0
+
+### Minor Changes
+
+- [`330ea2d`](https://github.com/gradientedge/cdk-utils/commit/330ea2da9c6e7f2737be9d7cb95ca0c2c9bd83d0) Thanks [@despock](https://github.com/despock)! - feat: including validate-jwt policy for APIs
+
+### Patch Changes
+
+- Updated dependencies [[`330ea2d`](https://github.com/gradientedge/cdk-utils/commit/330ea2da9c6e7f2737be9d7cb95ca0c2c9bd83d0)]:
+  - @gradientedge/cdk-utils-azure@2.18.0
+
 ## 11.18.0
 
 ### Minor Changes
