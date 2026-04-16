@@ -133,10 +133,10 @@ export class CommonAzureStack extends ComponentResource {
 
   protected registerOutputs() {
     if (this.construct && this.construct.resourceGroup) {
-      this.outputs = {
+      this.outputs = _.merge(this.outputs, {
         resourceGroupId: this.construct.resourceGroup.id,
         resourceGroupName: this.construct.resourceGroup.name,
-      }
+      })
       super.registerOutputs(this.outputs)
     }
   }
