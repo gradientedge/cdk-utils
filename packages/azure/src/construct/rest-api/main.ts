@@ -1,5 +1,6 @@
-import { HostnameType, LoggerType } from '@pulumi/azure-native/apimanagement/index.js'
+import { getApiManagementServiceOutput, HostnameType, LoggerType } from '@pulumi/azure-native/apimanagement/index.js'
 import { getComponentOutput, GetComponentResult } from '@pulumi/azure-native/applicationinsights/index.js'
+import { PrincipalType } from '@pulumi/azure-native/authorization/index.js'
 import { getVaultOutput } from '@pulumi/azure-native/keyvault/index.js'
 import * as pulumi from '@pulumi/pulumi'
 import { Output } from '@pulumi/pulumi'
@@ -92,7 +93,7 @@ export class AzureRestApi extends CommonAzureConstruct {
           {
             hostName: `api-${this.props.locationConfig?.[this.props.location].name}.${this.props.domainName}`,
             keyVaultId: this.props.apiManagement.certificateKeyVaultId,
-            type: HostnameType.Management,
+            type: HostnameType.Proxy,
           },
         ]
       }
@@ -115,10 +116,19 @@ export class AzureRestApi extends CommonAzureConstruct {
       this.api.name = this.api.apim.name
       this.api.resourceGroupName = this.resourceGroup.name
 
-      if (this.props.apiManagement.certificateKeyVaultId) {
+      const apimIdentity = getApiManagementServiceOutput({
+        serviceName: this.api.apim.name,
+        resourceGroupName: this.resourceGroup.name,
+      }).identity
+
+      if (this.props.apiManagement.certificateKeyVaultId && apimIdentity) {
         this.authorisationManager.createRoleAssignment(`${this.id}-kv-role`, this, {
-          principalId: this.api.apim.identity.apply(identity => identity?.principalId ?? ''),
-          roleDefinitionId: RoleDefinitionId.KEY_VAULT_CERTIFICATE_USER,
+          principalId: apimIdentity.apply(id => id?.principalId ?? ''),
+          roleDefinitionId: this.authorisationManager.resolveRoleDefinitionId(
+            this,
+            RoleDefinitionId.KEY_VAULT_CERTIFICATE_USER
+          ),
+          principalType: PrincipalType.ServicePrincipal,
           scope: this.props.apiManagement.certificateKeyVaultId,
         })
       }
@@ -137,15 +147,26 @@ export class AzureRestApi extends CommonAzureConstruct {
   protected createNamespaceSecretRole() {
     if (this.props.apiManagement.useExistingApiManagement) return
 
-    this.api.namedValueRoleAssignment = this.authorisationManager.createRoleAssignment(
-      `${this.id}-key-vault-role-api-namespace`,
-      this,
-      {
-        principalId: this.api.apim.identity.apply(identity => identity?.principalId ?? ''),
-        roleDefinitionId: `/subscriptions/${this.props.subscriptionId}/providers/Microsoft.Authorization/roleDefinitions/4633458b-17de-408a-b874-0445c86b69e6`,
-        scope: this.api.authKeyVault.id,
-      }
-    )
+    const apimIdentity = getApiManagementServiceOutput({
+      serviceName: this.api.apim.name,
+      resourceGroupName: this.resourceGroup.name,
+    }).identity
+
+    if (apimIdentity) {
+      this.api.namedValueRoleAssignment = this.authorisationManager.createRoleAssignment(
+        `${this.id}-key-vault-role-api-namespace`,
+        this,
+        {
+          principalId: apimIdentity.apply(id => id?.principalId ?? ''),
+          principalType: PrincipalType.ServicePrincipal,
+          roleDefinitionId: this.authorisationManager.resolveRoleDefinitionId(
+            this,
+            RoleDefinitionId.KEY_VAULT_SECRETS_USER
+          ),
+          scope: this.api.authKeyVault.id,
+        }
+      )
+    }
   }
 
   /**
@@ -159,8 +180,8 @@ export class AzureRestApi extends CommonAzureConstruct {
       this,
       {
         vaultName: this.api.authKeyVault.name,
-        secretName: `${this.applicationInsights.name}-${this.id}-key`,
-        resourceGroupName: this.resourceGroup.name,
+        secretName: pulumi.interpolate`${this.applicationInsights.name}-${this.id}-key`,
+        resourceGroupName: this.props.apiAuthKeyVault.resourceGroupName,
         properties: {
           value: this.applicationInsights.instrumentationKey,
         },
@@ -180,13 +201,13 @@ export class AzureRestApi extends CommonAzureConstruct {
       displayName: 'all-apis',
       state: 'active',
       allowTracing: false,
-      scope: '', // todo
+      scope: '/apis',
     })
 
     this.keyVaultManager.createKeyVaultSecret(`${this.id}-key-vault-api-subscription-key-secret`, this, {
       vaultName: this.api.authKeyVault.name,
       secretName: `${this.id}-subscription-key`,
-      resourceGroupName: this.resourceGroup.name,
+      resourceGroupName: this.props.apiAuthKeyVault.resourceGroupName,
       properties: {
         value: apiManagementSubscription.primaryKey.apply(key => key ?? ''),
       },
@@ -203,10 +224,10 @@ export class AzureRestApi extends CommonAzureConstruct {
       displayName: this.applicationInsights.name,
       resourceGroupName: this.resourceGroup.name,
       serviceName: this.api.apim.name,
-      namedValueId: `${this.applicationInsights.name}-key`,
+      namedValueId: pulumi.interpolate`${this.applicationInsights.name}-key`,
       secret: true,
       keyVault: {
-        secretIdentifier: this.api.namedValueSecret.id,
+        secretIdentifier: this.api.namedValueSecret.properties.apply(p => p.secretUri),
       },
     })
 

@@ -1,4 +1,13 @@
-import { Database, RedisEnterprise, SkuName } from '@pulumi/azure-native/redisenterprise/index.js'
+import {
+  AccessKeysAuthentication,
+  ClusteringPolicy,
+  Database,
+  DeferUpgradeSetting,
+  EvictionPolicy,
+  Protocol,
+  RedisEnterprise,
+  SkuName,
+} from '@pulumi/azure-native/redisenterprise/index.js'
 import { ResourceOptions } from '@pulumi/pulumi'
 
 import { CommonAzureConstruct } from '../../common/index.js'
@@ -73,6 +82,13 @@ export class AzureRedisManager {
         clusterName: cluster.name,
         resourceGroupName,
         databaseName: databaseProps?.databaseName ?? 'default',
+        accessKeysAuthentication: databaseProps?.accessKeysAuthentication ?? AccessKeysAuthentication.Enabled,
+        clientProtocol: databaseProps?.clientProtocol ?? Protocol.Encrypted,
+        clusteringPolicy: databaseProps?.clusteringPolicy ?? ClusteringPolicy.OSSCluster,
+        evictionPolicy: databaseProps?.evictionPolicy ?? EvictionPolicy.VolatileLRU,
+        port: databaseProps?.port ?? 10000,
+        persistence: databaseProps?.persistence ?? { aofEnabled: false, rdbEnabled: false },
+        deferUpgrade: databaseProps?.deferUpgrade ?? DeferUpgradeSetting.NotDeferred,
       },
       { parent: scope, dependsOn: [cluster], ...resourceOptions }
     )

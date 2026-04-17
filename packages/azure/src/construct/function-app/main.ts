@@ -8,6 +8,7 @@ import {
   GetConfigurationStoreResult,
 } from '@pulumi/azure-native/appconfiguration/index.js'
 import { getComponentOutput, GetComponentResult } from '@pulumi/azure-native/applicationinsights/index.js'
+import { PrincipalType } from '@pulumi/azure-native/authorization/index.js'
 import { SkuFamily, SkuName } from '@pulumi/azure-native/keyvault/index.js'
 import { Dashboard } from '@pulumi/azure-native/portal/index.js'
 import { BlobContainer, listStorageAccountKeysOutput, StorageAccount } from '@pulumi/azure-native/storage/index.js'
@@ -26,7 +27,6 @@ import { CosmosRoleDefinition } from '../../services/cosmosdb/constants.js'
 import { AzureAppConfigurationManager, RoleDefinitionId } from '../../services/index.js'
 
 import { AzureFunctionAppProps } from './types.js'
-import { PrincipalType } from '@pulumi/azure-native/authorization/index.js'
 
 /**
  * Provides a construct to create and deploy an Azure Function App with Flex Consumption hosting
@@ -125,7 +125,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
    * @summary Method to create parsed app configurations
    * - To be implemented in the overriding method in the implementation class
    */
-  protected createdParsedAppConfigurations() {}
+  protected createdParsedAppConfigurations() { }
 
   /**
    * @summary Method to create or resolve the App Configuration store
@@ -150,7 +150,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
    * @summary Method to create app configurations
    * - To be implemented in the overriding method in the implementation class
    */
-  protected createAppConfigurations() {}
+  protected createAppConfigurations() { }
 
   /**
    * @summary Method to create the storage account for the function app
@@ -321,7 +321,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
    * @summary Method to create the function app site configuration
    * - To be implemented in the overriding method in the implementation class
    */
-  protected createFunctionAppSiteConfig() {}
+  protected createFunctionAppSiteConfig() { }
 
   /**
    * @summary Method to create the Azure Function App with Flex Consumption hosting
@@ -360,12 +360,11 @@ export class AzureFunctionApp extends CommonAzureConstruct {
             },
             {
               name: 'AzureWebJobsStorage',
-              value: pulumi.interpolate`DefaultEndpointsProtocol=https;AccountName=${this.appStorageAccount.name};AccountKey=${
-                listStorageAccountKeysOutput({
-                  resourceGroupName: this.resourceGroup.name,
-                  accountName: this.appStorageAccount.name,
-                }).keys[0].value
-              };EndpointSuffix=core.windows.net`,
+              value: pulumi.interpolate`DefaultEndpointsProtocol=https;AccountName=${this.appStorageAccount.name};AccountKey=${listStorageAccountKeysOutput({
+                resourceGroupName: this.resourceGroup.name,
+                accountName: this.appStorageAccount.name,
+              }).keys[0].value
+                };EndpointSuffix=core.windows.net`,
             },
           ],
           connectionStrings: Object.fromEntries(
@@ -395,7 +394,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
         this,
         this.dataStorageAccount.id,
         this.getFunctionAppPrincipalId(),
-        RoleDefinitionId.STORAGE_BLOB_DATA_CONTRIBUTOR
+        this.authorisationManager.resolveRoleDefinitionId(this, RoleDefinitionId.STORAGE_BLOB_DATA_CONTRIBUTOR)
       )
     }
 
@@ -404,7 +403,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
       this,
       this.appStorageAccount.id,
       this.getFunctionAppPrincipalId(),
-      RoleDefinitionId.STORAGE_BLOB_DATA_CONTRIBUTOR
+      this.authorisationManager.resolveRoleDefinitionId(this, RoleDefinitionId.STORAGE_BLOB_DATA_CONTRIBUTOR)
     )
 
     if (!this.props.useConfigOverride) {
@@ -414,7 +413,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
         this.appConfig.id,
         this.getFunctionAppPrincipalId(),
         PrincipalType.ServicePrincipal,
-        RoleDefinitionId.APP_CONFIGURATION_DATA_READER
+        this.authorisationManager.resolveRoleDefinitionId(this, RoleDefinitionId.APP_CONFIGURATION_DATA_READER)
       )
     }
 
@@ -441,7 +440,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
             keyVaultName,
             resourceGroup,
             this.getFunctionAppPrincipalId(),
-            RoleDefinitionId.KEY_VAULT_SECRETS_USER
+            this.authorisationManager.resolveRoleDefinitionId(this, RoleDefinitionId.KEY_VAULT_SECRETS_USER)
           )
         })
       })
@@ -454,7 +453,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
         this.props.existingTopicName,
         this.props.existingTopicResourceGroupName,
         this.getFunctionAppPrincipalId(),
-        RoleDefinitionId.EVENTGRID_DATA_SENDER
+        this.authorisationManager.resolveRoleDefinitionId(this, RoleDefinitionId.EVENTGRID_DATA_SENDER)
       )
     }
   }

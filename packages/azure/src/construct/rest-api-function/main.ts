@@ -145,7 +145,10 @@ export class AzureRestApiFunction extends AzureFunctionApp {
       if (this.props.apiManagement.certificateKeyVaultId) {
         this.authorisationManager.createRoleAssignment(`${this.id}-kv-role`, this, {
           principalId: this.api.apim.identity.apply(identity => identity?.principalId ?? ''),
-          roleDefinitionId: RoleDefinitionId.KEY_VAULT_CERTIFICATE_USER,
+          roleDefinitionId: this.authorisationManager.resolveRoleDefinitionId(
+            this,
+            RoleDefinitionId.KEY_VAULT_CERTIFICATE_USER
+          ),
           scope: this.props.apiManagement.certificateKeyVaultId,
         })
       }

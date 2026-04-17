@@ -17,6 +17,7 @@ const testStackProps: any = {
   skipStageForARecords: false,
   stage: 'dev',
   stageContextPath: 'packages/azure/test/common/env',
+  subscriptionId: 'test-subscription-id',
 }
 
 class TestCommonConstruct extends CommonAzureConstruct {
@@ -30,7 +31,10 @@ class TestCommonConstruct extends CommonAzureConstruct {
     super(name, props)
     this.roleAssignment = this.authorisationManager.createRoleAssignment(`test-role-${this.props.stage}`, this, {
       principalId: 'test-principal-id',
-      roleDefinitionId: RoleDefinitionId.KEY_VAULT_SECRETS_USER,
+      roleDefinitionId: this.authorisationManager.resolveRoleDefinitionId(
+        this,
+        RoleDefinitionId.KEY_VAULT_SECRETS_USER
+      ),
       scope: '/subscriptions/test-sub/resourceGroups/test-rg',
     })
 
@@ -39,7 +43,7 @@ class TestCommonConstruct extends CommonAzureConstruct {
       this,
       '/subscriptions/test-sub/resourceGroups/test-rg/providers/Microsoft.Storage/storageAccounts/testsa/tableServices/default/tables/testtable',
       'test-principal-id',
-      RoleDefinitionId.STORAGE_TABLE_DATA_CONTRIBUTOR
+      this.authorisationManager.resolveRoleDefinitionId(this, RoleDefinitionId.STORAGE_TABLE_DATA_CONTRIBUTOR)
     )
 
     this.storageAccountRole = this.authorisationManager.grantRoleAssignmentToStorageAccount(
@@ -47,7 +51,7 @@ class TestCommonConstruct extends CommonAzureConstruct {
       this,
       '/subscriptions/test-sub/resourceGroups/test-rg/providers/Microsoft.Storage/storageAccounts/testsa',
       'test-principal-id',
-      RoleDefinitionId.STORAGE_BLOB_DATA_CONTRIBUTOR
+      this.authorisationManager.resolveRoleDefinitionId(this, RoleDefinitionId.STORAGE_BLOB_DATA_CONTRIBUTOR)
     )
 
     this.appConfigRole = this.authorisationManager.grantRoleAssignmentToApplicationConfiguration(
@@ -56,7 +60,7 @@ class TestCommonConstruct extends CommonAzureConstruct {
       '/subscriptions/test-sub/resourceGroups/test-rg/providers/Microsoft.AppConfiguration/configurationStores/testac',
       'test-principal-id',
       PrincipalType.ServicePrincipal,
-      RoleDefinitionId.APP_CONFIGURATION_DATA_READER
+      this.authorisationManager.resolveRoleDefinitionId(this, RoleDefinitionId.APP_CONFIGURATION_DATA_READER)
     )
   }
 }

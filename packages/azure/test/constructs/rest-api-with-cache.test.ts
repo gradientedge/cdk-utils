@@ -25,6 +25,7 @@ const testStackProps: TestAzureStackProps = {
   skipStageForARecords: false,
   stage: 'dev',
   stageContextPath: 'packages/azure/test/common/env',
+  subscriptionId: 'test-subscription-id',
 } as TestAzureStackProps
 
 class TestCommonStack extends CommonAzureStack {

@@ -1,6 +1,5 @@
 import {
   Api,
-  ApiDiagnostic,
   ApiManagementService,
   ApiOperation,
   ApiOperationPolicy,
@@ -8,6 +7,7 @@ import {
   Backend,
   BackendProtocol,
   Cache,
+  Diagnostic,
   getApiManagementServiceOutput,
   Logger,
   LoggerType,
@@ -261,7 +261,7 @@ export class AzureApiManagementManager {
   ) {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
-    return new ApiDiagnostic(`${id}`, props, { parent: scope, ...resourceOptions })
+    return new Diagnostic(`${id}`, props, { parent: scope, ...resourceOptions })
   }
 
   /**

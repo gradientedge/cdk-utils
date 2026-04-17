@@ -60,7 +60,7 @@ export class AzureAuthorisationManager {
     vaultName: string,
     resourceGroupName: Input<string>,
     principalId: Input<string>,
-    roleDefinitionId: RoleDefinitionId,
+    roleDefinitionId: string,
     resourceOptions?: ResourceOptions
   ) {
     const keyVault = scope.keyVaultManager.resolveKeyVault(scope, vaultName, resourceGroupName, resourceOptions)
@@ -92,7 +92,7 @@ export class AzureAuthorisationManager {
     topicName: Input<string>,
     resourceGroupName: Input<string>,
     principalId: Input<string>,
-    roleDefinitionId: RoleDefinitionId,
+    roleDefinitionId: string,
     resourceOptions?: ResourceOptions
   ) {
     const topic = scope.eventgridManager.resolveEventgridTopic(
@@ -131,7 +131,7 @@ export class AzureAuthorisationManager {
     appConfigId: Input<string>,
     principalId: Input<string>,
     principalType: Input<PrincipalType>,
-    roleDefinitionId: RoleDefinitionId,
+    roleDefinitionId: string,
     resourceOptions?: ResourceOptions
   ) {
     return this.createRoleAssignment(
@@ -161,7 +161,7 @@ export class AzureAuthorisationManager {
     scope: CommonAzureConstruct,
     accountId: Input<string>,
     principalId: Input<string>,
-    roleDefinitionId: RoleDefinitionId,
+    roleDefinitionId: string,
     resourceOptions?: ResourceOptions
   ) {
     return this.createRoleAssignment(
@@ -190,7 +190,7 @@ export class AzureAuthorisationManager {
     scope: CommonAzureConstruct,
     tableId: Input<string>,
     principalId: Input<string>,
-    roleDefinitionId: RoleDefinitionId,
+    roleDefinitionId: string,
     resourceOptions?: ResourceOptions
   ) {
     return this.createRoleAssignment(
@@ -203,5 +203,10 @@ export class AzureAuthorisationManager {
       },
       resourceOptions
     )
+  }
+
+  public resolveRoleDefinitionId(scope: CommonAzureConstruct, roleDefinitionId: RoleDefinitionId) {
+    if (!scope.props.subscriptionId) throw Error('Subscription id undefined')
+    return `/subscriptions/${scope.props.subscriptionId}${roleDefinitionId}`
   }
 }

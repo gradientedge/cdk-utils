@@ -85,8 +85,8 @@ export class AzureRestApiWithCache extends AzureRestApi {
       this,
       {
         vaultName: this.api.authKeyVault.name,
-        secretName: `${this.api.redisCluster.name}key`,
-        resourceGroupName: this.resourceGroup.name,
+        secretName: pulumi.interpolate`${this.api.redisCluster.name}key`,
+        resourceGroupName: this.props.apiAuthKeyVault.resourceGroupName,
         properties: {
           value: connectionString,
         },
@@ -100,13 +100,13 @@ export class AzureRestApiWithCache extends AzureRestApi {
    */
   protected createRedisCacheNamespace() {
     this.api.redisNamedValue = this.apiManagementManager.createNamedValue(`${this.id}-redis-nv`, this, {
-      displayName: `${this.api.redisCluster.name}key`,
+      displayName: pulumi.interpolate`${this.api.redisCluster.name}key`,
       resourceGroupName: this.resourceGroup.name,
       serviceName: this.api.apim.name,
-      namedValueId: `${this.api.redisCluster.name}key`,
+      namedValueId: pulumi.interpolate`${this.api.redisCluster.name}key`,
       secret: true,
       keyVault: {
-        secretIdentifier: this.api.redisNamedValueSecret.id,
+        secretIdentifier: this.api.redisNamedValueSecret.properties.apply(p => p.secretUri),
       },
     })
   }
@@ -117,11 +117,11 @@ export class AzureRestApiWithCache extends AzureRestApi {
   protected createRedisCacheApiManagement() {
     this.apiManagementManager.createCache(`${this.id}-am-redis-cache`, this, {
       serviceName: this.api.apim.name,
-      connectionString: `{{${this.api.redisNamedValue.name}}}`,
-      cacheId: this.api.redisCluster.id,
+      connectionString: pulumi.interpolate`{{${this.api.redisNamedValue.name}}}`,
+      cacheId: this.api.redisCluster.name,
       resourceGroupName: this.resourceGroup.name,
       useFromLocation: this.api.redisCluster.location,
-      description: `Redis cache for ${this.api.apim.name}`,
+      description: pulumi.interpolate`Redis cache for ${this.api.apim.name}`,
     })
   }
 }
