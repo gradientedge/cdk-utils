@@ -125,7 +125,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
    * @summary Method to create parsed app configurations
    * - To be implemented in the overriding method in the implementation class
    */
-  protected createdParsedAppConfigurations() { }
+  protected createdParsedAppConfigurations() {}
 
   /**
    * @summary Method to create or resolve the App Configuration store
@@ -150,7 +150,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
    * @summary Method to create app configurations
    * - To be implemented in the overriding method in the implementation class
    */
-  protected createAppConfigurations() { }
+  protected createAppConfigurations() {}
 
   /**
    * @summary Method to create the storage account for the function app
@@ -321,7 +321,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
    * @summary Method to create the function app site configuration
    * - To be implemented in the overriding method in the implementation class
    */
-  protected createFunctionAppSiteConfig() { }
+  protected createFunctionAppSiteConfig() {}
 
   /**
    * @summary Method to create the Azure Function App with Flex Consumption hosting
@@ -360,11 +360,12 @@ export class AzureFunctionApp extends CommonAzureConstruct {
             },
             {
               name: 'AzureWebJobsStorage',
-              value: pulumi.interpolate`DefaultEndpointsProtocol=https;AccountName=${this.appStorageAccount.name};AccountKey=${listStorageAccountKeysOutput({
-                resourceGroupName: this.resourceGroup.name,
-                accountName: this.appStorageAccount.name,
-              }).keys[0].value
-                };EndpointSuffix=core.windows.net`,
+              value: pulumi.interpolate`DefaultEndpointsProtocol=https;AccountName=${this.appStorageAccount.name};AccountKey=${
+                listStorageAccountKeysOutput({
+                  resourceGroupName: this.resourceGroup.name,
+                  accountName: this.appStorageAccount.name,
+                }).keys[0].value
+              };EndpointSuffix=core.windows.net`,
             },
           ],
           connectionStrings: Object.fromEntries(
