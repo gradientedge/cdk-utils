@@ -231,16 +231,21 @@ export class AzureRestApi extends CommonAzureConstruct {
       },
     })
 
-    this.api.logger = this.apiManagementManager.createLogger(`${this.id}-am-logger`, this, {
-      loggerId: this.applicationInsights.name,
-      resourceGroupName: this.resourceGroup.name,
-      serviceName: this.api.apim.name,
-      resourceId: this.applicationInsights.id,
-      loggerType: LoggerType.ApplicationInsights,
-      credentials: {
-        instrumentationKey: pulumi.interpolate`{{${apiAppNamedValue.displayName}}}`,
+    this.api.logger = this.apiManagementManager.createLogger(
+      `${this.id}-am-logger`,
+      this,
+      {
+        loggerId: this.applicationInsights.name,
+        resourceGroupName: this.resourceGroup.name,
+        serviceName: this.api.apim.name,
+        resourceId: this.applicationInsights.id,
+        loggerType: LoggerType.ApplicationInsights,
+        credentials: {
+          instrumentationKey: pulumi.interpolate`{{${apiAppNamedValue.displayName}}}`,
+        },
       },
-    }, { dependsOn: [apiAppNamedValue] })
+      { dependsOn: [apiAppNamedValue] }
+    )
   }
 
   /**
