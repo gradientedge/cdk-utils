@@ -1,4 +1,9 @@
-import { Table, Workspace, WorkspaceSkuNameEnum } from '@pulumi/azure-native/operationalinsights/index.js'
+import {
+  Table,
+  TablePlanEnum,
+  Workspace,
+  WorkspaceSkuNameEnum,
+} from '@pulumi/azure-native/operationalinsights/index.js'
 import { ResourceOptions } from '@pulumi/pulumi'
 
 import { CommonAzureConstruct } from '../../common/index.js'
@@ -84,6 +89,15 @@ export class AzureOperationalInsightsManager {
   ) {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
-    return new Table(`${id}`, props, { parent: scope, ...resourceOptions })
+    return new Table(
+      `${id}`,
+      {
+        ...props,
+        plan: props.plan ?? TablePlanEnum.Analytics,
+        retentionInDays: props.retentionInDays ?? 30,
+        totalRetentionInDays: props.totalRetentionInDays ?? 30,
+      },
+      { parent: scope, ...resourceOptions }
+    )
   }
 }

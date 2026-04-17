@@ -147,7 +147,7 @@ describe('AzureDashboardRenderer', () => {
       })
 
       const parsed = JSON.parse(result)
-      expect(parsed.lenses['0'].parts).toEqual({})
+      expect(parsed.lenses['0'].parts).toEqual([])
       expect(parsed.metadata.model.filterLocale.value).toBe('en-us')
       expect(parsed.metadata.model.filters.value.MsPortalFx_TimeRange.model.format).toBe('utc')
       expect(parsed.metadata.model.filters.value.MsPortalFx_TimeRange.model.granularity).toBe('auto')
@@ -263,7 +263,7 @@ template: |
 
       // Should not throw, but log an error
       const parsed = JSON.parse(result)
-      expect(parsed.lenses['0'].parts).toEqual({})
+      expect(parsed.lenses['0'].parts).toEqual([])
       expect(consoleSpy).toHaveBeenCalled()
     })
 

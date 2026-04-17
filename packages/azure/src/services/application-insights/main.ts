@@ -46,22 +46,22 @@ export class AzureApplicationInsightsManager {
 
     // Get resource group name
     const resourceGroupName =
-      (props.resourceGroupName ?? scope.props.resourceGroupName)
-        ? `${scope.props.resourceGroupName}-${scope.props.stage}`
-        : props.resourceGroupName
+      props.resourceGroupName ?? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
 
     if (!resourceGroupName) throw new Error(`Resource group name undefined for ${id}`)
 
+    const resourceName = scope.resourceNameFormatter.format(
+      props.resourceName?.toString(),
+      scope.props.resourceNameOptions?.applicationInsights
+    )
+
     const component = new Component(
-      `${id}-ai`,
+      `${id}`,
       {
         ...props,
-        resourceName: scope.resourceNameFormatter.format(
-          props.resourceName?.toString(),
-          scope.props.resourceNameOptions?.applicationInsights
-        ),
+        resourceName,
         resourceGroupName,
-        applicationType: (props.applicationType as any) ?? ApplicationType.Web,
+        applicationType: props.applicationType ?? ApplicationType.Web,
         kind: props.kind ?? 'web',
         tags: {
           environment: scope.props.stage,
@@ -73,10 +73,20 @@ export class AzureApplicationInsightsManager {
     )
 
     if (props.billingFeatures) {
-      this.createComponentCurrentBillingFeature(`${id}-billing`, scope, props.billingFeatures, {
-        parent: scope,
-        ...resourceOptions,
-      })
+      this.createComponentCurrentBillingFeature(
+        `${id}-billing`,
+        scope,
+        {
+          ...props.billingFeatures,
+          currentBillingFeatures: props.billingFeatures?.currentBillingFeatures ?? ['Basic'],
+          resourceName,
+          resourceGroupName,
+        },
+        {
+          parent: scope,
+          ...resourceOptions,
+        }
+      )
     }
 
     return component

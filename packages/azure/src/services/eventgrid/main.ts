@@ -1,10 +1,12 @@
 import {
+  DataResidencyBoundary,
   EventDeliverySchema,
   EventSubscription,
   GetSystemTopicResult,
   getTopicOutput,
   SystemTopic,
   SystemTopicEventSubscription,
+  TlsVersion,
   Topic,
 } from '@pulumi/azure-native/eventgrid/index.js'
 import { Output, ResourceOptions } from '@pulumi/pulumi'
@@ -68,6 +70,8 @@ export class AzureEventgridManager {
         ),
         location: props.location ?? scope.props.location,
         resourceGroupName,
+        dataResidencyBoundary: props.dataResidencyBoundary ?? DataResidencyBoundary.WithinGeopair,
+        minimumTlsVersionAllowed: props.minimumTlsVersionAllowed ?? TlsVersion.TlsVersion_1_2,
         tags: {
           environment: scope.props.stage,
           ...scope.props.defaultTags,

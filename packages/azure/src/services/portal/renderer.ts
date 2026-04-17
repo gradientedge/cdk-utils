@@ -47,7 +47,7 @@ export class AzureDashboardRenderer implements DashboardRenderer {
     // if client is used instead of hosts
     let partsIndex = 0
     let yIndex = 0
-    const parts: Record<string, any> = {}
+    const parts: any[] = []
     for (const pane of params.panes) {
       try {
         const paneTemplate = this.getPaneId(pane.id)
@@ -116,8 +116,7 @@ export class AzureDashboardRenderer implements DashboardRenderer {
         const templateParts = paneJSON.parts
 
         for (const part of templateParts) {
-          parts[`${partsIndex}`] = part
-          partsIndex++
+          parts.push(part)
         }
         yIndex += paneTemplate.dimensions.height
       } catch (e) {
@@ -129,12 +128,12 @@ export class AzureDashboardRenderer implements DashboardRenderer {
     }
 
     const dashboard = {
-      lenses: {
-        '0': {
+      lenses: [
+        {
           order: 0,
           parts,
         },
-      },
+      ],
       metadata: {
         model: {
           timeRange: {

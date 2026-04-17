@@ -1,4 +1,4 @@
-import { RoleAssignment } from '@pulumi/azure-native/authorization/index.js'
+import { PrincipalType, RoleAssignment } from '@pulumi/azure-native/authorization/index.js'
 import { Input, ResourceOptions } from '@pulumi/pulumi'
 
 import { CommonAzureConstruct } from '../../common/index.js'
@@ -41,7 +41,7 @@ export class AzureAuthorisationManager {
   ) {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
-    return new RoleAssignment(`${id}`, props, { parent: scope, ...resourceOptions })
+    return new RoleAssignment(`${id}`, props, { parent: scope, ignoreChanges: ['scope'], ...resourceOptions })
   }
 
   /**
@@ -130,6 +130,7 @@ export class AzureAuthorisationManager {
     scope: CommonAzureConstruct,
     appConfigId: Input<string>,
     principalId: Input<string>,
+    principalType: Input<PrincipalType>,
     roleDefinitionId: RoleDefinitionId,
     resourceOptions?: ResourceOptions
   ) {
@@ -138,6 +139,7 @@ export class AzureAuthorisationManager {
       scope,
       {
         principalId,
+        principalType,
         roleDefinitionId,
         scope: appConfigId,
       },

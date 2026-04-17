@@ -1,6 +1,7 @@
 import fs from 'fs'
 
 import { Dashboard } from '@pulumi/azure-native/portal/index.js'
+import * as pulumi from '@pulumi/pulumi'
 import { ResourceOptions } from '@pulumi/pulumi'
 
 import { CommonAzureConstruct } from '../../index.js'
@@ -45,11 +46,13 @@ export class AzurePortalManager {
   ) {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
-    const resourceGroup = scope.resourceGroupManager.resolveResourceGroup(
-      scope,
-      props.resourceGroupName.toString() ?? scope.props.resourceGroupName,
-      resourceOptions
-    )
+    const resourceGroup =
+      scope.resourceGroup ??
+      scope.resourceGroupManager.resolveResourceGroup(
+        scope,
+        props.resourceGroupName.toString() ?? scope.props.resourceGroupName,
+        resourceOptions
+      )
 
     const dashboardName = scope.resourceNameFormatter.format(
       props.dashboardName?.toString(),
@@ -59,10 +62,16 @@ export class AzurePortalManager {
     const dashboardRenderer = renderer ?? new AzureDashboardRenderer()
     const templateFile = dashboardRenderer.renderToFile(dashboardName, props)
     const template = fs.readFileSync(templateFile, 'utf-8')
-    const content = Object.entries(props.variables).reduce(
-      (result, [key, value]) => result.replaceAll(`\${${key}}`, JSON.stringify(String(value)).slice(1, -1)),
-      template
-    )
+    const keys = Object.keys(props.variables)
+    const values = Object.values(props.variables)
+
+    const properties = pulumi.all(values).apply(resolved => {
+      const content = keys.reduce(
+        (result, key, i) => result.replaceAll(`\${${key}}`, JSON.stringify(String(resolved[i])).slice(1, -1)),
+        template
+      )
+      return JSON.parse(content)
+    })
 
     return new Dashboard(
       `${id}-dashboard`,
@@ -74,12 +83,12 @@ export class AzurePortalManager {
         ),
         resourceGroupName: resourceGroup.name,
         location: props.location ?? resourceGroup.location,
-        properties: JSON.parse(content),
+        properties,
         tags: {
           'hidden-title': `${props.location} - ${props.displayName}`,
         },
       },
-      { ...resourceOptions, ignoreChanges: ['location'] }
+      { parent: scope, ...resourceOptions, ignoreChanges: ['location'] }
     )
   }
 }

@@ -49,7 +49,7 @@ export class AzureMonitorManager {
           scope.props.resourceNameOptions?.monitorDiagnosticSetting
         ),
       },
-      { parent: scope, ...resourceOptions }
+      { parent: scope, ignoreChanges: ['resourceUri'], ...resourceOptions }
     )
   }
 }

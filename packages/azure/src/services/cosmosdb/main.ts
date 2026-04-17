@@ -8,6 +8,7 @@ import {
   SqlResourceSqlRoleAssignment,
 } from '@pulumi/azure-native/cosmosdb/index.js'
 import { Input, ResourceOptions } from '@pulumi/pulumi'
+import { v5 as uuidv5 } from 'uuid'
 
 import { CommonAzureConstruct } from '../../common/index.js'
 
@@ -133,9 +134,7 @@ export class AzureCosmosDbManager {
 
     // Get resource group name
     const resourceGroupName =
-      (props.resourceGroupName ?? scope.props.resourceGroupName)
-        ? `${scope.props.resourceGroupName}-${scope.props.stage}`
-        : props.resourceGroupName
+      props.resourceGroupName ?? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
 
     if (!resourceGroupName) throw new Error(`Resource group name undefined for ${id}`)
 
@@ -143,10 +142,12 @@ export class AzureCosmosDbManager {
       `${id}-cc`,
       {
         ...props,
-        containerName: scope.resourceNameFormatter.format(
-          props.containerName?.toString(),
-          scope.props.resourceNameOptions?.cosmosDbSqlContainer
-        ),
+        ...(props.containerName && {
+          containerName: scope.resourceNameFormatter.format(
+            props.containerName.toString(),
+            scope.props.resourceNameOptions?.cosmosDbSqlContainer
+          ),
+        }),
         resourceGroupName,
       },
       { parent: scope, ...resourceOptions }
@@ -167,7 +168,15 @@ export class AzureCosmosDbManager {
     props: SqlResourceSqlRoleAssignmentProps,
     resourceOptions?: ResourceOptions
   ) {
-    return new SqlResourceSqlRoleAssignment(`${id}`, props, { parent: scope, ...resourceOptions })
+    const namespace = uuidv5(`${scope.id}-${id}`, uuidv5.URL)
+    return new SqlResourceSqlRoleAssignment(
+      `${id}`,
+      {
+        ...props,
+        roleAssignmentId: props.roleAssignmentId ?? uuidv5(id, namespace),
+      },
+      { parent: scope, ...resourceOptions }
+    )
   }
 
   /**

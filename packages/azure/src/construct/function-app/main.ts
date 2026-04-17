@@ -26,6 +26,7 @@ import { CosmosRoleDefinition } from '../../services/cosmosdb/constants.js'
 import { AzureAppConfigurationManager, RoleDefinitionId } from '../../services/index.js'
 
 import { AzureFunctionAppProps } from './types.js'
+import { PrincipalType } from '@pulumi/azure-native/authorization/index.js'
 
 /**
  * Provides a construct to create and deploy an Azure Function App with Flex Consumption hosting
@@ -412,6 +413,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
         this,
         this.appConfig.id,
         this.getFunctionAppPrincipalId(),
+        PrincipalType.ServicePrincipal,
         RoleDefinitionId.APP_CONFIGURATION_DATA_READER
       )
     }

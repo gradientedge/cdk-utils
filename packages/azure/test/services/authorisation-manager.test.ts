@@ -1,4 +1,4 @@
-import { RoleAssignment } from '@pulumi/azure-native/authorization/index.js'
+import { PrincipalType, RoleAssignment } from '@pulumi/azure-native/authorization/index.js'
 import * as pulumi from '@pulumi/pulumi'
 import { CommonAzureConstruct, CommonAzureStack, CommonAzureStackProps, RoleDefinitionId } from '../../src/index.js'
 import { outputToPromise } from '../helpers.js'
@@ -55,6 +55,7 @@ class TestCommonConstruct extends CommonAzureConstruct {
       this,
       '/subscriptions/test-sub/resourceGroups/test-rg/providers/Microsoft.AppConfiguration/configurationStores/testac',
       'test-principal-id',
+      PrincipalType.ServicePrincipal,
       RoleDefinitionId.APP_CONFIGURATION_DATA_READER
     )
   }
