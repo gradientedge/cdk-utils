@@ -13,6 +13,11 @@ export function isTaggableResource(resourceType: string): boolean {
   if (resourceType.startsWith('azuread:')) return false
   if (resourceType.startsWith('random:')) return false
   if (resourceType.startsWith('pulumi:')) return false
+  if (
+    resourceType.startsWith('azure-native:apimanagement:') &&
+    resourceType !== 'azure-native:apimanagement:ApiManagementService'
+  )
+    return false
 
   // Extract the resource name from the type (e.g., 'ResourceGroup' from 'azure-native:resources:ResourceGroup')
   const resourceName = resourceType.split(':').pop() || ''
