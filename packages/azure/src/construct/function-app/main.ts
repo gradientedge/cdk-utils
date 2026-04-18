@@ -369,6 +369,15 @@ export class AzureFunctionApp extends CommonAzureConstruct {
                 }).keys[0].value
               };EndpointSuffix=core.windows.net`,
             },
+            {
+              name: 'AzureWebJobsStorage',
+              value: pulumi.interpolate`DefaultEndpointsProtocol=https;AccountName=${this.appStorageAccount.name};AccountKey=${
+                listStorageAccountKeysOutput({
+                  resourceGroupName: this.resourceGroup.name,
+                  accountName: this.appStorageAccount.name,
+                }).keys[0].value
+              };EndpointSuffix=core.windows.net`,
+            },
           ],
           connectionStrings: Object.fromEntries(
             this.appConnectionStrings.map(cs => [cs.name, { type: cs.type, value: cs.value }])

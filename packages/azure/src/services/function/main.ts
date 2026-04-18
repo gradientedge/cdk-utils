@@ -203,7 +203,7 @@ export class AzureFunctionManager {
           },
         },
       },
-      { parent: functionApp, ...resourceOptions }
+      { parent: functionApp, dependsOn: [functionApp], ...resourceOptions }
     )
 
     return functionApp

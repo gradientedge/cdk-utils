@@ -104,10 +104,7 @@ export class AzureEventgridManager {
           props.topicName?.toString(),
           scope.props.resourceNameOptions?.eventGridTopic
         ),
-        resourceGroupName:
-          (props.resourceGroupName ?? scope.props.resourceGroupName)
-            ? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
-            : props.resourceGroupName,
+        resourceGroupName: props.resourceGroupName ?? scope.resourceNameFormatter.format(scope.props.resourceGroupName),
       },
       { parent: scope, ...resourceOptions }
     )

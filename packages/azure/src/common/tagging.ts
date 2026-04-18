@@ -13,6 +13,8 @@ export function isTaggableResource(resourceType: string): boolean {
   if (resourceType.startsWith('azuread:')) return false
   if (resourceType.startsWith('random:')) return false
   if (resourceType.startsWith('pulumi:')) return false
+  if (resourceType.startsWith('command:')) return false
+  if (resourceType === 'azure-native:appconfiguration:KeyValue') return false
   if (
     resourceType.startsWith('azure-native:apimanagement:') &&
     resourceType !== 'azure-native:apimanagement:ApiManagementService'

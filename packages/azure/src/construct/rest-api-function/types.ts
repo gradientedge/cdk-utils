@@ -1,4 +1,5 @@
 import { Api, ApiOperation, Backend, NamedValue } from '@pulumi/azure-native/apimanagement/index.js'
+import { Input } from '@pulumi/pulumi'
 
 import {
   ApiManagementApiProps,
@@ -41,5 +42,5 @@ export interface AzureApiFunction extends AzureApi {
   corsPolicyXmlContent?: string
   managementApi: Api
   namedValue: NamedValue
-  validateJwtPolicyXmlContent?: string
+  validateJwtPolicyXmlContent?: Input<string>
 }

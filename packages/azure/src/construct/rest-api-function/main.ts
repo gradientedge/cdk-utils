@@ -1,6 +1,6 @@
 import { HostnameType, NamedValue, PolicyContentFormat } from '@pulumi/azure-native/apimanagement/index.js'
 import { getVaultOutput } from '@pulumi/azure-native/keyvault/index.js'
-import { listWebAppHostKeysOutput } from '@pulumi/azure-native/web/index.js'
+import { listWebAppHostKeys } from '@pulumi/azure-native/web/index.js'
 import * as pulumi from '@pulumi/pulumi'
 import _ from 'lodash'
 
@@ -82,9 +82,24 @@ export class AzureRestApiFunction extends AzureFunctionApp {
   protected createNamespaceSecret() {
     if (!this.props.apiManagement.useExistingApiManagement) return
 
-    const functionDefaultKey = listWebAppHostKeysOutput({
-      name: this.app.name,
-      resourceGroupName: this.resourceGroup.name,
+    // Fetch function host keys with retry — the runtime may not be ready immediately after code deployment
+    const functionKey = pulumi.all([this.app.name, this.resourceGroup.name]).apply(async ([appName, rgName]) => {
+      if (pulumi.runtime.isDryRun()) return 'previewing'
+      const maxRetries = 10
+      const delayMs = 15000
+      for (let i = 0; i < maxRetries; i++) {
+        try {
+          const keys = await listWebAppHostKeys({ name: appName, resourceGroupName: rgName })
+          const defaultKey = keys.functionKeys?.['default']
+          if (defaultKey) return defaultKey
+        } catch {
+          // runtime not ready yet
+        }
+        if (i < maxRetries - 1) {
+          await new Promise(resolve => setTimeout(resolve, delayMs))
+        }
+      }
+      throw new Error(`Failed to retrieve function host keys for ${appName} after ${maxRetries} attempts`)
     })
 
     this.api.namedValueSecret = this.keyVaultManager.createKeyVaultSecret(
@@ -95,7 +110,11 @@ export class AzureRestApiFunction extends AzureFunctionApp {
         secretName: pulumi.interpolate`${this.app.name}key`,
         resourceGroupName: this.props.apiAuthKeyVault.resourceGroupName,
         properties: {
-          value: functionDefaultKey.functionKeys?.apply(keys => keys?.['default'] ?? ''),
+          value: functionKey,
+          attributes: {
+            enabled: true,
+          },
+          contentType: '',
         },
       }
     )
