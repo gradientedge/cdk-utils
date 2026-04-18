@@ -1,5 +1,13 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.22.0
+
+### Minor Changes
+
+- [`27abdf8`](https://github.com/gradientedge/cdk-utils/commit/27abdf86dc7a9ab593a9a654ee7425b92e51ec06) Thanks [@despock](https://github.com/despock)! - feat: optimising function deployment
+
+- [`27abdf8`](https://github.com/gradientedge/cdk-utils/commit/27abdf86dc7a9ab593a9a654ee7425b92e51ec06) Thanks [@despock](https://github.com/despock)! - feat: sanitising deployment id to be deterministic id
+
 ## 2.21.0
 
 ### Minor Changes
