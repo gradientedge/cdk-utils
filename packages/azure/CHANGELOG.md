@@ -1,5 +1,15 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.20.0
+
+### Minor Changes
+
+- [`d2313b1`](https://github.com/gradientedge/cdk-utils/commit/d2313b1518521a35d4ee205bb5fd0c840c6997b2) Thanks [@despock](https://github.com/despock)! - feat: resolve roleDefinitionId from subscription
+
+- [`8a9602d`](https://github.com/gradientedge/cdk-utils/commit/8a9602d819d683da435edebcb270a06a43851b24) Thanks [@despock](https://github.com/despock)! - feat: excluding apim resources which do not support tags
+
+- [`ef08018`](https://github.com/gradientedge/cdk-utils/commit/ef080181236f185652e296975f3368308097125c) Thanks [@despock](https://github.com/despock)! - feat: adding sensible defaults
+
 ## 2.19.0
 
 ### Minor Changes
