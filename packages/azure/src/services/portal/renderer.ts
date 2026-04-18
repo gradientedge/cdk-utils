@@ -45,7 +45,6 @@ export class AzureDashboardRenderer implements DashboardRenderer {
     _.templateSettings.interpolate = /{{([\s\S]+?)}}/g
 
     // if client is used instead of hosts
-    let partsIndex = 0
     let yIndex = 0
     const parts: any[] = []
     for (const pane of params.panes) {

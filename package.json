@@ -34,7 +34,7 @@
     "ci": "pnpm install --frozen-lockfile && pnpm build && pnpm validate && pnpm run docs",
     "docs": "rimraf api-docs && typedoc && cp -r img api-docs/img",
     "fix": "pnpm prettify && eslint --fix **/*.ts",
-    "lint": "pnpm prettify && eslint --no-cache **/*.ts --max-warnings=0 --no-warn-ignored",
+    "lint": "pnpm prettify && eslint **/*.ts --max-warnings=0 --no-warn-ignored",
     "prettier": "prettier --check \"**/*.{ts,json,md}\"",
     "prettify": "prettier --write \"**/*.{ts,json,md}\"",
     "test": "vitest run --coverage",
@@ -47,7 +47,7 @@
   },
   "devDependencies": {
     "@changesets/changelog-github": "0.6.0",
-    "@changesets/cli": "2.30.0",
+    "@changesets/cli": "2.31.0",
     "@commitlint/cli": "^20.5.0",
     "@commitlint/config-conventional": "^20.5.0",
     "@eslint/config-array": "0.23.5",
