@@ -168,7 +168,7 @@ export class AzureFunctionManager {
     const functionAppConfig = props.functionAppConfig as Record<string, any> | undefined
 
     new Deployment(
-      `${id}-deployment`,
+      `${id}-depl`,
       {
         resourceGroupName,
         properties: {
@@ -208,7 +208,7 @@ export class AzureFunctionManager {
           },
         },
       },
-      { parent: scope, ...resourceOptions }
+      { parent: functionApp, ...resourceOptions }
     )
 
     return functionApp

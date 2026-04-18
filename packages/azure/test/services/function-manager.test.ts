@@ -218,7 +218,7 @@ describe('TestAzureFunctionConstruct', () => {
   })
 
   test('flex consumption deployment has correct settings', () => {
-    const deploymentArgs = capturedResources['test-function-app-flex-consumption-dev-deployment']
+    const deploymentArgs = capturedResources['test-function-app-flex-consumption-dev-depl']
     expect(deploymentArgs).toBeDefined()
     expect(deploymentArgs.type).toEqual('azure-native:resources:Deployment')
 
@@ -356,7 +356,7 @@ describe('TestAzureFunctionConstruct - Default Value Branches', () => {
   })
 
   test('flex consumption deployment uses default values', () => {
-    const deploymentArgs = capturedResources['test-minimal-flex-dev-deployment']
+    const deploymentArgs = capturedResources['test-minimal-flex-dev-depl']
     expect(deploymentArgs).toBeDefined()
     const config = deploymentArgs.inputs.properties.template.resources[0].properties.functionAppConfig
     expect(config.runtime.name).toEqual('node')
