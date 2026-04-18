@@ -1,5 +1,5 @@
 import { Deployment, DeploymentMode, Resource } from '@pulumi/azure-native/resources/index.js'
-import { ManagedServiceIdentityType, WebApp, WebAppFunction } from '@pulumi/azure-native/web/index.js'
+import { ClientCertMode, ManagedServiceIdentityType, WebApp, WebAppFunction } from '@pulumi/azure-native/web/index.js'
 import { ResourceOptions } from '@pulumi/pulumi'
 
 import { CommonAzureConstruct, CommonAzureStack } from '../../common/index.js'
@@ -130,11 +130,17 @@ export class AzureFunctionManager {
         location: props.location ?? scope.props.location,
         resourceGroupName,
         kind: props.kind ?? 'functionapp,linux',
+        reserved: props.reserved ?? true,
         httpsOnly: props.httpsOnly ?? true,
         identity: props.identity ?? {
           type: ManagedServiceIdentityType.SystemAssigned,
         },
-        functionAppConfig: props.functionAppConfig ?? {
+        clientAffinityEnabled: props.clientAffinityEnabled ?? false,
+        clientAffinityProxyEnabled: props.clientAffinityProxyEnabled ?? false,
+        clientCertMode: props.clientCertMode ?? ClientCertMode.Optional,
+        clientCertEnabled: props.clientCertEnabled ?? false,
+        functionAppConfig: {
+          ...props.functionAppConfig,
           runtime: {
             ...props.runtime,
             name: props.runtime?.name ?? 'node',
@@ -189,14 +195,8 @@ export class AzureFunctionManager {
                     },
                     scaleAndConcurrency: {
                       ...props.scaleAndConcurrency,
-                      instanceMemoryMB:
-                        props.scaleAndConcurrency?.instanceMemoryMB ??
-                        functionAppConfig?.scaleAndConcurrency?.instanceMemoryMB ??
-                        4096,
-                      maximumInstanceCount:
-                        props.scaleAndConcurrency?.maximumInstanceCount ??
-                        functionAppConfig?.scaleAndConcurrency?.maximumInstanceCount ??
-                        40,
+                      instanceMemoryMB: props.scaleAndConcurrency?.instanceMemoryMB ?? 4096,
+                      maximumInstanceCount: props.scaleAndConcurrency?.maximumInstanceCount ?? 40,
                     },
                     siteUpdateStrategy: {
                       type: 'RollingUpdate',

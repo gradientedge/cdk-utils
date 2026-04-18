@@ -274,9 +274,11 @@ pulumi.runtime.setMocks({
           ...args.inputs,
           name: args.name,
           outputs: {
-            apiId: 'mock-api-id',
-            apiName: 'mock-api-name',
-            apiResourceGroupName: 'mock-api-rg',
+            stackOutputs: {
+              apiId: 'mock-api-id',
+              apiName: 'mock-api-name',
+              resourceGroupName: 'mock-api-rg',
+            },
           },
         },
       }
@@ -313,9 +315,11 @@ pulumi.runtime.setMocks({
     }
     if (args.token === 'pulumi:pulumi:StackReference') {
       return {
-        apiId: 'mock-api-id',
-        apiName: 'mock-api-name',
-        apiResourceGroupName: 'mock-api-rg',
+        stackOutputs: {
+          apiId: 'mock-api-id',
+          apiName: 'mock-api-name',
+          resourceGroupName: 'mock-api-rg',
+        },
       }
     }
     return args.inputs

@@ -60,6 +60,7 @@ export class AzureAuthorisationManager {
     vaultName: string,
     resourceGroupName: Input<string>,
     principalId: Input<string>,
+    principalType: Input<PrincipalType>,
     roleDefinitionId: string,
     resourceOptions?: ResourceOptions
   ) {
@@ -69,6 +70,7 @@ export class AzureAuthorisationManager {
       scope,
       {
         principalId,
+        principalType,
         roleDefinitionId,
         scope: keyVault.id,
       },
@@ -92,6 +94,7 @@ export class AzureAuthorisationManager {
     topicName: Input<string>,
     resourceGroupName: Input<string>,
     principalId: Input<string>,
+    principalType: Input<PrincipalType>,
     roleDefinitionId: string,
     resourceOptions?: ResourceOptions
   ) {
@@ -109,6 +112,7 @@ export class AzureAuthorisationManager {
       scope,
       {
         principalId,
+        principalType,
         roleDefinitionId,
         scope: topic.id,
       },
@@ -161,6 +165,7 @@ export class AzureAuthorisationManager {
     scope: CommonAzureConstruct,
     accountId: Input<string>,
     principalId: Input<string>,
+    principalType: Input<PrincipalType>,
     roleDefinitionId: string,
     resourceOptions?: ResourceOptions
   ) {
@@ -169,6 +174,7 @@ export class AzureAuthorisationManager {
       scope,
       {
         principalId,
+        principalType,
         roleDefinitionId,
         scope: accountId,
       },
@@ -190,6 +196,7 @@ export class AzureAuthorisationManager {
     scope: CommonAzureConstruct,
     tableId: Input<string>,
     principalId: Input<string>,
+    principalType: Input<PrincipalType>,
     roleDefinitionId: string,
     resourceOptions?: ResourceOptions
   ) {
@@ -198,6 +205,7 @@ export class AzureAuthorisationManager {
       scope,
       {
         principalId,
+        principalType,
         roleDefinitionId,
         scope: tableId,
       },

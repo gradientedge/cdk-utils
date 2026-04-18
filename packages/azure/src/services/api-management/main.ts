@@ -361,7 +361,7 @@ export class AzureApiManagementManager {
     props: ApiOperationPolicyProps,
     resourceOptions?: ResourceOptions
   ) {
-    return new ApiOperationPolicy(`${id}`, props, { parent: scope, ...resourceOptions })
+    return new ApiOperationPolicy(`${id}`, { ...props, policyId: 'policy' }, { parent: scope, ...resourceOptions })
   }
 
   /**
@@ -378,7 +378,7 @@ export class AzureApiManagementManager {
     props: ApiPolicyProps,
     resourceOptions?: ResourceOptions
   ) {
-    return new ApiPolicy(`${id}`, props, { parent: scope, ...resourceOptions })
+    return new ApiPolicy(`${id}`, { ...props, policyId: 'policy' }, { parent: scope, ...resourceOptions })
   }
 
   /**

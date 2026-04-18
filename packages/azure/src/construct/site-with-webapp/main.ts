@@ -70,6 +70,8 @@ export class SiteWithWebApp extends CommonAzureConstruct {
   protected createSiteAppServicePlan() {
     this.site.appServicePlan = this.appServiceManager.createAppServicePlan(`${this.id}-app-service-plan`, this, {
       ...this.props.site.appServicePlan,
+      name: this.id,
+      kind: this.props.site.appServicePlan?.kind ?? 'linux',
       location: this.resourceGroup.location,
       resourceGroupName: this.resourceGroup.name,
     })
@@ -156,6 +158,7 @@ export class SiteWithWebApp extends CommonAzureConstruct {
       this,
       {
         ...this.props.site.webApp,
+        kind: this.props.site.webApp.kind ?? 'app,linux',
         location: this.resourceGroup.location,
         resourceGroupName: this.resourceGroup.name,
         serverFarmId: this.site.appServicePlan.id,

@@ -1,4 +1,4 @@
-import { HostnameType, NamedValue } from '@pulumi/azure-native/apimanagement/index.js'
+import { HostnameType, NamedValue, PolicyContentFormat } from '@pulumi/azure-native/apimanagement/index.js'
 import { getVaultOutput } from '@pulumi/azure-native/keyvault/index.js'
 import { listWebAppHostKeysOutput } from '@pulumi/azure-native/web/index.js'
 import * as pulumi from '@pulumi/pulumi'
@@ -93,7 +93,7 @@ export class AzureRestApiFunction extends AzureFunctionApp {
       {
         vaultName: this.api.authKeyVault.name,
         secretName: pulumi.interpolate`${this.app.name}key`,
-        resourceGroupName: this.resourceGroup.name,
+        resourceGroupName: this.props.apiAuthKeyVault.resourceGroupName,
         properties: {
           value: functionDefaultKey.functionKeys?.apply(keys => keys?.['default'] ?? ''),
         },
@@ -108,9 +108,10 @@ export class AzureRestApiFunction extends AzureFunctionApp {
     if (this.props.apiManagement.useExistingApiManagement) {
       if (this.props.apiManagement.apiStackName) {
         const apiStack = new pulumi.StackReference(this.props.apiManagement.apiStackName)
-        this.api.id = apiStack.getOutput('apiId')
-        this.api.name = apiStack.getOutput('apiName')
-        this.api.resourceGroupName = apiStack.getOutput('apiResourceGroupName')
+        const stackOutputs = apiStack.getOutput('stackOutputs')
+        this.api.id = stackOutputs.apply(o => o.apiId)
+        this.api.name = stackOutputs.apply(o => o.apiName)
+        this.api.resourceGroupName = stackOutputs.apply(o => o.resourceGroupName)
       }
     } else {
       let hostnameConfigurations
@@ -159,18 +160,23 @@ export class AzureRestApiFunction extends AzureFunctionApp {
    * @summary Method to create the API Management named value and backend for the function app
    */
   protected createApiManagementNamespace() {
-    this.api.namedValue = new NamedValue(`${this.id}-am-nv`, {
-      displayName: this.app.name,
-      keyVault: {
-        secretIdentifier: this.api.namedValueSecret.id,
+    this.api.namedValue = new NamedValue(
+      `${this.id}-am-nv`,
+      {
+        displayName: this.app.name,
+        keyVault: {
+          secretIdentifier: this.api.namedValueSecret.properties.apply(p => p.secretUri),
+        },
+        resourceGroupName: this.api.resourceGroupName,
+        secret: true,
+        serviceName: this.api.name,
       },
-      resourceGroupName: this.api.resourceGroupName,
-      secret: true,
-      serviceName: this.api.name,
-    })
+      { parent: this }
+    )
 
     this.api.backend = this.apiManagementManager.createBackend(this.id, this, {
       ...this.props.apiManagementBackend,
+      backendId: this.id,
       title: this.id,
       resourceGroupName: this.api.resourceGroupName,
       serviceName: this.api.name,
@@ -178,7 +184,7 @@ export class AzureRestApiFunction extends AzureFunctionApp {
       resourceId: pulumi.interpolate`https://management.azure.com/subscriptions/${this.props.subscriptionId}/resourceGroups/${this.resourceGroup.name}/providers/Microsoft.Web/sites/${this.app.name}`,
       credentials: {
         header: {
-          'x-functions-key': [`{{${this.api.namedValue.name}}}`],
+          'x-functions-key': [pulumi.interpolate`{{${this.api.namedValue.name}}}`],
         },
       },
     })
@@ -190,6 +196,7 @@ export class AzureRestApiFunction extends AzureFunctionApp {
   protected createApiManagementRoutes() {
     this.api.managementApi = this.apiManagementManager.createApi(`${this.id}-apim-api`, this, {
       ...this.props.apiManagementApi,
+      apiId: this.id,
       displayName: this.props.apiManagementApi.displayName ?? this.id,
       serviceName: this.api.name,
       resourceGroupName: this.api.resourceGroupName,
@@ -215,7 +222,7 @@ export class AzureRestApiFunction extends AzureFunctionApp {
         method: operation.method.toString().toUpperCase(),
         serviceName: this.api.name,
         resourceGroupName: this.api.resourceGroupName,
-        apiId: this.api.id,
+        apiId: this.resourceNameFormatter.format(this.id, this.props.resourceNameOptions?.apiManagementApi),
         displayName: operation.displayName,
         urlTemplate: operation.urlTemplate,
         templateParameters: operation.templateParameters,
@@ -233,28 +240,28 @@ export class AzureRestApiFunction extends AzureFunctionApp {
       `${this.id}-apim-api-operation-policy-${operation.displayName}-${operation.method}`,
       this,
       {
-        apiId: this.api.id,
+        apiId: this.resourceNameFormatter.format(this.id, this.props.resourceNameOptions?.apiManagementApi),
         resourceGroupName: this.api.resourceGroupName,
         serviceName: this.api.name,
         operationId: `${operation.displayName}-${operation.method}`,
+        format: PolicyContentFormat.Rawxml,
         value: `
         <policies>
-          <policies>
-            <inbound>
-              <base />
-                ${this.props.apiManagementApi.cacheSetInboundPolicy}
-            </inbound>
-            <backend>
-              <base />
-            </backend>
-            <outbound>
-              <base />
-                ${this.props.apiManagementApi.cacheSetOutboundPolicy}
-            </outbound>
-            <on-error>
-              <base />
-            </on-error>
-        </policies>`.replace(/\n[ \t]*\n/g, '\n'), // move to utils
+          <inbound>
+            <base />
+              ${this.props.apiManagementApi.cacheSetInboundPolicy ?? ''}
+          </inbound>
+          <backend>
+            <base />
+          </backend>
+          <outbound>
+            <base />
+              ${this.props.apiManagementApi.cacheSetOutboundPolicy ?? ''}
+          </outbound>
+          <on-error>
+            <base />
+          </on-error>
+        </policies>`.replace(/\n[ \t]*\n/g, '\n'),
       }
     )
   }
@@ -333,8 +340,9 @@ export class AzureRestApiFunction extends AzureFunctionApp {
 
     this.apiManagementManager.createPolicy(`${this.id}-apim-api-policy`, this, {
       serviceName: this.api.name,
-      apiId: this.api.id,
+      apiId: this.resourceNameFormatter.format(this.id, this.props.resourceNameOptions?.apiManagementApi),
       resourceGroupName: this.api.resourceGroupName,
+      format: PolicyContentFormat.Rawxml,
       value: policyXmlContent.apply(xml => xml.replace(/\n[ \t]*\n/g, '\n')),
     })
   }

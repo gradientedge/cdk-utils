@@ -75,6 +75,7 @@ export class AzureStorageManager {
           .replace(/\W/g, '')
           .toLowerCase(),
         allowBlobPublicAccess: props.allowBlobPublicAccess ?? false,
+        isHnsEnabled: props.isHnsEnabled ?? false,
         resourceGroupName,
         sku: props.sku ?? {
           name: SkuName.Standard_LRS,
@@ -90,18 +91,22 @@ export class AzureStorageManager {
       { parent: scope, ...resourceOptions }
     )
 
-    new BlobServiceProperties(`${id}-blob-props`, {
-      ...props.blobProperties,
-      accountName: scope.resourceNameFormatter
-        .format(props.accountName?.toString(), scope.props.resourceNameOptions?.storageAccount)
-        .replace(/\W/g, '')
-        .toLowerCase(),
-      resourceGroupName,
-      deleteRetentionPolicy: props.blobProperties?.deleteRetentionPolicy ?? {
-        enabled: true,
-        days: 7,
+    new BlobServiceProperties(
+      `${id}-blob-props`,
+      {
+        ...props.blobProperties,
+        accountName: scope.resourceNameFormatter
+          .format(props.accountName?.toString(), scope.props.resourceNameOptions?.storageAccount)
+          .replace(/\W/g, '')
+          .toLowerCase(),
+        resourceGroupName,
+        deleteRetentionPolicy: props.blobProperties?.deleteRetentionPolicy ?? {
+          enabled: true,
+          days: 7,
+        },
       },
-    })
+      { parent: scope, ...resourceOptions }
+    )
 
     return storageAccount
   }

@@ -43,6 +43,7 @@ class TestCommonConstruct extends CommonAzureConstruct {
       this,
       '/subscriptions/test-sub/resourceGroups/test-rg/providers/Microsoft.Storage/storageAccounts/testsa/tableServices/default/tables/testtable',
       'test-principal-id',
+      PrincipalType.ServicePrincipal,
       this.authorisationManager.resolveRoleDefinitionId(this, RoleDefinitionId.STORAGE_TABLE_DATA_CONTRIBUTOR)
     )
 
@@ -51,6 +52,7 @@ class TestCommonConstruct extends CommonAzureConstruct {
       this,
       '/subscriptions/test-sub/resourceGroups/test-rg/providers/Microsoft.Storage/storageAccounts/testsa',
       'test-principal-id',
+      PrincipalType.ServicePrincipal,
       this.authorisationManager.resolveRoleDefinitionId(this, RoleDefinitionId.STORAGE_BLOB_DATA_CONTRIBUTOR)
     )
 

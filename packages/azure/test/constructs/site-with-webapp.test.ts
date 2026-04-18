@@ -162,7 +162,7 @@ describe('TestSiteWithWebAppConstruct', () => {
         expect(urn).toEqual(
           'urn:pulumi:stack::project::construct:test-common-stack$azure-native:web:AppServicePlan::test-common-stack-app-service-plan-as'
         )
-        expect(name).toEqual('test-site-plan-dev')
+        expect(name).toEqual('test-common-stack-dev')
         expect(tags?.environment).toEqual('dev')
       })
   })

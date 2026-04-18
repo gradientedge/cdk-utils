@@ -59,6 +59,7 @@ export class AzureAppServiceManager {
         ),
         resourceGroupName,
         location: props.location ?? scope.props.location,
+        kind: props.kind ?? 'functionapp',
         sku: props.sku ?? {
           name: 'FC1',
           tier: 'FlexConsumption',

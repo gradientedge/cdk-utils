@@ -116,6 +116,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
     this.appServicePlan = this.appServiceManager.createAppServicePlan(`${this.id}-app-service-plan`, this, {
       ...this.props.functionApp.servicePlan,
       name: this.id,
+      kind: this.props.functionApp.servicePlan?.kind ?? 'functionapp',
       resourceGroupName: this.resourceGroup.name,
       location: this.resourceGroup.location,
     })
@@ -291,7 +292,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
    * @summary Method to create and configure the function host.json
    */
   protected createFunctionHosts() {
-    const currentDirectory = path.resolve()
+    const currentDirectory = path.resolve(process.cwd(), '..')
     const hostsJsonFile = `${currentDirectory}/${this.props.functionApp.deploySource}/host.json`
     if (!fs.existsSync(hostsJsonFile)) return
 
@@ -308,7 +309,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
    * @summary Method to create the code package archive for deployment
    */
   protected createCodePackage() {
-    const currentDirectory = path.resolve()
+    const currentDirectory = path.resolve(process.cwd(), '..')
     this.appCodeArchiveFile = archive.getFileOutput({
       type: 'zip',
       sourceDir: `${currentDirectory}/${this.props.functionApp.deploySource}`,
@@ -333,6 +334,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
       {
         ...this.props.functionApp,
         name: this.props.functionApp.app?.name ?? this.id,
+        scaleAndConcurrency: this.props.functionApp.app?.scaleAndConcurrency,
         serverFarmId: this.appServicePlan.id,
         resourceGroupName: this.resourceGroup.name,
         functionAppConfig: {
@@ -342,7 +344,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
               value: pulumi.interpolate`${this.appStorageAccount.primaryEndpoints.apply(e => e?.blob)}${this.appDeploymentStorageContainer.name}`,
               authentication: {
                 type: AuthenticationType.StorageAccountConnectionString,
-                storageAccountConnectionStringName: 'AzureWebJobsStorage',
+                storageAccountConnectionStringName: 'DEPLOYMENT_STORAGE_CONNECTION_STRING',
               },
             },
           },
@@ -359,7 +361,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
               value: this.applicationInsights.instrumentationKey,
             },
             {
-              name: 'AzureWebJobsStorage',
+              name: 'DEPLOYMENT_STORAGE_CONNECTION_STRING',
               value: pulumi.interpolate`DefaultEndpointsProtocol=https;AccountName=${this.appStorageAccount.name};AccountKey=${
                 listStorageAccountKeysOutput({
                   resourceGroupName: this.resourceGroup.name,
@@ -395,6 +397,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
         this,
         this.dataStorageAccount.id,
         this.getFunctionAppPrincipalId(),
+        PrincipalType.ServicePrincipal,
         this.authorisationManager.resolveRoleDefinitionId(this, RoleDefinitionId.STORAGE_BLOB_DATA_CONTRIBUTOR)
       )
     }
@@ -404,6 +407,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
       this,
       this.appStorageAccount.id,
       this.getFunctionAppPrincipalId(),
+      PrincipalType.ServicePrincipal,
       this.authorisationManager.resolveRoleDefinitionId(this, RoleDefinitionId.STORAGE_BLOB_DATA_CONTRIBUTOR)
     )
 
@@ -441,6 +445,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
             keyVaultName,
             resourceGroup,
             this.getFunctionAppPrincipalId(),
+            PrincipalType.ServicePrincipal,
             this.authorisationManager.resolveRoleDefinitionId(this, RoleDefinitionId.KEY_VAULT_SECRETS_USER)
           )
         })
@@ -454,6 +459,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
         this.props.existingTopicName,
         this.props.existingTopicResourceGroupName,
         this.getFunctionAppPrincipalId(),
+        PrincipalType.ServicePrincipal,
         this.authorisationManager.resolveRoleDefinitionId(this, RoleDefinitionId.EVENTGRID_DATA_SENDER)
       )
     }
