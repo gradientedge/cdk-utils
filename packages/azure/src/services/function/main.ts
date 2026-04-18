@@ -1,6 +1,7 @@
 import { Deployment, DeploymentMode, Resource } from '@pulumi/azure-native/resources/index.js'
 import { ClientCertMode, ManagedServiceIdentityType, WebApp, WebAppFunction } from '@pulumi/azure-native/web/index.js'
 import { ResourceOptions } from '@pulumi/pulumi'
+import { v5 as uuidv5 } from 'uuid'
 
 import { CommonAzureConstruct, CommonAzureStack } from '../../common/index.js'
 
@@ -121,13 +122,25 @@ export class AzureFunctionManager {
     // Get resource group name
     const resourceGroupName =
       props.resourceGroupName ?? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
+    const name = scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.functionApp)
+    const location = props.location ?? scope.props.location
+    const runtime = {
+      ...props.runtime,
+      name: props.runtime?.name ?? 'node',
+      version: props.runtime?.version ?? CommonAzureStack.NODEJS_RUNTIME,
+    }
+    const scaleAndConcurrency = {
+      ...props.scaleAndConcurrency,
+      instanceMemoryMB: props.scaleAndConcurrency?.instanceMemoryMB ?? 4096,
+      maximumInstanceCount: props.scaleAndConcurrency?.maximumInstanceCount ?? 40,
+    }
 
     const functionApp = new WebApp(
       `${id}-fc`,
       {
         ...props,
-        name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.functionApp),
-        location: props.location ?? scope.props.location,
+        name,
+        location,
         resourceGroupName,
         kind: props.kind ?? 'functionapp,linux',
         reserved: props.reserved ?? true,
@@ -141,16 +154,8 @@ export class AzureFunctionManager {
         clientCertEnabled: props.clientCertEnabled ?? false,
         functionAppConfig: {
           ...props.functionAppConfig,
-          runtime: {
-            ...props.runtime,
-            name: props.runtime?.name ?? 'node',
-            version: props.runtime?.version ?? CommonAzureStack.NODEJS_RUNTIME,
-          },
-          scaleAndConcurrency: {
-            ...props.scaleAndConcurrency,
-            instanceMemoryMB: props.scaleAndConcurrency?.instanceMemoryMB ?? 4096,
-            maximumInstanceCount: props.scaleAndConcurrency?.maximumInstanceCount ?? 40,
-          },
+          runtime,
+          scaleAndConcurrency,
         },
         siteConfig: props.siteConfig ?? {
           http20Enabled: true,
@@ -165,11 +170,12 @@ export class AzureFunctionManager {
       { parent: scope, ...resourceOptions }
     )
 
-    const functionAppConfig = props.functionAppConfig as Record<string, any> | undefined
-
+    // perform a deployment for the rolling update strategy
+    const deploymentId = uuidv5(`${id}-depl`, uuidv5.DNS)
     new Deployment(
-      `${id}-depl`,
+      deploymentId,
       {
+        deploymentName: deploymentId,
         resourceGroupName,
         properties: {
           mode: DeploymentMode.Incremental,
@@ -180,24 +186,13 @@ export class AzureFunctionManager {
               {
                 type: 'Microsoft.Web/sites',
                 apiVersion: '2024-04-01',
-                name: scope.resourceNameFormatter.format(props.name, scope.props.resourceNameOptions?.functionApp),
-                location: props.location ?? scope.props.location,
+                name,
+                location,
                 properties: {
                   functionAppConfig: {
                     ...props.functionAppConfig,
-                    runtime: {
-                      ...props.runtime,
-                      name: props.runtime?.name ?? functionAppConfig?.runtime?.name ?? 'node',
-                      version:
-                        props.runtime?.version ??
-                        functionAppConfig?.runtime?.version ??
-                        CommonAzureStack.NODEJS_RUNTIME,
-                    },
-                    scaleAndConcurrency: {
-                      ...props.scaleAndConcurrency,
-                      instanceMemoryMB: props.scaleAndConcurrency?.instanceMemoryMB ?? 4096,
-                      maximumInstanceCount: props.scaleAndConcurrency?.maximumInstanceCount ?? 40,
-                    },
+                    runtime,
+                    scaleAndConcurrency,
                     siteUpdateStrategy: {
                       type: 'RollingUpdate',
                     },

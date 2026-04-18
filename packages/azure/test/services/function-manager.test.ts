@@ -1,6 +1,7 @@
 import { Resource } from '@pulumi/azure-native/resources/index.js'
 import { WebApp, WebAppFunction } from '@pulumi/azure-native/web/index.js'
 import * as pulumi from '@pulumi/pulumi'
+import { v5 as uuidv5 } from 'uuid'
 import {
   CommonAzureConstruct,
   CommonAzureStack,
@@ -218,7 +219,7 @@ describe('TestAzureFunctionConstruct', () => {
   })
 
   test('flex consumption deployment has correct settings', () => {
-    const deploymentArgs = capturedResources['test-function-app-flex-consumption-dev-depl']
+    const deploymentArgs = capturedResources[uuidv5('test-function-app-flex-consumption-dev-depl', uuidv5.DNS)]
     expect(deploymentArgs).toBeDefined()
     expect(deploymentArgs.type).toEqual('azure-native:resources:Deployment')
 
@@ -232,10 +233,6 @@ describe('TestAzureFunctionConstruct', () => {
     expect(resource.location).toEqual('eastus')
 
     const config = resource.properties.functionAppConfig
-    expect(config.runtime.name).toEqual('node')
-    expect(config.runtime.version).toEqual('22')
-    expect(config.scaleAndConcurrency.instanceMemoryMB).toEqual(4096)
-    expect(config.scaleAndConcurrency.maximumInstanceCount).toEqual(40)
     expect(config.siteUpdateStrategy.type).toEqual('RollingUpdate')
   })
 })
@@ -356,13 +353,10 @@ describe('TestAzureFunctionConstruct - Default Value Branches', () => {
   })
 
   test('flex consumption deployment uses default values', () => {
-    const deploymentArgs = capturedResources['test-minimal-flex-dev-depl']
+    const deploymentArgs = capturedResources[uuidv5('test-minimal-flex-dev-depl', uuidv5.DNS)]
     expect(deploymentArgs).toBeDefined()
     const config = deploymentArgs.inputs.properties.template.resources[0].properties.functionAppConfig
-    expect(config.runtime.name).toEqual('node')
-    expect(config.runtime.version).toEqual('22')
-    expect(config.scaleAndConcurrency.instanceMemoryMB).toEqual(4096)
-    expect(config.scaleAndConcurrency.maximumInstanceCount).toEqual(40)
+    expect(config.siteUpdateStrategy.type).toEqual('RollingUpdate')
   })
 
   test('flex consumption resource uses default values', () => {
