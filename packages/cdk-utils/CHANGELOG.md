@@ -1,5 +1,18 @@
 # @gradientedge/cdk-utils
 
+## 11.22.0
+
+### Minor Changes
+
+- [`39c870c`](https://github.com/gradientedge/cdk-utils/commit/39c870c8027cc26924fc587203a5b10a5393f4fb) Thanks [@despock](https://github.com/despock)! - feat: applying sensible defaults
+
+- [`1503a55`](https://github.com/gradientedge/cdk-utils/commit/1503a55607a09478263987d16982d5c912b6ab4d) Thanks [@despock](https://github.com/despock)! - fix: shortening deployment name and dependency
+
+### Patch Changes
+
+- Updated dependencies [[`39c870c`](https://github.com/gradientedge/cdk-utils/commit/39c870c8027cc26924fc587203a5b10a5393f4fb), [`1503a55`](https://github.com/gradientedge/cdk-utils/commit/1503a55607a09478263987d16982d5c912b6ab4d)]:
+  - @gradientedge/cdk-utils-azure@2.21.0
+
 ## 11.21.0
 
 ### Minor Changes
