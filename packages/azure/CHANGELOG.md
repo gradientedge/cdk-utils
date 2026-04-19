@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.23.0
+
+### Minor Changes
+
+- [`25749b4`](https://github.com/gradientedge/cdk-utils/commit/25749b4de52e7c8ba02a88498f9d965dadc5d4c6) Thanks [@despock](https://github.com/despock)! - feat: adding retries on namespace lookups, sanitising webapp deployments
+
 ## 2.22.0
 
 ### Minor Changes
