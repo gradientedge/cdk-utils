@@ -204,8 +204,7 @@ export class AzureStorageManager {
     props: ContainerSasTokenProps,
     storageAccount: StorageAccount
   ) {
-    const resourceGroupName =
-      props.resourceGroupName ?? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
+    const resourceGroupName = props.resourceGroupName ?? scope.resourceGroup.name
 
     return pulumi
       .all([storageAccount.name])

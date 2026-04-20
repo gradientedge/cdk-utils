@@ -1,7 +1,8 @@
 {
   "testContainerSas": {
     "expiry": "2040-12-31",
-    "permissions": "w"
+    "permissions": "w",
+    "resourceGroupName": "test-resource-group"
   },
   "testStorageAccount": {
     "accountName": "test-storage-account",
