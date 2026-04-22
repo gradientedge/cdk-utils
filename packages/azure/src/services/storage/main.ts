@@ -91,22 +91,25 @@ export class AzureStorageManager {
       { parent: scope, ...resourceOptions }
     )
 
-    new BlobServiceProperties(
-      `${id}-blob-props`,
-      {
-        ...props.blobProperties,
-        accountName: scope.resourceNameFormatter
-          .format(props.accountName?.toString(), scope.props.resourceNameOptions?.storageAccount)
-          .replace(/\W/g, '')
-          .toLowerCase(),
-        resourceGroupName,
-        deleteRetentionPolicy: props.blobProperties?.deleteRetentionPolicy ?? {
-          enabled: true,
-          days: 7,
+    if (!props.skipBlobServiceProperties) {
+      new BlobServiceProperties(
+        `${id}-blob-props`,
+        {
+          ...props.blobProperties,
+          blobServicesName: 'default',
+          accountName: scope.resourceNameFormatter
+            .format(props.accountName?.toString(), scope.props.resourceNameOptions?.storageAccount)
+            .replace(/\W/g, '')
+            .toLowerCase(),
+          resourceGroupName,
+          deleteRetentionPolicy: props.blobProperties?.deleteRetentionPolicy ?? {
+            enabled: true,
+            days: 7,
+          },
         },
-      },
-      { parent: scope, ...resourceOptions }
-    )
+        { parent: scope, ...resourceOptions }
+      )
+    }
 
     return storageAccount
   }
@@ -169,12 +172,14 @@ export class AzureStorageManager {
       `${id}-sb`,
       {
         ...props,
-        blobName: scope.resourceNameFormatter.format(
-          props.blobName?.toString(),
-          scope.props.resourceNameOptions?.storageBlob
-        ),
+        blobName: props.skipBlobNameFormatting
+          ? props.blobName
+          : scope.resourceNameFormatter.format(
+              props.blobName?.toString(),
+              scope.props.resourceNameOptions?.storageBlob
+            ),
         accountName: props.accountName,
-        containerName: `${props.containerName}-${scope.props.stage}`,
+        containerName: props.containerName,
         resourceGroupName,
       },
       { parent: scope, ...resourceOptions }
@@ -240,7 +245,11 @@ export class AzureStorageManager {
   ) {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
-    return new ManagementPolicy(`${id}`, props, { parent: scope, ...resourceOptions })
+    return new ManagementPolicy(
+      `${id}`,
+      { ...props, managementPolicyName: 'default' },
+      { parent: scope, ...resourceOptions }
+    )
   }
 
   /**

@@ -140,7 +140,7 @@ export class AzureServiceBusManager {
         duplicateDetectionHistoryTimeWindow: props.duplicateDetectionHistoryTimeWindow ?? 'PT1M',
         requiresDuplicateDetection: props.requiresDuplicateDetection ?? true,
         deadLetteringOnMessageExpiration: props.deadLetteringOnMessageExpiration ?? true,
-        defaultMessageTimeToLive: (props as any).defaultMessageTtl ?? 'P2D',
+        defaultMessageTimeToLive: props.defaultMessageTimeToLive ?? 'P14D',
         requiresSession: props.requiresSession ?? false,
         enablePartitioning: props.enablePartitioning ?? false,
       },

@@ -13,13 +13,16 @@ import { BaseAzureConfigProps } from '../../types/index.js'
 /** @category Interface */
 export interface StorageAccountProps extends StorageAccountArgs {
   blobProperties?: BlobServicePropertiesArgs
+  skipBlobServiceProperties?: boolean
 }
 
 /** @category Interface */
 export interface StorageContainerProps extends BlobContainerArgs, BaseAzureConfigProps {}
 
 /** @category Interface */
-export interface StorageBlobProps extends BaseAzureConfigProps, BlobArgs {}
+export interface StorageBlobProps extends BaseAzureConfigProps, BlobArgs {
+  skipBlobNameFormatting?: boolean
+}
 
 /** @category Interface */
 export interface ManagementPolicyProps extends ManagementPolicyArgs {}

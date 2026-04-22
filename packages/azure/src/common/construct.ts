@@ -102,10 +102,11 @@ export class CommonAzureConstruct extends ComponentResource {
     this.determineFullyQualifiedDomain()
   }
 
-  protected resolveStack(stackName: string) {
-    if (!stackName) throw new Error('Stack name undefined')
-    return new pulumi.StackReference(stackName, {
-      name: stackName,
+  protected resolveStack(id: string, stackName?: string) {
+    const name = stackName ?? id
+    if (!name) throw new Error('Stack name undefined')
+    return new pulumi.StackReference(id, {
+      name,
     })
   }
 
