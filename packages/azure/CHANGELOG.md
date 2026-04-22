@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.25.0
+
+### Minor Changes
+
+- [`6e84d65`](https://github.com/gradientedge/cdk-utils/commit/6e84d6513f3d6b797ca09ead6b54c587fbbf533d) Thanks [@despock](https://github.com/despock)! - feat: added support multiple stack resolution and skipping blob formatting
+
 ## 2.24.0
 
 ### Minor Changes
