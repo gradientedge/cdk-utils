@@ -1,5 +1,16 @@
 # @gradientedge/cdk-utils
 
+## 11.27.0
+
+### Minor Changes
+
+- [`9123a9b`](https://github.com/gradientedge/cdk-utils/commit/9123a9b590f662db76c5c31484a7d99b373de79f) Thanks [@despock](https://github.com/despock)! - feat: update to otel env vars
+
+### Patch Changes
+
+- Updated dependencies [[`9123a9b`](https://github.com/gradientedge/cdk-utils/commit/9123a9b590f662db76c5c31484a7d99b373de79f)]:
+  - @gradientedge/cdk-utils-azure@2.26.0
+
 ## 11.26.0
 
 ### Minor Changes
