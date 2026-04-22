@@ -138,8 +138,8 @@ export class SiteWithWebApp extends CommonAzureConstruct {
    */
   protected createWebAppSiteConfig() {
     this.site.environmentVariables = {
-      APPINSIGHTS_INSTRUMENTATIONKEY: this.applicationInsights.instrumentationKey,
-      APPLICATIONINSIGHTS_CONNECTION_STRING: this.applicationInsights.connectionString,
+      OTEL_APPINSIGHTS_INSTRUMENTATIONKEY: this.applicationInsights.instrumentationKey,
+      OTEL_APPLICATIONINSIGHTS_CONNECTION_STRING: this.applicationInsights.connectionString,
       ApplicationInsightsAgent_EXTENSION_VERSION: '~3',
       OTEL_SDK_DISABLED: 'false',
       BUILD_VERSION: '0.0.0',
