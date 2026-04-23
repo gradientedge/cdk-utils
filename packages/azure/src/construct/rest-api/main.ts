@@ -1,4 +1,9 @@
-import { getApiManagementServiceOutput, HostnameType, LoggerType } from '@pulumi/azure-native/apimanagement/index.js'
+import {
+  getApiManagementServiceOutput,
+  HostnameType,
+  listSubscriptionSecretsOutput,
+  LoggerType,
+} from '@pulumi/azure-native/apimanagement/index.js'
 import { getComponentOutput, GetComponentResult } from '@pulumi/azure-native/applicationinsights/index.js'
 import { PrincipalType } from '@pulumi/azure-native/authorization/index.js'
 import { getVaultOutput } from '@pulumi/azure-native/keyvault/index.js'
@@ -204,12 +209,22 @@ export class AzureRestApi extends CommonAzureConstruct {
       scope: '/apis',
     })
 
+    const subscriptionKey = pulumi
+      .all([this.api.apim.name, this.resourceGroup.name, apiManagementSubscription.name])
+      .apply(([serviceName, resourceGroupName, subscriptionName]) =>
+        listSubscriptionSecretsOutput({
+          serviceName,
+          resourceGroupName,
+          sid: subscriptionName,
+        }).apply(secrets => secrets.primaryKey ?? '')
+      )
+
     this.keyVaultManager.createKeyVaultSecret(`${this.id}-key-vault-api-subscription-key-secret`, this, {
       vaultName: this.api.authKeyVault.name,
       secretName: `${this.id}-subscription-key`,
       resourceGroupName: this.props.apiAuthKeyVault.resourceGroupName,
       properties: {
-        value: apiManagementSubscription.primaryKey.apply(key => key ?? ''),
+        value: subscriptionKey,
       },
     })
   }
