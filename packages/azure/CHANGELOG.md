@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.27.0
+
+### Minor Changes
+
+- [`06a5ea0`](https://github.com/gradientedge/cdk-utils/commit/06a5ea041acf0da6dc5083c10892a6f436e1fe1e) Thanks [@despock](https://github.com/despock)! - fix: resolving secret before populating
+
 ## 2.26.0
 
 ### Minor Changes
