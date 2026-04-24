@@ -1,5 +1,16 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.28.0
+
+### Minor Changes
+
+- [`e98f1b8`](https://github.com/gradientedge/cdk-utils/commit/e98f1b8fdb8aaa565ecf8c7bcd6c73d4729d3c5f) Thanks [@despock](https://github.com/despock)! - docs: adding JSDocs
+
+### Patch Changes
+
+- Updated dependencies [[`e98f1b8`](https://github.com/gradientedge/cdk-utils/commit/e98f1b8fdb8aaa565ecf8c7bcd6c73d4729d3c5f)]:
+  - @gradientedge/cdk-utils-common@2.2.0
+
 ## 2.27.0
 
 ### Minor Changes
