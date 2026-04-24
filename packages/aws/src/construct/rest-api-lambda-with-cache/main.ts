@@ -46,6 +46,9 @@ export abstract class RestApiLambdaWithCache extends RestApiLambda {
     this.id = id
   }
 
+  /**
+   * @summary Initialise and provision resources
+   */
   public initResources() {
     this.resolveVpc()
     this.resolveSecurityGroup()

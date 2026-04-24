@@ -24,11 +24,20 @@ import { CommonConstruct } from './construct.js'
  * @category Common
  */
 export class CommonStack extends Stack {
+  /** The default Node.js runtime used for Lambda functions */
   public static NODEJS_RUNTIME = Runtime.NODEJS_24_X
 
+  /** The common construct instance provisioned by this stack */
   construct: CommonConstruct
+  /** The resolved common stack properties */
   props: CommonStackProps
 
+  /**
+   * @summary Create a new CommonStack
+   * @param parent the CDK app
+   * @param name the stack name
+   * @param props the stack properties
+   */
   constructor(parent: App, name: string, props: StackProps) {
     super(parent, name, props)
 

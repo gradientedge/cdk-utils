@@ -10,15 +10,15 @@ import { DashboardRenderer, MissingKeys, PaneTemplate, RenderParams } from './ty
 
 /** @category Service */
 export class AzureDashboardRenderer implements DashboardRenderer {
-  private readonly paneTemplatePath: string
-  private readonly outputDir: string
+  readonly paneTemplatePath: string
+  readonly outputDir: string
 
   constructor(basePath?: string, outputDir?: string) {
     this.paneTemplatePath = basePath ?? path.join(appRoot.path, 'template', 'dashboard')
     this.outputDir = outputDir ?? path.join(appRoot.path, '.artifacts')
   }
 
-  private getPaneId(id: string): PaneTemplate {
+  protected getPaneId(id: string): PaneTemplate {
     const panePath = `${this.paneTemplatePath}/${id}.yaml`
     const paneFileContent = fs.readFileSync(panePath, 'utf-8')
     const paneTemplate = parse(paneFileContent)

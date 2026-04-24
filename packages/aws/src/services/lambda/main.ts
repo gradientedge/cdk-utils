@@ -63,6 +63,11 @@ export class LambdaManager {
     return lambdaLayer
   }
 
+  /**
+   * @summary Method to create Lambda Web Adapter layers for both x86_64 and ARM64 architectures
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   */
   public createWebAdapterLayer(id: string, scope: CommonConstruct) {
     return [
       LayerVersion.fromLayerVersionArn(
@@ -125,6 +130,7 @@ export class LambdaManager {
 
     const lambdaFunction = new Function(scope, `${id}`, {
       ...props,
+      /* When a VPC is provided, allow placement in public subnets (e.g. for NAT access) */
       allowPublicSubnet: !!vpc,
       architecture: props.architecture ?? Architecture.ARM_64,
       code,
@@ -144,8 +150,10 @@ export class LambdaManager {
         removalPolicy: RemovalPolicy.DESTROY,
         retention: scope.props.logRetention ?? props.logRetentionInDays,
       }),
+      /* Per-function concurrency takes precedence over the stack-wide default */
       reservedConcurrentExecutions:
         props.reservedConcurrentExecutions ?? scope.props.defaultReservedLambdaConcurrentExecutions,
+      /* Only L2 Role is accepted here — CfnRole (L1) is not compatible with the Function construct */
       role: role instanceof Role ? role : undefined,
       runtime: props.runtime ?? scope.props.nodejsRuntime ?? CommonStack.NODEJS_RUNTIME,
       securityGroups,
@@ -155,6 +163,8 @@ export class LambdaManager {
       vpcSubnets,
     })
 
+    /* When DLQ retries are enabled, wire the DLQ back as an SQS event source
+       so failed messages are automatically reprocessed by the same function */
     if (lambdaFunction.deadLetterQueue && props.dlq?.retriesEnabled) {
       lambdaFunction.addEventSource(
         new SqsEventSource(lambdaFunction.deadLetterQueue, {
@@ -164,6 +174,8 @@ export class LambdaManager {
       )
     }
 
+    /* Create aliases and optionally attach provisioned concurrency auto-scaling.
+       Provisioned concurrency requires an alias — it cannot be set on $LATEST. */
     if (props.lambdaAliases && !_.isEmpty(props.lambdaAliases)) {
       props.lambdaAliases.forEach(alias => {
         const aliasId = alias.id ?? `${id}-${alias.aliasName}`

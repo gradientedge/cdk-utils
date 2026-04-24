@@ -61,6 +61,12 @@ export class CloudflareZoneManager {
     )
   }
 
+  /**
+   * @summary Method to resolve an existing Cloudflare zone by its domain name
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param options optional zone lookup properties
+   */
   public resolveZone(id: string, scope: CommonCloudflareConstruct, options?: GetZoneProps) {
     const name = options?.filter?.name ?? scope.props.domainName
     return Zone.get(name, id)

@@ -87,6 +87,8 @@ export class StaticAssetDeployment extends CommonConstruct {
    * @summary Deploy the static assets into the static asset bucket
    */
   protected deployStaticAssets() {
+    /* Sources can be provided as either string paths (resolved relative to the
+       project root) or pre-built ISource objects for more flexibility */
     let sources: Array<ISource> = []
     if (
       Array.isArray(this.props.staticAssetSources) &&
@@ -101,6 +103,8 @@ export class StaticAssetDeployment extends CommonConstruct {
       sources = this.props.staticAssetSources as ISource[]
     }
 
+    /* Build optional config objects as empty objects and conditionally populate them,
+       then spread into the deployment — this avoids setting undefined properties */
     let distributionOptions: Pick<BucketDeploymentProps, 'distribution' | 'distributionPaths'> = {}
     if (this.cloudfrontDistribution) {
       distributionOptions = {

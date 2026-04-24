@@ -59,6 +59,8 @@ export class CloudWatchManager {
     if (!props.expression) throw new Error(`Could not find expression for Alarm props for id:${id}`)
     if (!props.metricProps) throw new Error(`Could not find metricProps for Alarm props for id:${id}`)
 
+    /* Build a keyed map of metrics (m0, m1, m2, ...) that aligns with the
+       metric references used in the MathExpression string (e.g. "m0 + m1") */
     const metrics: any = {}
     _.map(this.determineMetrics(scope, props.metricProps), (metric: watch.IMetric, index: number) => {
       metrics[`m${index}`] = metric
@@ -482,6 +484,10 @@ export class CloudWatchManager {
     const metrics: watch.IMetric[] = []
     if (metricProps) {
       metricProps.forEach((metricProp: MetricProps) => {
+        /* Start with any custom dimensions provided, then override based on
+           which service-specific fields are set. Note: these blocks are not
+           mutually exclusive — if multiple fields match, the last matching
+           block wins, since each reassigns metricDimensions entirely. */
         let metricDimensions: watch.DimensionHash = metricProp.dimensionsMap || {}
         if (metricProp.functionName) {
           metricDimensions = {
@@ -521,6 +527,7 @@ export class CloudWatchManager {
           }
         }
         if (metricProp.distributionId) {
+          /* CloudFront metrics are always reported as Region: Global */
           metricDimensions = {
             ...metricProp.dimensionsMap,
             DistributionId: `${metricProp.distributionId}`,
@@ -559,6 +566,8 @@ export class CloudWatchManager {
             RuleName: `${metricProp.ruleName}`,
           }
         }
+        /* When stageSuffix is enabled, append the stage to both metric name
+           and namespace to isolate metrics per deployment stage */
         const metric = new watch.Metric({
           dimensionsMap: metricDimensions,
           metricName: metricProp.stageSuffix ? `${metricProp.metricName}-${scope.props.stage}` : metricProp.metricName,

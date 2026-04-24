@@ -2,7 +2,13 @@ import { Construct } from 'constructs'
 
 import { BaseProps } from './types.js'
 
+/**
+ * Abstract base stack that all higher-level stacks extend.
+ * Provides common context resolution and domain configuration capabilities.
+ * @category Common
+ */
 export abstract class BaseStack extends Construct {
+  /** The base properties for the stack */
   props: BaseProps
 
   /**

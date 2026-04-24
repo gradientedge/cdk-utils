@@ -35,6 +35,11 @@ export class AzureRestApi extends CommonAzureConstruct {
   api: AzureApi = {} as AzureApi
   applicationInsights: Output<GetComponentResult>
 
+  /**
+   * @summary Create a new AzureRestApi
+   * @param id scoped id of the resource
+   * @param props the REST API properties
+   */
   constructor(id: string, props: AzureRestApiProps) {
     super(id, props)
     this.props = props
@@ -85,6 +90,9 @@ export class AzureRestApi extends CommonAzureConstruct {
    */
   protected createApiManagement() {
     if (this.props.apiManagement.useExistingApiManagement) {
+      /* Import existing APIM service outputs from another Pulumi stack.
+         The output keys (apiId, apiName, apiResourceGroupName) must match
+         the registerOutputs call at the bottom of this method. */
       if (this.props.apiManagement.apiStackName) {
         const apiStack = new pulumi.StackReference(this.props.apiManagement.apiStackName)
         this.api.id = apiStack.getOutput('apiId')
@@ -121,6 +129,9 @@ export class AzureRestApi extends CommonAzureConstruct {
       this.api.name = this.api.apim.name
       this.api.resourceGroupName = this.resourceGroup.name
 
+      /* Retrieve the APIM managed identity to grant Key Vault certificate access.
+         The identity must be resolved separately as it's not available until
+         the APIM service is created. */
       const apimIdentity = getApiManagementServiceOutput({
         serviceName: this.api.apim.name,
         resourceGroupName: this.resourceGroup.name,
@@ -139,6 +150,8 @@ export class AzureRestApi extends CommonAzureConstruct {
       }
     }
 
+    /* Register outputs for cross-stack consumption via StackReference.
+       These keys must match what consuming stacks expect in getOutput() calls. */
     this.registerOutputs({
       apiId: this.api.id,
       apiName: this.api.name,
@@ -209,6 +222,9 @@ export class AzureRestApi extends CommonAzureConstruct {
       scope: '/apis',
     })
 
+    /* Resolve the subscription's primary key through a double-async chain:
+       first resolve the APIM/resource group/subscription names, then fetch
+       the secrets from the Azure API to extract the primary key */
     const subscriptionKey = pulumi
       .all([this.api.apim.name, this.resourceGroup.name, apiManagementSubscription.name])
       .apply(([serviceName, resourceGroupName, subscriptionName]) =>

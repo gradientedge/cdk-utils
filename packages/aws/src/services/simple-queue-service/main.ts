@@ -38,6 +38,7 @@ export class SqsManager {
     if (!props.queueName) throw new Error(`Queue queueName undefined for ${id}`)
 
     let queueName = scope.resourceNameFormatter.format(props.queueName, scope.props.resourceNameOptions?.sqs)
+    /* AWS SQS requires FIFO queue names to end with the .fifo suffix */
     if (props.fifo) queueName += '.fifo'
 
     const queue = new Queue(scope, id, {

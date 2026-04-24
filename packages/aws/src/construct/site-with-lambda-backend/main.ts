@@ -119,6 +119,9 @@ export class SiteWithLambdaBackend extends CommonConstruct {
     this.resolveRegionalCertificate()
   }
 
+  /**
+   * @summary Resolve the global (edge) SSL certificate, optionally reading the ARN from SSM
+   */
   protected resolveGlobalCertificate() {
     if (
       this.props.siteCertificate.useExistingCertificate &&
@@ -139,6 +142,9 @@ export class SiteWithLambdaBackend extends CommonConstruct {
     )
   }
 
+  /**
+   * @summary Resolve the regional SSL certificate, optionally reading the ARN from SSM
+   */
   protected resolveRegionalCertificate() {
     if (
       this.props.siteRegionalCertificate.useExistingCertificate &&
@@ -192,6 +198,11 @@ export class SiteWithLambdaBackend extends CommonConstruct {
     this.siteLogBucket = this.s3Manager.createS3Bucket(`${this.id}-site-logs`, this, this.props.siteLogBucket)
   }
 
+  /**
+   * @summary Create a CloudFront cache policy with the specified TTL and behaviour settings
+   * @param id scoped id of the resource
+   * @param siteCachePolicy the cache policy properties
+   */
   protected createSiteCachePolicy(id: string, siteCachePolicy: SiteWithLambdaBackendCachePolicyProps) {
     if (!siteCachePolicy.cachePolicyName) throw new Error(`SiteCachePolicy cachePolicyName undefined for ${id}`)
 
@@ -208,6 +219,9 @@ export class SiteWithLambdaBackend extends CommonConstruct {
     })
   }
 
+  /**
+   * @summary Create the cache policy for the site origin and assign it to the default behaviour
+   */
   protected createSiteOriginCachePolicy() {
     if (!this.props.siteCachePolicy) return
     this.siteCachePolicy = this.createSiteCachePolicy(`${this.id}-site-cache-policy`, this.props.siteCachePolicy)
@@ -216,6 +230,9 @@ export class SiteWithLambdaBackend extends CommonConstruct {
     })
   }
 
+  /**
+   * @summary Create the origin request policy for the site distribution
+   */
   protected createSiteOriginRequestPolicy() {
     if (!this.props.siteOriginRequestPolicy) return
     if (!this.props.siteOriginRequestPolicy.originRequestPolicyName)
@@ -236,6 +253,10 @@ export class SiteWithLambdaBackend extends CommonConstruct {
     })
   }
 
+  /**
+   * @summary Create a CloudFront response headers policy with security headers
+   * @param props the response headers policy properties
+   */
   protected createResponseHeaderPolicy(props: SiteWithLambdaBackendResponseHeadersPolicyProps) {
     if (!props) return undefined
     if (!props.responseHeadersPolicyName)
@@ -257,6 +278,9 @@ export class SiteWithLambdaBackend extends CommonConstruct {
     })
   }
 
+  /**
+   * @summary Create the response headers policy for the site origin and assign it to the default behaviour
+   */
   protected createSiteOriginResponseHeadersPolicy() {
     if (!this.props.siteOriginResponseHeadersPolicy) return
     this.siteOriginResponseHeadersPolicy = this.createResponseHeaderPolicy(this.props.siteOriginResponseHeadersPolicy)
@@ -265,6 +289,9 @@ export class SiteWithLambdaBackend extends CommonConstruct {
     })
   }
 
+  /**
+   * @summary Create the HTTP origin backed by the Lambda function URL
+   */
   protected createSiteOrigin() {
     this.createSiteOriginResources()
     this.siteOrigin = new HttpOrigin(Fn.select(2, Fn.split('/', this.siteLambdaUrl.url)), {
@@ -274,6 +301,9 @@ export class SiteWithLambdaBackend extends CommonConstruct {
     })
   }
 
+  /**
+   * @summary Orchestrate creation of all Lambda-based origin resources
+   */
   protected createSiteOriginResources() {
     this.createSiteStaticAssetDeployment()
     this.createSiteLambdaPolicy()
@@ -285,8 +315,14 @@ export class SiteWithLambdaBackend extends CommonConstruct {
     this.createSiteLambdaUrl()
   }
 
+  /**
+   * @summary Create static asset deployment. Override to provide a deployment.
+   */
   protected createSiteStaticAssetDeployment() {}
 
+  /**
+   * @summary Create the IAM policy for the site Lambda function
+   */
   protected createSiteLambdaPolicy() {
     this.siteLambdaPolicy = new PolicyDocument({
       statements: [
@@ -299,10 +335,16 @@ export class SiteWithLambdaBackend extends CommonConstruct {
     })
   }
 
+  /**
+   * @summary Create the IAM role for the site Lambda function
+   */
   protected createSiteLambdaRole() {
     this.siteLambdaRole = this.iamManager.createRoleForLambda(`${this.id}-role`, this, this.siteLambdaPolicy)
   }
 
+  /**
+   * @summary Create the environment variables for the site Lambda function including Web Adapter config
+   */
   protected createSiteLambdaEnvironment() {
     this.siteLambdaEnvironment = {
       AWS_LAMBDA_EXEC_WRAPPER: this.props.siteExecWrapperPath ?? '/opt/bootstrap',
@@ -316,12 +358,21 @@ export class SiteWithLambdaBackend extends CommonConstruct {
     }
   }
 
+  /**
+   * @summary Create the Lambda Web Adapter layers for the site function
+   */
   protected createSiteLambdaLayers() {
     this.siteLambdaLayers = this.lambdaManager.createWebAdapterLayer(`${this.id}-web-adapter`, this)
   }
 
+  /**
+   * @summary Create the Lambda application code. Override to provide custom application code.
+   */
   protected createSiteLambdaApplication() {}
 
+  /**
+   * @summary Create the site Lambda function with the configured role, layers, and environment
+   */
   protected createSiteLambda() {
     this.siteLambdaFunction = this.lambdaManager.createLambdaFunction(
       `${this.id}-lambda`,
@@ -335,12 +386,19 @@ export class SiteWithLambdaBackend extends CommonConstruct {
     )
   }
 
+  /**
+   * @summary Create the Lambda function URL used as the CloudFront origin, with optional alias support
+   */
   protected createSiteLambdaUrl() {
+    /* Check if a 'current' alias is configured — when present, the function URL
+       points to the alias ARN (functionArn:aliasName) instead of $LATEST */
     const lambdaAlias = _.find(
       this.props.siteLambda.lambdaAliases,
       alias => alias.aliasName === LAMBDA_ALIAS_NAME_CURRENT
     )
 
+    /* When using an alias, import the function with sameEnvironment: true to
+       prevent CDK from generating cross-account/cross-region permissions */
     const lambdaFn = lambdaAlias
       ? Function.fromFunctionAttributes(this, `${this.id}-fn-alias`, {
           functionArn: `${this.siteLambdaFunction.functionArn}:${lambdaAlias.aliasName}`,
@@ -349,12 +407,15 @@ export class SiteWithLambdaBackend extends CommonConstruct {
       : this.siteLambdaFunction
     lambdaFn.node.addDependency(this.siteLambdaFunction)
 
+    /* Explicit dependencies ensure the function and alias exist before the URL is created */
     this.siteLambdaUrl = lambdaFn.addFunctionUrl({
       authType: FunctionUrlAuthType.NONE,
     })
     this.siteLambdaUrl.node.addDependency(this.siteLambdaFunction)
     this.siteLambdaUrl.node.addDependency(lambdaFn)
 
+    /* Grant public invoke access — the resource-based policy is applied via
+       grantInvokeUrl, restricted by the FunctionUrlAuthType condition */
     const principal = new AnyPrincipal()
     principal.addToPolicy(
       new PolicyStatement({

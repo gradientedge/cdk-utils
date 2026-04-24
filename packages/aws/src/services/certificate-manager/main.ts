@@ -55,6 +55,9 @@ export class AcmManager {
     let certificate
 
     if (props.useExistingCertificate) {
+      /* When importing an existing certificate, the ARN can be provided directly
+         or constructed from account/region/id — falls back to the current stack's
+         account and region when not explicitly specified */
       let certificateArn = props.certificateArn
       if (!certificateArn) {
         const certificateAccount = props.certificateAccount ? props.certificateAccount : Stack.of(scope).account

@@ -111,7 +111,7 @@ export class SSMParameterReader extends AwsCustomResource {
   }
 
   /**
-   *
+   * @summary Method to retrieve the SSM parameter value from the custom resource response
    */
   public getParameterValue(): string {
     return this.getResponseField('Parameter.Value')

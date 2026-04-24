@@ -61,6 +61,8 @@ export class EfsManager {
     if (!props) throw new Error(`EFS props undefined for ${id}`)
     if (!props.fileSystemName) throw new Error(`EFS fileSystemName undefined for ${id}`)
 
+    /* Appending a timestamp to the logical ID forces CDK to replace the file system
+       on each deployment — used when a fresh EFS volume is required per deploy */
     const fileSystemId = props.provisionNewOnDeployment ? `${id}-${new Date().getMilliseconds()}` : `${id}`
     const fileSystem = new FileSystem(scope, `${fileSystemId}`, {
       ...props,
@@ -82,6 +84,7 @@ export class EfsManager {
       for (const [index, accessPointOption] of accessPointOptions.entries()) {
         if (!accessPointOption.path)
           throw new Error(`Undefined access point path for option: [${accessPointOption}], id: [${id}]`)
+        /* Defaults use UID/GID 1000 (standard non-root Linux user) with 755 permissions */
         const accessPoint = fileSystem.addAccessPoint(`${id}-ap-${index}`, {
           createAcl: accessPointOption.createAcl ?? DEFAULT_CREATE_ACL,
           path: accessPointOption.path,

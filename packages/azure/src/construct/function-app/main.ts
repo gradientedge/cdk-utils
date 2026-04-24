@@ -66,6 +66,11 @@ export class AzureFunctionApp extends CommonAzureConstruct {
   applicationInsights: Output<GetComponentResult>
   functionDashboard: Dashboard
 
+  /**
+   * @summary Create a new AzureFunctionApp
+   * @param id scoped id of the resource
+   * @param props the function app properties
+   */
   constructor(id: string, props: AzureFunctionAppProps) {
     super(id, props)
     this.props = props

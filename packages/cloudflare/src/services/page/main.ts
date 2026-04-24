@@ -89,6 +89,12 @@ export class CloudflarePageManager {
     )
   }
 
+  /**
+   * @summary Method to deploy a Cloudflare Pages project using wrangler CLI
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props the pages project deployment properties
+   */
   public deployPagesProject(id: string, scope: CommonCloudflareConstruct, props: PagesProjectDeployProps) {
     if (!props) throw new Error(`Props undefined for ${id}`)
 

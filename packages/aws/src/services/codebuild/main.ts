@@ -22,22 +22,22 @@ import { CommonConstruct } from '../../common/index.js'
  */
 export class CodeBuildManager {
   /**
-   *
-   * @param id
-   * @param scope
-   * @param dockerfilePath
+   * @summary Method to create a Docker image used for CloudFront cache invalidation
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param dockerfilePath the path to the Dockerfile
    */
   public createImageForCloudfrontInvalidation(id: string, scope: CommonConstruct, dockerfilePath: string) {
     return scope.ecrManager.createDockerImage(`${id}-build-image`, scope, dockerfilePath)
   }
 
   /**
-   *
-   * @param id
-   * @param scope
-   * @param dockerFilepath
-   * @param distributionId
-   * @param paths
+   * @summary Method to create a CodeBuild project for invalidating a CloudFront distribution cache
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param dockerFilepath the path to the Dockerfile for the build image
+   * @param distributionId the CloudFront distribution ID to invalidate
+   * @param paths optional invalidation paths (defaults to /*)
    */
   public createProjectForCloudfrontInvalidation(
     id: string,

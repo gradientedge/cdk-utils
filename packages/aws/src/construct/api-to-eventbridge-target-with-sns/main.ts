@@ -83,6 +83,9 @@ export class ApiToEventBridgeTargetWithSns extends CommonConstruct {
     this.apiResource = 'notify'
   }
 
+  /**
+   * @summary Initialise and provision resources
+   */
   public initResources() {
     /* application related resources */
     this.resolveSecrets()

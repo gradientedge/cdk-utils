@@ -28,6 +28,11 @@ export class AzureRestApiFunction extends AzureFunctionApp {
   props: AzureRestApiFunctionProps
   api: AzureApiFunction = {} as AzureApiFunction
 
+  /**
+   * @summary Create a new AzureRestApiFunction
+   * @param id scoped id of the resource
+   * @param props the REST API function properties
+   */
   constructor(id: string, props: AzureRestApiFunctionProps) {
     super(id, props)
     this.props = props

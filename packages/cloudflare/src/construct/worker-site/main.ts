@@ -39,6 +39,12 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
   workerPlainTextBindingEnvironmentVariables: WorkersScriptBinding[] = []
   workerSecretTextBindingEnvironmentVariables: WorkersScriptBinding[] = []
 
+  /**
+   * @summary Create a new CloudflareWorkerSite
+   * @param id scoped id of the resource
+   * @param props the worker site properties
+   * @param options optional Pulumi component resource options
+   */
   constructor(id: string, props: CloudflareWorkerSiteProps, options?: ComponentResourceOptions) {
     super(id, props)
     this.props = props

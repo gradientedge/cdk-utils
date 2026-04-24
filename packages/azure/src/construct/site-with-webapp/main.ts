@@ -30,6 +30,11 @@ export class SiteWithWebApp extends CommonAzureConstruct {
   applicationInsights: Output<GetComponentResult>
   site: Site = {} as Site
 
+  /**
+   * @summary Create a new SiteWithWebApp
+   * @param id scoped id of the resource
+   * @param props the site with web app properties
+   */
   constructor(id: string, props: SiteWithWebAppProps) {
     super(id, props)
     this.props = props

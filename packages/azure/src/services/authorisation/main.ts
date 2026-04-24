@@ -213,6 +213,11 @@ export class AzureAuthorisationManager {
     )
   }
 
+  /**
+   * @summary Method to resolve the full role definition ID from a subscription and role definition
+   * @param scope scope in which this resource is defined
+   * @param roleDefinitionId the role definition identifier to resolve
+   */
   public resolveRoleDefinitionId(scope: CommonAzureConstruct, roleDefinitionId: RoleDefinitionId) {
     if (!scope.props.subscriptionId) throw Error('Subscription id undefined')
     return `/subscriptions/${scope.props.subscriptionId}${roleDefinitionId}`

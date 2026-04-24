@@ -31,11 +31,17 @@ export class ApplicationConfiguration extends CommonConstruct {
     this.id = id
   }
 
+  /**
+   * @summary Initialise and provision resources
+   */
   public initResources() {
     this.createConfiguration()
     this.resolveEnvironmentVariables()
   }
 
+  /**
+   * @summary Create all AppConfig resources for the application configuration
+   */
   protected createConfiguration() {
     this.createAppConfigApplication()
     this.createAppConfigEnvironment()
@@ -45,6 +51,9 @@ export class ApplicationConfiguration extends CommonConstruct {
     this.createAppConfigDeployment()
   }
 
+  /**
+   * @summary Create the AppConfig application resource
+   */
   protected createAppConfigApplication() {
     this.appConfigApplication = this.appConfigManager.createApplication(
       `${this.id}-ac-application`,
@@ -53,6 +62,9 @@ export class ApplicationConfiguration extends CommonConstruct {
     )
   }
 
+  /**
+   * @summary Create the AppConfig environment resource
+   */
   protected createAppConfigEnvironment() {
     this.appConfigEnvironment = this.appConfigManager.createEnvironment(
       `${this.id}-ac-environment`,
@@ -62,6 +74,9 @@ export class ApplicationConfiguration extends CommonConstruct {
     )
   }
 
+  /**
+   * @summary Create the AppConfig configuration profile resource
+   */
   protected createAppConfigProfile() {
     this.appConfigProfile = this.appConfigManager.createConfigurationProfile(
       `${this.id}-ac-profile`,
@@ -71,6 +86,9 @@ export class ApplicationConfiguration extends CommonConstruct {
     )
   }
 
+  /**
+   * @summary Create the AppConfig hosted configuration version with the provided content
+   */
   protected createAppConfigVersion() {
     this.appConfigVersion = new CfnHostedConfigurationVersion(this, `${this.id}-ac-configuration`, {
       applicationId: Fn.ref(this.appConfigApplication.logicalId),
@@ -80,6 +98,9 @@ export class ApplicationConfiguration extends CommonConstruct {
     })
   }
 
+  /**
+   * @summary Create or resolve the AppConfig deployment strategy
+   */
   protected createAppConfigDeploymentStrategy() {
     if (!this.props.appConfig.deploymentStrategy) return
 
@@ -108,6 +129,9 @@ export class ApplicationConfiguration extends CommonConstruct {
     })
   }
 
+  /**
+   * @summary Create the AppConfig deployment to roll out the configuration
+   */
   protected createAppConfigDeployment() {
     new CfnDeployment(this, `${this.id}-app-config-deployment`, {
       applicationId: Fn.ref(this.appConfigApplication.logicalId),
@@ -118,6 +142,9 @@ export class ApplicationConfiguration extends CommonConstruct {
     })
   }
 
+  /**
+   * @summary Resolve environment variables containing AppConfig resource identifiers for Lambda consumption
+   */
   public resolveEnvironmentVariables(): any {
     return {
       APP_CONFIG_APPLICATION_ID: Fn.ref(this.appConfigApplication.logicalId),

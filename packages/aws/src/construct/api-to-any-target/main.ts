@@ -52,6 +52,9 @@ export class ApiToAnyTarget extends CommonConstruct {
     this.apiToAnyTargetRestApi = new ApiToAnyTargetRestApi()
   }
 
+  /**
+   * @summary Initialise and provision resources
+   */
   public initResources() {
     /* application related resources */
     this.resolveSecrets()
@@ -111,6 +114,9 @@ export class ApiToAnyTarget extends CommonConstruct {
     )
   }
 
+  /**
+   * @summary Create or resolve the API Gateway REST API for the any-target integration
+   */
   protected createApiToAnyTargetRestApi() {
     if (this.props.api.useExisting && this.props.api.importedRestApiRef) {
       this.apiToAnyTargetRestApi.api = RestApi.fromRestApiId(
@@ -170,6 +176,10 @@ export class ApiToAnyTarget extends CommonConstruct {
     this.addCfnOutput(`${this.id}-restApiRootResourceId`, this.apiToAnyTargetRestApi.api.root.resourceId)
   }
 
+  /**
+   * @summary Create an API resource with the specified integration and method configuration
+   * @param apiResourceProps the resource properties including path, integration, and authorizer
+   */
   protected createApiToAnyTargetResource(apiResourceProps: ApiToAnyTargetRestApiResource) {
     if (!this.props.api.withResource) return
     let rootResource
@@ -202,6 +212,9 @@ export class ApiToAnyTarget extends CommonConstruct {
     )
   }
 
+  /**
+   * @summary Create the custom domain for the API Gateway
+   */
   protected createApiDomain() {
     if (this.props.api.useExisting) return
     this.apiToAnyTargetRestApi.domain = this.apiManager.createApiDomain(
@@ -214,6 +227,9 @@ export class ApiToAnyTarget extends CommonConstruct {
     )
   }
 
+  /**
+   * @summary Create the base path mapping for the API custom domain
+   */
   protected createApiBasePathMapping() {
     if (this.props.api.useExisting) return
     new BasePathMapping(this, `${this.id}-base-bath-mapping`, {
@@ -224,6 +240,9 @@ export class ApiToAnyTarget extends CommonConstruct {
     })
   }
 
+  /**
+   * @summary Create Route53 DNS records for the API custom domain
+   */
   protected createApiRouteAssets() {
     if (this.props.api.useExisting) return
     this.route53Manager.createApiGatewayARecord(

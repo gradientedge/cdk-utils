@@ -33,6 +33,9 @@ export class ApiToLambdaTarget extends CommonConstruct {
     this.apiToLambdaTargetRestApi = new ApiToLambdaTargetRestApi()
   }
 
+  /**
+   * @summary Initialise and provision resources
+   */
   public initResources() {
     this.resolveSecrets()
     this.resolveHostedZone()
@@ -131,6 +134,9 @@ export class ApiToLambdaTarget extends CommonConstruct {
     }
   }
 
+  /**
+   * @summary Resolve an existing Lambda function by name for the API integration
+   */
   protected resolveApiToLambdaTargetFunction() {
     this.apiToLambdaTargetRestApi.lambda = Function.fromFunctionName(
       this,
@@ -193,6 +199,9 @@ export class ApiToLambdaTarget extends CommonConstruct {
     this.apiToLambdaTargetRestApi.resource = rootResource.addResource(this.props.api.resource ?? this.apiResource)
   }
 
+  /**
+   * @summary Create the IAM policy for the Lambda target integration
+   */
   protected createApiToLambdaTargetPolicy() {
     this.apiToLambdaTargetRestApi.policy = new PolicyDocument({
       statements: [

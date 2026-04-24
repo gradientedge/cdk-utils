@@ -52,40 +52,78 @@ import { CommonStackProps } from './types.js'
  * @category Common
  */
 export class CommonConstruct extends Construct {
+  /** The common stack properties for the construct */
   props: CommonStackProps
+  /** Utility for formatting resource names with prefix/suffix conventions */
   resourceNameFormatter: ResourceNameFormatter
+  /** Manager for AWS Certificate Manager operations */
   acmManager: AcmManager
+  /** Manager for API Gateway operations */
   apiManager: ApiManager
+  /** Manager for AWS AppConfig operations */
   appConfigManager: AppConfigManager
+  /** Manager for AWS CodeBuild operations */
   codeBuildManager: CodeBuildManager
+  /** Manager for CloudFront distribution operations */
   cloudFrontManager: CloudFrontManager
+  /** Manager for CloudTrail operations */
   cloudTrailManager: CloudTrailManager
+  /** Manager for CloudWatch operations */
   cloudWatchManager: CloudWatchManager
+  /** Manager for DynamoDB operations */
   dynamodbManager: DynamodbManager
+  /** Manager for Elastic Container Registry operations */
   ecrManager: EcrManager
+  /** Manager for Elastic Container Service operations */
   ecsManager: EcsManager
+  /** Manager for Elastic File System operations */
   efsManager: EfsManager
+  /** Manager for Elastic Kubernetes Service operations */
   eksManager: EksManager
+  /** Manager for ElastiCache operations */
   elasticacheManager: ElastiCacheManager
+  /** Manager for EventBridge operations */
   eventManager: EventManager
+  /** Manager for EventBridge target operations */
   eventTargetManager: EventTargetManager
+  /** Manager for CloudWatch Evidently operations */
   evidentlyManager: EvidentlyManager
+  /** Manager for IAM operations */
   iamManager: IamManager
+  /** Manager for KMS operations */
   kmsManager: KmsManager
+  /** Manager for Lambda operations */
   lambdaManager: LambdaManager
+  /** Manager for CloudWatch Logs operations */
   logManager: LogManager
+  /** Manager for Route53 operations */
   route53Manager: Route53Manager
+  /** Manager for S3 operations */
   s3Manager: S3Manager
+  /** Manager for Secrets Manager operations */
   secretsManager: SecretsManager
+  /** Manager for Step Functions operations */
   sfnManager: SfnManager
+  /** Manager for SNS operations */
   snsManager: SnsManager
+  /** Manager for SQS operations */
   sqsManager: SqsManager
+  /** Manager for Systems Manager operations */
   ssmManager: SsmManager
+  /** Manager for VPC operations */
   vpcManager: VpcManager
+  /** Manager for WAF operations */
   wafManager: WafManager
 
+  /** The fully qualified domain name resolved from domainName and subDomain */
   fullyQualifiedDomainName: string
 
+  /**
+   * @summary Create a new CommonConstruct
+   * @param parent the parent construct
+   * @param id scoped id of the resource
+   * @param props the common stack properties
+   */
   constructor(parent: Construct, id: string, props: CommonStackProps) {
     super(parent, id)
     this.props = props

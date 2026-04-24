@@ -42,6 +42,12 @@ export class CloudflarePagesStaticSite extends CommonCloudflareConstruct {
   sitePagesPreviewSecrets: { [key: string]: PagesProjectDeploymentConfigsPreviewEnvVars }
   siteDeploymentDependsOn: any
 
+  /**
+   * @summary Create a new CloudflarePagesStaticSite
+   * @param id scoped id of the resource
+   * @param props the pages static site properties
+   * @param options optional Pulumi component resource options
+   */
   constructor(id: string, props: CloudflarePagesStaticSiteProps, options?: ComponentResourceOptions) {
     super(id, props)
     this.props = props

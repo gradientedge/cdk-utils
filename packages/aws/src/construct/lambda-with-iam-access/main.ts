@@ -73,12 +73,18 @@ export class LambdaWithIamAccess extends CommonConstruct {
     this.createIamSecretForLambdaFunction()
   }
 
+  /**
+   * @summary Resolve the VPC for the Lambda function if a VPC name is provided
+   */
   protected resolveVpc() {
     if (this.props.vpcName) {
       this.lambdaVpc = this.vpcManager.retrieveCommonVpc(`${this.id}-vpc`, this, this.props.vpcName)
     }
   }
 
+  /**
+   * @summary Resolve the security groups for the Lambda function from an exported value
+   */
   protected resolveSecurityGroups() {
     if (this.props.securityGroupExportName) {
       const lambdaSecurityGroup = SecurityGroup.fromSecurityGroupId(
@@ -91,10 +97,19 @@ export class LambdaWithIamAccess extends CommonConstruct {
     }
   }
 
+  /**
+   * @summary Resolve the EFS access point for the Lambda function. Override to provide an access point.
+   */
   protected resolveAccessPoint() {}
 
+  /**
+   * @summary Resolve the EFS mount path for the Lambda function. Override to provide a mount path.
+   */
   protected resolveMountPath() {}
 
+  /**
+   * @summary Resolve the VPC subnets for the Lambda function. Override to provide specific subnets.
+   */
   protected resolveVpcSubnets() {}
 
   /**
@@ -193,6 +208,8 @@ export class LambdaWithIamAccess extends CommonConstruct {
       userName: this.resourceNameFormatter.format(`${this.id}-user`),
     })
 
+    /* The wildcard suffix on the ARN is needed to match alias-qualified ARNs
+       (e.g. arn:...:function:name:aliasName) for InvokeFunction permission */
     new Policy(this, `${this.id}-lambda-user-policy`, {
       policyName: this.resourceNameFormatter.format(`${this.id}-policy`),
       statements: [
@@ -222,6 +239,8 @@ export class LambdaWithIamAccess extends CommonConstruct {
       })
     }
 
+    /* Stage is included in the logical ID to avoid collisions when deploying
+       multiple stages to the same AWS account */
     this.lambdaUserAccessKey = new CfnAccessKey(this, `${this.id}-access-key-${this.props.stage}`, {
       userName: this.lambdaIamUser.userName,
     })
@@ -237,6 +256,9 @@ export class LambdaWithIamAccess extends CommonConstruct {
       this.props.lambdaSecret
     )
 
+    /* Override the L1 CfnSecret to disable auto-generated secret string and inject
+       the IAM access key credentials instead. We use a template literal (not JSON.stringify)
+       because the values contain CloudFormation Ref/GetAtt tokens that must not be escaped. */
     const cfnSecret = this.lambdaUserAccessSecret.node.defaultChild as CfnSecret
     cfnSecret.generateSecretString = undefined
     cfnSecret.secretString = `{ "ACCESS_KEY_ID": "${this.lambdaUserAccessKey.ref}", "ACCESS_KEY_SECRET": "${this.lambdaUserAccessKey.attrSecretAccessKey}" }`

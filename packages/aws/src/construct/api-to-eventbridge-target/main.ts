@@ -74,6 +74,9 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
     this.apiResource = 'notify'
   }
 
+  /**
+   * @summary Initialise and provision resources
+   */
   public initResources() {
     /* application related resources */
     this.resolveSecrets()
@@ -208,6 +211,9 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
     )
   }
 
+  /**
+   * @summary Create the IAM policy for the EventBridge target integration
+   */
   protected createApiToEventBridgeTargetPolicy() {
     this.apiToEventBridgeTargetRestApi.policy = new PolicyDocument({
       statements: [this.iamManager.statementForPutEvents()],

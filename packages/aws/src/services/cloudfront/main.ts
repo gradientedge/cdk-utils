@@ -54,6 +54,12 @@ import { CloudfrontFunctionProps, DistributionProps } from './types.js'
  * @category Service
  */
 export class CloudFrontManager {
+  /**
+   * @summary Method to create a CloudFront Origin Access Identity
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param accessBucket optional S3 bucket to grant read access to the OAI
+   */
   public createOriginAccessIdentity(id: string, scope: CommonConstruct, accessBucket?: IBucket) {
     const oai = new OriginAccessIdentity(scope, `${id}`, {
       comment: `${id} - ${scope.props.stage} stage`,
@@ -312,6 +318,11 @@ export class CloudFrontManager {
     return cloudfrontFunction
   }
 
+  /**
+   * @summary Method to resolve an existing CloudFront distribution by its attributes
+   * @param scope scope in which this resource is defined
+   * @param props the distribution attributes to look up
+   */
   public resolveDistribution(scope: CommonConstruct, props: DistributionAttributes): IDistribution {
     return Distribution.fromDistributionAttributes(scope, `${scope.node.id}-sa-distribution`, props)
   }

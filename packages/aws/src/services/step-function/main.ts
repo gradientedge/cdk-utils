@@ -54,6 +54,9 @@ import {
   SfnWaitProps,
 } from './types.js'
 
+/* Default retry configuration applied to all step function steps when no
+   explicit retries are provided: exponential backoff (2x) starting at 30s,
+   up to 6 attempts, catching all error types */
 const DEFAULT_RETRY_CONFIG = [
   {
     backoffRate: 2,
@@ -356,6 +359,8 @@ export class SfnManager {
     skipExecution?: boolean
   ) {
     if (!props) throw new Error(`Step props undefined for ${id}`)
+    /* When skipExecution is true, substitute a no-op Pass step instead of the Lambda
+       invocation — useful for conditionally disabling steps without changing the workflow topology */
     if (skipExecution) return this.createPassStep(id, scope, { comment: props.comment, name: props.name })
     const step = new LambdaInvoke(scope, `${props.name}`, {
       ...props,

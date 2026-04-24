@@ -2,10 +2,21 @@ import { Construct } from 'constructs'
 
 import { CommonStackProps, ResourceNameFormatterProps } from './types.js'
 
-/** @category Common */
+/**
+ * Utility class to format resource names with configurable prefix, suffix, and stage conventions.
+ * Ensures consistent naming across all provisioned AWS resources.
+ * @category Common
+ */
 export class ResourceNameFormatter extends Construct {
+  /** The common stack properties used for resource name formatting */
   props: CommonStackProps
 
+  /**
+   * @summary Create a new ResourceNameFormatter
+   * @param parent the parent construct
+   * @param id scoped id of the resource
+   * @param props the common stack properties
+   */
   constructor(parent: Construct, id: string, props: CommonStackProps) {
     super(parent, id)
     this.props = props

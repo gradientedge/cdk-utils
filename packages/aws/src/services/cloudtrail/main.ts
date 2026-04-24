@@ -60,6 +60,8 @@ export class CloudTrailManager {
       ...props,
       cloudWatchLogsLogGroupArn: logGroup.attrArn,
       cloudWatchLogsRoleArn: role.attrArn,
+      /* Track only S3 data write events (not management events) to reduce
+         noise and cost — reads are excluded to focus on mutation auditing */
       eventSelectors: [
         {
           dataResources: [
@@ -78,6 +80,8 @@ export class CloudTrailManager {
       trailName: scope.resourceNameFormatter.format(props.trailName, scope.props.resourceNameOptions?.cloudtrail),
     })
 
+    /* CloudTrail requires the bucket policy (write permissions), log group,
+       and IAM role to exist before the trail can be created */
     cloudTrail.addDependency(logBucketPolicy)
     cloudTrail.addDependency(logGroup)
     cloudTrail.addDependency(role)

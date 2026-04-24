@@ -28,6 +28,11 @@ export class AzureEventHandler extends AzureFunctionApp {
   eventGridTopic: Topic | Output<GetTopicResult>
   serviceBus: EventHandlerServiceBus
 
+  /**
+   * @summary Create a new AzureEventHandler
+   * @param id scoped id of the resource
+   * @param props the event handler properties
+   */
   constructor(id: string, props: AzureEventHandlerProps) {
     super(id, props)
     this.props = props
@@ -254,6 +259,9 @@ export class AzureEventHandler extends AzureFunctionApp {
     })
   }
 
+  /**
+   * @summary Override to extend the function app site config with service bus connection strings
+   */
   protected createFunctionAppSiteConfig() {
     super.createFunctionAppSiteConfig()
 
@@ -275,6 +283,9 @@ export class AzureEventHandler extends AzureFunctionApp {
     ]
   }
 
+  /**
+   * @summary Override to extend the dashboard variables with service bus and event grid specifics
+   */
   protected dashboardVariables(): Record<string, any> {
     const variables = super.dashboardVariables()
     return {

@@ -312,6 +312,9 @@ export class IamManager {
     return new PolicyStatement({
       actions: ['logs:CreateLogStream'],
       effect: Effect.ALLOW,
+      /* Note: the log stream name pattern follows CloudTrail's convention:
+         {accountId}_CloudTrail_{region}. The eu-west-1 suffix is hard-coded
+         to match the expected trail region for this deployment. */
       resources: [
         `arn:aws:logs:${Stack.of(scope).region}:${Stack.of(scope).account}:log-group:${
           logGroup.logGroupName
@@ -342,6 +345,8 @@ export class IamManager {
     return new PolicyStatement({
       actions: ['logs:PutLogEvents'],
       effect: Effect.ALLOW,
+      /* Note: log stream name follows CloudTrail convention — eu-west-1 is
+         hard-coded to match the expected trail region for this deployment */
       resources: [
         `arn:aws:logs:${Stack.of(scope).region}:${Stack.of(scope).account}:log-group:${
           logGroup.logGroupName

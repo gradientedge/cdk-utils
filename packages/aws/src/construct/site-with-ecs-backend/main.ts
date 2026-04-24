@@ -145,6 +145,9 @@ export class SiteWithEcsBackend extends CommonConstruct {
     this.resolveRegionalCertificate()
   }
 
+  /**
+   * @summary Resolve the global (edge) SSL certificate, optionally reading the ARN from SSM
+   */
   protected resolveGlobalCertificate() {
     if (
       this.props.siteCertificate.useExistingCertificate &&
@@ -165,6 +168,9 @@ export class SiteWithEcsBackend extends CommonConstruct {
     )
   }
 
+  /**
+   * @summary Resolve the regional SSL certificate, optionally reading the ARN from SSM
+   */
   protected resolveRegionalCertificate() {
     if (
       this.props.siteRegionalCertificate.useExistingCertificate &&
@@ -350,6 +356,8 @@ export class SiteWithEcsBackend extends CommonConstruct {
 
     fargateService.loadBalancer.logAccessLogs(this.siteLogBucket, 'alb')
 
+    /* Configure auto-scaling policies — each scaling dimension is independent
+       and only enabled when its corresponding threshold is set in props */
     if (this.props.siteTask.siteScaling) {
       const scalableTaskCount = this.siteEcsService.autoScaleTaskCount({
         maxCapacity: this.props.siteTask.siteScaling.maxCapacity ?? 4,
@@ -390,7 +398,8 @@ export class SiteWithEcsBackend extends CommonConstruct {
         this.props.siteFileSystemAccessPoints
       )
 
-      /* allow access to/from EFS from Fargate ECS service */
+      /* Allow bidirectional NFS traffic between EFS and the Fargate service —
+         both directions are required for the EFS mount to function correctly */
       this.siteFileSystem.connections.allowDefaultPortFrom(this.siteEcsService.connections)
       this.siteFileSystem.connections.allowDefaultPortTo(this.siteEcsService.connections)
 
@@ -435,6 +444,11 @@ export class SiteWithEcsBackend extends CommonConstruct {
     this.siteLogBucket = this.s3Manager.createS3Bucket(`${this.id}-site-logs`, this, this.props.siteLogBucket)
   }
 
+  /**
+   * @summary Create a CloudFront cache policy with the specified TTL and behaviour settings
+   * @param id scoped id of the resource
+   * @param siteCachePolicy the cache policy properties
+   */
   protected createSiteCachePolicy(id: string, siteCachePolicy: SiteCachePolicyProps) {
     if (!siteCachePolicy.cachePolicyName) throw new Error(`SiteCachePolicy cachePolicyName undefined for ${id}`)
 
@@ -451,6 +465,9 @@ export class SiteWithEcsBackend extends CommonConstruct {
     })
   }
 
+  /**
+   * @summary Create the cache policy for the site origin and assign it to the default behaviour
+   */
   protected createSiteOriginCachePolicy() {
     if (!this.props.siteCachePolicy) return
     this.siteCachePolicy = this.createSiteCachePolicy(`${this.id}-site-cache-policy`, this.props.siteCachePolicy)
@@ -459,6 +476,9 @@ export class SiteWithEcsBackend extends CommonConstruct {
     })
   }
 
+  /**
+   * @summary Create the origin request policy for the site distribution
+   */
   protected createSiteOriginRequestPolicy() {
     if (!this.props.siteOriginRequestPolicy) return
     if (!this.props.siteOriginRequestPolicy.originRequestPolicyName)
@@ -479,6 +499,10 @@ export class SiteWithEcsBackend extends CommonConstruct {
     })
   }
 
+  /**
+   * @summary Create a CloudFront response headers policy with security headers
+   * @param props the response headers policy properties
+   */
   protected createResponseHeaderPolicy(props: SiteResponseHeadersPolicyProps) {
     if (!props) return undefined
     if (!props.responseHeadersPolicyName)
@@ -500,6 +524,9 @@ export class SiteWithEcsBackend extends CommonConstruct {
     })
   }
 
+  /**
+   * @summary Create the response headers policy for the site origin and assign it to the default behaviour
+   */
   protected createSiteOriginResponseHeadersPolicy() {
     if (!this.props.siteOriginResponseHeadersPolicy) return
     this.siteOriginResponseHeadersPolicy = this.createResponseHeaderPolicy(this.props.siteOriginResponseHeadersPolicy)
@@ -508,6 +535,9 @@ export class SiteWithEcsBackend extends CommonConstruct {
     })
   }
 
+  /**
+   * @summary Create the HTTP origin pointing to the ECS backend service
+   */
   protected createSiteOrigin() {
     this.siteOrigin = new HttpOrigin(this.siteInternalDomainName, {
       httpPort: this.props.siteTask.listenerPort,

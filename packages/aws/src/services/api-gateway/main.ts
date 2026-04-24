@@ -156,6 +156,8 @@ export class ApiManager {
   ) {
     const methods = allowedMethods ?? Cors.ALL_METHODS
 
+    /* enableDefaultCors uses strict equality — only `false` disables CORS.
+       When CORS is disabled, OPTIONS requests are routed to the mock integration instead. */
     let defaultCorsPreflightOptions
     if (enableDefaultCors === false) {
       defaultCorsPreflightOptions = undefined
@@ -172,6 +174,8 @@ export class ApiManager {
       defaultCorsPreflightOptions: defaultCorsPreflightOptions,
     })
 
+    /* When CORS is disabled, route OPTIONS to the mock integration for manual
+       CORS handling; all other methods use the real integration */
     _.forEach(methods, method => {
       if (enableDefaultCors === false && mockIntegration && method === 'OPTIONS') {
         resource.addMethod(method, mockIntegration, {
@@ -188,6 +192,8 @@ export class ApiManager {
     })
     createCfnOutput(`${id}-${path}ResourceId`, scope, resource.resourceId)
 
+    /* Create a greedy proxy resource ({path+}) to catch all sub-paths.
+       Uses proxyIntegration if provided, otherwise falls back to the main integration. */
     if (addProxy) {
       const resourceProxy = resource.addResource(`{${path}+}`, {
         defaultCorsPreflightOptions: defaultCorsPreflightOptions,

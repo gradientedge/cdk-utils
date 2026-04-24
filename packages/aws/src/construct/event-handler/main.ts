@@ -44,6 +44,9 @@ export class EventHandler extends CommonConstruct {
     this.handler = new Handler()
   }
 
+  /**
+   * @summary Initialise and provision resources
+   */
   public initResources() {
     this.createSQSEventSource()
     this.createWorkflow()
@@ -133,7 +136,10 @@ export class EventHandler extends CommonConstruct {
    * @summary Method to create an event archive if the event rule is not a scheduled one.
    */
   protected createEventArchive() {
-    /* do not enable for scheduled events */
+    /* Skip archiving when:
+       - no event rule is configured
+       - the rule is schedule-based (scheduled events are not worth archiving)
+       - archiving is explicitly disabled */
     if (
       !this.props.eventRule ||
       this.props.eventRule.schedule ||
@@ -142,6 +148,7 @@ export class EventHandler extends CommonConstruct {
     )
       return
     this.handler.archive = new Archive(this, `${this.id}-archive`, {
+      /* Strip the stack name prefix from the archive name to keep it concise */
       archiveName: `${this.props.eventRule.ruleName}-${this.props.stage}`.replace(
         `${this.node.tryGetContext('stackName')}-`,
         ''
@@ -184,6 +191,10 @@ export class EventHandler extends CommonConstruct {
    * @summary Method to create the workflow definition.
    */
   protected createWorkflowDefinition() {
+    /* When useMapState is true, the workflow uses a Map state to iterate over
+       the entire input payload (which must be an array at runtime). The
+       eventWorkflowDefinition becomes the iterator (inner step) of the Map
+       rather than the top-level state machine definition. */
     if (this.useMapState) {
       this.handler.workflowMapState = new Map(this, `Map Iterator`, {
         ...this.props.workflowMapState,

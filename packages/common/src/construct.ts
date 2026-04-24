@@ -2,7 +2,13 @@ import { Construct } from 'constructs'
 
 import { BaseProps } from './types.js'
 
+/**
+ * Abstract base construct that all higher-level constructs extend.
+ * Provides common stage-detection and domain resolution capabilities.
+ * @category Common
+ */
 export abstract class BaseConstruct extends Construct {
+  /** The base properties for the construct */
   props: BaseProps
 
   /**

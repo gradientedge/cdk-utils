@@ -24,6 +24,11 @@ export class AzureRestApiWithCache extends AzureRestApi {
   props: AzureRestApiWithCacheProps
   declare api: AzureApiWithCache
 
+  /**
+   * @summary Create a new AzureRestApiWithCache
+   * @param id scoped id of the resource
+   * @param props the REST API with cache properties
+   */
   constructor(id: string, props: AzureRestApiWithCacheProps) {
     super(id, props)
     this.props = props
@@ -65,6 +70,11 @@ export class AzureRestApiWithCache extends AzureRestApi {
    * @summary Method to create the Redis cache connection string secret in Key Vault
    */
   protected createRedisCacheSecret() {
+    /* Resolve the Redis connection string through a double-async chain:
+       first resolve the cluster/database/resource group names, then fetch
+       the database keys from the Azure API to build the connection string.
+       Port 10000 is the Azure Redis Enterprise port (not the standard 6379).
+       ssl=True and abortConnect=False are StackExchange.Redis connection params. */
     const connectionString = pulumi
       .all([
         this.api.redisCluster.hostName,
@@ -91,6 +101,8 @@ export class AzureRestApiWithCache extends AzureRestApi {
           value: connectionString,
         },
       },
+      /* The role assignment must complete before writing the secret,
+         as Key Vault requires the identity to have access first */
       { dependsOn: [this.api.redisCluster, this.api.redisDatabase, this.api.namedValueRoleAssignment] }
     )
   }

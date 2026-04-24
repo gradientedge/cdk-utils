@@ -1,4 +1,5 @@
 /**
+ * Supported application log levels
  */
 /** @category Enum */
 export enum LogLevel {
@@ -10,6 +11,9 @@ export enum LogLevel {
   CRITICAL = 'CRITICAL',
 }
 
+/**
+ * Supported deployment stages
+ */
 /** @category Enum */
 export enum Stage {
   DEV = 'dev',

@@ -96,6 +96,9 @@ export abstract class RestApiLambda extends CommonConstruct {
    * @summary Method to resolve a certificate based on attributes
    */
   protected resolveCertificate() {
+    /* ACM certificates for CloudFront must be in us-east-1, which may differ from the
+       stack's region. When an SSM parameter name and region are provided, the ARN is
+       read cross-region and mutated onto the props before certificate resolution. */
     if (
       this.props.restApiCertificate.useExistingCertificate &&
       this.props.restApiCertificate.certificateSsmName &&

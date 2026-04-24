@@ -75,6 +75,10 @@ export class S3Manager {
    * @param bucketName the bucket name
    */
   public static determineBucketName(scope: CommonConstruct, props: S3BucketProps, bucketName: string) {
+    /* Naming strategy priority (note: flags use negative naming — "exclude" means "don't use"):
+       1. Domain-based naming (default) — includes the domain name for global uniqueness
+       2. Account-based naming — falls back to account+region when domain is excluded
+       3. Formatter-only — plain prefix/suffix when both domain and account are excluded */
     if (!scope.props.excludeDomainNameForBuckets) {
       return S3Manager.determineBucketNameByDomainName(scope, bucketName)
     }
