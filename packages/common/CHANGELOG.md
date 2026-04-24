@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-common
 
+## 2.2.0
+
+### Minor Changes
+
+- [`e98f1b8`](https://github.com/gradientedge/cdk-utils/commit/e98f1b8fdb8aaa565ecf8c7bcd6c73d4729d3c5f) Thanks [@despock](https://github.com/despock)! - docs: adding JSDocs
+
 ## 2.1.0
 
 ### Minor Changes
