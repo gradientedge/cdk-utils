@@ -135,8 +135,9 @@ describe('TestAzureAppServiceConstruct', () => {
           stack.construct.appServicePlan.location,
           stack.construct.appServicePlan.sku,
           stack.construct.appServicePlan.tags,
+          stack.construct.appServicePlan.zoneRedundant,
         ])
-        .apply(([id, urn, name, location, sku, tags]) => {
+        .apply(([id, urn, name, location, sku, tags, zoneRedundant]) => {
           expect(id).toEqual('test-app-service-plan-dev-as-id')
           expect(urn).toEqual(
             'urn:pulumi:stack::project::construct:test-common-stack$azure-native:web:AppServicePlan::test-app-service-plan-dev-as'
@@ -145,6 +146,7 @@ describe('TestAzureAppServiceConstruct', () => {
           expect(location).toEqual('eastus')
           expect(sku).toEqual({ name: 'B1', tier: 'Basic' })
           expect(tags?.environment).toEqual('dev')
+          expect(zoneRedundant).toEqual(false)
         })
     )
   })

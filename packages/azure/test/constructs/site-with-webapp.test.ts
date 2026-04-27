@@ -92,6 +92,9 @@ pulumi.runtime.setAllConfig({
   'project:extraContexts': JSON.stringify(testStackProps.extraContexts),
 })
 
+let capturedStorageAccountName: string | undefined
+let capturedContainerAccountName: string | undefined
+
 pulumi.runtime.setMocks({
   newResource: (args: pulumi.runtime.MockResourceArgs) => {
     let name
@@ -102,8 +105,10 @@ pulumi.runtime.setMocks({
       name = args.inputs.name
     } else if (args.type === 'azure-native:storage:StorageAccount') {
       name = args.inputs.accountName
+      capturedStorageAccountName = args.inputs.accountName
     } else if (args.type === 'azure-native:storage:BlobContainer') {
       name = args.inputs.containerName
+      capturedContainerAccountName = args.inputs.accountName
     } else if (args.type === 'azure-native:web:WebApp') {
       name = args.inputs.name
     } else if (args.type === 'azure-native:monitor:DiagnosticSetting') {
@@ -199,6 +204,10 @@ describe('TestSiteWithWebAppConstruct', () => {
         )
         expect(name).toBeDefined()
       })
+  })
+
+  test('storage container accountName uses storage account name', () => {
+    expect(capturedContainerAccountName).toEqual(capturedStorageAccountName)
   })
 
   test('provisions web app as expected', () => {

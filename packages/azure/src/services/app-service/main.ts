@@ -65,7 +65,7 @@ export class AzureAppServiceManager {
           tier: 'FlexConsumption',
         },
         reserved: props.reserved ?? true,
-        zoneRedundant: props.zoneRedundant ?? true,
+        zoneRedundant: props.zoneRedundant ?? false,
         tags: {
           environment: scope.props.stage,
           ...scope.props.defaultTags,

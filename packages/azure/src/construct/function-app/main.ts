@@ -9,7 +9,7 @@ import {
 } from '@pulumi/azure-native/appconfiguration/index.js'
 import { getComponentOutput, GetComponentResult } from '@pulumi/azure-native/applicationinsights/index.js'
 import { PrincipalType } from '@pulumi/azure-native/authorization/index.js'
-import { SkuFamily, SkuName } from '@pulumi/azure-native/keyvault/index.js'
+import { SkuFamily, SkuName, Vault } from '@pulumi/azure-native/keyvault/index.js'
 import { Dashboard } from '@pulumi/azure-native/portal/index.js'
 import { BlobContainer, listStorageAccountKeysOutput, StorageAccount } from '@pulumi/azure-native/storage/index.js'
 import {
@@ -60,6 +60,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
   appConfigurationsParsedConfig: any
   appConfigurationsOriginalParsedConfig: any
 
+  dataKeyVault: Vault
   dataStorageAccount: StorageAccount
   dataStorageContainer: BlobContainer
 
@@ -263,6 +264,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
       },
       { ignoreChanges: ['location'] }
     )
+    this.dataKeyVault = keyVault
 
     this.monitorManager.createMonitorDiagnosticSettings(`${this.id}-${this.props.dataKeyVaultName}`, this, {
       name: `${this.props.dataKeyVaultName}-keyvault`,

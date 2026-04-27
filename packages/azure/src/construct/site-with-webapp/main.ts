@@ -102,7 +102,7 @@ export class SiteWithWebApp extends CommonAzureConstruct {
       this,
       {
         ...this.props.site.storageContainer,
-        accountName: this.site.storageAccount.id,
+        accountName: this.site.storageAccount.name,
         resourceGroupName: this.resourceGroup.name,
       }
     )
