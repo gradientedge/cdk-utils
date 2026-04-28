@@ -1,5 +1,19 @@
 # @gradientedge/cdk-utils
 
+## 11.30.0
+
+### Minor Changes
+
+- [`e4c818e`](https://github.com/gradientedge/cdk-utils/commit/e4c818eef3d9feba4d94220e2112a3d6612c29f6) Thanks [@despock](https://github.com/despock)! - feat: adding defaults to web app resources
+
+- [`42cdbdf`](https://github.com/gradientedge/cdk-utils/commit/42cdbdfda98aa1f07caffc75cc9c4d9699aa47c0) Thanks [@despock](https://github.com/despock)! - feat: resolving zone output
+
+### Patch Changes
+
+- Updated dependencies [[`e4c818e`](https://github.com/gradientedge/cdk-utils/commit/e4c818eef3d9feba4d94220e2112a3d6612c29f6), [`42cdbdf`](https://github.com/gradientedge/cdk-utils/commit/42cdbdfda98aa1f07caffc75cc9c4d9699aa47c0)]:
+  - @gradientedge/cdk-utils-azure@2.29.0
+  - @gradientedge/cdk-utils-cloudflare@2.7.0
+
 ## 11.29.0
 
 ### Minor Changes
