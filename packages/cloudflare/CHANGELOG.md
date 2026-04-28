@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-cloudflare
 
+## 2.7.0
+
+### Minor Changes
+
+- [`42cdbdf`](https://github.com/gradientedge/cdk-utils/commit/42cdbdfda98aa1f07caffc75cc9c4d9699aa47c0) Thanks [@despock](https://github.com/despock)! - feat: resolving zone output
+
 ## 2.6.0
 
 ### Minor Changes
