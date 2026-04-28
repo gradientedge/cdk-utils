@@ -8,7 +8,6 @@ import {
   ZoneLockdown,
   ZoneSetting,
 } from '@pulumi/cloudflare'
-import * as pulumi from '@pulumi/pulumi'
 
 import { CommonCloudflareConstruct } from '../../common/index.js'
 
