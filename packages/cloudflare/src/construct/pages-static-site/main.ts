@@ -1,11 +1,11 @@
 import * as aws from '@pulumi/aws'
 import * as azure from '@pulumi/azure-native'
-import { DnsRecord, PagesDomain, PagesProject, Zone } from '@pulumi/cloudflare'
+import { DnsRecord, GetZoneResult, PagesDomain, PagesProject, Zone } from '@pulumi/cloudflare'
 import {
   PagesProjectDeploymentConfigsPreviewEnvVars,
   PagesProjectDeploymentConfigsProductionEnvVars,
 } from '@pulumi/cloudflare/types/input.js'
-import { ComponentResourceOptions } from '@pulumi/pulumi'
+import { ComponentResourceOptions, Output } from '@pulumi/pulumi'
 import * as std from '@pulumi/std'
 
 import { CommonCloudflareConstruct } from '../../common/index.js'
@@ -35,7 +35,7 @@ export class CloudflarePagesStaticSite extends CommonCloudflareConstruct {
   sitePagesCnameRecord: DnsRecord
   sitePagesDomain: PagesDomain
   sitePagesProject: PagesProject
-  siteZone: Zone
+  siteZone: Zone | Output<GetZoneResult>
   sitePagesEnvironmentVariables: { [key: string]: PagesProjectDeploymentConfigsProductionEnvVars }
   sitePagesPreviewEnvironmentVariables: { [key: string]: PagesProjectDeploymentConfigsPreviewEnvVars }
   sitePagesSecrets: { [key: string]: PagesProjectDeploymentConfigsProductionEnvVars }

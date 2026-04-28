@@ -140,6 +140,13 @@ pulumi.runtime.setMocks({
     }
   },
   call: (args: pulumi.runtime.MockCallArgs) => {
+    if (args.token.includes('getZone'))
+      return {
+        ...args.inputs,
+        id: 'mock-zone-id',
+        zoneId: 'mock-zone-id',
+        name: args.inputs?.filter?.name ?? 'mock-zone',
+      }
     return args.inputs
   },
 })
@@ -210,7 +217,7 @@ describe('TestCloudflareApiShieldManager', () => {
               type: 'header',
             },
           ])
-          expect(zoneId).toEqual('test-api-shield-dev-data-zone')
+          expect(zoneId).toEqual('mock-zone-id')
         })
     )
   })
@@ -237,7 +244,7 @@ describe('TestCloudflareApiShieldManager', () => {
           expect(file).toEqual('{\n  "test": true,\n  "hello": "world"\n}\n')
           expect(kind).toEqual('openapi_v3')
           expect(name).toEqual('test-api-dev')
-          expect(zoneId).toEqual('test-api-shield-sch-dev-data-zone')
+          expect(zoneId).toEqual('mock-zone-id')
         })
     )
   })
@@ -262,7 +269,7 @@ describe('TestCloudflareApiShieldManager', () => {
           )
           expect(validationDefaultMitigationAction).toEqual('log')
           expect(validationOverrideMitigationAction).toEqual('none')
-          expect(zoneId).toEqual('test-api-shield-val-dev-data-zone')
+          expect(zoneId).toEqual('mock-zone-id')
         })
     )
   })
@@ -289,7 +296,7 @@ describe('TestCloudflareApiShieldManager', () => {
           expect(endpoint).toEqual('/product')
           expect(host).toEqual('api.gradientedge.io')
           expect(method).toEqual('GET')
-          expect(zoneId).toEqual('test-api-shield-op-dev-data-zone')
+          expect(zoneId).toEqual('mock-zone-id')
         })
     )
   })
@@ -314,7 +321,7 @@ describe('TestCloudflareApiShieldManager', () => {
           )
           expect(mitigationAction).toEqual('block')
           expect(operationId).toEqual('test-api-shield-op-dev-id')
-          expect(zoneId).toEqual('test-api-shield-op-val-dev-data-zone')
+          expect(zoneId).toEqual('mock-zone-id')
         })
     )
   })

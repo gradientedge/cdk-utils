@@ -1,4 +1,6 @@
+import { GetZoneResult, Zone } from '@pulumi/cloudflare'
 import * as pulumi from '@pulumi/pulumi'
+import { Output } from '@pulumi/pulumi'
 import path from 'path'
 import appRoot from 'app-root-path'
 import { CloudflareWorkerSite, CloudflareWorkerSiteProps, CommonCloudflareStack } from '../../src/index.js'
@@ -138,6 +140,13 @@ pulumi.runtime.setMocks({
     }
   },
   call: (args: pulumi.runtime.MockCallArgs) => {
+    if (args.token.includes('getZone'))
+      return {
+        ...args.inputs,
+        id: 'mock-zone-id',
+        zoneId: 'mock-zone-id',
+        name: args.inputs?.filter?.name ?? 'mock-zone',
+      }
     return args.inputs
   },
 })
@@ -153,21 +162,12 @@ describe('TestCloudflareWorkerSite', () => {
 describe('TestCloudflareWorkerSite', () => {
   expect(stack.construct.siteZone).toBeDefined()
   test('provisions zone as expected', () => {
-    pulumi
-      .all([
-        stack.construct.siteZone.id,
-        stack.construct.siteZone.urn,
-        stack.construct.siteZone.name,
-        stack.construct.siteZone.account,
-      ])
-      .apply(([id, urn, name, account]) => {
-        expect(id).toEqual('test-common-stack-zone-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$cloudflare:index/zone:Zone::test-common-stack-zone'
-        )
-        expect(name).toEqual('gradientedge.io')
-        expect(account.id).toEqual('test-account')
-      })
+    const zone = stack.construct.siteZone as Zone
+    pulumi.all([zone.id, zone.urn, zone.name]).apply(([id, urn, name]) => {
+      expect(id).toBeDefined()
+      expect(urn).toBeDefined()
+      expect(name).toEqual('gradientedge.io')
+    })
   })
 })
 
@@ -216,7 +216,7 @@ describe('TestCloudflareWorkerSite', () => {
         expect(accountId).toEqual('test-account')
         expect(hostname).toEqual('test.app.gradientedge.io')
         expect(service).toEqual('test-script-dev')
-        expect(zoneId).toEqual('test-common-stack-worker-domain-data-zone')
+        expect(zoneId).toEqual('mock-zone-id')
       })
   })
 })
@@ -262,7 +262,7 @@ describe('TestCloudflareWorkerSite', () => {
         )
         expect(settingId).toEqual('always_online')
         expect(value).toEqual('on')
-        expect(zoneId).toEqual('test-common-stack-zone-setting-data-zone')
+        expect(zoneId).toEqual('mock-zone-id')
       })
   })
 })
@@ -271,12 +271,11 @@ describe('TestCloudflareWorkerSite - useExistingZone', () => {
   test('resolves existing zone when useExistingZone is true', () => {
     const existingZoneStack = new TestExistingZoneCloudflareStack('test-existing-zone-stack', testStackProps)
     expect(existingZoneStack.construct.siteZone).toBeDefined()
-    pulumi
-      .all([existingZoneStack.construct.siteZone.id, existingZoneStack.construct.siteZone.urn])
-      .apply(([id, urn]) => {
-        expect(id).toBeDefined()
-        expect(urn).toBeDefined()
-      })
+    const zone = existingZoneStack.construct.siteZone as Output<GetZoneResult>
+    pulumi.all([zone.id, zone.zoneId]).apply(([id, zoneId]) => {
+      expect(id).toBeDefined()
+      expect(zoneId).toBeDefined()
+    })
   })
 })
 

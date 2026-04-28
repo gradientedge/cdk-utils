@@ -101,6 +101,13 @@ pulumi.runtime.setMocks({
     }
   },
   call: (args: pulumi.runtime.MockCallArgs) => {
+    if (args.token.includes('getZone'))
+      return {
+        ...args.inputs,
+        id: 'mock-zone-id',
+        zoneId: 'mock-zone-id',
+        name: args.inputs?.filter?.name ?? 'mock-zone',
+      }
     return args.inputs
   },
 })
@@ -247,7 +254,7 @@ describe('TestCloudflarePagesManager', () => {
           })
           expect(priority).toEqual(1)
           expect(target).toEqual('test.gradientedge.io/p/*')
-          expect(zoneId).toEqual('test-page-rule-dev-data-zone')
+          expect(zoneId).toEqual('mock-zone-id')
         })
     )
   })

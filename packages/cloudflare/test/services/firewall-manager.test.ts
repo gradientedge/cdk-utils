@@ -93,6 +93,13 @@ pulumi.runtime.setMocks({
     }
   },
   call: (args: pulumi.runtime.MockCallArgs) => {
+    if (args.token.includes('getZone'))
+      return {
+        ...args.inputs,
+        id: 'mock-zone-id',
+        zoneId: 'mock-zone-id',
+        name: args.inputs?.filter?.name ?? 'mock-zone',
+      }
     return args.inputs
   },
 })
@@ -183,7 +190,7 @@ describe('TestCloudflareFirewallManager', () => {
               },
             ],
           })
-          expect(zoneId).toEqual('test-firewall-rule-dev-data-zone')
+          expect(zoneId).toEqual('mock-zone-id')
         })
     )
   })

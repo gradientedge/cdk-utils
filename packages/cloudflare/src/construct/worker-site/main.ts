@@ -2,9 +2,9 @@ import fs from 'fs'
 
 import * as aws from '@pulumi/aws'
 import * as azure from '@pulumi/azure-native'
-import { Ruleset, WorkersCustomDomain, WorkersScript, Zone, ZoneSetting } from '@pulumi/cloudflare'
+import { GetZoneResult, Ruleset, WorkersCustomDomain, WorkersScript, Zone, ZoneSetting } from '@pulumi/cloudflare'
 import { WorkersScriptBinding } from '@pulumi/cloudflare/types/input.js'
-import { ComponentResourceOptions } from '@pulumi/pulumi'
+import { ComponentResourceOptions, Output } from '@pulumi/pulumi'
 import * as std from '@pulumi/std'
 
 import { CommonCloudflareConstruct } from '../../common/index.js'
@@ -31,7 +31,7 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
   declare props: CloudflareWorkerSiteProps
 
   /* worker site resources */
-  siteZone: Zone
+  siteZone: Zone | Output<GetZoneResult>
   siteWorkerScript: WorkersScript
   siteWorkerDomain: WorkersCustomDomain
   siteRuleSet: Ruleset

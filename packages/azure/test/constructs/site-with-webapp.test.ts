@@ -185,7 +185,7 @@ describe('TestSiteWithWebAppConstruct', () => {
         expect(urn).toEqual(
           'urn:pulumi:stack::project::construct:test-common-stack$azure-native:storage:StorageAccount::test-common-stack-storage-account-sa'
         )
-        expect(name).toBeDefined()
+        expect(name).toEqual('testsitestoragedev')
         expect(tags?.environment).toEqual('dev')
       })
   })
@@ -202,7 +202,7 @@ describe('TestSiteWithWebAppConstruct', () => {
         expect(urn).toEqual(
           'urn:pulumi:stack::project::construct:test-common-stack$azure-native:storage:BlobContainer::test-common-stack-storage-deployment-container-sc'
         )
-        expect(name).toBeDefined()
+        expect(name).toEqual('test-site-deployment-container-dev')
       })
   })
 
@@ -220,7 +220,9 @@ describe('TestSiteWithWebAppConstruct', () => {
       ])
       .apply(([id, urn, name, tags]) => {
         expect(id).toEqual('test-common-stack-web-app-lwa-id')
-        expect(urn).toBeDefined()
+        expect(urn).toEqual(
+          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:web:WebApp::test-common-stack-web-app-lwa'
+        )
         expect(name).toEqual('test-site-web-app-dev')
         expect(tags?.environment).toEqual('dev')
       })
@@ -228,7 +230,6 @@ describe('TestSiteWithWebAppConstruct', () => {
 
   test('creates site config environment variables as expected', () => {
     const envVars = stack.construct.site.environmentVariables
-    expect(envVars).toBeDefined()
     expect(envVars.STAGE).toEqual('dev')
     expect(envVars.NODE_OPTIONS).toEqual('--max-old-space-size=4096')
     expect(envVars.NODE_ENV).toEqual('development')

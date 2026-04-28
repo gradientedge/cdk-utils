@@ -60,7 +60,7 @@ export class CloudflareAccessManager {
       ? props.zoneId
       : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, {
           filter: { name: scope.props.domainName },
-        })?.id
+        })?.zoneId
 
     return new ZeroTrustAccessApplication(
       `${id}`,
@@ -92,7 +92,7 @@ export class CloudflareAccessManager {
       ? props.zoneId
       : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, {
           filter: { name: scope.props.domainName },
-        })?.id
+        })?.zoneId
 
     return new ZeroTrustAccessShortLivedCertificate(
       `${id}`,
@@ -139,7 +139,7 @@ export class CloudflareAccessManager {
       ? props.zoneId
       : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, {
           filter: { name: scope.props.domainName },
-        })?.id
+        })?.zoneId
 
     return new ZeroTrustAccessGroup(
       `${id}`,
@@ -170,7 +170,7 @@ export class CloudflareAccessManager {
       ? props.zoneId
       : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, {
           filter: { name: scope.props.domainName },
-        })?.id
+        })?.zoneId
 
     return new ZeroTrustAccessIdentityProvider(
       `${id}`,
@@ -202,7 +202,7 @@ export class CloudflareAccessManager {
       ? props.zoneId
       : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, {
           filter: { name: scope.props.domainName },
-        })?.id
+        })?.zoneId
 
     return new ZeroTrustAccessMtlsCertificate(
       `${id}`,
@@ -229,7 +229,7 @@ export class CloudflareAccessManager {
       ? props.zoneId
       : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, {
           filter: { name: scope.props.domainName },
-        })?.id
+        })?.zoneId
 
     return new ZeroTrustOrganization(
       `${id}`,
@@ -277,7 +277,7 @@ export class CloudflareAccessManager {
       ? props.zoneId
       : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, {
           filter: { name: scope.props.domainName },
-        })?.id
+        })?.zoneId
 
     return new AccessRule(
       `${id}`,
@@ -308,7 +308,7 @@ export class CloudflareAccessManager {
       ? props.zoneId
       : scope.zoneManager.resolveZone(`${id}-data-zone`, scope, {
           filter: { name: scope.props.domainName },
-        })?.id
+        })?.zoneId
 
     return new ZeroTrustAccessServiceToken(
       `${id}`,

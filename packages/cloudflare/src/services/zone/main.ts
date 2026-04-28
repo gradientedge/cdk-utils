@@ -1,4 +1,5 @@
 import {
+  getZoneOutput,
   Zone,
   ZoneCacheReserve,
   ZoneCacheVariants,
@@ -69,7 +70,7 @@ export class CloudflareZoneManager {
    */
   public resolveZone(id: string, scope: CommonCloudflareConstruct, options?: GetZoneProps) {
     const name = options?.filter?.name ?? scope.props.domainName
-    return Zone.get(name, id)
+    return getZoneOutput({ filter: { name } }, { parent: scope })
   }
 
   /**
@@ -82,8 +83,7 @@ export class CloudflareZoneManager {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
     const zoneId =
-      props.zoneId ??
-      pulumi.output(this.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })).id
+      props.zoneId ?? this.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } }).zoneId
     return new ZoneCacheReserve(
       id,
       {
@@ -104,8 +104,7 @@ export class CloudflareZoneManager {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
     const zoneId =
-      props.zoneId ??
-      pulumi.output(this.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })).id
+      props.zoneId ?? this.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } }).zoneId
     return new ZoneCacheVariants(
       id,
       {
@@ -126,8 +125,7 @@ export class CloudflareZoneManager {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
     const zoneId =
-      props.zoneId ??
-      pulumi.output(this.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })).id
+      props.zoneId ?? this.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } }).zoneId
     return new ZoneDnssec(
       id,
       {
@@ -148,8 +146,7 @@ export class CloudflareZoneManager {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
     const zoneId =
-      props.zoneId ??
-      pulumi.output(this.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })).id
+      props.zoneId ?? this.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } }).zoneId
     return new ZoneHold(
       id,
       {
@@ -170,8 +167,7 @@ export class CloudflareZoneManager {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
     const zoneId =
-      props.zoneId ??
-      pulumi.output(this.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })).id
+      props.zoneId ?? this.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } }).zoneId
     return new ZoneLockdown(
       id,
       {
@@ -192,8 +188,7 @@ export class CloudflareZoneManager {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
     const zoneId =
-      props.zoneId ??
-      pulumi.output(this.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })).id
+      props.zoneId ?? this.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } }).zoneId
     const zoneDnsSettings = new ZoneSetting(
       id,
       {
@@ -216,8 +211,7 @@ export class CloudflareZoneManager {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
     const zoneId =
-      props.zoneId ??
-      pulumi.output(this.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } })).id
+      props.zoneId ?? this.resolveZone(`${id}-data-zone`, scope, { filter: { name: scope.props.domainName } }).zoneId
     return new ZoneSetting(
       id,
       {
