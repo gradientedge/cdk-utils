@@ -1,5 +1,16 @@
 # @gradientedge/cdk-utils
 
+## 11.31.0
+
+### Minor Changes
+
+- [`0f4bc4f`](https://github.com/gradientedge/cdk-utils/commit/0f4bc4fa6796a58f62d5b9ce5ed819ede598aca1) Thanks [@despock](https://github.com/despock)! - feat: resolving cwd for cloudflare worker assets
+
+### Patch Changes
+
+- Updated dependencies [[`0f4bc4f`](https://github.com/gradientedge/cdk-utils/commit/0f4bc4fa6796a58f62d5b9ce5ed819ede598aca1)]:
+  - @gradientedge/cdk-utils-cloudflare@2.8.0
+
 ## 11.30.0
 
 ### Minor Changes
