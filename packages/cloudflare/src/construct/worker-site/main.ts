@@ -1,4 +1,5 @@
 import fs from 'fs'
+import * as path from 'path'
 
 import * as aws from '@pulumi/aws'
 import * as azure from '@pulumi/azure-native'
@@ -91,7 +92,8 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
    * @summary Create the worker
    */
   protected createWorker() {
-    const workerContent = fs.readFileSync(this.props.siteWorkerAsset, 'utf-8')
+    const currentDirectory = path.resolve(process.cwd(), '..')
+    const workerContent = fs.readFileSync(`${currentDirectory}/${this.props.siteWorkerAsset}`, 'utf-8')
     this.siteWorkerScript = this.workerManager.createWorkerScript(`${this.id}-worker-script`, this, {
       ...this.props.siteWorkerScript,
       content: workerContent,

@@ -1,9 +1,16 @@
+import * as path from 'path'
+import { fileURLToPath } from 'url'
+
 import { GetZoneResult, Zone } from '@pulumi/cloudflare'
 import * as pulumi from '@pulumi/pulumi'
 import { Output } from '@pulumi/pulumi'
-import path from 'path'
-import appRoot from 'app-root-path'
 import { CloudflareWorkerSite, CloudflareWorkerSiteProps, CommonCloudflareStack } from '../../src/index.js'
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url))
+const sampleHtmlPath = path.relative(
+  path.resolve(process.cwd(), '..'),
+  path.resolve(__dirname, '../common/sample.html')
+)
 
 interface TestCloudflareStackProps extends CloudflareWorkerSiteProps {
   testAttribute?: string
@@ -37,7 +44,7 @@ class TestCommonCloudflareStack extends CommonCloudflareStack {
   protected determineConstructProps(props: TestCloudflareStackProps) {
     return {
       ...super.determineConstructProps(props),
-      siteWorkerAsset: path.join(appRoot.path, `packages/cloudflare/test/common/sample.html`),
+      siteWorkerAsset: sampleHtmlPath,
       siteSubDomain: `test.app`,
     }
   }
@@ -55,7 +62,7 @@ class TestExistingZoneCloudflareStack extends CommonCloudflareStack {
   protected determineConstructProps(props: TestCloudflareStackProps) {
     return {
       ...super.determineConstructProps(props),
-      siteWorkerAsset: path.join(appRoot.path, `packages/cloudflare/test/common/sample.html`),
+      siteWorkerAsset: sampleHtmlPath,
       siteSubDomain: `test.app`,
       useExistingZone: true,
     }
@@ -74,7 +81,7 @@ class TestNoRuleSetCloudflareStack extends CommonCloudflareStack {
   protected determineConstructProps(props: TestCloudflareStackProps) {
     return {
       ...super.determineConstructProps(props),
-      siteWorkerAsset: path.join(appRoot.path, `packages/cloudflare/test/common/sample.html`),
+      siteWorkerAsset: sampleHtmlPath,
       siteSubDomain: `test.app`,
       siteRuleSet: undefined,
       siteZoneSetting: undefined,
@@ -316,7 +323,7 @@ class TestSecretsCloudflareStack extends CommonCloudflareStack {
   protected determineConstructProps(props: TestCloudflareStackProps) {
     return {
       ...super.determineConstructProps(props),
-      siteWorkerAsset: path.join(appRoot.path, `packages/cloudflare/test/common/sample.html`),
+      siteWorkerAsset: sampleHtmlPath,
       siteSubDomain: `test.app`,
     }
   }
