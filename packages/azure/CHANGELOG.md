@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.31.0
+
+### Minor Changes
+
+- [`87ca958`](https://github.com/gradientedge/cdk-utils/commit/87ca958e9bb09bed0ce85abc66b7606c1fd3ce28) Thanks [@despock](https://github.com/despock)! - feat: use provisioned storage account name instead of reformatting
+
 ## 2.30.0
 
 ### Minor Changes
