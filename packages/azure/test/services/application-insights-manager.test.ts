@@ -1,10 +1,15 @@
-import { Component } from '@pulumi/azure-native/applicationinsights/index.js'
+import fs from 'fs'
+import path from 'path'
+
+import { Component, Workbook } from '@pulumi/azure-native/applicationinsights/index.js'
 import * as pulumi from '@pulumi/pulumi'
 import {
   ApplicationInsightsProps,
+  AzureWorkbookRenderer,
   CommonAzureConstruct,
   CommonAzureStack,
   CommonAzureStackProps,
+  WorkbookProps,
 } from '../../src/index.js'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
@@ -80,6 +85,9 @@ pulumi.runtime.setMocks({
     // Return different names based on resource type
     if (args.type === 'azure-native:insights:Component') {
       name = args.inputs.resourceName
+    }
+    if (args.type === 'azure-native:applicationinsights:Workbook') {
+      name = args.inputs.resourceName ?? args.name
     }
 
     return {
@@ -191,5 +199,102 @@ describe('TestAzureApplicationInsightsConstruct - createComponentCurrentBillingF
         undefined as any
       )
     }).toThrow('Props undefined for test-billing-err')
+  })
+})
+
+/* --- Tests for createWorkbook --- */
+
+const tmpDir = fs.mkdtempSync(path.join('/tmp', 'workbook-renderer-test-'))
+const workbookOutputFile = path.join(tmpDir, 'test-workbook-workbook.json')
+fs.writeFileSync(workbookOutputFile, JSON.stringify({ version: 'Notebook/1.0', items: [] }), 'utf-8')
+
+const testWorkbookProps: WorkbookProps = {
+  category: 'workbook',
+  displayName: 'Test Workbook',
+  serializedData: JSON.stringify({ version: 'Notebook/1.0', items: [] }),
+  resourceGroupName: 'test-rg-dev',
+  resourceName: 'test-workbook-id',
+  location: 'eastus',
+  kind: 'shared',
+  description: 'A test workbook',
+  tags: { environment: 'dev' },
+  slug: 'test-workbook',
+  templateId: 'test-template',
+  variables: {},
+}
+
+const mockRenderer: AzureWorkbookRenderer = {
+  renderToFile: () => workbookOutputFile,
+} as unknown as AzureWorkbookRenderer
+
+class TestConstructWithWorkbook extends CommonAzureConstruct {
+  declare props: TestAzureStackProps
+  workbook: Workbook
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.workbook = this.applicationInsightsManager.createWorkbook(
+      `test-workbook-${this.props.stage}`,
+      this,
+      testWorkbookProps,
+      mockRenderer
+    )
+  }
+}
+
+class TestStackWithWorkbook extends CommonAzureStack {
+  declare props: TestAzureStackProps
+  declare construct: TestConstructWithWorkbook
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestConstructWithWorkbook(props.name, this.props)
+  }
+}
+
+const stackWithWorkbook = new TestStackWithWorkbook('test-workbook-stack', testStackProps)
+
+describe('TestAzureApplicationInsightsConstruct - createWorkbook', () => {
+  test('throws when props are undefined', () => {
+    expect(() => {
+      stack.construct.applicationInsightsManager.createWorkbook('test-workbook-err', stack.construct, undefined as any)
+    }).toThrow('Props undefined for test-workbook-err')
+  })
+
+  test('synthesises as expected', () => {
+    expect(stackWithWorkbook).toBeDefined()
+    expect(stackWithWorkbook.construct).toBeDefined()
+    expect(stackWithWorkbook.construct.workbook).toBeDefined()
+  })
+
+  test('provisions workbook as expected', () => {
+    pulumi
+      .all([
+        stackWithWorkbook.construct.workbook.id,
+        stackWithWorkbook.construct.workbook.urn,
+        stackWithWorkbook.construct.workbook.name,
+        stackWithWorkbook.construct.workbook.category,
+        stackWithWorkbook.construct.workbook.displayName,
+        stackWithWorkbook.construct.workbook.serializedData,
+        stackWithWorkbook.construct.workbook.location,
+        stackWithWorkbook.construct.workbook.kind,
+        stackWithWorkbook.construct.workbook.description,
+      ])
+      .apply(([id, urn, name, category, displayName, serializedData, location, kind, description]) => {
+        expect(id).toEqual('test-workbook-dev-id')
+        expect(urn).toEqual(
+          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:applicationinsights:Workbook::test-workbook-dev'
+        )
+        expect(name).toEqual('test-workbook-id')
+        expect(category).toEqual('workbook')
+        expect(displayName).toEqual('eastus - Test Workbook')
+        expect(serializedData).toEqual(JSON.stringify({ version: 'Notebook/1.0', items: [] }))
+        expect(location).toEqual('eastus')
+        expect(kind).toEqual('shared')
+        expect(description).toEqual('A test workbook')
+      })
+    stackWithWorkbook.construct.workbook.tags.apply(tags => {
+      expect(tags).toEqual({ environment: 'dev' })
+    })
   })
 })

@@ -1,13 +1,19 @@
+import fs from 'fs'
+
 import {
   ApplicationType,
   Component,
   ComponentCurrentBillingFeature,
+  Workbook,
+  WorkbookSharedTypeKind,
 } from '@pulumi/azure-native/applicationinsights/index.js'
+import * as pulumi from '@pulumi/pulumi'
 import { ResourceOptions } from '@pulumi/pulumi'
 
 import { CommonAzureConstruct } from '../../common/index.js'
 
-import { ApplicationInsightsProps, ComponentCurrentBillingFeatureProps } from './types.js'
+import { AzureWorkbookRenderer } from './renderer.js'
+import { ApplicationInsightsProps, ComponentCurrentBillingFeatureProps, WorkbookProps } from './types.js'
 
 /**
  * Provides operations on Azure Application Insights using Pulumi
@@ -109,5 +115,60 @@ export class AzureApplicationInsightsManager {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
     return new ComponentCurrentBillingFeature(`${id}`, props, { parent: scope, ...resourceOptions })
+  }
+
+  /**
+   * @summary Method to create a new application insights workbook
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props application insights workbook properties
+   * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native Application Insights Billing Feature]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/applicationinsights/workbook/}
+   */
+  public createWorkbook(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: WorkbookProps,
+    renderer?: AzureWorkbookRenderer,
+    resourceOptions?: ResourceOptions
+  ) {
+    if (!props) throw new Error(`Props undefined for ${id}`)
+
+    const resourceGroup =
+      scope.resourceGroup ??
+      scope.resourceGroupManager.resolveResourceGroup(
+        scope,
+        props.resourceGroupName.toString() ?? scope.props.resourceGroupName,
+        resourceOptions
+      )
+
+    const workbookRenderer = renderer ?? new AzureWorkbookRenderer()
+    const templateFile = workbookRenderer.renderToFile(props.slug, props.templateId, props.variables)
+    const template = fs.readFileSync(templateFile, 'utf-8')
+    const keys = Object.keys(props.variables)
+    const values = Object.values(props.variables)
+
+    const properties = pulumi.all(values).apply(resolved => {
+      const content = keys.reduce(
+        (result, key, i) => result.replaceAll(`\${${key}}`, JSON.stringify(String(resolved[i])).slice(1, -1)),
+        template
+      )
+      return JSON.parse(content)
+    })
+
+    return new Workbook(
+      `${id}`,
+      {
+        ...props,
+        displayName: `${props.location} - ${props.displayName}`,
+        resourceGroupName: resourceGroup.name,
+        location: props.location ?? resourceGroup.location,
+        kind: props.kind ?? WorkbookSharedTypeKind.Shared,
+        serializedData: properties.apply(p => JSON.stringify(p)),
+        sourceId: props.sourceId?.toString().toLowerCase(),
+        category: props.category ?? 'workbook',
+      },
+      { parent: scope, ...resourceOptions, ignoreChanges: ['location'] }
+    )
   }
 }

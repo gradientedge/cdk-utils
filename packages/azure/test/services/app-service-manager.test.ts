@@ -146,7 +146,7 @@ describe('TestAzureAppServiceConstruct', () => {
           expect(location).toEqual('eastus')
           expect(sku).toEqual({ name: 'B1', tier: 'Basic' })
           expect(tags?.environment).toEqual('dev')
-          expect(zoneRedundant).toEqual(false)
+          expect(zoneRedundant).toEqual(true)
         })
     )
   })
