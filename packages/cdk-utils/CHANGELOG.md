@@ -1,5 +1,16 @@
 # @gradientedge/cdk-utils
 
+## 11.33.0
+
+### Minor Changes
+
+- [`87ca958`](https://github.com/gradientedge/cdk-utils/commit/87ca958e9bb09bed0ce85abc66b7606c1fd3ce28) Thanks [@despock](https://github.com/despock)! - feat: use provisioned storage account name instead of reformatting
+
+### Patch Changes
+
+- Updated dependencies [[`87ca958`](https://github.com/gradientedge/cdk-utils/commit/87ca958e9bb09bed0ce85abc66b7606c1fd3ce28)]:
+  - @gradientedge/cdk-utils-azure@2.31.0
+
 ## 11.32.0
 
 ### Minor Changes
