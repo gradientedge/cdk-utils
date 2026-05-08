@@ -97,17 +97,14 @@ export class AzureStorageManager {
         {
           ...props.blobProperties,
           blobServicesName: 'default',
-          accountName: scope.resourceNameFormatter
-            .format(props.accountName?.toString(), scope.props.resourceNameOptions?.storageAccount)
-            .replace(/\W/g, '')
-            .toLowerCase(),
+          accountName: storageAccount.name,
           resourceGroupName,
           deleteRetentionPolicy: props.blobProperties?.deleteRetentionPolicy ?? {
             enabled: true,
             days: 7,
           },
         },
-        { parent: scope, ...resourceOptions }
+        { parent: scope, dependsOn: [storageAccount], ...resourceOptions }
       )
     }
 
