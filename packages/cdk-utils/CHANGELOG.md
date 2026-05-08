@@ -1,5 +1,18 @@
 # @gradientedge/cdk-utils
 
+## 11.32.0
+
+### Minor Changes
+
+- [`7b33922`](https://github.com/gradientedge/cdk-utils/commit/7b339227602f41cd2358ee52b2296e110cca8300) Thanks [@despock](https://github.com/despock)! - feat: adding support for Application Insights Workbook
+
+### Patch Changes
+
+- Updated dependencies [[`7b33922`](https://github.com/gradientedge/cdk-utils/commit/7b339227602f41cd2358ee52b2296e110cca8300)]:
+  - @gradientedge/cdk-utils-cloudflare@2.9.0
+  - @gradientedge/cdk-utils-azure@2.30.0
+  - @gradientedge/cdk-utils-aws@2.5.0
+
 ## 11.31.1
 
 ### Patch Changes
