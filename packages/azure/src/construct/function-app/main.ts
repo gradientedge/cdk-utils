@@ -339,7 +339,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
       `${this.id}-function-app-flex`,
       this,
       {
-        ...this.props.functionApp,
+        ...this.props.functionApp.app,
         name: this.props.functionApp.app?.name ?? this.id,
         scaleAndConcurrency: this.props.functionApp.app?.scaleAndConcurrency,
         serverFarmId: this.appServicePlan.id,
