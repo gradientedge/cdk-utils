@@ -8,6 +8,7 @@ import {
   CommonAzureStack,
   CommonAzureStackProps,
   FunctionAppProperties,
+  RoleDefinitionId,
   StorageAccountProps,
   StorageContainerProps,
 } from '../../src/index.js'
@@ -354,6 +355,36 @@ describe('TestAzureFunctionAppConstruct', () => {
       })
     )
   })
+
+  test('provisions storage blob data contributor role assignment', async () => {
+    await outputToPromise(
+      pulumi
+        .all([stack.construct.storageRoleAssignment.urn, stack.construct.storageRoleAssignment.roleDefinitionId])
+        .apply(([urn, roleDefId]) => {
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:authorization:RoleAssignment::test-common-stack-sa-role'
+          )
+          expect(roleDefId).toEqual(
+            `/subscriptions/test-subscription-id${RoleDefinitionId.STORAGE_BLOB_DATA_CONTRIBUTOR}`
+          )
+        })
+    )
+  })
+
+  test('provisions app configuration data reader role assignment', async () => {
+    await outputToPromise(
+      pulumi
+        .all([stack.construct.appConfigRoleAssignment.urn, stack.construct.appConfigRoleAssignment.roleDefinitionId])
+        .apply(([urn, roleDefId]) => {
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:authorization:RoleAssignment::test-common-stack-ac-role'
+          )
+          expect(roleDefId).toEqual(
+            `/subscriptions/test-subscription-id${RoleDefinitionId.APP_CONFIGURATION_DATA_READER}`
+          )
+        })
+    )
+  })
 })
 
 describe('TestAzureFunctionAppWithOverridesConstruct', () => {
@@ -372,6 +403,17 @@ describe('TestAzureFunctionAppWithOverridesConstruct', () => {
       })
     )
   })
+
+  test('provisions storage role assignment but skips app config role when useConfigOverride is true', async () => {
+    await outputToPromise(
+      pulumi.all([stackWithOverrides.construct.storageRoleAssignment.urn]).apply(([urn]) => {
+        expect(urn).toEqual(
+          'urn:pulumi:stack::project::construct:test-common-stack-overrides$azure-native:authorization:RoleAssignment::test-common-stack-overrides-sa-role'
+        )
+      })
+    )
+    expect(stackWithOverrides.construct.appConfigRoleAssignment).toBeUndefined()
+  })
 })
 
 describe('TestAzureFunctionAppWithExistingConfigConstruct', () => {
@@ -380,6 +422,40 @@ describe('TestAzureFunctionAppWithExistingConfigConstruct', () => {
     expect(stackWithExistingConfig.construct).toBeDefined()
     expect(stackWithExistingConfig.construct.appConfig).toBeDefined()
     expect(stackWithExistingConfig.construct.app).toBeDefined()
+  })
+
+  test('provisions eventgrid data sender role assignment when config has eventGridTargets', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stackWithExistingConfig.construct.eventGridRoleAssignment.urn,
+          stackWithExistingConfig.construct.eventGridRoleAssignment.roleDefinitionId,
+        ])
+        .apply(([urn, roleDefId]) => {
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack-existing-config$azure-native:authorization:RoleAssignment::test-common-stack-existing-config-egt-role-test-topic'
+          )
+          expect(roleDefId).toEqual(`/subscriptions/test-subscription-id${RoleDefinitionId.EVENTGRID_DATA_SENDER}`)
+        })
+    )
+  })
+
+  test('provisions storage and app config role assignments', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stackWithExistingConfig.construct.storageRoleAssignment.urn,
+          stackWithExistingConfig.construct.appConfigRoleAssignment.urn,
+        ])
+        .apply(([storageUrn, configUrn]) => {
+          expect(storageUrn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack-existing-config$azure-native:authorization:RoleAssignment::test-common-stack-existing-config-sa-role'
+          )
+          expect(configUrn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack-existing-config$azure-native:authorization:RoleAssignment::test-common-stack-existing-config-ac-role'
+          )
+        })
+    )
   })
 })
 
@@ -391,5 +467,11 @@ describe('TestAzureFunctionAppMinimalConstruct', () => {
     expect(stackMinimal.construct.dataStorageAccount).toBeUndefined()
     expect(stackMinimal.construct.dataStorageContainer).toBeUndefined()
     expect(stackMinimal.construct.appStorageContainer).toBeUndefined()
+  })
+
+  test('does not provision role assignments when createRoleAssignments is not called', () => {
+    expect(stackMinimal.construct.storageRoleAssignment).toBeUndefined()
+    expect(stackMinimal.construct.appConfigRoleAssignment).toBeUndefined()
+    expect(stackMinimal.construct.eventGridRoleAssignment).toBeUndefined()
   })
 })

@@ -8,7 +8,7 @@ import {
   GetConfigurationStoreResult,
 } from '@pulumi/azure-native/appconfiguration/index.js'
 import { getComponentOutput, GetComponentResult } from '@pulumi/azure-native/applicationinsights/index.js'
-import { PrincipalType } from '@pulumi/azure-native/authorization/index.js'
+import { PrincipalType, RoleAssignment } from '@pulumi/azure-native/authorization/index.js'
 import { SkuFamily, SkuName, Vault } from '@pulumi/azure-native/keyvault/index.js'
 import { Dashboard } from '@pulumi/azure-native/portal/index.js'
 import { BlobContainer, listStorageAccountKeysOutput, StorageAccount } from '@pulumi/azure-native/storage/index.js'
@@ -66,6 +66,9 @@ export class AzureFunctionApp extends CommonAzureConstruct {
 
   applicationInsights: Output<GetComponentResult>
   functionDashboard: Dashboard
+  storageRoleAssignment: RoleAssignment
+  appConfigRoleAssignment: RoleAssignment
+  eventGridRoleAssignment: RoleAssignment
 
   /**
    * @summary Create a new AzureFunctionApp
@@ -418,7 +421,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
       )
     }
 
-    this.authorisationManager.grantRoleAssignmentToStorageAccount(
+    this.storageRoleAssignment = this.authorisationManager.grantRoleAssignmentToStorageAccount(
       this.id,
       this,
       this.appStorageAccount.id,
@@ -428,7 +431,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
     )
 
     if (!this.props.useConfigOverride) {
-      this.authorisationManager.grantRoleAssignmentToApplicationConfiguration(
+      this.appConfigRoleAssignment = this.authorisationManager.grantRoleAssignmentToApplicationConfiguration(
         this.id,
         this,
         this.appConfig.id,
@@ -469,7 +472,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
     }
 
     if (AzureAppConfigurationManager.hasEventGridTargets(this.appConfigurationsParsedConfig)) {
-      this.authorisationManager.grantRoleAssignmentToEventgridTopic(
+      this.eventGridRoleAssignment = this.authorisationManager.grantRoleAssignmentToEventgridTopic(
         this.id,
         this,
         this.props.existingTopicName,
