@@ -1,5 +1,16 @@
 # @gradientedge/cdk-utils
 
+## 11.35.0
+
+### Minor Changes
+
+- [`531bb45`](https://github.com/gradientedge/cdk-utils/commit/531bb458cce928b876b2d06254c897a46c017c01) Thanks [@despock](https://github.com/despock)! - feat: exposing role assignments provisioned in constructs
+
+### Patch Changes
+
+- Updated dependencies [[`531bb45`](https://github.com/gradientedge/cdk-utils/commit/531bb458cce928b876b2d06254c897a46c017c01)]:
+  - @gradientedge/cdk-utils-azure@2.33.0
+
 ## 11.34.0
 
 ### Minor Changes
