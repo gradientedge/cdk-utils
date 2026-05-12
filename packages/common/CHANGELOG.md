@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-common
 
+## 2.3.0
+
+### Minor Changes
+
+- [`fd89e65`](https://github.com/gradientedge/cdk-utils/commit/fd89e65a03d1d1472cbbdb112a869d21a6d5b996) Thanks [@despock](https://github.com/despock)! - feat: bumping dependencies
+
 ## 2.2.1
 
 ### Patch Changes
