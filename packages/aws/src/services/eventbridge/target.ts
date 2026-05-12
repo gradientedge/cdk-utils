@@ -60,15 +60,20 @@ export interface LogGroupNoPolicyProps extends TargetBaseProps {
  * @category Service
  */
 export class CloudWatchLogGroupNoPolicy implements IRuleTarget {
+  /**
+   * @param logGroup the CloudWatch log group to use as the event target
+   * @param props optional configuration for the log group target
+   */
   constructor(
     private readonly logGroup: ILogGroup,
     private readonly props: LogGroupNoPolicyProps = {}
   ) {}
 
   /**
-   * Returns a RuleTarget that can be used to log an event into a CloudWatch LogGroup
+   * @summary Returns a RuleTarget that can be used to log an event into a CloudWatch LogGroup
    */
   public bind(): RuleTargetConfig {
+    /* Resolve the log group's stack to build the ARN in the correct account/region */
     const logGroupStack = Stack.of(this.logGroup)
 
     return {

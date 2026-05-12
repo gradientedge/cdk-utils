@@ -34,16 +34,25 @@ import { ApiToAnyTargetProps, ApiToAnyTargetRestApiResource, ApiToAnyTargetRestA
  * @category Construct
  */
 export class ApiToAnyTarget extends CommonConstruct {
+  /** The API to any target properties */
   props: ApiToAnyTargetProps
+  /** The scoped id of this construct */
   id: string
 
-  /* application related resources */
+  /** The resolved application secrets from SecretsManager */
   applicationSecrets: ISecret[]
 
-  /* rest restApi related resources */
+  /** The REST API resources (api, integration, domain, etc.) */
   apiToAnyTargetRestApi: ApiToAnyTargetRestApiType
+  /** The default API resource path name */
   apiResource: string
 
+  /**
+   * @summary Create a new ApiToAnyTarget construct
+   * @param parent the parent construct
+   * @param id scoped id of the resource
+   * @param props the API to any target properties
+   */
   constructor(parent: Construct, id: string, props: ApiToAnyTargetProps) {
     super(parent, id, props)
     this.props = props

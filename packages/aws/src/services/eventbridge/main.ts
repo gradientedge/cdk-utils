@@ -48,6 +48,7 @@ export class EventManager {
     if (!props) throw new Error(`EventBus props undefined for ${id}`)
     if (!props.eventBusName) throw new Error(`EventBus eventBusName undefined for ${id}`)
 
+    /* Skip name formatting for the 'default' event bus since it is an AWS built-in name */
     let eventBusName = props.eventBusName
     if (eventBusName !== 'default') {
       eventBusName = scope.resourceNameFormatter.format(
@@ -112,11 +113,11 @@ export class EventManager {
    * @summary Method to create an eventbridge rule with lambda target
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props
-   * @param lambdaFunction
-   * @param eventBusName
-   * @param eventPattern
-   * @param scheduleExpression
+   * @param props the CfnRule properties for the event rule
+   * @param lambdaFunction the Lambda function to invoke as the rule target
+   * @param eventBusName optional name of the custom event bus to attach the rule to
+   * @param eventPattern optional event pattern to filter events
+   * @param scheduleExpression optional cron or rate expression for scheduled rules
    */
   public createLambdaRule(
     id: string,
@@ -152,6 +153,7 @@ export class EventManager {
       })
     }
 
+    /* Grant EventBridge permission to invoke the Lambda function */
     new CfnPermission(scope, `${id}LambdaPermission`, {
       action: 'lambda:InvokeFunction',
       functionName: lambdaFunction.functionName,
@@ -169,12 +171,12 @@ export class EventManager {
    * @summary Method to create an eventbridge rule with fargate task target
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props
-   * @param cluster
-   * @param task
-   * @param subnetIds
-   * @param role
-   * @param eventPattern
+   * @param props the CfnRule properties for the event rule
+   * @param cluster the ECS cluster to run the Fargate task in
+   * @param task the ECS task definition to execute
+   * @param subnetIds the list of subnet IDs for the Fargate task's VPC configuration
+   * @param role the IAM role granting EventBridge permission to run the ECS task
+   * @param eventPattern optional event pattern to filter events
    */
   public createFargateTaskRule(
     id: string,
@@ -235,6 +237,7 @@ export class EventManager {
     if (!props) throw new Error(`Pipe props undefined for ${id}`)
     if (!props.name) throw new Error(`Pipe name undefined for ${id}`)
 
+    /* Create an IAM role granting the pipe access to poll the SQS queue and start the Step Function */
     const pipeRole = scope.iamManager.createRoleForSqsToSfnPipe(
       `${id}-role`,
       scope,
@@ -248,6 +251,7 @@ export class EventManager {
       roleArn: pipeRole.roleArn,
       source: sourceQueue.queueArn,
       sourceParameters: {
+        /* Apply optional filter criteria to only forward matching SQS messages */
         filterCriteria: props.pipeFilterPattern
           ? {
               filters: [
@@ -295,6 +299,7 @@ export class EventManager {
     if (!props) throw new Error(`Pipe props undefined for ${id}`)
     if (!props.name) throw new Error(`Pipe name undefined for ${id}`)
 
+    /* Create an IAM role granting the pipe access to poll the SQS queue and invoke the Lambda */
     const pipeRole = scope.iamManager.createRoleForSqsToLambdaPipe(
       `${id}-role`,
       scope,
@@ -308,6 +313,7 @@ export class EventManager {
       roleArn: pipeRole.roleArn,
       source: sourceQueue.queueArn,
       sourceParameters: {
+        /* Apply optional filter criteria to only forward matching SQS messages */
         filterCriteria: props.pipeFilterPattern
           ? {
               filters: [
@@ -352,6 +358,7 @@ export class EventManager {
     if (!props) throw new Error(`Pipe props undefined for ${id}`)
     if (!props.name) throw new Error(`Pipe name undefined for ${id}`)
 
+    /* Create an IAM role granting the pipe access to read the DynamoDB stream and invoke the Lambda */
     const pipeRole = scope.iamManager.createRoleForDynamoDbToLambdaPipe(
       `${id}-role`,
       scope,
@@ -365,6 +372,7 @@ export class EventManager {
       roleArn: pipeRole.roleArn,
       source: sourceDynamoDbStreamArn,
       sourceParameters: {
+        /* Apply optional filter criteria to only forward matching DynamoDB stream records */
         filterCriteria: props.pipeFilterPattern
           ? {
               filters: [

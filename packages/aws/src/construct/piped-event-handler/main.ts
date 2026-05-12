@@ -24,10 +24,19 @@ import { PipedEventHandlerProps } from './types.js'
  * @category Construct
  */
 export class PipedEventHandler extends EventHandler {
+  /** The piped event handler properties */
   props: PipedEventHandlerProps
+  /** The dead-letter queue for failed piped messages */
   pipedDlq: IQueue
+  /** The SQS queue used as the event pipe source */
   pipedQueue: IQueue
 
+  /**
+   * @summary Create a new PipedEventHandler construct
+   * @param parent the parent construct
+   * @param id scoped id of the resource
+   * @param props the piped event handler properties
+   */
   protected constructor(parent: Construct, id: string, props: PipedEventHandlerProps) {
     super(parent, id, props)
     this.props = props

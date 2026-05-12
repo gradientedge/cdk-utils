@@ -5,6 +5,16 @@ import { BaseProps } from './types.js'
 /**
  * Abstract base stack that all higher-level stacks extend.
  * Provides common context resolution and domain configuration capabilities.
+ * @example
+ * import { BaseStack } from '@gradientedge/cdk-utils-common';
+ *
+ * class MyStack extends BaseStack {
+ *   constructor(parent: Construct, id: string, props: BaseProps) {
+ *     super(parent, id);
+ *     this.props = props;
+ *   }
+ * }
+ * @see {@link BaseProps} for the available configuration properties
  * @category Common
  */
 export abstract class BaseStack extends Construct {
@@ -13,6 +23,7 @@ export abstract class BaseStack extends Construct {
 
   /**
    * @summary Method to determine the core CDK construct properties injected via context json
+   * @param props - The base properties containing context configuration
    */
   protected abstract determineConstructProps(props: BaseProps): void
 

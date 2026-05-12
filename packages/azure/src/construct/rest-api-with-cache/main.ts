@@ -21,7 +21,9 @@ import { AzureApiWithCache, AzureRestApiWithCacheProps } from './types.js'
  * @category Construct
  */
 export class AzureRestApiWithCache extends AzureRestApi {
+  /** REST API with cache properties */
   props: AzureRestApiWithCacheProps
+  /** Provisioned API Management resources with Redis cache */
   declare api: AzureApiWithCache
 
   /**

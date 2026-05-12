@@ -15,7 +15,7 @@ import { ArnsByRegionForArm64, ArnsByRegionForX86_64 } from './constants.js'
 import { AppConfigProps } from './types.js'
 
 /**
- * Provides operations on AWS
+ * Provides operations on AWS AppConfig.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
  * @example
@@ -52,7 +52,7 @@ export class AppConfigManager {
    * @summary Method to create an AppConfig Application
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props
+   * @param props the AppConfig configuration properties
    * @returns the appconfig application
    */
   public createApplication(id: string, scope: CommonConstruct, props: AppConfigProps): CfnApplication {
@@ -74,7 +74,7 @@ export class AppConfigManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param applicationId id of the application
-   * @param props
+   * @param props the AppConfig configuration properties
    * @returns the appconfig environment
    */
   public createEnvironment(
@@ -103,7 +103,7 @@ export class AppConfigManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param applicationId id of the application
-   * @param props
+   * @param props the AppConfig configuration properties
    * @returns the appconfig configuration profile
    */
   public createConfigurationProfile(
@@ -134,7 +134,7 @@ export class AppConfigManager {
    * @summary Method to create an AppConfig Deployment Strategy
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props
+   * @param props the AppConfig configuration properties
    * @returns the appconfig deployment strategy
    */
   public createDeploymentStrategy(id: string, scope: CommonConstruct, props: AppConfigProps): DeploymentStrategy {

@@ -46,6 +46,7 @@ export class CloudflareZoneManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props zone properties
+   * @see [Pulumi Cloudflare Zone]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/zone/}
    */
   public createZone(id: string, scope: CommonCloudflareConstruct, props: ZoneProps) {
     if (!props) throw new Error(`Props undefined for ${id}`)
@@ -66,6 +67,7 @@ export class CloudflareZoneManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param options optional zone lookup properties
+   * @see [Pulumi Cloudflare getZone]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/getzone/}
    */
   public resolveZone(id: string, scope: CommonCloudflareConstruct, options?: GetZoneProps) {
     const name = options?.filter?.name ?? scope.props.domainName
@@ -77,6 +79,7 @@ export class CloudflareZoneManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props zone cache reserve properties
+   * @see [Pulumi Cloudflare ZoneCacheReserve]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/zonecachereserve/}
    */
   public createZoneCacheReserve(id: string, scope: CommonCloudflareConstruct, props: ZoneCacheReserveProps) {
     if (!props) throw new Error(`Props undefined for ${id}`)
@@ -98,6 +101,7 @@ export class CloudflareZoneManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props zone cache variants properties
+   * @see [Pulumi Cloudflare ZoneCacheVariants]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/zonecachevariants/}
    */
   public createZoneCacheVariants(id: string, scope: CommonCloudflareConstruct, props: ZoneCacheVariantsProps) {
     if (!props) throw new Error(`Props undefined for ${id}`)
@@ -119,6 +123,7 @@ export class CloudflareZoneManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props zone dnssec properties
+   * @see [Pulumi Cloudflare ZoneDnssec]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/zonednssec/}
    */
   public createZoneDnssec(id: string, scope: CommonCloudflareConstruct, props: ZoneDnssecProps) {
     if (!props) throw new Error(`Props undefined for ${id}`)
@@ -140,6 +145,7 @@ export class CloudflareZoneManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props zone hold properties
+   * @see [Pulumi Cloudflare ZoneHold]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/zonehold/}
    */
   public createZoneHold(id: string, scope: CommonCloudflareConstruct, props: ZoneHoldProps) {
     if (!props) throw new Error(`Props undefined for ${id}`)
@@ -161,6 +167,7 @@ export class CloudflareZoneManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props zone lockdown properties
+   * @see [Pulumi Cloudflare ZoneLockdown]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/zonelockdown/}
    */
   public createZoneLockdown(id: string, scope: CommonCloudflareConstruct, props: ZoneLockdownProps) {
     if (!props) throw new Error(`Props undefined for ${id}`)
@@ -182,6 +189,7 @@ export class CloudflareZoneManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props zone dns settings properties
+   * @see [Pulumi Cloudflare ZoneSetting]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/zonesetting/}
    */
   public createZoneDnsSettings(id: string, scope: CommonCloudflareConstruct, props: ZoneSettingProps) {
     if (!props) throw new Error(`Props undefined for ${id}`)
@@ -205,6 +213,7 @@ export class CloudflareZoneManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props zone setting properties
+   * @see [Pulumi Cloudflare ZoneSetting]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/zonesetting/}
    */
   public createZoneSetting(id: string, scope: CommonCloudflareConstruct, props: ZoneSettingProps) {
     if (!props) throw new Error(`Props undefined for ${id}`)

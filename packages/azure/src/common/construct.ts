@@ -47,32 +47,63 @@ import { CommonAzureStackProps } from './types.js'
  * @category Common
  */
 export class CommonAzureConstruct extends ComponentResource {
+  /** Stack properties for the construct */
   declare props: CommonAzureStackProps
+  /** Optional Pulumi component resource options */
   declare options?: ComponentResourceOptions
+  /** Unique identifier for the construct */
   id: string
+  /** The Azure resource group associated with this construct */
   resourceGroup: ResourceGroup
+  /** The fully qualified domain name derived from domainName and subDomain */
   fullyQualifiedDomainName: string
+  /** Manager for Azure RBAC role assignments */
   authorisationManager: AzureAuthorisationManager
+  /** Manager for Azure API Management resources */
   apiManagementManager: AzureApiManagementManager
+  /** Manager for Azure App Configuration resources */
   appConfigurationManager: AzureAppConfigurationManager
+  /** Manager for Azure App Service resources */
   appServiceManager: AzureAppServiceManager
+  /** Manager for Azure Application Insights resources */
   applicationInsightsManager: AzureApplicationInsightsManager
+  /** Manager for Azure CosmosDB resources */
   cosmosDbManager: AzureCosmosDbManager
+  /** Manager for Azure DNS resources */
   dnsManager: AzureDnsManager
+  /** Manager for Azure Event Grid resources */
   eventgridManager: AzureEventgridManager
+  /** Manager for Azure Function App resources */
   functionManager: AzureFunctionManager
+  /** Manager for Azure Key Vault resources */
   keyVaultManager: AzureKeyVaultManager
+  /** Manager for Azure Log Analytics Workspace resources */
   operationalInsightsManager: AzureOperationalInsightsManager
+  /** Manager for Azure Portal Dashboard resources */
   portalManager: AzurePortalManager
+  /** Manager for Azure Monitor diagnostic settings */
   monitorManager: AzureMonitorManager
+  /** Manager for Azure Managed Redis (Enterprise) resources */
   redisManager: AzureRedisManager
+  /** Manager for Azure Resource Group resources */
   resourceGroupManager: AzureResourceGroupManager
+  /** Formatter for Azure resource names based on naming conventions */
   resourceNameFormatter: AzureResourceNameFormatter
+  /** Manager for Azure Security Center (Defender) resources */
   securityCentermanager: AzureSecurityCentermanager
+  /** Manager for Azure Service Bus resources */
   serviceBusManager: AzureServiceBusManager
+  /** Manager for Azure Storage resources */
   storageManager: AzureStorageManager
+  /** Shared Log Analytics Workspace resolved from props, used for diagnostic logging */
   commonLogAnalyticsWorkspace: Workspace | Output<GetWorkspaceResult>
 
+  /**
+   * @summary Create a new CommonAzureConstruct
+   * @param name the scoped name of the construct
+   * @param props the common Azure stack properties
+   * @param options optional Pulumi component resource options
+   */
   constructor(name: string, props: CommonAzureStackProps, options?: ComponentResourceOptions) {
     super(`construct:${name}`, name, props, options)
     this.props = props
@@ -102,6 +133,11 @@ export class CommonAzureConstruct extends ComponentResource {
     this.determineFullyQualifiedDomain()
   }
 
+  /**
+   * @summary Resolve a Pulumi stack reference for cross-stack outputs
+   * @param id scoped id of the stack reference resource
+   * @param stackName optional fully qualified stack name; defaults to id if not provided
+   */
   protected resolveStack(id: string, stackName?: string) {
     const name = stackName ?? id
     if (!name) throw new Error('Stack name undefined')
@@ -110,6 +146,12 @@ export class CommonAzureConstruct extends ComponentResource {
     })
   }
 
+  /**
+   * @summary Create the resource group for this construct
+   * - Uses the resourceGroupName from props or falls back to the construct id
+   * - Registers resource group id and name as stack outputs
+   * - No-op if the resource group already exists
+   */
   protected createResourceGroup() {
     if (this.resourceGroup) return
 
@@ -124,6 +166,11 @@ export class CommonAzureConstruct extends ComponentResource {
     })
   }
 
+  /**
+   * @summary Resolve a shared Log Analytics Workspace from props
+   * - Populates the commonLogAnalyticsWorkspace property for use in diagnostic settings
+   * - No-op if commonLogAnalyticsWorkspace is not configured in props
+   */
   protected resolveCommonLogAnalyticsWorkspace() {
     if (!this.props.commonLogAnalyticsWorkspace || !this.props.commonLogAnalyticsWorkspace.workspaceName) return
 

@@ -32,14 +32,23 @@ export class CloudflarePagesStaticSite extends CommonCloudflareConstruct {
   declare props: CloudflarePagesStaticSiteProps
 
   /* static site resources */
+  /** The DNS CNAME record for the pages site */
   sitePagesCnameRecord: DnsRecord
+  /** The pages domain association */
   sitePagesDomain: PagesDomain
+  /** The Cloudflare Pages project resource */
   sitePagesProject: PagesProject
+  /** The Cloudflare zone (created or resolved) for the site */
   siteZone: Zone | Output<GetZoneResult>
+  /** Production environment variables for the pages deployment */
   sitePagesEnvironmentVariables: { [key: string]: PagesProjectDeploymentConfigsProductionEnvVars }
+  /** Preview environment variables for the pages deployment */
   sitePagesPreviewEnvironmentVariables: { [key: string]: PagesProjectDeploymentConfigsPreviewEnvVars }
+  /** Production secrets for the pages deployment */
   sitePagesSecrets: { [key: string]: PagesProjectDeploymentConfigsProductionEnvVars }
+  /** Preview secrets for the pages deployment */
   sitePagesPreviewSecrets: { [key: string]: PagesProjectDeploymentConfigsPreviewEnvVars }
+  /** Optional resources that the deployment depends on */
   siteDeploymentDependsOn: any
 
   /**

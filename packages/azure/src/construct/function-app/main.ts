@@ -44,30 +44,53 @@ import { AzureFunctionAppProps } from './types.js'
  * @category Construct
  */
 export class AzureFunctionApp extends CommonAzureConstruct {
+  /** Function app properties */
   props: AzureFunctionAppProps
+  /** The provisioned Azure Function App web app resource */
   app: WebApp
+  /** The provisioned App Service Plan for the function app */
   appServicePlan: AppServicePlan
+  /** Environment variables to inject into the function app configuration */
   appEnvironmentVariables: Record<string, any> = {}
+  /** The provisioned storage account for the function app */
   appStorageAccount: StorageAccount
+  /** The provisioned storage container for deployment artifacts */
   appDeploymentStorageContainer: BlobContainer
+  /** The provisioned storage container for function app data */
   appStorageContainer: BlobContainer
+  /** The provisioned or resolved App Configuration store */
   appConfig: ConfigurationStore | Output<GetConfigurationStoreResult>
+  /** The archive file output for the function app deployment package */
   appCodeArchiveFile: Output<archive.GetFileResult>
+  /** Hash of the app configuration for change detection */
   appConfigHash: string
+  /** Map of resource group names to sets of Key Vault names for role assignments */
   appKeyVaultsByResourceGroup: Map<string, Set<string>> = {} as Map<string, Set<string>>
+  /** Connection strings to configure on the function app */
   appConnectionStrings: any[] = []
+  /** Prefix for App Configuration key names */
   appConfigPrefix?: string
+  /** Parsed app configuration data (processed version) */
   appConfigurationsParsedConfig: any
+  /** Parsed app configuration data (original version before processing) */
   appConfigurationsOriginalParsedConfig: any
 
+  /** The provisioned Key Vault for data storage secrets */
   dataKeyVault: Vault
+  /** The provisioned data storage account */
   dataStorageAccount: StorageAccount
+  /** The provisioned data storage container */
   dataStorageContainer: BlobContainer
 
+  /** The resolved Application Insights component for telemetry */
   applicationInsights: Output<GetComponentResult>
+  /** The provisioned Azure Portal dashboard for monitoring */
   functionDashboard: Dashboard
+  /** Role assignment granting the function app access to the storage account */
   storageRoleAssignment: RoleAssignment
+  /** Role assignment granting the function app access to the App Configuration store */
   appConfigRoleAssignment: RoleAssignment
+  /** Role assignment granting the function app access to EventGrid topics */
   eventGridRoleAssignment: RoleAssignment
 
   /**

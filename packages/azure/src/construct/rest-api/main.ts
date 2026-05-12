@@ -31,8 +31,11 @@ import { AzureApi, AzureRestApiProps } from './types.js'
  * @category Construct
  */
 export class AzureRestApi extends CommonAzureConstruct {
+  /** REST API properties */
   props: AzureRestApiProps
+  /** Provisioned API Management resources */
   api: AzureApi = {} as AzureApi
+  /** The resolved Application Insights component for telemetry */
   applicationInsights: Output<GetComponentResult>
 
   /**

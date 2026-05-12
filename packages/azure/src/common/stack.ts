@@ -26,13 +26,24 @@ import { CommonAzureStackProps } from './types.js'
  * @category Common
  */
 export class CommonAzureStack extends ComponentResource {
+  /** Default Node.js runtime version for Azure Function Apps */
   public static NODEJS_RUNTIME = '22'
 
+  /** The construct instance created by this stack */
   construct: CommonAzureConstruct
+  /** Stack properties including environment-specific configuration */
   props: CommonAzureStackProps
+  /** Pulumi config instance for reading stack configuration values */
   config: Config
+  /** Registered stack outputs for cross-stack references */
   outputs?: Record<string, unknown>
 
+  /**
+   * @summary Create a new CommonAzureStack
+   * @param name the scoped name of the stack
+   * @param props the common Azure stack properties
+   * @param options optional Pulumi component resource options
+   */
   constructor(name: string, props: CommonAzureStackProps, options?: ComponentResourceOptions) {
     super(`stack:${name}`, name, props, options)
 
@@ -129,8 +140,16 @@ export class CommonAzureStack extends ComponentResource {
     return JSON.parse(stageContextPropsBuffer.toString('utf-8'))
   }
 
+  /**
+   * @summary Create the construct instance for this stack
+   * - Override in subclasses to provision infrastructure resources
+   */
   protected createConstruct() {}
 
+  /**
+   * @summary Register stack outputs for cross-stack consumption
+   * - Registers resource group id and name if a construct with a resource group exists
+   */
   protected registerOutputs() {
     if (this.construct && this.construct.resourceGroup) {
       this.outputs = _.merge(this.outputs, {
@@ -151,6 +170,11 @@ export class CommonAzureStack extends ComponentResource {
     return subDomain ? `${subDomain}.${domainName}` : domainName
   }
 
+  /**
+   * @summary Walk up the directory tree to locate the infrastructure root containing the stage context path
+   * @returns The directory path containing the stage context configuration
+   * @throws Error if the stage context directory cannot be found within 6 parent directories
+   */
   protected static determineEnvironmentProperty() {
     const config = new Config()
     const stageContextPath = config.get('stageContextPath')
@@ -166,6 +190,11 @@ export class CommonAzureStack extends ComponentResource {
     throw new Error('Could not locate infrastructure root (pulumi-env/ not found)')
   }
 
+  /**
+   * @summary Retrieve a specific property from the stage-specific environment configuration file
+   * @param property the property key to retrieve from the environment config
+   * @returns The value of the requested property from the stage config JSON
+   */
   protected static getEnvironmentProperty(property: string) {
     const config = new Config()
     const stage = config.get('stage')

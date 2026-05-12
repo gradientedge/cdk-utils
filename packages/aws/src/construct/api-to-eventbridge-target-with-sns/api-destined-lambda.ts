@@ -9,11 +9,18 @@ import { ApiDestinedLambdaEnvironment, ApiDestinedLambdaType } from './types.js'
  * @category Construct
  */
 export class ApiDestinedLambda implements ApiDestinedLambdaType {
+  /** The EventBridge destination for failed Lambda invocations */
   destinationFailure: EventBridgeDestination
+  /** The EventBridge destination for successful Lambda invocations */
   destinationSuccess: EventBridgeDestination
+  /** The environment variables for the Lambda function */
   environment: ApiDestinedLambdaEnvironment
+  /** The Lambda function */
   function: IFunction
+  /** The Lambda layers attached to the function */
   layers: LayerVersion[]
+  /** The IAM policy for the Lambda function */
   policy: PolicyDocument
+  /** The IAM role for the Lambda function */
   role: Role
 }

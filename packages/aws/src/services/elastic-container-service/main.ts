@@ -43,8 +43,8 @@ export class EcsManager {
    * @summary Method to create an ecs cluster
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props
-   * @param vpc
+   * @param props the ECS cluster properties
+   * @param vpc the VPC in which the cluster will be created
    */
   public createEcsCluster(id: string, scope: CommonConstruct, props: EcsClusterProps, vpc: IVpc) {
     if (!props) throw new Error(`Ecs Cluster props undefined for ${id}`)
@@ -71,14 +71,14 @@ export class EcsManager {
    * @summary Method to create an ecs fargate task
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props
-   * @param cluster
-   * @param role
-   * @param logGroup
-   * @param containerImage
-   * @param environment
-   * @param secrets
-   * @param command
+   * @param props the ECS task definition properties
+   * @param cluster the ECS cluster to associate with the task
+   * @param role the IAM role for task execution and task role
+   * @param logGroup the CloudWatch log group for container logging
+   * @param containerImage the container image to use for the task
+   * @param environment optional environment variables for the container
+   * @param secrets optional secret values to inject into the container
+   * @param command optional command to override the container entrypoint
    */
   public createEcsFargateTask(
     id: string,
@@ -94,6 +94,7 @@ export class EcsManager {
   ) {
     if (!props) throw new Error(`EcsTask props undefined for ${id}`)
 
+    /* Create a Fargate-compatible task definition with AWS VPC networking */
     const ecsTask = new TaskDefinition(scope, `${id}`, {
       ...props,
       compatibility: Compatibility.FARGATE,
@@ -107,6 +108,7 @@ export class EcsManager {
       taskRole: role,
     })
 
+    /* Add the primary container to the task definition with logging and resource limits */
     ecsTask.addContainer('EcsContainer', {
       command,
       cpu: props.cpu ? parseInt(props.cpu) : undefined,
@@ -139,9 +141,9 @@ export class EcsManager {
    * @summary Method to create an application load balanced ecs fargate task
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props
-   * @param cluster
-   * @param logGroup
+   * @param props the Application Load Balanced Fargate service properties
+   * @param cluster the ECS cluster to deploy the service into
+   * @param logGroup the CloudWatch log group for container logging
    */
   public createLoadBalancedFargateService(
     id: string,
@@ -185,6 +187,7 @@ export class EcsManager {
       },
     })
 
+    /* Configure target group health check if specified, converting seconds to Duration */
     if (props.healthCheck) {
       fargateService.targetGroup.configureHealthCheck({
         ...props.healthCheck,

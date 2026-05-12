@@ -29,9 +29,9 @@ export class EksManager {
    * @summary Method to create an eks deployment
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props
-   * @param image
-   * @param vpc
+   * @param props the EKS cluster properties including application capacity and port
+   * @param image the Docker image asset to deploy in the cluster
+   * @param vpc the VPC in which the EKS cluster will be created
    */
   public createEksDeployment(
     id: string,
@@ -45,6 +45,7 @@ export class EksManager {
 
     const appLabel = { app: `${id}`.toLowerCase() }
 
+    /* Define the Kubernetes Deployment manifest for the application */
     const deployment = {
       apiVersion: 'apps/v1',
       kind: 'Deployment',
@@ -66,6 +67,7 @@ export class EksManager {
       },
     }
 
+    /* Define the Kubernetes Service manifest with a LoadBalancer to expose the application */
     const service = {
       apiVersion: 'v1',
       kind: 'Service',
@@ -84,6 +86,7 @@ export class EksManager {
       },
     }
 
+    /* Create the EKS cluster with default capacity using T3 Large instances */
     const cluster = new Cluster(scope, `${id}Cluster`, {
       clusterName: scope.resourceNameFormatter.format(props.clusterName, scope.props.resourceNameOptions?.eks),
       defaultCapacity: props.appCapacity,
@@ -93,6 +96,7 @@ export class EksManager {
       vpc,
     })
 
+    /* Apply both the Service and Deployment manifests to the cluster */
     cluster.addManifest(`${id}Pod`, service, deployment)
 
     createCfnOutput(`${id}-clusterArn`, scope, cluster.clusterArn)

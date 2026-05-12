@@ -18,25 +18,64 @@ import {
 
 import { CommonCloudflareStackProps } from './types.js'
 
-/** @category Common */
+/**
+ * Common construct to use as a base for all Cloudflare constructs.
+ * Initialises all service managers and configures the Cloudflare provider.
+ * - Extend this class to create custom Cloudflare constructs.
+ * - All service managers (e.g. {@link CloudflareAccessManager}, {@link CloudflareZoneManager}) are available within the context.
+ * @example
+ * ```
+ * import { CommonCloudflareConstruct, CommonCloudflareStackProps } from '@gradientedge/cdk-utils'
+ *
+ * class CustomConstruct extends CommonCloudflareConstruct {
+ *   constructor(name: string, props: CommonCloudflareStackProps) {
+ *     super(name, props)
+ *     this.zoneManager.createZone('MyZone', this, props)
+ *   }
+ * }
+ * ```
+ * @category Common
+ */
 export class CommonCloudflareConstruct extends ComponentResource {
+  /** The construct stack properties */
   declare props: CommonCloudflareStackProps
+  /** Optional Pulumi component resource options */
   declare options?: ComponentResourceOptions
+  /** The scoped identifier for this construct */
   id: string
+  /** The Pulumi configuration instance */
   config: Config
+  /** The fully qualified domain name resolved from domainName and subDomain */
   fullyQualifiedDomainName: string
+  /** Manager for Cloudflare Access operations */
   accessManager: CloudflareAccessManager
+  /** Manager for Cloudflare API Shield operations */
   apiShieldManager: CloudflareApiShieldManager
+  /** Manager for Cloudflare Argo operations */
   argoManager: CloudflareArgoManager
+  /** Manager for Cloudflare Filter operations */
   filterManager: CloudflareFilterManager
+  /** Manager for Cloudflare Firewall operations */
   firewallManager: CloudflareFirewallManager
+  /** Manager for Cloudflare Pages operations */
   pageManager: CloudflarePageManager
+  /** Manager for Cloudflare DNS Record operations */
   recordManager: CloudflareRecordManager
+  /** Manager for Cloudflare Rule Set operations */
   ruleSetManager: CloudflareRuleSetManager
+  /** Manager for Cloudflare Worker operations */
   workerManager: CloudflareWorkerManager
+  /** Manager for Cloudflare Zone operations */
   zoneManager: CloudflareZoneManager
+  /** The Cloudflare provider instance */
   provider: CloudflareProvider
 
+  /**
+   * @summary Create a new CommonCloudflareConstruct
+   * @param name scoped id of the construct
+   * @param props the common cloudflare stack properties
+   * @param options optional Pulumi component resource options
+   */
   constructor(name: string, props: CommonCloudflareStackProps, options?: ComponentResourceOptions) {
     super(`construct:${name}`, name, props, options)
     this.props = props
@@ -60,6 +99,11 @@ export class CommonCloudflareConstruct extends ComponentResource {
     this.provider = new CloudflareProvider(`${this.id}-provider`, this.props, options)
   }
 
+  /**
+   * @summary Resolve a Pulumi stack reference by name
+   * @param stackName the fully qualified stack name to resolve
+   * @returns the resolved stack reference
+   */
   protected resolveStack(stackName: string) {
     if (!stackName) throw new Error('Stack name undefined')
     return new pulumi.StackReference(stackName)

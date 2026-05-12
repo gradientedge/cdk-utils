@@ -29,16 +29,26 @@ import { RestApiLambdaWithCacheProps } from './types.js'
  * @category Construct
  */
 export abstract class RestApiLambdaWithCache extends RestApiLambda {
-  /* restApiLambdaWithCache props */
+  /** The REST API Lambda with cache properties */
   props: RestApiLambdaWithCacheProps
+  /** The scoped id of this construct */
   id: string
 
-  /* restApiLambda resources */
+  /** The VPC for the Lambda function and ElastiCache cluster */
   restApivpc: IVpc
+  /** The ElastiCache replication group */
   restApiCache: CfnReplicationGroup
+  /** The security group shared by the Lambda function and ElastiCache cluster */
   restApiSecurityGroup: ISecurityGroup
+  /** The CloudFormation export name for the security group */
   restApiSecurityGroupExportName: string
 
+  /**
+   * @summary Create a new RestApiLambdaWithCache construct
+   * @param parent the parent construct
+   * @param id scoped id of the resource
+   * @param props the REST API Lambda with cache properties
+   */
   protected constructor(parent: Construct, id: string, props: RestApiLambdaWithCacheProps) {
     super(parent, id, props)
 

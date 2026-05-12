@@ -107,6 +107,7 @@ export class CloudflareWorkerManager {
       { parent: scope }
     )
 
+    /* create associated worker routes if specified in the script properties */
     if (props.routes) {
       _.forEach(props.routes, (route: WorkerRouteProps) => {
         this.createWorkerRoute(`${id}-route-${route.pattern}`, scope, route)

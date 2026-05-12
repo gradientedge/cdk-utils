@@ -21,7 +21,7 @@ import { TableProps, TablePropsV2 } from './types.js'
  *     this.dynamodbManager.createTable('MyTable', this, tableProps)
  *   }
  * }
- * @see [CDK Certificate Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_dynamodb-readme.html}
+ * @see [CDK DynamoDB Module]{@link https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_dynamodb-readme.html}
  * @category Service
  */
 export class DynamodbManager {
@@ -55,7 +55,7 @@ export class DynamodbManager {
   }
 
   /**
-   * @summary Method to create a table
+   * @summary Method to create a table (v2) using the TableV2 construct
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props table props

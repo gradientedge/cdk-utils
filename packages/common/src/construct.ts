@@ -5,6 +5,16 @@ import { BaseProps } from './types.js'
 /**
  * Abstract base construct that all higher-level constructs extend.
  * Provides common stage-detection and domain resolution capabilities.
+ * @example
+ * import { BaseConstruct } from '@gradientedge/cdk-utils-common';
+ *
+ * class MyConstruct extends BaseConstruct {
+ *   constructor(parent: Construct, id: string, props: BaseProps) {
+ *     super(parent, id);
+ *     this.props = props;
+ *   }
+ * }
+ * @see {@link BaseProps} for the available configuration properties
  * @category Common
  */
 export abstract class BaseConstruct extends Construct {

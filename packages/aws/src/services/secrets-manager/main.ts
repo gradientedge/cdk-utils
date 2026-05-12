@@ -64,6 +64,7 @@ export class SecretsManager {
    * @param secretKey the secret key to resolve the value for
    */
   public async resolveSecretValue(region: string, secretId: string, secretKey: string) {
+    /* Create an SDK client using the credentials resolved from the environment/profile */
     const client = new SecretsManagerClient({
       credentials: determineCredentials(),
       region,
@@ -73,6 +74,7 @@ export class SecretsManager {
     })
     const response = await client.send(command)
     if (!response.SecretString) throw new Error(`Unable to resolve secret for ${secretId}`)
+    /* Parse the secret JSON string and extract the requested key */
     const secretString = JSON.parse(response.SecretString)
 
     return secretString[secretKey]

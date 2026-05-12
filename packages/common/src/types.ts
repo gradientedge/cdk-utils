@@ -1,5 +1,6 @@
 /**
- * Base properties shared across all constructs and stacks
+ * Base properties shared across all constructs and stacks.
+ * Defines the minimal configuration required by {@link BaseConstruct} and {@link BaseStack}.
  */
 /** @category Interface */
 export interface BaseProps {

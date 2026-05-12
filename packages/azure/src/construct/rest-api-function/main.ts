@@ -25,7 +25,9 @@ import { AzureApiFunction, AzureRestApiFunctionProps } from './types.js'
  * @category Construct
  */
 export class AzureRestApiFunction extends AzureFunctionApp {
+  /** REST API function properties */
   props: AzureRestApiFunctionProps
+  /** Provisioned API Management resources for the function-backed REST API */
   api: AzureApiFunction = {} as AzureApiFunction
 
   /**

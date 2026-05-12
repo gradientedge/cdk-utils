@@ -50,19 +50,28 @@ import {
  * @category Construct
  */
 export class ApiToEventBridgeTarget extends CommonConstruct {
+  /** The API to EventBridge target properties */
   props: ApiToEventBridgeTargetProps
+  /** The scoped id of this construct */
   id: string
 
-  /* application related resources */
+  /** The resolved application secrets from SecretsManager */
   applicationSecrets: ISecret[]
 
-  /* event related resources */
+  /** The EventBridge event resources (bus, rules, log groups) */
   apiEvent: ApiToEventBridgeTargetEventType
 
-  /* rest restApi related resources */
+  /** The REST API resources (api, integration, domain, etc.) */
   apiToEventBridgeTargetRestApi: ApiToEventBridgeTargetRestApiType
+  /** The default API resource path name */
   apiResource: string
 
+  /**
+   * @summary Create a new ApiToEventBridgeTarget construct
+   * @param parent the parent construct
+   * @param id scoped id of the resource
+   * @param props the API to EventBridge target properties
+   */
   constructor(parent: Construct, id: string, props: ApiToEventBridgeTargetProps) {
     super(parent, id, props)
 

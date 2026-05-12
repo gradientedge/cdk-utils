@@ -8,8 +8,13 @@ import { AzureResourceNameFormatterProps, CommonAzureStackProps } from '../index
  * @category Common
  */
 export class AzureResourceNameFormatter {
+  /** Stack properties containing naming configuration */
   props: CommonAzureStackProps
 
+  /**
+   * @summary Create a new AzureResourceNameFormatter
+   * @param props the common Azure stack properties containing naming configuration
+   */
   constructor(props: CommonAzureStackProps) {
     this.props = props
   }

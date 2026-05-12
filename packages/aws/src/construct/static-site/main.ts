@@ -31,21 +31,36 @@ import { StaticSiteProps } from './types.js'
  * @category Construct
  */
 export class StaticSite extends CommonConstruct {
-  /* static site properties */
+  /** The static site properties */
   props: StaticSiteProps
+  /** The scoped id of this construct */
   id: string
 
-  /* static site resources */
+  /** The Route53 hosted zone for the site domain */
   siteHostedZone: IHostedZone
+  /** The SSL/TLS certificate for the site */
   siteCertificate: ICertificate
+  /** The Route53 A record pointing to the CloudFront distribution */
   siteARecord: ARecord
+  /** The S3 bucket hosting the static site content */
   siteBucket: IBucket
+  /** The CloudFront distribution serving the static site */
   siteDistribution: IDistribution
+  /** The S3 bucket used for CloudFront access logs */
   siteLogBucket: IBucket
+  /** The CloudFront origin access identity for S3 bucket access */
   siteOriginAccessIdentity: OriginAccessIdentity
+  /** The CloudFront function attached to the distribution */
   siteCloudfrontFunction: IFunction
+  /** The CloudFront function associations for the distribution behaviours */
   siteFunctionAssociations: FunctionAssociation[]
 
+  /**
+   * @summary Create a new StaticSite construct
+   * @param parent the parent construct
+   * @param id scoped id of the resource
+   * @param props the static site properties
+   */
   constructor(parent: Construct, id: string, props: StaticSiteProps) {
     super(parent, id, props)
 

@@ -104,6 +104,8 @@ export class Route53Manager {
     if (!distribution) throw new Error(`Distribution undefined for ${id}`)
     if (!hostedZone) throw new Error(`HostedZone undefined for ${id}`)
 
+    /* In production or when skipStageFromRecord is set, use the plain record name;
+       otherwise append the stage suffix for environment isolation */
     const aRecord = new ARecord(scope, `${id}`, {
       recordName:
         (recordName && scope.isProductionStage()) || skipStageFromRecord

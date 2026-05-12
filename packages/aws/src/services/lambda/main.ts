@@ -46,8 +46,8 @@ export class LambdaManager {
    * @summary Method to create a lambda layer (nodejs)
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param code
-   * @param architectures
+   * @param code the asset code for the layer
+   * @param architectures optional list of compatible architectures, defaults to ARM_64
    */
   public createLambdaLayer(id: string, scope: CommonConstruct, code: AssetCode, architectures?: Architecture[]) {
     const lambdaLayer = new LayerVersion(scope, `${id}`, {
@@ -87,17 +87,17 @@ export class LambdaManager {
    * @summary Method to create a lambda function (nodejs)
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props
-   * @param role
-   * @param layers
-   * @param code
-   * @param handler
-   * @param environment
-   * @param vpc
-   * @param securityGroups
-   * @param accessPoint
-   * @param mountPath
-   * @param vpcSubnets
+   * @param props the Lambda function properties
+   * @param role the IAM role for the function execution
+   * @param layers the list of Lambda layers to attach
+   * @param code the asset code for the function
+   * @param handler optional handler entry point, defaults to 'index.lambda_handler'
+   * @param environment optional environment variables to inject
+   * @param vpc optional VPC to place the function in
+   * @param securityGroups optional security groups when running in a VPC
+   * @param accessPoint optional EFS access point for file system mounting
+   * @param mountPath optional mount path for the EFS file system, defaults to '/mnt/msg'
+   * @param vpcSubnets optional subnet selection when running in a VPC
    */
   public createLambdaFunction(
     id: string,
@@ -250,15 +250,15 @@ export class LambdaManager {
    * @summary Method to create a lambda function (nodejs) with docker image
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props
-   * @param role
-   * @param code
-   * @param environment
-   * @param vpc
-   * @param securityGroups
-   * @param accessPoint
-   * @param mountPath
-   * @param vpcSubnets
+   * @param props the Lambda function properties
+   * @param role the IAM role for the function execution
+   * @param code the Docker image code for the function
+   * @param environment optional environment variables to inject
+   * @param vpc optional VPC to place the function in
+   * @param securityGroups optional security groups when running in a VPC
+   * @param accessPoint optional EFS access point for file system mounting
+   * @param mountPath optional mount path for the EFS file system, defaults to '/mnt/msg'
+   * @param vpcSubnets optional subnet selection when running in a VPC
    */
   public createLambdaDockerFunction(
     id: string,
@@ -281,6 +281,7 @@ export class LambdaManager {
       scope.props.resourceNameOptions?.lambdaFunction
     )
 
+    /* Optionally provision a dead letter queue with a redrive queue for failed invocations */
     let deadLetterQueue
     if (props.deadLetterQueueEnabled) {
       const redriveQueue = scope.sqsManager.createRedriveQueueForLambda(`${id}-rdq`, scope, props)
@@ -330,11 +331,11 @@ export class LambdaManager {
   }
 
   /**
-   * @summary Method to create a lambda function Alias
+   * @summary Method to create a lambda function alias
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props
-   * @param lambdaVersion
+   * @param props the Lambda alias properties
+   * @param lambdaVersion the Lambda function version to point the alias to
    */
   public createLambdaFunctionAlias(
     id: string,

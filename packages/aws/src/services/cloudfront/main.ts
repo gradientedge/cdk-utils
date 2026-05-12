@@ -30,7 +30,7 @@ import { LambdaEdgeProps } from '../lambda/index.js'
 import { CloudfrontFunctionProps, DistributionProps } from './types.js'
 
 /**
- * Provides operations on AWS
+ * Provides operations on AWS CloudFront.
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
  * @example
@@ -74,12 +74,12 @@ export class CloudFrontManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props distribution properties
-   * @param siteBucket
-   * @param logBucket
-   * @param oai
-   * @param certificate
-   * @param aliases
-   * @param defaultFunctionAssociations
+   * @param siteBucket the S3 bucket serving as the origin
+   * @param logBucket optional S3 bucket for access logs
+   * @param oai optional Origin Access Identity for S3 access
+   * @param certificate optional ACM certificate for custom domain HTTPS
+   * @param aliases optional custom domain names for the distribution
+   * @param defaultFunctionAssociations optional CloudFront function associations for the default behavior
    */
   public createDistributionWithS3Origin(
     id: string,
@@ -129,12 +129,12 @@ export class CloudFrontManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props distribution properties
-   * @param origin
-   * @param domainNames
-   * @param logBucket
-   * @param certificate
-   * @param defaultFunctionAssociations
-   * @param responseHeadersPolicy
+   * @param origin the HTTP origin for the distribution
+   * @param domainNames the custom domain names for the distribution
+   * @param logBucket optional S3 bucket for access logs
+   * @param certificate optional ACM certificate for custom domain HTTPS
+   * @param defaultFunctionAssociations optional CloudFront function associations for the default behavior
+   * @param responseHeadersPolicy optional response headers policy for the default behavior
    */
   public createDistributionWithHttpOrigin(
     id: string,
@@ -193,14 +193,14 @@ export class CloudFrontManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props lambda@edge properties
-   * @param layers
-   * @param code
-   * @param role
-   * @param environment
-   * @param vpc
-   * @param securityGroups
-   * @param accessPoint
-   * @param mountPath
+   * @param layers the Lambda layers to attach to the function
+   * @param code the asset code bundle for the function
+   * @param role the IAM role for the function execution
+   * @param environment optional environment variables for the function
+   * @param vpc optional VPC to deploy the function into
+   * @param securityGroups optional security groups for VPC-connected functions
+   * @param accessPoint optional EFS access point for filesystem mounting
+   * @param mountPath optional mount path for the EFS filesystem (defaults to /mnt/msg)
    */
   public createEdgeFunction(
     id: string,
@@ -261,12 +261,12 @@ export class CloudFrontManager {
   }
 
   /**
-   *
-   * @param id
-   * @param scope
-   * @param dockerFilePath
-   * @param distributionId
-   * @param paths
+   * @summary Method to trigger a CloudFront cache invalidation via a CodeBuild project
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param dockerFilePath the path to the Dockerfile for the CodeBuild project
+   * @param distributionId the CloudFront distribution ID to invalidate
+   * @param paths optional invalidation paths (defaults to /*)
    */
   public invalidateCache(
     id: string,
@@ -298,7 +298,7 @@ export class CloudFrontManager {
    * @summary Method to provision a Cloudfront function
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props
+   * @param props the CloudFront function properties
    */
   public createCloudfrontFunction(id: string, scope: CommonConstruct, props: CloudfrontFunctionProps) {
     if (!props) throw new Error(`CloudFront Function props undefined for ${id}`)

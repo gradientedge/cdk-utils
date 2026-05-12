@@ -29,14 +29,27 @@ import { EventHandlerProps } from './types.js'
  * @category Construct
  */
 export class EventHandler extends CommonConstruct {
+  /** The event handler properties */
   props: EventHandlerProps
+  /** The scoped id of this construct */
   id: string
+  /** Container for all event handler resources (targets, workflow, rules) */
   handler: Handler
+  /** Whether to provision the Step Functions target on the EventBridge rule */
   provisionTarget: boolean = true
+  /** The VPC security group for Lambda functions */
   securityGroup: ISecurityGroup
+  /** Whether to wrap the workflow definition in a Map state for parallel processing */
   useMapState: boolean
+  /** The VPC for Lambda functions that require VPC access */
   vpc: IVpc
 
+  /**
+   * @summary Create a new EventHandler construct
+   * @param parent the parent construct
+   * @param id scoped id of the resource
+   * @param props the event handler properties
+   */
   constructor(parent: Construct, id: string, props: EventHandlerProps) {
     super(parent, id, props)
     this.props = props

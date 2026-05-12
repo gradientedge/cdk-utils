@@ -30,23 +30,40 @@ import { RestApiLambdaEnvironment, RestApiLambdaProps } from './types.js'
  * @category Construct
  */
 export abstract class RestApiLambda extends CommonConstruct {
-  /* restApiLambda props */
+  /** The REST API Lambda properties */
   props: RestApiLambdaProps
+  /** The scoped id of this construct */
   id: string
 
-  /* restApiLambda resources */
+  /** The resolved application secrets from SecretsManager */
   applicationSecrets: ISecret[]
+  /** The IAM policy for the REST API Lambda function */
   restApiLambdaPolicy: PolicyDocument
+  /** The IAM role for the REST API Lambda function */
   restApiLambdaRole: Role
+  /** The environment variables for the REST API Lambda function */
   restApiLambdaEnvironment: RestApiLambdaEnvironment
+  /** The Lambda layers attached to the REST API function */
   restApiLambdaLayers: ILayerVersion[] = []
+  /** The REST API Lambda function */
   restApiLambdaFunction: IFunction
+  /** The API Gateway REST API */
   restApi: RestApi
+  /** The Route53 hosted zone for the API domain */
   restApiHostedZone: IHostedZone
+  /** The SSL/TLS certificate for the API custom domain */
   restApiCertificate: ICertificate
+  /** The API Gateway custom domain */
   restApiDomain: DomainName
+  /** The base path mappings for the API custom domain */
   restApiBasePathMappings: BasePathMapping[] = []
 
+  /**
+   * @summary Create a new RestApiLambda construct
+   * @param parent the parent construct
+   * @param id scoped id of the resource
+   * @param props the REST API Lambda properties
+   */
   protected constructor(parent: Construct, id: string, props: RestApiLambdaProps) {
     super(parent, id, props)
 
@@ -193,6 +210,10 @@ export abstract class RestApiLambda extends CommonConstruct {
     )
   }
 
+  /**
+   * @summary Abstract method to create REST API resources (routes, methods, integrations)
+   * Must be implemented by subclasses to define the API structure
+   */
   protected abstract createRestApiResources(): void
 
   /**

@@ -55,41 +55,76 @@ import { SiteCachePolicyProps, SiteResponseHeadersPolicyProps, SiteWithEcsBacken
  * @category Construct
  */
 export class SiteWithEcsBackend extends CommonConstruct {
-  /* site properties */
+  /** The site with ECS backend properties */
   props: SiteWithEcsBackendProps
+  /** The scoped id of this construct */
   id: string
 
-  /* site resources */
+  /** The Route53 hosted zone for the site domain */
   siteHostedZone: IHostedZone
+  /** The global (edge) SSL/TLS certificate */
   siteCertificate: ICertificate
+  /** The regional SSL/TLS certificate */
   siteRegionalCertificate: ICertificate
+  /** The IAM policy for the ECS task execution role */
   siteEcsPolicy: PolicyDocument
+  /** The IAM role for the ECS task execution */
   siteEcsRole: Role
+  /** The environment variables passed to the ECS container */
   siteEcsEnvironment: { [key: string]: string }
+  /** The VPC for the ECS cluster */
   siteVpc: IVpc
+  /** The resolved secrets from SecretsManager */
   siteSecrets: any
+  /** The ECS cluster */
   siteEcsCluster: Cluster
+  /** The CloudWatch log group for ECS task logs */
   siteEcsLogGroup: LogGroup
+  /** Docker build arguments for the ECS container image */
   siteEcsBuildArgs: any = {}
+  /** The Docker container image for the ECS task */
   siteEcsContainerImage: AssetImage
+  /** The ECS Fargate service */
   siteEcsService: FargateService
+  /** The ECS Fargate task definition */
   siteEcsTaskDefinition: FargateTaskDefinition
+  /** The Application Load Balancer listener */
   siteEcsListener: ApplicationListener
+  /** The Application Load Balancer */
   siteEcsLoadBalancer: ApplicationLoadBalancer
+  /** The ALB target group */
   siteEcsTargetGroup: ApplicationTargetGroup
+  /** The EFS file system for persistent storage */
   siteFileSystem: FileSystem
+  /** The S3 bucket used for ALB and CloudFront access logs */
   siteLogBucket: IBucket
+  /** The HTTP origin pointing to the ECS backend */
   siteOrigin: HttpOrigin
+  /** The CloudFront distribution for the site */
   siteDistribution: Distribution
+  /** The internal domain name used by the ECS load balancer */
   siteInternalDomainName: string
+  /** The external domain name exposed to end users via CloudFront */
   siteExternalDomainName: string
+  /** The list of domain names associated with the CloudFront distribution */
   siteDomainNames: string[]
+  /** The CloudFront function attached to the distribution */
   siteCloudfrontFunction: IFunction
+  /** The CloudFront function associations for the distribution behaviours */
   siteFunctionAssociations: FunctionAssociation[]
+  /** The CloudFront origin request policy */
   siteOriginRequestPolicy: OriginRequestPolicy
+  /** The CloudFront response headers policy */
   siteOriginResponseHeadersPolicy?: ResponseHeadersPolicy
+  /** The CloudFront cache policy */
   siteCachePolicy: CachePolicy
 
+  /**
+   * @summary Create a new SiteWithEcsBackend construct
+   * @param parent the parent construct
+   * @param id scoped id of the resource
+   * @param props the site with ECS backend properties
+   */
   constructor(parent: Construct, id: string, props: SiteWithEcsBackendProps) {
     super(parent, id, props)
 

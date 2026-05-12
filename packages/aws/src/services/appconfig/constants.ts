@@ -1,5 +1,5 @@
 /**
- * @returns { Map<string, string> } AppConfig extension ARN by region for x84
+ * Mapping of AWS region to AppConfig extension Lambda layer ARN for x86_64 architecture.
  */
 /** @category Constant */
 export const ArnsByRegionForX86_64: { [region: string]: string } = {
@@ -37,7 +37,7 @@ export const ArnsByRegionForX86_64: { [region: string]: string } = {
 }
 
 /**
- * @returns { Map<string, string> } AppConfig extension ARN by region for arm64
+ * Mapping of AWS region to AppConfig extension Lambda layer ARN for ARM64 architecture.
  */
 /** @category Constant */
 export const ArnsByRegionForArm64: { [region: string]: string } = {

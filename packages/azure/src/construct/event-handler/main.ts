@@ -23,9 +23,13 @@ import { AzureEventHandlerProps, EventHandlerEventGridSubscription, EventHandler
  * @category Construct
  */
 export class AzureEventHandler extends AzureFunctionApp {
+  /** Event handler properties */
   props: AzureEventHandlerProps
+  /** Provisioned EventGrid subscription resources including dead-letter storage */
   eventGridEventSubscription: EventHandlerEventGridSubscription
+  /** The provisioned or resolved EventGrid topic */
   eventGridTopic: Topic | Output<GetTopicResult>
+  /** Provisioned Service Bus resources (namespace and queue) */
   serviceBus: EventHandlerServiceBus
 
   /**

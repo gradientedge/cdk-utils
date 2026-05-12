@@ -29,10 +29,11 @@ import { SSMParameterReaderProps, SSMStringParameterProps } from './types.js'
  * @category Service
  */
 export class SsmManager {
+  /** Parameter name used to store the last-modified timestamp for secrets */
   public static SECRETS_MODIFIED_TIMESTAMP_PARAM = 'secrets-last-modified-timestamp'
 
   /**
-   * Method to write a string parameter to the parameters store
+   * @summary Method to write a string parameter to the parameters store
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props parameter props
@@ -54,7 +55,7 @@ export class SsmManager {
   }
 
   /**
-   * Method to read a string parameter from the parameters store
+   * @summary Method to read a string parameter from the parameters store
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param parameterName parameter name to lookup
@@ -69,7 +70,7 @@ export class SsmManager {
   }
 
   /**
-   * Method to read a string parameter from the parameters store in a given region
+   * @summary Method to read a string parameter from the parameters store in a given region
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param parameterName parameter name to lookup
@@ -87,13 +88,25 @@ export class SsmManager {
 }
 
 /**
- * Provides utilities to read same/cross region SSM parameters
+ * Provides utilities to read same/cross region SSM parameters.
+ *
+ * Uses an {@link AwsCustomResource} backed by the SSM SDK to read
+ * parameters from any region, including cross-region lookups that
+ * the standard CDK SSM constructs do not support.
  * @category Service
  */
 export class SSMParameterReader extends AwsCustomResource {
+  /**
+   * @summary Creates a custom resource that reads an SSM parameter
+   * @param scope scope in which this resource is defined
+   * @param name scoped id of the resource
+   * @param props the parameter reader configuration including name and region
+   */
   constructor(scope: CommonConstruct, name: string, props: SSMParameterReaderProps) {
     const { parameterName, region } = props
 
+    /* Build the SDK call to GetParameter, using a timestamp-based physical
+       resource ID so CloudFormation re-reads the value on every update */
     const ssmAwsSdkCall: AwsSdkCall = {
       action: 'getParameter',
       parameters: {

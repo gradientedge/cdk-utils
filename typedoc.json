@@ -62,7 +62,8 @@
     "aws-cdk-lib": {
       "ContainerInsights.DISABLED": "https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_ecs.ContainerInsights.html",
       "NetworkMode.AWS_VPC": "https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_ecs.NetworkMode.html",
-      "NetworkMode.HOST": "https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_ecs.NetworkMode.html"
+      "NetworkMode.HOST": "https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.aws_ecs.NetworkMode.html",
+      "AwsCustomResource": "https://docs.aws.amazon.com/cdk/api/v2/docs/aws-cdk-lib.custom_resources.AwsCustomResource.html"
     }
   }
 }

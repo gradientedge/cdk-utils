@@ -26,8 +26,11 @@ import { Site, SiteWithWebAppProps } from './types.js'
  * @category Construct
  */
 export class SiteWithWebApp extends CommonAzureConstruct {
+  /** Site with web app properties */
   props: SiteWithWebAppProps
+  /** The resolved Application Insights component for telemetry */
   applicationInsights: Output<GetComponentResult>
+  /** Provisioned site resources */
   site: Site = {} as Site
 
   /**

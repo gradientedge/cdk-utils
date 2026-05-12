@@ -101,9 +101,11 @@ export class S3Manager {
 
     const bucketName = S3Manager.determineBucketName(scope, props, props.bucketName)
 
+    /* Import an existing bucket by name instead of creating a new one */
     if (props.existingBucket && props.bucketName) {
       bucket = Bucket.fromBucketName(scope, `${id}`, S3Manager.determineBucketName(scope, props, props.bucketName))
     } else {
+      /* Optionally look up a separate bucket for server access logging */
       let logBucket
       if (props.logBucketName) {
         logBucket = Bucket.fromBucketName(
@@ -123,6 +125,8 @@ export class S3Manager {
         serverAccessLogsBucket: logBucket,
       })
 
+      /* Enable EventBridge notifications at the L1 (CloudFormation) level,
+         since the L2 Bucket construct does not expose this setting directly */
       const cfnBucket = bucket.node.defaultChild as CfnBucket
       cfnBucket.notificationConfiguration = {
         eventBridgeConfiguration: {
@@ -207,7 +211,7 @@ export class S3Manager {
   }
 
   /**
-   *
+   * @summary Method to create placeholder folders in an S3 bucket
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param bucket bucket to create the folders in

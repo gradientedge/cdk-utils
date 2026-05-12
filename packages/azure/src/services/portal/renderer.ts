@@ -8,16 +8,35 @@ import { parse } from 'yaml'
 import { TemplateError } from './error.js'
 import { DashboardRenderer, MissingKeys, PaneTemplate, RenderParams } from './types.js'
 
-/** @category Service */
+/**
+ * Renders Azure Portal dashboard templates from YAML pane definitions into JSON
+ * - Reads pane templates from a configurable template directory
+ * - Compiles templates using Lodash template interpolation with `{{}}` delimiters
+ * - Validates required variables and properties before rendering
+ * - Assembles multiple panes into a single dashboard JSON structure
+ * @category Service
+ */
 export class AzureDashboardRenderer implements DashboardRenderer {
+  /** Absolute path to the directory containing pane YAML templates */
   readonly paneTemplatePath: string
+  /** Absolute path to the directory where rendered dashboard files are written */
   readonly outputDir: string
 
+  /**
+   * @summary Create a new AzureDashboardRenderer
+   * @param basePath optional base path for pane templates; defaults to '<appRoot>/template/dashboard'
+   * @param outputDir optional output directory for rendered files; defaults to '<appRoot>/.artifacts'
+   */
   constructor(basePath?: string, outputDir?: string) {
     this.paneTemplatePath = basePath ?? path.join(appRoot.path, 'template', 'dashboard')
     this.outputDir = outputDir ?? path.join(appRoot.path, '.artifacts')
   }
 
+  /**
+   * @summary Load and parse a pane template by its identifier
+   * @param id the pane template identifier (corresponds to a YAML filename without extension)
+   * @returns the parsed pane template including dimensions, properties, variables, and template content
+   */
   protected getPaneId(id: string): PaneTemplate {
     const panePath = `${this.paneTemplatePath}/${id}.yaml`
     const paneFileContent = fs.readFileSync(panePath, 'utf-8')
@@ -25,6 +44,12 @@ export class AzureDashboardRenderer implements DashboardRenderer {
     return paneTemplate
   }
 
+  /**
+   * @summary Check for required properties that are missing from the render parameters
+   * @param template the pane template defining required properties
+   * @param properties the provided properties to check against the template
+   * @returns an object indicating which required property keys are missing
+   */
   public getMissingProperties(template: PaneTemplate, properties: RenderParams['properties'] = []): MissingKeys {
     const keys = Object.keys(template.properties ?? {}).filter(key => !(key in properties))
     return {
@@ -33,6 +58,12 @@ export class AzureDashboardRenderer implements DashboardRenderer {
     }
   }
 
+  /**
+   * @summary Check for required variables that are missing from the render parameters
+   * @param template the pane template defining required variables
+   * @param variables the provided variables to check against the template
+   * @returns an object indicating which required variable keys are missing
+   */
   public getMissingVariables(template: PaneTemplate, variables: RenderParams['variables']): MissingKeys {
     const keys = Object.keys(template.variables ?? {}).filter(key => !(key in variables))
     return {
@@ -41,6 +72,12 @@ export class AzureDashboardRenderer implements DashboardRenderer {
     }
   }
 
+  /**
+   * @summary Render a complete dashboard from multiple pane templates
+   * @param params render parameters including panes, variables, properties, and optional filter settings
+   * @returns the rendered dashboard JSON string
+   * @throws {@link TemplateError} if required variables or properties are missing
+   */
   public render(params: RenderParams): string {
     _.templateSettings.interpolate = /{{([\s\S]+?)}}/g
 
@@ -170,6 +207,12 @@ export class AzureDashboardRenderer implements DashboardRenderer {
     return JSON.stringify(dashboard, null, 2)
   }
 
+  /**
+   * @summary Render a dashboard and write the output to a template file
+   * @param filename the output filename (used as '<filename>.tftpl')
+   * @param params render parameters including panes, variables, properties, and optional filter settings
+   * @returns the absolute path to the rendered output file
+   */
   renderToFile(filename: string, params: RenderParams): string {
     const templateOutput = this.render(params)
     if (!fs.existsSync(this.outputDir)) {

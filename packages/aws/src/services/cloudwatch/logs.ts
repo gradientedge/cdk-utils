@@ -29,8 +29,8 @@ export class LogManager {
    * @summary Method to create a cloudwatch metric filter
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props
-   * @param logGroup
+   * @param props the metric filter properties
+   * @param logGroup the log group to apply the metric filter to
    */
   public createMetricFilter(id: string, scope: CommonConstruct, props: MetricFilterProps, logGroup: logs.ILogGroup) {
     if (!props) throw new Error(`MetricFilter props undefined for ${id}`)
@@ -59,7 +59,7 @@ export class LogManager {
    * @summary Method to create a cloudwatch log group (cfn)
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props
+   * @param props the log group properties
    */
   public createCfnLogGroup(id: string, scope: CommonConstruct, props: LogProps) {
     if (!props) throw new Error(`Logs props undefined for ${id}`)
@@ -86,7 +86,7 @@ export class LogManager {
    * @summary Method to create a cloudwatch log group
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props
+   * @param props the log group properties
    */
   public createLogGroup(id: string, scope: CommonConstruct, props: LogProps) {
     if (!props) throw new Error(`Logs props undefined for ${id}`)

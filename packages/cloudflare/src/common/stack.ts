@@ -23,10 +23,19 @@ import { CommonCloudflareStackProps } from './types.js'
  * @category Common
  */
 export class CommonCloudflareStack extends ComponentResource {
+  /** The underlying Cloudflare construct instance */
   construct: CommonCloudflareConstruct
+  /** The stack properties */
   props: CommonCloudflareStackProps
+  /** The Pulumi configuration instance */
   config: Config
 
+  /**
+   * @summary Create a new CommonCloudflareStack
+   * @param name scoped id of the stack
+   * @param props the common cloudflare stack properties
+   * @param options optional Pulumi component resource options
+   */
   constructor(name: string, props: CommonCloudflareStackProps, options?: ComponentResourceOptions) {
     super(`stack:${name}`, name, props, options)
 

@@ -46,7 +46,7 @@ export class ApiManager {
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
    * @param props lambda rest restApi props
-   * @param lambdaFunction
+   * @param lambdaFunction the Lambda function to use as the backend handler
    */
   public createLambdaRestApi(id: string, scope: CommonConstruct, props: LambdaRestApiProps, lambdaFunction: IFunction) {
     if (!props) throw new Error(`Api props undefined for ${id}`)
@@ -120,22 +120,22 @@ export class ApiManager {
   }
 
   /**
-   * @summary Method to create an API gateway resource
-   * @param id
-   * @param scope
-   * @param parent
-   * @param path
-   * @param integration
-   * @param addProxy
-   * @param authorizer
-   * @param allowedOrigins
-   * @param allowedMethods
-   * @param allowedHeaders
-   * @param methodRequestParameters
-   * @param proxyIntegration
-   * @param enableDefaultCors
-   * @param mockIntegration
-   * @param mockMethodResponses
+   * @summary Method to create an API gateway resource with methods, optional CORS, and optional proxy sub-resource
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param parent the parent API resource to attach this resource to
+   * @param path the URL path segment for this resource
+   * @param integration the backend integration for methods on this resource
+   * @param addProxy whether to create a greedy proxy child resource ({path+})
+   * @param authorizer optional authorizer for the methods
+   * @param allowedOrigins optional CORS allowed origins (defaults to all origins)
+   * @param allowedMethods optional CORS allowed methods (defaults to all methods)
+   * @param allowedHeaders optional CORS allowed headers (defaults to default headers)
+   * @param methodRequestParameters optional request parameter mappings for methods
+   * @param proxyIntegration optional alternative integration for the proxy resource
+   * @param enableDefaultCors set to false to disable automatic CORS preflight configuration
+   * @param mockIntegration optional mock integration for OPTIONS when CORS is disabled
+   * @param mockMethodResponses optional method responses for the mock OPTIONS integration
    */
   public createApiResource(
     id: string,
@@ -221,9 +221,9 @@ export class ApiManager {
 
   /**
    * @summary Method to create an api deployment
-   * @param id
-   * @param scope
-   * @param api
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param api the REST API to create a deployment for
    */
   public createApiDeployment(id: string, scope: CommonConstruct, api: IRestApi) {
     new Deployment(scope, `${id}`, {

@@ -45,35 +45,64 @@ import {
  * @category Construct
  */
 export class SiteWithLambdaBackend extends CommonConstruct {
-  /* site properties */
+  /** The site with lambda backend properties */
   props: SiteWithLambdaBackendProps
+  /** The scoped id of this construct */
   id: string
 
-  /* site resources */
+  /** The Route53 hosted zone for the site domain */
   siteHostedZone: IHostedZone
+  /** The global (edge) SSL/TLS certificate */
   siteCertificate: ICertificate
+  /** The regional SSL/TLS certificate */
   siteRegionalCertificate: ICertificate
+  /** The resolved secrets from SecretsManager */
   siteSecrets: any
+  /** The S3 bucket used for CloudFront access logs */
   siteLogBucket: IBucket
+  /** The HTTP origin backed by the Lambda function URL */
   siteOrigin: HttpOrigin
+  /** The CloudFront distribution for the site */
   siteDistribution: Distribution
+  /** The internal domain name used for Lambda function URL routing */
   siteInternalDomainName: string
+  /** The external domain name exposed to end users via CloudFront */
   siteExternalDomainName: string
+  /** The list of domain names associated with the CloudFront distribution */
   siteDomainNames: string[]
+  /** The CloudFront function attached to the distribution */
   siteCloudfrontFunction: CfIFunction
+  /** The CloudFront function associations for the distribution behaviours */
   siteFunctionAssociations: FunctionAssociation[]
+  /** The CloudFront origin request policy */
   siteOriginRequestPolicy: OriginRequestPolicy
+  /** The CloudFront response headers policy */
   siteOriginResponseHeadersPolicy?: ResponseHeadersPolicy
+  /** The CloudFront cache policy */
   siteCachePolicy: CachePolicy
+  /** The S3 bucket deployment for static assets */
   siteStaticAssetDeployment: BucketDeployment
+  /** The IAM policy for the site Lambda function */
   siteLambdaPolicy: PolicyDocument
+  /** The IAM role for the site Lambda function */
   siteLambdaRole: Role
+  /** The environment variables for the site Lambda function */
   siteLambdaEnvironment: any
+  /** The Lambda layers (including Web Adapter) for the site function */
   siteLambdaLayers: ILayerVersion[]
+  /** The Lambda application code asset */
   siteLambdaApplication: AssetCode
+  /** The site Lambda function */
   siteLambdaFunction: IFunction
+  /** The Lambda function URL used as the CloudFront origin */
   siteLambdaUrl: FunctionUrl
 
+  /**
+   * @summary Create a new SiteWithLambdaBackend construct
+   * @param parent the parent construct
+   * @param id scoped id of the resource
+   * @param props the site with lambda backend properties
+   */
   constructor(parent: Construct, id: string, props: SiteWithLambdaBackendProps) {
     super(parent, id, props)
     this.props = props

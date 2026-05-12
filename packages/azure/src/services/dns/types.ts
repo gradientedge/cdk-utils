@@ -1,13 +1,29 @@
 import { RecordSetArgs, ZoneArgs } from '@pulumi/azure-native/dns/index.js'
 
-/** @category Interface */
+/**
+ * Properties for creating a DNS zone
+ * @see [Pulumi Azure Native DNS Zone]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/network/zone/}
+ * @category Interface
+ */
 export interface DnsZoneProps extends ZoneArgs {}
 
-/** @category Interface */
+/**
+ * Properties for creating a DNS A record
+ * @see [Pulumi Azure Native DNS Record Set]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/network/recordset/}
+ * @category Interface
+ */
 export interface DnsARecordProps extends RecordSetArgs {}
 
-/** @category Interface */
+/**
+ * Properties for creating a DNS CNAME record
+ * @see [Pulumi Azure Native DNS Record Set]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/network/recordset/}
+ * @category Interface
+ */
 export interface DnsCnameRecordProps extends RecordSetArgs {}
 
-/** @category Interface */
+/**
+ * Properties for creating a DNS TXT record
+ * @see [Pulumi Azure Native DNS Record Set]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/network/recordset/}
+ * @category Interface
+ */
 export interface DnsTxtRecordProps extends RecordSetArgs {}

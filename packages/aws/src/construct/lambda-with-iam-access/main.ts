@@ -29,25 +29,44 @@ import { LambdaWithIamAccessEnvironment, LambdaWithIamAccessProps } from './type
  * @category Construct
  */
 export class LambdaWithIamAccess extends CommonConstruct {
-  /* LambdaWithIamAccess props */
+  /** The Lambda with IAM access properties */
   props: LambdaWithIamAccessProps
+  /** The scoped id of this construct */
   id: string
 
-  /* LambdaWithIamAccess resources */
+  /** The IAM policy for the Lambda function */
   lambdaPolicy: PolicyDocument
+  /** The IAM role for the Lambda function */
   lambdaRole: Role
+  /** The environment variables for the Lambda function */
   lambdaEnvironment: LambdaWithIamAccessEnvironment
+  /** The Lambda layers attached to the function */
   lambdaLayers: ILayerVersion[] = []
+  /** The Lambda function */
   lambdaFunction: IFunction
+  /** The IAM user created for invoking the Lambda function */
   lambdaIamUser: User
+  /** The IAM access key for the Lambda IAM user */
   lambdaUserAccessKey: CfnAccessKey
+  /** The Secrets Manager secret storing the IAM access key credentials */
   lambdaUserAccessSecret: Secret
+  /** The VPC for the Lambda function */
   lambdaVpc: IVpc
+  /** The security groups for the Lambda function */
   lambdaSecurityGroups: ISecurityGroup[]
+  /** The EFS access point for the Lambda function */
   lambdaAccessPoint: IAccessPoint
+  /** The EFS mount path for the Lambda function */
   lambdaMountPath: string
+  /** The VPC subnet selection for the Lambda function */
   lambdaVpcSubnets: SubnetSelection
 
+  /**
+   * @summary Create a new LambdaWithIamAccess construct
+   * @param parent the parent construct
+   * @param id scoped id of the resource
+   * @param props the Lambda with IAM access properties
+   */
   constructor(parent: Construct, id: string, props: LambdaWithIamAccessProps) {
     super(parent, id, props)
 

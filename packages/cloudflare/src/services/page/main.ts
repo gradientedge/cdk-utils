@@ -98,7 +98,9 @@ export class CloudflarePageManager {
   public deployPagesProject(id: string, scope: CommonCloudflareConstruct, props: PagesProjectDeployProps) {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
+    /* use build number from CI environment as the deploy message if available, otherwise fall back to props */
     const message = process.env.BUILD_NUMBER ?? props.message
+    /* execute wrangler CLI command to deploy pages project assets */
     return new local.Command(
       `${id}-deploy-${new Date().toISOString()}`,
       {

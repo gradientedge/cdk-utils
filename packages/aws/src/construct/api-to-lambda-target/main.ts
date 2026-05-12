@@ -11,19 +11,41 @@ import { ApiToLambdaTargetRestApi } from './api.js'
 import { ApiToLambdaTargetProps, ApiToLambdaTargetRestApiType } from './types.js'
 
 /**
+ * Provides a construct to create and deploy API Gateway invocations to a Lambda function
+ * @example
+ * import { ApiToLambdaTarget, ApiToLambdaTargetProps } '@gradientedge/cdk-utils'
+ * import { Construct } from 'constructs'
+ *
+ * class CustomConstruct extends ApiToLambdaTarget {
+ *   constructor(parent: Construct, id: string, props: ApiToLambdaTargetProps) {
+ *     super(parent, id, props)
+ *     this.props = props
+ *     this.id = id
+ *     this.initResources()
+ *   }
+ * }
  * @category Construct
  */
 export class ApiToLambdaTarget extends CommonConstruct {
+  /** The API to Lambda target properties */
   props: ApiToLambdaTargetProps
+  /** The scoped id of this construct */
   id: string
 
-  /* application related resources */
+  /** The resolved application secrets from SecretsManager */
   applicationSecrets: ISecret[]
 
-  /* rest restApi related resources */
+  /** The REST API resources (api, integration, domain, etc.) */
   apiToLambdaTargetRestApi: ApiToLambdaTargetRestApiType
+  /** The default API resource path name */
   apiResource: string
 
+  /**
+   * @summary Create a new ApiToLambdaTarget construct
+   * @param parent the parent construct
+   * @param id scoped id of the resource
+   * @param props the API to Lambda target properties
+   */
   constructor(parent: Construct, id: string, props: ApiToLambdaTargetProps) {
     super(parent, id, props)
 

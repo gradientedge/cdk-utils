@@ -101,6 +101,8 @@ export class SqsManager {
     props: LambdaProps,
     deadLetterQueue: IQueue
   ) {
+    /* Merge any DLQ-specific config from the lambda props, falling back to
+       a minimal config with just the queue name derived from the function name */
     let queueProps
     if (props.dlq) {
       queueProps = {

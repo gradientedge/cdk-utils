@@ -27,12 +27,21 @@ import { StaticAssetDeploymentProps } from './types.js'
  * @category Construct
  */
 export class StaticAssetDeployment extends CommonConstruct {
-  /* construct resources */
+  /** The S3 bucket for static assets */
   staticAssetBucket: IBucket
+  /** The optional CloudFront distribution for cache invalidation */
   cloudfrontDistribution?: IDistribution
+  /** The static asset deployment properties */
   props: StaticAssetDeploymentProps
+  /** The scoped id of this construct */
   id: string
 
+  /**
+   * @summary Create a new StaticAssetDeployment construct
+   * @param parent the parent construct
+   * @param id scoped id of the resource
+   * @param props the static asset deployment properties
+   */
   constructor(parent: Construct, id: string, props: StaticAssetDeploymentProps) {
     super(parent, id, props)
     this.id = id

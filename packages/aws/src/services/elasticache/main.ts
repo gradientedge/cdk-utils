@@ -26,10 +26,10 @@ import { ElastiCacheProps, ReplicatedElastiCacheProps } from './types.js'
  */
 export class ElastiCacheManager {
   /**
-   * @summary Method to create an elasticache resource
+   * @summary Method to create an ElastiCache subnet group
    * @param id scoped id of the resource
-   * @param scope scope in which scope resource is defined
-   * @param subnetIds
+   * @param scope scope in which this resource is defined
+   * @param subnetIds the list of subnet IDs to include in the subnet group
    */
   public createElastiCacheSubnetGroup(id: string, scope: CommonConstruct, subnetIds: string[]) {
     return new CfnSubnetGroup(scope, `${id}`, {
@@ -40,13 +40,13 @@ export class ElastiCacheManager {
   }
 
   /**
-   * @summary Method to create an elasticache resource
+   * @summary Method to create an ElastiCache cache cluster
    * @param id scoped id of the resource
-   * @param scope scope in which scope resource is defined
-   * @param props
-   * @param subnetIds
-   * @param securityGroupIds
-   * @param logDeliveryConfigurations
+   * @param scope scope in which this resource is defined
+   * @param props the ElastiCache cluster properties
+   * @param subnetIds the list of subnet IDs for the cache subnet group
+   * @param securityGroupIds the list of VPC security group IDs to associate with the cluster
+   * @param logDeliveryConfigurations optional log delivery configuration for the cluster
    */
   public createElastiCache(
     id: string,
@@ -59,6 +59,7 @@ export class ElastiCacheManager {
     if (!props) throw new Error(`ElastiCache props undefined for ${id}`)
     if (!props.clusterName) throw new Error(`ElastiCache clusterName undefined for ${id}`)
 
+    /* Create a dedicated subnet group before provisioning the cache cluster */
     const subnetGroup = this.createElastiCacheSubnetGroup(`${id}-subnetGroup`, scope, subnetIds)
 
     const elasticacheCluster = new CfnCacheCluster(scope, `${id}`, {
@@ -69,6 +70,7 @@ export class ElastiCacheManager {
       vpcSecurityGroupIds: securityGroupIds,
     })
 
+    /* Ensure the subnet group is created before the cache cluster */
     elasticacheCluster.addDependency(subnetGroup)
 
     if (props.tags && !_.isEmpty(props.tags)) {
@@ -85,12 +87,12 @@ export class ElastiCacheManager {
   }
 
   /**
-   * @summary Method to create an replicated elasticache resource
+   * @summary Method to create a replicated ElastiCache replication group
    * @param id scoped id of the resource
-   * @param scope scope in which scope resource is defined
-   * @param props
-   * @param subnetIds
-   * @param securityGroupIds
+   * @param scope scope in which this resource is defined
+   * @param props the replicated ElastiCache properties
+   * @param subnetIds the list of subnet IDs for the cache subnet group
+   * @param securityGroupIds the list of VPC security group IDs to associate with the replication group
    */
   public createReplicatedElastiCache(
     id: string,
@@ -101,6 +103,7 @@ export class ElastiCacheManager {
   ) {
     if (!props) throw new Error(`ElastiCache props undefined for ${id}`)
 
+    /* Create a dedicated subnet group before provisioning the replication group */
     const subnetGroup = this.createElastiCacheSubnetGroup(`${id}-subnetGroup`, scope, subnetIds)
 
     const elasticacheCluster = new CfnReplicationGroup(scope, `${id}`, {
@@ -111,6 +114,7 @@ export class ElastiCacheManager {
       securityGroupIds,
     })
 
+    /* Ensure the subnet group is created before the replication group */
     elasticacheCluster.addDependency(subnetGroup)
 
     return elasticacheCluster

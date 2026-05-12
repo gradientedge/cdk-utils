@@ -15,16 +15,44 @@ import { CommonConstruct } from '../../common/index.js'
 
 import { ApplicationConfigurationProps } from './types.js'
 
-/** @category Construct */
+/**
+ * Provides a construct to create and deploy an AWS AppConfig application configuration
+ * @example
+ * import { ApplicationConfiguration, ApplicationConfigurationProps } '@gradientedge/cdk-utils'
+ * import { Construct } from 'constructs'
+ *
+ * class CustomConstruct extends ApplicationConfiguration {
+ *   constructor(parent: Construct, id: string, props: ApplicationConfigurationProps) {
+ *     super(parent, id, props)
+ *     this.props = props
+ *     this.id = id
+ *     this.initResources()
+ *   }
+ * }
+ * @category Construct
+ */
 export class ApplicationConfiguration extends CommonConstruct {
+  /** The application configuration properties */
   declare props: ApplicationConfigurationProps
+  /** The scoped id of this construct */
   id: string
+  /** The AppConfig application resource */
   appConfigApplication: CfnApplication
+  /** The AppConfig environment resource */
   appConfigEnvironment: CfnEnvironment
+  /** The AppConfig configuration profile resource */
   appConfigProfile: CfnConfigurationProfile
+  /** The AppConfig hosted configuration version resource */
   appConfigVersion: CfnHostedConfigurationVersion
+  /** The AppConfig deployment strategy */
   appConfigDeploymentStrategy: IDeploymentStrategy
 
+  /**
+   * @summary Create a new ApplicationConfiguration construct
+   * @param parent the parent construct
+   * @param id scoped id of the resource
+   * @param props the application configuration properties
+   */
   constructor(parent: Construct, id: string, props: ApplicationConfigurationProps) {
     super(parent, id, props)
     this.props = props

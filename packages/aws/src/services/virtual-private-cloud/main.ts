@@ -8,8 +8,7 @@ import { createCfnOutput } from '../../utils/index.js'
 import { Ipv6Vpc } from './ipv6.js'
 import { VpcProps } from './types.js'
 
-/**
- */
+/** Default identifier used for the common/shared VPC when no custom identifier is specified */
 const CommonVpcIdentifier = 'CommonVpc'
 
 /**

@@ -18,7 +18,7 @@ import { CommonConstruct } from '../../common/index.js'
 import { createCfnOutput } from '../../utils/index.js'
 
 /**
- * Provides operations on AWS
+ * Provides operations on AWS Identity and Access Management (IAM).
  * - A new instance of this class is injected into {@link CommonConstruct} constructor.
  * - If a custom construct extends {@link CommonConstruct}, an instance is available within the context.
  * @example
@@ -162,7 +162,7 @@ export class IamManager {
   /**
    * @summary Method to create iam statement to list s3 buckets
    * @param scope scope in which this resource is defined
-   * @param bucket
+   * @param bucket the S3 bucket to grant list access to
    */
   public statementForListBucket(scope: CommonConstruct, bucket: IBucket) {
     return new PolicyStatement({
@@ -187,8 +187,8 @@ export class IamManager {
   /**
    * @summary Method to create iam statement to get s3 objects in buckets
    * @param scope scope in which this resource is defined
-   * @param bucket
-   * @param resourceArns list of ARNs to allow access to
+   * @param bucket the S3 bucket to grant read access to
+   * @param resourceArns optional list of ARNs to allow access to, defaults to all objects in the bucket
    */
   public statementForGetAnyS3Objects(scope: CommonConstruct, bucket: IBucket, resourceArns?: string[]) {
     return new PolicyStatement({
@@ -201,8 +201,8 @@ export class IamManager {
   /**
    * @summary Method to create iam statement to delete s3 objects in buckets
    * @param scope scope in which this resource is defined
-   * @param bucket
-   * @param resourceArns list of ARNs to allow access to
+   * @param bucket the S3 bucket to grant delete access to
+   * @param resourceArns optional list of ARNs to allow access to, defaults to all objects in the bucket
    */
   public statementForDeleteAnyS3Objects(scope: CommonConstruct, bucket: IBucket, resourceArns?: string[]) {
     return new PolicyStatement({
@@ -215,8 +215,8 @@ export class IamManager {
   /**
    * @summary Method to create iam statement to write s3 objects in buckets
    * @param scope scope in which this resource is defined
-   * @param bucket
-   * @param resourceArns list of ARNs to allow access to
+   * @param bucket the S3 bucket to grant write access to
+   * @param resourceArns optional list of ARNs to allow access to, defaults to all objects in the bucket
    */
   public statementForPutAnyS3Objects(scope: CommonConstruct, bucket: IBucket, resourceArns?: string[]) {
     return new PolicyStatement({
@@ -265,7 +265,7 @@ export class IamManager {
   /**
    * @summary Method to create iam statement to assume iam role
    * @param scope scope in which this resource is defined
-   * @param servicePrincipals
+   * @param servicePrincipals the list of service principals allowed to assume the role
    */
   public statementForAssumeRole(scope: CommonConstruct, servicePrincipals: ServicePrincipal[]) {
     return new PolicyStatement({
@@ -291,8 +291,8 @@ export class IamManager {
   /**
    * @summary Method to create iam statement to run ecs task
    * @param scope scope in which this resource is defined
-   * @param cluster
-   * @param task
+   * @param cluster the ECS cluster the task runs in
+   * @param task the ECS task definition to allow running
    */
   public statementForRunEcsTask(scope: CommonConstruct, cluster: ICluster, task: ITaskDefinition) {
     return new PolicyStatement({
@@ -306,7 +306,7 @@ export class IamManager {
   /**
    * @summary Method to create iam statement to create log stream
    * @param scope scope in which this resource is defined
-   * @param logGroup
+   * @param logGroup the CloudWatch log group to allow creating log streams in
    */
   public statementForCreateLogStream(scope: CommonConstruct, logGroup: CfnLogGroup) {
     return new PolicyStatement({
@@ -339,7 +339,7 @@ export class IamManager {
   /**
    * @summary Method to create iam statement to write log events
    * @param scope scope in which this resource is defined
-   * @param logGroup
+   * @param logGroup the CloudWatch log group to allow writing log events to
    */
   public statementForPutLogEvent(scope: CommonConstruct, logGroup: CfnLogGroup) {
     return new PolicyStatement({
@@ -438,12 +438,12 @@ export class IamManager {
   }
 
   /**
-   * @summary Method to create iam policy for sqs
+   * @summary Method to create iam policy for SQS event processing
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param sqsQueue
-   * @param eventBridgeRule
-   * @param servicePrincipals
+   * @param sqsQueue the SQS queue to grant access to
+   * @param eventBridgeRule the EventBridge rule that sends events to the queue
+   * @param servicePrincipals optional list of service principals, defaults to events.amazonaws.com
    */
   public createPolicyForSqsEvent(
     id: string,
@@ -485,10 +485,10 @@ export class IamManager {
   }
 
   /**
-   * @summary Method to create iam statement for cloud trail
+   * @summary Method to create iam role for CloudTrail
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param logGroup
+   * @param logGroup the CloudWatch log group for CloudTrail to deliver logs to
    */
   public createRoleForCloudTrail(id: string, scope: CommonConstruct, logGroup: CfnLogGroup) {
     const policy = new PolicyDocument({
@@ -514,11 +514,11 @@ export class IamManager {
   }
 
   /**
-   * @summary Method to create iam statement for ecs event
+   * @summary Method to create iam role for ECS event-driven task execution
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param cluster
-   * @param task
+   * @param cluster the ECS cluster the task runs in
+   * @param task the ECS task definition to allow running
    */
   public createRoleForEcsEvent(id: string, scope: CommonConstruct, cluster: ICluster, task: ITaskDefinition) {
     const policy = new PolicyDocument({
@@ -539,10 +539,10 @@ export class IamManager {
   }
 
   /**
-   * @summary Method to create iam statement for ecs execution
+   * @summary Method to create iam role for ECS task execution
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param policy
+   * @param policy the inline policy document to attach to the role
    */
   public createRoleForEcsExecution(id: string, scope: CommonConstruct, policy: PolicyDocument) {
     const role = new Role(scope, `${id}`, {
@@ -566,11 +566,11 @@ export class IamManager {
   }
 
   /**
-   * @summary Method to create iam statement for lambda execution
+   * @summary Method to create iam role for Lambda function execution
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param policy
-   * @param servicePrincipal
+   * @param policy the inline policy document to attach to the role
+   * @param servicePrincipal optional service principal, defaults to lambda.amazonaws.com
    */
   public createRoleForLambda(
     id: string,
@@ -599,11 +599,11 @@ export class IamManager {
   }
 
   /**
-   * @summary Method to create iam statement for appconfig secrets manager integration
+   * @summary Method to create iam role for AppConfig Secrets Manager integration
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param policy
-   * @param servicePrincipal
+   * @param policy the inline policy document to attach to the role
+   * @param servicePrincipal optional service principal, defaults to appconfig.amazonaws.com
    */
   public createRoleForAppConfigSecrets(
     id: string,
@@ -625,11 +625,11 @@ export class IamManager {
   }
 
   /**
-   * @summary Method to create iam statement for step function execution
+   * @summary Method to create iam role for Step Function execution
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param policy
-   * @param servicePrincipal
+   * @param policy the inline policy document to attach to the role
+   * @param servicePrincipal optional service principal, defaults to states.amazonaws.com
    */
   public createRoleForStepFunction(
     id: string,
@@ -658,11 +658,11 @@ export class IamManager {
   }
 
   /**
-   * @summary Method to create iam statement for sqs to step function pipe
+   * @summary Method to create iam role for SQS to Step Function pipe
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param queueArn the arn of the sqs queue
-   * @param stepFunctionArn the arn of the step function
+   * @param queueArn the ARN of the SQS queue (source)
+   * @param stepFunctionArn the ARN of the Step Function (target)
    */
   public createRoleForSqsToSfnPipe(id: string, scope: CommonConstruct, queueArn: string, stepFunctionArn: string) {
     const role = new Role(scope, `${id}`, {
@@ -681,11 +681,11 @@ export class IamManager {
   }
 
   /**
-   * @summary Method to create iam statement for sqs to lambda pipe
+   * @summary Method to create iam role for SQS to Lambda pipe
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param queueArn the arn of the sqs queue
-   * @param lambdaArn the arn of the lambda function
+   * @param queueArn the ARN of the SQS queue (source)
+   * @param lambdaArn the ARN of the Lambda function (target)
    */
   public createRoleForSqsToLambdaPipe(id: string, scope: CommonConstruct, queueArn: string, lambdaArn: string) {
     const role = new Role(scope, `${id}`, {
@@ -704,11 +704,11 @@ export class IamManager {
   }
 
   /**
-   * @summary Method to create iam statement for dynamoDb to lambda function pipe
+   * @summary Method to create iam role for DynamoDB stream to Lambda function pipe
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param dynamoDbStreamArn the arn of the dynamoDb Stream queue
-   * @param lambdaFunctionArn the arn of the lambda function
+   * @param dynamoDbStreamArn the ARN of the DynamoDB stream (source)
+   * @param lambdaFunctionArn the ARN of the Lambda function (target)
    */
   public createRoleForDynamoDbToLambdaPipe(
     id: string,

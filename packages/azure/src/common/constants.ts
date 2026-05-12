@@ -1,7 +1,13 @@
-/** @category Enum */
+/**
+ * Supported remote backend types for Azure infrastructure state management
+ * @category Enum
+ */
 export enum AzureRemoteBackend {
+  /** Azure Resource Manager backend for storing state in Azure Blob Storage */
   azurerm = 'azurerm',
+  /** Pulumi Cloud backend for managed state storage */
   pulumi = 'pulumi',
+  /** Local file system backend for development and testing */
   local = 'local',
 }
 

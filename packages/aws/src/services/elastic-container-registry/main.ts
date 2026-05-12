@@ -25,7 +25,7 @@ export class EcrManager {
    * @summary Method to create a docker image in ecr
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param dockerfilePath
+   * @param dockerfilePath the path to the directory containing the Dockerfile
    */
   public createDockerImage(id: string, scope: CommonConstruct, dockerfilePath: string) {
     const asset = new DockerImageAsset(scope, `${id}`, {

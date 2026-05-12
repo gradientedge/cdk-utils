@@ -19,6 +19,7 @@ import {
 } from './types.js'
 
 /**
+ * Supported CloudWatch dashboard widget types.
  */
 enum CloudWatchWidgetType {
   Text = 'Text',
@@ -51,7 +52,7 @@ export class CloudWatchManager {
    * @summary Method to create a cloudwatch alarm for a given expression
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props
+   * @param props the alarm properties including the math expression and metrics
    */
   public createAlarmForExpression(id: string, scope: CommonConstruct, props: AlarmProps) {
     if (!props) throw new Error(`Alarm props undefined for ${id}`)
@@ -87,8 +88,8 @@ export class CloudWatchManager {
    * @summary Method to create a cloudwatch alarm for a given metric
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props
-   * @param metric
+   * @param props the alarm properties
+   * @param metric the CloudWatch metric to create the alarm for
    */
   public createAlarmForMetric(id: string, scope: CommonConstruct, props: AlarmProps, metric: watch.Metric) {
     if (!props) throw new Error(`Alarm props undefined for ${id}`)
@@ -107,8 +108,8 @@ export class CloudWatchManager {
    * @summary Method to create a cloudwatch dashboard
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props
-   * @param widgets
+   * @param props the dashboard properties
+   * @param widgets optional 2D array of widgets to add to the dashboard
    */
   public createDashboard(id: string, scope: CommonConstruct, props: DashboardProps, widgets?: watch.IWidget[][]) {
     if (!props) throw new Error(`Dashboard props undefined for ${id}`)
@@ -133,7 +134,7 @@ export class CloudWatchManager {
   /**
    * @summary Method to create cloudwatch widgets
    * @param scope scope in which this resource is defined
-   * @param props
+   * @param props array of widget properties
    */
   public createWidgets(scope: CommonConstruct, props: any[]) {
     if (!props || props.length === 0) throw new Error(`Widget props undefined`)
@@ -147,10 +148,10 @@ export class CloudWatchManager {
   }
 
   /**
-   * @summary Method to create a cloudwatch widget
+   * @summary Method to create a cloudwatch widget based on type
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props
+   * @param props the widget properties including the type discriminator
    */
   public createWidget(id: string, scope: CommonConstruct, props: any) {
     if (!props) throw new Error(`Widget props undefined for ${id}`)
@@ -350,7 +351,7 @@ export class CloudWatchManager {
    * @summary Method to create a cloudwatch text widget
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props
+   * @param props the text widget properties
    */
   public createTextWidget(id: string, scope: CommonConstruct, props: TextWidgetProps) {
     if (!props) throw new Error(`Widget props undefined for ${id}`)
@@ -367,8 +368,8 @@ export class CloudWatchManager {
    * @summary Method to create a cloudwatch numeric widget
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props
-   * @param metrics
+   * @param props the numeric widget properties
+   * @param metrics the metrics to display in the widget
    */
   public createSingleValueWidget(id: string, scope: CommonConstruct, props: NumericWidgetProps, metrics: IMetric[]) {
     if (!props) throw new Error(`Widget props undefined for ${id}`)
@@ -384,11 +385,11 @@ export class CloudWatchManager {
   }
 
   /**
-   * @summary Method to create a cloudwatch guage widget
+   * @summary Method to create a cloudwatch gauge widget
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props
-   * @param metrics
+   * @param props the gauge widget properties
+   * @param metrics the metrics to display in the widget
    */
   public createGuageWidget(id: string, scope: CommonConstruct, props: GuageWidgetProps, metrics: IMetric[]) {
     if (!props) throw new Error(`Widget props undefined for ${id}`)
@@ -407,9 +408,9 @@ export class CloudWatchManager {
    * @summary Method to create a cloudwatch graph widget
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props
-   * @param leftYMetrics
-   * @param rightYMetrics
+   * @param props the graph widget properties
+   * @param leftYMetrics optional metrics to display on the left Y axis
+   * @param rightYMetrics optional metrics to display on the right Y axis
    */
   public createGraphWidget(
     id: string,
@@ -435,8 +436,8 @@ export class CloudWatchManager {
    * @summary Method to create a cloudwatch alarm status widget
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props
-   * @param alarms
+   * @param props the alarm status widget properties
+   * @param alarms the alarms to display status for
    */
   public createAlarmStatusWidget(
     id: string,
@@ -459,8 +460,8 @@ export class CloudWatchManager {
    * @summary Method to create a cloudwatch log query widget
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param props
-   * @param logGroupNames
+   * @param props the log query widget properties
+   * @param logGroupNames the log group names to query
    */
   public createLogQueryWidget(id: string, scope: CommonConstruct, props: LogQueryWidgetProps, logGroupNames: string[]) {
     if (!props) throw new Error(`Widget props undefined for ${id}`)
@@ -478,7 +479,7 @@ export class CloudWatchManager {
   /**
    * @summary Utility method to determine the metrics and dimensions
    * @param scope scope in which this resource is defined
-   * @param metricProps
+   * @param metricProps array of metric properties to resolve into CloudWatch metrics
    */
   private determineMetrics(scope: CommonConstruct, metricProps: MetricProps[]) {
     const metrics: watch.IMetric[] = []
@@ -585,7 +586,7 @@ export class CloudWatchManager {
 
   /**
    * @summary Utility method to determine the time range
-   * @param range
+   * @param range a time range string (e.g. 'START_TODAY', 'END_TODAY') or a custom value
    */
   private static determineTimeRange(range?: string) {
     const moment = require('moment')
@@ -604,7 +605,7 @@ export class CloudWatchManager {
    * @summary Utility method to determine the configured alarms
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
-   * @param alarmProps
+   * @param alarmProps array of alarm properties to resolve into alarm references
    */
   private determineAlarms(id: string, scope: CommonConstruct, alarmProps: watch.AlarmProps[]) {
     const alarms: watch.IAlarm[] = []

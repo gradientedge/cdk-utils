@@ -32,12 +32,19 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
   declare props: CloudflareWorkerSiteProps
 
   /* worker site resources */
+  /** The Cloudflare zone (created or resolved) for the worker site */
   siteZone: Zone | Output<GetZoneResult>
+  /** The Cloudflare Workers script resource */
   siteWorkerScript: WorkersScript
+  /** The Cloudflare Workers custom domain resource */
   siteWorkerDomain: WorkersCustomDomain
+  /** The Cloudflare ruleset resource for the worker site */
   siteRuleSet: Ruleset
+  /** The Cloudflare zone setting resource for the worker site */
   siteZoneSetting: ZoneSetting
+  /** Plain text binding environment variables for the worker script */
   workerPlainTextBindingEnvironmentVariables: WorkersScriptBinding[] = []
+  /** Secret text binding environment variables for the worker script */
   workerSecretTextBindingEnvironmentVariables: WorkersScriptBinding[] = []
 
   /**
@@ -80,6 +87,7 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
    * @summary Resolve the environment variables to use for the static site
    */
   protected resolveEnvironmentVariables() {
+    /* merge plain text and secret text bindings into the worker script configuration */
     this.props.siteWorkerScript = {
       ...this.props.siteWorkerScript,
       bindings: this.workerPlainTextBindingEnvironmentVariables.concat(
@@ -92,6 +100,7 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
    * @summary Create the worker
    */
   protected createWorker() {
+    /* resolve the worker script content from the parent directory relative to the current working directory */
     const currentDirectory = path.resolve(process.cwd(), '..')
     const workerContent = fs.readFileSync(`${currentDirectory}/${this.props.siteWorkerAsset}`, 'utf-8')
     this.siteWorkerScript = this.workerManager.createWorkerScript(`${this.id}-worker-script`, this, {
