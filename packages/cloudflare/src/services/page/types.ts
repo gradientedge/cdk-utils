@@ -1,4 +1,5 @@
 import { PageRuleArgs, PagesDomainArgs, PagesProjectArgs } from '@pulumi/cloudflare'
+import { Input } from '@pulumi/pulumi'
 
 /**
  * Properties for creating a Cloudflare Pages Project
@@ -30,7 +31,7 @@ export interface PagesProjectDeployProps {
   /** The deployment commit message */
   message: string
   /** The name of the Cloudflare Pages project to deploy to */
-  projectName: string
+  projectName: Input<string>
   /** Optional resources that the deployment depends on */
   dependsOn?: any
 }
