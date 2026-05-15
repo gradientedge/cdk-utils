@@ -1,5 +1,20 @@
 # @gradientedge/cdk-utils
 
+## 11.37.0
+
+### Minor Changes
+
+- [#1042](https://github.com/gradientedge/cdk-utils/pull/1042) [`8431596`](https://github.com/gradientedge/cdk-utils/commit/84315966b92664c015c61b5e02a9ca496467b5c7) Thanks [@despock](https://github.com/despock)! - feat: bumping dependencies
+
+### Patch Changes
+
+- [#1042](https://github.com/gradientedge/cdk-utils/pull/1042) [`fd843e5`](https://github.com/gradientedge/cdk-utils/commit/fd843e550a8166df409c51201a0363d55e25ddad) Thanks [@despock](https://github.com/despock)! - fix: interpolating outputs for resolution
+
+- Updated dependencies [[`fd843e5`](https://github.com/gradientedge/cdk-utils/commit/fd843e550a8166df409c51201a0363d55e25ddad), [`8431596`](https://github.com/gradientedge/cdk-utils/commit/84315966b92664c015c61b5e02a9ca496467b5c7)]:
+  - @gradientedge/cdk-utils-cloudflare@2.12.0
+  - @gradientedge/cdk-utils-azure@2.35.0
+  - @gradientedge/cdk-utils-aws@2.7.0
+
 ## 11.36.0
 
 ### Minor Changes
