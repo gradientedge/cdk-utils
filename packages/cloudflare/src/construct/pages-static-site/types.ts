@@ -11,7 +11,7 @@ export interface CloudflarePagesStaticSiteProps extends CommonCloudflareStackPro
   /** The git branch to deploy from, defaults to 'main' */
   siteBranch?: string
   /** The DNS CNAME record properties for the static site */
-  siteCnameRecord: DnsRecordProps
+  siteCnameRecord?: DnsRecordProps
   /** The deployment message used when deploying the pages project */
   siteDeployMessage: string
   /** The Cloudflare Pages project properties */

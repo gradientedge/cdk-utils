@@ -1,5 +1,6 @@
 import { PageRule, PagesDomain, PagesProject } from '@pulumi/cloudflare'
 import { local } from '@pulumi/command'
+import * as pulumi from '@pulumi/pulumi'
 
 import { CommonCloudflareConstruct } from '../../common/index.js'
 
@@ -104,7 +105,7 @@ export class CloudflarePageManager {
     return new local.Command(
       `${id}-deploy-${new Date().toISOString()}`,
       {
-        create: `CLOUDFLARE_ACCOUNT_ID=${scope.props.accountId} CLOUDFLARE_API_TOKEN=${scope.props.apiToken} npx wrangler pages deploy ${props.directory} --project-name=${props.projectName} --branch=${props.branch} --commit-message=${message}`,
+        create: pulumi.interpolate`CLOUDFLARE_ACCOUNT_ID=${scope.props.accountId} CLOUDFLARE_API_TOKEN=${scope.props.apiToken} npx wrangler pages deploy ${props.directory} --project-name=${props.projectName} --branch=${props.branch} --commit-message=${message}`,
         dir: '',
       },
       {

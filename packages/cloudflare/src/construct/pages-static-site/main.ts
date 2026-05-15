@@ -5,6 +5,7 @@ import {
   PagesProjectDeploymentConfigsPreviewEnvVars,
   PagesProjectDeploymentConfigsProductionEnvVars,
 } from '@pulumi/cloudflare/types/input.js'
+import * as pulumi from '@pulumi/pulumi'
 import { ComponentResourceOptions, Output } from '@pulumi/pulumi'
 import * as std from '@pulumi/std'
 
@@ -184,12 +185,13 @@ export class CloudflarePagesStaticSite extends CommonCloudflareConstruct {
    * @summary Create the pages cname record
    */
   protected createRecord() {
+    if (!this.props.siteCnameRecord) return
     this.sitePagesCnameRecord = this.recordManager.createRecord(`${this.id}-site-record`, this, {
       ...this.props.siteCnameRecord,
       name: this.props.siteSubDomain,
       data: {
         ...this.props.siteCnameRecord.data,
-        value: `${this.sitePagesProject.name}.pages.dev`,
+        value: pulumi.interpolate`${this.sitePagesProject.name}.pages.dev`,
       },
     })
   }
@@ -202,7 +204,7 @@ export class CloudflarePagesStaticSite extends CommonCloudflareConstruct {
       branch: this.props.siteBranch ?? 'main',
       directory: this.props.siteAssetDir,
       message: this.props.siteDeployMessage,
-      projectName: String(this.sitePagesProject.name),
+      projectName: this.sitePagesProject.name,
       dependsOn: this.siteDeploymentDependsOn,
     })
   }
