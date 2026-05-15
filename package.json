@@ -80,5 +80,10 @@
     "packages/*",
     "app/api-destined-function/*"
   ],
+  "pnpm": {
+    "overrides": {
+      "protobufjs": "8.0.2"
+    }
+  },
   "packageManager": "pnpm@10.33.2"
 }
