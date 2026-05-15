@@ -21,11 +21,11 @@
   },
   "dependencies": {
     "@gradientedge/cdk-utils-common": "workspace:*",
-    "@pulumi/aws": "7.29.0",
+    "@pulumi/aws": "7.30.0",
     "@pulumi/azure-native": "3.18.0",
     "@pulumi/cloudflare": "6.15.0",
     "@pulumi/command": "1.2.1",
-    "@pulumi/pulumi": "3.237.0",
+    "@pulumi/pulumi": "3.239.0",
     "@pulumi/std": "2.3.2",
     "@types/lodash": "4.17.24",
     "app-root-path": "3.1.0",
