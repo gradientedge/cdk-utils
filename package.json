@@ -82,7 +82,7 @@
   ],
   "pnpm": {
     "overrides": {
-      "protobufjs": "8.0.2"
+      "protobufjs": "8.3.0"
     }
   },
   "packageManager": "pnpm@10.33.2"
