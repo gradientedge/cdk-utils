@@ -1,0 +1,7 @@
+{
+  "region": "us-east-1",
+  "resourcePrefix": "ge-us-east-1",
+  "subDomain": "us",
+  "logLevel": "info",
+  "apiSubDomain": "api-us"
+}

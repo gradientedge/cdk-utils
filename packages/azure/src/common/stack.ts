@@ -69,9 +69,11 @@ export class CommonAzureStack extends ComponentResource {
     return {
       ...props,
       extraContexts: this.config.getObject('extraContexts'),
+      regionContexts: this.config.getObject('regionContexts'),
       stage: this.config.get('stage'),
       stageContextPath: this.config.get('stageContextPath'),
       ...this.determineExtraContexts(),
+      ...this.determineRegionContexts(),
       ...this.determineStageContexts(),
     }
   }
@@ -108,6 +110,40 @@ export class CommonAzureStack extends ComponentResource {
       }
     })
     return extraContextProps
+  }
+
+  /**
+   * @summary Method to determine region contexts apart from the main context
+   * - Sets the properties from the region contexts
+   * - Primary use is to have layered config for each region in separate files
+   */
+  protected determineRegionContexts() {
+    const regionContexts = this.config.getObject('regionContexts')
+    const debug = this.config.getBoolean('debug')
+    if (!regionContexts) {
+      if (debug) console.debug(`No region contexts provided. Using default context properties`)
+      return {}
+    }
+
+    let regionContextProps: Record<string, any> = {}
+    _.forEach(regionContexts, (context: string) => {
+      const regionContextPath = path.join(appRoot.path, context)
+
+      /* scenario where region context is configured but absent in file system */
+      if (!fs.existsSync(regionContextPath))
+        throw new Error(`Region context properties unavailable in path:${regionContextPath}`)
+
+      /* read the region properties */
+      const regionContextPropsBuffer = fs.readFileSync(regionContextPath)
+      if (debug) console.debug(`Adding region contexts provided in ${regionContextPath}`)
+
+      /* parse as JSON properties */
+      regionContextProps = {
+        ...regionContextProps,
+        ...JSON.parse(regionContextPropsBuffer.toString('utf-8')),
+      }
+    })
+    return regionContextProps
   }
 
   /**

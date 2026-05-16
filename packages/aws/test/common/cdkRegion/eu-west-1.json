@@ -1,0 +1,7 @@
+{
+  "region": "eu-west-1",
+  "resourcePrefix": "ge-eu-west-1",
+  "subDomain": "eu",
+  "logLevel": "warn",
+  "apiSubDomain": "api-eu"
+}

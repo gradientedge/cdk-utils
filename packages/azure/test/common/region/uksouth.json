@@ -1,0 +1,12 @@
+{
+  "location": "uksouth",
+  "resourcePrefix": "ge-uksouth",
+  "subDomain": "uk",
+  "logLevel": "warn",
+  "locationConfig": {
+    "uksouth": {
+      "id": "uksouth",
+      "name": "UK South"
+    }
+  }
+}

@@ -1,0 +1,12 @@
+{
+  "location": "westeurope",
+  "resourcePrefix": "ge-westeurope",
+  "subDomain": "eu",
+  "logLevel": "info",
+  "locationConfig": {
+    "westeurope": {
+      "id": "westeurope",
+      "name": "West Europe"
+    }
+  }
+}

@@ -44,6 +44,9 @@ export class CommonStack extends Stack {
     /* determine extra cdk contexts */
     this.determineExtraContexts()
 
+    /* determine region cdk contexts */
+    this.determineRegionContexts()
+
     /* determine extra cdk stage contexts */
     this.determineStageContexts()
 
@@ -111,6 +114,41 @@ export class CommonStack extends Stack {
       /* set each of the property into the cdk node context */
       _.keys(extraContextProps).forEach((propKey: any) => {
         this.node.setContext(propKey, extraContextProps[propKey])
+      })
+    })
+  }
+
+  /**
+   * @summary Method to determine region cdk contexts apart from the main cdk.json
+   * - Sets the properties from the region contexts into cdk node context
+   * - Primary use is to have layered config for each region in separate files
+   */
+  protected determineRegionContexts() {
+    const regionContexts = this.node.tryGetContext('regionContexts')
+    const debug = this.node.tryGetContext('debug')
+
+    if (!regionContexts) {
+      if (debug) console.debug(`No region contexts provided. Using default context properties from cdk.json`)
+      return
+    }
+
+    _.forEach(regionContexts, (context: string) => {
+      const regionContextPath = path.join(appRoot.path, context)
+
+      /* scenario where region context is configured in cdk.json but absent in file system */
+      if (!fs.existsSync(regionContextPath))
+        throw new Error(`Region context properties unavailable in path:${regionContextPath}`)
+
+      /* read the region properties */
+      const regionContextPropsBuffer = fs.readFileSync(regionContextPath)
+      if (debug) console.debug(`Adding region contexts provided in ${regionContextPath}`)
+
+      /* parse as JSON properties */
+      const regionContextProps = JSON.parse(regionContextPropsBuffer.toString('utf-8'))
+
+      /* set each of the property into the cdk node context */
+      _.keys(regionContextProps).forEach((propKey: any) => {
+        this.node.setContext(propKey, regionContextProps[propKey])
       })
     })
   }

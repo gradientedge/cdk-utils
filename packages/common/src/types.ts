@@ -10,6 +10,8 @@ export interface BaseProps {
   domainName: string
   /** Additional CDK context file paths to load */
   extraContexts?: string[]
+  /** Region-specific context file paths to load */
+  regionContexts?: string[]
   /** The name identifier for the stack or construct */
   name: string
   /** Whether to omit the stage prefix for Route53 A records */
