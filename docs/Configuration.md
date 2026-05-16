@@ -17,7 +17,7 @@ The primary configuration interface. All properties are passed through the CDK c
 | `subDomain` | `string` | No | Subdomain prefix (e.g., `api`) |
 | `stackName` | `string` | No | Override the CloudFormation stack name |
 | `extraContexts` | `string[]` | No | Paths to additional context JSON files |
-| `regionContexts` | `string[]` | No | Paths to region-specific context JSON files (AWS and Azure only) |
+| `regionContextPath` | `string` | No | Directory containing region-specific context files (AWS and Azure only) |
 | `stageContextPath` | `string` | No | Directory containing stage context files (default: `cdk-env` for AWS, `pulumi-env` for Azure) |
 
 ### Resource Naming Properties
@@ -115,16 +115,28 @@ Configuration is loaded in layers, where each layer overrides the previous:
 ```
 1. Base props (lowest priority)
 2. Extra contexts
-3. Region contexts
-4. Stage contexts (highest priority)
+3. Region context
+4. Stage context (highest priority)
 ```
 
-This means:
+### How Region and Stage Contexts Resolve Their Files
 
-- **Stage contexts** always win for any property they set
-- **Region contexts** override extra contexts, but are overridden by stage contexts
-- **Extra contexts** provide shared defaults, overridden by both region and stage
-- **Base props** (passed directly to the stack constructor) have the lowest priority
+Both follow the same convention — a directory path combined with a key to auto-resolve the file:
+
+| Layer | Directory config | Key | Resolves to |
+|-------|-----------------|-----|-------------|
+| Region (AWS) | `regionContextPath: "cdk-region"` | `region: "eu-west-1"` | `cdk-region/eu-west-1.json` |
+| Region (Azure) | `regionContextPath: "pulumi-region"` | `location: "uksouth"` | `pulumi-region/uksouth.json` |
+| Stage (AWS) | `stageContextPath: "cdk-env"` | `stage: "dev"` | `cdk-env/dev.json` |
+| Stage (Azure) | `stageContextPath: "pulumi-env"` | `stage: "dev"` | `pulumi-env/dev.json` |
+
+If the resolved file doesn't exist, the layer is silently skipped.
+
+### Why This Order
+
+- **Extra contexts** are shared defaults — same across all regions and stages (e.g., base Lambda memory at 512 MB, Function App SKU at B1/Basic)
+- **Region context** overrides with region-specific values — different per deployment target (e.g., eu-west-1 gets 1024 MB Lambda, uksouth gets EP1/ElasticPremium SKU)
+- **Stage context** has final say — environment-specific overrides that apply regardless of region (e.g., dev stage always gets `logLevel: "debug"`, prod gets `logLevel: "error"`)
 
 ## Extra Contexts
 
@@ -148,36 +160,55 @@ Extra contexts are loaded first. Region and stage contexts take precedence over 
 
 Layer region-specific configuration between extra contexts and stage contexts. This is useful for multi-region deployments where resources need different configuration per region (e.g., resource prefixes, location settings, SKU availability).
 
+Set `regionContextPath` to a directory containing one JSON file per region/location. You can add as many region files as you need — the stack automatically picks the right one based on the current `region` (AWS) or `location` (Azure):
+
+```
+cdk-region/               pulumi-region/
+├── eu-west-1.json        ├── uksouth.json
+├── us-east-1.json        ├── westeurope.json
+├── ap-southeast-1.json   ├── eastus.json
+└── eu-central-1.json     └── australiaeast.json
+```
+
+The file is resolved as `{regionContextPath}/{region|location}.json`, matching the same convention as stage contexts (`{stageContextPath}/{stage}.json`). If the file for the current region doesn't exist, the layer is silently skipped.
+
 Region contexts are supported in **AWS** and **Azure** stacks. Cloudflare does not have a region concept and does not support region contexts.
 
 ### AWS (cdk.json)
 
+The stack loads `{regionContextPath}/{region}.json`:
+
 ```json
 {
   "context": {
+    "region": "eu-west-1",
     "extraContexts": ["cdk-config/shared.json"],
-    "regionContexts": [
-      "cdk-region/eu-west-1.json"
-    ],
+    "regionContextPath": "cdk-region",
     "stageContextPath": "cdk-env",
     "stage": "dev"
   }
 }
 ```
 
+This resolves to `cdk-region/eu-west-1.json`.
+
 ### Azure (Pulumi.yaml)
+
+The stack loads `{regionContextPath}/{location}.json`:
 
 ```yaml
 name: my-azure-project
 runtime: nodejs
 config:
+  location: uksouth
   extraContexts:
     - pulumi-config/shared.json
-  regionContexts:
-    - pulumi-region/uksouth.json
+  regionContextPath: pulumi-region
   stageContextPath: pulumi-env
   stage: dev
 ```
+
+This resolves to `pulumi-region/uksouth.json`.
 
 ### Example: AWS — Base Config with Region Override
 
@@ -310,32 +341,47 @@ config:
 
 ### Directory Structure
 
-Following the existing conventions for test and config directories:
-
 ```
 my-aws-project/
 ├── cdk.json
 ├── cdk-config/          # Extra contexts (shared config)
 │   └── shared.json
-├── cdk-region/          # Region contexts
+├── cdk-region/          # One file per region — stack auto-selects
 │   ├── eu-west-1.json
-│   └── us-east-1.json
-└── cdk-env/             # Stage contexts
+│   ├── us-east-1.json
+│   ├── ap-southeast-1.json
+│   └── eu-central-1.json
+└── cdk-env/             # One file per stage — stack auto-selects
     ├── dev.json
     ├── tst.json
+    ├── uat.json
     └── prd.json
 
 my-azure-project/
 ├── Pulumi.yaml
 ├── pulumi-config/      # Extra contexts (shared config)
 │   └── shared.json
-├── pulumi-region/      # Region contexts
+├── pulumi-region/      # One file per location — stack auto-selects
 │   ├── uksouth.json
-│   └── westeurope.json
-└── pulumi-env/         # Stage contexts
+│   ├── westeurope.json
+│   ├── eastus.json
+│   └── australiaeast.json
+└── pulumi-env/         # One file per stage — stack auto-selects
     ├── dev.json
     ├── tst.json
+    ├── uat.json
     └── prd.json
+```
+
+Deploy to a different region without changing any config — just set the `region`/`location` value:
+
+```shell
+# AWS — deploys with cdk-region/us-east-1.json
+cdk deploy -c region=us-east-1 -c stage=prd
+
+# Azure — deploys with pulumi-region/westeurope.json
+pulumi config set location westeurope
+pulumi up
 ```
 
 ### How Region Context Overrides Work
@@ -441,7 +487,7 @@ For stage-aware domains (Route53 A records):
     "resourcePrefix": "myapp",
     "stageContextPath": "cdk-env",
     "extraContexts": [],
-    "regionContexts": ["cdk-region/eu-west-1.json"]
+    "regionContextPath": "cdk-region"
   }
 }
 ```
@@ -466,9 +512,9 @@ runtime: nodejs
 config:
   stage: dev
   domainName: example.com
+  location: uksouth
   resourcePrefix: myapp
-  regionContexts:
-    - pulumi-region/uksouth.json
+  regionContextPath: pulumi-region
 ```
 
 ### Azure Resource Naming
@@ -490,7 +536,7 @@ Key difference: Azure handles `undefined` resource names gracefully (converts to
 
 ## Cloudflare Pulumi Configuration
 
-Cloudflare uses `CommonCloudflareStackProps` with the same shared base properties. Cloudflare is a global anycast network and does not have a region concept, so `regionContexts` is not supported for Cloudflare stacks.
+Cloudflare uses `CommonCloudflareStackProps` with the same shared base properties. Cloudflare is a global anycast network and does not have a region concept, so `regionContextPath` is not supported for Cloudflare stacks.
 
 ### Pulumi.yaml Example
 

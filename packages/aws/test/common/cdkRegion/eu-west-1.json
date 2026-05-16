@@ -3,5 +3,39 @@
   "resourcePrefix": "ge-eu-west-1",
   "subDomain": "eu",
   "logLevel": "warn",
-  "apiSubDomain": "api-eu"
+  "apiSubDomain": "api-eu",
+  "testLambda": {
+    "functionName": "test-lambda",
+    "logRetentionInDays": 7,
+    "memorySize": 512,
+    "timeoutInSecs": 30,
+    "logLevel": "info",
+    "tags": [
+      { "key": "testTagName1", "value": "testTagValue1" },
+      { "key": "testTagName2", "value": "testTagValue2" }
+    ]
+  },
+  "siteLogBucket": {
+    "bucketName": "site-logs-eu",
+    "accessControl": "LogDeliveryWrite",
+    "autoDeleteObjects": true,
+    "removalPolicy": "destroy",
+    "existingBucket": false
+  },
+  "siteBucket": {
+    "bucketName": "site-eu",
+    "logBucketName": "site-logs-eu",
+    "accessControl": "LogDeliveryWrite",
+    "autoDeleteObjects": true,
+    "removalPolicy": "destroy",
+    "serverAccessLogsPrefix": "logs/",
+    "websiteIndexDocument": "index.html",
+    "websiteErrorDocument": "index.html",
+    "existingBucket": false,
+    "enableEventBridge": true,
+    "tags": [
+      { "key": "testTagName1", "value": "testTagValue1" },
+      { "key": "testTagName2", "value": "testTagValue2" }
+    ]
+  }
 }

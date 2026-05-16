@@ -1,6 +1,0 @@
-{
-  "testResourceGroup": {
-    "resourceGroupName": "test-resource-group",
-    "location": "uksouth"
-  }
-}

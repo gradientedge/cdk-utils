@@ -15,15 +15,12 @@ const testStackProps = {
   domainName: 'gradientedge.io',
   env: {
     account: '123456789',
-    region: 'us-east-1',
+    region: 'eu-west-1',
   },
   extraContexts: ['packages/aws/test/common/cdkConfig/base.json', 'packages/aws/test/common/cdkConfig/lambdas.json'],
-  regionContexts: [
-    'packages/aws/test/common/cdkRegion/eu-west-1.json',
-    'packages/aws/test/common/cdkRegion/eu-west-1-lambdas.json',
-  ],
+  regionContextPath: 'packages/aws/test/common/cdkRegion',
   name: 'test-common-stack',
-  region: 'us-east-1',
+  region: 'eu-west-1',
   stackName: 'test',
   stage: 'test',
   stageContextPath: 'packages/aws/test/common/cdkEnv',

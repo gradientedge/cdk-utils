@@ -69,7 +69,7 @@ export class CommonAzureStack extends ComponentResource {
     return {
       ...props,
       extraContexts: this.config.getObject('extraContexts'),
-      regionContexts: this.config.getObject('regionContexts'),
+      regionContextPath: this.config.get('regionContextPath'),
       stage: this.config.get('stage'),
       stageContextPath: this.config.get('stageContextPath'),
       ...this.determineExtraContexts(),
@@ -114,36 +114,34 @@ export class CommonAzureStack extends ComponentResource {
 
   /**
    * @summary Method to determine region contexts apart from the main context
-   * - Sets the properties from the region contexts
+   * - Location is resolved from `location` Pulumi config
+   * - Loads `{regionContextPath}/{location}.json` if present
    * - Primary use is to have layered config for each region in separate files
    */
   protected determineRegionContexts() {
-    const regionContexts = this.config.getObject('regionContexts')
     const debug = this.config.getBoolean('debug')
-    if (!regionContexts) {
-      if (debug) console.debug(`No region contexts provided. Using default context properties`)
+    const location = this.config.get('location')
+    const regionContextPath = this.config.get('regionContextPath')
+    if (!location || !regionContextPath) {
+      if (debug) console.debug(`No region context provided. Using default context properties`)
       return {}
     }
 
-    let regionContextProps: Record<string, any> = {}
-    _.forEach(regionContexts, (context: string) => {
-      const regionContextPath = path.join(appRoot.path, context)
+    const regionContextFilePath = path.join(appRoot.path, regionContextPath, `${location}.json`)
 
-      /* scenario where region context is configured but absent in file system */
-      if (!fs.existsSync(regionContextPath))
-        throw new Error(`Region context properties unavailable in path:${regionContextPath}`)
+    /* alert default context usage when region config is missing */
+    if (!fs.existsSync(regionContextFilePath)) {
+      if (debug) console.debug(`Region context properties unavailable in path:${regionContextFilePath}`)
+      if (debug) console.debug(`Using default context properties for ${location} location`)
+      return {}
+    }
 
-      /* read the region properties */
-      const regionContextPropsBuffer = fs.readFileSync(regionContextPath)
-      if (debug) console.debug(`Adding region contexts provided in ${regionContextPath}`)
+    /* read the region properties */
+    const regionContextPropsBuffer = fs.readFileSync(regionContextFilePath)
+    if (debug) console.debug(`Adding region contexts provided in ${regionContextFilePath}`)
 
-      /* parse as JSON properties */
-      regionContextProps = {
-        ...regionContextProps,
-        ...JSON.parse(regionContextPropsBuffer.toString('utf-8')),
-      }
-    })
-    return regionContextProps
+    /* parse as JSON properties */
+    return JSON.parse(regionContextPropsBuffer.toString('utf-8'))
   }
 
   /**

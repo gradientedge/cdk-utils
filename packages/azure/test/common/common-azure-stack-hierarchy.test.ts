@@ -51,8 +51,9 @@ const baseContexts = ['packages/azure/test/common/config/base.json']
 pulumi.runtime.setAllConfig({
   'project:stage': testStackProps.stage,
   'project:stageContextPath': testStackProps.stageContextPath,
+  'project:location': 'uksouth',
   'project:extraContexts': JSON.stringify(baseContexts),
-  'project:regionContexts': JSON.stringify(['packages/azure/test/common/region/uksouth.json']),
+  'project:regionContextPath': 'packages/azure/test/common/region',
 })
 
 const stackUkSouth = new TestAzureStack('test-stack-region-uksouth', {
@@ -96,8 +97,9 @@ describe('CommonAzureStack - Region Context Hierarchy - WestEurope', () => {
   pulumi.runtime.setAllConfig({
     'project:stage': testStackProps.stage,
     'project:stageContextPath': testStackProps.stageContextPath,
+    'project:location': 'westeurope',
     'project:extraContexts': JSON.stringify(baseContexts),
-    'project:regionContexts': JSON.stringify(['packages/azure/test/common/region/westeurope.json']),
+    'project:regionContextPath': 'packages/azure/test/common/region',
   })
 
   const stack = new TestAzureStack('test-stack-region-westeurope', {
@@ -125,17 +127,15 @@ describe('CommonAzureStack - Region Context Hierarchy - WestEurope', () => {
   })
 })
 
-describe('CommonAzureStack - Region Context Hierarchy - Multiple Regions', () => {
+describe('CommonAzureStack - Region Context Hierarchy - Auto-Select from Multiple Regions', () => {
   const baseContexts = ['packages/azure/test/common/config/base.json']
 
   pulumi.runtime.setAllConfig({
     'project:stage': testStackProps.stage,
     'project:stageContextPath': testStackProps.stageContextPath,
+    'project:location': 'westeurope',
     'project:extraContexts': JSON.stringify(baseContexts),
-    'project:regionContexts': JSON.stringify([
-      'packages/azure/test/common/region/uksouth.json',
-      'packages/azure/test/common/region/westeurope.json',
-    ]),
+    'project:regionContextPath': 'packages/azure/test/common/region',
   })
 
   const stack = new TestAzureStack('test-stack-region-multi', {
@@ -143,8 +143,8 @@ describe('CommonAzureStack - Region Context Hierarchy - Multiple Regions', () =>
     extraContexts: baseContexts,
   })
 
-  test('later region file overrides earlier for shared keys', () => {
-    // westeurope.json loaded second, overrides uksouth.json
+  test('only the matching region file is applied when multiple are configured', () => {
+    // location is 'westeurope', so uksouth.json is skipped and westeurope.json is applied
     expect(stack.props.location).toEqual(AzureLocation.WestEurope)
     expect(stack.props.resourcePrefix).toEqual('ge-westeurope')
     expect(stack.props.locationConfig).toEqual({
@@ -153,21 +153,23 @@ describe('CommonAzureStack - Region Context Hierarchy - Multiple Regions', () =>
   })
 })
 
-describe('CommonAzureStack - Region Context Hierarchy - Error Handling', () => {
-  test('throws when region context file does not exist', () => {
+describe('CommonAzureStack - Region Context Hierarchy - Graceful Handling', () => {
+  test('handles missing region context file gracefully', () => {
     pulumi.runtime.setAllConfig({
       'project:stage': testStackProps.stage,
       'project:stageContextPath': testStackProps.stageContextPath,
+      'project:location': 'nonexistent',
+      'project:regionContextPath': 'packages/azure/test/common/region',
       'project:extraContexts': JSON.stringify(['packages/azure/test/common/config/dummy.json']),
-      'project:regionContexts': JSON.stringify(['packages/azure/test/common/region/nonexistent.json']),
     })
 
-    expect(() => new TestAzureStack('test-stack-bad-region', testStackProps)).toThrow(
-      'Region context properties unavailable in path'
-    )
+    const stack = new TestAzureStack('test-stack-missing-region', testStackProps)
+    expect(stack.props.testAttribute).toEqual('success')
+    expect(stack.props.stage).toEqual('dev')
+    expect(stack.props.locationConfig).toBeUndefined()
   })
 
-  test('no region contexts leaves props unaffected by region layer', () => {
+  test('no regionContextPath leaves props unaffected by region layer', () => {
     pulumi.runtime.setAllConfig({
       'project:stage': testStackProps.stage,
       'project:stageContextPath': testStackProps.stageContextPath,
@@ -179,5 +181,18 @@ describe('CommonAzureStack - Region Context Hierarchy - Error Handling', () => {
     expect(stack.props.stage).toEqual('dev')
     expect(stack.props.domainName).toEqual('gradientedge.io')
     expect(stack.props.locationConfig).toBeUndefined()
+  })
+
+  test('no location set skips region context even when regionContextPath is configured', () => {
+    pulumi.runtime.setAllConfig({
+      'project:stage': testStackProps.stage,
+      'project:stageContextPath': testStackProps.stageContextPath,
+      'project:regionContextPath': 'packages/azure/test/common/region',
+      'project:extraContexts': JSON.stringify(['packages/azure/test/common/config/dummy.json']),
+    })
+
+    const stack = new TestAzureStack('test-stack-no-location', testStackProps)
+    expect(stack.props.locationConfig).toBeUndefined()
+    expect(stack.props.testAttribute).toEqual('success')
   })
 })

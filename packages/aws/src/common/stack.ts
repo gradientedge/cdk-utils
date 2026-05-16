@@ -120,36 +120,39 @@ export class CommonStack extends Stack {
 
   /**
    * @summary Method to determine region cdk contexts apart from the main cdk.json
-   * - Sets the properties from the region contexts into cdk node context
+   * - Region is resolved from `region` CDK context
+   * - Loads `{regionContextPath}/{region}.json` if present
    * - Primary use is to have layered config for each region in separate files
    */
   protected determineRegionContexts() {
-    const regionContexts = this.node.tryGetContext('regionContexts')
+    const region = this.node.tryGetContext('region')
+    const regionContextPath = this.node.tryGetContext('regionContextPath')
     const debug = this.node.tryGetContext('debug')
 
-    if (!regionContexts) {
-      if (debug) console.debug(`No region contexts provided. Using default context properties from cdk.json`)
+    if (!region || !regionContextPath) {
+      if (debug) console.debug(`No region context provided. Using default context properties from cdk.json`)
       return
     }
 
-    _.forEach(regionContexts, (context: string) => {
-      const regionContextPath = path.join(appRoot.path, context)
+    const regionContextFilePath = path.join(appRoot.path, regionContextPath, `${region}.json`)
 
-      /* scenario where region context is configured in cdk.json but absent in file system */
-      if (!fs.existsSync(regionContextPath))
-        throw new Error(`Region context properties unavailable in path:${regionContextPath}`)
+    /* alert default context usage when region config is missing */
+    if (!fs.existsSync(regionContextFilePath)) {
+      if (debug) console.debug(`Region context properties unavailable in path:${regionContextFilePath}`)
+      if (debug) console.debug(`Using default context properties for ${region} region`)
+      return
+    }
 
-      /* read the region properties */
-      const regionContextPropsBuffer = fs.readFileSync(regionContextPath)
-      if (debug) console.debug(`Adding region contexts provided in ${regionContextPath}`)
+    /* read the region properties */
+    const regionContextPropsBuffer = fs.readFileSync(regionContextFilePath)
+    if (debug) console.debug(`Adding region contexts provided in ${regionContextFilePath}`)
 
-      /* parse as JSON properties */
-      const regionContextProps = JSON.parse(regionContextPropsBuffer.toString('utf-8'))
+    /* parse as JSON properties */
+    const regionContextProps = JSON.parse(regionContextPropsBuffer.toString('utf-8'))
 
-      /* set each of the property into the cdk node context */
-      _.keys(regionContextProps).forEach((propKey: any) => {
-        this.node.setContext(propKey, regionContextProps[propKey])
-      })
+    /* set each of the property into the cdk node context */
+    _.keys(regionContextProps).forEach((propKey: any) => {
+      this.node.setContext(propKey, regionContextProps[propKey])
     })
   }
 

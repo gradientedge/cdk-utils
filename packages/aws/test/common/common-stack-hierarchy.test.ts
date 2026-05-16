@@ -12,7 +12,7 @@ describe('CommonStack - Region Context Hierarchy - eu-west-1', () => {
   const regionProps = {
     domainName: 'gradientedge.io',
     extraContexts: ['packages/aws/test/common/cdkConfig/base.json'],
-    regionContexts: ['packages/aws/test/common/cdkRegion/eu-west-1.json'],
+    regionContextPath: 'packages/aws/test/common/cdkRegion',
     name: 'test-region-euw1',
     region: 'eu-west-1',
     stackName: 'test-region-euw1',
@@ -70,7 +70,7 @@ describe('CommonStack - Region Context Hierarchy - us-east-1', () => {
   const regionProps = {
     domainName: 'gradientedge.io',
     extraContexts: ['packages/aws/test/common/cdkConfig/base.json'],
-    regionContexts: ['packages/aws/test/common/cdkRegion/us-east-1.json'],
+    regionContextPath: 'packages/aws/test/common/cdkRegion',
     name: 'test-region-use1',
     region: 'us-east-1',
     stackName: 'test-region-use1',
@@ -120,14 +120,11 @@ describe('CommonStack - Region Context Hierarchy - us-east-1', () => {
   })
 })
 
-describe('CommonStack - Region Context Hierarchy - Multiple Regions', () => {
+describe('CommonStack - Region Context Hierarchy - Auto-Select from Multiple Regions', () => {
   const regionProps = {
     domainName: 'gradientedge.io',
     extraContexts: ['packages/aws/test/common/cdkConfig/base.json'],
-    regionContexts: [
-      'packages/aws/test/common/cdkRegion/eu-west-1.json',
-      'packages/aws/test/common/cdkRegion/us-east-1.json',
-    ],
+    regionContextPath: 'packages/aws/test/common/cdkRegion',
     name: 'test-region-multi',
     region: 'us-east-1',
     stackName: 'test-region-multi',
@@ -154,40 +151,59 @@ describe('CommonStack - Region Context Hierarchy - Multiple Regions', () => {
   const app = new cdk.App({ context: regionProps })
   const stack = new TestStack(app, 'test-region-multi-stack', regionProps)
 
-  test('later region file overrides earlier for shared keys, stage still wins', () => {
-    // resourcePrefix: base='ge', region-eu='ge-eu-west-1', region-us='ge-us-east-1', stage='cdktest' → stage wins
+  test('only the matching region file is applied when multiple are configured', () => {
+    // region is 'us-east-1', so eu-west-1.json is skipped and us-east-1.json is applied
+    // resourcePrefix: base='ge', region-us='ge-us-east-1', stage='cdktest' → stage wins
     expect(stack.props.resourcePrefix).toEqual('cdktest')
-    // subDomain: region-eu='eu', region-us='us', stage='test' → stage wins
+    // subDomain: region-us='us', stage='test' → stage wins
     expect(stack.props.subDomain).toEqual('test')
-    // logLevel: base='error', region-eu='warn', region-us='info', stage='debug' → stage wins
+    // logLevel: base='error', region-us='info', stage='debug' → stage wins
     expect(stack.props.logLevel).toEqual('debug')
+    // apiSubDomain: region-us='api-us', stage='api' → stage wins
+    expect(stack.props.apiSubDomain).toEqual('api')
   })
 })
 
-describe('CommonStack - Region Context Hierarchy - Error Handling', () => {
-  test('throws error when region context file not found', () => {
-    const errorProps = {
+describe('CommonStack - Region Context Hierarchy - Graceful Handling', () => {
+  test('handles missing region context file gracefully', () => {
+    const missingRegionProps = {
       domainName: 'gradientedge.io',
-      regionContexts: ['packages/aws/test/common/cdkRegion/nonexistent.json'],
-      name: 'test-region-error',
-      region: 'eu-west-1',
-      stackName: 'test-region-error',
+      extraContexts: ['packages/aws/test/common/cdkConfig/base.json'],
+      regionContextPath: 'packages/aws/test/common/cdkRegion',
+      name: 'test-missing-region',
+      region: 'ap-southeast-1',
+      stackName: 'test-missing-region',
       stage: 'test',
+      stageContextPath: 'packages/aws/test/common/cdkEnv',
     }
 
     class TestStack extends CommonStack {
+      declare props: TestStackProps
+
       constructor(parent: cdk.App, name: string, props: any) {
-        super(parent, name, errorProps)
+        super(parent, name, missingRegionProps)
+      }
+
+      protected determineConstructProps(props: cdk.StackProps) {
+        return {
+          ...super.determineConstructProps(props),
+          globalPrefix: this.node.tryGetContext('globalPrefix'),
+          logLevel: this.node.tryGetContext('logLevel'),
+        }
       }
     }
 
-    const app = new cdk.App({ context: errorProps })
-    expect(() => new TestStack(app, 'test-region-error-stack', errorProps)).toThrow(
-      'Region context properties unavailable'
-    )
+    const app = new cdk.App({ context: missingRegionProps })
+    const stack = new TestStack(app, 'test-missing-region-stack', missingRegionProps)
+
+    // no ap-southeast-1.json exists, so region layer is skipped
+    // base='error', stage='debug' → stage wins
+    expect(stack.props.logLevel).toEqual('debug')
+    expect(stack.props.globalPrefix).toEqual('gradientedge')
+    expect(stack.props.stage).toEqual('test')
   })
 
-  test('no region contexts leaves props unaffected by region layer', () => {
+  test('no regionContextPath leaves props unaffected by region layer', () => {
     const noRegionProps = {
       domainName: 'gradientedge.io',
       extraContexts: ['packages/aws/test/common/cdkConfig/base.json'],

@@ -58,11 +58,9 @@ class TestCommonConstruct extends CommonAzureConstruct {
 pulumi.runtime.setAllConfig({
   'project:stage': testStackProps.stage,
   'project:stageContextPath': testStackProps.stageContextPath,
+  'project:location': 'uksouth',
   'project:extraContexts': JSON.stringify(testStackProps.extraContexts),
-  'project:regionContexts': JSON.stringify([
-    'packages/azure/test/common/region/uksouth.json',
-    'packages/azure/test/common/region/uksouth-functions.json',
-  ]),
+  'project:regionContextPath': 'packages/azure/test/common/region',
 })
 
 pulumi.runtime.setMocks({

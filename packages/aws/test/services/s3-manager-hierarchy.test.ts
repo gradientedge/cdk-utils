@@ -18,10 +18,7 @@ const testStackProps = {
   },
   excludeDomainNameForBuckets: true,
   extraContexts: ['packages/aws/test/common/cdkConfig/base.json', 'packages/aws/test/common/cdkConfig/buckets.json'],
-  regionContexts: [
-    'packages/aws/test/common/cdkRegion/eu-west-1.json',
-    'packages/aws/test/common/cdkRegion/eu-west-1-buckets.json',
-  ],
+  regionContextPath: 'packages/aws/test/common/cdkRegion',
   name: 'test-common-stack',
   region: 'eu-west-1',
   stackName: 'test',
