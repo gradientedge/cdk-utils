@@ -1,0 +1,79 @@
+{
+  "location": "uksouth",
+  "resourcePrefix": "ge-uksouth",
+  "subDomain": "uk",
+  "logLevel": "warn",
+  "locationConfig": {
+    "uksouth": {
+      "id": "uksouth",
+      "name": "UK South"
+    }
+  },
+  "testResourceGroup": {
+    "resourceGroupName": "test-resource-group",
+    "location": "uksouth"
+  },
+  "testFunctionApp": {
+    "name": "test-function-app",
+    "resourceGroupName": "test-rg-uksouth",
+    "serverFarmId": "/subscriptions/test-sub/resourceGroups/test-rg-uksouth/providers/Microsoft.Web/serverfarms/test-asp",
+    "kind": "functionapp"
+  },
+  "testFunction": {
+    "name": "test-function",
+    "functionAppName": "test-function-app-dev",
+    "resourceGroupName": "test-rg-uksouth"
+  },
+  "testFunctionAppFlexConsumption": {
+    "name": "test-function-app-flex-consumption",
+    "resourceGroupName": "test-rg-uksouth",
+    "kind": "functionapp",
+    "functionAppConfig": {
+      "deployment": {
+        "storage": {
+          "type": "blobContainer",
+          "value": "https://testsa.blob.core.windows.net/deployments",
+          "authentication": {
+            "type": "SystemAssignedIdentity"
+          }
+        }
+      },
+      "scaleAndConcurrency": {
+        "maximumInstanceCount": 40,
+        "instanceMemoryMB": 2048
+      },
+      "runtime": {
+        "name": "node",
+        "version": "22"
+      }
+    }
+  },
+  "apiAuthKeyVault": {
+    "name": "test-api-keyvault",
+    "resourceGroupName": "test-rg-uksouth"
+  },
+  "apiManagement": {
+    "useExistingApiManagement": true,
+    "apiStackName": "test-api-stack",
+    "serviceName": "test-api-management-uksouth",
+    "publisherEmail": "test@gradientedge.io",
+    "publisherName": "GradientEdge"
+  },
+  "apiManagementDiagnostic": {
+    "diagnosticId": "applicationinsights",
+    "apiId": "/subscriptions/test-sub/resourceGroups/test-rg-uksouth/providers/Microsoft.ApiManagement/service/test-api-management-uksouth-dev/apis/test-api"
+  },
+  "apiManagementDiagnosticSettings": {
+    "name": "test-api-diagnostic",
+    "logs": [{ "categoryGroup": "allLogs", "enabled": true }],
+    "metrics": [{ "category": "AllMetrics", "enabled": true }]
+  },
+  "commonLogAnalyticsWorkspace": {
+    "workspaceName": "test-workspace",
+    "resourceGroupName": "test-rg-uksouth"
+  },
+  "commonApplicationInsights": {
+    "resourceName": "test-app-insights",
+    "resourceGroupName": "test-rg-uksouth"
+  }
+}

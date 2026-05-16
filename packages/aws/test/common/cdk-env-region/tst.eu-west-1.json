@@ -1,0 +1,11 @@
+{
+  "logLevel": "trace",
+  "resourcePrefix": "ge-test-eu-west-1",
+  "testLambda": {
+    "functionName": "test-lambda",
+    "logRetentionInDays": 1,
+    "memorySize": 256,
+    "timeoutInSecs": 10,
+    "logLevel": "trace"
+  }
+}

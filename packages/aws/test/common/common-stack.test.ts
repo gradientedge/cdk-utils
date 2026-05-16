@@ -9,13 +9,13 @@ interface TestStackProps extends CommonStackProps {
 
 const testStackProps: TestStackProps = {
   domainName: 'gradientedge.io',
-  extraContexts: ['packages/aws/test/common/cdkConfig/dummy.json'],
+  extraContexts: ['packages/aws/test/common/cdk-config/dummy.json'],
   name: 'test-common-stack',
   region: 'eu-west-1',
   skipStageForARecords: false,
   stackName: 'test',
   stage: 'test',
-  stageContextPath: 'packages/aws/test/common/cdkEnv',
+  stageContextPath: 'packages/aws/test/common/cdk-env',
 }
 
 class TestCommonStack extends CommonStack {
@@ -129,7 +129,7 @@ describe('TestCommonStackDevStage', () => {
       region: 'eu-west-1',
       stackName: 'test-dev',
       stage: 'dev',
-      stageContextPath: 'packages/aws/test/common/cdkEnv',
+      stageContextPath: 'packages/aws/test/common/cdk-env',
     }
 
     class TestStackDev extends CommonStack {
@@ -153,7 +153,7 @@ describe('TestCommonStackMissingStageContext', () => {
       region: 'eu-west-1',
       stackName: 'test-missing',
       stage: 'production',
-      stageContextPath: 'packages/aws/test/common/cdkEnv',
+      stageContextPath: 'packages/aws/test/common/cdk-env',
     }
 
     class TestStackMissingStage extends CommonStack {
@@ -177,7 +177,7 @@ describe('TestCommonStackStageContextWithObjects', () => {
       region: 'eu-west-1',
       stackName: 'test-obj',
       stage: 'test',
-      stageContextPath: 'packages/aws/test/common/cdkEnv',
+      stageContextPath: 'packages/aws/test/common/cdk-env',
     }
 
     class TestStackObjStage extends CommonStack {
@@ -207,7 +207,7 @@ describe('TestCommonStackErrorHandling', () => {
   test('throws error when extra context file not found', () => {
     const errorProps = {
       domainName: 'gradientedge.io',
-      extraContexts: ['packages/aws/test/common/cdkConfig/nonexistent.json'],
+      extraContexts: ['packages/aws/test/common/cdk-config/nonexistent.json'],
       name: 'test-error',
       region: 'eu-west-1',
       stackName: 'test-error',
@@ -281,12 +281,12 @@ describe('TestCommonStackWithDebug', () => {
     const debugProps = {
       debug: true,
       domainName: 'gradientedge.io',
-      extraContexts: ['packages/aws/test/common/cdkConfig/dummy.json'],
+      extraContexts: ['packages/aws/test/common/cdk-config/dummy.json'],
       name: 'test-debug',
       region: 'eu-west-1',
       stackName: 'test-debug',
       stage: 'test',
-      stageContextPath: 'packages/aws/test/common/cdkEnv',
+      stageContextPath: 'packages/aws/test/common/cdk-env',
     }
 
     class TestStackDebug extends CommonStack {
@@ -331,7 +331,7 @@ describe('TestCommonStackWithDebug', () => {
       region: 'eu-west-1',
       stackName: 'test-debug-missing',
       stage: 'nonexistent-stage',
-      stageContextPath: 'packages/aws/test/common/cdkEnv',
+      stageContextPath: 'packages/aws/test/common/cdk-env',
     }
 
     class TestStackDebugMissing extends CommonStack {
@@ -358,7 +358,7 @@ describe('TestCommonStackWithDebug', () => {
       region: 'eu-west-1',
       stackName: 'test-debug-dev',
       stage: 'dev',
-      stageContextPath: 'packages/aws/test/common/cdkEnv',
+      stageContextPath: 'packages/aws/test/common/cdk-env',
     }
 
     class TestStackDebugDev extends CommonStack {

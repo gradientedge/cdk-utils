@@ -1,0 +1,5 @@
+{
+  "logLevel": "error",
+  "resourcePrefix": "ge",
+  "globalPrefix": "gradientedge"
+}

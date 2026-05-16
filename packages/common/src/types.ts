@@ -10,6 +10,8 @@ export interface BaseProps {
   domainName: string
   /** Additional CDK context file paths to load */
   extraContexts?: string[]
+  /** The relative path to region-specific context files */
+  regionContextPath?: string
   /** The name identifier for the stack or construct */
   name: string
   /** Whether to omit the stage prefix for Route53 A records */
@@ -18,6 +20,8 @@ export interface BaseProps {
   stage: string
   /** The relative path to stage-specific context files */
   stageContextPath?: string
+  /** The relative path to stage-region-specific context files */
+  stageRegionContextPath?: string
   /** The subdomain prefix for the deployment */
   subDomain?: string
 }

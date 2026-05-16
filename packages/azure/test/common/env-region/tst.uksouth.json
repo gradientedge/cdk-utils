@@ -1,0 +1,13 @@
+{
+  "logLevel": "trace",
+  "resourcePrefix": "ge-dev-uksouth",
+  "functionApp": {
+    "name": "api-function-app",
+    "resourceGroupName": "rg-dev-uksouth",
+    "kind": "functionapp",
+    "sku": {
+      "name": "B1",
+      "tier": "Basic"
+    }
+  }
+}

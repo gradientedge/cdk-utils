@@ -1,0 +1,11 @@
+{
+  "stage": "tst",
+  "subDomain": "tst",
+  "siteSubDomain": "site",
+  "apiSubDomain": "api",
+  "useExistingHostedZone": true,
+  "logLevel": "debug",
+  "timezone": "UTC",
+  "nodeEnv": "test",
+  "testAttribute": "success"
+}

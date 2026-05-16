@@ -13,7 +13,7 @@ interface TestStackProps extends LambdaWithIamAccessProps {
 
 const testStackProps = {
   domainName: 'gradientedge.io',
-  extraContexts: ['packages/aws/test/common/cdkConfig/lambdas.json'],
+  extraContexts: ['packages/aws/test/common/cdk-config/lambdas.json'],
   name: 'test-lambda-with-iam-access-stack',
   region: 'eu-west-1',
   siteCreateAltARecord: true,
@@ -21,7 +21,7 @@ const testStackProps = {
   skipStageForARecords: true,
   stackName: 'test',
   stage: 'test',
-  stageContextPath: 'packages/aws/test/common/cdkEnv',
+  stageContextPath: 'packages/aws/test/common/cdk-env',
 }
 
 class TestCommonStack extends CommonStack {
@@ -160,7 +160,10 @@ describe('TestLambdaWithIamAccess - Branch Coverage Tests', () => {
     // The VPC branch coverage is tested through integration tests
     const vpcContext = {
       ...testStackProps,
-      extraContexts: ['packages/aws/test/common/cdkConfig/lambdas.json', 'packages/aws/test/common/cdkConfig/vpc.json'],
+      extraContexts: [
+        'packages/aws/test/common/cdk-config/lambdas.json',
+        'packages/aws/test/common/cdk-config/vpc.json',
+      ],
       vpcName: 'test-vpc',
     }
 
@@ -309,7 +312,7 @@ describe('TestLambdaWithIamAccess - Branch Coverage Tests', () => {
   test('handles lambda with aliases', () => {
     const aliasContext = {
       ...testStackProps,
-      extraContexts: ['packages/aws/test/common/cdkConfig/lambdas-with-alias.json'],
+      extraContexts: ['packages/aws/test/common/cdk-config/lambdas-with-alias.json'],
     }
 
     class TestStackWithAlias extends CommonStack {
