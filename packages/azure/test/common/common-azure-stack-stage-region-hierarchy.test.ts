@@ -1,5 +1,5 @@
 import * as pulumi from '@pulumi/pulumi'
-import { AzureLocation, CommonAzureConstruct, CommonAzureStack, CommonAzureStackProps } from '../../src/index.js'
+import { AzureLocation, CommonAzureStack, CommonAzureStackProps } from '../../src/index.js'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
   logLevel?: string
