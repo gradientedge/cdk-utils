@@ -49,6 +49,30 @@
 <td>No</td>
 <td>Override the CloudFormation stack name</td>
 </tr>
+<tr>
+<td><code>extraContexts</code></td>
+<td><code>string[]</code></td>
+<td>No</td>
+<td>Paths to additional context JSON files</td>
+</tr>
+<tr>
+<td><code>regionContextPath</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td>Directory containing region-specific context files (AWS and Azure only)</td>
+</tr>
+<tr>
+<td><code>stageContextPath</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td>Directory containing stage context files (default: <code>cdk-env</code> for AWS, <code>pulumi-env</code> for Azure)</td>
+</tr>
+<tr>
+<td><code>stageRegionContextPath</code></td>
+<td><code>string</code></td>
+<td>No</td>
+<td>Directory containing stage-region-specific context files (AWS and Azure only)</td>
+</tr>
 </tbody>
 </table>
 <h3 id="resource-naming-properties" class="tsd-anchor-link">Resource Naming Properties<a href="#resource-naming-properties" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
@@ -183,33 +207,290 @@
 </table>
 <h2 id="stage-configuration" class="tsd-anchor-link">Stage Configuration<a href="#stage-configuration" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <h3 id="directory-structure" class="tsd-anchor-link">Directory Structure<a href="#directory-structure" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<p>Create a <code>cdkEnv/</code> directory in your project root with a JSON file per stage:</p>
-<pre><code><span class="hl-1">my</span><span class="hl-3">-</span><span class="hl-1">project</span><span class="hl-3">/</span><br/><span class="hl-1">├── cdk.json</span><br/><span class="hl-1">├── cdkEnv</span><span class="hl-3">/</span><br/><span class="hl-1">│   ├── dev.json</span><br/><span class="hl-1">│   ├── tst.json</span><br/><span class="hl-1">│   ├── uat.json</span><br/><span class="hl-1">│   └── prd.json</span>
+<p>Create a <code>cdk-env/</code> directory in your project root with a JSON file per stage:</p>
+<pre><code><span class="hl-1">my</span><span class="hl-3">-</span><span class="hl-1">project</span><span class="hl-3">/</span><br/><span class="hl-1">├── cdk.json</span><br/><span class="hl-1">├── cdk</span><span class="hl-3">-</span><span class="hl-1">env</span><span class="hl-3">/</span><br/><span class="hl-1">│   ├── dev.json</span><br/><span class="hl-1">│   ├── tst.json</span><br/><span class="hl-1">│   ├── uat.json</span><br/><span class="hl-1">│   └── prd.json</span>
 </code><button>Copy</button></pre>
 
 <h3 id="stage-file-example" class="tsd-anchor-link">Stage File Example<a href="#stage-file-example" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<p><code>cdkEnv/tst.json</code>:</p>
+<p><code>cdk-env/tst.json</code>:</p>
 <pre><code class="json"><span class="hl-1">{</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;stage&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;tst&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;subDomain&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;test&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;resourcePrefix&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;myapp&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;apiSubDomain&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;api&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;siteSubDomain&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;site&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;logLevel&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;debug&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;nodeEnv&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;development&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;timezone&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;UTC&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;useExistingHostedZone&quot;</span><span class="hl-1">: </span><span class="hl-5">true</span><br/><span class="hl-1">}</span>
 </code><button type="button">Copy</button></pre>
 
 <h3 id="how-stage-loading-works" class="tsd-anchor-link">How Stage Loading Works<a href="#how-stage-loading-works" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ol>
 <li>CDK reads the <code>stage</code> value from context (typically passed via <code>-c stage=tst</code>)</li>
-<li><code>CommonStack</code> looks for <code>cdkEnv/{stage}.json</code></li>
+<li><code>CommonStack</code> looks for <code>cdk-env/{stage}.json</code></li>
 <li>Properties from the stage file are merged into the CDK context</li>
 <li>Objects and arrays are deep-merged; primitives are overwritten</li>
+<li>Stage context overrides both extra and region contexts. Only stage-region context can override stage context</li>
 </ol>
 <h3 id="custom-stage-context-path" class="tsd-anchor-link">Custom Stage Context Path<a href="#custom-stage-context-path" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<p>Override the default <code>cdkEnv/</code> directory:</p>
-<pre><code class="json"><span class="hl-7">// cdk.json</span><br/><span class="hl-1">{</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;context&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;stageContextPath&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;config/environments&quot;</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">}</span>
+<p>Override the default <code>cdk-env/</code> directory:</p>
+<pre><code class="json"><span class="hl-7">// cdk.json</span><br/><span class="hl-1">{</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;context&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;stageContextPath&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;cdk-environments&quot;</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">}</span>
 </code><button type="button">Copy</button></pre>
 
+<h2 id="configuration-hierarchy" class="tsd-anchor-link">Configuration Hierarchy<a href="#configuration-hierarchy" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Configuration is loaded in layers, where each layer overrides the previous:</p>
+<pre><code><span class="hl-5">1.</span><span class="hl-1"> Base </span><span class="hl-0">props</span><span class="hl-1"> (lowest priority)</span><br/><span class="hl-5">2.</span><span class="hl-1"> Extra contexts</span><br/><span class="hl-5">3.</span><span class="hl-1"> Region context</span><br/><span class="hl-5">4.</span><span class="hl-1"> Stage context</span><br/><span class="hl-5">5.</span><span class="hl-1"> Stage</span><span class="hl-3">-</span><span class="hl-1">region </span><span class="hl-0">context</span><span class="hl-1"> (highest priority)</span>
+</code><button>Copy</button></pre>
+
+<h3 id="how-contexts-resolve-their-files" class="tsd-anchor-link">How Contexts Resolve Their Files<a href="#how-contexts-resolve-their-files" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p>Region, stage, and stage-region contexts all follow the same convention — a directory path combined with keys to auto-resolve the file:</p>
+<table>
+<thead>
+<tr>
+<th>Layer</th>
+<th>Directory config</th>
+<th>Key(s)</th>
+<th>Resolves to</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Region (AWS)</td>
+<td><code>regionContextPath</code></td>
+<td><code>region</code></td>
+<td><code>cdk-region/eu-west-1.json</code></td>
+</tr>
+<tr>
+<td>Region (Azure)</td>
+<td><code>regionContextPath</code></td>
+<td><code>location</code></td>
+<td><code>pulumi-region/uksouth.json</code></td>
+</tr>
+<tr>
+<td>Stage (AWS)</td>
+<td><code>stageContextPath</code></td>
+<td><code>stage</code></td>
+<td><code>cdk-env/dev.json</code></td>
+</tr>
+<tr>
+<td>Stage (Azure)</td>
+<td><code>stageContextPath</code></td>
+<td><code>stage</code></td>
+<td><code>pulumi-env/dev.json</code></td>
+</tr>
+<tr>
+<td>Stage-region (AWS)</td>
+<td><code>stageRegionContextPath</code></td>
+<td><code>stage</code> + <code>region</code></td>
+<td><code>cdk-env-region/dev.eu-west-1.json</code></td>
+</tr>
+<tr>
+<td>Stage-region (Azure)</td>
+<td><code>stageRegionContextPath</code></td>
+<td><code>stage</code> + <code>location</code></td>
+<td><code>pulumi-env-region/dev.uksouth.json</code></td>
+</tr>
+</tbody>
+</table>
+<p>If the resolved file doesn't exist, the layer is silently skipped.</p>
+<h3 id="why-this-order" class="tsd-anchor-link">Why This Order<a href="#why-this-order" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<ul>
+<li><strong>Extra contexts</strong> are shared defaults — same across all regions and stages (e.g., base Lambda memory at 512 MB, Function App SKU at B1/Basic)</li>
+<li><strong>Region context</strong> overrides with region-specific values — different per deployment target (e.g., eu-west-1 gets 1024 MB Lambda, uksouth gets EP1/ElasticPremium SKU)</li>
+<li><strong>Stage context</strong> provides environment-specific overrides that apply regardless of region (e.g., dev stage always gets <code>logLevel: &quot;debug&quot;</code>, prod gets <code>logLevel: &quot;error&quot;</code>)</li>
+<li><strong>Stage-region context</strong> has final say — for overrides that are specific to a particular stage AND region combination (e.g., prod in eu-west-1 needs a different SKU than prod in us-east-1)</li>
+</ul>
 <h2 id="extra-contexts" class="tsd-anchor-link">Extra Contexts<a href="#extra-contexts" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
-<p>Layer additional configuration files on top of the stage config:</p>
-<pre><code class="json"><span class="hl-7">// cdk.json</span><br/><span class="hl-1">{</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;context&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;extraContexts&quot;</span><span class="hl-1">: [</span><br/><span class="hl-1">      </span><span class="hl-2">&quot;config/shared.json&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-2">&quot;config/secrets.json&quot;</span><br/><span class="hl-1">    ]</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">}</span>
+<p>Layer additional configuration files for shared settings:</p>
+<pre><code class="json"><span class="hl-7">// cdk.json</span><br/><span class="hl-1">{</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;context&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;extraContexts&quot;</span><span class="hl-1">: [</span><br/><span class="hl-1">      </span><span class="hl-2">&quot;cdk-config/shared.json&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-2">&quot;cdk-config/secrets.json&quot;</span><br/><span class="hl-1">    ]</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">}</span>
 </code><button type="button">Copy</button></pre>
 
-<p>Extra contexts are loaded before stage contexts, so stage-specific values take precedence.</p>
+<p>Extra contexts are loaded first. Region and stage contexts take precedence over extra contexts for any overlapping properties.</p>
+<h2 id="region-contexts" class="tsd-anchor-link">Region Contexts<a href="#region-contexts" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
+<p>Layer region-specific configuration between extra contexts and stage contexts. This is useful for multi-region deployments where resources need different configuration per region (e.g., resource prefixes, location settings, SKU availability).</p>
+<p>Set <code>regionContextPath</code> to a directory containing one JSON file per region/location. The stack automatically picks the right one based on the current <code>region</code> (AWS) or <code>location</code> (Azure):</p>
+<pre><code><span class="hl-1">cdk</span><span class="hl-3">-</span><span class="hl-1">region</span><span class="hl-3">/</span><span class="hl-1">               pulumi</span><span class="hl-3">-</span><span class="hl-1">region</span><span class="hl-3">/</span><br/><span class="hl-1">├── eu</span><span class="hl-3">-</span><span class="hl-1">west</span><span class="hl-3">-</span><span class="hl-1">1.json        ├── uksouth.json</span><br/><span class="hl-1">├── us</span><span class="hl-3">-</span><span class="hl-1">east</span><span class="hl-3">-</span><span class="hl-1">1.json        └── westeurope.json</span><br/><span class="hl-1">└── ap</span><span class="hl-3">-</span><span class="hl-1">southeast</span><span class="hl-3">-</span><span class="hl-1">1.json</span>
+</code><button>Copy</button></pre>
+
+<p>Optionally, set <code>stageRegionContextPath</code> to a separate directory for stage+region overrides. These files use the <code>{stage}.{region}.json</code> naming convention:</p>
+<pre><code><span class="hl-1">cdk</span><span class="hl-3">-</span><span class="hl-1">env</span><span class="hl-3">-</span><span class="hl-1">region</span><span class="hl-3">/</span><span class="hl-1">           pulumi</span><span class="hl-3">-</span><span class="hl-1">env</span><span class="hl-3">-</span><span class="hl-1">region</span><span class="hl-3">/</span><br/><span class="hl-1">├── dev.eu</span><span class="hl-3">-</span><span class="hl-1">west</span><span class="hl-3">-</span><span class="hl-1">1.json    ├── dev.uksouth.json</span><br/><span class="hl-1">├── prd.eu</span><span class="hl-3">-</span><span class="hl-1">west</span><span class="hl-3">-</span><span class="hl-1">1.json    ├── prd.uksouth.json</span><br/><span class="hl-1">└── prd.us</span><span class="hl-3">-</span><span class="hl-1">east</span><span class="hl-3">-</span><span class="hl-1">1.json    └── prd.westeurope.json</span>
+</code><button>Copy</button></pre>
+
+<p>If a resolved file doesn't exist, the layer is silently skipped.</p>
+<p>Region contexts are supported in <strong>AWS</strong> and <strong>Azure</strong> stacks. Cloudflare does not have a region concept and does not support region contexts.</p>
+<h3 id="aws-cdkjson" class="tsd-anchor-link">AWS (cdk.json)<a href="#aws-cdkjson" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<pre><code class="json"><span class="hl-1">{</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;context&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;region&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;eu-west-1&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;stage&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;dev&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;extraContexts&quot;</span><span class="hl-1">: [</span><span class="hl-2">&quot;cdk-config/shared.json&quot;</span><span class="hl-1">],</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;regionContextPath&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;cdk-region&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;stageContextPath&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;cdk-env&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;stageRegionContextPath&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;cdk-env-region&quot;</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<p>This resolves:</p>
+<ul>
+<li>Region: <code>cdk-region/eu-west-1.json</code></li>
+<li>Stage: <code>cdk-env/dev.json</code></li>
+<li>Stage-region: <code>cdk-env-region/dev.eu-west-1.json</code></li>
+</ul>
+<h3 id="azure-pulumiyaml" class="tsd-anchor-link">Azure (Pulumi.yaml)<a href="#azure-pulumiyaml" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<pre><code class="yaml"><span class="hl-8">name</span><span class="hl-1">: </span><span class="hl-2">my-azure-project</span><br/><span class="hl-8">runtime</span><span class="hl-1">: </span><span class="hl-2">nodejs</span><br/><span class="hl-8">config</span><span class="hl-1">:</span><br/><span class="hl-1">  </span><span class="hl-8">location</span><span class="hl-1">: </span><span class="hl-2">uksouth</span><br/><span class="hl-1">  </span><span class="hl-8">stage</span><span class="hl-1">: </span><span class="hl-2">dev</span><br/><span class="hl-1">  </span><span class="hl-8">extraContexts</span><span class="hl-1">:</span><br/><span class="hl-1">    - </span><span class="hl-2">pulumi-config/shared.json</span><br/><span class="hl-1">  </span><span class="hl-8">regionContextPath</span><span class="hl-1">: </span><span class="hl-2">pulumi-region</span><br/><span class="hl-1">  </span><span class="hl-8">stageContextPath</span><span class="hl-1">: </span><span class="hl-2">pulumi-env</span><br/><span class="hl-1">  </span><span class="hl-8">stageRegionContextPath</span><span class="hl-1">: </span><span class="hl-2">pulumi-env-region</span>
+</code><button type="button">Copy</button></pre>
+
+<p>This resolves:</p>
+<ul>
+<li>Region: <code>pulumi-region/uksouth.json</code></li>
+<li>Stage: <code>pulumi-env/dev.json</code></li>
+<li>Stage-region: <code>pulumi-env-region/dev.uksouth.json</code></li>
+</ul>
+<h3 id="example-aws-base-config-with-region-override" class="tsd-anchor-link">Example: AWS — Base Config with Region Override<a href="#example-aws-base-config-with-region-override" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><code>cdk-config/shared.json</code> — base config defines a Lambda with modest defaults:</p>
+<pre><code class="json"><span class="hl-1">{</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;graphqlApi&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;functionName&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;graphql-server&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;memorySize&quot;</span><span class="hl-1">: </span><span class="hl-5">512</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;timeoutInSecs&quot;</span><span class="hl-1">: </span><span class="hl-5">60</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;logRetentionInDays&quot;</span><span class="hl-1">: </span><span class="hl-5">7</span><br/><span class="hl-1">  },</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;siteBucket&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;bucketName&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;site&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;logBucketName&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;site-logs&quot;</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<p><code>cdk-region/eu-west-1.json</code> — EU region overrides with higher memory and longer retention:</p>
+<pre><code class="json"><span class="hl-1">{</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;region&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;eu-west-1&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;resourcePrefix&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;ge-eu-west-1&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;subDomain&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;eu&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;apiSubDomain&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;api-eu&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;graphqlApi&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;functionName&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;graphql-server&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;memorySize&quot;</span><span class="hl-1">: </span><span class="hl-5">1024</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;timeoutInSecs&quot;</span><span class="hl-1">: </span><span class="hl-5">300</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;logRetentionInDays&quot;</span><span class="hl-1">: </span><span class="hl-5">30</span><br/><span class="hl-1">  },</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;siteBucket&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;bucketName&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;site-eu&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;logBucketName&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;site-logs-eu&quot;</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<p><code>cdk-region/us-east-1.json</code> — US primary region overrides with even higher memory and longer retention:</p>
+<pre><code class="json"><span class="hl-1">{</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;region&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;us-east-1&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;resourcePrefix&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;ge-us-east-1&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;subDomain&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;us&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;apiSubDomain&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;api-us&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;graphqlApi&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;functionName&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;graphql-server&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;memorySize&quot;</span><span class="hl-1">: </span><span class="hl-5">2048</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;timeoutInSecs&quot;</span><span class="hl-1">: </span><span class="hl-5">300</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;logRetentionInDays&quot;</span><span class="hl-1">: </span><span class="hl-5">90</span><br/><span class="hl-1">  },</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;siteBucket&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;bucketName&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;site-us&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;logBucketName&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;site-logs-us&quot;</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<p><code>cdk-env-region/dev.eu-west-1.json</code> — dev in EU gets reduced resources for cost savings:</p>
+<pre><code class="json"><span class="hl-1">{</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;logLevel&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;trace&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;resourcePrefix&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;ge-dev-eu-west-1&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;graphqlApi&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;functionName&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;graphql-server&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;memorySize&quot;</span><span class="hl-1">: </span><span class="hl-5">256</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;timeoutInSecs&quot;</span><span class="hl-1">: </span><span class="hl-5">10</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;logRetentionInDays&quot;</span><span class="hl-1">: </span><span class="hl-5">1</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="example-azure-base-config-with-region-override" class="tsd-anchor-link">Example: Azure — Base Config with Region Override<a href="#example-azure-base-config-with-region-override" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><code>pulumi-config/shared.json</code> — base config defines a Function App with a Basic SKU:</p>
+<pre><code class="json"><span class="hl-1">{</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;functionApp&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;name&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;api-function-app&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;resourceGroupName&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;rg-shared&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;kind&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;functionapp&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;sku&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">      </span><span class="hl-5">&quot;name&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;B1&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-5">&quot;tier&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;Basic&quot;</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<p><code>pulumi-region/uksouth.json</code> — UK South overrides with Elastic Premium for production-grade workloads:</p>
+<pre><code class="json"><span class="hl-1">{</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;location&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;uksouth&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;resourcePrefix&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;ge-uksouth&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;subDomain&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;uk&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;locationConfig&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;uksouth&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">      </span><span class="hl-5">&quot;id&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;uksouth&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-5">&quot;name&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;UK South&quot;</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">  },</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;functionApp&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;name&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;api-function-app&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;resourceGroupName&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;rg-uksouth&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;kind&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;functionapp&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;sku&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">      </span><span class="hl-5">&quot;name&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;EP1&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-5">&quot;tier&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;ElasticPremium&quot;</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<p><code>pulumi-region/westeurope.json</code> — West Europe overrides with a higher Elastic Premium tier for the primary region:</p>
+<pre><code class="json"><span class="hl-1">{</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;location&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;westeurope&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;resourcePrefix&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;ge-westeurope&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;subDomain&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;eu&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;locationConfig&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;westeurope&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">      </span><span class="hl-5">&quot;id&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;westeurope&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-5">&quot;name&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;West Europe&quot;</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">  },</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;functionApp&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;name&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;api-function-app&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;resourceGroupName&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;rg-westeurope&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;kind&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;functionapp&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;sku&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">      </span><span class="hl-5">&quot;name&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;EP2&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-5">&quot;tier&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;ElasticPremium&quot;</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<p><code>pulumi-env-region/dev.uksouth.json</code> — dev in UK South downgrades to Basic for cost savings:</p>
+<pre><code class="json"><span class="hl-1">{</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;logLevel&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;trace&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;resourcePrefix&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;ge-dev-uksouth&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;functionApp&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;name&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;api-function-app&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;resourceGroupName&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;rg-dev-uksouth&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;kind&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;functionapp&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;sku&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">      </span><span class="hl-5">&quot;name&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;B1&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">      </span><span class="hl-5">&quot;tier&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;Basic&quot;</span><br/><span class="hl-1">    }</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">}</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="directory-structure-1" class="tsd-anchor-link">Directory Structure<a href="#directory-structure-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<pre><code><span class="hl-1">my</span><span class="hl-3">-</span><span class="hl-1">aws</span><span class="hl-3">-</span><span class="hl-1">project</span><span class="hl-3">/</span><br/><span class="hl-1">├── cdk.json</span><br/><span class="hl-1">├── cdk</span><span class="hl-3">-</span><span class="hl-1">config</span><span class="hl-3">/</span><span class="hl-1">              # Extra </span><span class="hl-0">contexts</span><span class="hl-1"> (shared config)</span><br/><span class="hl-1">│   └── shared.json</span><br/><span class="hl-1">├── cdk</span><span class="hl-3">-</span><span class="hl-1">region</span><span class="hl-3">/</span><span class="hl-1">              # Region </span><span class="hl-0">contexts</span><span class="hl-1"> (per region, all stages)</span><br/><span class="hl-1">│   ├── eu</span><span class="hl-3">-</span><span class="hl-1">west</span><span class="hl-3">-</span><span class="hl-1">1.json</span><br/><span class="hl-1">│   └── us</span><span class="hl-3">-</span><span class="hl-1">east</span><span class="hl-3">-</span><span class="hl-1">1.json</span><br/><span class="hl-1">├── cdk</span><span class="hl-3">-</span><span class="hl-1">env</span><span class="hl-3">/</span><span class="hl-1">                 # Stage </span><span class="hl-0">contexts</span><span class="hl-1"> (per stage, all regions)</span><br/><span class="hl-1">│   ├── dev.json</span><br/><span class="hl-1">│   ├── tst.json</span><br/><span class="hl-1">│   ├── uat.json</span><br/><span class="hl-1">│   └── prd.json</span><br/><span class="hl-1">└── cdk</span><span class="hl-3">-</span><span class="hl-1">env</span><span class="hl-3">-</span><span class="hl-1">region</span><span class="hl-3">/</span><span class="hl-1">        # Stage</span><span class="hl-3">-</span><span class="hl-1">region </span><span class="hl-0">contexts</span><span class="hl-1"> (per stage</span><span class="hl-3">+</span><span class="hl-1">region combo)</span><br/><span class="hl-1">    ├── dev.eu</span><span class="hl-3">-</span><span class="hl-1">west</span><span class="hl-3">-</span><span class="hl-1">1.json</span><br/><span class="hl-1">    └── prd.us</span><span class="hl-3">-</span><span class="hl-1">east</span><span class="hl-3">-</span><span class="hl-1">1.json</span><br/><br/><span class="hl-1">my</span><span class="hl-3">-</span><span class="hl-1">azure</span><span class="hl-3">-</span><span class="hl-1">project</span><span class="hl-3">/</span><br/><span class="hl-1">├── Pulumi.yaml</span><br/><span class="hl-1">├── pulumi</span><span class="hl-3">-</span><span class="hl-1">config</span><span class="hl-3">/</span><span class="hl-1">           # Extra </span><span class="hl-0">contexts</span><span class="hl-1"> (shared config)</span><br/><span class="hl-1">│   └── shared.json</span><br/><span class="hl-1">├── pulumi</span><span class="hl-3">-</span><span class="hl-1">region</span><span class="hl-3">/</span><span class="hl-1">           # Region </span><span class="hl-0">contexts</span><span class="hl-1"> (per location, all stages)</span><br/><span class="hl-1">│   ├── uksouth.json</span><br/><span class="hl-1">│   └── westeurope.json</span><br/><span class="hl-1">├── pulumi</span><span class="hl-3">-</span><span class="hl-1">env</span><span class="hl-3">/</span><span class="hl-1">              # Stage </span><span class="hl-0">contexts</span><span class="hl-1"> (per stage, all locations)</span><br/><span class="hl-1">│   ├── dev.json</span><br/><span class="hl-1">│   ├── tst.json</span><br/><span class="hl-1">│   ├── uat.json</span><br/><span class="hl-1">│   └── prd.json</span><br/><span class="hl-1">└── pulumi</span><span class="hl-3">-</span><span class="hl-1">env</span><span class="hl-3">-</span><span class="hl-1">region</span><span class="hl-3">/</span><span class="hl-1">     # Stage</span><span class="hl-3">-</span><span class="hl-1">region </span><span class="hl-0">contexts</span><span class="hl-1"> (per stage</span><span class="hl-3">+</span><span class="hl-1">location combo)</span><br/><span class="hl-1">    ├── dev.uksouth.json</span><br/><span class="hl-1">    └── prd.westeurope.json</span>
+</code><button>Copy</button></pre>
+
+<p>Deploy to a different region without changing any config — just set the <code>region</code>/<code>location</code> value:</p>
+<pre><code class="shell"><span class="hl-7"># AWS — deploys with cdk-region/us-east-1.json</span><br/><span class="hl-0">cdk</span><span class="hl-1"> </span><span class="hl-2">deploy</span><span class="hl-1"> </span><span class="hl-5">-c</span><span class="hl-1"> </span><span class="hl-2">region=us-east-1</span><span class="hl-1"> </span><span class="hl-5">-c</span><span class="hl-1"> </span><span class="hl-2">stage=prd</span><br/><br/><span class="hl-7"># Azure — deploys with pulumi-region/westeurope.json</span><br/><span class="hl-0">pulumi</span><span class="hl-1"> </span><span class="hl-2">config</span><span class="hl-1"> </span><span class="hl-2">set</span><span class="hl-1"> </span><span class="hl-2">location</span><span class="hl-1"> </span><span class="hl-2">westeurope</span><br/><span class="hl-0">pulumi</span><span class="hl-1"> </span><span class="hl-2">up</span>
+</code><button type="button">Copy</button></pre>
+
+<h3 id="how-the-full-hierarchy-works" class="tsd-anchor-link">How the Full Hierarchy Works<a href="#how-the-full-hierarchy-works" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<p><strong>Azure</strong> — base defines a Basic SKU, region promotes to Elastic Premium, stage overrides the subdomain, stage-region pins a specific SKU for dev+uksouth:</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Base</th>
+<th>Region (<code>uksouth</code>)</th>
+<th>Stage (<code>dev</code>)</th>
+<th>Stage-Region (<code>dev.uksouth</code>)</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>functionApp.sku.name</code></td>
+<td><code>B1</code></td>
+<td><code>EP1</code></td>
+<td>—</td>
+<td><code>B1</code></td>
+<td><code>B1</code> (stage-region wins)</td>
+</tr>
+<tr>
+<td><code>functionApp.sku.tier</code></td>
+<td><code>Basic</code></td>
+<td><code>ElasticPremium</code></td>
+<td>—</td>
+<td><code>Basic</code></td>
+<td><code>Basic</code> (stage-region wins)</td>
+</tr>
+<tr>
+<td><code>functionApp.resourceGroupName</code></td>
+<td><code>rg-shared</code></td>
+<td><code>rg-uksouth</code></td>
+<td>—</td>
+<td><code>rg-dev-uksouth</code></td>
+<td><code>rg-dev-uksouth</code> (stage-region wins)</td>
+</tr>
+<tr>
+<td><code>location</code></td>
+<td>—</td>
+<td><code>uksouth</code></td>
+<td>—</td>
+<td>—</td>
+<td><code>uksouth</code> (region survives)</td>
+</tr>
+<tr>
+<td><code>subDomain</code></td>
+<td>—</td>
+<td><code>uk</code></td>
+<td><code>dev</code></td>
+<td>—</td>
+<td><code>dev</code> (stage survives)</td>
+</tr>
+<tr>
+<td><code>logLevel</code></td>
+<td><code>error</code></td>
+<td><code>warn</code></td>
+<td><code>debug</code></td>
+<td><code>trace</code></td>
+<td><code>trace</code> (stage-region wins)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>AWS</strong> — base defines a 512 MB Lambda, region scales up to 1024 MB, stage overrides the prefix, stage-region scales down to 256 MB for test+eu-west-1:</p>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>Base</th>
+<th>Region (<code>eu-west-1</code>)</th>
+<th>Stage (<code>tst</code>)</th>
+<th>Stage-Region (<code>tst.eu-west-1</code>)</th>
+<th>Result</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>graphqlApi.memorySize</code></td>
+<td><code>512</code></td>
+<td><code>1024</code></td>
+<td>—</td>
+<td><code>256</code></td>
+<td><code>256</code> (stage-region wins)</td>
+</tr>
+<tr>
+<td><code>graphqlApi.logRetentionInDays</code></td>
+<td><code>7</code></td>
+<td><code>30</code></td>
+<td>—</td>
+<td><code>1</code></td>
+<td><code>1</code> (stage-region wins)</td>
+</tr>
+<tr>
+<td><code>resourcePrefix</code></td>
+<td><code>ge</code></td>
+<td><code>ge-eu-west-1</code></td>
+<td><code>cdktest</code></td>
+<td><code>ge-test-eu-west-1</code></td>
+<td><code>ge-test-eu-west-1</code> (stage-region wins)</td>
+</tr>
+<tr>
+<td><code>subDomain</code></td>
+<td>—</td>
+<td><code>eu</code></td>
+<td><code>tst</code></td>
+<td>—</td>
+<td><code>tst</code> (stage survives)</td>
+</tr>
+<tr>
+<td><code>logLevel</code></td>
+<td><code>error</code></td>
+<td><code>warn</code></td>
+<td><code>debug</code></td>
+<td><code>trace</code></td>
+<td><code>trace</code> (stage-region wins)</td>
+</tr>
+</tbody>
+</table>
 <h2 id="resource-naming" class="tsd-anchor-link">Resource Naming<a href="#resource-naming" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <h3 id="default-pattern" class="tsd-anchor-link">Default Pattern<a href="#default-pattern" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <pre><code><span class="hl-1">[globalPrefix]</span><span class="hl-3">-</span><span class="hl-1">[resourcePrefix]</span><span class="hl-3">-</span><span class="hl-1">resourceName</span><span class="hl-3">-</span><span class="hl-1">[resourceSuffix]</span><span class="hl-3">-</span><span class="hl-1">[globalSuffix]</span><span class="hl-3">-</span><span class="hl-1">stage</span>
@@ -304,7 +585,7 @@
 </ul>
 <h2 id="aws-cdk-configuration" class="tsd-anchor-link">AWS CDK Configuration<a href="#aws-cdk-configuration" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
 <h3 id="cdkjson-example" class="tsd-anchor-link">cdk.json Example<a href="#cdkjson-example" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<pre><code class="json"><span class="hl-1">{</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;app&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;npx ts-node --prefer-ts-exts src/main.ts&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;context&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;stage&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;dev&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;domainName&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;example.com&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;subDomain&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;api&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;region&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;eu-west-1&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;globalPrefix&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;acme&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;resourcePrefix&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;myapp&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;stageContextPath&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;cdkEnv&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;extraContexts&quot;</span><span class="hl-1">: []</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">}</span>
+<pre><code class="json"><span class="hl-1">{</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;app&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;npx ts-node --prefer-ts-exts src/main.ts&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">  </span><span class="hl-5">&quot;context&quot;</span><span class="hl-1">: {</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;stage&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;dev&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;domainName&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;example.com&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;subDomain&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;api&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;region&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;eu-west-1&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;globalPrefix&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;acme&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;resourcePrefix&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;myapp&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;stageContextPath&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;cdk-env&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;extraContexts&quot;</span><span class="hl-1">: [],</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;regionContextPath&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;cdk-region&quot;</span><span class="hl-1">,</span><br/><span class="hl-1">    </span><span class="hl-5">&quot;stageRegionContextPath&quot;</span><span class="hl-1">: </span><span class="hl-2">&quot;cdk-env-region&quot;</span><br/><span class="hl-1">  }</span><br/><span class="hl-1">}</span>
 </code><button type="button">Copy</button></pre>
 
 <p>Deploy with a different stage:</p>
@@ -315,7 +596,7 @@
 <p>Azure uses the <a href="https://www.pulumi.com/registry/packages/azure-native/">Pulumi Azure Native</a> provider (<code>@pulumi/azure-native</code>), which provides 100% API coverage of Azure Resource Manager. This is the recommended provider over the classic <code>@pulumi/azure</code> provider.</p>
 <p><code>CommonAzureStackProps</code> shares the same base properties (<code>stage</code>, <code>domainName</code>, <code>subDomain</code>, <code>name</code>) from <code>@gradientedge/cdk-utils-common</code>, plus Azure-specific options.</p>
 <h3 id="pulumiyaml-example" class="tsd-anchor-link">Pulumi.yaml Example<a href="#pulumiyaml-example" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<pre><code class="yaml"><span class="hl-8">name</span><span class="hl-1">: </span><span class="hl-2">my-azure-project</span><br/><span class="hl-8">runtime</span><span class="hl-1">: </span><span class="hl-2">nodejs</span><br/><span class="hl-8">config</span><span class="hl-1">:</span><br/><span class="hl-1">  </span><span class="hl-8">stage</span><span class="hl-1">: </span><span class="hl-2">dev</span><br/><span class="hl-1">  </span><span class="hl-8">domainName</span><span class="hl-1">: </span><span class="hl-2">example.com</span><br/><span class="hl-1">  </span><span class="hl-8">resourcePrefix</span><span class="hl-1">: </span><span class="hl-2">myapp</span>
+<pre><code class="yaml"><span class="hl-8">name</span><span class="hl-1">: </span><span class="hl-2">my-azure-project</span><br/><span class="hl-8">runtime</span><span class="hl-1">: </span><span class="hl-2">nodejs</span><br/><span class="hl-8">config</span><span class="hl-1">:</span><br/><span class="hl-1">  </span><span class="hl-8">stage</span><span class="hl-1">: </span><span class="hl-2">dev</span><br/><span class="hl-1">  </span><span class="hl-8">domainName</span><span class="hl-1">: </span><span class="hl-2">example.com</span><br/><span class="hl-1">  </span><span class="hl-8">location</span><span class="hl-1">: </span><span class="hl-2">uksouth</span><br/><span class="hl-1">  </span><span class="hl-8">resourcePrefix</span><span class="hl-1">: </span><span class="hl-2">myapp</span><br/><span class="hl-1">  </span><span class="hl-8">regionContextPath</span><span class="hl-1">: </span><span class="hl-2">pulumi-region</span><br/><span class="hl-1">  </span><span class="hl-8">stageRegionContextPath</span><span class="hl-1">: </span><span class="hl-2">pulumi-env-region</span>
 </code><button type="button">Copy</button></pre>
 
 <h3 id="azure-resource-naming" class="tsd-anchor-link">Azure Resource Naming<a href="#azure-resource-naming" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
@@ -347,10 +628,10 @@
 </tbody>
 </table>
 <h2 id="cloudflare-pulumi-configuration" class="tsd-anchor-link">Cloudflare Pulumi Configuration<a href="#cloudflare-pulumi-configuration" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2>
-<p>Cloudflare uses <code>CommonCloudflareStackProps</code> with the same shared base properties.</p>
+<p>Cloudflare uses <code>CommonCloudflareStackProps</code> with the same shared base properties. Cloudflare is a global anycast network and does not have a region concept, so <code>regionContextPath</code> is not supported for Cloudflare stacks.</p>
 <h3 id="pulumiyaml-example-1" class="tsd-anchor-link">Pulumi.yaml Example<a href="#pulumiyaml-example-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <pre><code class="yaml"><span class="hl-8">name</span><span class="hl-1">: </span><span class="hl-2">my-cloudflare-project</span><br/><span class="hl-8">runtime</span><span class="hl-1">: </span><span class="hl-2">nodejs</span><br/><span class="hl-8">config</span><span class="hl-1">:</span><br/><span class="hl-1">  </span><span class="hl-8">stage</span><span class="hl-1">: </span><span class="hl-2">dev</span><br/><span class="hl-1">  </span><span class="hl-8">domainName</span><span class="hl-1">: </span><span class="hl-2">example.com</span>
 </code><button type="button">Copy</button></pre>
 
 <p>Cloudflare constructs use Pulumi's native naming conventions rather than a custom formatter.</p>
-</div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg><h3>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg><h3>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#configuration"><span>Configuration</span></a><ul><li><a href="#commonstackprops"><span>Common<wbr/>Stack<wbr/>Props</span></a></li><li><ul><li><a href="#core-properties"><span>Core <wbr/>Properties</span></a></li><li><a href="#resource-naming-properties"><span>Resource <wbr/>Naming <wbr/>Properties</span></a></li><li><a href="#runtime-properties"><span>Runtime <wbr/>Properties</span></a></li><li><a href="#bucket-naming-properties"><span>Bucket <wbr/>Naming <wbr/>Properties</span></a></li><li><a href="#domain-properties"><span>Domain <wbr/>Properties</span></a></li></ul></li><li><a href="#stage-configuration"><span>Stage <wbr/>Configuration</span></a></li><li><ul><li><a href="#directory-structure"><span>Directory <wbr/>Structure</span></a></li><li><a href="#stage-file-example"><span>Stage <wbr/>File <wbr/>Example</span></a></li><li><a href="#how-stage-loading-works"><span>How <wbr/>Stage <wbr/>Loading <wbr/>Works</span></a></li><li><a href="#custom-stage-context-path"><span>Custom <wbr/>Stage <wbr/>Context <wbr/>Path</span></a></li></ul></li><li><a href="#extra-contexts"><span>Extra <wbr/>Contexts</span></a></li><li><a href="#resource-naming"><span>Resource <wbr/>Naming</span></a></li><li><ul><li><a href="#default-pattern"><span>Default <wbr/>Pattern</span></a></li><li><a href="#examples"><span>Examples</span></a></li><li><a href="#per-resource-overrides"><span>Per-<wbr/>Resource <wbr/>Overrides</span></a></li></ul></li><li><a href="#domain-name-resolution"><span>Domain <wbr/>Name <wbr/>Resolution</span></a></li><li><a href="#aws-cdk-configuration"><span>AWS <wbr/>CDK <wbr/>Configuration</span></a></li><li><ul><li><a href="#cdkjson-example"><span>cdk.json <wbr/>Example</span></a></li></ul></li><li><a href="#azure-pulumi-configuration"><span>Azure <wbr/>Pulumi <wbr/>Configuration</span></a></li><li><ul><li><a href="#pulumiyaml-example"><span>Pulumi.yaml <wbr/>Example</span></a></li><li><a href="#azure-resource-naming"><span>Azure <wbr/>Resource <wbr/>Naming</span></a></li><li><a href="#azure-specific-properties"><span>Azure-<wbr/>Specific <wbr/>Properties</span></a></li></ul></li><li><a href="#cloudflare-pulumi-configuration"><span>Cloudflare <wbr/>Pulumi <wbr/>Configuration</span></a></li><li><ul><li><a href="#pulumiyaml-example-1"><span>Pulumi.yaml <wbr/>Example</span></a></li></ul></li></ul></div></details></div><div class="site-menu"><nav class="tsd-navigation"><a href="../modules.html">GradientEdge CDK Utils</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><footer><p>© <span id="footer-year"></span> GradientEdge. All rights reserved.</p></footer><div class="overlay"></div></body></html>
+</div></div><div class="col-sidebar"><div class="page-menu"><div class="tsd-navigation settings"><details class="tsd-accordion"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg><h3>Settings</h3></summary><div class="tsd-accordion-details"><div class="tsd-filter-visibility"><span class="settings-label">Member Visibility</span><ul id="tsd-filter-options"><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-protected" name="protected"/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Protected</span></label></li><li class="tsd-filter-item"><label class="tsd-filter-input"><input type="checkbox" id="tsd-filter-inherited" name="inherited" checked/><svg width="32" height="32" viewBox="0 0 32 32" aria-hidden="true"><rect class="tsd-checkbox-background" width="30" height="30" x="1" y="1" rx="6" fill="none"></rect><path class="tsd-checkbox-checkmark" d="M8.35422 16.8214L13.2143 21.75L24.6458 10.25" stroke="none" stroke-width="3.5" stroke-linejoin="round" fill="none"></path></svg><span>Inherited</span></label></li></ul></div><div class="tsd-theme-toggle"><label class="settings-label" for="tsd-theme">Theme</label><select id="tsd-theme"><option value="os">OS</option><option value="light">Light</option><option value="dark">Dark</option></select></div></div></details></div><details open class="tsd-accordion tsd-page-navigation"><summary class="tsd-accordion-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg><h3>On This Page</h3></summary><div class="tsd-accordion-details"><a href="#configuration"><span>Configuration</span></a><ul><li><a href="#commonstackprops"><span>Common<wbr/>Stack<wbr/>Props</span></a></li><li><ul><li><a href="#core-properties"><span>Core <wbr/>Properties</span></a></li><li><a href="#resource-naming-properties"><span>Resource <wbr/>Naming <wbr/>Properties</span></a></li><li><a href="#runtime-properties"><span>Runtime <wbr/>Properties</span></a></li><li><a href="#bucket-naming-properties"><span>Bucket <wbr/>Naming <wbr/>Properties</span></a></li><li><a href="#domain-properties"><span>Domain <wbr/>Properties</span></a></li></ul></li><li><a href="#stage-configuration"><span>Stage <wbr/>Configuration</span></a></li><li><ul><li><a href="#directory-structure"><span>Directory <wbr/>Structure</span></a></li><li><a href="#stage-file-example"><span>Stage <wbr/>File <wbr/>Example</span></a></li><li><a href="#how-stage-loading-works"><span>How <wbr/>Stage <wbr/>Loading <wbr/>Works</span></a></li><li><a href="#custom-stage-context-path"><span>Custom <wbr/>Stage <wbr/>Context <wbr/>Path</span></a></li></ul></li><li><a href="#configuration-hierarchy"><span>Configuration <wbr/>Hierarchy</span></a></li><li><ul><li><a href="#how-contexts-resolve-their-files"><span>How <wbr/>Contexts <wbr/>Resolve <wbr/>Their <wbr/>Files</span></a></li><li><a href="#why-this-order"><span>Why <wbr/>This <wbr/>Order</span></a></li></ul></li><li><a href="#extra-contexts"><span>Extra <wbr/>Contexts</span></a></li><li><a href="#region-contexts"><span>Region <wbr/>Contexts</span></a></li><li><ul><li><a href="#aws-cdkjson"><span>AWS (cdk.json)</span></a></li><li><a href="#azure-pulumiyaml"><span>Azure (<wbr/>Pulumi.yaml)</span></a></li><li><a href="#example-aws-base-config-with-region-override"><span>Example: <wbr/>AWS — <wbr/>Base <wbr/>Config with <wbr/>Region <wbr/>Override</span></a></li><li><a href="#example-azure-base-config-with-region-override"><span>Example: <wbr/>Azure — <wbr/>Base <wbr/>Config with <wbr/>Region <wbr/>Override</span></a></li><li><a href="#directory-structure-1"><span>Directory <wbr/>Structure</span></a></li><li><a href="#how-the-full-hierarchy-works"><span>How the <wbr/>Full <wbr/>Hierarchy <wbr/>Works</span></a></li></ul></li><li><a href="#resource-naming"><span>Resource <wbr/>Naming</span></a></li><li><ul><li><a href="#default-pattern"><span>Default <wbr/>Pattern</span></a></li><li><a href="#examples"><span>Examples</span></a></li><li><a href="#per-resource-overrides"><span>Per-<wbr/>Resource <wbr/>Overrides</span></a></li></ul></li><li><a href="#domain-name-resolution"><span>Domain <wbr/>Name <wbr/>Resolution</span></a></li><li><a href="#aws-cdk-configuration"><span>AWS <wbr/>CDK <wbr/>Configuration</span></a></li><li><ul><li><a href="#cdkjson-example"><span>cdk.json <wbr/>Example</span></a></li></ul></li><li><a href="#azure-pulumi-configuration"><span>Azure <wbr/>Pulumi <wbr/>Configuration</span></a></li><li><ul><li><a href="#pulumiyaml-example"><span>Pulumi.yaml <wbr/>Example</span></a></li><li><a href="#azure-resource-naming"><span>Azure <wbr/>Resource <wbr/>Naming</span></a></li><li><a href="#azure-specific-properties"><span>Azure-<wbr/>Specific <wbr/>Properties</span></a></li></ul></li><li><a href="#cloudflare-pulumi-configuration"><span>Cloudflare <wbr/>Pulumi <wbr/>Configuration</span></a></li><li><ul><li><a href="#pulumiyaml-example-1"><span>Pulumi.yaml <wbr/>Example</span></a></li></ul></li></ul></div></details></div><div class="site-menu"><nav class="tsd-navigation"><a href="../modules.html">GradientEdge CDK Utils</a><ul class="tsd-small-nested-navigation" id="tsd-nav-container"><li>Loading...</li></ul></nav></div></div></div><footer><p>© <span id="footer-year"></span> GradientEdge. All rights reserved.</p></footer><div class="overlay"></div></body></html>
