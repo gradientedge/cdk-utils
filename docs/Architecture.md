@@ -117,9 +117,13 @@ Configuration loads in layers, with later layers overriding earlier ones:
    ↓ merged with
 2. Extra context files (from extraContexts array)
    ↓ merged with
-3. Stage-specific file (cdkEnv/{stage}.json)
+3. Region-specific file (cdk-region/{region}.json)
+   ↓ merged with
+4. Stage-specific file (cdk-env/{stage}.json)
+   ↓ merged with
+5. Stage-region-specific file (cdk-env-region/{stage}.{region}.json)
    ↓ produces
-4. CommonStackProps
+6. CommonStackProps
 ```
 
 - Objects and arrays are deep-merged (via lodash `_.merge`)

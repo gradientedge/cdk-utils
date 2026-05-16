@@ -10,13 +10,13 @@ interface TestStackProps extends CommonStackProps {
 
 const testStackProps: TestStackProps = {
   domainName: 'gradientedge.io',
-  extraContexts: ['packages/aws/test/common/cdkConfig/dummy.json'],
+  extraContexts: ['packages/aws/test/common/cdk-config/dummy.json'],
   name: 'test-common-stack',
   region: 'eu-west-1',
   skipStageForARecords: false,
   stackName: 'test',
   stage: 'test',
-  stageContextPath: 'packages/aws/test/common/cdkEnv',
+  stageContextPath: 'packages/aws/test/common/cdk-env',
 }
 
 class TestCommonStack extends CommonStack {

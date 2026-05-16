@@ -50,6 +50,9 @@ export class CommonStack extends Stack {
     /* determine extra cdk stage contexts */
     this.determineStageContexts()
 
+    /* determine stage-region cdk contexts */
+    this.determineStageRegionContexts()
+
     this.props = this.determineConstructProps(props)
 
     /* initialise the construct */
@@ -163,7 +166,7 @@ export class CommonStack extends Stack {
    */
   protected determineStageContexts() {
     const stage = this.node.tryGetContext('stage')
-    const stageContextPath = this.node.tryGetContext('stageContextPath') || 'cdkEnv'
+    const stageContextPath = this.node.tryGetContext('stageContextPath') || 'cdk-env'
     const stageContextFilePath = path.join(appRoot.path, stageContextPath, `${stage}.json`)
 
     const debug = this.node.tryGetContext('debug')
@@ -195,6 +198,44 @@ export class CommonStack extends Stack {
         /* handle all other primitive properties */
         this.node.setContext(propKey, stageContextProps[propKey])
       }
+    })
+  }
+
+  /**
+   * @summary Method to determine stage-region cdk contexts for environment and region-specific overrides
+   * - Loads `{stageRegionContextPath}/{stage}.{region}.json` if present
+   * - Has the highest priority in the configuration hierarchy
+   * - Primary use is to override config for a specific stage+region combination (e.g., prd.eu-west-1.json)
+   */
+  protected determineStageRegionContexts() {
+    const stage = this.node.tryGetContext('stage')
+    const region = this.node.tryGetContext('region')
+    const stageRegionContextPath = this.node.tryGetContext('stageRegionContextPath')
+    const debug = this.node.tryGetContext('debug')
+
+    if (!stage || !region || !stageRegionContextPath) {
+      if (debug) console.debug(`No stage-region context provided. Using default context properties from cdk.json`)
+      return
+    }
+
+    const stageRegionContextFilePath = path.join(appRoot.path, stageRegionContextPath, `${stage}.${region}.json`)
+
+    /* gracefully skip when stage-region config is missing */
+    if (!fs.existsSync(stageRegionContextFilePath)) {
+      if (debug) console.debug(`Stage-region context properties unavailable in path:${stageRegionContextFilePath}`)
+      return
+    }
+
+    /* read the stage-region properties */
+    const stageRegionContextPropsBuffer = fs.readFileSync(stageRegionContextFilePath)
+    if (debug) console.debug(`Adding stage-region contexts provided in ${stageRegionContextFilePath}`)
+
+    /* parse as JSON properties */
+    const stageRegionContextProps = JSON.parse(stageRegionContextPropsBuffer.toString('utf-8'))
+
+    /* set each of the property into the cdk node context */
+    _.keys(stageRegionContextProps).forEach((propKey: any) => {
+      this.node.setContext(propKey, stageRegionContextProps[propKey])
     })
   }
 

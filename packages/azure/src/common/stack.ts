@@ -72,9 +72,11 @@ export class CommonAzureStack extends ComponentResource {
       regionContextPath: this.config.get('regionContextPath'),
       stage: this.config.get('stage'),
       stageContextPath: this.config.get('stageContextPath'),
+      stageRegionContextPath: this.config.get('stageRegionContextPath'),
       ...this.determineExtraContexts(),
       ...this.determineRegionContexts(),
       ...this.determineStageContexts(),
+      ...this.determineStageRegionContexts(),
     }
   }
 
@@ -172,6 +174,38 @@ export class CommonAzureStack extends ComponentResource {
 
     /* parse as JSON properties */
     return JSON.parse(stageContextPropsBuffer.toString('utf-8'))
+  }
+
+  /**
+   * @summary Method to determine stage-region contexts for environment and region-specific overrides
+   * - Loads `{stageRegionContextPath}/{stage}.{location}.json` if present
+   * - Has the highest priority in the configuration hierarchy
+   * - Primary use is to override config for a specific stage+region combination (e.g., prd.uksouth.json)
+   */
+  protected determineStageRegionContexts() {
+    const debug = this.config.getBoolean('debug')
+    const stage = this.config.get('stage')
+    const location = this.config.get('location')
+    const stageRegionContextPath = this.config.get('stageRegionContextPath')
+    if (!stage || !location || !stageRegionContextPath) {
+      if (debug) console.debug(`No stage-region context provided. Using default context properties`)
+      return {}
+    }
+
+    const stageRegionContextFilePath = path.join(appRoot.path, stageRegionContextPath, `${stage}.${location}.json`)
+
+    /* gracefully skip when stage-region config is missing */
+    if (!fs.existsSync(stageRegionContextFilePath)) {
+      if (debug) console.debug(`Stage-region context properties unavailable in path:${stageRegionContextFilePath}`)
+      return {}
+    }
+
+    /* read the stage-region properties */
+    const stageRegionContextPropsBuffer = fs.readFileSync(stageRegionContextFilePath)
+    if (debug) console.debug(`Adding stage-region contexts provided in ${stageRegionContextFilePath}`)
+
+    /* parse as JSON properties */
+    return JSON.parse(stageRegionContextPropsBuffer.toString('utf-8'))
   }
 
   /**

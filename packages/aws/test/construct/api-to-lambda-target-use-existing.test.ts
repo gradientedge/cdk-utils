@@ -19,17 +19,17 @@ const testStackPropsUseExisting = {
     region: 'eu-west-1',
   },
   extraContexts: [
-    'packages/aws/test/common/cdkConfig/apiConfigs.json',
-    'packages/aws/test/common/cdkConfig/dummy.json',
-    'packages/aws/test/common/cdkConfig/certificates.json',
-    'packages/aws/test/common/cdkConfig/lambdas.json',
-    'packages/aws/test/common/cdkConfig/rules.json',
+    'packages/aws/test/common/cdk-config/apiConfigs.json',
+    'packages/aws/test/common/cdk-config/dummy.json',
+    'packages/aws/test/common/cdk-config/certificates.json',
+    'packages/aws/test/common/cdk-config/lambdas.json',
+    'packages/aws/test/common/cdk-config/rules.json',
   ],
   name: 'test-api-to-lambda-use-existing-stack',
   region: 'eu-west-1',
   stackName: 'test',
   stage: 'test',
-  stageContextPath: 'packages/aws/test/common/cdkEnv',
+  stageContextPath: 'packages/aws/test/common/cdk-env',
 }
 
 class TestCommonStackUseExisting extends CommonStack {
@@ -148,17 +148,17 @@ const testStackPropsUseExistingNoResource = {
     region: 'eu-west-1',
   },
   extraContexts: [
-    'packages/aws/test/common/cdkConfig/apiConfigs.json',
-    'packages/aws/test/common/cdkConfig/dummy.json',
-    'packages/aws/test/common/cdkConfig/certificates.json',
-    'packages/aws/test/common/cdkConfig/lambdas.json',
-    'packages/aws/test/common/cdkConfig/rules.json',
+    'packages/aws/test/common/cdk-config/apiConfigs.json',
+    'packages/aws/test/common/cdk-config/dummy.json',
+    'packages/aws/test/common/cdk-config/certificates.json',
+    'packages/aws/test/common/cdk-config/lambdas.json',
+    'packages/aws/test/common/cdk-config/rules.json',
   ],
   name: 'test-api-to-lambda-use-existing-no-resource-stack',
   region: 'eu-west-1',
   stackName: 'test',
   stage: 'test',
-  stageContextPath: 'packages/aws/test/common/cdkEnv',
+  stageContextPath: 'packages/aws/test/common/cdk-env',
 }
 
 class TestCommonStackUseExistingNoResource extends CommonStack {
@@ -266,17 +266,17 @@ const testStackPropsImportedRoot = {
     region: 'eu-west-1',
   },
   extraContexts: [
-    'packages/aws/test/common/cdkConfig/apiConfigs.json',
-    'packages/aws/test/common/cdkConfig/dummy.json',
-    'packages/aws/test/common/cdkConfig/certificates.json',
-    'packages/aws/test/common/cdkConfig/lambdas.json',
-    'packages/aws/test/common/cdkConfig/rules.json',
+    'packages/aws/test/common/cdk-config/apiConfigs.json',
+    'packages/aws/test/common/cdk-config/dummy.json',
+    'packages/aws/test/common/cdk-config/certificates.json',
+    'packages/aws/test/common/cdk-config/lambdas.json',
+    'packages/aws/test/common/cdk-config/rules.json',
   ],
   name: 'test-api-to-lambda-imported-root-stack',
   region: 'eu-west-1',
   stackName: 'test',
   stage: 'test',
-  stageContextPath: 'packages/aws/test/common/cdkEnv',
+  stageContextPath: 'packages/aws/test/common/cdk-env',
 }
 
 class TestCommonStackImportedRoot extends CommonStack {

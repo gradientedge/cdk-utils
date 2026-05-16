@@ -23,17 +23,17 @@ const testStackProps = {
     region: 'us-east-1',
   },
   extraContexts: [
-    'packages/aws/test/common/cdkConfig/buckets.json',
-    'packages/aws/test/common/cdkConfig/certificates.json',
-    'packages/aws/test/common/cdkConfig/distributions.json',
-    'packages/aws/test/common/cdkConfig/lambdas.json',
-    'packages/aws/test/common/cdkConfig/function.json',
+    'packages/aws/test/common/cdk-config/buckets.json',
+    'packages/aws/test/common/cdk-config/certificates.json',
+    'packages/aws/test/common/cdk-config/distributions.json',
+    'packages/aws/test/common/cdk-config/lambdas.json',
+    'packages/aws/test/common/cdk-config/function.json',
   ],
   name: 'test-common-stack',
   region: 'us-east-1',
   stackName: 'test',
   stage: 'test',
-  stageContextPath: 'packages/aws/test/common/cdkEnv',
+  stageContextPath: 'packages/aws/test/common/cdk-env',
 }
 
 class TestCommonStack extends CommonStack {

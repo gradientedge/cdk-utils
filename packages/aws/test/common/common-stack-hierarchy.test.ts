@@ -11,13 +11,13 @@ interface TestStackProps extends CommonStackProps {
 describe('CommonStack - Region Context Hierarchy - eu-west-1', () => {
   const regionProps = {
     domainName: 'gradientedge.io',
-    extraContexts: ['packages/aws/test/common/cdkConfig/base.json'],
-    regionContextPath: 'packages/aws/test/common/cdkRegion',
+    extraContexts: ['packages/aws/test/common/cdk-config/base.json'],
+    regionContextPath: 'packages/aws/test/common/cdk-region',
     name: 'test-region-euw1',
     region: 'eu-west-1',
     stackName: 'test-region-euw1',
     stage: 'test',
-    stageContextPath: 'packages/aws/test/common/cdkEnv',
+    stageContextPath: 'packages/aws/test/common/cdk-env',
   }
 
   class TestStack extends CommonStack {
@@ -69,13 +69,13 @@ describe('CommonStack - Region Context Hierarchy - eu-west-1', () => {
 describe('CommonStack - Region Context Hierarchy - us-east-1', () => {
   const regionProps = {
     domainName: 'gradientedge.io',
-    extraContexts: ['packages/aws/test/common/cdkConfig/base.json'],
-    regionContextPath: 'packages/aws/test/common/cdkRegion',
+    extraContexts: ['packages/aws/test/common/cdk-config/base.json'],
+    regionContextPath: 'packages/aws/test/common/cdk-region',
     name: 'test-region-use1',
     region: 'us-east-1',
     stackName: 'test-region-use1',
     stage: 'test',
-    stageContextPath: 'packages/aws/test/common/cdkEnv',
+    stageContextPath: 'packages/aws/test/common/cdk-env',
   }
 
   class TestStack extends CommonStack {
@@ -123,13 +123,13 @@ describe('CommonStack - Region Context Hierarchy - us-east-1', () => {
 describe('CommonStack - Region Context Hierarchy - Auto-Select from Multiple Regions', () => {
   const regionProps = {
     domainName: 'gradientedge.io',
-    extraContexts: ['packages/aws/test/common/cdkConfig/base.json'],
-    regionContextPath: 'packages/aws/test/common/cdkRegion',
+    extraContexts: ['packages/aws/test/common/cdk-config/base.json'],
+    regionContextPath: 'packages/aws/test/common/cdk-region',
     name: 'test-region-multi',
     region: 'us-east-1',
     stackName: 'test-region-multi',
     stage: 'test',
-    stageContextPath: 'packages/aws/test/common/cdkEnv',
+    stageContextPath: 'packages/aws/test/common/cdk-env',
   }
 
   class TestStack extends CommonStack {
@@ -168,13 +168,13 @@ describe('CommonStack - Region Context Hierarchy - Graceful Handling', () => {
   test('handles missing region context file gracefully', () => {
     const missingRegionProps = {
       domainName: 'gradientedge.io',
-      extraContexts: ['packages/aws/test/common/cdkConfig/base.json'],
-      regionContextPath: 'packages/aws/test/common/cdkRegion',
+      extraContexts: ['packages/aws/test/common/cdk-config/base.json'],
+      regionContextPath: 'packages/aws/test/common/cdk-region',
       name: 'test-missing-region',
       region: 'ap-southeast-1',
       stackName: 'test-missing-region',
       stage: 'test',
-      stageContextPath: 'packages/aws/test/common/cdkEnv',
+      stageContextPath: 'packages/aws/test/common/cdk-env',
     }
 
     class TestStack extends CommonStack {
@@ -206,12 +206,12 @@ describe('CommonStack - Region Context Hierarchy - Graceful Handling', () => {
   test('no regionContextPath leaves props unaffected by region layer', () => {
     const noRegionProps = {
       domainName: 'gradientedge.io',
-      extraContexts: ['packages/aws/test/common/cdkConfig/base.json'],
+      extraContexts: ['packages/aws/test/common/cdk-config/base.json'],
       name: 'test-no-region',
       region: 'eu-west-1',
       stackName: 'test-no-region',
       stage: 'test',
-      stageContextPath: 'packages/aws/test/common/cdkEnv',
+      stageContextPath: 'packages/aws/test/common/cdk-env',
     }
 
     class TestStack extends CommonStack {

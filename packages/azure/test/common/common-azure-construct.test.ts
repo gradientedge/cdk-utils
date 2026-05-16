@@ -25,7 +25,7 @@ const testStackProps: any = {
   resourceGroupName: 'test-rg',
   skipStageForARecords: false,
   stage: 'dev',
-  stageContextPath: 'packages/azure/test/common/pulumiEnv',
+  stageContextPath: 'packages/azure/test/common/pulumi-env',
 }
 
 class TestCommonStack extends CommonAzureStack {

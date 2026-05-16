@@ -14,15 +14,15 @@ const testRestApiLambdaProps = {
   apiSubDomain: 'api',
   domainName: 'gradientedge.io',
   extraContexts: [
-    'packages/aws/test/common/cdkConfig/dummy.json',
-    'packages/aws/test/common/cdkConfig/certificates.json',
-    'packages/aws/test/common/cdkConfig/lambdas.json',
+    'packages/aws/test/common/cdk-config/dummy.json',
+    'packages/aws/test/common/cdk-config/certificates.json',
+    'packages/aws/test/common/cdk-config/lambdas.json',
   ],
   name: 'test-restapi-stack',
   region: 'eu-west-1',
   stackName: 'test',
   stage: 'test',
-  stageContextPath: 'packages/aws/test/common/cdkEnv',
+  stageContextPath: 'packages/aws/test/common/cdk-env',
 }
 
 class TestCommonStack extends CommonStack {
@@ -231,15 +231,15 @@ const testRestApiNoPathsProps = {
   apiSubDomain: 'api',
   domainName: 'gradientedge.io',
   extraContexts: [
-    'packages/aws/test/common/cdkConfig/dummy.json',
-    'packages/aws/test/common/cdkConfig/certificates.json',
-    'packages/aws/test/common/cdkConfig/lambdas.json',
+    'packages/aws/test/common/cdk-config/dummy.json',
+    'packages/aws/test/common/cdk-config/certificates.json',
+    'packages/aws/test/common/cdk-config/lambdas.json',
   ],
   name: 'test-restapi-no-paths-stack',
   region: 'eu-west-1',
   stackName: 'test',
   stage: 'test',
-  stageContextPath: 'packages/aws/test/common/cdkEnv',
+  stageContextPath: 'packages/aws/test/common/cdk-env',
 }
 
 class TestNoPathsCommonStack extends CommonStack {

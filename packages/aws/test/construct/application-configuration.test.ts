@@ -7,12 +7,12 @@ interface TestRestApiLambdaProps extends ApplicationConfigurationProps {}
 
 const testRestApiLambdaProps = {
   domainName: 'gradientedge.io',
-  extraContexts: ['packages/aws/test/common/cdkConfig/configs.json'],
+  extraContexts: ['packages/aws/test/common/cdk-config/configs.json'],
   name: 'test-application-configuration-stack',
   region: 'eu-west-1',
   stackName: 'test',
   stage: 'test',
-  stageContextPath: 'packages/aws/test/common/cdkEnv',
+  stageContextPath: 'packages/aws/test/common/cdk-env',
 }
 
 class TestCommonStack extends CommonStack {
@@ -158,12 +158,12 @@ describe('TestApplicationConfiguration', () => {
 /* Test with existing deployment strategy ARN */
 const testAppConfigWithArnProps = {
   domainName: 'gradientedge.io',
-  extraContexts: ['packages/aws/test/common/cdkConfig/configs.json'],
+  extraContexts: ['packages/aws/test/common/cdk-config/configs.json'],
   name: 'test-appconfig-arn-stack',
   region: 'eu-west-1',
   stackName: 'test',
   stage: 'test',
-  stageContextPath: 'packages/aws/test/common/cdkEnv',
+  stageContextPath: 'packages/aws/test/common/cdk-env',
 }
 
 class TestArnCommonStack extends CommonStack {

@@ -20,6 +20,8 @@ export interface BaseProps {
   stage: string
   /** The relative path to stage-specific context files */
   stageContextPath?: string
+  /** The relative path to stage-region-specific context files */
+  stageRegionContextPath?: string
   /** The subdomain prefix for the deployment */
   subDomain?: string
 }

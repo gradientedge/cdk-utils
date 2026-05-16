@@ -22,15 +22,15 @@ const testStackProps = {
     region: 'eu-west-1',
   },
   extraContexts: [
-    'packages/aws/test/common/cdkConfig/ecs.json',
-    'packages/aws/test/common/cdkConfig/logs.json',
-    'packages/aws/test/common/cdkConfig/vpc.json',
+    'packages/aws/test/common/cdk-config/ecs.json',
+    'packages/aws/test/common/cdk-config/logs.json',
+    'packages/aws/test/common/cdk-config/vpc.json',
   ],
   name: 'test-common-stack',
   region: 'eu-west-1',
   stackName: 'test',
   stage: 'test',
-  stageContextPath: 'packages/aws/test/common/cdkEnv',
+  stageContextPath: 'packages/aws/test/common/cdk-env',
 }
 
 class TestCommonStack extends CommonStack {

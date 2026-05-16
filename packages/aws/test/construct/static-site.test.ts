@@ -11,11 +11,11 @@ interface TestStackProps extends StaticSiteProps {
 const testContext = {
   domainName: 'gradientedge.io',
   extraContexts: [
-    'packages/aws/test/common/cdkConfig/dummy.json',
-    'packages/aws/test/common/cdkConfig/buckets.json',
-    'packages/aws/test/common/cdkConfig/certificates.json',
-    'packages/aws/test/common/cdkConfig/distributions.json',
-    'packages/aws/test/common/cdkConfig/function.json',
+    'packages/aws/test/common/cdk-config/dummy.json',
+    'packages/aws/test/common/cdk-config/buckets.json',
+    'packages/aws/test/common/cdk-config/certificates.json',
+    'packages/aws/test/common/cdk-config/distributions.json',
+    'packages/aws/test/common/cdk-config/function.json',
   ],
   name: 'test-static-site-stack',
   region: 'eu-west-1',
@@ -24,7 +24,7 @@ const testContext = {
   skipStageForARecords: true,
   stackName: 'test',
   stage: 'test',
-  stageContextPath: 'packages/aws/test/common/cdkEnv',
+  stageContextPath: 'packages/aws/test/common/cdk-env',
 }
 
 class TestCommonStack extends CommonStack {
@@ -357,10 +357,10 @@ describe('TestStaticSiteConstruct - Error Handling and Edge Cases', () => {
     const contextWithoutFunction = {
       ...testContext,
       extraContexts: [
-        'packages/aws/test/common/cdkConfig/dummy.json',
-        'packages/aws/test/common/cdkConfig/buckets.json',
-        'packages/aws/test/common/cdkConfig/certificates.json',
-        'packages/aws/test/common/cdkConfig/distributions.json',
+        'packages/aws/test/common/cdk-config/dummy.json',
+        'packages/aws/test/common/cdk-config/buckets.json',
+        'packages/aws/test/common/cdk-config/certificates.json',
+        'packages/aws/test/common/cdk-config/distributions.json',
       ],
     }
 

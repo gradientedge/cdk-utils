@@ -20,19 +20,19 @@ const testStackProps = {
     region: 'eu-west-1',
   },
   extraContexts: [
-    'packages/aws/test/common/cdkConfig/lambdas.json',
-    'packages/aws/test/common/cdkConfig/logs.json',
-    'packages/aws/test/common/cdkConfig/pipes.json',
-    'packages/aws/test/common/cdkConfig/rules.json',
-    'packages/aws/test/common/cdkConfig/sqs.json',
-    'packages/aws/test/common/cdkConfig/stepFunctions.json',
-    'packages/aws/test/common/cdkConfig/vpc.json',
+    'packages/aws/test/common/cdk-config/lambdas.json',
+    'packages/aws/test/common/cdk-config/logs.json',
+    'packages/aws/test/common/cdk-config/pipes.json',
+    'packages/aws/test/common/cdk-config/rules.json',
+    'packages/aws/test/common/cdk-config/sqs.json',
+    'packages/aws/test/common/cdk-config/stepFunctions.json',
+    'packages/aws/test/common/cdk-config/vpc.json',
   ],
   name: 'test-api-stack',
   region: 'eu-west-1',
   stackName: 'test',
   stage: 'test',
-  stageContextPath: 'packages/aws/test/common/cdkEnv',
+  stageContextPath: 'packages/aws/test/common/cdk-env',
 }
 
 /* props with archive enabled */

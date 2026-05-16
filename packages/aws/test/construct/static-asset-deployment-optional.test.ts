@@ -7,8 +7,8 @@ import { findOneResourceId, ref } from '../../tools/cdk/index.js'
 const testStackProps = {
   domainName: 'gradientedge.io',
   extraContexts: [
-    'packages/aws/test/common/cdkConfig/buckets.json',
-    'packages/aws/test/common/cdkConfig/staticAsset.json',
+    'packages/aws/test/common/cdk-config/buckets.json',
+    'packages/aws/test/common/cdk-config/staticAsset.json',
   ],
   name: 'test-static-asset-deployment-stack',
   region: 'eu-west-1',
@@ -17,7 +17,7 @@ const testStackProps = {
   skipStageForARecords: true,
   stackName: 'test',
   stage: 'test',
-  stageContextPath: 'packages/aws/test/common/cdkEnv',
+  stageContextPath: 'packages/aws/test/common/cdk-env',
 }
 
 interface TestStackProps extends StaticAssetDeploymentProps {}

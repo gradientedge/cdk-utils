@@ -62,17 +62,17 @@ const testStackProps = {
     region: 'eu-west-1',
   },
   extraContexts: [
-    'packages/aws/test/common/cdkConfig/dynamodb.json',
-    'packages/aws/test/common/cdkConfig/lambdas.json',
-    'packages/aws/test/common/cdkConfig/logs.json',
-    'packages/aws/test/common/cdkConfig/sqs.json',
-    'packages/aws/test/common/cdkConfig/stepFunctions.json',
+    'packages/aws/test/common/cdk-config/dynamodb.json',
+    'packages/aws/test/common/cdk-config/lambdas.json',
+    'packages/aws/test/common/cdk-config/logs.json',
+    'packages/aws/test/common/cdk-config/sqs.json',
+    'packages/aws/test/common/cdk-config/stepFunctions.json',
   ],
   name: 'test-common-stack',
   region: 'eu-west-1',
   stackName: 'test',
   stage: 'test',
-  stageContextPath: 'packages/aws/test/common/cdkEnv',
+  stageContextPath: 'packages/aws/test/common/cdk-env',
 }
 
 class TestCommonStack extends CommonStack {

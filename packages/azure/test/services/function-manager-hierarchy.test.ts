@@ -1,6 +1,7 @@
 import { WebApp } from '@pulumi/azure-native/web/index.js'
 import * as pulumi from '@pulumi/pulumi'
 import {
+  AzureLocation,
   CommonAzureConstruct,
   CommonAzureStack,
   CommonAzureStackProps,
@@ -98,7 +99,7 @@ describe('FunctionManager - Region Context Hierarchy', () => {
   })
 
   test('region only: location and locationConfig set only in region, survive through stage', () => {
-    expect(stack.props.location).toEqual('uksouth')
+    expect(stack.props.location).toEqual(AzureLocation.UKSouth)
     expect(stack.props.locationConfig).toEqual({
       uksouth: { id: 'uksouth', name: 'UK South' },
     })

@@ -15,12 +15,12 @@ const testStackProps = {
     region: 'eu-west-1',
   },
   excludeDomainNameForBuckets: true,
-  extraContexts: ['packages/aws/test/common/cdkConfig/buckets.json'],
+  extraContexts: ['packages/aws/test/common/cdk-config/buckets.json'],
   name: 'test-common-stack',
   region: 'eu-west-1',
   stackName: 'test',
   stage: 'test',
-  stageContextPath: 'packages/aws/test/common/cdkEnv',
+  stageContextPath: 'packages/aws/test/common/cdk-env',
 }
 
 class TestCommonStack extends CommonStack {
