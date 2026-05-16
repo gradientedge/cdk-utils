@@ -1,5 +1,19 @@
 # @gradientedge/cdk-utils
 
+## 11.38.0
+
+### Minor Changes
+
+- [#1044](https://github.com/gradientedge/cdk-utils/pull/1044) [`9595484`](https://github.com/gradientedge/cdk-utils/commit/95954849ca553a92c01c8f2bc61900fd301639ad) Thanks [@despock](https://github.com/despock)! - feat: feat: add region and stage-region configuration layers for AWS and Azure
+
+### Patch Changes
+
+- Updated dependencies [[`9595484`](https://github.com/gradientedge/cdk-utils/commit/95954849ca553a92c01c8f2bc61900fd301639ad)]:
+  - @gradientedge/cdk-utils-common@2.4.0
+  - @gradientedge/cdk-utils-azure@2.36.0
+  - @gradientedge/cdk-utils-aws@2.8.0
+  - @gradientedge/cdk-utils-cloudflare@2.12.1
+
 ## 11.37.0
 
 ### Minor Changes
