@@ -1,0 +1,10 @@
+{
+  "serverConfig": {
+    "logging": {
+      "level": "warn"
+    },
+    "monitoring": {
+      "enabled": true
+    }
+  }
+}

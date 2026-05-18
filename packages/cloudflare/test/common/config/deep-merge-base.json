@@ -1,0 +1,21 @@
+{
+  "serverConfig": {
+    "logging": {
+      "level": "error",
+      "format": "json",
+      "destination": "stdout"
+    },
+    "cache": {
+      "enabled": true,
+      "ttl": 300,
+      "maxSize": 1000
+    },
+    "monitoring": {
+      "enabled": false,
+      "endpoint": "https://monitor.example.com"
+    }
+  },
+  "logLevel": "error",
+  "resourcePrefix": "ge",
+  "globalPrefix": "gradientedge"
+}

@@ -116,7 +116,11 @@ export class CommonStack extends Stack {
 
       /* set each of the property into the cdk node context */
       _.keys(extraContextProps).forEach((propKey: any) => {
-        this.node.setContext(propKey, extraContextProps[propKey])
+        if (typeof extraContextProps[propKey] === 'object' && !Array.isArray(extraContextProps[propKey])) {
+          this.node.setContext(propKey, _.merge(this.node.tryGetContext(propKey), extraContextProps[propKey]))
+        } else {
+          this.node.setContext(propKey, extraContextProps[propKey])
+        }
       })
     })
   }
@@ -155,7 +159,11 @@ export class CommonStack extends Stack {
 
     /* set each of the property into the cdk node context */
     _.keys(regionContextProps).forEach((propKey: any) => {
-      this.node.setContext(propKey, regionContextProps[propKey])
+      if (typeof regionContextProps[propKey] === 'object' && !Array.isArray(regionContextProps[propKey])) {
+        this.node.setContext(propKey, _.merge(this.node.tryGetContext(propKey), regionContextProps[propKey]))
+      } else {
+        this.node.setContext(propKey, regionContextProps[propKey])
+      }
     })
   }
 
@@ -235,7 +243,11 @@ export class CommonStack extends Stack {
 
     /* set each of the property into the cdk node context */
     _.keys(stageRegionContextProps).forEach((propKey: any) => {
-      this.node.setContext(propKey, stageRegionContextProps[propKey])
+      if (typeof stageRegionContextProps[propKey] === 'object' && !Array.isArray(stageRegionContextProps[propKey])) {
+        this.node.setContext(propKey, _.merge(this.node.tryGetContext(propKey), stageRegionContextProps[propKey]))
+      } else {
+        this.node.setContext(propKey, stageRegionContextProps[propKey])
+      }
     })
   }
 

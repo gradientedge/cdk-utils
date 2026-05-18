@@ -66,18 +66,21 @@ export class CommonAzureStack extends ComponentResource {
    * @returns The stack properties
    */
   protected determineConstructProps(props: CommonAzureStackProps) {
-    return {
-      ...props,
-      extraContexts: this.config.getObject('extraContexts'),
-      regionContextPath: this.config.get('regionContextPath'),
-      stage: this.config.get('stage'),
-      stageContextPath: this.config.get('stageContextPath'),
-      stageRegionContextPath: this.config.get('stageRegionContextPath'),
-      ...this.determineExtraContexts(),
-      ...this.determineRegionContexts(),
-      ...this.determineStageContexts(),
-      ...this.determineStageRegionContexts(),
-    }
+    return _.merge(
+      {},
+      props,
+      {
+        extraContexts: this.config.getObject('extraContexts'),
+        regionContextPath: this.config.get('regionContextPath'),
+        stage: this.config.get('stage'),
+        stageContextPath: this.config.get('stageContextPath'),
+        stageRegionContextPath: this.config.get('stageRegionContextPath'),
+      },
+      this.determineExtraContexts(),
+      this.determineRegionContexts(),
+      this.determineStageContexts(),
+      this.determineStageRegionContexts()
+    )
   }
 
   /**
@@ -106,10 +109,7 @@ export class CommonAzureStack extends ComponentResource {
       if (debug) console.debug(`Adding additional contexts provided in ${extraContextPath}`)
 
       /* parse as JSON properties */
-      extraContextProps = {
-        ...extraContextProps,
-        ...JSON.parse(extraContextPropsBuffer.toString('utf-8')),
-      }
+      extraContextProps = _.merge(extraContextProps, JSON.parse(extraContextPropsBuffer.toString('utf-8')))
     })
     return extraContextProps
   }

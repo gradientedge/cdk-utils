@@ -1,0 +1,9 @@
+{
+  "serverConfig": {
+    "logging": {
+      "level": "trace"
+    }
+  },
+  "logLevel": "trace",
+  "resourcePrefix": "ge-tst-uksouth"
+}

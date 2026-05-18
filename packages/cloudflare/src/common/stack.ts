@@ -60,14 +60,17 @@ export class CommonCloudflareStack extends ComponentResource {
       projectProps = JSON.parse(projectPropsBuffer.toString('utf-8'))
     }
 
-    return {
-      ...props,
-      extraContexts: this.config.getObject('extraContexts'),
-      stage: this.config.get('stage'),
-      stageContextPath: this.config.get('stageContextPath'),
-      ...this.determineExtraContexts(),
-      ...this.determineStageContexts(),
-    }
+    return _.merge(
+      {},
+      props,
+      {
+        extraContexts: this.config.getObject('extraContexts'),
+        stage: this.config.get('stage'),
+        stageContextPath: this.config.get('stageContextPath'),
+      },
+      this.determineExtraContexts(),
+      this.determineStageContexts()
+    )
   }
 
   /**
@@ -96,10 +99,7 @@ export class CommonCloudflareStack extends ComponentResource {
       if (debug) console.debug(`Adding additional contexts provided in ${extraContextPath}`)
 
       /* parse as JSON properties */
-      extraContextProps = {
-        ...extraContextProps,
-        ...JSON.parse(extraContextPropsBuffer.toString('utf-8')),
-      }
+      extraContextProps = _.merge(extraContextProps, JSON.parse(extraContextPropsBuffer.toString('utf-8')))
     })
     return extraContextProps
   }
