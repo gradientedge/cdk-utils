@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.37.0
+
+### Minor Changes
+
+- [#1046](https://github.com/gradientedge/cdk-utils/pull/1046) [`098f3cc`](https://github.com/gradientedge/cdk-utils/commit/098f3ccd9e34c8cce530c0dc60390d8756b151aa) Thanks [@despock](https://github.com/despock)! - feat: add support for deep merging config
+
 ## 2.36.0
 
 ### Minor Changes
