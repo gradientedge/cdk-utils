@@ -1,0 +1,14 @@
+{
+  "serverConfig": {
+    "logging": {
+      "level": "debug"
+    },
+    "cache": {
+      "maxSize": 2000
+    }
+  },
+  "logLevel": "debug",
+  "resourcePrefix": "ge-tst",
+  "subDomain": "tst",
+  "stage": "deep-merge-tst"
+}

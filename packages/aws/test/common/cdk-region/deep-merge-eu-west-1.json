@@ -1,0 +1,14 @@
+{
+  "serverConfig": {
+    "logging": {
+      "level": "info",
+      "destination": "cloudwatch"
+    },
+    "cache": {
+      "ttl": 600
+    },
+    "region": "eu-west-1"
+  },
+  "logLevel": "warn",
+  "resourcePrefix": "ge-eu-west-1"
+}

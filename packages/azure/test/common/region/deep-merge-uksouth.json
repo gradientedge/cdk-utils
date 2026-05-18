@@ -1,0 +1,14 @@
+{
+  "serverConfig": {
+    "logging": {
+      "level": "info",
+      "destination": "azure-monitor"
+    },
+    "cache": {
+      "ttl": 600
+    },
+    "region": "uksouth"
+  },
+  "logLevel": "warn",
+  "resourcePrefix": "ge-uksouth"
+}
