@@ -69,8 +69,8 @@ export class AzureRestApiFunction extends AzureFunctionApp {
     this.createApiManagement()
     this.createApiManagementNamespace()
     this.createApiManagementRoutes()
-    this.createApiPolicy()
     this.createCorsPolicy()
+    this.createApiPolicy()
     this.createFunctionDashboard()
   }
 
