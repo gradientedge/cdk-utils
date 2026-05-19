@@ -1,5 +1,14 @@
 # @gradientedge/cdk-utils
 
+## 11.39.2
+
+### Patch Changes
+
+- [`757ce88`](https://github.com/gradientedge/cdk-utils/commit/757ce88c9a62ad2d9a524c9e02cb90fccc4ce181) Thanks [@despock](https://github.com/despock)! - fix: initialise API policy in construct
+
+- Updated dependencies [[`757ce88`](https://github.com/gradientedge/cdk-utils/commit/757ce88c9a62ad2d9a524c9e02cb90fccc4ce181)]:
+  - @gradientedge/cdk-utils-azure@2.37.2
+
 ## 11.39.1
 
 ### Patch Changes
