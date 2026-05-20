@@ -530,7 +530,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
 
     this.functionDashboard = this.portalManager.createDashBoard(`${this.id}-dsh`, this, {
       displayName: this.props.functionApp.dashboard.displayName,
-      location: this.props.locationConfig?.[this.props.location].name,
+      location: this.props.location,
       dashboardName: this.id,
       resourceGroupName: this.resourceGroup.name,
       variables: this.dashboardVariables(),
