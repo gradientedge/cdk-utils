@@ -398,9 +398,15 @@ describe('TestAzureFunctionAppWithOverridesConstruct', () => {
 
   test('creates function dashboard as expected', async () => {
     await outputToPromise(
-      pulumi.all([stackWithOverrides.construct.functionDashboard.id]).apply(([id]) => {
-        expect(id).toBeDefined()
-      })
+      pulumi
+        .all([
+          stackWithOverrides.construct.functionDashboard.id,
+          stackWithOverrides.construct.functionDashboard.location,
+        ])
+        .apply(([id, location]) => {
+          expect(id).toBeDefined()
+          expect(location).toEqual('eastus')
+        })
     )
   })
 
