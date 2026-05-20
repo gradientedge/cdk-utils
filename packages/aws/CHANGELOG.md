@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-aws
 
+## 2.9.1
+
+### Patch Changes
+
+- [#1051](https://github.com/gradientedge/cdk-utils/pull/1051) [`da769dd`](https://github.com/gradientedge/cdk-utils/commit/da769dd4b319b7294a0b9ab9160e7887e26d0674) Thanks [@despock](https://github.com/despock)! - fix: using valid location instead of invalid location name in function dashboard
+
 ## 2.9.0
 
 ### Minor Changes
