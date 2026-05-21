@@ -1,5 +1,16 @@
 # @gradientedge/cdk-utils
 
+## 11.41.0
+
+### Minor Changes
+
+- [#1054](https://github.com/gradientedge/cdk-utils/pull/1054) [`f69c20a`](https://github.com/gradientedge/cdk-utils/commit/f69c20aa449395eada2a0331299344eed19db4e3) Thanks [@despock](https://github.com/despock)! - fix: using valid connection strings format
+
+### Patch Changes
+
+- Updated dependencies [[`f69c20a`](https://github.com/gradientedge/cdk-utils/commit/f69c20aa449395eada2a0331299344eed19db4e3)]:
+  - @gradientedge/cdk-utils-azure@2.39.0
+
 ## 11.40.0
 
 ### Minor Changes
