@@ -190,55 +190,6 @@ class TestFunctionAppWithExistingConfigConstruct extends AzureFunctionApp {
   }
 }
 
-class TestCommonStackWithConnectionStrings extends CommonAzureStack {
-  declare props: any
-  declare construct: TestFunctionAppWithConnectionStringsConstruct
-
-  constructor(name: string, props: TestAzureStackProps) {
-    super(name, testStackProps)
-    this.construct = new TestFunctionAppWithConnectionStringsConstruct(`${props.name}-conn-strings`, this.props)
-  }
-}
-
-class TestFunctionAppWithConnectionStringsConstruct extends AzureFunctionApp {
-  declare props: AzureFunctionAppProps & TestAzureStackProps
-
-  constructor(name: string, props: AzureFunctionAppProps & TestAzureStackProps) {
-    super(name, props)
-    this.props = props
-    this.appConnectionStrings = [
-      {
-        name: 'EVENT_INGEST_SERVICE_BUS',
-        value: pulumi.output(
-          'Endpoint=sb://test-namespace.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=mock-key'
-        ),
-        type: 'ServiceBus',
-      },
-      {
-        name: 'SECONDARY_CONNECTION',
-        value: pulumi.output('Server=tcp:test-server.database.windows.net;Database=testdb'),
-        type: 'SQLAzure',
-      },
-    ]
-    this.initResources()
-  }
-
-  public initResources() {
-    this.createResourceGroup()
-    this.resolveCommonLogAnalyticsWorkspace()
-    this.resolveApplicationInsights()
-    this.createAppServicePlan()
-    this.createAppConfiguration()
-    this.createStorageAccount()
-    this.createStorageDeploymentContainer()
-    this.createStorageContainer()
-    this.createDataStorageAccount()
-    this.createDataStorageContainer()
-    this.createCodePackage()
-    this.createFunctionApp()
-  }
-}
-
 class TestCommonStackMinimal extends CommonAzureStack {
   declare props: any
   declare construct: TestFunctionAppMinimalConstruct
