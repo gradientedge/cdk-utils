@@ -1,5 +1,21 @@
 # @gradientedge/cdk-utils
 
+## 11.40.0
+
+### Minor Changes
+
+- [`cc0e7bd`](https://github.com/gradientedge/cdk-utils/commit/cc0e7bddc6cd977a8d64798963d33acf2c7a0a9e) Thanks [@despock](https://github.com/despock)! - feat: adding dynamic peroperty to ARM deployment to force change
+
+- [`631fe12`](https://github.com/gradientedge/cdk-utils/commit/631fe1232e278c045cbdfb634a7eed35d938ed73) Thanks [@despock](https://github.com/despock)! - feat: bumping dependencies
+
+### Patch Changes
+
+- Updated dependencies [[`cc0e7bd`](https://github.com/gradientedge/cdk-utils/commit/cc0e7bddc6cd977a8d64798963d33acf2c7a0a9e), [`631fe12`](https://github.com/gradientedge/cdk-utils/commit/631fe1232e278c045cbdfb634a7eed35d938ed73)]:
+  - @gradientedge/cdk-utils-azure@2.38.0
+  - @gradientedge/cdk-utils-aws@2.10.0
+  - @gradientedge/cdk-utils-cloudflare@2.14.0
+  - @gradientedge/cdk-utils-common@2.5.0
+
 ## 11.39.3
 
 ### Patch Changes
