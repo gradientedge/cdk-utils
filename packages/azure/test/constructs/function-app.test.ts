@@ -75,7 +75,20 @@ class TestFunctionAppConstruct extends AzureFunctionApp {
   constructor(name: string, props: AzureFunctionAppProps & TestAzureStackProps) {
     super(name, props)
     this.props = props
-    this.appConnectionStrings = []
+    this.appConnectionStrings = [
+      {
+        name: 'EVENT_INGEST_SERVICE_BUS',
+        value: pulumi.output(
+          'Endpoint=sb://test-namespace.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=mock-key'
+        ),
+        type: 'ServiceBus',
+      },
+      {
+        name: 'SECONDARY_CONNECTION',
+        value: pulumi.output('Server=tcp:test-server.database.windows.net;Database=testdb'),
+        type: 'SQLAzure',
+      },
+    ]
     this.initResources()
   }
 
@@ -352,6 +365,27 @@ describe('TestAzureFunctionAppConstruct', () => {
       pulumi.all([stack.construct.app.id, stack.construct.app.urn]).apply(([id, urn]) => {
         expect(id).toBeDefined()
         expect(urn).toBeDefined()
+      })
+    )
+  })
+
+  test('provisions function app with connection strings in ConnStringInfoArgs format', async () => {
+    await outputToPromise(
+      (stack.construct.app as any).siteConfig.apply((siteConfig: any) => {
+        const connectionStrings = siteConfig.connectionStrings
+        expect(connectionStrings).toEqual([
+          {
+            name: 'EVENT_INGEST_SERVICE_BUS',
+            connectionString:
+              'Endpoint=sb://test-namespace.servicebus.windows.net/;SharedAccessKeyName=RootManageSharedAccessKey;SharedAccessKey=mock-key',
+            type: 'ServiceBus',
+          },
+          {
+            name: 'SECONDARY_CONNECTION',
+            connectionString: 'Server=tcp:test-server.database.windows.net;Database=testdb',
+            type: 'SQLAzure',
+          },
+        ])
       })
     )
   })
