@@ -225,7 +225,7 @@ describe('TestAzureFunctionConstruct', () => {
 
     const template = deploymentArgs.inputs.properties.template
     expect(template.$schema).toEqual('https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#')
-    expect(template.contentVersion).toEqual('1.0.0.0')
+    expect(template.contentVersion).toMatch(/^1\.0\.\d+\.0$/)
 
     const resource = template.resources[0]
     expect(resource.type).toEqual('Microsoft.Web/sites')

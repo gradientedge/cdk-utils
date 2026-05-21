@@ -181,7 +181,7 @@ export class AzureFunctionManager {
           mode: DeploymentMode.Incremental,
           template: {
             $schema: 'https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#',
-            contentVersion: '1.0.0.0',
+            contentVersion: `1.0.${Date.now()}.0`,
             resources: [
               {
                 type: 'Microsoft.Web/sites',
