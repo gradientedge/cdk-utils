@@ -412,9 +412,11 @@ export class AzureFunctionApp extends CommonAzureConstruct {
               };EndpointSuffix=core.windows.net`,
             },
           ],
-          connectionStrings: Object.fromEntries(
-            this.appConnectionStrings.map(cs => [cs.name, { type: cs.type, value: cs.value }])
-          ),
+          connectionStrings: this.appConnectionStrings.map(cs => ({
+            name: cs.name,
+            connectionString: cs.value,
+            type: cs.type,
+          })),
         },
         httpsOnly: this.props.functionApp.app?.httpsOnly ?? true,
       },
