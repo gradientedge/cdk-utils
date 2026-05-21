@@ -42,8 +42,8 @@ importers:
         specifier: 4.1.7
         version: 4.1.7(vitest@4.1.7)
       aws-cdk:
-        specifier: 2.1124.0
-        version: 2.1124.0
+        specifier: 2.1124.1
+        version: 2.1124.1
       dotenv:
         specifier: 17.4.2
         version: 17.4.2
@@ -118,11 +118,11 @@ importers:
   packages/aws:
     dependencies:
       '@aws-sdk/client-secrets-manager':
-        specifier: 3.1050.0
-        version: 3.1050.0
+        specifier: 3.1051.0
+        version: 3.1051.0
       '@aws-sdk/credential-providers':
-        specifier: 3.1050.0
-        version: 3.1050.0
+        specifier: 3.1051.0
+        version: 3.1051.0
       '@aws-sdk/types':
         specifier: 3.973.8
         version: 3.973.8
@@ -136,8 +136,8 @@ importers:
         specifier: 3.1.0
         version: 3.1.0
       aws-cdk-lib:
-        specifier: 2.256.0
-        version: 2.256.0(constructs@10.6.0)
+        specifier: 2.256.1
+        version: 2.256.1(constructs@10.6.0)
       constructs:
         specifier: 10.6.0
         version: 10.6.0
@@ -276,12 +276,12 @@ packages:
   '@aws-crypto/util@5.2.0':
     resolution: {integrity: sha512-4RkU9EsI6ZpBve5fseQlGNUWKMa1RLPQ1dnjnQoe07ldfIzcsGb5hC5W0Dm7u423KWzawlrpbjXBrXCEv9zazQ==}
 
-  '@aws-sdk/client-cognito-identity@3.1050.0':
-    resolution: {integrity: sha512-VBbHeLRUoprJE57zc8WEbqC+bLUbHGlMI8S7NUuvEZ3svsYp0SGzkw81xuq2W7zbnlNFJL1jMIINjNMGo0Rn1Q==}
+  '@aws-sdk/client-cognito-identity@3.1051.0':
+    resolution: {integrity: sha512-3UBc7Fmc/5HnoV/8fMrjdZJoZdhLGx26doE21i5ekkWI1D/WvTsA+SK4C75Fl0xZxQIrQoPS1M3xhi2P/iIKpA==}
     engines: {node: '>=20.0.0'}
 
-  '@aws-sdk/client-secrets-manager@3.1050.0':
-    resolution: {integrity: sha512-mVOzxK4inCJgbGSQTeENYaACA9qGikru07b3HJyrKEeLVhuLKmo5csVzvKuz++ROdhX9gR7WzzJkoDOO5Xy/EQ==}
+  '@aws-sdk/client-secrets-manager@3.1051.0':
+    resolution: {integrity: sha512-bJN7+ck68aCFnTHGysMYqdXJY7qVMxRo99rZoqR5aG0Zm/uH6ZaFxO5qLSdOBV5CnBEbhmzsS6xNCaBk75WHiA==}
     engines: {node: '>=20.0.0'}
 
   '@aws-sdk/core@3.974.12':
@@ -324,8 +324,8 @@ packages:
     resolution: {integrity: sha512-/67fXX0ddllD4u2Nujc5PvT4byHgpMUfz6+RxIKi/0nFIckeorm7JvXgzBuDyVKw0s58EbofmETDWUf9vTEuHQ==}
     engines: {node: '>=20.0.0'}
 
-  '@aws-sdk/credential-providers@3.1050.0':
-    resolution: {integrity: sha512-IvGKl6+Vwf/x/wzgfWHjUwKu+0x5BeB7uwSO3QGH/9ssuAdpZR+maBUDP+HYbBgG2mU+CufN/eTelVwnWh10FQ==}
+  '@aws-sdk/credential-providers@3.1051.0':
+    resolution: {integrity: sha512-ZT4dj1oKdX0JPPbKnugCqVk/UvyVdUeh6TLWAUX/2Z1DhlWBeqg7b8RJjJYgMb8qqdg6Qn30MkzjOSqgQ6sy+Q==}
     engines: {node: '>=20.0.0'}
 
   '@aws-sdk/nested-clients@3.997.10':
@@ -1724,8 +1724,8 @@ packages:
   ast-v8-to-istanbul@1.0.0:
     resolution: {integrity: sha512-1fSfIwuDICFA4LKkCzRPO7F0hzFf0B7+Xqrl27ynQaa+Rh0e1Es0v6kWHPott3lU10AyAr7oKHa65OppjLn3Rg==}
 
-  aws-cdk-lib@2.256.0:
-    resolution: {integrity: sha512-MtA5XOSWs+yDA42lW9cO8i+IeCHQt2EwmdPyqWf3li6mF/ptzNxnFjth6rFa5Ms+8v2VzB5cdAS+Ly1ZDGs3fg==}
+  aws-cdk-lib@2.256.1:
+    resolution: {integrity: sha512-18xLE+iqzjvpYGGKJy+9zyvF8loUSXjpVV2MtVLPQ/hPgeWHQiVsqLOWNsBemd3pU7o0L9wXfRY+xqG80vlZFw==}
     engines: {node: '>= 20.0.0'}
     peerDependencies:
       constructs: ^10.5.0
@@ -1743,8 +1743,8 @@ packages:
       - yaml
       - mime-types
 
-  aws-cdk@2.1124.0:
-    resolution: {integrity: sha512-E8viq6qaujEI4SXcj2HtBs5pOKVKwaNa8MCEa+N+6KIG8z2VgHEEdJt5sg+zVfJi+IOJ1Vd2OvHXVEVXkAx9Og==}
+  aws-cdk@2.1124.1:
+    resolution: {integrity: sha512-sRYdPMdkX+02EHaT946AFV0w0CMfbHKWpLZPv525xTCkaVu1eYu6DzHFuTdimxdSN0uGQ2D4LHrD1sr94tRhow==}
     engines: {node: '>= 18.0.0'}
     hasBin: true
 
@@ -3406,7 +3406,7 @@ snapshots:
       '@smithy/util-utf8': 2.3.0
       tslib: 2.8.1
 
-  '@aws-sdk/client-cognito-identity@3.1050.0':
+  '@aws-sdk/client-cognito-identity@3.1051.0':
     dependencies:
       '@aws-crypto/sha256-browser': 5.2.0
       '@aws-crypto/sha256-js': 5.2.0
@@ -3419,7 +3419,7 @@ snapshots:
       '@smithy/types': 4.14.2
       tslib: 2.8.1
 
-  '@aws-sdk/client-secrets-manager@3.1050.0':
+  '@aws-sdk/client-secrets-manager@3.1051.0':
     dependencies:
       '@aws-crypto/sha256-browser': 5.2.0
       '@aws-crypto/sha256-js': 5.2.0
@@ -3535,9 +3535,9 @@ snapshots:
       '@smithy/types': 4.14.2
       tslib: 2.8.1
 
-  '@aws-sdk/credential-providers@3.1050.0':
+  '@aws-sdk/credential-providers@3.1051.0':
     dependencies:
-      '@aws-sdk/client-cognito-identity': 3.1050.0
+      '@aws-sdk/client-cognito-identity': 3.1051.0
       '@aws-sdk/core': 3.974.12
       '@aws-sdk/credential-provider-cognito-identity': 3.972.35
       '@aws-sdk/credential-provider-env': 3.972.38
@@ -5062,14 +5062,14 @@ snapshots:
       estree-walker: 3.0.3
       js-tokens: 10.0.0
 
-  aws-cdk-lib@2.256.0(constructs@10.6.0):
+  aws-cdk-lib@2.256.1(constructs@10.6.0):
     dependencies:
       '@aws-cdk/asset-awscli-v1': 2.2.273
       '@aws-cdk/asset-node-proxy-agent-v6': 2.1.1
       '@aws-cdk/cloud-assembly-schema': 53.26.0
       constructs: 10.6.0
 
-  aws-cdk@2.1124.0: {}
+  aws-cdk@2.1124.1: {}
 
   balanced-match@4.0.4: {}
 

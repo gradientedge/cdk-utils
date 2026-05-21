@@ -55,7 +55,7 @@
     "@typescript-eslint/eslint-plugin": "8.59.4",
     "@typescript-eslint/parser": "8.59.4",
     "@vitest/coverage-v8": "4.1.7",
-    "aws-cdk": "2.1124.0",
+    "aws-cdk": "2.1124.1",
     "dotenv": "17.4.2",
     "esbuild": "0.28.0",
     "eslint": "10.4.0",
