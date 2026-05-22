@@ -1,5 +1,16 @@
 # @gradientedge/cdk-utils
 
+## 11.42.0
+
+### Minor Changes
+
+- [#1056](https://github.com/gradientedge/cdk-utils/pull/1056) [`527c099`](https://github.com/gradientedge/cdk-utils/commit/527c09991aa8ec37e83d28b3e980ecaeee37346a) Thanks [@despock](https://github.com/despock)! - feat: adding support for azure location env var
+
+### Patch Changes
+
+- Updated dependencies [[`527c099`](https://github.com/gradientedge/cdk-utils/commit/527c09991aa8ec37e83d28b3e980ecaeee37346a)]:
+  - @gradientedge/cdk-utils-azure@2.40.0
+
 ## 11.41.0
 
 ### Minor Changes
