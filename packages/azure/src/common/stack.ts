@@ -185,7 +185,7 @@ export class CommonAzureStack extends ComponentResource {
   protected determineStageRegionContexts() {
     const debug = this.config.getBoolean('debug')
     const stage = this.config.get('stage')
-    const location = this.config.get('location')
+    const location = this.config.get('location') ?? process.env.LOCATION
     const stageRegionContextPath = this.config.get('stageRegionContextPath')
     if (!stage || !location || !stageRegionContextPath) {
       if (debug) console.debug(`No stage-region context provided. Using default context properties`)
