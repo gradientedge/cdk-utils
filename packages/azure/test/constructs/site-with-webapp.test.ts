@@ -1,3 +1,5 @@
+import fs from 'fs'
+import path from 'path'
 import * as pulumi from '@pulumi/pulumi'
 import {
   AzureLocation,
@@ -7,6 +9,14 @@ import {
   SiteWithWebApp,
   SiteWithWebAppProps,
 } from '../../src/index.js'
+
+const distDir = path.resolve('dist')
+beforeAll(() => {
+  fs.mkdirSync(distDir, { recursive: true })
+})
+afterAll(() => {
+  fs.rmSync(path.join(distDir, 'package.json'), { force: true })
+})
 
 interface TestAzureStackProps extends CommonAzureStackProps {
   testAttribute?: string
