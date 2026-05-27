@@ -21,15 +21,15 @@
   },
   "dependencies": {
     "@gradientedge/cdk-utils-common": "workspace:*",
-    "@pulumi/archive": "0.4.0",
-    "@pulumi/azure-native": "3.18.0",
-    "@pulumi/azuread": "6.9.0",
-    "@pulumi/pulumi": "3.242.0",
-    "@types/lodash": "4.17.24",
-    "app-root-path": "3.1.0",
-    "lodash": "4.18.1",
-    "uuid": "14.0.0",
-    "yaml": "2.9.0"
+    "@pulumi/archive": "0.5.0",
+    "@pulumi/azure-native": "catalog:",
+    "@pulumi/azuread": "6.9.1",
+    "@pulumi/pulumi": "catalog:",
+    "@types/lodash": "catalog:",
+    "app-root-path": "catalog:",
+    "lodash": "catalog:",
+    "uuid": "catalog:",
+    "yaml": "catalog:"
   },
   "keywords": [
     "gradientedge",
