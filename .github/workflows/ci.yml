@@ -8,6 +8,10 @@ on:
 
 name: CI-Pipeline
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 env:
   name: CI-Pipeline
   NODE_OPTIONS: --max_old_space_size=7168
@@ -19,7 +23,6 @@ jobs:
     strategy:
       matrix:
         node-version: [22.x, 24.x]
-        terraform-version: [1.3.9]
     env:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     steps:
@@ -29,35 +32,23 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Setup Environment
-        id: setup-environment
-        uses: ./.github/actions/setup-env
-      - name: Setup Terraform ${{ matrix.terraform-version }}
-        uses: hashicorp/setup-terraform@v4
-        with:
-          terraform_version: ${{ matrix.terraform-version }}
-      - name: Cache dependencies
+      - name: Enable Corepack
+        run: corepack enable && corepack install
+      - name: Cache pnpm store
         uses: actions/cache@v5
-        id: cache-dependencies
-        env:
-          cache-name: cache-dependencies
         with:
-          path: |
-            ./node_modules
-            ./packages/*/node_modules
-            ./app/api-destined-function/node_modules
-          key: ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          path: ~/.local/share/pnpm/store/v10
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
       - name: Install Packages
-        if: steps.cache-dependencies.outputs.cache-hit != 'true'
         run: pnpm install --frozen-lockfile
       - name: Build Applications
-        id: build-applications
-        uses: ./.github/actions/build
-        with:
-          use-cache: steps.cache-dependencies.outputs.cache-hit
+        run: pnpm build
       - name: Test Applications
-        id: test-applications
-        uses: ./.github/actions/test
+        run: pnpm validate
+      - name: Validate Documentation
+        run: pnpm run docs
       - name: Publish Code Coverage Report
         uses: codecov/codecov-action@v6
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && success() && matrix.node-version == '24.x' }}
@@ -90,20 +81,17 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: ${{ matrix.node-version }}
-      - name: Setup Environment
-        id: setup-environment
-        uses: ./.github/actions/setup-env
-      - name: Cache dependencies
+      - name: Enable Corepack
+        run: corepack enable && corepack install
+      - name: Cache pnpm store
         uses: actions/cache@v5
-        id: cache-dependencies
-        env:
-          cache-name: cache-dependencies
         with:
-          path: |
-            ./node_modules
-            ./packages/*/node_modules
-            ./app/api-destined-function/node_modules
-          key: ${{ runner.os }}-${{ github.ref }}-${{ env.cache-name }}-${{ hashFiles('**/pnpm-lock.yaml') }}
+          path: ~/.local/share/pnpm/store/v10
+          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
+          restore-keys: |
+            ${{ runner.os }}-pnpm-
+      - name: Install Packages
+        run: pnpm install --frozen-lockfile
       - uses: actions/download-artifact@v8
         with:
           name: docs-artifact
