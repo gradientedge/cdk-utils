@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-common
 
+## 2.7.0
+
+### Minor Changes
+
+- [#1065](https://github.com/gradientedge/cdk-utils/pull/1065) [`27998eb`](https://github.com/gradientedge/cdk-utils/commit/27998ebc44b508cc1476d8ee11d4dc0285d48203) Thanks [@despock](https://github.com/despock)! - feat: bumping versions
+
 ## 2.6.0
 
 ### Minor Changes
