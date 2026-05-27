@@ -72,7 +72,7 @@ export class CommonAzureStack extends ComponentResource {
       {
         extraContexts: this.config.getObject('extraContexts'),
         regionContextPath: this.config.get('regionContextPath'),
-        stage: this.config.get('stage'),
+        stage: process.env.STAGE ?? this.config.get('stage'),
         stageContextPath: this.config.get('stageContextPath'),
         stageRegionContextPath: this.config.get('stageRegionContextPath'),
       },
@@ -153,7 +153,7 @@ export class CommonAzureStack extends ComponentResource {
    */
   protected determineStageContexts() {
     const debug = this.config.getBoolean('debug')
-    const stage = this.config.get('stage')
+    const stage = process.env.STAGE ?? this.config.get('stage')
     const stageContextPath = this.config.get('stageContextPath')
     const stageContextFilePath = path.join(appRoot.path, stageContextPath ?? 'env', `${stage}.json`)
 
@@ -184,7 +184,7 @@ export class CommonAzureStack extends ComponentResource {
    */
   protected determineStageRegionContexts() {
     const debug = this.config.getBoolean('debug')
-    const stage = this.config.get('stage')
+    const stage = process.env.STAGE ?? this.config.get('stage')
     const location = this.config.get('location') ?? process.env.LOCATION
     const stageRegionContextPath = this.config.get('stageRegionContextPath')
     if (!stage || !location || !stageRegionContextPath) {

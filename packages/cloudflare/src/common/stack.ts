@@ -65,7 +65,7 @@ export class CommonCloudflareStack extends ComponentResource {
       props,
       {
         extraContexts: this.config.getObject('extraContexts'),
-        stage: this.config.get('stage'),
+        stage: process.env.STAGE ?? this.config.get('stage'),
         stageContextPath: this.config.get('stageContextPath'),
       },
       this.determineExtraContexts(),
@@ -111,7 +111,7 @@ export class CommonCloudflareStack extends ComponentResource {
    */
   protected determineStageContexts() {
     const debug = this.config.getBoolean('debug')
-    const stage = this.config.get('stage')
+    const stage = process.env.STAGE ?? this.config.get('stage')
     const stageContextPath = this.config.get('stageContextPath')
     const stageContextFilePath = path.join(appRoot.path, stageContextPath ?? 'env', `${stage}.json`)
 
