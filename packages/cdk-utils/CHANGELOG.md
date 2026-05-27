@@ -1,5 +1,21 @@
 # @gradientedge/cdk-utils
 
+## 11.44.0
+
+### Minor Changes
+
+- [`7cc8ead`](https://github.com/gradientedge/cdk-utils/commit/7cc8eadd7476b3a53f14bb287de1343dac963ce0) Thanks [@despock](https://github.com/despock)! - feat: adding support for stage env var
+
+- [#1065](https://github.com/gradientedge/cdk-utils/pull/1065) [`27998eb`](https://github.com/gradientedge/cdk-utils/commit/27998ebc44b508cc1476d8ee11d4dc0285d48203) Thanks [@despock](https://github.com/despock)! - feat: bumping versions
+
+### Patch Changes
+
+- Updated dependencies [[`7cc8ead`](https://github.com/gradientedge/cdk-utils/commit/7cc8eadd7476b3a53f14bb287de1343dac963ce0), [`27998eb`](https://github.com/gradientedge/cdk-utils/commit/27998ebc44b508cc1476d8ee11d4dc0285d48203)]:
+  - @gradientedge/cdk-utils-cloudflare@2.16.0
+  - @gradientedge/cdk-utils-azure@2.42.0
+  - @gradientedge/cdk-utils-aws@2.12.0
+  - @gradientedge/cdk-utils-common@2.7.0
+
 ## 11.43.0
 
 ### Minor Changes
