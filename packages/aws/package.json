@@ -1,6 +1,6 @@
 {
   "name": "@gradientedge/cdk-utils-aws",
-  "version": "2.10.0",
+  "version": "2.11.0",
   "description": "AWS CDK utilities for @gradientedge/cdk-utils",
   "type": "module",
   "main": "dist/src/index.js",
