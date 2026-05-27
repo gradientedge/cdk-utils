@@ -34,10 +34,13 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Enable Corepack
         run: corepack enable && corepack install
+      - name: Get pnpm store directory
+        id: pnpm-store
+        run: echo "path=$(pnpm store path)" >> $GITHUB_OUTPUT
       - name: Cache pnpm store
         uses: actions/cache@v5
         with:
-          path: ~/.local/share/pnpm/store/v10
+          path: ${{ steps.pnpm-store.outputs.path }}
           key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-
@@ -83,10 +86,13 @@ jobs:
           node-version: ${{ matrix.node-version }}
       - name: Enable Corepack
         run: corepack enable && corepack install
+      - name: Get pnpm store directory
+        id: pnpm-store
+        run: echo "path=$(pnpm store path)" >> $GITHUB_OUTPUT
       - name: Cache pnpm store
         uses: actions/cache@v5
         with:
-          path: ~/.local/share/pnpm/store/v10
+          path: ${{ steps.pnpm-store.outputs.path }}
           key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
           restore-keys: |
             ${{ runner.os }}-pnpm-
