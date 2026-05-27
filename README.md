@@ -1,7 +1,10 @@
 # <img src="https://cdn.gradientedge.io/images/ge-logo-1200.png" width="175px" alt="Gradient Edge"> CDK Utils
 
-[![Release][release]][release-url]
 [![version][version]][version-url]
+[![version-aws][version-aws]][version-aws-url]
+[![version-azure][version-azure]][version-azure-url]
+[![version-cloudflare][version-cloudflare]][version-cloudflare-url]
+[![version-common][version-common]][version-common-url]
 
 [![License][license]][license-url]
 [![Maintained][maintained]][repo-url]
@@ -33,13 +36,13 @@ For more details, see the full [API documentation](https://gradientedge.github.i
 
 ## Packages
 
-| Package                              | Description                                                 |
-| ------------------------------------ | ----------------------------------------------------------- |
-| `@gradientedge/cdk-utils-aws`        | AWS CDK constructs and service managers                     |
-| `@gradientedge/cdk-utils-azure`      | Azure Pulumi (Azure Native) constructs and service managers |
-| `@gradientedge/cdk-utils-cloudflare` | Cloudflare Pulumi constructs and service managers           |
-| `@gradientedge/cdk-utils-common`     | Shared utilities, types, and stage helpers                  |
-| `@gradientedge/cdk-utils`            | Umbrella package that re-exports all of the above           |
+| Package                              | Description                                                 | Version                                                             |
+| ------------------------------------ | ----------------------------------------------------------- | ------------------------------------------------------------------- |
+| `@gradientedge/cdk-utils-aws`        | AWS CDK constructs and service managers                     | [![version-aws][version-aws]][version-aws-url]                      |
+| `@gradientedge/cdk-utils-azure`      | Azure Pulumi (Azure Native) constructs and service managers | [![version-azure][version-azure]][version-azure-url]                |
+| `@gradientedge/cdk-utils-cloudflare` | Cloudflare Pulumi constructs and service managers           | [![version-cloudflare][version-cloudflare]][version-cloudflare-url] |
+| `@gradientedge/cdk-utils-common`     | Shared utilities, types, and stage helpers                  | [![version-common][version-common]][version-common-url]             |
+| `@gradientedge/cdk-utils`            | Umbrella package that re-exports all of the above           | [![version][version]][version-url]                                  |
 
 ## Prerequisites
 
@@ -201,5 +204,13 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 [repo-url]: https://github.com/gradientedge/cdk-utils
 [twitter]: https://img.shields.io/twitter/follow/gradientedge
 [twitter-url]: https://twitter.com/gradientedge
-[version]: https://img.shields.io/npm/v/@gradientedge/cdk-utils
+[version]: https://img.shields.io/npm/v/@gradientedge/cdk-utils?label=cdk-utils
 [version-url]: https://www.npmjs.com/package/@gradientedge/cdk-utils
+[version-aws]: https://img.shields.io/npm/v/@gradientedge/cdk-utils-aws?label=cdk-utils-aws
+[version-aws-url]: https://www.npmjs.com/package/@gradientedge/cdk-utils-aws
+[version-azure]: https://img.shields.io/npm/v/@gradientedge/cdk-utils-azure?label=cdk-utils-azure
+[version-azure-url]: https://www.npmjs.com/package/@gradientedge/cdk-utils-azure
+[version-cloudflare]: https://img.shields.io/npm/v/@gradientedge/cdk-utils-cloudflare?label=cdk-utils-cloudflare
+[version-cloudflare-url]: https://www.npmjs.com/package/@gradientedge/cdk-utils-cloudflare
+[version-common]: https://img.shields.io/npm/v/@gradientedge/cdk-utils-common?label=cdk-utils-common
+[version-common-url]: https://www.npmjs.com/package/@gradientedge/cdk-utils-common
