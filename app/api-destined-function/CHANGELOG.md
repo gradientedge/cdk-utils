@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-api-destined-function
 
+## 0.1.0
+
+### Minor Changes
+
+- [`da5faec`](https://github.com/gradientedge/cdk-utils/commit/da5faec4f832daa7c0348d23acb6182bd35a6e7d) Thanks [@despock](https://github.com/despock)! - feat: removing pnpm catalog
+
 ## 0.0.0
 
 ### Minor Changes
