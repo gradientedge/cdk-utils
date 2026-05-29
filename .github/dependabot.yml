@@ -3,19 +3,19 @@
 
 version: 2
 updates:
-  - package-ecosystem: "npm"
-    directory: "/"
+  - package-ecosystem: 'npm'
+    directory: '/'
     schedule:
-      interval: "weekly"
-      time: "09:00"
-      timezone: "Europe/London"
+      interval: 'weekly'
+      time: '09:00'
+      timezone: 'Europe/London'
     allow:
-      - dependency-type: "direct"
+      - dependency-type: 'direct'
     versioning-strategy: increase
 
-  - package-ecosystem: "github-actions"
-    directory: "/"
+  - package-ecosystem: 'github-actions'
+    directory: '/'
     schedule:
-      interval: "weekly"
-      time: "09:00"
-      timezone: "Europe/London"
+      interval: 'weekly'
+      time: '09:00'
+      timezone: 'Europe/London'

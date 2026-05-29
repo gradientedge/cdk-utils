@@ -14,12 +14,23 @@ overrides:
   protobufjs: 8.3.0
   tmp: 0.2.6
 minimumReleaseAge: 10080
+utoInstallPeers: true
+blockExoticSubdeps: true
+catalogMode: 'prefer'
+dedupeInjectedDeps: true
+injectWorkspacePackages: true
+linkWorkspacePackages: true
+optimisticRepeatInstall: false
+preferWorkspacePackages: true
+saveWorkspaceProtocol: 'rolling'
+strictPeerDependencies: false
+trustPolicy: 'off'
 allowBuilds:
   '@pulumi/command': true
   '@pulumi/std': true
-  esbuild: true
-  protobufjs: true
-  unrs-resolver: true
+  esbuild: false
+  protobufjs: false
+  unrs-resolver: false
 minimumReleaseAgeExclude:
   - '@aws-sdk/client-cognito-identity@3.1056.0'
   - '@aws-sdk/client-secrets-manager@3.1056.0'
