@@ -5,33 +5,6 @@ settings:
   excludeLinksFromLockfile: false
   injectWorkspacePackages: true
 
-catalogs:
-  default:
-    '@pulumi/azure-native':
-      specifier: 3.18.0
-      version: 3.18.0
-    '@pulumi/pulumi':
-      specifier: 3.243.0
-      version: 3.243.0
-    '@types/lodash':
-      specifier: 4.17.24
-      version: 4.17.24
-    app-root-path:
-      specifier: 3.1.0
-      version: 3.1.0
-    lodash:
-      specifier: 4.18.1
-      version: 4.18.1
-    rimraf:
-      specifier: 6.1.3
-      version: 6.1.3
-    uuid:
-      specifier: 14.0.0
-      version: 14.0.0
-    yaml:
-      specifier: 2.9.0
-      version: 2.9.0
-
 overrides:
   protobufjs: 8.3.0
   tmp: 0.2.6
@@ -133,14 +106,14 @@ importers:
   app/api-destined-function:
     dependencies:
       uuid:
-        specifier: 'catalog:'
+        specifier: 14.0.0
         version: 14.0.0
     devDependencies:
       mkdirp:
         specifier: 3.0.1
         version: 3.0.1
       rimraf:
-        specifier: 'catalog:'
+        specifier: 6.1.3
         version: 6.1.3
 
   packages/aws:
@@ -158,10 +131,10 @@ importers:
         specifier: workspace:*
         version: link:../common
       '@types/lodash':
-        specifier: 'catalog:'
+        specifier: 4.17.24
         version: 4.17.24
       app-root-path:
-        specifier: 'catalog:'
+        specifier: 3.1.0
         version: 3.1.0
       aws-cdk-lib:
         specifier: 2.257.0
@@ -170,13 +143,13 @@ importers:
         specifier: 10.6.0
         version: 10.6.0
       lodash:
-        specifier: 'catalog:'
+        specifier: 4.18.1
         version: 4.18.1
       moment:
         specifier: 2.30.1
         version: 2.30.1
       uuid:
-        specifier: 'catalog:'
+        specifier: 14.0.0
         version: 14.0.0
 
   packages/azure:
@@ -188,28 +161,28 @@ importers:
         specifier: 0.5.0
         version: 0.5.0(ts-node@10.9.2(@types/node@25.9.1)(typescript@6.0.3))(typescript@6.0.3)
       '@pulumi/azure-native':
-        specifier: 'catalog:'
+        specifier: 3.18.0
         version: 3.18.0(ts-node@10.9.2(@types/node@25.9.1)(typescript@6.0.3))(typescript@6.0.3)
       '@pulumi/azuread':
         specifier: 6.9.1
         version: 6.9.1(ts-node@10.9.2(@types/node@25.9.1)(typescript@6.0.3))(typescript@6.0.3)
       '@pulumi/pulumi':
-        specifier: 'catalog:'
+        specifier: 3.243.0
         version: 3.243.0(ts-node@10.9.2(@types/node@25.9.1)(typescript@6.0.3))(typescript@6.0.3)
       '@types/lodash':
-        specifier: 'catalog:'
+        specifier: 4.17.24
         version: 4.17.24
       app-root-path:
-        specifier: 'catalog:'
+        specifier: 3.1.0
         version: 3.1.0
       lodash:
-        specifier: 'catalog:'
+        specifier: 4.18.1
         version: 4.18.1
       uuid:
-        specifier: 'catalog:'
+        specifier: 14.0.0
         version: 14.0.0
       yaml:
-        specifier: 'catalog:'
+        specifier: 2.9.0
         version: 2.9.0
 
   packages/cdk-utils:
@@ -236,7 +209,7 @@ importers:
         specifier: 7.31.0
         version: 7.31.0(ts-node@10.9.2(@types/node@25.9.1)(typescript@6.0.3))(typescript@6.0.3)
       '@pulumi/azure-native':
-        specifier: 'catalog:'
+        specifier: 3.18.0
         version: 3.18.0(ts-node@10.9.2(@types/node@25.9.1)(typescript@6.0.3))(typescript@6.0.3)
       '@pulumi/cloudflare':
         specifier: 6.17.0
@@ -245,31 +218,31 @@ importers:
         specifier: 1.2.1
         version: 1.2.1(ts-node@10.9.2(@types/node@25.9.1)(typescript@6.0.3))(typescript@6.0.3)
       '@pulumi/pulumi':
-        specifier: 'catalog:'
+        specifier: 3.243.0
         version: 3.243.0(ts-node@10.9.2(@types/node@25.9.1)(typescript@6.0.3))(typescript@6.0.3)
       '@pulumi/std':
         specifier: 2.3.2
         version: 2.3.2(ts-node@10.9.2(@types/node@25.9.1)(typescript@6.0.3))(typescript@6.0.3)
       '@types/lodash':
-        specifier: 'catalog:'
+        specifier: 4.17.24
         version: 4.17.24
       app-root-path:
-        specifier: 'catalog:'
+        specifier: 3.1.0
         version: 3.1.0
       lodash:
-        specifier: 'catalog:'
+        specifier: 4.18.1
         version: 4.18.1
 
   packages/common:
     dependencies:
       '@types/lodash':
-        specifier: 'catalog:'
+        specifier: 4.17.24
         version: 4.17.24
       constructs:
         specifier: ^10.6.0
         version: 10.6.0
       lodash:
-        specifier: 'catalog:'
+        specifier: 4.18.1
         version: 4.18.1
 
 packages:
