@@ -1,5 +1,18 @@
 # @gradientedge/cdk-utils-aws
 
+## 2.13.0
+
+### Minor Changes
+
+- [`da5faec`](https://github.com/gradientedge/cdk-utils/commit/da5faec4f832daa7c0348d23acb6182bd35a6e7d) Thanks [@despock](https://github.com/despock)! - feat: removing pnpm catalog
+
+- [#1067](https://github.com/gradientedge/cdk-utils/pull/1067) [`b09141a`](https://github.com/gradientedge/cdk-utils/commit/b09141a28629461f43c282cb678fa7d7e3420d0f) Thanks [@despock](https://github.com/despock)! - feat: bumping dependencies
+
+### Patch Changes
+
+- Updated dependencies [[`da5faec`](https://github.com/gradientedge/cdk-utils/commit/da5faec4f832daa7c0348d23acb6182bd35a6e7d)]:
+  - @gradientedge/cdk-utils-common@2.8.0
+
 ## 2.12.0
 
 ### Minor Changes

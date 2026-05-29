@@ -1,5 +1,16 @@
 # @gradientedge/cdk-utils-cloudflare
 
+## 2.17.0
+
+### Minor Changes
+
+- [`da5faec`](https://github.com/gradientedge/cdk-utils/commit/da5faec4f832daa7c0348d23acb6182bd35a6e7d) Thanks [@despock](https://github.com/despock)! - feat: removing pnpm catalog
+
+### Patch Changes
+
+- Updated dependencies [[`da5faec`](https://github.com/gradientedge/cdk-utils/commit/da5faec4f832daa7c0348d23acb6182bd35a6e7d)]:
+  - @gradientedge/cdk-utils-common@2.8.0
+
 ## 2.16.0
 
 ### Minor Changes
