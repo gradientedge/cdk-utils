@@ -3,7 +3,7 @@ packages:
   - 'app/**'
 overrides:
   protobufjs: 8.3.0
-  tmp: 0.2.5
+  tmp: 0.2.6
 minimumReleaseAge: 10080
 autoInstallPeers: true
 blockExoticSubdeps: true
@@ -21,3 +21,5 @@ allowBuilds:
   esbuild: false
   protobufjs: false
   unrs-resolver: false
+minimumReleaseAgeExclude:
+  - tmp@0.2.6
