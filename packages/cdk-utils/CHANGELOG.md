@@ -1,5 +1,16 @@
 # @gradientedge/cdk-utils
 
+## 11.47.0
+
+### Minor Changes
+
+- [#1072](https://github.com/gradientedge/cdk-utils/pull/1072) [`7a7eb9c`](https://github.com/gradientedge/cdk-utils/commit/7a7eb9c7d561d772d33b6f9061ad4ce2dde006ce) Thanks [@despock](https://github.com/despock)! - feat: adding support in Azure for Node24 runtime
+
+### Patch Changes
+
+- Updated dependencies [[`7a7eb9c`](https://github.com/gradientedge/cdk-utils/commit/7a7eb9c7d561d772d33b6f9061ad4ce2dde006ce)]:
+  - @gradientedge/cdk-utils-azure@2.45.0
+
 ## 11.46.0
 
 ### Minor Changes

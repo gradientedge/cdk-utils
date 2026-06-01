@@ -1,6 +1,6 @@
 {
   "name": "@gradientedge/cdk-utils-azure",
-  "version": "2.44.0",
+  "version": "2.45.0",
   "description": "Azure Pulumi utilities for @gradientedge/cdk-utils",
   "type": "module",
   "main": "dist/src/index.js",
