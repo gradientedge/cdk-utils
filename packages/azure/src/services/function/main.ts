@@ -131,7 +131,7 @@ export class AzureFunctionManager {
     const runtime = {
       ...props.runtime,
       name: props.runtime?.name ?? 'node',
-      version: props.runtime?.version ?? CommonAzureStack.NODEJS_RUNTIME,
+      version: props.runtime?.version ?? scope.props.runtimeVersion ?? CommonAzureStack.NODEJS_RUNTIME,
     }
     const scaleAndConcurrency = {
       ...props.scaleAndConcurrency,
@@ -168,7 +168,7 @@ export class AzureFunctionManager {
         },
         siteConfig: props.siteConfig ?? {
           http20Enabled: true,
-          linuxFxVersion: `${props.runtime?.name ?? 'node'}|${props.runtime?.version ?? CommonAzureStack.NODEJS_RUNTIME}`,
+          linuxFxVersion: `${props.runtime?.name ?? 'node'}|${props.runtime?.version ?? scope.props.runtimeVersion ?? CommonAzureStack.NODEJS_RUNTIME}`,
         },
         tags: tags,
       },
@@ -254,7 +254,7 @@ export class AzureFunctionManager {
             runtime: {
               ...props.runtime,
               name: props.runtime?.name ?? 'node',
-              version: props.runtime?.version ?? CommonAzureStack.NODEJS_RUNTIME,
+              version: props.runtime?.version ?? scope.props.runtimeVersion ?? CommonAzureStack.NODEJS_RUNTIME,
             },
             scaleAndConcurrency: {
               ...props.scaleAndConcurrency,

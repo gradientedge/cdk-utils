@@ -27,7 +27,7 @@ import { CommonAzureStackProps } from './types.js'
  */
 export class CommonAzureStack extends ComponentResource {
   /** Default Node.js runtime version for Azure Function Apps */
-  public static NODEJS_RUNTIME = '22'
+  public static NODEJS_RUNTIME = '24'
 
   /** The construct instance created by this stack */
   construct: CommonAzureConstruct

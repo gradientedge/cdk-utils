@@ -1,6 +1,7 @@
+import { BaseProps } from '@gradientedge/cdk-utils-common'
 import { GetComponentOutputArgs } from '@pulumi/azure-native/applicationinsights/index.js'
 import { GetWorkspaceOutputArgs } from '@pulumi/azure-native/operationalinsights/index.js'
-import { BaseProps } from '@gradientedge/cdk-utils-common'
+import { Input } from '@pulumi/pulumi'
 
 import { AzureLocation, AzureRemoteBackend } from './constants.js'
 
@@ -24,6 +25,8 @@ export interface AzureLocationConfig {
  * @category Interface
  */
 export interface CommonAzureStackProps extends BaseProps {
+  /** Optional runtime versions for node functions */
+  runtimeVersion?: Input<string>
   /** Optional Pulumi stack name for cross-stack references */
   stackName?: string
   /** Optional Azure resource group name override */
