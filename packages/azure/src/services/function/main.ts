@@ -63,7 +63,11 @@ export class AzureFunctionManager {
           ...props.tags,
         },
       },
-      { parent: scope, ...resourceOptions }
+      {
+        parent: scope,
+        ...resourceOptions,
+        ignoreChanges: [...(resourceOptions?.ignoreChanges ?? []), 'tags'],
+      }
     )
   }
 
@@ -134,6 +138,11 @@ export class AzureFunctionManager {
       instanceMemoryMB: props.scaleAndConcurrency?.instanceMemoryMB ?? 4096,
       maximumInstanceCount: props.scaleAndConcurrency?.maximumInstanceCount ?? 40,
     }
+    const tags = {
+      environment: scope.props.stage,
+      ...scope.props.defaultTags,
+      ...props.tags,
+    }
 
     const functionApp = new WebApp(
       `${id}-fc`,
@@ -161,11 +170,7 @@ export class AzureFunctionManager {
           http20Enabled: true,
           linuxFxVersion: `${props.runtime?.name ?? 'node'}|${props.runtime?.version ?? CommonAzureStack.NODEJS_RUNTIME}`,
         },
-        tags: {
-          environment: scope.props.stage,
-          ...scope.props.defaultTags,
-          ...props.tags,
-        },
+        tags: tags,
       },
       { parent: scope, ...resourceOptions }
     )
@@ -188,6 +193,7 @@ export class AzureFunctionManager {
                 apiVersion: '2024-04-01',
                 name,
                 location,
+                tags,
                 properties: {
                   functionAppConfig: {
                     ...props.functionAppConfig,
