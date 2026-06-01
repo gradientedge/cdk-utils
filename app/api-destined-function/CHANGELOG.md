@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-api-destined-function
 
+## 0.2.0
+
+### Minor Changes
+
+- [#1070](https://github.com/gradientedge/cdk-utils/pull/1070) [`1671d18`](https://github.com/gradientedge/cdk-utils/commit/1671d1873f14d494864bfcf90a122242e9b65ef0) Thanks [@despock](https://github.com/despock)! - feat: bumping dependencies
+
 ## 0.1.0
 
 ### Minor Changes
