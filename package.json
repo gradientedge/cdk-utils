@@ -39,7 +39,7 @@
     "test": "vitest run --coverage",
     "test:watch": "vitest",
     "test:coverage": "pnpm -r test:coverage",
-    "update": "pnpm update -r --latest -i",
+    "update:deps": "pnpm update -r --latest -i",
     "validate": "pnpm prettier && pnpm lint && pnpm test",
     "prepare": "husky",
     "release": "changeset publish"
