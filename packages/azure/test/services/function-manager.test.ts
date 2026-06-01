@@ -211,7 +211,7 @@ describe('TestAzureFunctionConstruct', () => {
       pulumi.all([stack.construct.functionAppFlexConsumption.functionAppConfig]).apply(([functionAppConfig]) => {
         expect(functionAppConfig).toBeDefined()
         expect(functionAppConfig?.runtime?.name).toEqual('node')
-        expect(functionAppConfig?.runtime?.version).toEqual('22')
+        expect(functionAppConfig?.runtime?.version).toEqual('24')
         expect(functionAppConfig?.scaleAndConcurrency?.instanceMemoryMB).toEqual(4096)
         expect(functionAppConfig?.scaleAndConcurrency?.maximumInstanceCount).toEqual(40)
       })
@@ -345,11 +345,11 @@ describe('TestAzureFunctionConstruct - Default Value Branches', () => {
     expect(flexArgs.inputs.kind).toEqual('functionapp,linux')
     expect(flexArgs.inputs.httpsOnly).toEqual(true)
     expect(flexArgs.inputs.functionAppConfig.runtime.name).toEqual('node')
-    expect(flexArgs.inputs.functionAppConfig.runtime.version).toEqual('22')
+    expect(flexArgs.inputs.functionAppConfig.runtime.version).toEqual('24')
     expect(flexArgs.inputs.functionAppConfig.scaleAndConcurrency.instanceMemoryMB).toEqual(4096)
     expect(flexArgs.inputs.functionAppConfig.scaleAndConcurrency.maximumInstanceCount).toEqual(40)
     expect(flexArgs.inputs.siteConfig.http20Enabled).toEqual(true)
-    expect(flexArgs.inputs.siteConfig.linuxFxVersion).toEqual('node|22')
+    expect(flexArgs.inputs.siteConfig.linuxFxVersion).toEqual('node|24')
   })
 
   test('flex consumption deployment uses default values', () => {
@@ -365,7 +365,7 @@ describe('TestAzureFunctionConstruct - Default Value Branches', () => {
     expect(resourceArgs.inputs.kind).toEqual('functionapp,linux')
     expect(resourceArgs.inputs.properties.httpsOnly).toEqual(true)
     expect(resourceArgs.inputs.properties.functionAppConfig.runtime.name).toEqual('node')
-    expect(resourceArgs.inputs.properties.functionAppConfig.runtime.version).toEqual('22')
+    expect(resourceArgs.inputs.properties.functionAppConfig.runtime.version).toEqual('24')
     expect(resourceArgs.inputs.properties.functionAppConfig.scaleAndConcurrency.instanceMemoryMB).toEqual(4096)
     expect(resourceArgs.inputs.properties.functionAppConfig.scaleAndConcurrency.maximumInstanceCount).toEqual(40)
     expect(resourceArgs.inputs.properties.functionAppConfig.siteUpdateStrategy.type).toEqual('RollingUpdate')
