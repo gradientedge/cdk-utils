@@ -6,6 +6,7 @@ import {
   Kind,
   listStorageAccountSAS,
   ManagementPolicy,
+  MinimumTlsVersion,
   Permissions,
   PublicAccess,
   Services,
@@ -76,6 +77,7 @@ export class AzureStorageManager {
           .toLowerCase(),
         allowBlobPublicAccess: props.allowBlobPublicAccess ?? false,
         isHnsEnabled: props.isHnsEnabled ?? false,
+        minimumTlsVersion: props.minimumTlsVersion ?? MinimumTlsVersion.TLS1_2,
         resourceGroupName,
         sku: props.sku ?? {
           name: SkuName.Standard_LRS,
