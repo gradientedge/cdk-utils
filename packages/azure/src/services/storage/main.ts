@@ -221,8 +221,8 @@ export class AzureStorageManager {
           sharedAccessExpiryTime:
             props.expiry ?? new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
           permissions: props.permissions ?? Permissions.R,
-          services: Services.B,
-          resourceTypes: SignedResourceTypes.C,
+          services: props.services ?? Services.B,
+          resourceTypes: props.resourceTypes ?? SignedResourceTypes.O,
         })
       })
       .apply(result => result.accountSasToken)
