@@ -139,9 +139,10 @@ describe('TestAzureStorageConstruct', () => {
           stack.construct.storageAccount.name,
           stack.construct.storageAccount.location,
           stack.construct.storageAccount.sku,
+          stack.construct.storageAccount.minimumTlsVersion,
           stack.construct.storageAccount.tags,
         ])
-        .apply(([id, urn, name, location, sku, tags]) => {
+        .apply(([id, urn, name, location, sku, minimumTlsVersion, tags]) => {
           expect(id).toEqual('test-storage-account-dev-sa-id')
           expect(urn).toEqual(
             'urn:pulumi:stack::project::construct:test-common-stack$azure-native:storage:StorageAccount::test-storage-account-dev-sa'
@@ -149,6 +150,7 @@ describe('TestAzureStorageConstruct', () => {
           expect(name).toEqual('teststorageaccountdev')
           expect(location).toEqual('eastus')
           expect(sku).toEqual({ name: 'Standard_LRS' })
+          expect(minimumTlsVersion).toEqual('TLS1_2')
           expect(tags?.environment).toEqual('dev')
         })
     )
