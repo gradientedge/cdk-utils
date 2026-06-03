@@ -1,4 +1,4 @@
-import { Blob, BlobContainer, MinimumTlsVersion, StorageAccount } from '@pulumi/azure-native/storage/index.js'
+import { Blob, BlobContainer, StorageAccount } from '@pulumi/azure-native/storage/index.js'
 import * as pulumi from '@pulumi/pulumi'
 import { outputToPromise } from '../helpers.js'
 import {
@@ -150,7 +150,7 @@ describe('TestAzureStorageConstruct', () => {
           expect(name).toEqual('teststorageaccountdev')
           expect(location).toEqual('eastus')
           expect(sku).toEqual({ name: 'Standard_LRS' })
-          expect(minimumTlsVersion).toEqual(MinimumTlsVersion.TLS1_2)
+          expect(minimumTlsVersion).toEqual('TLS1_2')
           expect(tags?.environment).toEqual('dev')
         })
     )
