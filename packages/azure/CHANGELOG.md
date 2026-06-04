@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.45.1
+
+### Patch Changes
+
+- [#1075](https://github.com/gradientedge/cdk-utils/pull/1075) [`4be4c63`](https://github.com/gradientedge/cdk-utils/commit/4be4c631c60d097fbe70b5ce86fa976b01f3c906) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - Update storage account and sas token properties
+
 ## 2.45.0
 
 ### Minor Changes
