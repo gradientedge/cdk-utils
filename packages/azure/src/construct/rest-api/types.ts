@@ -31,7 +31,8 @@ export interface AzureRestApiProps extends CommonAzureStackProps {
   /** API Management service properties */
   apiManagement: ApiManagementProps
   /** API diagnostic properties for logging */
-  apiManagementDiagnostic: ApiDiagnosticProps
+  apiManagementDiagnosticAppInsights: ApiDiagnosticProps
+  apiManagementDiagnosticAzMonitor: ApiDiagnosticProps
   /** Monitor diagnostic settings for the API Management service */
   apiManagementDiagnosticSettings: MonitorDiagnosticSettingProps
 }
