@@ -21,5 +21,3 @@ allowBuilds:
   esbuild: false
   protobufjs: false
   unrs-resolver: false
-minimumReleaseAgeExclude:
-  - tmp@0.2.6
