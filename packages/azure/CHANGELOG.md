@@ -1,5 +1,13 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.46.1
+
+### Patch Changes
+
+- [#1079](https://github.com/gradientedge/cdk-utils/pull/1079) [`92bf304`](https://github.com/gradientedge/cdk-utils/commit/92bf304fe45cd4b4611ca6e073a52200dcf06f9c) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - Updating Azure flex consumption function deffault memory
+
+- [#1079](https://github.com/gradientedge/cdk-utils/pull/1079) [`92bf304`](https://github.com/gradientedge/cdk-utils/commit/92bf304fe45cd4b4611ca6e073a52200dcf06f9c) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - Update dependencies when creating API Management API's
+
 ## 2.46.0
 
 ### Minor Changes
