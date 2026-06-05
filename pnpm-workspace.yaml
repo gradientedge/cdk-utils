@@ -7,8 +7,6 @@ overrides:
 minimumReleaseAge: 10080
 autoInstallPeers: true
 blockExoticSubdeps: true
-dedupeInjectedDeps: true
-injectWorkspacePackages: true
 linkWorkspacePackages: true
 optimisticRepeatInstall: false
 preferWorkspacePackages: true

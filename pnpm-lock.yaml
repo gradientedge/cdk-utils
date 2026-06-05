@@ -3,7 +3,6 @@ lockfileVersion: '9.0'
 settings:
   autoInstallPeers: true
   excludeLinksFromLockfile: false
-  injectWorkspacePackages: true
 
 overrides:
   protobufjs: 8.3.0
@@ -130,7 +129,7 @@ importers:
         version: 3.973.9
       '@gradientedge/cdk-utils-common':
         specifier: workspace:*
-        version: file:packages/common(constructs@10.6.0)
+        version: link:../common
       '@types/lodash':
         specifier: 4.17.24
         version: 4.17.24
@@ -157,7 +156,7 @@ importers:
     dependencies:
       '@gradientedge/cdk-utils-common':
         specifier: workspace:*
-        version: file:packages/common(constructs@10.6.0)
+        version: link:../common
       '@pulumi/archive':
         specifier: 0.5.0
         version: 0.5.0(ts-node@10.9.2(@types/node@25.9.1)(typescript@6.0.3))(typescript@6.0.3)
@@ -190,22 +189,22 @@ importers:
     dependencies:
       '@gradientedge/cdk-utils-aws':
         specifier: workspace:*
-        version: file:packages/aws
+        version: link:../aws
       '@gradientedge/cdk-utils-azure':
         specifier: workspace:*
-        version: file:packages/azure(constructs@10.6.0)(ts-node@10.9.2(@types/node@25.9.1)(typescript@6.0.3))(typescript@6.0.3)
+        version: link:../azure
       '@gradientedge/cdk-utils-cloudflare':
         specifier: workspace:*
-        version: file:packages/cloudflare(constructs@10.6.0)(ts-node@10.9.2(@types/node@25.9.1)(typescript@6.0.3))(typescript@6.0.3)
+        version: link:../cloudflare
       '@gradientedge/cdk-utils-common':
         specifier: workspace:*
-        version: file:packages/common(constructs@10.6.0)
+        version: link:../common
 
   packages/cloudflare:
     dependencies:
       '@gradientedge/cdk-utils-common':
         specifier: workspace:*
-        version: file:packages/common(constructs@10.6.0)
+        version: link:../common
       '@pulumi/aws':
         specifier: 7.31.0
         version: 7.31.0(ts-node@10.9.2(@types/node@25.9.1)(typescript@6.0.3))(typescript@6.0.3)
@@ -278,16 +277,8 @@ packages:
   '@aws-crypto/util@5.2.0':
     resolution: {integrity: sha512-4RkU9EsI6ZpBve5fseQlGNUWKMa1RLPQ1dnjnQoe07ldfIzcsGb5hC5W0Dm7u423KWzawlrpbjXBrXCEv9zazQ==}
 
-  '@aws-sdk/client-cognito-identity@3.1053.0':
-    resolution: {integrity: sha512-fMwSPTOWcYrKsB1NG1z9uRSLE/GDJR/375tjiAyO6z2UTlpLSuWkfoYx98oMwHaJpqb1fEhtZZQ7o8czblShJQ==}
-    engines: {node: '>=20.0.0'}
-
   '@aws-sdk/client-cognito-identity@3.1056.0':
     resolution: {integrity: sha512-Fywg6+B39uGiYZRYFEsOXbIeHQ8wvtMqlt6FUwWev8N2H+V0pVdgCKn32pSOzud1i17wnm5gpB2VXZEoyVHc2A==}
-    engines: {node: '>=20.0.0'}
-
-  '@aws-sdk/client-secrets-manager@3.1053.0':
-    resolution: {integrity: sha512-nkjzxLmpG+AiEnqEvFg2oCqMYc8zCVKPeICfGPAvOkaoCENdithFpigOwJKoLPRbNsk6lsdVezTL2/bZagCvdg==}
     engines: {node: '>=20.0.0'}
 
   '@aws-sdk/client-secrets-manager@3.1056.0':
@@ -332,10 +323,6 @@ packages:
 
   '@aws-sdk/credential-provider-web-identity@3.972.45':
     resolution: {integrity: sha512-CDhzKdb2onv5bpnjn/acgdNmJOQthPDLsPizU7rZflsEcgMMp8Mlri+U5hdxf8ldvZJpvM3vLU6D56vfJm5AMQ==}
-    engines: {node: '>=20.0.0'}
-
-  '@aws-sdk/credential-providers@3.1053.0':
-    resolution: {integrity: sha512-jMzNBhYIIzaKiVOFndhyWSvEIosiU/zSxgcOaGXrHGcwlRXcFgTgZEcOFL504hxg4BdrrAIVdGw55Zk9zMhs7g==}
     engines: {node: '>=20.0.0'}
 
   '@aws-sdk/credential-providers@3.1056.0':
@@ -755,20 +742,6 @@ packages:
   '@gerrit0/mini-shiki@3.23.0':
     resolution: {integrity: sha512-bEMORlG0cqdjVyCEuU0cDQbORWX+kYCeo0kV1lbxF5bt4r7SID2l9bqsxJEM0zndaxpOUT7riCyIVEuqq/Ynxg==}
 
-  '@gradientedge/cdk-utils-aws@file:packages/aws':
-    resolution: {directory: packages/aws, type: directory}
-
-  '@gradientedge/cdk-utils-azure@file:packages/azure':
-    resolution: {directory: packages/azure, type: directory}
-
-  '@gradientedge/cdk-utils-cloudflare@file:packages/cloudflare':
-    resolution: {directory: packages/cloudflare, type: directory}
-
-  '@gradientedge/cdk-utils-common@file:packages/common':
-    resolution: {directory: packages/common, type: directory}
-    peerDependencies:
-      constructs: ^10.6.0
-
   '@grpc/grpc-js@1.14.4':
     resolution: {integrity: sha512-k9Dj3DV/itK9D06Y8f190Qgop7/Ui+D0njFV3LHMPwPT75DpXLQohE9Wmz0QElrJnzsjB7KPWiKJbOl7IPDArQ==}
     engines: {node: '>=12.10.0'}
@@ -1036,14 +1009,8 @@ packages:
   '@pulumi/archive@0.5.0':
     resolution: {integrity: sha512-zugbt5eNAAke2ThuP4QQXLSelJUhM0i8PRthKiT6w9Fv/s26XTePXDD2kI3j7rHjJbMvBQC4FBmj4EqABWoORw==}
 
-  '@pulumi/aws@7.30.0':
-    resolution: {integrity: sha512-R1CnPcGD/ECRj/JZw2N+MLKwhKkm0C8aF+S5arBXf1j85qb+67lg+E2skgR2GtAIj6PJ1Qy8usEx+4ZlVeit7Q==}
-
   '@pulumi/aws@7.31.0':
     resolution: {integrity: sha512-DZlVp71B6PmLVA88EMI0nDeSUjBwYVlF/TP9l0hrGKxPXeUIf4UmnvxOx4G3+pK5IpvZN6BsUQy+bKdu0dtvkw==}
-
-  '@pulumi/azure-native@3.18.0':
-    resolution: {integrity: sha512-Kv50uw442FfExUP/Za9PXBWvzqINvR9iHvLoI2LAl8ZfT9UmDuWJO+CNwVJv2ZRSI33amqnvQN+bzGPTrZH6ZQ==}
 
   '@pulumi/azure-native@3.19.0':
     resolution: {integrity: sha512-ucHbfBz18VblvCe36XqLyR4ofFoPvNYYhC8oaoHKQuu9xQuFCbGGLYG9ptDvVapUNztcxcqIvz/8nD7oxUHyag==}
@@ -1056,18 +1023,6 @@ packages:
 
   '@pulumi/command@1.2.1':
     resolution: {integrity: sha512-mutNDIUYP67yCBYOVIidQyxuTwZDY9v/sx9EGbgIv4PXfyfolOKGgGLeoHEbI1lxRwaw2wbTZ3VNIynDnA5VKA==}
-
-  '@pulumi/pulumi@3.243.0':
-    resolution: {integrity: sha512-KRIBErgCj9+gsEG7fOo3xRvvhq3VGw8gnzVpbFiyW2Zqr84MCIKDDVmj4MZDt/61KOn3OapI4ia1/6dSg3qwzQ==}
-    engines: {node: '>=20'}
-    peerDependencies:
-      ts-node: '>= 7.0.1 < 12'
-      typescript: '>= 3.8.3 < 7'
-    peerDependenciesMeta:
-      ts-node:
-        optional: true
-      typescript:
-        optional: true
 
   '@pulumi/pulumi@3.244.0':
     resolution: {integrity: sha512-vJnzsxPalz0mtatiheaVvZmImiBIufaPyXRpfABLM8l6Q/sQJHp/BDdX359XeAdxg1uuNTAxIQEgoIDjQYKlMg==}
@@ -3476,33 +3431,7 @@ snapshots:
       '@smithy/util-utf8': 2.3.0
       tslib: 2.8.1
 
-  '@aws-sdk/client-cognito-identity@3.1053.0':
-    dependencies:
-      '@aws-crypto/sha256-browser': 5.2.0
-      '@aws-crypto/sha256-js': 5.2.0
-      '@aws-sdk/core': 3.974.15
-      '@aws-sdk/credential-provider-node': 3.972.46
-      '@aws-sdk/types': 3.973.9
-      '@smithy/core': 3.24.5
-      '@smithy/fetch-http-handler': 5.4.5
-      '@smithy/node-http-handler': 4.7.5
-      '@smithy/types': 4.14.2
-      tslib: 2.8.1
-
   '@aws-sdk/client-cognito-identity@3.1056.0':
-    dependencies:
-      '@aws-crypto/sha256-browser': 5.2.0
-      '@aws-crypto/sha256-js': 5.2.0
-      '@aws-sdk/core': 3.974.15
-      '@aws-sdk/credential-provider-node': 3.972.46
-      '@aws-sdk/types': 3.973.9
-      '@smithy/core': 3.24.5
-      '@smithy/fetch-http-handler': 5.4.5
-      '@smithy/node-http-handler': 4.7.5
-      '@smithy/types': 4.14.2
-      tslib: 2.8.1
-
-  '@aws-sdk/client-secrets-manager@3.1053.0':
     dependencies:
       '@aws-crypto/sha256-browser': 5.2.0
       '@aws-crypto/sha256-js': 5.2.0
@@ -3628,26 +3557,6 @@ snapshots:
       '@aws-sdk/nested-clients': 3.997.13
       '@aws-sdk/types': 3.973.9
       '@smithy/core': 3.24.5
-      '@smithy/types': 4.14.2
-      tslib: 2.8.1
-
-  '@aws-sdk/credential-providers@3.1053.0':
-    dependencies:
-      '@aws-sdk/client-cognito-identity': 3.1053.0
-      '@aws-sdk/core': 3.974.15
-      '@aws-sdk/credential-provider-cognito-identity': 3.972.38
-      '@aws-sdk/credential-provider-env': 3.972.41
-      '@aws-sdk/credential-provider-http': 3.972.43
-      '@aws-sdk/credential-provider-ini': 3.972.45
-      '@aws-sdk/credential-provider-login': 3.972.45
-      '@aws-sdk/credential-provider-node': 3.972.46
-      '@aws-sdk/credential-provider-process': 3.972.41
-      '@aws-sdk/credential-provider-sso': 3.972.45
-      '@aws-sdk/credential-provider-web-identity': 3.972.45
-      '@aws-sdk/nested-clients': 3.997.13
-      '@aws-sdk/types': 3.973.9
-      '@smithy/core': 3.24.5
-      '@smithy/credential-provider-imds': 4.3.5
       '@smithy/types': 4.14.2
       tslib: 2.8.1
 
@@ -4162,62 +4071,6 @@ snapshots:
       '@shikijs/types': 3.23.0
       '@shikijs/vscode-textmate': 10.0.2
 
-  '@gradientedge/cdk-utils-aws@file:packages/aws':
-    dependencies:
-      '@aws-sdk/client-secrets-manager': 3.1053.0
-      '@aws-sdk/credential-providers': 3.1053.0
-      '@aws-sdk/types': 3.973.9
-      '@gradientedge/cdk-utils-common': file:packages/common(constructs@10.6.0)
-      '@types/lodash': 4.17.24
-      app-root-path: 3.1.0
-      aws-cdk-lib: 2.257.0(constructs@10.6.0)
-      constructs: 10.6.0
-      lodash: 4.18.1
-      moment: 2.30.1
-      uuid: 14.0.0
-
-  '@gradientedge/cdk-utils-azure@file:packages/azure(constructs@10.6.0)(ts-node@10.9.2(@types/node@25.9.1)(typescript@6.0.3))(typescript@6.0.3)':
-    dependencies:
-      '@gradientedge/cdk-utils-common': file:packages/common(constructs@10.6.0)
-      '@pulumi/archive': 0.5.0(ts-node@10.9.2(@types/node@25.9.1)(typescript@6.0.3))(typescript@6.0.3)
-      '@pulumi/azure-native': 3.18.0(ts-node@10.9.2(@types/node@25.9.1)(typescript@6.0.3))(typescript@6.0.3)
-      '@pulumi/azuread': 6.9.1(ts-node@10.9.2(@types/node@25.9.1)(typescript@6.0.3))(typescript@6.0.3)
-      '@pulumi/pulumi': 3.243.0(ts-node@10.9.2(@types/node@25.9.1)(typescript@6.0.3))(typescript@6.0.3)
-      '@types/lodash': 4.17.24
-      app-root-path: 3.1.0
-      lodash: 4.18.1
-      uuid: 14.0.0
-      yaml: 2.9.0
-    transitivePeerDependencies:
-      - constructs
-      - supports-color
-      - ts-node
-      - typescript
-
-  '@gradientedge/cdk-utils-cloudflare@file:packages/cloudflare(constructs@10.6.0)(ts-node@10.9.2(@types/node@25.9.1)(typescript@6.0.3))(typescript@6.0.3)':
-    dependencies:
-      '@gradientedge/cdk-utils-common': file:packages/common(constructs@10.6.0)
-      '@pulumi/aws': 7.30.0(ts-node@10.9.2(@types/node@25.9.1)(typescript@6.0.3))(typescript@6.0.3)
-      '@pulumi/azure-native': 3.18.0(ts-node@10.9.2(@types/node@25.9.1)(typescript@6.0.3))(typescript@6.0.3)
-      '@pulumi/cloudflare': 6.17.0(ts-node@10.9.2(@types/node@25.9.1)(typescript@6.0.3))(typescript@6.0.3)
-      '@pulumi/command': 1.2.1(ts-node@10.9.2(@types/node@25.9.1)(typescript@6.0.3))(typescript@6.0.3)
-      '@pulumi/pulumi': 3.243.0(ts-node@10.9.2(@types/node@25.9.1)(typescript@6.0.3))(typescript@6.0.3)
-      '@pulumi/std': 2.3.2(ts-node@10.9.2(@types/node@25.9.1)(typescript@6.0.3))(typescript@6.0.3)
-      '@types/lodash': 4.17.24
-      app-root-path: 3.1.0
-      lodash: 4.18.1
-    transitivePeerDependencies:
-      - constructs
-      - supports-color
-      - ts-node
-      - typescript
-
-  '@gradientedge/cdk-utils-common@file:packages/common(constructs@10.6.0)':
-    dependencies:
-      '@types/lodash': 4.17.24
-      constructs: 10.6.0
-      lodash: 4.18.1
-
   '@grpc/grpc-js@1.14.4':
     dependencies:
       '@grpc/proto-loader': 0.8.1
@@ -4571,27 +4424,10 @@ snapshots:
       - ts-node
       - typescript
 
-  '@pulumi/aws@7.30.0(ts-node@10.9.2(@types/node@25.9.1)(typescript@6.0.3))(typescript@6.0.3)':
-    dependencies:
-      '@pulumi/pulumi': 3.243.0(ts-node@10.9.2(@types/node@25.9.1)(typescript@6.0.3))(typescript@6.0.3)
-      mime: 2.6.0
-    transitivePeerDependencies:
-      - supports-color
-      - ts-node
-      - typescript
-
   '@pulumi/aws@7.31.0(ts-node@10.9.2(@types/node@25.9.1)(typescript@6.0.3))(typescript@6.0.3)':
     dependencies:
       '@pulumi/pulumi': 3.244.0(ts-node@10.9.2(@types/node@25.9.1)(typescript@6.0.3))(typescript@6.0.3)
       mime: 2.6.0
-    transitivePeerDependencies:
-      - supports-color
-      - ts-node
-      - typescript
-
-  '@pulumi/azure-native@3.18.0(ts-node@10.9.2(@types/node@25.9.1)(typescript@6.0.3))(typescript@6.0.3)':
-    dependencies:
-      '@pulumi/pulumi': 3.243.0(ts-node@10.9.2(@types/node@25.9.1)(typescript@6.0.3))(typescript@6.0.3)
     transitivePeerDependencies:
       - supports-color
       - ts-node
@@ -4628,41 +4464,6 @@ snapshots:
       - supports-color
       - ts-node
       - typescript
-
-  '@pulumi/pulumi@3.243.0(ts-node@10.9.2(@types/node@25.9.1)(typescript@6.0.3))(typescript@6.0.3)':
-    dependencies:
-      '@grpc/grpc-js': 1.14.4
-      '@logdna/tail-file': 2.2.0
-      '@npmcli/arborist': 9.7.0
-      '@opentelemetry/api': 1.9.1
-      '@opentelemetry/exporter-trace-otlp-grpc': 0.57.2(@opentelemetry/api@1.9.1)
-      '@opentelemetry/exporter-zipkin': 1.30.1(@opentelemetry/api@1.9.1)
-      '@opentelemetry/instrumentation': 0.57.2(@opentelemetry/api@1.9.1)
-      '@opentelemetry/instrumentation-grpc': 0.57.2(@opentelemetry/api@1.9.1)
-      '@opentelemetry/resources': 1.30.1(@opentelemetry/api@1.9.1)
-      '@opentelemetry/sdk-trace-base': 1.30.1(@opentelemetry/api@1.9.1)
-      '@opentelemetry/sdk-trace-node': 1.30.1(@opentelemetry/api@1.9.1)
-      '@types/google-protobuf': 3.15.12
-      '@types/semver': 7.7.1
-      '@types/tmp': 0.2.6
-      execa: 5.1.1
-      fdir: 6.5.0(picomatch@4.0.4)
-      google-protobuf: 3.21.4
-      ini: 2.0.0
-      js-yaml: 3.14.2
-      minimist: 1.2.8
-      normalize-package-data: 6.0.2
-      picomatch: 4.0.4
-      require-from-string: 2.0.2
-      semver: 7.8.1
-      source-map-support: 0.5.21
-      tmp: 0.2.6
-      upath: 1.2.0
-    optionalDependencies:
-      ts-node: 10.9.2(@types/node@25.9.1)(typescript@6.0.3)
-      typescript: 6.0.3
-    transitivePeerDependencies:
-      - supports-color
 
   '@pulumi/pulumi@3.244.0(ts-node@10.9.2(@types/node@25.9.1)(typescript@6.0.3))(typescript@6.0.3)':
     dependencies:
