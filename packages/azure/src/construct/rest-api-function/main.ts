@@ -253,7 +253,8 @@ export class AzureRestApiFunction extends AzureFunctionApp {
         displayName: operation.displayName,
         urlTemplate: operation.urlTemplate,
         templateParameters: operation.templateParameters,
-      }
+      },
+      { dependsOn: [this.api.managementApi] }
     )
   }
 
@@ -289,7 +290,8 @@ export class AzureRestApiFunction extends AzureFunctionApp {
             <base />
           </on-error>
         </policies>`.replace(/\n[ \t]*\n/g, '\n'),
-      }
+      },
+      { dependsOn: [this.api.managementApi] }
     )
   }
 
