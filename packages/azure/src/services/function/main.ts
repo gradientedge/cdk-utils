@@ -258,7 +258,7 @@ export class AzureFunctionManager {
             },
             scaleAndConcurrency: {
               ...props.scaleAndConcurrency,
-              instanceMemoryMB: props.scaleAndConcurrency?.instanceMemoryMB ?? 4096,
+              instanceMemoryMB: props.scaleAndConcurrency?.instanceMemoryMB ?? 2048,
               maximumInstanceCount: props.scaleAndConcurrency?.maximumInstanceCount ?? 40,
             },
             siteUpdateStrategy: {

@@ -366,7 +366,7 @@ describe('TestAzureFunctionConstruct - Default Value Branches', () => {
     expect(resourceArgs.inputs.properties.httpsOnly).toEqual(true)
     expect(resourceArgs.inputs.properties.functionAppConfig.runtime.name).toEqual('node')
     expect(resourceArgs.inputs.properties.functionAppConfig.runtime.version).toEqual('24')
-    expect(resourceArgs.inputs.properties.functionAppConfig.scaleAndConcurrency.instanceMemoryMB).toEqual(4096)
+    expect(resourceArgs.inputs.properties.functionAppConfig.scaleAndConcurrency.instanceMemoryMB).toEqual(2048)
     expect(resourceArgs.inputs.properties.functionAppConfig.scaleAndConcurrency.maximumInstanceCount).toEqual(40)
     expect(resourceArgs.inputs.properties.functionAppConfig.siteUpdateStrategy.type).toEqual('RollingUpdate')
   })
