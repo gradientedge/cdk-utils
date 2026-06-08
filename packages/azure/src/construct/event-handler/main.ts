@@ -260,10 +260,15 @@ export class AzureEventHandler extends AzureFunctionApp {
   }
 
   /**
-   * @summary Method to create diagnostic log settings for the Service Bus namespace
+   * @summary Method to create diagnostic log settings for the Service Bus namespace.
+   *
+   * Diagnostic settings live on the namespace, so the construct only registers them when it owns
+   * the namespace. When the namespace is external (e.g. provisioned by common-regional), its
+   * owner is responsible for diagnostic settings — registering again here would conflict.
    */
   protected createServiceBusDiagnosticLog() {
-    if (this.props.serviceBus?.useExisting) return
+    const useExistingFlags = this.resolveServiceBusUseExisting()
+    if (useExistingFlags.namespace) return
 
     this.monitorManager.createMonitorDiagnosticSettings(this.id, this, {
       name: `${this.id}-servicebus`,
