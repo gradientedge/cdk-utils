@@ -99,10 +99,37 @@ export class AzureEventHandler extends AzureFunctionApp {
   }
 
   /**
+   * @summary Resolve effective `useExisting` flags for the Service Bus namespace and queue.
+   *
+   * Per-resource flags (`namespace.useExisting`, `queue.useExisting`) take precedence over the
+   * deprecated top-level `serviceBus.useExisting`, which is treated as an alias that sets both.
+   * Throws if the invalid combination (namespace.useExisting=false + queue.useExisting=true) is
+   * requested — a queue cannot be looked up under a namespace the construct is about to create.
+   */
+  protected resolveServiceBusUseExisting(): { namespace: boolean; queue: boolean } {
+    // TODO: remove `deprecatedServiceBusUseExisting` and the `?? deprecatedServiceBusUseExisting`
+    //       fallbacks once all callers have migrated to the per-resource flags
+    //       (see EventHandlerServiceBusProps.useExisting in types.ts).
+    const deprecatedServiceBusUseExisting = this.props.serviceBus?.useExisting
+    const namespaceUseExisting = this.props.serviceBus?.namespace?.useExisting
+    const queueUseExisting = this.props.serviceBus?.queue?.useExisting
+    const namespace = namespaceUseExisting ?? deprecatedServiceBusUseExisting ?? false
+    const queue = queueUseExisting ?? deprecatedServiceBusUseExisting ?? false
+    if (!namespace && queue) {
+      throw new Error(
+        `[${this.id}] invalid serviceBus configuration: queue.useExisting=true requires namespace.useExisting=true ` +
+          `(cannot resolve an existing queue under a namespace the construct is creating).`
+      )
+    }
+    return { namespace, queue }
+  }
+
+  /**
    * @summary Method to create the Service Bus namespace
    */
   protected createServiceBusNamespace() {
-    if (this.props.serviceBus?.useExisting && this.props.serviceBus?.namespace?.namespaceName) {
+    const useExistingFlags = this.resolveServiceBusUseExisting()
+    if (useExistingFlags.namespace && this.props.serviceBus?.namespace?.namespaceName) {
       this.serviceBus.namespace = getNamespaceOutput({
         namespaceName: this.props.serviceBus.namespace.namespaceName,
         resourceGroupName: this.props.serviceBus.namespace.resourceGroupName,
@@ -129,8 +156,9 @@ export class AzureEventHandler extends AzureFunctionApp {
    * @summary Method to create the Service Bus queue
    */
   protected createServiceBusQueue() {
+    const useExistingFlags = this.resolveServiceBusUseExisting()
     if (
-      this.props.serviceBus?.useExisting &&
+      useExistingFlags.queue &&
       this.props.serviceBus?.namespace?.namespaceName &&
       this.props.serviceBus?.queue?.queueName
     ) {

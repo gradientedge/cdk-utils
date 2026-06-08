@@ -39,15 +39,50 @@ export interface EventHandlerEventGridSubscription {
 }
 
 /**
- * Properties for configuring the Service Bus integration in the event handler
+ * Properties for configuring the Service Bus namespace inside the event handler.
+ * Wraps {@link ServiceBusNamespaceProps} with a `useExisting` flag controlling
+ * whether the construct creates the namespace or resolves an existing one.
+ * @category Interface
+ */
+export interface EventHandlerServiceBusNamespaceProps extends ServiceBusNamespaceProps {
+  /** When true, resolves an existing namespace via getNamespaceOutput instead of creating one */
+  useExisting?: boolean
+}
+
+/**
+ * Properties for configuring the Service Bus queue inside the event handler.
+ * Wraps {@link ServiceBusQueueProps} with a `useExisting` flag controlling
+ * whether the construct creates the queue or resolves an existing one.
+ * @category Interface
+ */
+export interface EventHandlerServiceBusQueueProps extends ServiceBusQueueProps {
+  /** When true, resolves an existing queue via getQueueOutput instead of creating one */
+  useExisting?: boolean
+}
+
+/**
+ * Properties for configuring the Service Bus integration in the event handler.
+ *
+ * `namespace.useExisting` and `queue.useExisting` are independent. The supported combinations are:
+ * - `namespace.useExisting=false, queue.useExisting=false` — create both (default)
+ * - `namespace.useExisting=true,  queue.useExisting=false` — reuse an existing (e.g. shared) namespace, create a new queue under it
+ * - `namespace.useExisting=true,  queue.useExisting=true`  — reuse both (cross-stack reference to a queue someone else owns)
+ * - `namespace.useExisting=false, queue.useExisting=true`  — invalid; construct throws at construct-time
  * @category Interface
  */
 export interface EventHandlerServiceBusProps {
-  /** Service Bus namespace properties */
-  namespace?: ServiceBusNamespaceProps
-  /** Service Bus queue properties */
-  queue?: ServiceBusQueueProps
-  /** When true, resolves an existing Service Bus instead of creating a new one */
+  /** Service Bus namespace properties (extends {@link ServiceBusNamespaceProps} with `useExisting`) */
+  namespace?: EventHandlerServiceBusNamespaceProps
+  /** Service Bus queue properties (extends {@link ServiceBusQueueProps} with `useExisting`) */
+  queue?: EventHandlerServiceBusQueueProps
+  /**
+   * Convenience alias that sets both `namespace.useExisting` and `queue.useExisting` to the same value.
+   * @deprecated Prefer `namespace.useExisting` and `queue.useExisting` individually. Retained as an alias
+   * so existing callers (e.g. WebhookEventHandler) continue to compile unchanged.
+   * TODO: remove once all callers have migrated to the per-resource flags
+   * as part of the Service Bus namespace consolidation rollout. Also remove the resolution
+   * fallback in `resolveServiceBusUseExisting()` in main.ts.
+   */
   useExisting?: boolean
 }
 
