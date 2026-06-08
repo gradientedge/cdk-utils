@@ -14,8 +14,36 @@ import { AzureFunctionApp } from '../function-app/index.js'
 import { AzureEventHandlerProps, EventHandlerEventGridSubscription, EventHandlerServiceBus } from './types.js'
 
 /**
- * Provides a construct to create and deploy an Azure EventGrid Event Handler with Service Bus integration
+ * Provides a construct to create and deploy an Azure EventGrid Event Handler with Service Bus integration.
+ *
+ * ## Service Bus configuration
+ *
+ * The construct manages a Service Bus namespace and queue. Each can independently be created by the
+ * construct or resolved from existing Azure resources via the `namespace.useExisting` and
+ * `queue.useExisting` flags on {@link EventHandlerServiceBusProps}:
+ *
+ * | `namespace.useExisting` | `queue.useExisting` | Behaviour |
+ * |---|---|---|
+ * | `false` | `false` | Create both — the default. Used by single-purpose stacks that own the whole Service Bus surface. |
+ * | `true`  | `false` | Look up the namespace, create a new queue under it. Use this when one namespace is provisioned by a shared infrastructure stack and multiple event-handler stacks each provision their own queue under it. |
+ * | `true`  | `true`  | Look up both. Cross-stack pattern where the producer/owner of the queue is a different stack (e.g. `WebhookEventHandler` consuming a queue created by `WebhookGateway`). |
+ * | `false` | `true`  | **Invalid** — construct-time error. You cannot resolve an existing queue under a namespace the construct is creating. |
+ *
+ * The top-level `serviceBus.useExisting` flag is retained as a deprecated alias that sets both
+ * per-resource flags to the same value, so existing callers continue to work unchanged.
+ *
+ * ## Authorization and the `EVENT_INGEST_SERVICE_BUS` connection string
+ *
+ * When the construct owns the queue (`queue.useExisting=false`), it provisions a per-queue
+ * authorization rule named `${id}-listen-send` with `Listen + Send` rights, and the function app's
+ * `EVENT_INGEST_SERVICE_BUS` connection string is sourced from that rule. This avoids granting the
+ * function app access to sibling queues when the namespace is shared.
+ *
+ * When the queue is external (`queue.useExisting=true`) the construct does not own auth rules on it
+ * and falls back to reading the namespace-level `RootManageSharedAccessKey` for the connection string.
+ *
  * @example
+ * // Minimal subclass (defaults — both namespace and queue created by the construct):
  * import { AzureEventHandler, AzureEventHandlerProps } from '@gradientedge/cdk-utils'
  *
  * class CustomConstruct extends AzureEventHandler {
@@ -26,6 +54,30 @@ import { AzureEventHandlerProps, EventHandlerEventGridSubscription, EventHandler
  *     this.initResources()
  *   }
  * }
+ *
+ * @example
+ * // Shared-namespace pattern — reuse a namespace provisioned by another stack, create a new
+ * // queue under it. Useful when multiple event handlers should share a single Service Bus namespace.
+ * import * as pulumi from '@pulumi/pulumi'
+ *
+ * const sharedInfraStack = new pulumi.StackReference('shared-infra')
+ * const sharedNamespace = sharedInfraStack.getOutput('serviceBusNamespace')
+ *
+ * new CustomConstruct('my-event-handler', {
+ *   ...baseProps,
+ *   serviceBus: {
+ *     namespace: {
+ *       useExisting: true,
+ *       namespaceName: sharedNamespace.apply((ns) => ns.name),
+ *       resourceGroupName: sharedNamespace.apply((ns) => ns.resourceGroupName),
+ *     },
+ *     queue: {
+ *       useExisting: false,
+ *       queueName: 'my-event-queue',
+ *     },
+ *   },
+ * })
+ *
  * @category Construct
  */
 export class AzureEventHandler extends AzureFunctionApp {
@@ -276,8 +328,8 @@ export class AzureEventHandler extends AzureFunctionApp {
    * @summary Method to create the EventGrid event subscription with Service Bus queue destination.
    *
    * Skipped when the construct is reusing an existing queue (the producer/owner of that queue owns
-   * the subscription). When the construct creates a new queue — including the consolidation case
-   * of a new queue under an externally-managed namespace — the subscription is wired here.
+   * the subscription). When the construct creates a new queue — including the case where the queue
+   * is new but the parent namespace is externally-managed — the subscription is wired here.
    */
   protected createEventGridEventSubscription() {
     const useExistingFlags = this.resolveServiceBusUseExisting()
@@ -307,8 +359,8 @@ export class AzureEventHandler extends AzureFunctionApp {
    * @summary Method to create diagnostic log settings for the Service Bus namespace.
    *
    * Diagnostic settings live on the namespace, so the construct only registers them when it owns
-   * the namespace. When the namespace is external (e.g. provisioned by common-regional), its
-   * owner is responsible for diagnostic settings — registering again here would conflict.
+   * the namespace. When the namespace is external (e.g. provisioned by a shared infrastructure
+   * stack), its owner is responsible for diagnostic settings — registering again here would conflict.
    */
   protected createServiceBusDiagnosticLog() {
     const useExistingFlags = this.resolveServiceBusUseExisting()

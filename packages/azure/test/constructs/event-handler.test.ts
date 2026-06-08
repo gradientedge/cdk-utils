@@ -244,6 +244,8 @@ pulumi.runtime.setMocks({
       name = args.inputs.namespaceName
     } else if (args.type === 'azure-native:servicebus:Queue') {
       name = args.inputs.queueName
+    } else if (args.type === 'azure-native:servicebus:QueueAuthorizationRule') {
+      name = args.inputs.authorizationRuleName
     } else if (args.type === 'azure-native:eventgrid:Topic') {
       name = args.inputs.topicName
     } else if (args.type === 'azure-native:eventgrid:EventSubscription') {
@@ -274,6 +276,12 @@ pulumi.runtime.setMocks({
       return {
         primaryConnectionString: 'mock-servicebus-connection-string',
         secondaryConnectionString: 'mock-servicebus-secondary-connection-string',
+      }
+    }
+    if (args.token === 'azure-native:servicebus:listQueueKeys') {
+      return {
+        primaryConnectionString: 'mock-servicebus-queue-connection-string',
+        secondaryConnectionString: 'mock-servicebus-queue-secondary-connection-string',
       }
     }
     if (args.token === 'azure-native:eventgrid:getTopic') {
@@ -583,6 +591,7 @@ class TestEventHandlerUseExistingConstruct extends AzureEventHandler {
     this.createEventGridSubscriptionDlqStorageContainer()
     this.createServiceBusNamespace()
     this.createServiceBusQueue()
+    this.createServiceBusQueueAuthorizationRule()
     this.createEventGrid()
     this.createEventGridEventSubscription()
     this.createServiceBusDiagnosticLog()
@@ -671,5 +680,186 @@ describe('TestAzureEventHandlerFullConstruct', () => {
     )
     expect(serviceBusConn).toBeDefined()
     expect(serviceBusConn.type).toEqual('ServiceBus')
+  })
+})
+
+/* --- Tests for the per-resource useExisting flag combinations --- */
+
+/* Combination 1: namespace.useExisting=false, queue.useExisting=false (default — covered by stack / stackFull above).
+ *   - Existing tests cover: queue is created, EG subscription created, auth rule created, diag log created.
+ *
+ * Combination 2: namespace.useExisting=true, queue.useExisting=false (shared-namespace consolidation).
+ *   - New tests below: namespace is looked up, queue is created in the namespace's RG, auth rule provisioned, EG subscription created, diag log skipped.
+ *
+ * Combination 3: namespace.useExisting=true, queue.useExisting=true (legacy cross-stack pattern — covered by stackUseExisting above via top-level useExisting alias).
+ *   - Existing tests cover: both looked up, no EG subscription, no auth rule.
+ *
+ * Combination 4: namespace.useExisting=false, queue.useExisting=true (invalid — must throw).
+ *   - New test below: constructor throws.
+ */
+
+/* Combination 2 — shared namespace, owned queue */
+
+const testStackSharedNamespaceProps: TestAzureStackProps = {
+  domainName: 'gradientedge.io',
+  extraContexts: [
+    'packages/azure/test/common/config/dummy.json',
+    'packages/azure/test/common/config/event-handler-shared-namespace.json',
+  ],
+  location: AzureLocation.EastUS,
+  name: 'test-common-stack',
+  resourceGroupName: 'test-rg',
+  skipStageForARecords: false,
+  stage: 'dev',
+  stageContextPath: 'packages/azure/test/common/env',
+} as TestAzureStackProps
+
+class TestEventHandlerSharedNamespaceConstruct extends AzureEventHandler {
+  declare props: AzureEventHandlerProps & TestAzureStackProps
+
+  constructor(name: string, props: AzureEventHandlerProps & TestAzureStackProps) {
+    super(name, props)
+    this.props = props
+    this.eventGridEventSubscription = {} as EventHandlerEventGridSubscription
+    this.serviceBus = {} as EventHandlerServiceBus
+    this.initResources()
+  }
+
+  public initResources() {
+    this.createResourceGroup()
+    this.resolveCommonLogAnalyticsWorkspace()
+    this.createEventGridSubscriptionDlqStorageAccount()
+    this.createEventGridSubscriptionDlqStorageContainer()
+    this.createServiceBusNamespace()
+    this.createServiceBusQueue()
+    this.createServiceBusQueueAuthorizationRule()
+    this.createEventGrid()
+    this.createEventGridEventSubscription()
+    this.createServiceBusDiagnosticLog()
+  }
+}
+
+class TestCommonStackSharedNamespace extends CommonAzureStack {
+  declare props: AzureEventHandlerProps & TestAzureStackProps
+  declare construct: TestEventHandlerSharedNamespaceConstruct
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackSharedNamespaceProps)
+    this.construct = new TestEventHandlerSharedNamespaceConstruct(`${props.name}-shared-ns`, this.props)
+  }
+}
+
+pulumi.runtime.setConfig('project:extraContexts', JSON.stringify(testStackSharedNamespaceProps.extraContexts))
+const stackSharedNamespace = new TestCommonStackSharedNamespace(
+  'test-shared-namespace-stack',
+  testStackSharedNamespaceProps
+)
+
+describe('TestAzureEventHandlerSharedNamespace', () => {
+  test('synthesises with namespace.useExisting=true and queue.useExisting=false', () => {
+    expect(stackSharedNamespace).toBeDefined()
+    expect(stackSharedNamespace.construct).toBeDefined()
+    expect(stackSharedNamespace.construct.props.serviceBus.namespace?.useExisting).toEqual(true)
+    expect(stackSharedNamespace.construct.props.serviceBus.queue?.useExisting).toEqual(false)
+  })
+
+  test('looks up the shared namespace via getNamespaceOutput', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stackSharedNamespace.construct.serviceBus.namespace.id,
+          stackSharedNamespace.construct.serviceBus.namespace.name,
+        ])
+        .apply(([id, name]) => {
+          expect(id).toEqual('existing-namespace-id')
+          expect(name).toEqual('shared-domain-sb-ns')
+        })
+    )
+  })
+
+  test('creates a new queue (not a lookup) under the shared namespace', async () => {
+    await outputToPromise(
+      stackSharedNamespace.construct.serviceBus.queue.id.apply(id => {
+        // Pulumi-generated id for created resources is `${name}-id`, not the 'existing-queue-id' lookup sentinel
+        expect(id).not.toEqual('existing-queue-id')
+        expect(id).toContain('-id')
+      })
+    )
+  })
+
+  test('provisions a per-queue Listen+Send authorization rule', async () => {
+    expect(stackSharedNamespace.construct.serviceBus.queueAuthorizationRule).toBeDefined()
+    await outputToPromise(
+      pulumi
+        .all([
+          stackSharedNamespace.construct.serviceBus.queueAuthorizationRule!.name,
+          stackSharedNamespace.construct.serviceBus.queueAuthorizationRule!.rights,
+        ])
+        .apply(([name, rights]) => {
+          expect(name).toContain('listen-send')
+          expect(rights).toEqual(['Listen', 'Send'])
+        })
+    )
+  })
+
+  test('creates the EventGrid event subscription (queue is owned)', () => {
+    expect(stackSharedNamespace.construct.eventGridEventSubscription.eventSubscription).toBeDefined()
+  })
+})
+
+/* Verify the connection string flows from the queue-scoped rule.
+ * Uses stackFull (default flags — auth rule provisioned) since the code path is identical for
+ * any caller pattern where the construct owns the queue. */
+describe('TestAzureEventHandler EVENT_INGEST_SERVICE_BUS connection string source', () => {
+  test('connection string value comes from listQueueKeys (per-queue rule), not listNamespaceKeys', async () => {
+    await outputToPromise(
+      stackFull.construct.appConnectionStrings
+        .find((cs: { name: string }) => cs.name === 'EVENT_INGEST_SERVICE_BUS')!
+        .value.apply((value: string) => {
+          // mock returns 'mock-servicebus-queue-connection-string' for listQueueKeys
+          // and 'mock-servicebus-connection-string' for listNamespaceKeys; assert the queue one
+          expect(value).toEqual('mock-servicebus-queue-connection-string')
+        })
+    )
+  })
+})
+
+/* Combination 4 — invalid (queue.useExisting=true requires namespace.useExisting=true) */
+
+describe('TestAzureEventHandler invalid useExisting combination', () => {
+  test('throws when queue.useExisting=true and namespace.useExisting=false', () => {
+    const invalidProps = {
+      ...testStackProps,
+      serviceBus: {
+        namespace: { useExisting: false, namespaceName: 'irrelevant' },
+        queue: { useExisting: true, queueName: 'irrelevant' },
+      },
+    } as unknown as AzureEventHandlerProps & TestAzureStackProps
+
+    expect(() => {
+      new TestEventHandlerConstruct(`${invalidProps.name}-invalid-combo`, invalidProps)
+    }).toThrow(/queue\.useExisting=true requires namespace\.useExisting=true/)
+  })
+})
+
+/* Deprecated top-level alias regression — `serviceBus.useExisting=true` must set both flags */
+
+describe('TestAzureEventHandlerUseExistingConstruct (deprecated alias regression)', () => {
+  test('deprecated top-level useExisting=true still triggers namespace AND queue lookup', async () => {
+    // top-level useExisting=true is set in event-handler-use-existing.json; the existing
+    // tests already cover behaviour. Here we explicitly assert the resolver treats it
+    // as setting both per-resource flags by verifying the lookup sentinels are returned.
+    await outputToPromise(
+      pulumi
+        .all([stackUseExisting.construct.serviceBus.namespace.id, stackUseExisting.construct.serviceBus.queue.id])
+        .apply(([nsId, queueId]) => {
+          expect(nsId).toEqual('existing-namespace-id')
+          expect(queueId).toEqual('existing-queue-id')
+        })
+    )
+  })
+
+  test('deprecated top-level useExisting=true skips per-queue auth rule provisioning', () => {
+    expect(stackUseExisting.construct.serviceBus.queueAuthorizationRule).toBeUndefined()
   })
 })

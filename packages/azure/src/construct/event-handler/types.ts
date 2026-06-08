@@ -85,9 +85,8 @@ export interface EventHandlerServiceBusProps {
    * Convenience alias that sets both `namespace.useExisting` and `queue.useExisting` to the same value.
    * @deprecated Prefer `namespace.useExisting` and `queue.useExisting` individually. Retained as an alias
    * so existing callers (e.g. WebhookEventHandler) continue to compile unchanged.
-   * TODO: remove once all callers have migrated to the per-resource flags
-   * as part of the Service Bus namespace consolidation rollout. Also remove the resolution
-   * fallback in `resolveServiceBusUseExisting()` in main.ts.
+   * TODO: remove once all callers have migrated to the per-resource flags. Also remove the
+   * resolution fallback in `resolveServiceBusUseExisting()` in main.ts.
    */
   useExisting?: boolean
 }
