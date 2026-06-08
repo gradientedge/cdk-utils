@@ -252,7 +252,7 @@ export class AzureRestApi extends CommonAzureConstruct {
    * @summary Method to create the API Management logger with Application Insights integration
    */
   protected createApiManagementLogger() {
-    if (this.props.apiManagement.useExistingApiManagement) return
+    if (this.props.apiManagement.useExistingApiManagement && !this.props.apiManagementDiagnosticAppInsights) return
 
     const apiAppNamedValue = this.apiManagementManager.createNamedValue(`${this.id}-am-nv`, this, {
       displayName: this.applicationInsights.name,
@@ -288,13 +288,27 @@ export class AzureRestApi extends CommonAzureConstruct {
   protected createApiDiagnostic() {
     if (this.props.apiManagement.useExistingApiManagement) return
 
-    this.apiManagementManager.createApiDiagnostic(`${this.id}-all-apis`, this, {
-      ...this.props.apiManagementDiagnostic,
-      apiId: this.api.apim.id,
-      resourceGroupName: this.resourceGroup.name,
-      serviceName: this.api.apim.name,
-      loggerId: this.api.logger.id,
-    })
+    if (this.props.apiManagementDiagnosticAppInsights) {
+      this.apiManagementManager.createApiDiagnostic(`${this.id}-all-apis-app-insights`, this, {
+        ...this.props.apiManagementDiagnosticAppInsights,
+        diagnosticId: 'applicationinsights',
+        apiId: this.api.apim.id,
+        resourceGroupName: this.resourceGroup.name,
+        serviceName: this.api.apim.name,
+        loggerId: this.api.logger.id,
+      })
+    }
+
+    if (this.props.apiManagementDiagnosticAzMonitor) {
+      this.apiManagementManager.createApiDiagnostic(`${this.id}-all-apis-az-monitor`, this, {
+        ...this.props.apiManagementDiagnosticAzMonitor,
+        diagnosticId: 'azuremonitor',
+        apiId: this.api.apim.id,
+        resourceGroupName: this.resourceGroup.name,
+        serviceName: this.api.apim.name,
+        loggerId: pulumi.interpolate`${this.api.apim.id}/loggers/azuremonitor`,
+      })
+    }
   }
 
   /**
