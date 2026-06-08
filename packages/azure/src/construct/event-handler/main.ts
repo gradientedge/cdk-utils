@@ -229,10 +229,15 @@ export class AzureEventHandler extends AzureFunctionApp {
   }
 
   /**
-   * @summary Method to create the EventGrid event subscription with Service Bus queue destination
+   * @summary Method to create the EventGrid event subscription with Service Bus queue destination.
+   *
+   * Skipped when the construct is reusing an existing queue (the producer/owner of that queue owns
+   * the subscription). When the construct creates a new queue — including the consolidation case
+   * of a new queue under an externally-managed namespace — the subscription is wired here.
    */
   protected createEventGridEventSubscription() {
-    if (this.props.serviceBus?.useExisting || !this.eventGridEventSubscription.dlqStorageAccount) return
+    const useExistingFlags = this.resolveServiceBusUseExisting()
+    if (useExistingFlags.queue || !this.eventGridEventSubscription.dlqStorageAccount) return
 
     this.eventGridEventSubscription.eventSubscription = this.eventgridManager.createEventgridSubscription(
       this.id,
