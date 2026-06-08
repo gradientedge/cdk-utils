@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.47.0
+
+### Minor Changes
+
+- [#1081](https://github.com/gradientedge/cdk-utils/pull/1081) [`c3fda51`](https://github.com/gradientedge/cdk-utils/commit/c3fda515685e8f4f51025a27b8fa568bb3bb4a53) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - Add option to create api management logging with app insights and/or az monitor
+
 ## 2.46.1
 
 ### Patch Changes
