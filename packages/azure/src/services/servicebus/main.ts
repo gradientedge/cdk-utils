@@ -3,6 +3,7 @@ import {
   ManagedServiceIdentityType,
   Namespace,
   Queue,
+  QueueAuthorizationRule,
   SkuName,
   Subscription,
   Topic,
@@ -14,6 +15,7 @@ import { CommonAzureConstruct } from '../../common/index.js'
 import {
   ResolveServicebusQueueProps,
   ServiceBusNamespaceProps,
+  ServiceBusQueueAuthorizationRuleProps,
   ServiceBusQueueProps,
   ServiceBusSubscriptionProps,
   ServiceBusTopicProps,
@@ -146,6 +148,25 @@ export class AzureServiceBusManager {
       },
       { parent: scope, ...resourceOptions }
     )
+  }
+
+  /**
+   * @summary Method to create a new service bus queue authorization rule
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props service bus queue authorization rule properties
+   * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native Service Bus Queue Authorization Rule]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/servicebus/queueauthorizationrule/}
+   */
+  public createServiceBusQueueAuthorizationRule(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: ServiceBusQueueAuthorizationRuleProps,
+    resourceOptions?: ResourceOptions
+  ) {
+    if (!props) throw new Error(`Props undefined for ${id}`)
+
+    return new QueueAuthorizationRule(`${id}-sqar`, { ...props }, { parent: scope, ...resourceOptions })
   }
 
   /**

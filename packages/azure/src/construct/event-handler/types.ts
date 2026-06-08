@@ -1,5 +1,11 @@
 import { EventSubscription } from '@pulumi/azure-native/eventgrid/index.js'
-import { GetNamespaceResult, GetQueueResult, Namespace, Queue } from '@pulumi/azure-native/servicebus/index.js'
+import {
+  GetNamespaceResult,
+  GetQueueResult,
+  Namespace,
+  Queue,
+  QueueAuthorizationRule,
+} from '@pulumi/azure-native/servicebus/index.js'
 import { BlobContainer, StorageAccount } from '@pulumi/azure-native/storage/index.js'
 import { Input, Output } from '@pulumi/pulumi'
 
@@ -95,6 +101,13 @@ export interface EventHandlerServiceBus {
   namespace: Namespace | Output<GetNamespaceResult>
   /** The provisioned or resolved Service Bus queue */
   queue: Queue | Output<GetQueueResult>
+  /**
+   * Per-queue authorization rule (Listen+Send) used to build the function app's
+   * `EVENT_INGEST_SERVICE_BUS` connection string. Provisioned only when the
+   * construct owns the queue (`queue.useExisting=false`); undefined when the
+   * queue is external and the connection string falls back to the namespace-level rule.
+   */
+  queueAuthorizationRule?: QueueAuthorizationRule
 }
 
 /**

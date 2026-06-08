@@ -1,6 +1,12 @@
 import { Provider } from '@pulumi/azure-native'
 import { getTopicOutput, GetTopicResult, Topic } from '@pulumi/azure-native/eventgrid/index.js'
-import { getNamespaceOutput, getQueueOutput, listNamespaceKeysOutput } from '@pulumi/azure-native/servicebus/index.js'
+import {
+  getNamespaceOutput,
+  getQueueOutput,
+  listNamespaceKeysOutput,
+  listQueueKeysOutput,
+} from '@pulumi/azure-native/servicebus/index.js'
+import { AccessRights } from '@pulumi/azure-native/types/enums/servicebus/index.js'
 import { Output } from '@pulumi/pulumi'
 
 import { AzureFunctionApp } from '../function-app/index.js'
@@ -56,6 +62,7 @@ export class AzureEventHandler extends AzureFunctionApp {
     this.createEventGridSubscriptionDlqStorageContainer()
     this.createServiceBusNamespace()
     this.createServiceBusQueue()
+    this.createServiceBusQueueAuthorizationRule()
     this.createEventGrid()
     this.createEventGridEventSubscription()
     this.createServiceBusDiagnosticLog()
@@ -185,6 +192,43 @@ export class AzureEventHandler extends AzureFunctionApp {
     this.registerOutputs({
       serviceBusQueueId: this.serviceBus.queue.id,
       serviceBusQueueName: this.serviceBus.queue.name,
+    })
+  }
+
+  /**
+   * @summary Provision a per-queue Listen+Send authorization rule.
+   *
+   * Skipped when the construct does not own the queue (`queue.useExisting=true`) — in that case
+   * the producer/owner of the queue is responsible for its auth rules and the function app's
+   * connection string falls back to the namespace-level root rule in {@link createFunctionAppSiteConfig}.
+   *
+   * Replaces the previous reliance on `RootManageSharedAccessKey`, which grants Listen+Send+Manage
+   * on every queue in the namespace. The new rule narrows the scope to this one queue while keeping
+   * Listen+Send so existing function code can both consume and publish through it (Manage is
+   * intentionally dropped — a runtime app should not create or delete queues).
+   */
+  protected createServiceBusQueueAuthorizationRule() {
+    const useExistingFlags = this.resolveServiceBusUseExisting()
+    if (useExistingFlags.queue) return
+
+    const namespaceResourceGroupName = useExistingFlags.namespace
+      ? (this.props.serviceBus?.namespace?.resourceGroupName ?? this.resourceGroup.name)
+      : this.resourceGroup.name
+
+    this.serviceBus.queueAuthorizationRule = this.serviceBusManager.createServiceBusQueueAuthorizationRule(
+      this.id,
+      this,
+      {
+        authorizationRuleName: `${this.id}-listen-send`,
+        namespaceName: this.serviceBus.namespace.name,
+        queueName: this.serviceBus.queue.name,
+        resourceGroupName: namespaceResourceGroupName,
+        rights: [AccessRights.Listen, AccessRights.Send],
+      }
+    )
+
+    this.registerOutputs({
+      serviceBusQueueAuthorizationRuleId: this.serviceBus.queueAuthorizationRule.id,
     })
   }
 
@@ -321,14 +365,40 @@ export class AzureEventHandler extends AzureFunctionApp {
     this.appConnectionStrings = [
       {
         name: 'EVENT_INGEST_SERVICE_BUS',
-        value: listNamespaceKeysOutput({
-          resourceGroupName: this.props.serviceBus?.namespace?.resourceGroupName ?? this.resourceGroup.name,
-          namespaceName: this.serviceBus.namespace.name,
-          authorizationRuleName: 'RootManageSharedAccessKey',
-        }).primaryConnectionString,
+        value: this.resolveServiceBusConnectionString(),
         type: 'ServiceBus',
       },
     ]
+  }
+
+  /**
+   * @summary Resolve the connection string injected as `EVENT_INGEST_SERVICE_BUS` on the function app.
+   *
+   * - When the construct provisioned the queue itself, read from the per-queue Listen-scoped
+   *   authorization rule created in {@link createServiceBusQueueAuthorizationRule}. Scope is
+   *   limited to this one queue, which is correct for a shared (per-domain) namespace.
+   * - When the queue is external (legacy `WebhookEventHandler` cross-stack pattern), fall back to
+   *   the namespace-level `RootManageSharedAccessKey` — preserves pre-existing behaviour for that
+   *   caller shape since the construct does not own the queue and cannot provision a rule on it.
+   */
+  protected resolveServiceBusConnectionString(): Output<string> {
+    if (this.serviceBus.queueAuthorizationRule) {
+      const useExistingFlags = this.resolveServiceBusUseExisting()
+      const namespaceResourceGroupName = useExistingFlags.namespace
+        ? (this.props.serviceBus?.namespace?.resourceGroupName ?? this.resourceGroup.name)
+        : this.resourceGroup.name
+      return listQueueKeysOutput({
+        resourceGroupName: namespaceResourceGroupName,
+        namespaceName: this.serviceBus.namespace.name,
+        queueName: this.serviceBus.queue.name,
+        authorizationRuleName: this.serviceBus.queueAuthorizationRule.name,
+      }).primaryConnectionString
+    }
+    return listNamespaceKeysOutput({
+      resourceGroupName: this.props.serviceBus?.namespace?.resourceGroupName ?? this.resourceGroup.name,
+      namespaceName: this.serviceBus.namespace.name,
+      authorizationRuleName: 'RootManageSharedAccessKey',
+    }).primaryConnectionString
   }
 
   /**
