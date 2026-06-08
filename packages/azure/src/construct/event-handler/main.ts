@@ -168,11 +168,17 @@ export class AzureEventHandler extends AzureFunctionApp {
         resourceGroupName: this.props.serviceBus.namespace.resourceGroupName,
       })
     } else {
+      // Azure requires the queue's resource group to match its parent namespace's resource group.
+      // When the namespace is external, use the namespace's resource group from props;
+      // otherwise the construct is creating the namespace alongside the queue in the consumer stack's own resource group.
+      const namespaceResourceGroupName = useExistingFlags.namespace
+        ? (this.props.serviceBus?.namespace?.resourceGroupName ?? this.resourceGroup.name)
+        : this.resourceGroup.name
       this.serviceBus.queue = this.serviceBusManager.createServiceBusQueue(this.id, this, {
         ...this.props.serviceBus?.queue,
         queueName: this.props.serviceBus?.queue?.queueName ?? this.id,
         namespaceName: this.serviceBus.namespace.name,
-        resourceGroupName: this.resourceGroup.name,
+        resourceGroupName: namespaceResourceGroupName,
       })
     }
 
