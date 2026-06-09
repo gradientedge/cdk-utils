@@ -18,4 +18,6 @@ export enum RoleDefinitionId {
   STORAGE_BLOB_DATA_CONTRIBUTOR = '/providers/Microsoft.Authorization/roleDefinitions/ba92f5b4-2d11-453d-a403-e96b0029c9fe',
   /** Read, write, and delete Azure Storage table data */
   STORAGE_TABLE_DATA_CONTRIBUTOR = '/providers/Microsoft.Authorization/roleDefinitions/0a9a7e1f-b9d0-4cc4-a60d-0319b160aaa3',
+  /** Full data-plane + management access on Service Bus namespaces (create queues/topics, listKeys on auth rules, send/receive) */
+  AZURE_SERVICE_BUS_DATA_OWNER = '/providers/Microsoft.Authorization/roleDefinitions/090c5cfd-751d-490a-894a-3ce6f1109419',
 }
