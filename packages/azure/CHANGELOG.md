@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.48.0
+
+### Minor Changes
+
+- [#1083](https://github.com/gradientedge/cdk-utils/pull/1083) [`a65174f`](https://github.com/gradientedge/cdk-utils/commit/a65174fdd76b9cce585e0bfc44e56d9498edd418) Thanks [@despock](https://github.com/despock)! - feat: support existing Service Bus namespace with owned queue in event-handler
+
 ## 2.47.0
 
 ### Minor Changes
