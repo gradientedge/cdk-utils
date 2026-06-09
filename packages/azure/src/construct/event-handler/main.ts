@@ -1,6 +1,12 @@
 import { Provider } from '@pulumi/azure-native'
 import { getTopicOutput, GetTopicResult, Topic } from '@pulumi/azure-native/eventgrid/index.js'
-import { getNamespaceOutput, getQueueOutput, listNamespaceKeysOutput } from '@pulumi/azure-native/servicebus/index.js'
+import {
+  getNamespaceOutput,
+  getQueueOutput,
+  listNamespaceKeysOutput,
+  listQueueKeysOutput,
+} from '@pulumi/azure-native/servicebus/index.js'
+import { AccessRights } from '@pulumi/azure-native/types/enums/servicebus/index.js'
 import { Output } from '@pulumi/pulumi'
 
 import { AzureFunctionApp } from '../function-app/index.js'
@@ -8,8 +14,36 @@ import { AzureFunctionApp } from '../function-app/index.js'
 import { AzureEventHandlerProps, EventHandlerEventGridSubscription, EventHandlerServiceBus } from './types.js'
 
 /**
- * Provides a construct to create and deploy an Azure EventGrid Event Handler with Service Bus integration
+ * Provides a construct to create and deploy an Azure EventGrid Event Handler with Service Bus integration.
+ *
+ * ## Service Bus configuration
+ *
+ * The construct manages a Service Bus namespace and queue. Each can independently be created by the
+ * construct or resolved from existing Azure resources via the `namespace.useExisting` and
+ * `queue.useExisting` flags on {@link EventHandlerServiceBusProps}:
+ *
+ * | `namespace.useExisting` | `queue.useExisting` | Behaviour |
+ * |---|---|---|
+ * | `false` | `false` | Create both — the default. Used by single-purpose stacks that own the whole Service Bus surface. |
+ * | `true`  | `false` | Look up the namespace, create a new queue under it. Use this when one namespace is provisioned by a shared infrastructure stack and multiple event-handler stacks each provision their own queue under it. |
+ * | `true`  | `true`  | Look up both. Cross-stack pattern where the producer/owner of the queue is a different stack (e.g. `WebhookEventHandler` consuming a queue created by `WebhookGateway`). |
+ * | `false` | `true`  | **Invalid** — construct-time error. You cannot resolve an existing queue under a namespace the construct is creating. |
+ *
+ * The top-level `serviceBus.useExisting` flag is retained as a deprecated alias that sets both
+ * per-resource flags to the same value, so existing callers continue to work unchanged.
+ *
+ * ## Authorization and the `EVENT_INGEST_SERVICE_BUS` connection string
+ *
+ * When the construct owns the queue (`queue.useExisting=false`), it provisions a per-queue
+ * authorization rule named `${id}-listen-send` with `Listen + Send` rights, and the function app's
+ * `EVENT_INGEST_SERVICE_BUS` connection string is sourced from that rule. This avoids granting the
+ * function app access to sibling queues when the namespace is shared.
+ *
+ * When the queue is external (`queue.useExisting=true`) the construct does not own auth rules on it
+ * and falls back to reading the namespace-level `RootManageSharedAccessKey` for the connection string.
+ *
  * @example
+ * // Minimal subclass (defaults — both namespace and queue created by the construct):
  * import { AzureEventHandler, AzureEventHandlerProps } from '@gradientedge/cdk-utils'
  *
  * class CustomConstruct extends AzureEventHandler {
@@ -20,6 +54,30 @@ import { AzureEventHandlerProps, EventHandlerEventGridSubscription, EventHandler
  *     this.initResources()
  *   }
  * }
+ *
+ * @example
+ * // Shared-namespace pattern — reuse a namespace provisioned by another stack, create a new
+ * // queue under it. Useful when multiple event handlers should share a single Service Bus namespace.
+ * import * as pulumi from '@pulumi/pulumi'
+ *
+ * const sharedInfraStack = new pulumi.StackReference('shared-infra')
+ * const sharedNamespace = sharedInfraStack.getOutput('serviceBusNamespace')
+ *
+ * new CustomConstruct('my-event-handler', {
+ *   ...baseProps,
+ *   serviceBus: {
+ *     namespace: {
+ *       useExisting: true,
+ *       namespaceName: sharedNamespace.apply((ns) => ns.name),
+ *       resourceGroupName: sharedNamespace.apply((ns) => ns.resourceGroupName),
+ *     },
+ *     queue: {
+ *       useExisting: false,
+ *       queueName: 'my-event-queue',
+ *     },
+ *   },
+ * })
+ *
  * @category Construct
  */
 export class AzureEventHandler extends AzureFunctionApp {
@@ -56,6 +114,7 @@ export class AzureEventHandler extends AzureFunctionApp {
     this.createEventGridSubscriptionDlqStorageContainer()
     this.createServiceBusNamespace()
     this.createServiceBusQueue()
+    this.createServiceBusQueueAuthorizationRule()
     this.createEventGrid()
     this.createEventGridEventSubscription()
     this.createServiceBusDiagnosticLog()
@@ -99,10 +158,37 @@ export class AzureEventHandler extends AzureFunctionApp {
   }
 
   /**
+   * @summary Resolve effective `useExisting` flags for the Service Bus namespace and queue.
+   *
+   * Per-resource flags (`namespace.useExisting`, `queue.useExisting`) take precedence over the
+   * deprecated top-level `serviceBus.useExisting`, which is treated as an alias that sets both.
+   * Throws if the invalid combination (namespace.useExisting=false + queue.useExisting=true) is
+   * requested — a queue cannot be looked up under a namespace the construct is about to create.
+   */
+  protected resolveServiceBusUseExisting(): { namespace: boolean; queue: boolean } {
+    // TODO: remove `deprecatedServiceBusUseExisting` and the `?? deprecatedServiceBusUseExisting`
+    //       fallbacks once all callers have migrated to the per-resource flags
+    //       (see EventHandlerServiceBusProps.useExisting in types.ts).
+    const deprecatedServiceBusUseExisting = this.props.serviceBus?.useExisting
+    const namespaceUseExisting = this.props.serviceBus?.namespace?.useExisting
+    const queueUseExisting = this.props.serviceBus?.queue?.useExisting
+    const namespace = namespaceUseExisting ?? deprecatedServiceBusUseExisting ?? false
+    const queue = queueUseExisting ?? deprecatedServiceBusUseExisting ?? false
+    if (!namespace && queue) {
+      throw new Error(
+        `[${this.id}] invalid serviceBus configuration: queue.useExisting=true requires namespace.useExisting=true ` +
+          `(cannot resolve an existing queue under a namespace the construct is creating).`
+      )
+    }
+    return { namespace, queue }
+  }
+
+  /**
    * @summary Method to create the Service Bus namespace
    */
   protected createServiceBusNamespace() {
-    if (this.props.serviceBus?.useExisting && this.props.serviceBus?.namespace?.namespaceName) {
+    const useExistingFlags = this.resolveServiceBusUseExisting()
+    if (useExistingFlags.namespace && this.props.serviceBus?.namespace?.namespaceName) {
       this.serviceBus.namespace = getNamespaceOutput({
         namespaceName: this.props.serviceBus.namespace.namespaceName,
         resourceGroupName: this.props.serviceBus.namespace.resourceGroupName,
@@ -129,8 +215,9 @@ export class AzureEventHandler extends AzureFunctionApp {
    * @summary Method to create the Service Bus queue
    */
   protected createServiceBusQueue() {
+    const useExistingFlags = this.resolveServiceBusUseExisting()
     if (
-      this.props.serviceBus?.useExisting &&
+      useExistingFlags.queue &&
       this.props.serviceBus?.namespace?.namespaceName &&
       this.props.serviceBus?.queue?.queueName
     ) {
@@ -140,17 +227,60 @@ export class AzureEventHandler extends AzureFunctionApp {
         resourceGroupName: this.props.serviceBus.namespace.resourceGroupName,
       })
     } else {
+      // Azure requires the queue's resource group to match its parent namespace's resource group.
+      // When the namespace is external, use the namespace's resource group from props;
+      // otherwise the construct is creating the namespace alongside the queue in the consumer stack's own resource group.
+      const namespaceResourceGroupName = useExistingFlags.namespace
+        ? (this.props.serviceBus?.namespace?.resourceGroupName ?? this.resourceGroup.name)
+        : this.resourceGroup.name
       this.serviceBus.queue = this.serviceBusManager.createServiceBusQueue(this.id, this, {
         ...this.props.serviceBus?.queue,
         queueName: this.props.serviceBus?.queue?.queueName ?? this.id,
         namespaceName: this.serviceBus.namespace.name,
-        resourceGroupName: this.resourceGroup.name,
+        resourceGroupName: namespaceResourceGroupName,
       })
     }
 
     this.registerOutputs({
       serviceBusQueueId: this.serviceBus.queue.id,
       serviceBusQueueName: this.serviceBus.queue.name,
+    })
+  }
+
+  /**
+   * @summary Provision a per-queue Listen+Send authorization rule.
+   *
+   * Skipped when the construct does not own the queue (`queue.useExisting=true`) — in that case
+   * the producer/owner of the queue is responsible for its auth rules and the function app's
+   * connection string falls back to the namespace-level root rule in {@link createFunctionAppSiteConfig}.
+   *
+   * Replaces the previous reliance on `RootManageSharedAccessKey`, which grants Listen+Send+Manage
+   * on every queue in the namespace. The new rule narrows the scope to this one queue while keeping
+   * Listen+Send so existing function code can both consume and publish through it (Manage is
+   * intentionally dropped — a runtime app should not create or delete queues).
+   */
+  protected createServiceBusQueueAuthorizationRule() {
+    const useExistingFlags = this.resolveServiceBusUseExisting()
+    if (useExistingFlags.queue) return
+
+    const namespaceResourceGroupName = useExistingFlags.namespace
+      ? (this.props.serviceBus?.namespace?.resourceGroupName ?? this.resourceGroup.name)
+      : this.resourceGroup.name
+
+    this.serviceBus.queueAuthorizationRule = this.serviceBusManager.createServiceBusQueueAuthorizationRule(
+      this.id,
+      this,
+      {
+        authorizationRuleName: `${this.id}-listen-send`,
+        namespaceName: this.serviceBus.namespace.name,
+        queueName: this.serviceBus.queue.name,
+        resourceGroupName: namespaceResourceGroupName,
+        rights: [AccessRights.Listen, AccessRights.Send],
+      }
+    )
+
+    this.registerOutputs({
+      serviceBusQueueAuthorizationRuleId: this.serviceBus.queueAuthorizationRule.id,
     })
   }
 
@@ -195,10 +325,15 @@ export class AzureEventHandler extends AzureFunctionApp {
   }
 
   /**
-   * @summary Method to create the EventGrid event subscription with Service Bus queue destination
+   * @summary Method to create the EventGrid event subscription with Service Bus queue destination.
+   *
+   * Skipped when the construct is reusing an existing queue (the producer/owner of that queue owns
+   * the subscription). When the construct creates a new queue — including the case where the queue
+   * is new but the parent namespace is externally-managed — the subscription is wired here.
    */
   protected createEventGridEventSubscription() {
-    if (this.props.serviceBus?.useExisting || !this.eventGridEventSubscription.dlqStorageAccount) return
+    const useExistingFlags = this.resolveServiceBusUseExisting()
+    if (useExistingFlags.queue || !this.eventGridEventSubscription.dlqStorageAccount) return
 
     this.eventGridEventSubscription.eventSubscription = this.eventgridManager.createEventgridSubscription(
       this.id,
@@ -221,10 +356,15 @@ export class AzureEventHandler extends AzureFunctionApp {
   }
 
   /**
-   * @summary Method to create diagnostic log settings for the Service Bus namespace
+   * @summary Method to create diagnostic log settings for the Service Bus namespace.
+   *
+   * Diagnostic settings live on the namespace, so the construct only registers them when it owns
+   * the namespace. When the namespace is external (e.g. provisioned by a shared infrastructure
+   * stack), its owner is responsible for diagnostic settings — registering again here would conflict.
    */
   protected createServiceBusDiagnosticLog() {
-    if (this.props.serviceBus?.useExisting) return
+    const useExistingFlags = this.resolveServiceBusUseExisting()
+    if (useExistingFlags.namespace) return
 
     this.monitorManager.createMonitorDiagnosticSettings(this.id, this, {
       name: `${this.id}-servicebus`,
@@ -277,14 +417,40 @@ export class AzureEventHandler extends AzureFunctionApp {
     this.appConnectionStrings = [
       {
         name: 'EVENT_INGEST_SERVICE_BUS',
-        value: listNamespaceKeysOutput({
-          resourceGroupName: this.props.serviceBus?.namespace?.resourceGroupName ?? this.resourceGroup.name,
-          namespaceName: this.serviceBus.namespace.name,
-          authorizationRuleName: 'RootManageSharedAccessKey',
-        }).primaryConnectionString,
+        value: this.resolveServiceBusConnectionString(),
         type: 'ServiceBus',
       },
     ]
+  }
+
+  /**
+   * @summary Resolve the connection string injected as `EVENT_INGEST_SERVICE_BUS` on the function app.
+   *
+   * - When the construct provisioned the queue itself, read from the per-queue Listen-scoped
+   *   authorization rule created in {@link createServiceBusQueueAuthorizationRule}. Scope is
+   *   limited to this one queue, which is correct for a shared (per-domain) namespace.
+   * - When the queue is external (legacy `WebhookEventHandler` cross-stack pattern), fall back to
+   *   the namespace-level `RootManageSharedAccessKey` — preserves pre-existing behaviour for that
+   *   caller shape since the construct does not own the queue and cannot provision a rule on it.
+   */
+  protected resolveServiceBusConnectionString(): Output<string> {
+    if (this.serviceBus.queueAuthorizationRule) {
+      const useExistingFlags = this.resolveServiceBusUseExisting()
+      const namespaceResourceGroupName = useExistingFlags.namespace
+        ? (this.props.serviceBus?.namespace?.resourceGroupName ?? this.resourceGroup.name)
+        : this.resourceGroup.name
+      return listQueueKeysOutput({
+        resourceGroupName: namespaceResourceGroupName,
+        namespaceName: this.serviceBus.namespace.name,
+        queueName: this.serviceBus.queue.name,
+        authorizationRuleName: this.serviceBus.queueAuthorizationRule.name,
+      }).primaryConnectionString
+    }
+    return listNamespaceKeysOutput({
+      resourceGroupName: this.props.serviceBus?.namespace?.resourceGroupName ?? this.resourceGroup.name,
+      namespaceName: this.serviceBus.namespace.name,
+      authorizationRuleName: 'RootManageSharedAccessKey',
+    }).primaryConnectionString
   }
 
   /**

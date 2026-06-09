@@ -2,6 +2,7 @@ import {
   GetQueueOutputArgs,
   NamespaceArgs,
   QueueArgs,
+  QueueAuthorizationRuleArgs,
   SubscriptionArgs,
   TopicArgs,
 } from '@pulumi/azure-native/servicebus/index.js'
@@ -26,6 +27,13 @@ export interface ServiceBusTopicProps extends TopicArgs {}
  * @category Interface
  */
 export interface ServiceBusQueueProps extends QueueArgs {}
+
+/**
+ * Properties for creating a Service Bus queue authorization rule
+ * @see [Pulumi Azure Native Service Bus Queue Authorization Rule]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/servicebus/queueauthorizationrule/}
+ * @category Interface
+ */
+export interface ServiceBusQueueAuthorizationRuleProps extends QueueAuthorizationRuleArgs {}
 
 /**
  * Properties for creating a Service Bus subscription
