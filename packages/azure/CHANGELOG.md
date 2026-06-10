@@ -1,5 +1,13 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.50.0
+
+### Minor Changes
+
+- [#1087](https://github.com/gradientedge/cdk-utils/pull/1087) [`55c8683`](https://github.com/gradientedge/cdk-utils/commit/55c8683e29513e6dbcb47be8b0d89831ded2f578) Thanks [@despock](https://github.com/despock)! - feat: bumping dependencies
+
+- [#1087](https://github.com/gradientedge/cdk-utils/pull/1087) [`d08147e`](https://github.com/gradientedge/cdk-utils/commit/d08147e3ce1f6dbe5458d5c9981d6fcfb9faad78) Thanks [@despock](https://github.com/despock)! - feat: remove deprecated flags
+
 ## 2.49.0
 
 ### Minor Changes

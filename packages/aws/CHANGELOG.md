@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-aws
 
+## 2.16.0
+
+### Minor Changes
+
+- [#1087](https://github.com/gradientedge/cdk-utils/pull/1087) [`55c8683`](https://github.com/gradientedge/cdk-utils/commit/55c8683e29513e6dbcb47be8b0d89831ded2f578) Thanks [@despock](https://github.com/despock)! - feat: bumping dependencies
+
 ## 2.15.0
 
 ### Minor Changes
