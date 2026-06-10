@@ -35,7 +35,7 @@ import { AzureEventHandlerProps, EventHandlerEventGridSubscription, EventHandler
  * ## Authorization and the `EVENT_INGEST_SERVICE_BUS` connection string
  *
  * When the construct owns the queue (`queue.useExisting=false`), it provisions a per-queue
- * authorization rule named `${id}-listen-send` with `Listen + Send` rights, and the function app's
+ * authorization rule named `listen-send` (scoped to the queue) with `Listen + Send` rights, and the function app's
  * `EVENT_INGEST_SERVICE_BUS` connection string is sourced from that rule. This avoids granting the
  * function app access to sibling queues when the namespace is shared.
  *
@@ -267,11 +267,14 @@ export class AzureEventHandler extends AzureFunctionApp {
       ? (this.props.serviceBus?.namespace?.resourceGroupName ?? this.resourceGroup.name)
       : this.resourceGroup.name
 
+    // Azure caps `authorizationRuleName` at 50 chars. The rule's scope is the queue itself
+    // (`…/namespaces/<ns>/queues/<queue>/authorizationRules/<rule>`), so a literal name is
+    // unambiguous and avoids hitting the cap on long stack ids.
     this.serviceBus.queueAuthorizationRule = this.serviceBusManager.createServiceBusQueueAuthorizationRule(
       this.id,
       this,
       {
-        authorizationRuleName: `${this.id}-listen-send`,
+        authorizationRuleName: 'listen-send',
         namespaceName: this.serviceBus.namespace.name,
         queueName: this.serviceBus.queue.name,
         resourceGroupName: namespaceResourceGroupName,
