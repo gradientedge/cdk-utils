@@ -615,7 +615,8 @@ describe('TestAzureEventHandlerUseExistingConstruct', () => {
   test('synthesises with useExisting service bus as expected', () => {
     expect(stackUseExisting).toBeDefined()
     expect(stackUseExisting.construct).toBeDefined()
-    expect(stackUseExisting.construct.props.serviceBus.useExisting).toEqual(true)
+    expect(stackUseExisting.construct.props.serviceBus.namespace?.useExisting).toEqual(true)
+    expect(stackUseExisting.construct.props.serviceBus.queue?.useExisting).toEqual(true)
     expect(stackUseExisting.construct.serviceBus).toBeDefined()
     expect(stackUseExisting.construct.eventGridTopic).toBeDefined()
   })
@@ -691,7 +692,7 @@ describe('TestAzureEventHandlerFullConstruct', () => {
  * Combination 2: namespace.useExisting=true, queue.useExisting=false (shared-namespace consolidation).
  *   - New tests below: namespace is looked up, queue is created in the namespace's RG, auth rule provisioned, EG subscription created, diag log skipped.
  *
- * Combination 3: namespace.useExisting=true, queue.useExisting=true (legacy cross-stack pattern — covered by stackUseExisting above via top-level useExisting alias).
+ * Combination 3: namespace.useExisting=true, queue.useExisting=true (legacy cross-stack pattern — covered by stackUseExisting above).
  *   - Existing tests cover: both looked up, no EG subscription, no auth rule.
  *
  * Combination 4: namespace.useExisting=false, queue.useExisting=true (invalid — must throw).
@@ -839,27 +840,5 @@ describe('TestAzureEventHandler invalid useExisting combination', () => {
     expect(() => {
       new TestEventHandlerConstruct(`${invalidProps.name}-invalid-combo`, invalidProps)
     }).toThrow(/queue\.useExisting=true requires namespace\.useExisting=true/)
-  })
-})
-
-/* Deprecated top-level alias regression — `serviceBus.useExisting=true` must set both flags */
-
-describe('TestAzureEventHandlerUseExistingConstruct (deprecated alias regression)', () => {
-  test('deprecated top-level useExisting=true still triggers namespace AND queue lookup', async () => {
-    // top-level useExisting=true is set in event-handler-use-existing.json; the existing
-    // tests already cover behaviour. Here we explicitly assert the resolver treats it
-    // as setting both per-resource flags by verifying the lookup sentinels are returned.
-    await outputToPromise(
-      pulumi
-        .all([stackUseExisting.construct.serviceBus.namespace.id, stackUseExisting.construct.serviceBus.queue.id])
-        .apply(([nsId, queueId]) => {
-          expect(nsId).toEqual('existing-namespace-id')
-          expect(queueId).toEqual('existing-queue-id')
-        })
-    )
-  })
-
-  test('deprecated top-level useExisting=true skips per-queue auth rule provisioning', () => {
-    expect(stackUseExisting.construct.serviceBus.queueAuthorizationRule).toBeUndefined()
   })
 })

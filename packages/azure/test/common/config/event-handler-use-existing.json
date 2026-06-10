@@ -21,8 +21,8 @@
     }
   },
   "serviceBus": {
-    "useExisting": true,
     "namespace": {
+      "useExisting": true,
       "namespaceName": "test-existing-sb-ns",
       "resourceGroupName": "test-rg-dev",
       "sku": {
@@ -30,6 +30,7 @@
       }
     },
     "queue": {
+      "useExisting": true,
       "queueName": "test-existing-sb-queue",
       "namespaceName": "test-existing-sb-ns-dev",
       "resourceGroupName": "test-rg-dev"

@@ -29,9 +29,6 @@ import { AzureEventHandlerProps, EventHandlerEventGridSubscription, EventHandler
  * | `true`  | `true`  | Look up both. Cross-stack pattern where the producer/owner of the queue is a different stack (e.g. `WebhookEventHandler` consuming a queue created by `WebhookGateway`). |
  * | `false` | `true`  | **Invalid** — construct-time error. You cannot resolve an existing queue under a namespace the construct is creating. |
  *
- * The top-level `serviceBus.useExisting` flag is retained as a deprecated alias that sets both
- * per-resource flags to the same value, so existing callers continue to work unchanged.
- *
  * ## Authorization and the `EVENT_INGEST_SERVICE_BUS` connection string
  *
  * When the construct owns the queue (`queue.useExisting=false`), it provisions a per-queue
@@ -160,20 +157,12 @@ export class AzureEventHandler extends AzureFunctionApp {
   /**
    * @summary Resolve effective `useExisting` flags for the Service Bus namespace and queue.
    *
-   * Per-resource flags (`namespace.useExisting`, `queue.useExisting`) take precedence over the
-   * deprecated top-level `serviceBus.useExisting`, which is treated as an alias that sets both.
    * Throws if the invalid combination (namespace.useExisting=false + queue.useExisting=true) is
    * requested — a queue cannot be looked up under a namespace the construct is about to create.
    */
   protected resolveServiceBusUseExisting(): { namespace: boolean; queue: boolean } {
-    // TODO: remove `deprecatedServiceBusUseExisting` and the `?? deprecatedServiceBusUseExisting`
-    //       fallbacks once all callers have migrated to the per-resource flags
-    //       (see EventHandlerServiceBusProps.useExisting in types.ts).
-    const deprecatedServiceBusUseExisting = this.props.serviceBus?.useExisting
-    const namespaceUseExisting = this.props.serviceBus?.namespace?.useExisting
-    const queueUseExisting = this.props.serviceBus?.queue?.useExisting
-    const namespace = namespaceUseExisting ?? deprecatedServiceBusUseExisting ?? false
-    const queue = queueUseExisting ?? deprecatedServiceBusUseExisting ?? false
+    const namespace = this.props.serviceBus?.namespace?.useExisting ?? false
+    const queue = this.props.serviceBus?.queue?.useExisting ?? false
     if (!namespace && queue) {
       throw new Error(
         `[${this.id}] invalid serviceBus configuration: queue.useExisting=true requires namespace.useExisting=true ` +
