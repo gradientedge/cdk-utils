@@ -1,5 +1,15 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.49.0
+
+### Minor Changes
+
+- [#1085](https://github.com/gradientedge/cdk-utils/pull/1085) [`0d5d242`](https://github.com/gradientedge/cdk-utils/commit/0d5d2423f4c97e1e4be39272ca5569cf73baece8) Thanks [@despock](https://github.com/despock)! - fix: remove dynamic authorizationRuleName
+
+### Patch Changes
+
+- [#1085](https://github.com/gradientedge/cdk-utils/pull/1085) [`c9de912`](https://github.com/gradientedge/cdk-utils/commit/c9de912f523ced455345b488942084f65e26a0b5) Thanks [@despock](https://github.com/despock)! - fix(event-handler): per-queue Service Bus authorization rule name now uses the literal `listen-send` instead of `${this.id}-listen-send`, avoiding Azure's 50-character `authorizationRuleName` cap on long stack ids. The rule is scoped to the queue (`…/queues/<queue>/authorizationRules/listen-send`) so a fixed name is unambiguous. Pulumi resource id is unchanged so state is stable.
+
 ## 2.48.0
 
 ### Minor Changes
