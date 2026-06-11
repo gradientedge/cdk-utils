@@ -101,12 +101,17 @@ export class CloudflarePageManager {
 
     /* use build number from CI environment as the deploy message if available, otherwise fall back to props */
     const message = process.env.BUILD_NUMBER ?? props.message
-    /* execute wrangler CLI command to deploy pages project assets */
+    /* execute wrangler CLI command to deploy pages project assets - credentials are passed via the
+       process environment rather than the command line to keep them out of rendered diffs and ps output */
     return new local.Command(
       `${id}-deploy-${new Date().toISOString()}`,
       {
-        create: pulumi.interpolate`CLOUDFLARE_ACCOUNT_ID=${scope.props.accountId} CLOUDFLARE_API_TOKEN=${scope.props.apiToken} npx wrangler pages deploy ${props.directory} --project-name=${props.projectName} --branch=${props.branch} --commit-message=${message}`,
+        create: pulumi.interpolate`npx wrangler pages deploy ${props.directory} --project-name=${props.projectName} --branch=${props.branch} --commit-message=${message}`,
         dir: '',
+        environment: {
+          CLOUDFLARE_ACCOUNT_ID: scope.props.accountId,
+          CLOUDFLARE_API_TOKEN: scope.props.apiToken,
+        },
       },
       {
         dependsOn: props.dependsOn,

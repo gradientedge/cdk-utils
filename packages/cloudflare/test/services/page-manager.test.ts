@@ -295,6 +295,30 @@ describe('TestCloudflarePagesManager - With explicit zoneId', () => {
   })
 })
 
+describe('TestCloudflarePagesManager - Deploy pages project', () => {
+  test('passes credentials via the process environment, not the command line', async () => {
+    const construct = stack.construct
+    construct.props.apiToken = 'test-api-token'
+    const command = construct.pageManager.deployPagesProject('test-deploy', construct, {
+      branch: 'main',
+      directory: './dist',
+      message: 'test deploy',
+      projectName: 'test-pages-project',
+    })
+    await outputToPromise(
+      pulumi.all([command.create, command.environment]).apply(([create, environment]) => {
+        expect(create).toContain('npx wrangler pages deploy')
+        expect(create).not.toContain('test-api-token')
+        expect(create).not.toContain('CLOUDFLARE_API_TOKEN')
+        expect(environment).toEqual({
+          CLOUDFLARE_ACCOUNT_ID: construct.props.accountId,
+          CLOUDFLARE_API_TOKEN: 'test-api-token',
+        })
+      })
+    )
+  })
+})
+
 describe('TestCloudflarePagesManager - Undefined props', () => {
   test('throws error when pages project props are undefined', () => {
     const construct = stack.construct
