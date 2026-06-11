@@ -1,6 +1,7 @@
 import * as cdk from 'aws-cdk-lib'
 import { Template } from 'aws-cdk-lib/assertions'
 import * as apig from 'aws-cdk-lib/aws-apigateway'
+import * as ec2 from 'aws-cdk-lib/aws-ec2'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import { Construct } from 'constructs'
 import { CommonStack, RestApiLambdaWithCache, RestApiLambdaWithCacheProps } from '../../src/index.js'
@@ -324,7 +325,7 @@ describe('TestRestApiWithCacheLambdaConstruct with existing VPC', () => {
 })
 
 describe('TestRestApiWithCacheLambdaConstruct with IPv6 VPC', () => {
-  test('configures IPv6 security group when isIPV6 is true', () => {
+  test('configures self-referencing security group ingress when isIPV6 is true', () => {
     const ipv6Props = {
       ...testRestApiLambdaWithCacheProps,
       name: 'test-restapi-ipv6',
@@ -394,17 +395,110 @@ describe('TestRestApiWithCacheLambdaConstruct with IPv6 VPC', () => {
     const stackWithIPv6 = new TestStackWithIPv6(appWithIPv6, 'test-restapi-ipv6-stack', ipv6Props)
     const templateWithIPv6 = Template.fromStack(stackWithIPv6)
 
-    // Should create security group with IPv6 rules
+    // Should create security group with a self-referencing ingress rule on the cache port only
     templateWithIPv6.resourceCountIs('AWS::EC2::SecurityGroup', 1)
-    templateWithIPv6.hasResourceProperties('AWS::EC2::SecurityGroup', {
+    templateWithIPv6.resourceCountIs('AWS::EC2::SecurityGroupIngress', 1)
+    templateWithIPv6.hasResourceProperties('AWS::EC2::SecurityGroupIngress', {
+      Description: 'Lambda to ElastiCache',
+      FromPort: 6379,
+      IpProtocol: 'tcp',
+      ToPort: 6379,
+    })
+  })
+})
+
+describe('TestRestApiWithCacheLambdaConstruct with custom ingress rules', () => {
+  test('applies consumer-provided securityGroupIngressRules instead of the default', () => {
+    const customIngressProps = {
+      ...testRestApiLambdaWithCacheProps,
+      name: 'test-restapi-custom-ingress',
+    }
+
+    class TestStackWithCustomIngress extends CommonStack {
+      declare props: RestRestApiLambdaWithCacheProps
+
+      constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
+        super(parent, name, props)
+        this.construct = new TestRestApiWithCustomIngress(this, customIngressProps.name, this.props)
+      }
+
+      protected determineConstructProps(props: cdk.StackProps) {
+        return {
+          ...super.determineConstructProps(props),
+          ...{
+            apiRootPaths: this.node.tryGetContext('apiRootPaths'),
+            apiSubDomain: this.node.tryGetContext('apiSubDomain'),
+            logLevel: this.node.tryGetContext('logLevel'),
+            nodeEnv: this.node.tryGetContext('nodeEnv'),
+            restApiCache: this.node.tryGetContext('testReplicatedElastiCache'),
+            restApiCertificate: this.node.tryGetContext('restApiCertificate'),
+            restApiLambda: this.node.tryGetContext('restApiLambda'),
+            restApiVpc: this.node.tryGetContext('testVpc'),
+            testAttribute: this.node.tryGetContext('testAttribute'),
+            timezone: this.node.tryGetContext('timezone'),
+          },
+        }
+      }
+    }
+
+    class TestRestApiWithCustomIngress extends RestApiLambdaWithCache {
+      declare props: RestRestApiLambdaWithCacheProps
+
+      constructor(parent: Construct, id: string, props: RestRestApiLambdaWithCacheProps) {
+        super(parent, id, props)
+        this.props = props
+        this.id = 'test-custom-ingress'
+        this.props.restApiSource = new lambda.AssetCode('packages/aws/test/common/nodejs/lib')
+        this.props.restApi = {
+          defaultCorsPreflightOptions: {
+            allowOrigins: apig.Cors.ALL_ORIGINS,
+          },
+          deploy: true,
+          deployOptions: {
+            description: `${this.id} - ${this.props.stage} stage`,
+            stageName: this.props.stage,
+          },
+          endpointConfiguration: {
+            types: [apig.EndpointType.REGIONAL],
+          },
+          handler: this.restApiLambdaFunction,
+          proxy: true,
+          restApiName: 'test-lambda-rest-api-custom-ingress',
+        }
+        this.props.securityGroupIngressRules = [
+          {
+            description: 'Bastion access to Redis',
+            peer: ec2.Peer.ipv4('10.0.0.0/16'),
+            port: ec2.Port.tcp(6379),
+          },
+        ]
+        this.initResources()
+      }
+
+      protected createRestApiResources(): void {}
+    }
+
+    const appWithCustomIngress = new cdk.App({ context: customIngressProps })
+    const stackWithCustomIngress = new TestStackWithCustomIngress(
+      appWithCustomIngress,
+      'test-restapi-custom-ingress-stack',
+      customIngressProps
+    )
+    const templateWithCustomIngress = Template.fromStack(stackWithCustomIngress)
+
+    templateWithCustomIngress.hasResourceProperties('AWS::EC2::SecurityGroup', {
       SecurityGroupIngress: [
         {
-          CidrIpv6: '::/0',
-          Description: 'All Traffic',
-          IpProtocol: '-1',
+          CidrIp: '10.0.0.0/16',
+          Description: 'Bastion access to Redis',
+          FromPort: 6379,
+          IpProtocol: 'tcp',
+          ToPort: 6379,
         },
       ],
     })
+    // No default self-referencing rule when custom rules are provided
+    templateWithCustomIngress.resourceCountIs('AWS::EC2::SecurityGroupIngress', 0)
   })
 })
 

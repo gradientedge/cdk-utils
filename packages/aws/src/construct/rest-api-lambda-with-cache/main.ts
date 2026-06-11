@@ -1,5 +1,5 @@
 import { Fn } from 'aws-cdk-lib'
-import { ISecurityGroup, IVpc, Peer, Port, SecurityGroup } from 'aws-cdk-lib/aws-ec2'
+import { ISecurityGroup, IVpc, Port, SecurityGroup } from 'aws-cdk-lib/aws-ec2'
 import { CfnReplicationGroup } from 'aws-cdk-lib/aws-elasticache'
 import { ManagedPolicy } from 'aws-cdk-lib/aws-iam'
 import { Construct } from 'constructs'
@@ -93,17 +93,28 @@ export abstract class RestApiLambdaWithCache extends RestApiLambda {
         Fn.importValue(this.props.securityGroupExportName)
       )
     } else {
-      this.restApiSecurityGroup = new SecurityGroup(this, `${this.id}-security-group-${this.props.stage}`, {
+      const securityGroup = new SecurityGroup(this, `${this.id}-security-group-${this.props.stage}`, {
         securityGroupName: `${this.id}-security-group-${this.props.stage}`,
         vpc: this.restApivpc,
       })
 
-      if (this.props.restApiVpc.isIPV6) {
-        this.restApiSecurityGroup.addIngressRule(Peer.anyIpv6(), Port.allTraffic(), 'All Traffic')
-      } else {
-        this.restApiSecurityGroup.addIngressRule(Peer.anyIpv4(), Port.allTraffic(), 'All Traffic')
+      const ingressRules =
+        this.props.securityGroupIngressRules ??
+        (this.props.restApiCache
+          ? [
+              {
+                description: 'Lambda to ElastiCache',
+                peer: securityGroup,
+                port: Port.tcp(this.props.restApiCache.port ?? 6379),
+              },
+            ]
+          : [])
+
+      for (const rule of ingressRules) {
+        securityGroup.addIngressRule(rule.peer, rule.port, rule.description)
       }
 
+      this.restApiSecurityGroup = securityGroup
       createCfnOutput(`${this.id}-security-group-id`, this, this.restApiSecurityGroup.securityGroupId)
     }
   }
