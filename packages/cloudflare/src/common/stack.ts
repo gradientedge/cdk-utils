@@ -37,7 +37,9 @@ export class CommonCloudflareStack extends ComponentResource {
    * @param options optional Pulumi component resource options
    */
   constructor(name: string, props: CommonCloudflareStackProps, options?: ComponentResourceOptions) {
-    super(`stack:${name}`, name, props, options)
+    /* omit apiToken from the inputs registered with the parent ComponentResource so it is not
+       persisted as a plaintext component input on the stack resource */
+    super(`stack:${name}`, name, _.omit(props, 'apiToken'), options)
 
     /* initialise config */
     this.config = new Config()

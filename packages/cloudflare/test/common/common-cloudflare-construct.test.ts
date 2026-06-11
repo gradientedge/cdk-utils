@@ -15,6 +15,7 @@ interface TestCloudflareStackProps extends CommonCloudflareStackProps {
 
 const testStackProps: any = {
   accountId: '123456789012',
+  apiToken: 'test-api-token-do-not-leak',
   domainName: 'gradientedge.io',
   extraContexts: [
     'packages/cloudflare/test/common/config/dummy.json',
@@ -146,6 +147,16 @@ describe('TestCloudflareCommonConstruct - Stage Utilities', () => {
   test('fullyQualifiedDomainName is set correctly with subDomain', () => {
     // When skipStageForARecords is false, stage is prefixed to domain
     expect(stack.construct.fullyQualifiedDomainName).toBe('dev.gradientedge.io')
+  })
+})
+
+describe('TestCloudflareCommonConstruct - apiToken handling', () => {
+  test('apiToken remains accessible on construct.props for downstream callers', () => {
+    expect(stack.construct.props.apiToken).toEqual('test-api-token-do-not-leak')
+  })
+
+  test('apiToken remains accessible on stack.props for downstream callers', () => {
+    expect(stack.props.apiToken).toEqual('test-api-token-do-not-leak')
   })
 })
 

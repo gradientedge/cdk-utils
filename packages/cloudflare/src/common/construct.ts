@@ -2,6 +2,7 @@ import { isDevStage, isPrdStage, isTestStage, isUatStage } from '@gradientedge/c
 import { Provider as CloudflareProvider } from '@pulumi/cloudflare'
 import * as pulumi from '@pulumi/pulumi'
 import { ComponentResource, ComponentResourceOptions, Config } from '@pulumi/pulumi'
+import { omit } from 'lodash'
 
 import {
   CloudflareAccessManager,
@@ -77,7 +78,9 @@ export class CommonCloudflareConstruct extends ComponentResource {
    * @param options optional Pulumi component resource options
    */
   constructor(name: string, props: CommonCloudflareStackProps, options?: ComponentResourceOptions) {
-    super(`construct:${name}`, name, props, options)
+    /* omit apiToken from the inputs registered with the parent ComponentResource so it is not
+       persisted as a plaintext component input - the provider schema handles the token securely */
+    super(`construct:${name}`, name, omit(props, 'apiToken'), options)
     this.props = props
     this.options = options
     this.id = name
