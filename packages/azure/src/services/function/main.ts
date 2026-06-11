@@ -54,6 +54,7 @@ export class AzureFunctionManager {
         resourceGroupName,
         location: props.location ?? scope.props.location,
         kind: props.kind ?? 'functionapp,linux',
+        httpsOnly: props.httpsOnly ?? true,
         identity: props.identity ?? {
           type: ManagedServiceIdentityType.SystemAssigned,
         },

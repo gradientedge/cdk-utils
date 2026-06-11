@@ -339,6 +339,12 @@ describe('TestAzureFunctionConstruct - Default Value Branches', () => {
     expect(fnArgs.inputs.isDisabled).toEqual(false)
   })
 
+  test('function app defaults httpsOnly to true when not provided', () => {
+    const faArgs = capturedResources['test-minimal-fa-dev-fa']
+    expect(faArgs).toBeDefined()
+    expect(faArgs.inputs.httpsOnly).toEqual(true)
+  })
+
   test('flex consumption app uses default runtime, scaleAndConcurrency, and siteConfig', () => {
     const flexArgs = capturedResources['test-minimal-flex-dev-fc']
     expect(flexArgs).toBeDefined()
@@ -369,6 +375,27 @@ describe('TestAzureFunctionConstruct - Default Value Branches', () => {
     expect(resourceArgs.inputs.properties.functionAppConfig.scaleAndConcurrency.instanceMemoryMB).toEqual(2048)
     expect(resourceArgs.inputs.properties.functionAppConfig.scaleAndConcurrency.maximumInstanceCount).toEqual(40)
     expect(resourceArgs.inputs.properties.functionAppConfig.siteUpdateStrategy.type).toEqual('RollingUpdate')
+  })
+})
+
+describe('TestAzureFunctionConstruct - httpsOnly override', () => {
+  test('function app honours an explicit httpsOnly=false override', async () => {
+    const overrideProps: FunctionAppProps = {
+      name: 'test-fa-http-override',
+      resourceGroupName: 'test-rg-dev',
+      serverFarmId: '/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.Web/serverfarms/test-asp',
+      httpsOnly: false,
+    }
+    const fa = stack.construct.functionManager.createFunctionApp(
+      'test-fa-http-override',
+      stack.construct,
+      overrideProps
+    )
+    await outputToPromise(
+      pulumi.all([fa.httpsOnly]).apply(([httpsOnly]) => {
+        expect(httpsOnly).toEqual(false)
+      })
+    )
   })
 })
 
