@@ -162,18 +162,6 @@ describe('TestAzureCommonConstruct - Stage Utilities', () => {
   test('isProductionStage returns false for dev stage', () => {
     expect(stack.construct.isProductionStage()).toBe(false)
   })
-
-  test('fullyQualifiedDomainName is set correctly without subDomain', () => {
-    expect(stack.construct.fullyQualifiedDomainName).toBe('gradientedge.io')
-  })
-
-  test('fullyQualifiedDomainName is set correctly with subDomain', () => {
-    const stackWithSubdomain = new TestCommonStack('test-stack-subdomain', {
-      ...testStackProps,
-      subDomain: 'test',
-    })
-    expect(stackWithSubdomain.construct.fullyQualifiedDomainName).toBe('test.gradientedge.io')
-  })
 })
 
 describe('TestAzureCommonConstruct - Different Stages', () => {

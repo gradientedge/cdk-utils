@@ -7,7 +7,7 @@ export interface BaseProps {
   /** Enable debug logging output */
   debug?: boolean
   /** The root domain name for the deployment */
-  domainName: string
+  domainName?: string
   /** Additional CDK context file paths to load */
   extraContexts?: string[]
   /** The relative path to region-specific context files */
