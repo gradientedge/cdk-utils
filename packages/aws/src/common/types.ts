@@ -8,6 +8,8 @@ import { BaseProps } from '@gradientedge/cdk-utils-common'
  */
 /** @category Interface */
 export interface CommonStackProps extends BaseProps, StackProps {
+  /** The root domain name for the deployment */
+  domainName: string
   /** The AWS region for resource deployment */
   region: string
   /** Optional project identifier used in resource naming */

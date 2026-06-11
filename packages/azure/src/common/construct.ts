@@ -129,8 +129,6 @@ export class CommonAzureConstruct extends ComponentResource {
     this.securityCentermanager = new AzureSecurityCentermanager()
     this.serviceBusManager = new AzureServiceBusManager()
     this.storageManager = new AzureStorageManager()
-
-    this.determineFullyQualifiedDomain()
   }
 
   /**
@@ -178,15 +176,6 @@ export class CommonAzureConstruct extends ComponentResource {
       workspaceName: this.props.commonLogAnalyticsWorkspace.workspaceName,
       resourceGroupName: this.props.commonLogAnalyticsWorkspace.resourceGroupName,
     })
-  }
-
-  /**
-   * @summary Determine the fully qualified domain name based on domainName & subDomain
-   */
-  protected determineFullyQualifiedDomain(): void {
-    this.fullyQualifiedDomainName = this.props.subDomain
-      ? `${this.props.subDomain}.${this.props.domainName}`
-      : this.props.domainName
   }
 
   /**
