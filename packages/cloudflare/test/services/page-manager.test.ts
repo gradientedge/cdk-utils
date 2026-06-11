@@ -317,6 +317,24 @@ describe('TestCloudflarePagesManager - Deploy pages project', () => {
       })
     )
   })
+
+  test('shell-quotes all command arguments', async () => {
+    const construct = stack.construct
+    const command = construct.pageManager.deployPagesProject('test-deploy-quoting', construct, {
+      branch: 'main; curl script.sh|sh',
+      directory: './dist $(whoami)',
+      message: "it's a `test`",
+      projectName: 'project && rm -rf /',
+    })
+    await outputToPromise(
+      pulumi.all([command.create]).apply(([create]) => {
+        expect(create).toEqual(
+          "npx wrangler pages deploy './dist $(whoami)' --project-name='project && rm -rf /' " +
+            "--branch='main; curl script.sh|sh' --commit-message='it'\\''s a `test`'"
+        )
+      })
+    )
+  })
 })
 
 describe('TestCloudflarePagesManager - Undefined props', () => {

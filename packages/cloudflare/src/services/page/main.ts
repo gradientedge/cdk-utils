@@ -6,6 +6,9 @@ import { CommonCloudflareConstruct } from '../../common/index.js'
 
 import { PageRuleProps, PagesDomainProps, PagesProjectDeployProps, PagesProjectProps } from './types.js'
 
+/* wrap a value in single quotes for safe use in a shell command */
+const shellQuote = (value: string) => `'${value.replace(/'/g, `'\\''`)}'`
+
 /**
  * Provides operations on Cloudflare Pages
  * - A new instance of this class is injected into {@link CommonCloudflareConstruct} constructor.
@@ -106,7 +109,9 @@ export class CloudflarePageManager {
     return new local.Command(
       `${id}-deploy-${new Date().toISOString()}`,
       {
-        create: pulumi.interpolate`npx wrangler pages deploy ${props.directory} --project-name=${props.projectName} --branch=${props.branch} --commit-message=${message}`,
+        create: pulumi.interpolate`npx wrangler pages deploy ${shellQuote(props.directory)} --project-name=${pulumi
+          .output(props.projectName)
+          .apply(shellQuote)} --branch=${shellQuote(props.branch)} --commit-message=${shellQuote(message ?? '')}`,
         dir: '',
         environment: {
           CLOUDFLARE_ACCOUNT_ID: scope.props.accountId,
