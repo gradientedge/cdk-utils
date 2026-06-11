@@ -1,5 +1,16 @@
 # @gradientedge/cdk-utils-cloudflare
 
+## 2.21.0
+
+### Minor Changes
+
+- [#1089](https://github.com/gradientedge/cdk-utils/pull/1089) [`f04944e`](https://github.com/gradientedge/cdk-utils/commit/f04944e5c3c02d37d7fdf134eabf137dd107deaa) Thanks [@despock](https://github.com/despock)! - feat: making domainName optional for Azure
+
+### Patch Changes
+
+- Updated dependencies [[`f04944e`](https://github.com/gradientedge/cdk-utils/commit/f04944e5c3c02d37d7fdf134eabf137dd107deaa)]:
+  - @gradientedge/cdk-utils-common@2.10.0
+
 ## 2.20.0
 
 ### Minor Changes
