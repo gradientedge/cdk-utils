@@ -5,7 +5,7 @@ import {
   ResponseHeadersStrictTransportSecurity,
   ResponseSecurityHeadersBehavior,
 } from 'aws-cdk-lib/aws-cloudfront'
-import { IPrincipal } from 'aws-cdk-lib/aws-iam'
+import { IPrincipal, PolicyStatement } from 'aws-cdk-lib/aws-iam'
 import { FunctionUrlAuthType } from 'aws-cdk-lib/aws-lambda'
 
 import { CommonStackProps } from '../../common/index.js'
@@ -45,6 +45,13 @@ export interface SiteWithLambdaBackendProps extends CommonStackProps {
   siteHealthEndpoint: string
   /** Configuration for the site Lambda function */
   siteLambda: LambdaProps
+  /**
+   * Additional IAM policy statements to attach to the site Lambda execution role.
+   * Defaults to none — the role only has the CloudWatch Logs permissions granted by
+   * `AWSLambdaBasicExecutionRole`. Use this to grant the Lambda access to specific
+   * resources (e.g. invoking a sibling Function URL scoped to its ARN).
+   */
+  siteLambdaAdditionalPolicyStatements?: PolicyStatement[]
   /**
    * Auth type for the site Lambda Function URL.
    * Defaults to `FunctionUrlAuthType.AWS_IAM` so the URL is reachable only via the

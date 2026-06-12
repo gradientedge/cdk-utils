@@ -360,17 +360,15 @@ export class SiteWithLambdaBackend extends CommonConstruct {
   protected createSiteStaticAssetDeployment() {}
 
   /**
-   * @summary Create the IAM policy for the site Lambda function
+   * @summary Create the IAM policy for the site Lambda function.
+   * Defaults to an empty document — CloudWatch Logs access is supplied by
+   * `AWSLambdaBasicExecutionRole` which `createRoleForLambda` attaches separately.
+   * Consumers granting the Lambda access to specific resources should set
+   * `siteLambdaAdditionalPolicyStatements` rather than override this method.
    */
   protected createSiteLambdaPolicy() {
     this.siteLambdaPolicy = new PolicyDocument({
-      statements: [
-        new PolicyStatement({
-          actions: ['lambda:InvokeFunctionUrl'],
-          effect: Effect.ALLOW,
-          resources: ['*'],
-        }),
-      ],
+      statements: [...(this.props.siteLambdaAdditionalPolicyStatements ?? [])],
     })
   }
 

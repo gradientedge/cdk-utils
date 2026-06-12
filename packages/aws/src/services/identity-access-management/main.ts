@@ -581,7 +581,9 @@ export class IamManager {
     const role = new Role(scope, `${id}`, {
       assumedBy: servicePrincipal ?? new ServicePrincipal('lambda.amazonaws.com'),
       description: `Role for ${id} Lambda function`,
-      inlinePolicies: { policy },
+      /* skip the inline policy when empty - CDK rejects inlinePolicies entries
+         without statements */
+      inlinePolicies: policy.isEmpty ? undefined : { policy },
       managedPolicies: [
         ManagedPolicy.fromManagedPolicyArn(
           scope,

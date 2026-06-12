@@ -336,4 +336,29 @@ describe('SiteWithLambdaBackend', () => {
       expect((resource as any).Properties?.Principal).not.toEqual('*')
     }
   })
+
+  test('site Lambda execution role does not include lambda:InvokeFunctionUrl on Resource:*', () => {
+    /* No IAM::Policy attached to a role should carry the wildcard InvokeFunctionUrl
+       grant that previously came from createSiteLambdaPolicy */
+    const policies = template.findResources('AWS::IAM::Policy')
+    for (const [, resource] of Object.entries(policies)) {
+      const statements = (resource as any).Properties?.PolicyDocument?.Statement ?? []
+      for (const statement of statements) {
+        const isWildcardInvoke =
+          (Array.isArray(statement.Action) ? statement.Action : [statement.Action]).includes(
+            'lambda:InvokeFunctionUrl'
+          ) && (Array.isArray(statement.Resource) ? statement.Resource : [statement.Resource]).includes('*')
+        expect(isWildcardInvoke).toBe(false)
+      }
+    }
+  })
+
+  test('site Lambda execution role has no inline policy by default', () => {
+    /* With the wildcard statement removed and no siteLambdaAdditionalPolicyStatements
+       supplied, the role's inline policy block should be elided entirely */
+    const roles = template.findResources('AWS::IAM::Role')
+    const siteRole = Object.entries(roles).find(([logicalId]) => logicalId.toLowerCase().includes('siterole'))
+    expect(siteRole).toBeDefined()
+    expect((siteRole![1] as any).Properties.Policies).toBeUndefined()
+  })
 })
