@@ -280,6 +280,35 @@ describe('TestAzureCosmosDbConstruct - Default Values', () => {
       })
     )
   })
+
+  test('cosmosdb account defaults disableLocalAuth to true when not provided', async () => {
+    await outputToPromise(
+      pulumi.all([minimalCosmosStack.construct.cosmosDbAccount.disableLocalAuth]).apply(([disableLocalAuth]) => {
+        expect(disableLocalAuth).toEqual(true)
+      })
+    )
+  })
+
+  test('cosmosdb account honours an explicit disableLocalAuth=false override', async () => {
+    const overrideProps: CosmosdbAccountProps = {
+      accountName: 'test-cosmos-local-auth-on',
+      resourceGroupName: 'test-rg-dev',
+      databaseAccountOfferType: 'Standard',
+      consistencyPolicy: { defaultConsistencyLevel: 'Session' },
+      locations: [{ locationName: 'eastus', failoverPriority: 0 }],
+      disableLocalAuth: false,
+    }
+    const account = minimalCosmosStack.construct.cosmosDbManager.createCosmosDbAccount(
+      'test-cosmos-local-auth-on',
+      minimalCosmosStack.construct,
+      overrideProps
+    )
+    await outputToPromise(
+      pulumi.all([account.disableLocalAuth]).apply(([disableLocalAuth]) => {
+        expect(disableLocalAuth).toEqual(false)
+      })
+    )
+  })
 })
 
 /* --- Tests for grantSqlRoleDefinitionToAccount --- */
