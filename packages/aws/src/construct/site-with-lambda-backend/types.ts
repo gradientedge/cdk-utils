@@ -5,6 +5,8 @@ import {
   ResponseHeadersStrictTransportSecurity,
   ResponseSecurityHeadersBehavior,
 } from 'aws-cdk-lib/aws-cloudfront'
+import { IPrincipal } from 'aws-cdk-lib/aws-iam'
+import { FunctionUrlAuthType } from 'aws-cdk-lib/aws-lambda'
 
 import { CommonStackProps } from '../../common/index.js'
 import {
@@ -43,6 +45,19 @@ export interface SiteWithLambdaBackendProps extends CommonStackProps {
   siteHealthEndpoint: string
   /** Configuration for the site Lambda function */
   siteLambda: LambdaProps
+  /**
+   * Auth type for the site Lambda Function URL.
+   * Defaults to `FunctionUrlAuthType.AWS_IAM` so the URL is reachable only via the
+   * CloudFront distribution signed through Origin Access Control. Set to
+   * `FunctionUrlAuthType.NONE` to publish a public unauthenticated URL.
+   */
+  siteLambdaUrlAuthType?: FunctionUrlAuthType
+  /**
+   * Principals permitted to invoke the Function URL when `siteLambdaUrlAuthType` is
+   * `FunctionUrlAuthType.NONE`. Defaults to `[new AnyPrincipal()]` for backwards
+   * compatibility. Ignored when the auth type is `AWS_IAM`.
+   */
+  siteLambdaUrlInvokeGrantees?: IPrincipal[]
   /** Configuration for the site log group */
   siteLog: LogProps
   /** Configuration for the S3 bucket used for access logs */

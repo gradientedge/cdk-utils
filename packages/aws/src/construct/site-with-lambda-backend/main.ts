@@ -6,12 +6,13 @@ import {
   Distribution,
   FunctionAssociation,
   FunctionEventType,
+  IOrigin,
   OriginProtocolPolicy,
   OriginRequestPolicy,
   ResponseHeadersPolicy,
 } from 'aws-cdk-lib/aws-cloudfront'
-import { HttpOrigin } from 'aws-cdk-lib/aws-cloudfront-origins'
-import { AnyPrincipal, Effect, PolicyDocument, PolicyStatement, Role } from 'aws-cdk-lib/aws-iam'
+import { FunctionUrlOrigin, HttpOrigin } from 'aws-cdk-lib/aws-cloudfront-origins'
+import { AnyPrincipal, Effect, IPrincipal, PolicyDocument, PolicyStatement, Role } from 'aws-cdk-lib/aws-iam'
 import { AssetCode, Function, FunctionUrl, FunctionUrlAuthType, IFunction, ILayerVersion } from 'aws-cdk-lib/aws-lambda'
 import { IHostedZone } from 'aws-cdk-lib/aws-route53'
 import { IBucket } from 'aws-cdk-lib/aws-s3'
@@ -60,8 +61,8 @@ export class SiteWithLambdaBackend extends CommonConstruct {
   siteSecrets: any
   /** The S3 bucket used for CloudFront access logs */
   siteLogBucket: IBucket
-  /** The HTTP origin backed by the Lambda function URL */
-  siteOrigin: HttpOrigin
+  /** The CloudFront origin backed by the Lambda function URL */
+  siteOrigin: IOrigin
   /** The CloudFront distribution for the site */
   siteDistribution: Distribution
   /** The internal domain name used for Lambda function URL routing */
@@ -323,11 +324,20 @@ export class SiteWithLambdaBackend extends CommonConstruct {
    */
   protected createSiteOrigin() {
     this.createSiteOriginResources()
-    this.siteOrigin = new HttpOrigin(Fn.select(2, Fn.split('/', this.siteLambdaUrl.url)), {
-      httpPort: 443,
-      originId: `${this.id}-server`,
-      protocolPolicy: OriginProtocolPolicy.HTTPS_ONLY,
-    })
+    const authType = this.props.siteLambdaUrlAuthType ?? FunctionUrlAuthType.AWS_IAM
+    if (authType === FunctionUrlAuthType.AWS_IAM) {
+      /* CloudFront signs requests to the Function URL via an automatically-provisioned
+         Origin Access Control. The OAC also attaches a scoped lambda:InvokeFunctionUrl
+         resource policy permitting only cloudfront.amazonaws.com sourced from this
+         distribution ARN. */
+      this.siteOrigin = FunctionUrlOrigin.withOriginAccessControl(this.siteLambdaUrl)
+    } else {
+      this.siteOrigin = new HttpOrigin(Fn.select(2, Fn.split('/', this.siteLambdaUrl.url)), {
+        httpPort: 443,
+        originId: `${this.id}-server`,
+        protocolPolicy: OriginProtocolPolicy.HTTPS_ONLY,
+      })
+    }
   }
 
   /**
@@ -436,26 +446,35 @@ export class SiteWithLambdaBackend extends CommonConstruct {
       : this.siteLambdaFunction
     lambdaFn.node.addDependency(this.siteLambdaFunction)
 
-    /* Explicit dependencies ensure the function and alias exist before the URL is created */
-    this.siteLambdaUrl = lambdaFn.addFunctionUrl({
-      authType: FunctionUrlAuthType.NONE,
-    })
+    /* Explicit dependencies ensure the function and alias exist before the URL is created.
+       Default to AWS_IAM so the URL is reachable only via the CloudFront distribution
+       (signed through Origin Access Control) and not as a public endpoint. */
+    const authType = this.props.siteLambdaUrlAuthType ?? FunctionUrlAuthType.AWS_IAM
+    this.siteLambdaUrl = lambdaFn.addFunctionUrl({ authType })
     this.siteLambdaUrl.node.addDependency(this.siteLambdaFunction)
     this.siteLambdaUrl.node.addDependency(lambdaFn)
 
-    /* Grant public invoke access — the resource-based policy is applied via
-       grantInvokeUrl, restricted by the FunctionUrlAuthType condition */
-    const principal = new AnyPrincipal()
-    principal.addToPolicy(
-      new PolicyStatement({
-        actions: ['lambda:InvokeFunctionUrl'],
-        conditions: { StringEquals: { 'lambda:FunctionUrlAuthType': FunctionUrlAuthType.NONE } },
-        effect: Effect.ALLOW,
-        resources: ['*'],
-      })
-    )
-
-    lambdaFn.grantInvokeUrl({ grantPrincipal: principal })
+    /* When the consumer explicitly opts into a public URL (authType=NONE), preserve the
+       previous behaviour and grant invoke access to the configured grantees
+       (defaulting to AnyPrincipal). When AWS_IAM is in effect, the resource policy is
+       added automatically by FunctionUrlOrigin.withOriginAccessControl, scoped to the
+       distribution ARN. */
+    if (authType === FunctionUrlAuthType.NONE) {
+      const grantees: IPrincipal[] = this.props.siteLambdaUrlInvokeGrantees ?? [new AnyPrincipal()]
+      for (const grantee of grantees) {
+        if (grantee instanceof AnyPrincipal) {
+          grantee.addToPolicy(
+            new PolicyStatement({
+              actions: ['lambda:InvokeFunctionUrl'],
+              conditions: { StringEquals: { 'lambda:FunctionUrlAuthType': FunctionUrlAuthType.NONE } },
+              effect: Effect.ALLOW,
+              resources: ['*'],
+            })
+          )
+        }
+        lambdaFn.grantInvokeUrl({ grantPrincipal: grantee })
+      }
+    }
 
     this.addCfnOutput(`${this.id}-url`, this.siteLambdaUrl.url)
   }

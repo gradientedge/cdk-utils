@@ -9,12 +9,13 @@ import {
   FunctionCode,
   HttpVersion,
   IDistribution,
+  IOrigin,
   IResponseHeadersPolicyRef,
   OriginAccessIdentity,
   PriceClass,
   SecurityPolicyProtocol,
 } from 'aws-cdk-lib/aws-cloudfront'
-import { HttpOrigin, S3BucketOrigin } from 'aws-cdk-lib/aws-cloudfront-origins'
+import { S3BucketOrigin } from 'aws-cdk-lib/aws-cloudfront-origins'
 import { ISecurityGroup, IVpc } from 'aws-cdk-lib/aws-ec2'
 import { IAccessPoint } from 'aws-cdk-lib/aws-efs'
 import { Role } from 'aws-cdk-lib/aws-iam'
@@ -140,7 +141,7 @@ export class CloudFrontManager {
     id: string,
     scope: CommonConstruct,
     props: DistributionProps,
-    origin: HttpOrigin,
+    origin: IOrigin,
     domainNames: string[],
     logBucket?: IBucket,
     certificate?: ICertificate,

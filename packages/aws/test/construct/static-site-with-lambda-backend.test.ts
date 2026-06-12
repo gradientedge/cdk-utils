@@ -124,7 +124,7 @@ describe('SiteWithLambdaBackend', () => {
     template.resourceCountIs('AWS::ApplicationAutoScaling::ScalableTarget', 1)
     template.resourceCountIs('AWS::ApplicationAutoScaling::ScalingPolicy', 1)
     template.resourceCountIs('AWS::Lambda::Url', 1)
-    template.resourceCountIs('AWS::Lambda::Permission', 4)
+    template.resourceCountIs('AWS::Lambda::Permission', 1)
   })
 })
 
@@ -207,7 +207,6 @@ describe('SiteWithLambdaBackend', () => {
           OriginRequestPolicyId: {
             Ref: 'testsitestacktestsitesorp2C35A58F',
           },
-          TargetOriginId: 'test-site-server',
           ViewerProtocolPolicy: 'redirect-to-https',
         },
         Enabled: true,
@@ -223,7 +222,6 @@ describe('SiteWithLambdaBackend', () => {
         Origins: [
           {
             CustomOriginConfig: {
-              HTTPPort: 443,
               OriginProtocolPolicy: 'https-only',
               OriginSSLProtocols: ['TLSv1.2'],
             },
@@ -240,7 +238,6 @@ describe('SiteWithLambdaBackend', () => {
                 },
               ],
             },
-            Id: 'test-site-server',
           },
         ],
         PriceClass: 'PriceClass_All',
@@ -298,12 +295,45 @@ describe('SiteWithLambdaBackend', () => {
 })
 
 describe('SiteWithLambdaBackend', () => {
-  test('provisions cloudfront cache policy as expected', () => {
+  test('provisions lambda function url with AWS_IAM auth by default', () => {
     template.hasResourceProperties('AWS::Lambda::Url', {
-      AuthType: 'NONE',
+      AuthType: 'AWS_IAM',
       TargetFunctionArn: {
         'Fn::Join': ['', [{ 'Fn::GetAtt': ['testsitestacktestsitelambdaC503A7D7', 'Arn'] }, ':latest']],
       },
     })
+  })
+
+  test('provisions a CloudFront origin access control for the function url', () => {
+    template.resourceCountIs('AWS::CloudFront::OriginAccessControl', 1)
+    template.hasResourceProperties('AWS::CloudFront::OriginAccessControl', {
+      OriginAccessControlConfig: {
+        OriginAccessControlOriginType: 'lambda',
+        SigningBehavior: 'always',
+        SigningProtocol: 'sigv4',
+      },
+    })
+  })
+
+  test('grants CloudFront permission to invoke the function url scoped to the distribution', () => {
+    template.hasResourceProperties('AWS::Lambda::Permission', {
+      Action: 'lambda:InvokeFunctionUrl',
+      Principal: 'cloudfront.amazonaws.com',
+      SourceArn: {
+        'Fn::Join': [
+          '',
+          ['arn:', { Ref: 'AWS::Partition' }, ':cloudfront::', { Ref: 'AWS::AccountId' }, ':distribution/', {}],
+        ],
+      },
+    })
+  })
+
+  test('does not grant invoke access to AnyPrincipal when AWS_IAM auth is in effect', () => {
+    /* No resource-based grant for the wildcard principal should exist alongside the
+       CloudFront-scoped Permission */
+    const permissions = template.findResources('AWS::Lambda::Permission')
+    for (const [, resource] of Object.entries(permissions)) {
+      expect((resource as any).Properties?.Principal).not.toEqual('*')
+    }
   })
 })
