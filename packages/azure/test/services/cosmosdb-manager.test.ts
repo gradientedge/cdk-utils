@@ -289,7 +289,9 @@ describe('TestAzureCosmosDbConstruct - Default Values', () => {
     )
   })
 
-  test('cosmosdb account honours an explicit disableLocalAuth=false override', async () => {
+  test('cosmosdb account enforces disableLocalAuth=true even when caller passes false', async () => {
+    /* The construct deliberately hardcodes disableLocalAuth to true so that key-based
+       auth cannot be re-enabled by props — AAD/RBAC is the only supported auth path. */
     const overrideProps: CosmosdbAccountProps = {
       accountName: 'test-cosmos-local-auth-on',
       resourceGroupName: 'test-rg-dev',
@@ -305,7 +307,7 @@ describe('TestAzureCosmosDbConstruct - Default Values', () => {
     )
     await outputToPromise(
       pulumi.all([account.disableLocalAuth]).apply(([disableLocalAuth]) => {
-        expect(disableLocalAuth).toEqual(false)
+        expect(disableLocalAuth).toEqual(true)
       })
     )
   })

@@ -67,7 +67,7 @@ export class AzureCosmosDbManager {
           props.accountName?.toString(),
           scope.props.resourceNameOptions?.cosmosDbAccount
         ),
-        disableLocalAuth: props.disableLocalAuth ?? true,
+        disableLocalAuth: true,
         location: props.location ?? scope.props.location,
         resourceGroupName,
         tags: {
