@@ -6,6 +6,7 @@ import * as lambda from 'aws-cdk-lib/aws-lambda'
 import * as sfn from 'aws-cdk-lib/aws-stepfunctions'
 import { Construct } from 'constructs'
 import { CommonConstruct, CommonStack, CommonStackProps } from '../../src/index.js'
+import { STUB_SECRET_ARN } from '../common/stubs.js'
 
 interface TestStackProps extends CommonStackProps {
   testCluster: any
@@ -127,7 +128,9 @@ class TestCommonConstruct extends CommonConstruct {
     const testCluster = this.ecsManager.createEcsCluster('test-cluster', this, this.props.testCluster, testVpc)
     const testImage = ecs.ContainerImage.fromAsset('packages/aws/test/common/docker')
     const testLogGroup = this.logManager.createLogGroup('test-log-group', this, this.props.testLogGroup)
-    const testPolicy = new iam.PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this)] })
+    const testPolicy = new iam.PolicyDocument({
+      statements: [this.iamManager.statementForReadSecrets(this, [STUB_SECRET_ARN])],
+    })
     const testRole = this.iamManager.createRoleForEcsExecution('test-role', this, testPolicy)
     const testTask = this.ecsManager.createEcsFargateTask(
       'test-task',
@@ -604,7 +607,9 @@ describe('TestEventConstructErrorHandling', () => {
 
       constructor(parent: Construct, name: string, props: TestStackProps) {
         super(parent, name, props)
-        const testPolicy = new iam.PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this)] })
+        const testPolicy = new iam.PolicyDocument({
+          statements: [this.iamManager.statementForReadSecrets(this, [STUB_SECRET_ARN])],
+        })
         const testRole = this.iamManager.createRoleForEcsExecution('test-role-lr-err', this, testPolicy)
         const testLambda = this.lambdaManager.createLambdaFunction(
           'test-lambda-lr-err',
@@ -656,7 +661,9 @@ describe('TestEventConstructErrorHandling', () => {
         )
         const testImage = ecs.ContainerImage.fromAsset('packages/aws/test/common/docker')
         const testLogGroup = this.logManager.createLogGroup('test-log-group-fr-err', this, this.props.testLogGroup)
-        const testPolicy = new iam.PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this)] })
+        const testPolicy = new iam.PolicyDocument({
+          statements: [this.iamManager.statementForReadSecrets(this, [STUB_SECRET_ARN])],
+        })
         const testRole = this.iamManager.createRoleForEcsExecution('test-role-fr-err', this, testPolicy)
         const testTask = this.ecsManager.createEcsFargateTask(
           'test-task-fr-err',
@@ -716,7 +723,9 @@ describe('TestEventConstructErrorHandling', () => {
 
       constructor(parent: Construct, name: string, props: TestStackProps) {
         super(parent, name, props)
-        const testPolicy = new iam.PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this)] })
+        const testPolicy = new iam.PolicyDocument({
+          statements: [this.iamManager.statementForReadSecrets(this, [STUB_SECRET_ARN])],
+        })
         const testRole = this.iamManager.createRoleForEcsExecution('test-role-pipe-err', this, testPolicy)
         const testLambda = this.lambdaManager.createLambdaFunction(
           'test-lambda-pipe-err',
@@ -778,7 +787,9 @@ describe('TestEventConstructErrorHandling', () => {
 
       constructor(parent: Construct, name: string, props: TestStackProps) {
         super(parent, name, props)
-        const testPolicy = new iam.PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this)] })
+        const testPolicy = new iam.PolicyDocument({
+          statements: [this.iamManager.statementForReadSecrets(this, [STUB_SECRET_ARN])],
+        })
         const testRole = this.iamManager.createRoleForEcsExecution('test-role-pn-err', this, testPolicy)
         const testLambda = this.lambdaManager.createLambdaFunction(
           'test-lambda-pn-err',
@@ -825,7 +836,9 @@ describe('TestEventConstructErrorHandling', () => {
 
       constructor(parent: Construct, name: string, props: TestStackProps) {
         super(parent, name, props)
-        const testPolicy = new iam.PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this)] })
+        const testPolicy = new iam.PolicyDocument({
+          statements: [this.iamManager.statementForReadSecrets(this, [STUB_SECRET_ARN])],
+        })
         const testRole = this.iamManager.createRoleForEcsExecution('test-role-ddb-err', this, testPolicy)
         const testLambda = this.lambdaManager.createLambdaFunction(
           'test-lambda-ddb-err',

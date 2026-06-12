@@ -6,6 +6,7 @@ import { AssetCode, IFunction } from 'aws-cdk-lib/aws-lambda'
 import { Chain, Succeed } from 'aws-cdk-lib/aws-stepfunctions'
 import { Construct } from 'constructs'
 import { CommonStack, EventHandler, EventHandlerProps } from '../../src/index.js'
+import { STUB_SECRET_ARN } from '../common/stubs.js'
 
 interface TestStackProps extends EventHandlerProps {
   testLambda: any
@@ -92,7 +93,9 @@ class TestEventHandler extends EventHandler {
   }
 
   public initResources() {
-    const testPolicy = new PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this)] })
+    const testPolicy = new PolicyDocument({
+      statements: [this.iamManager.statementForReadSecrets(this, [STUB_SECRET_ARN])],
+    })
     const testRole = this.iamManager.createRoleForEcsExecution('test-role', this, testPolicy)
     this.testLambda = this.lambdaManager.createLambdaFunction(
       'test-lambda',
@@ -231,7 +234,9 @@ class TestArchiveEventHandler extends EventHandler {
   }
 
   public initResources() {
-    const testPolicy = new PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this)] })
+    const testPolicy = new PolicyDocument({
+      statements: [this.iamManager.statementForReadSecrets(this, [STUB_SECRET_ARN])],
+    })
     const testRole = this.iamManager.createRoleForEcsExecution('test-role', this, testPolicy)
     this.testLambda = this.lambdaManager.createLambdaFunction(
       'test-lambda',
@@ -307,7 +312,9 @@ class TestScheduleEventHandler extends EventHandler {
   }
 
   public initResources() {
-    const testPolicy = new PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this)] })
+    const testPolicy = new PolicyDocument({
+      statements: [this.iamManager.statementForReadSecrets(this, [STUB_SECRET_ARN])],
+    })
     const testRole = this.iamManager.createRoleForEcsExecution('test-role', this, testPolicy)
     this.testLambda = this.lambdaManager.createLambdaFunction(
       'test-lambda',

@@ -225,7 +225,7 @@ export class ApiToEventBridgeTarget extends CommonConstruct {
    */
   protected createApiToEventBridgeTargetPolicy() {
     this.apiToEventBridgeTargetRestApi.policy = new PolicyDocument({
-      statements: [this.iamManager.statementForPutEvents()],
+      statements: [this.iamManager.statementForPutEvents([this.apiEvent.eventBus.eventBusArn])],
     })
   }
 

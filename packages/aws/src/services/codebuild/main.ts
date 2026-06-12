@@ -1,4 +1,4 @@
-import { Duration } from 'aws-cdk-lib'
+import { Duration, Stack } from 'aws-cdk-lib'
 import { BuildSpec, ComputeType, LinuxBuildImage, Project } from 'aws-cdk-lib/aws-codebuild'
 
 import { CommonConstruct } from '../../common/index.js'
@@ -47,6 +47,11 @@ export class CodeBuildManager {
     paths?: string
   ) {
     const invalidationPaths = paths ?? '/*'
+    const stack = Stack.of(scope)
+    const distributionArn = `arn:${stack.partition}:cloudfront::${stack.account}:distribution/${distributionId}`
+    const logGroup = scope.logManager.createLogGroup(`${id}-project-log-group`, scope, {
+      logGroupName: `${id}-cloudfront-invalidation`,
+    })
     return new Project(scope, `${id}-install-deps-project`, {
       buildSpec: BuildSpec.fromObject({
         phases: {
@@ -68,12 +73,10 @@ export class CodeBuildManager {
       logging: {
         cloudWatch: {
           enabled: true,
-          logGroup: scope.logManager.createLogGroup(`${id}-project-log-group`, scope, {
-            logGroupName: `${id}-cloudfront-invalidation`,
-          }),
+          logGroup,
         },
       },
-      role: scope.iamManager.createRoleForCloudfrontInvalidation(id, scope),
+      role: scope.iamManager.createRoleForCloudfrontInvalidation(id, scope, [distributionArn], [logGroup.logGroupArn]),
       timeout: Duration.minutes(5),
     })
   }

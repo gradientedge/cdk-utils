@@ -141,7 +141,9 @@ export abstract class RestApiLambda extends CommonConstruct {
    */
   protected createLambdaPolicy() {
     this.restApiLambdaPolicy = new PolicyDocument({
-      statements: [this.iamManager.statementForCreateAnyLogStream()],
+      /* the function's own log group is already covered by AWSLambdaBasicExecutionRole;
+         wildcard here preserves prior behaviour for caller-supplied log groups */
+      statements: [this.iamManager.statementForCreateAnyLogStream(['*'])],
     })
   }
 

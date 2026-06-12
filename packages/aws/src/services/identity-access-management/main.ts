@@ -40,13 +40,11 @@ export class IamManager {
    * @param scope scope in which this resource is defined
    * @param resourceArns list of ARNs to allow access to
    */
-  public statementForReadSecrets(scope: CommonConstruct, resourceArns?: string[]) {
+  public statementForReadSecrets(scope: CommonConstruct, resourceArns: string[]) {
     return new PolicyStatement({
       actions: ['secretsmanager:GetSecretValue'],
       effect: Effect.ALLOW,
-      resources: resourceArns ?? [
-        `arn:aws:secretsmanager:${Stack.of(scope).region}:${Stack.of(scope).account}:secret:*`,
-      ],
+      resources: resourceArns,
     })
   }
 
@@ -54,11 +52,11 @@ export class IamManager {
    * @summary Method to create iam statement to put events
    * @param resourceArns list of ARNs to allow access to
    */
-  public statementForPutEvents(resourceArns?: string[]) {
+  public statementForPutEvents(resourceArns: string[]) {
     return new PolicyStatement({
       actions: ['events:PutEvents'],
       effect: Effect.ALLOW,
-      resources: resourceArns ?? ['*'],
+      resources: resourceArns,
     })
   }
 
@@ -66,11 +64,11 @@ export class IamManager {
    * @summary Method to create iam statement to start step function execution
    * @param resourceArns list of ARNs to allow access to
    */
-  public statementForStartExecution(resourceArns?: string[]) {
+  public statementForStartExecution(resourceArns: string[]) {
     return new PolicyStatement({
       actions: ['states:StartExecution'],
       effect: Effect.ALLOW,
-      resources: resourceArns ?? ['*'],
+      resources: resourceArns,
     })
   }
 
@@ -78,11 +76,11 @@ export class IamManager {
    * @summary Method to create iam statement to poll queue
    * @param resourceArns list of ARNs to allow access to
    */
-  public statementForPollQueue(resourceArns?: string[]) {
+  public statementForPollQueue(resourceArns: string[]) {
     return new PolicyStatement({
       actions: ['sqs:ReceiveMessage', 'sqs:DeleteMessage', 'sqs:GetQueueAttributes'],
       effect: Effect.ALLOW,
-      resources: resourceArns ?? ['*'],
+      resources: resourceArns,
     })
   }
 
@@ -90,11 +88,11 @@ export class IamManager {
    * @summary Method to create iam statement to invoke lambda function
    * @param resourceArns list of ARNs to allow access to
    */
-  public statementForInvokeLambda(resourceArns?: string[]) {
+  public statementForInvokeLambda(resourceArns: string[]) {
     return new PolicyStatement({
       actions: ['lambda:InvokeFunction'],
       effect: Effect.ALLOW,
-      resources: resourceArns ?? ['*'],
+      resources: resourceArns,
     })
   }
 
@@ -102,7 +100,7 @@ export class IamManager {
    * @summary Method to create iam statement to read app config
    * @param resourceArns list of ARNs to allow access to
    */
-  public statementForReadAnyAppConfig(resourceArns?: string[]) {
+  public statementForReadAnyAppConfig(resourceArns: string[]) {
     return new PolicyStatement({
       actions: [
         'ssm:GetDocument',
@@ -119,7 +117,7 @@ export class IamManager {
         'appconfig:ListDeployments',
       ],
       effect: Effect.ALLOW,
-      resources: resourceArns ?? ['*'],
+      resources: resourceArns,
     })
   }
 
@@ -127,11 +125,11 @@ export class IamManager {
    * @summary Method to create iam statement to access app config
    * @param resourceArns list of ARNs to allow access to
    */
-  public statementForAppConfigExecution(resourceArns?: string[]) {
+  public statementForAppConfigExecution(resourceArns: string[]) {
     return new PolicyStatement({
       actions: ['appconfig:GetLatestConfiguration', 'appconfig:StartConfigurationSession'],
       effect: Effect.ALLOW,
-      resources: resourceArns ?? ['*'],
+      resources: resourceArns,
     })
   }
 
@@ -139,11 +137,11 @@ export class IamManager {
    * @summary Method to create iam statement to put xray telemetry
    * @param resourceArns list of ARNs to allow access to
    */
-  public statementForPutXrayTelemetry(resourceArns?: string[]) {
+  public statementForPutXrayTelemetry(resourceArns: string[]) {
     return new PolicyStatement({
       actions: ['xray:PutTraceSegments', 'xray:PutTelemetryRecords'],
       effect: Effect.ALLOW,
-      resources: resourceArns ?? ['*'],
+      resources: resourceArns,
     })
   }
 
@@ -151,11 +149,11 @@ export class IamManager {
    * @summary Method to create iam statement to decrypt kms
    * @param resourceArns list of ARNs to allow access to
    */
-  public statementForDecryptKms(resourceArns?: string[]) {
+  public statementForDecryptKms(resourceArns: string[]) {
     return new PolicyStatement({
       actions: ['kms:Decrypt'],
       effect: Effect.ALLOW,
-      resources: resourceArns ?? ['*'],
+      resources: resourceArns,
     })
   }
 
@@ -176,11 +174,11 @@ export class IamManager {
    * @summary Method to create iam statement to list all s3 buckets
    * @param resourceArns list of ARNs to allow access to
    */
-  public statementForListAllMyBuckets(resourceArns?: string[]) {
+  public statementForListAllMyBuckets(resourceArns: string[]) {
     return new PolicyStatement({
       actions: ['s3:ListAllMyBuckets'],
       effect: Effect.ALLOW,
-      resources: resourceArns ?? ['*'],
+      resources: resourceArns,
     })
   }
 
@@ -194,6 +192,7 @@ export class IamManager {
     return new PolicyStatement({
       actions: ['s3:GetObject', 's3:GetObjectAcl'],
       effect: Effect.ALLOW,
+      /* defaults to the supplied bucket's objects - already scoped, not a wildcard */
       resources: resourceArns ?? [bucket.arnForObjects(`*`)],
     })
   }
@@ -208,6 +207,7 @@ export class IamManager {
     return new PolicyStatement({
       actions: ['s3:DeleteObject'],
       effect: Effect.ALLOW,
+      /* defaults to the supplied bucket's objects - already scoped, not a wildcard */
       resources: resourceArns ?? [bucket.arnForObjects(`*`)],
     })
   }
@@ -222,6 +222,7 @@ export class IamManager {
     return new PolicyStatement({
       actions: ['s3:PutObject', 's3:PutObjectAcl'],
       effect: Effect.ALLOW,
+      /* defaults to the supplied bucket's objects - already scoped, not a wildcard */
       resources: resourceArns ?? [bucket.arnForObjects(`*`)],
     })
   }
@@ -230,11 +231,11 @@ export class IamManager {
    * @summary Method to create iam statement to pass iam role
    * @param resourceArns list of ARNs to allow access to
    */
-  public statementForPassRole(resourceArns?: string[]) {
+  public statementForPassRole(resourceArns: string[]) {
     return new PolicyStatement({
       actions: ['iam:PassRole'],
       effect: Effect.ALLOW,
-      resources: resourceArns ?? ['*'],
+      resources: resourceArns,
     })
   }
 
@@ -242,11 +243,11 @@ export class IamManager {
    * @summary Method to create iam statement to invalidate cloudfront cache
    * @param resourceArns list of ARNs to allow access to
    */
-  public statementForCloudfrontInvalidation(resourceArns?: string[]) {
+  public statementForCloudfrontInvalidation(resourceArns: string[]) {
     return new PolicyStatement({
       actions: ['cloudfront:GetInvalidation', 'cloudfront:CreateInvalidation'],
       effect: Effect.ALLOW,
-      resources: resourceArns ?? ['*'],
+      resources: resourceArns,
     })
   }
 
@@ -254,11 +255,11 @@ export class IamManager {
    * @summary Method to create iam statement to access efs
    * @param resourceArns list of ARNs to allow access to
    */
-  public statementForWriteEfs(resourceArns?: string[]) {
+  public statementForWriteEfs(resourceArns: string[]) {
     return new PolicyStatement({
       actions: ['elasticfilesystem:*'],
       effect: Effect.ALLOW,
-      resources: resourceArns ?? ['*'],
+      resources: resourceArns,
     })
   }
 
@@ -279,12 +280,12 @@ export class IamManager {
    * @summary Method to create iam statement to pass ecs role
    * @param resourceArns list of ARNs to allow access to
    */
-  public statementForEcsPassRole(resourceArns?: string[]) {
+  public statementForEcsPassRole(resourceArns: string[]) {
     return new PolicyStatement({
       actions: ['iam:PassRole'],
       conditions: { StringLike: { 'iam:PassedToService': 'ecs-tasks.amazonaws.com' } },
       effect: Effect.ALLOW,
-      resources: resourceArns ?? ['*'],
+      resources: resourceArns,
     })
   }
 
@@ -328,11 +329,11 @@ export class IamManager {
    * @summary Method to create iam statement to create any log stream
    * @param resourceArns list of ARNs to allow access to
    */
-  public statementForCreateAnyLogStream(resourceArns?: string[]) {
+  public statementForCreateAnyLogStream(resourceArns: string[]) {
     return new PolicyStatement({
       actions: ['logs:CreateLogStream'],
       effect: Effect.ALLOW,
-      resources: resourceArns ?? ['*'],
+      resources: resourceArns,
     })
   }
 
@@ -360,11 +361,11 @@ export class IamManager {
    * @summary Method to create iam statement to write any log events
    * @param resourceArns list of ARNs to allow access to
    */
-  public statementForPutAnyLogEvent(resourceArns?: string[]) {
+  public statementForPutAnyLogEvent(resourceArns: string[]) {
     return new PolicyStatement({
       actions: ['logs:PutLogEvents'],
       effect: Effect.ALLOW,
-      resources: resourceArns ?? ['*'],
+      resources: resourceArns,
     })
   }
 
@@ -372,7 +373,7 @@ export class IamManager {
    * @summary Method to create iam statement to read items from dynamodb table
    * @param resourceArns list of ARNs to allow access to
    */
-  public statementForReadTableItems(resourceArns?: string[]) {
+  public statementForReadTableItems(resourceArns: string[]) {
     return new PolicyStatement({
       actions: [
         'dynamodb:PartiQLSelect',
@@ -385,7 +386,7 @@ export class IamManager {
         'dynamodb:BatchGetItem',
       ],
       effect: Effect.ALLOW,
-      resources: resourceArns ?? ['*'],
+      resources: resourceArns,
     })
   }
 
@@ -393,11 +394,11 @@ export class IamManager {
    * @summary Method to create iam statement to write items from dynamodb table
    * @param resourceArns list of ARNs to allow access to
    */
-  public statementForWriteTableItems(resourceArns?: string[]) {
+  public statementForWriteTableItems(resourceArns: string[]) {
     return new PolicyStatement({
       actions: ['dynamodb:BatchWriteItem', 'dynamodb:DeleteItem', 'dynamodb:PutItem', 'dynamodb:UpdateItem'],
       effect: Effect.ALLOW,
-      resources: resourceArns ?? ['*'],
+      resources: resourceArns,
     })
   }
 
@@ -405,24 +406,25 @@ export class IamManager {
    * @summary Method to create iam statement to poll from dynamodb table
    * @param resourceArns list of ARNs to allow access to
    */
-  public statementFordynamoDbStream(resourceArns?: string[]) {
+  public statementFordynamoDbStream(resourceArns: string[]) {
     return new PolicyStatement({
       actions: ['dynamodb:DescribeStream', 'dynamodb:GetRecords', 'dynamodb:GetShardIterator', 'dynamodb:ListStreams'],
       effect: Effect.ALLOW,
-      resources: resourceArns ?? ['*'],
+      resources: resourceArns,
     })
   }
 
   /**
    * @summary Method to create iam policy to invalidate cloudfront cache
-   * @param resourceArns list of ARNs to allow access to
+   * @param distributionArns CloudFront distribution ARNs to allow invalidation against
+   * @param logGroupArns CloudWatch log group ARNs the CodeBuild project writes to
    */
-  public createPolicyForCloudfrontInvalidation(resourceArns?: string[]) {
+  public createPolicyForCloudfrontInvalidation(distributionArns: string[], logGroupArns: string[]) {
     return new PolicyDocument({
       statements: [
-        this.statementForCreateAnyLogStream(),
-        this.statementForPutAnyLogEvent(),
-        this.statementForCloudfrontInvalidation(),
+        this.statementForCreateAnyLogStream(logGroupArns),
+        this.statementForPutAnyLogEvent(logGroupArns),
+        this.statementForCloudfrontInvalidation(distributionArns),
         new PolicyStatement({
           actions: [
             'ecr:GetDownloadUrlForLayer',
@@ -431,7 +433,9 @@ export class IamManager {
             'ecr:GetAuthorizationToken',
           ],
           effect: Effect.ALLOW,
-          resources: resourceArns ?? ['*'],
+          /* ecr:GetAuthorizationToken does not support resource-level IAM and must
+             use Resource:* per AWS docs; the other ECR actions inherit the same. */
+          resources: ['*'],
         }),
       ],
     })
@@ -473,12 +477,19 @@ export class IamManager {
    * @summary Method to create iam role to invalidate cloudfront cache
    * @param id scoped id of the resource
    * @param scope scope in which this resource is defined
+   * @param distributionArns CloudFront distribution ARNs to allow invalidation against
+   * @param logGroupArns CloudWatch log group ARNs the CodeBuild project writes to
    */
-  public createRoleForCloudfrontInvalidation(id: string, scope: CommonConstruct) {
+  public createRoleForCloudfrontInvalidation(
+    id: string,
+    scope: CommonConstruct,
+    distributionArns: string[],
+    logGroupArns: string[]
+  ) {
     return new Role(scope, `${id}-install-deps-project-role`, {
       assumedBy: new ServicePrincipal('codebuild.amazonaws.com'),
       inlinePolicies: {
-        codeBuildPolicy: this.createPolicyForCloudfrontInvalidation(),
+        codeBuildPolicy: this.createPolicyForCloudfrontInvalidation(distributionArns, logGroupArns),
       },
       roleName: scope.resourceNameFormatter.format(`${id}-cf-invalidation`, scope.props.resourceNameOptions?.iam),
     })
@@ -522,7 +533,13 @@ export class IamManager {
    */
   public createRoleForEcsEvent(id: string, scope: CommonConstruct, cluster: ICluster, task: ITaskDefinition) {
     const policy = new PolicyDocument({
-      statements: [this.statementForRunEcsTask(scope, cluster, task), this.statementForEcsPassRole()],
+      statements: [
+        this.statementForRunEcsTask(scope, cluster, task),
+        /* iam:PassRole condition (PassedToService=ecs-tasks) already limits which roles
+           the EventBridge target can pass; resource scope kept wildcard to allow any
+           ECS task role the consumer wires up */
+        this.statementForEcsPassRole(['*']),
+      ],
     })
 
     const role = new Role(scope, `${id}`, {

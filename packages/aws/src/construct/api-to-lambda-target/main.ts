@@ -227,7 +227,10 @@ export class ApiToLambdaTarget extends CommonConstruct {
   protected createApiToLambdaTargetPolicy() {
     this.apiToLambdaTargetRestApi.policy = new PolicyDocument({
       statements: [
-        this.iamManager.statementForPutEvents(),
+        /* PutEvents kept wildcard - api-to-lambda-target may publish to any bus the
+           consumer wires through Lambda destinations; the consumer should override
+           if a specific bus ARN can be supplied */
+        this.iamManager.statementForPutEvents(['*']),
         this.iamManager.statementForInvokeLambda([this.apiToLambdaTargetRestApi.lambda.functionArn]),
       ],
     })

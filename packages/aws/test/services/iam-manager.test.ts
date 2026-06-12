@@ -5,6 +5,14 @@ import * as eventsTargets from 'aws-cdk-lib/aws-events-targets'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import { Construct } from 'constructs'
 import { CommonConstruct, CommonStack, CommonStackProps } from '../../src/index.js'
+import {
+  STUB_APP_CONFIG_ARN,
+  STUB_DDB_TABLE_ARN,
+  STUB_IAM_ROLE_ARN,
+  STUB_KMS_KEY_ARN,
+  STUB_S3_BUCKET_ARN,
+  STUB_SECRET_ARN,
+} from '../common/stubs.js'
 
 interface TestStackProps extends CommonStackProps {
   testBucket: any
@@ -80,7 +88,9 @@ class TestCommonConstruct extends CommonConstruct {
     const testVpc = this.vpcManager.createCommonVpc(`${name}-vpc`, this, this.props.testVpc)
     const testCluster = this.ecsManager.createEcsCluster('test-cluster', this, this.props.testCluster, testVpc)
     const testImage = ecs.ContainerImage.fromAsset('packages/aws/test/common/docker')
-    const testPolicy = new iam.PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this)] })
+    const testPolicy = new iam.PolicyDocument({
+      statements: [this.iamManager.statementForReadSecrets(this, [STUB_SECRET_ARN])],
+    })
     const testRole = this.iamManager.createRoleForEcsExecution('test-role', this, testPolicy)
     const testTask = this.ecsManager.createEcsFargateTask(
       'test-task',
@@ -92,35 +102,37 @@ class TestCommonConstruct extends CommonConstruct {
       testImage
     )
 
-    this.iamManager.statementForReadSecrets(this)
-    this.iamManager.statementForReadAnyAppConfig()
+    this.iamManager.statementForReadSecrets(this, [STUB_SECRET_ARN])
+    this.iamManager.statementForReadAnyAppConfig([STUB_APP_CONFIG_ARN])
     this.iamManager.statementForListBucket(this, testBucket)
-    this.iamManager.statementForListAllMyBuckets()
+    /* s3:ListAllMyBuckets does not support resource-level IAM */
+    this.iamManager.statementForListAllMyBuckets(['*'])
     this.iamManager.statementForGetAnyS3Objects(this, testBucket)
     this.iamManager.statementForDeleteAnyS3Objects(this, testBucket)
     this.iamManager.statementForPutAnyS3Objects(this, testBucket)
-    this.iamManager.statementForPassRole()
+    this.iamManager.statementForPassRole([STUB_IAM_ROLE_ARN])
     this.iamManager.statementForAssumeRole(this, [new iam.ServicePrincipal('s3')])
-    this.iamManager.statementForEcsPassRole()
+    this.iamManager.statementForEcsPassRole([STUB_IAM_ROLE_ARN])
     this.iamManager.statementForRunEcsTask(this, testCluster, testTask)
     this.iamManager.statementForCreateLogStream(this, testLogGroup)
     this.iamManager.statementForPutLogEvent(this, testLogGroup)
-    this.iamManager.statementForReadTableItems()
-    this.iamManager.statementForWriteTableItems()
-    this.iamManager.statementForAppConfigExecution()
-    this.iamManager.statementForPutXrayTelemetry()
-    this.iamManager.statementForDecryptKms()
+    this.iamManager.statementForReadTableItems([STUB_DDB_TABLE_ARN])
+    this.iamManager.statementForWriteTableItems([STUB_DDB_TABLE_ARN])
+    this.iamManager.statementForAppConfigExecution([STUB_APP_CONFIG_ARN])
+    /* xray:PutTelemetryRecords / PutTraceSegments do not support resource-level IAM */
+    this.iamManager.statementForPutXrayTelemetry(['*'])
+    this.iamManager.statementForDecryptKms([STUB_KMS_KEY_ARN])
     this.iamManager.createRoleForCloudTrail('test-role-trail', this, testLogGroup)
     this.iamManager.createRoleForEcsEvent('test-role-ecs-event', this, testCluster, testTask)
     this.iamManager.createRoleForAppConfigSecrets(
       'test-role-appconfig-secrets',
       this,
-      new iam.PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this)] })
+      new iam.PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this, [STUB_SECRET_ARN])] })
     )
     this.iamManager.createRoleForLambda(
       'test-role-lambda',
       this,
-      new iam.PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this)] })
+      new iam.PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this, [STUB_SECRET_ARN])] })
     )
 
     /* Test SQS Document Policy Creation */

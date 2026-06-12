@@ -4,6 +4,7 @@ import * as iam from 'aws-cdk-lib/aws-iam'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import { Construct } from 'constructs'
 import { CommonConstruct, CommonStack, CommonStackProps } from '../../src/index.js'
+import { STUB_SECRET_ARN } from '../common/stubs.js'
 
 interface TestStackProps extends CommonStackProps {
   testLambda: any
@@ -79,7 +80,7 @@ class TestCommonConstruct extends CommonConstruct {
     const testRole = this.iamManager.createRoleForLambda(
       'test-role',
       this,
-      new iam.PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this)] })
+      new iam.PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this, [STUB_SECRET_ARN])] })
     )
     const testLambda = this.lambdaManager.createLambdaFunction(
       'test-lambda',
@@ -355,7 +356,7 @@ describe('TestLambdaConstructErrorHandling', () => {
         const testRole = this.iamManager.createRoleForLambda(
           'test-role-err',
           this,
-          new iam.PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this)] })
+          new iam.PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this, [STUB_SECRET_ARN])] })
         )
         this.lambdaManager.createLambdaFunction(
           'test-lambda-err',
@@ -396,7 +397,7 @@ describe('TestLambdaConstructErrorHandling', () => {
         const testRole = this.iamManager.createRoleForLambda(
           'test-role-docker-err',
           this,
-          new iam.PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this)] })
+          new iam.PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this, [STUB_SECRET_ARN])] })
         )
         this.lambdaManager.createLambdaDockerFunction(
           'test-docker-err',
@@ -436,7 +437,7 @@ describe('TestLambdaConstructErrorHandling', () => {
         const testRole = this.iamManager.createRoleForLambda(
           'test-role-docker-name-err',
           this,
-          new iam.PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this)] })
+          new iam.PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this, [STUB_SECRET_ARN])] })
         )
         this.lambdaManager.createLambdaDockerFunction(
           'test-docker-name-err',
@@ -477,7 +478,7 @@ describe('TestLambdaConstructErrorHandling', () => {
         const testRole = this.iamManager.createRoleForLambda(
           'test-role-alias-err',
           this,
-          new iam.PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this)] })
+          new iam.PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this, [STUB_SECRET_ARN])] })
         )
         const testLambda = this.lambdaManager.createLambdaFunction(
           'test-lambda-alias-err',

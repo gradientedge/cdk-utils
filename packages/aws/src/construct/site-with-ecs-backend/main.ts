@@ -273,7 +273,9 @@ export class SiteWithEcsBackend extends CommonConstruct {
    */
   protected createEcsPolicy() {
     this.siteEcsPolicy = new PolicyDocument({
-      statements: [this.iamManager.statementForCreateAnyLogStream()],
+      /* covered by AmazonECSTaskExecutionRolePolicy managed policy for the task's
+         own log group; wildcard preserves prior behaviour for additional groups */
+      statements: [this.iamManager.statementForCreateAnyLogStream(['*'])],
     })
   }
 

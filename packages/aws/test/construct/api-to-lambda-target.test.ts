@@ -4,6 +4,7 @@ import * as iam from 'aws-cdk-lib/aws-iam'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import { Construct } from 'constructs'
 import { ApiToLambdaTarget, ApiToLambdaTargetProps, CommonStack } from '../../src/index.js'
+import { STUB_SECRET_ARN } from '../common/stubs.js'
 
 interface TestStackProps extends ApiToLambdaTargetProps {
   testLambda: any
@@ -81,7 +82,7 @@ class TestApiToLambdaTarget extends ApiToLambdaTarget {
     const testRole = this.iamManager.createRoleForLambda(
       'test-role',
       this,
-      new iam.PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this)] })
+      new iam.PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this, [STUB_SECRET_ARN])] })
     )
     this.lambdaManager.createLambdaFunction(
       'test-src-lambda',

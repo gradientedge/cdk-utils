@@ -7,6 +7,7 @@ import * as sfn from 'aws-cdk-lib/aws-stepfunctions'
 import * as tasks from 'aws-cdk-lib/aws-stepfunctions-tasks'
 import { Construct } from 'constructs'
 import { CommonConstruct, CommonStack, CommonStackProps, TableProps } from '../../src/index.js'
+import { STUB_SECRET_ARN } from '../common/stubs.js'
 
 interface TestStackProps extends CommonStackProps {
   testAnotherLogGroup: any
@@ -149,7 +150,7 @@ class TestCommonConstruct extends CommonConstruct {
     const testRole = this.iamManager.createRoleForLambda(
       'test-role',
       this,
-      new iam.PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this)] })
+      new iam.PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this, [STUB_SECRET_ARN])] })
     )
     const testLambda = this.lambdaManager.createLambdaFunction(
       'test-lambda',
@@ -364,7 +365,7 @@ class TestBranchCoverageConstruct extends CommonConstruct {
     const testRole = this.iamManager.createRoleForLambda(
       'test-role',
       this,
-      new iam.PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this)] })
+      new iam.PolicyDocument({ statements: [this.iamManager.statementForReadSecrets(this, [STUB_SECRET_ARN])] })
     )
     const testLambda = this.lambdaManager.createLambdaFunction(
       'test-lambda',

@@ -136,12 +136,22 @@ export class LambdaWithIamAccess extends CommonConstruct {
    */
   protected createLambdaPolicy() {
     this.lambdaPolicy = new PolicyDocument({
-      statements: [this.iamManager.statementForCreateAnyLogStream(), this.iamManager.statementForPutXrayTelemetry()],
+      statements: [
+        /* CloudWatch Logs stream creation - the function's own log group is
+           granted via AWSLambdaBasicExecutionRole; this wildcard covers
+           caller-supplied groups, override via subclass if scoping is needed */
+        this.iamManager.statementForCreateAnyLogStream(['*']),
+        /* xray:PutTraceSegments / xray:PutTelemetryRecords do not support
+           resource-level IAM per AWS docs - must be Resource:* */
+        this.iamManager.statementForPutXrayTelemetry(['*']),
+      ],
     })
     if (this.props.configEnabled) {
       this.lambdaPolicy.addStatements(
-        this.iamManager.statementForReadAnyAppConfig(),
-        this.iamManager.statementForAppConfigExecution()
+        /* AppConfig grants - scoping requires the consumer's application/environment
+           ARN; left wildcard by default, override via subclass if known */
+        this.iamManager.statementForReadAnyAppConfig(['*']),
+        this.iamManager.statementForAppConfigExecution(['*'])
       )
     }
   }
