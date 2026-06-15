@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.52.1
+
+### Patch Changes
+
+- [#1097](https://github.com/gradientedge/cdk-utils/pull/1097) [`1e17034`](https://github.com/gradientedge/cdk-utils/commit/1e1703426c6e932050aa85b891457f7cdef4271f) Thanks [@sathish-palanivelu](https://github.com/sathish-palanivelu)! - Wire tagsToIgnore through CommonAzureStack so stack-level tag ignore keys are passed into registerTagTransformation.
+
 ## 2.52.0
 
 ### Minor Changes

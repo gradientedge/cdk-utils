@@ -1,5 +1,12 @@
 # @gradientedge/cdk-utils
 
+## 11.53.1
+
+### Patch Changes
+
+- Updated dependencies [[`1e17034`](https://github.com/gradientedge/cdk-utils/commit/1e1703426c6e932050aa85b891457f7cdef4271f)]:
+  - @gradientedge/cdk-utils-azure@2.52.1
+
 ## 11.53.0
 
 ### Minor Changes
