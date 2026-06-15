@@ -336,4 +336,21 @@ describe('TestAzureCommonStack - defaultTags', () => {
     expect(stack.props).toBeDefined()
     expect(stack.props.defaultTags).toBeUndefined()
   })
+
+  test('tagsToIgnore is stored on props when provided', () => {
+    const stack = new TestAzureStack('test-stack-tags-to-ignore', {
+      ...testStackProps,
+      defaultTags: undefined,
+      tagsToIgnore: ['CreatedOn', 'CreatedAt'],
+    })
+    expect(stack.props.tagsToIgnore).toEqual(['CreatedOn', 'CreatedAt'])
+  })
+
+  test('tagsToIgnore defaults to undefined when not provided', () => {
+    const stack = new TestAzureStack('test-stack-no-tags-to-ignore', {
+      ...testStackProps,
+      defaultTags: undefined,
+    })
+    expect(stack.props.tagsToIgnore).toBeUndefined()
+  })
 })
