@@ -53,7 +53,7 @@ export class CommonAzureStack extends ComponentResource {
 
     /* register tag transformation for automatic tag application */
     if (this.props.defaultTags) {
-      registerTagTransformation(this.props.defaultTags)
+      registerTagTransformation(this.props.defaultTags, this.props.tagsToIgnore ?? [])
     }
 
     this.createConstruct()
