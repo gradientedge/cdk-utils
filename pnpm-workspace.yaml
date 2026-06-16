@@ -4,7 +4,7 @@ packages:
 overrides:
   '@opentelemetry/core': 2.8.0
   js-yaml: 4.2.0
-  protobufjs: 8.5.0
+  protobufjs: 8.6.3
   # read-yaml-file@1 calls js-yaml.safeLoad which was removed in js-yaml 4.
   # Pin the @changesets/cli transitive dep to the first version that switched
   # to yaml.load so `pnpm changeset version` survives the override above.
