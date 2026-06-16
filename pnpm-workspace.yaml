@@ -3,7 +3,8 @@ packages:
   - 'app/**'
 overrides:
   protobufjs: 8.3.0
-  tmp: 0.2.6
+  tmp: 0.2.7
+  js-yaml: 4.2.0
 minimumReleaseAge: 10080
 autoInstallPeers: true
 blockExoticSubdeps: true
