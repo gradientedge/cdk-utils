@@ -2,14 +2,28 @@ packages:
   - 'packages/*'
   - 'app/**'
 overrides:
-  protobufjs: 8.3.0
-  tmp: 0.2.7
   js-yaml: 4.2.0
+  protobufjs: 8.3.0
   # read-yaml-file@1 calls js-yaml.safeLoad which was removed in js-yaml 4.
   # Pin the @changesets/cli transitive dep to the first version that switched
   # to yaml.load so `pnpm changeset version` survives the override above.
   read-yaml-file: 2.1.0
-minimumReleaseAge: 10080
+  tmp: 0.2.7
+minimumReleaseAge: 2880
+minimumReleaseAgeExclude:
+  # Trusted publishers (well-known orgs) whose scoped families publish
+  # on a same-day cadence and would otherwise block every install on
+  # release day.
+  - '@aws-cdk/*' # AWS CDK constructs
+  - '@aws-sdk/*' # Amazon Web Services
+  - '@azure/*' # Microsoft Azure
+  - '@esbuild/*' # platform binaries shipped lockstep with esbuild
+  - '@pulumi/*' # Pulumi providers ship lockstep
+  - '@smithy/*' # AWS SDK transitives, ship lockstep with @aws-sdk
+  - '@typescript-eslint/*' # ships lockstep
+  - '@vitest/*' # ships lockstep with vitest
+  # Internal @gradientedge packages.
+  - '@gradientedge/*'
 autoInstallPeers: true
 blockExoticSubdeps: true
 linkWorkspacePackages: true
