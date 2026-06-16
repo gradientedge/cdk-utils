@@ -1,5 +1,18 @@
 # @gradientedge/cdk-utils
 
+## 11.55.0
+
+### Minor Changes
+
+- [#1102](https://github.com/gradientedge/cdk-utils/pull/1102) [`4cb4eb5`](https://github.com/gradientedge/cdk-utils/commit/4cb4eb57f4cda05df4d1400899811ec7c0c7cb11) Thanks [@despock](https://github.com/despock)! - Expose created Lambda Aliases on the returned Function (new `FunctionWithAliases` type), and accept an `IBucket` for S3 server access logging (new optional `logBucket` on `S3BucketProps`).
+
+  Both let downstream constructs work with the real L2 instances instead of re-importing by ARN/name — clearing the `UnclearLambdaEnvironment` warning (and silently-dropped `addPermission()` invokes) when wiring `LambdaIntegration` to an alias, and the `accessLogsPolicyNotAdded` warning when the caller owns the log destination bucket. `StaticSite` is updated to pass its just-created `siteLogBucket` through so consumers benefit without code changes.
+
+### Patch Changes
+
+- Updated dependencies [[`4cb4eb5`](https://github.com/gradientedge/cdk-utils/commit/4cb4eb57f4cda05df4d1400899811ec7c0c7cb11)]:
+  - @gradientedge/cdk-utils-aws@2.20.0
+
 ## 11.54.0
 
 ### Minor Changes
