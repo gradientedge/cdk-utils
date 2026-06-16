@@ -3,7 +3,8 @@ import { Template } from 'aws-cdk-lib/assertions'
 import * as iam from 'aws-cdk-lib/aws-iam'
 import * as lambda from 'aws-cdk-lib/aws-lambda'
 import { Construct } from 'constructs'
-import { CommonConstruct, CommonStack, CommonStackProps } from '../../src/index.js'
+import _ from 'lodash'
+import { CommonConstruct, CommonStack, CommonStackProps, FunctionWithAliases } from '../../src/index.js'
 import { STUB_SECRET_ARN } from '../common/stubs.js'
 
 interface TestStackProps extends CommonStackProps {
@@ -33,6 +34,7 @@ const testStackProps = {
 
 class TestCommonStack extends CommonStack {
   declare props: TestStackProps
+  declare construct: TestCommonConstruct
 
   constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
     super(parent, name, props)
@@ -69,6 +71,7 @@ class TestInvalidCommonStack extends CommonStack {
 
 class TestCommonConstruct extends CommonConstruct {
   declare props: TestStackProps
+  public testLambdaWithConcurrency!: FunctionWithAliases
 
   constructor(parent: Construct, name: string, props: TestStackProps) {
     super(parent, name, props)
@@ -98,7 +101,7 @@ class TestCommonConstruct extends CommonConstruct {
       [testLayer],
       new lambda.AssetCode('packages/aws/test/common/nodejs/lib')
     )
-    this.lambdaManager.createLambdaFunction(
+    this.testLambdaWithConcurrency = this.lambdaManager.createLambdaFunction(
       'test-lambda-with-concurrency',
       this,
       this.props.testLambdaWithConcurrency,
@@ -251,6 +254,29 @@ describe('TestLambdaConstruct', () => {
       Name: 'test-alias',
       ProvisionedConcurrencyConfig: { ProvisionedConcurrentExecutions: 1 },
     })
+  })
+})
+
+describe('TestLambdaConstructAliasesExposed', () => {
+  test('exposes lambdaAliases keyed by aliasName as expected', () => {
+    const fn = commonStack.construct.testLambdaWithConcurrency
+    expect(_.keys(fn.lambdaAliases)).toEqual(['test-concurrent-alias'])
+  })
+
+  test('exposes the real Alias L2 attached to the consuming stack as expected', () => {
+    const alias = commonStack.construct.testLambdaWithConcurrency.lambdaAliases?.['test-concurrent-alias']
+    expect(alias?.aliasName).toEqual('test-concurrent-alias')
+    /* Same stack — what addPermission() needs to skip the UnclearLambdaEnvironment warning */
+    expect(cdk.Stack.of(alias!)).toBe(commonStack)
+  })
+
+  test('exposed alias count matches the number of AWS::Lambda::Alias CFN resources synthesised', () => {
+    const aliasResources = _.pickBy(
+      template.toJSON().Resources as Record<string, { Type: string }>,
+      resource => resource.Type === 'AWS::Lambda::Alias'
+    )
+    const exposedAliasCount = _.size(commonStack.construct.testLambdaWithConcurrency.lambdaAliases)
+    expect(_.size(aliasResources)).toBeGreaterThanOrEqual(exposedAliasCount)
   })
 })
 

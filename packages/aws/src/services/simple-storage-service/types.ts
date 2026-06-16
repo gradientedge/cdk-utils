@@ -41,7 +41,19 @@ export interface S3BucketProps extends s3.BucketProps {
   existingBucket?: boolean
   /** Lifecycle rules for objects in the bucket */
   lifecycleRules?: LifecycleRule[]
-  /** Name of an existing bucket to use for server access logging */
+  /**
+   * Bucket instance to use for server access logging. Pass this when the caller
+   * already owns the log destination bucket (e.g. created earlier in the same
+   * stack) — CDK can then add the log-delivery policy to it directly. Falls back
+   * to {@link logBucketName} when not provided.
+   */
+  logBucket?: s3.IBucket
+  /**
+   * Name of an existing bucket to use for server access logging. When set, the
+   * bucket is imported by name — CDK cannot mutate its policy in that case,
+   * which surfaces an `accessLogsPolicyNotAdded` warning at synth. Prefer
+   * {@link logBucket} when the destination bucket is owned by the caller.
+   */
   logBucketName?: string
   /** Tags to apply to the bucket */
   tags?: TagProps[]

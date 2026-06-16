@@ -130,7 +130,13 @@ export class StaticSite extends CommonConstruct {
    * @summary Method to create a site bucket
    */
   protected createSiteBucket() {
-    this.siteBucket = this.s3Manager.createS3Bucket(`${this.id}-site`, this, this.props.siteBucket)
+    /* Pass the just-created siteLogBucket L2 so server-access logging is wired
+       via Ref instead of an imported bucket name — lets CDK attach the
+       log-delivery policy and clears the accessLogsPolicyNotAdded warning. */
+    this.siteBucket = this.s3Manager.createS3Bucket(`${this.id}-site`, this, {
+      ...this.props.siteBucket,
+      logBucket: this.siteLogBucket,
+    })
   }
 
   /**
