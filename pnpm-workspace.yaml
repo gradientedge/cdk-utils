@@ -5,6 +5,10 @@ overrides:
   protobufjs: 8.3.0
   tmp: 0.2.7
   js-yaml: 4.2.0
+  # read-yaml-file@1 calls js-yaml.safeLoad which was removed in js-yaml 4.
+  # Pin the @changesets/cli transitive dep to the first version that switched
+  # to yaml.load so `pnpm changeset version` survives the override above.
+  read-yaml-file: 2.1.0
 minimumReleaseAge: 10080
 autoInstallPeers: true
 blockExoticSubdeps: true
