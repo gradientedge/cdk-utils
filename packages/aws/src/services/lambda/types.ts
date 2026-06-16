@@ -1,8 +1,22 @@
-import { AliasProps, FunctionProps } from 'aws-cdk-lib/aws-lambda'
+import { Alias, AliasProps, Function, FunctionProps } from 'aws-cdk-lib/aws-lambda'
 import { SqsEventSourceProps } from 'aws-cdk-lib/aws-lambda-event-sources'
 
 import { TagProps } from '../../types/index.js'
 import { QueueProps } from '../simple-queue-service/index.js'
+
+/**
+ * A Function returned by {@link LambdaManager.createLambdaFunction} when the
+ * caller supplied {@link LambdaProps.lambdaAliases}. The aliases that were
+ * created are exposed under `lambdaAliases`, keyed by aliasName, so downstream
+ * constructs can pass them directly to integrations (e.g. ApiGateway's
+ * LambdaIntegration) instead of re-importing by ARN — which carries an
+ * UnclearLambdaEnvironment warning and silently drops the invoke permission
+ * when CDK can't statically prove same-env.
+ */
+/** @category Interface */
+export type FunctionWithAliases = Function & {
+  lambdaAliases?: Record<string, Alias>
+}
 
 /**
  * Props for Lambda@Edge function, matching aws-cdk-lib experimental EdgeFunctionProps.

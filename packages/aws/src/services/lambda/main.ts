@@ -22,7 +22,7 @@ import { CommonConstruct, CommonStack } from '../../common/index.js'
 import { createCfnOutput } from '../../utils/index.js'
 import { CloudFrontManager } from '../cloudfront/index.js'
 
-import { LambdaAliasProps, LambdaEdgeProps, LambdaProps } from './types.js'
+import { FunctionWithAliases, LambdaAliasProps, LambdaEdgeProps, LambdaProps } from './types.js'
 
 /**
  * Provides operations on AWS Lambda
@@ -128,7 +128,7 @@ export class LambdaManager {
       deadLetterQueue = scope.sqsManager.createDeadLetterQueueForLambda(`${id}-dlq`, scope, props, redriveQueue)
     }
 
-    const lambdaFunction = new Function(scope, `${id}`, {
+    const lambdaFunction: FunctionWithAliases = new Function(scope, `${id}`, {
       ...props,
       /* When a VPC is provided, allow placement in public subnets (e.g. for NAT access) */
       allowPublicSubnet: !!vpc,
@@ -175,11 +175,17 @@ export class LambdaManager {
     }
 
     /* Create aliases and optionally attach provisioned concurrency auto-scaling.
-       Provisioned concurrency requires an alias — it cannot be set on $LATEST. */
+       Provisioned concurrency requires an alias — it cannot be set on $LATEST.
+       The created Alias instances are also stashed on the returned function under
+       `.lambdaAliases` (keyed by aliasName) so downstream constructs can use them
+       directly instead of re-importing by ARN — which carries an UnclearLambdaEnvironment
+       warning and silently drops permissions when CDK can't statically prove same-env. */
     if (props.lambdaAliases && !_.isEmpty(props.lambdaAliases)) {
+      const aliasMap: Record<string, Alias> = {}
       props.lambdaAliases.forEach(alias => {
         const aliasId = alias.id ?? `${id}-${alias.aliasName}`
         const functionAlias = this.createLambdaFunctionAlias(`${aliasId}`, scope, alias, lambdaFunction.currentVersion)
+        aliasMap[alias.aliasName] = functionAlias
         createCfnOutput(`${id}-${alias.aliasName}AliasArn`, scope, functionAlias.functionArn)
         createCfnOutput(`${id}-${alias.aliasName}AliasName`, scope, functionAlias.aliasName)
 
@@ -190,6 +196,7 @@ export class LambdaManager {
           })
         }
       })
+      lambdaFunction.lambdaAliases = aliasMap
     }
 
     if (props.tags && !_.isEmpty(props.tags)) {
