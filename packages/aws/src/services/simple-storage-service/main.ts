@@ -105,9 +105,14 @@ export class S3Manager {
     if (props.existingBucket && props.bucketName) {
       bucket = Bucket.fromBucketName(scope, `${id}`, S3Manager.determineBucketName(scope, props, props.bucketName))
     } else {
-      /* Optionally look up a separate bucket for server access logging */
-      let logBucket
-      if (props.logBucketName) {
+      /* Resolve the server-access-logging destination bucket. When the caller
+         already owns the log bucket (e.g. created earlier in the same stack)
+         they should pass the IBucket instance via `logBucket` — CDK then attaches
+         the log-delivery policy directly and no `accessLogsPolicyNotAdded`
+         warning is raised. The `logBucketName` path remains for true imports
+         where only the name is known. */
+      let logBucket = props.logBucket
+      if (!logBucket && props.logBucketName) {
         logBucket = Bucket.fromBucketName(
           scope,
           `${id}-logs`,

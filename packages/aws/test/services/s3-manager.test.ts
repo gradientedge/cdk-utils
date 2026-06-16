@@ -1,6 +1,7 @@
 import * as cdk from 'aws-cdk-lib'
 import { Template } from 'aws-cdk-lib/assertions'
 import { Construct } from 'constructs'
+import _ from 'lodash'
 import { CommonConstruct, CommonStack, CommonStackProps } from '../../src/index.js'
 
 interface TestStackProps extends CommonStackProps {
@@ -192,6 +193,63 @@ describe('TestS3ManagerLifecycle', () => {
 
   test('provisions bucket folders', () => {
     templateS3Lifecycle.resourceCountIs('Custom::CDKBucketDeployment', 2)
+  })
+})
+
+/* Test S3 access logging wired through the new `logBucket` (L2) prop */
+class TestS3OwnedLogBucketStack extends CommonStack {
+  declare props: TestStackProps
+  declare construct: TestS3OwnedLogBucketConstruct
+
+  constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
+    super(parent, name, props)
+    this.construct = new TestS3OwnedLogBucketConstruct(this, 'test-s3-owned-log-bucket', this.props)
+  }
+
+  protected determineConstructProps(props: cdk.StackProps) {
+    return {
+      ...super.determineConstructProps(props),
+      ...{
+        testBucket: this.node.tryGetContext('siteBucket'),
+        testLogBucket: this.node.tryGetContext('siteLogBucket'),
+      },
+    }
+  }
+}
+
+class TestS3OwnedLogBucketConstruct extends CommonConstruct {
+  declare props: TestStackProps
+
+  constructor(parent: Construct, name: string, props: TestStackProps) {
+    super(parent, name, props)
+    const logBucket = this.s3Manager.createS3Bucket('test-owned-log-bucket', this, this.props.testLogBucket)
+    this.s3Manager.createS3Bucket('test-owned-bucket', this, { ...this.props.testBucket, logBucket })
+  }
+}
+
+const appS3Owned = new cdk.App({ context: testStackProps })
+const stackS3Owned = new TestS3OwnedLogBucketStack(appS3Owned, 'test-s3-owned-log-bucket-stack', testStackProps)
+const templateS3Owned = Template.fromStack(stackS3Owned)
+
+describe('TestS3ManagerOwnedLogBucket', () => {
+  test('wires LoggingConfiguration via Ref to the owned log bucket as expected', () => {
+    /* When the caller passes the L2 IBucket, CDK can resolve the log destination
+       to a same-stack Ref instead of a literal bucket name string — which is what
+       allows it to attach the log-delivery policy and avoid the
+       @aws-cdk/aws-s3:accessLogsPolicyNotAdded warning. */
+    const buckets = _.pickBy(
+      templateS3Owned.toJSON().Resources as Record<string, { Type: string; Properties: any }>,
+      resource => resource.Type === 'AWS::S3::Bucket'
+    )
+    const sourceBucket = _.find(buckets, bucket => bucket.Properties.BucketName === 'site-123456789-eu-west-1-test')
+    const logBucketLogicalId = _.findKey(
+      buckets,
+      bucket => bucket.Properties.BucketName === 'site-logs-123456789-eu-west-1-test'
+    )
+    expect(sourceBucket?.Properties.LoggingConfiguration).toEqual({
+      DestinationBucketName: { Ref: logBucketLogicalId },
+      LogFilePrefix: 'logs/',
+    })
   })
 })
 
