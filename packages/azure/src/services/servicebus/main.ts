@@ -1,3 +1,4 @@
+import { Deployment, DeploymentMode } from '@pulumi/azure-native/resources/index.js'
 import {
   getQueueOutput,
   ManagedServiceIdentityType,
@@ -8,12 +9,14 @@ import {
   Subscription,
   Topic,
 } from '@pulumi/azure-native/servicebus/index.js'
-import { ResourceOptions } from '@pulumi/pulumi'
+import { servicebus as servicebusInputs } from '@pulumi/azure-native/types/input.js'
+import { all, Input, output, ResourceOptions } from '@pulumi/pulumi'
 
 import { CommonAzureConstruct } from '../../common/index.js'
 
 import {
   ResolveServicebusQueueProps,
+  ServiceBusGeoReplicationProps,
   ServiceBusNamespaceProps,
   ServiceBusQueueAuthorizationRuleProps,
   ServiceBusQueueProps,
@@ -56,33 +59,127 @@ export class AzureServiceBusManager {
   ) {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
+    const { enableGeoReplication, geoReplication, ...namespaceProps } = props
+
+    if (enableGeoReplication && !geoReplication) {
+      throw new Error(`enableGeoReplication is true but geoReplication config is missing for ${id}`)
+    }
+
     // Get resource group name
     const resourceGroupName =
-      props.resourceGroupName ?? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
+      namespaceProps.resourceGroupName ?? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
 
-    return new Namespace(
+    const sku = namespaceProps.sku ?? { name: SkuName.Standard }
+
+    if (enableGeoReplication) {
+      // Geo-replication requires Premium. Callers pass `sku` as a literal SBSkuArgs in
+      // practice; validate synchronously so misconfiguration fails at construct time
+      // rather than during preview/up.
+      const skuName = (sku as servicebusInputs.SBSkuArgs).name
+      if (skuName !== SkuName.Premium) {
+        throw new Error(
+          `Service Bus geo-replication requires the Premium SKU, but ${id} was configured with "${String(skuName)}"`
+        )
+      }
+    }
+
+    const namespace = new Namespace(
       `${id}-sn`,
       {
-        ...props,
+        ...namespaceProps,
         namespaceName: scope.resourceNameFormatter.format(
-          props.namespaceName?.toString(),
+          namespaceProps.namespaceName?.toString(),
           scope.props.resourceNameOptions?.serviceBusNamespace
         ),
         resourceGroupName,
-        location: props.location ?? scope.props.location,
-        identity: props.identity ?? {
+        location: namespaceProps.location ?? scope.props.location,
+        identity: namespaceProps.identity ?? {
           type: ManagedServiceIdentityType.SystemAssigned,
         },
-        sku: props.sku ?? {
-          name: SkuName.Standard,
-        },
+        sku,
         tags: {
           environment: scope.props.stage,
           ...scope.props.defaultTags,
-          ...props.tags,
+          ...namespaceProps.tags,
         },
       },
       { parent: scope, ...resourceOptions }
+    )
+
+    if (enableGeoReplication && geoReplication) {
+      this.createServiceBusGeoReplicationDeployment(
+        id,
+        scope,
+        namespace,
+        resourceGroupName,
+        sku,
+        geoReplication,
+        resourceOptions
+      )
+    }
+
+    return namespace
+  }
+
+  /**
+   * Provisions the geo-replication topology for a Service Bus namespace via an ARM
+   * deployment. The deployment PATCHes the existing namespace using the 2024-01-01
+   * Service Bus API version, which exposes the `geoDataReplication` property that is
+   * not yet surfaced by `@pulumi/azure-native`'s strongly-typed `Namespace` resource.
+   */
+  private createServiceBusGeoReplicationDeployment(
+    id: string,
+    scope: CommonAzureConstruct,
+    namespace: Namespace,
+    resourceGroupName: Input<string>,
+    sku: Input<servicebusInputs.SBSkuArgs>,
+    geoReplication: ServiceBusGeoReplicationProps,
+    resourceOptions?: ResourceOptions
+  ) {
+    const template = all([
+      namespace.name,
+      namespace.location,
+      output(sku),
+      output(geoReplication.maxReplicationLagDurationInSeconds ?? 0),
+      output(geoReplication.locations),
+    ]).apply(([namespaceName, location, resolvedSku, maxLagSeconds, locations]) => ({
+      $schema: 'https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#',
+      contentVersion: '1.0.0.0',
+      resources: [
+        {
+          type: 'Microsoft.ServiceBus/namespaces',
+          apiVersion: '2024-01-01',
+          name: namespaceName,
+          location,
+          sku: {
+            name: resolvedSku.name,
+            tier: resolvedSku.tier ?? resolvedSku.name,
+            capacity: resolvedSku.capacity ?? 1,
+          },
+          properties: {
+            geoDataReplication: {
+              maxReplicationLagDurationInSeconds: maxLagSeconds,
+              locations: locations.map(location => ({
+                locationName: location.locationName,
+                roleType: location.roleType,
+              })),
+            },
+          },
+        },
+      ],
+    }))
+
+    return new Deployment(
+      `${id}-sn-geo`,
+      {
+        resourceGroupName,
+        deploymentName: scope.resourceNameFormatter.format(`${id}-sn-geo`),
+        properties: {
+          mode: DeploymentMode.Incremental,
+          template,
+        },
+      },
+      { ...resourceOptions, parent: namespace, dependsOn: [namespace] }
     )
   }
 

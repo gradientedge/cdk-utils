@@ -1,10 +1,11 @@
-import { Namespace, Queue, Subscription, Topic } from '@pulumi/azure-native/servicebus/index.js'
+import { Namespace, Queue, SkuName, SkuTier, Subscription, Topic } from '@pulumi/azure-native/servicebus/index.js'
 import * as pulumi from '@pulumi/pulumi'
 import { outputToPromise } from '../helpers.js'
 import {
   CommonAzureConstruct,
   CommonAzureStack,
   CommonAzureStackProps,
+  ServiceBusGeoReplicationRoleType,
   ServiceBusNamespaceProps,
   ServiceBusQueueProps,
   ServiceBusSubscriptionProps,
@@ -109,6 +110,8 @@ pulumi.runtime.setAllConfig({
   'project:extraContexts': JSON.stringify(testStackProps.extraContexts),
 })
 
+const capturedDeployments: pulumi.runtime.MockResourceArgs[] = []
+
 pulumi.runtime.setMocks({
   newResource: (args: pulumi.runtime.MockResourceArgs) => {
     let name
@@ -122,6 +125,9 @@ pulumi.runtime.setMocks({
       name = args.inputs.queueName
     } else if (args.type === 'azure-native:servicebus:Subscription') {
       name = args.inputs.subscriptionName
+    } else if (args.type === 'azure-native:resources:Deployment') {
+      name = args.inputs.deploymentName
+      capturedDeployments.push(args)
     }
 
     return {
@@ -406,5 +412,165 @@ describe('TestAzureServicebusConstruct - Default Values', () => {
 describe('TestAzureServicebusConstruct - resolveServiceBusQueue', () => {
   test('resolves existing service bus queue', () => {
     expect(stack.construct.resolvedServiceBusQueue).toBeDefined()
+  })
+})
+
+/* --- Tests for geo-replication --- */
+
+class TestGeoReplicationConstruct extends CommonAzureConstruct {
+  declare props: TestAzureStackProps
+  serviceBusNamespace: Namespace
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.serviceBusNamespace = this.serviceBusManager.createServiceBusNamespace(
+      `test-geo-sb-ns-${this.props.stage}`,
+      this,
+      {
+        namespaceName: 'test-geo-sb-ns',
+        resourceGroupName: 'test-rg-dev',
+        sku: { name: SkuName.Premium, tier: SkuTier.Premium, capacity: 1 },
+        enableGeoReplication: true,
+        geoReplication: {
+          maxReplicationLagDurationInSeconds: 0,
+          locations: [
+            { locationName: 'westeurope', roleType: ServiceBusGeoReplicationRoleType.Primary },
+            { locationName: 'northeurope', roleType: ServiceBusGeoReplicationRoleType.Secondary },
+          ],
+        },
+      }
+    )
+  }
+}
+
+class TestGeoReplicationStack extends CommonAzureStack {
+  declare props: TestAzureStackProps
+  declare construct: TestGeoReplicationConstruct
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestGeoReplicationConstruct(props.name, this.props)
+  }
+}
+
+const geoStack = new TestGeoReplicationStack('test-geo-sb-stack', testStackProps)
+
+describe('TestAzureServicebusConstruct - GeoReplication', () => {
+  test('provisions namespace with Premium sku', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          geoStack.construct.serviceBusNamespace.id,
+          geoStack.construct.serviceBusNamespace.urn,
+          geoStack.construct.serviceBusNamespace.name,
+          geoStack.construct.serviceBusNamespace.location,
+          geoStack.construct.serviceBusNamespace.sku,
+          geoStack.construct.serviceBusNamespace.identity,
+        ])
+        .apply(([id, urn, name, location, sku, identity]) => {
+          expect(id).toEqual('test-geo-sb-ns-dev-sn-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:servicebus:Namespace::test-geo-sb-ns-dev-sn'
+          )
+          expect(name).toEqual('test-geo-sb-ns-dev')
+          expect(location).toEqual('eastus')
+          expect(sku).toEqual({ name: 'Premium', tier: 'Premium', capacity: 1 })
+          expect(identity).toEqual({ type: 'SystemAssigned' })
+        })
+    )
+  })
+
+  test('provisions ARM deployment for geo-replication with exact template', () => {
+    const deployments = capturedDeployments.filter(deployment => deployment.name === 'test-geo-sb-ns-dev-sn-geo')
+    expect(deployments.length).toEqual(1)
+    const deployment = deployments[0]
+    expect(deployment.type).toEqual('azure-native:resources:Deployment')
+    expect(deployment.inputs.resourceGroupName).toEqual('test-rg-dev')
+    expect(deployment.inputs.deploymentName).toEqual('test-geo-sb-ns-dev-sn-geo-dev')
+    expect(deployment.inputs.properties).toEqual({
+      mode: 'Incremental',
+      template: {
+        $schema: 'https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#',
+        contentVersion: '1.0.0.0',
+        resources: [
+          {
+            type: 'Microsoft.ServiceBus/namespaces',
+            apiVersion: '2024-01-01',
+            name: 'test-geo-sb-ns-dev',
+            location: 'eastus',
+            sku: { name: 'Premium', tier: 'Premium', capacity: 1 },
+            properties: {
+              geoDataReplication: {
+                maxReplicationLagDurationInSeconds: 0,
+                locations: [
+                  { locationName: 'westeurope', roleType: 'Primary' },
+                  { locationName: 'northeurope', roleType: 'Secondary' },
+                ],
+              },
+            },
+          },
+        ],
+      },
+    })
+  })
+
+  test('throws when enableGeoReplication is true but geoReplication config is missing', () => {
+    expect(() => {
+      stack.construct.serviceBusManager.createServiceBusNamespace('test-geo-missing', stack.construct, {
+        namespaceName: 'test-geo-missing',
+        resourceGroupName: 'test-rg-dev',
+        sku: { name: SkuName.Premium, tier: SkuTier.Premium, capacity: 1 },
+        enableGeoReplication: true,
+      })
+    }).toThrow('enableGeoReplication is true but geoReplication config is missing for test-geo-missing')
+  })
+
+  test('throws when enableGeoReplication is true but sku is not Premium', () => {
+    expect(() => {
+      stack.construct.serviceBusManager.createServiceBusNamespace('test-geo-standard', stack.construct, {
+        namespaceName: 'test-geo-standard',
+        resourceGroupName: 'test-rg-dev',
+        sku: { name: SkuName.Standard },
+        enableGeoReplication: true,
+        geoReplication: {
+          maxReplicationLagDurationInSeconds: 0,
+          locations: [
+            { locationName: 'westeurope', roleType: ServiceBusGeoReplicationRoleType.Primary },
+            { locationName: 'northeurope', roleType: ServiceBusGeoReplicationRoleType.Secondary },
+          ],
+        },
+      })
+    }).toThrow(
+      'Service Bus geo-replication requires the Premium SKU, but test-geo-standard was configured with "Standard"'
+    )
+  })
+
+  test('throws when enableGeoReplication is true and sku defaults to Standard', () => {
+    expect(() => {
+      stack.construct.serviceBusManager.createServiceBusNamespace('test-geo-default-sku', stack.construct, {
+        namespaceName: 'test-geo-default-sku',
+        resourceGroupName: 'test-rg-dev',
+        enableGeoReplication: true,
+        geoReplication: {
+          maxReplicationLagDurationInSeconds: 0,
+          locations: [
+            { locationName: 'westeurope', roleType: ServiceBusGeoReplicationRoleType.Primary },
+            { locationName: 'northeurope', roleType: ServiceBusGeoReplicationRoleType.Secondary },
+          ],
+        },
+      })
+    }).toThrow(
+      'Service Bus geo-replication requires the Premium SKU, but test-geo-default-sku was configured with "Standard"'
+    )
+  })
+
+  test('does not provision deployment when enableGeoReplication is false', () => {
+    const before = capturedDeployments.length
+    stack.construct.serviceBusManager.createServiceBusNamespace('test-geo-disabled', stack.construct, {
+      namespaceName: 'test-geo-disabled',
+      resourceGroupName: 'test-rg-dev',
+      sku: { name: SkuName.Standard },
+    })
+    expect(capturedDeployments.length).toEqual(before)
   })
 })
