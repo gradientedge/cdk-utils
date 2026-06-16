@@ -1,5 +1,13 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.53.0
+
+### Minor Changes
+
+- [#1099](https://github.com/gradientedge/cdk-utils/pull/1099) [`1a2109a`](https://github.com/gradientedge/cdk-utils/commit/1a2109ac8f10d78cec67fa9d6855f2a69ae00233) Thanks [@despock](https://github.com/despock)! - feat: adding geo-replication L1 support for service bus namespace
+
+- [#1099](https://github.com/gradientedge/cdk-utils/pull/1099) [`0ad896e`](https://github.com/gradientedge/cdk-utils/commit/0ad896e40d749eb53843917ff759ae9a63a739e7) Thanks [@despock](https://github.com/despock)! - feat: bumping dependencies
+
 ## 2.52.1
 
 ### Patch Changes
