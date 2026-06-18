@@ -386,8 +386,6 @@ class TestMinimalEventgridStack extends CommonAzureStack {
 const minimalEventgridStack = new TestMinimalEventgridStack('test-minimal-eg-stack', testStackProps)
 
 describe('TestAzureEventgridConstruct - Default Values', () => {
-
-
   test('eventgrid topic uses default location from scope when not provided', async () => {
     await outputToPromise(
       pulumi.all([minimalEventgridStack.construct.eventgridTopic.location]).apply(([location]) => {
