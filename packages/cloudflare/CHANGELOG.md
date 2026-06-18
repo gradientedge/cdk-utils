@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-cloudflare
 
+## 2.23.1
+
+### Patch Changes
+
+- [#1106](https://github.com/gradientedge/cdk-utils/pull/1106) [`593a13a`](https://github.com/gradientedge/cdk-utils/commit/593a13a331cc7bbb2496b69f81fe4b6cc4225143) Thanks [@despock](https://github.com/despock)! - fix: use lodash default import to fix ESM named-export crash
+
 ## 2.23.0
 
 ### Minor Changes
