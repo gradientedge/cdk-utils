@@ -1,5 +1,6 @@
 import {
   EventSubscriptionArgs,
+  GetSystemTopicOutputArgs,
   GetTopicOutputArgs,
   SystemTopicArgs,
   SystemTopicEventSubscriptionArgs,
@@ -40,3 +41,10 @@ export interface EventgridSystemTopicEventSubscriptionProps extends SystemTopicE
  * @category Interface
  */
 export interface ResolveEventgridTopicProps extends GetTopicOutputArgs {}
+
+/**
+ * Properties for resolving an existing EventGrid system topic
+ * @see [Pulumi Azure Native Event Grid System Topic]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/systemtopic/}
+ * @category Interface
+ */
+export interface ResolveEventgridSystemTopicProps extends GetSystemTopicOutputArgs {}

@@ -2,6 +2,8 @@ import {
   Blob,
   BlobContainer,
   BlobServiceProperties,
+  getStorageAccountOutput,
+  getBlobContainerOutput,
   HttpProtocol,
   Kind,
   listStorageAccountSAS,
@@ -23,6 +25,8 @@ import { CommonAzureConstruct } from '../../common/index.js'
 import {
   ContainerSasTokenProps,
   ManagementPolicyProps,
+  ResolveStorageAccountProps,
+  ResolveStorageContainerProps,
   StorageAccountProps,
   StorageBlobProps,
   StorageContainerProps,
@@ -268,5 +272,56 @@ export class AzureStorageManager {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
     return new Table(`${id}`, props, { parent: scope, ...resourceOptions })
+  }
+
+  /**
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props storage account properties
+   * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native Storage Table]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/storage/table/}
+   */
+  public resolveStorageAccount(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: ResolveStorageAccountProps,
+    resourceOptions?: ResourceOptions
+  ) {
+    return getStorageAccountOutput(
+      {
+        accountName: scope.resourceNameFormatter.format(
+          props.accountName?.toString(),
+          scope.props.resourceNameOptions?.storageAccount
+        ),
+        resourceGroupName: props.resourceGroupName ?? scope.resourceNameFormatter.format(scope.props.resourceGroupName),
+      },
+      { parent: scope, ...resourceOptions }
+    )
+  }
+
+  /**
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props storage account container properties
+   * @param resourceOptions Optional settings to control resource behaviour
+
+   */
+  public resolveStorageContainer(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: ResolveStorageContainerProps,
+    resourceOptions?: ResourceOptions
+  ) {
+    return getBlobContainerOutput(
+      {
+        accountName: scope.resourceNameFormatter.format(
+          props.accountName?.toString(),
+          scope.props.resourceNameOptions?.storageAccount
+        ),
+        containerName: props.containerName,
+        resourceGroupName: props.resourceGroupName ?? scope.resourceNameFormatter.format(scope.props.resourceGroupName),
+      },
+      { parent: scope, ...resourceOptions }
+    )
   }
 }

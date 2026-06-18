@@ -4,6 +4,7 @@ import {
   EventSubscription,
   GetSystemTopicResult,
   getTopicOutput,
+  getSystemTopicOutput,
   SystemTopic,
   SystemTopicEventSubscription,
   TlsVersion,
@@ -19,6 +20,7 @@ import {
   EventgridSystemTopicProps,
   EventgridTopicProps,
   ResolveEventgridTopicProps,
+  ResolveEventgridSystemTopicProps,
 } from './types.js'
 
 /**
@@ -214,6 +216,36 @@ export class AzureEventgridManager {
         ),
         systemTopicName: systemTopic.name,
         resourceGroupName,
+      },
+      { parent: scope, ...resourceOptions }
+    )
+  }
+
+  /**
+   * @summary Method to resolve an existing eventgrid system topic
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props eventgrid system topic properties
+   * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native Event Grid System Topic Lookup]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/getsystemtopic/}
+   */
+  public resolveEventgridSystemTopic(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: ResolveEventgridSystemTopicProps,
+    resourceOptions?: ResourceOptions
+  ) {
+    if (!props) throw new Error(`Props undefined for ${id}`)
+
+    return getSystemTopicOutput(
+      {
+        systemTopicName:
+          props.systemTopicName ??
+          scope.resourceNameFormatter.format(
+            props.systemTopicName,
+            scope.props.resourceNameOptions?.eventGridSystemTopic
+          ),
+        resourceGroupName: props.resourceGroupName ?? scope.resourceNameFormatter.format(scope.props.resourceGroupName),
       },
       { parent: scope, ...resourceOptions }
     )
