@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.53.1
+
+### Patch Changes
+
+- [#1104](https://github.com/gradientedge/cdk-utils/pull/1104) [`eb7fb50`](https://github.com/gradientedge/cdk-utils/commit/eb7fb50aa1b892de93618d41b747199b902ddfad) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - Adding contructs to resolve storage accounts and event grid system topics
+
 ## 2.53.0
 
 ### Minor Changes
