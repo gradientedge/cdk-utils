@@ -279,6 +279,16 @@ describe('TestAzureEventgridConstruct - Props Undefined', () => {
       stack.construct.eventgridManager.resolveEventgridTopic('test-resolve-err', stack.construct, undefined as any)
     }).toThrow('Props undefined for test-resolve-err')
   })
+
+  test('resolveEventgridSystemTopic throws when props are undefined', () => {
+    expect(() => {
+      stack.construct.eventgridManager.resolveEventgridSystemTopic(
+        'test-system-resolve-err',
+        stack.construct,
+        undefined as any
+      )
+    }).toThrow('Props undefined for test-system-resolve-err')
+  })
 })
 
 /* --- Tests for default value fallback branches --- */
@@ -287,6 +297,9 @@ class TestMinimalEventgridConstruct extends CommonAzureConstruct {
   eventgridTopic: Topic
   eventgridSubscription: EventSubscription
   eventgridSystemTopic: SystemTopic
+  eventgridSystemEventSubscription: SystemTopicEventSubscription
+  resolvedEventgridTopic: pulumi.Output<any>
+  resolvedEventgridSystemTopic: pulumi.Output<any>
 
   constructor(name: string, props: TestAzureStackProps) {
     super(name, props)
@@ -297,7 +310,6 @@ class TestMinimalEventgridConstruct extends CommonAzureConstruct {
       this,
       {
         topicName: 'test-minimal-eg-topic',
-        resourceGroupName: 'test-rg-dev',
       } as any
     )
 
@@ -322,9 +334,40 @@ class TestMinimalEventgridConstruct extends CommonAzureConstruct {
       this,
       {
         systemTopicName: 'test-minimal-eg-sys-topic',
-        resourceGroupName: 'test-rg-dev',
         source: '/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.Storage/storageAccounts/testsa',
         topicType: 'Microsoft.Storage.StorageAccounts',
+      } as any
+    )
+
+    // System topic subscription with minimal props - exercises resourceGroupName fallback
+    this.eventgridSystemEventSubscription = this.eventgridManager.createEventgridSystemTopicEventSubscription(
+      `test-minimal-eg-sys-sub-${this.props.stage}`,
+      this,
+      {
+        eventSubscriptionName: 'test-minimal-eg-sys-sub',
+        scope:
+          '/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.EventGrid/systemTopics/test-minimal-eg-sys-topic-dev',
+        destination: {
+          endpointType: 'WebHook',
+          properties: { endpointUrl: 'https://test.example.com/webhook' },
+        },
+      } as any,
+      this.eventgridSystemTopic
+    )
+
+    this.resolvedEventgridTopic = this.eventgridManager.resolveEventgridTopic(
+      `test-resolved-eg-topic-${this.props.stage}`,
+      this,
+      {
+        topicName: 'test-minimal-eg-topic',
+      } as any
+    )
+
+    this.resolvedEventgridSystemTopic = this.eventgridManager.resolveEventgridSystemTopic(
+      `test-resolved-eg-sys-topic-${this.props.stage}`,
+      this,
+      {
+        systemTopicName: 'test-minimal-eg-sys-topic',
       } as any
     )
   }
@@ -359,6 +402,26 @@ describe('TestAzureEventgridConstruct - Default Values', () => {
     )
   })
 
+  test('eventgrid topic uses default data residency boundary when not provided', async () => {
+    await outputToPromise(
+      pulumi
+        .all([minimalEventgridStack.construct.eventgridTopic.dataResidencyBoundary])
+        .apply(([dataResidencyBoundary]) => {
+          expect(dataResidencyBoundary).toEqual('WithinGeopair')
+        })
+    )
+  })
+
+  test('eventgrid topic uses default minimum tls version when not provided', async () => {
+    await outputToPromise(
+      pulumi
+        .all([minimalEventgridStack.construct.eventgridTopic.minimumTlsVersionAllowed])
+        .apply(([minimumTlsVersionAllowed]) => {
+          expect(minimumTlsVersionAllowed).toEqual('1.2')
+        })
+    )
+  })
+
   test('eventgrid subscription uses default eventDeliverySchema when not provided', async () => {
     await outputToPromise(
       pulumi.all([minimalEventgridStack.construct.eventgridSubscription.eventDeliverySchema]).apply(([schema]) => {
@@ -389,6 +452,26 @@ describe('TestAzureEventgridConstruct - Default Values', () => {
       pulumi.all([minimalEventgridStack.construct.eventgridSystemTopic.tags]).apply(([tags]) => {
         expect(tags?.environment).toEqual('dev')
       })
+    )
+  })
+
+  test('resolve eventgrid topic uses formatted topic name and default resource group name from scope', async () => {
+    await outputToPromise(
+      pulumi.output(minimalEventgridStack.construct.resolvedEventgridTopic).apply(resolvedEventgridTopic => {
+        expect((resolvedEventgridTopic as any).topicName).toEqual('test-minimal-eg-topic-dev')
+        expect((resolvedEventgridTopic as any).resourceGroupName).toEqual('test-rg-dev')
+      })
+    )
+  })
+
+  test('resolve eventgrid system topic uses provided system topic name and default resource group name from scope', async () => {
+    await outputToPromise(
+      pulumi
+        .output(minimalEventgridStack.construct.resolvedEventgridSystemTopic)
+        .apply(resolvedEventgridSystemTopic => {
+          expect((resolvedEventgridSystemTopic as any).systemTopicName).toEqual('test-minimal-eg-sys-topic')
+          expect((resolvedEventgridSystemTopic as any).resourceGroupName).toEqual('test-rg-dev')
+        })
     )
   })
 })

@@ -2,6 +2,8 @@ import {
   BlobArgs,
   BlobContainerArgs,
   BlobServicePropertiesArgs,
+  GetStorageAccountOutputArgs,
+  GetBlobContainerOutputArgs,
   ListStorageAccountSASArgs,
   ManagementPolicyArgs,
   StorageAccountArgs,
@@ -70,3 +72,17 @@ export interface ContainerSasTokenProps extends ListStorageAccountSASArgs {
   /** SAS expiry date in 'YYYY-MM-DD' format; defaults to 7 days from now */
   expiry?: string
 }
+
+/**
+ * Properties for resolving an existing Storage account
+ * @see [Pulumi Azure Native Event Grid Topic]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/storage/getstorageaccount/}
+ * @category Interface
+ */
+export interface ResolveStorageAccountProps extends GetStorageAccountOutputArgs {}
+
+/**
+ * Properties for resolving an existing Storage account container
+ * @see [Pulumi Azure Native Event Grid Topic]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/storage/getstorageaccount/}
+ * @category Interface
+ */
+export interface ResolveStorageContainerProps extends GetBlobContainerOutputArgs {}
