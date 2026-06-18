@@ -12,6 +12,10 @@ updates:
     allow:
       - dependency-type: 'direct'
     versioning-strategy: increase
+    # Match the pnpm `minimumReleaseAge: 2880` (48h) gate in pnpm-workspace.yaml
+    # so Dependabot does not raise PRs for releases pnpm would still hold back.
+    cooldown:
+      default-days: 2
 
   - package-ecosystem: 'github-actions'
     directory: '/'
