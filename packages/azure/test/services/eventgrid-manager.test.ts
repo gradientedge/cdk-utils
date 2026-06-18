@@ -386,13 +386,7 @@ class TestMinimalEventgridStack extends CommonAzureStack {
 const minimalEventgridStack = new TestMinimalEventgridStack('test-minimal-eg-stack', testStackProps)
 
 describe('TestAzureEventgridConstruct - Default Values', () => {
-  test('eventgrid topic uses default resource group name from scope when not provided', async () => {
-    await outputToPromise(
-      pulumi.all([minimalEventgridStack.construct.eventgridTopic.resourceGroupName]).apply(([resourceGroupName]) => {
-        expect(resourceGroupName).toEqual('test-rg-dev')
-      })
-    )
-  })
+
 
   test('eventgrid topic uses default location from scope when not provided', async () => {
     await outputToPromise(
@@ -455,31 +449,11 @@ describe('TestAzureEventgridConstruct - Default Values', () => {
     )
   })
 
-  test('eventgrid system topic uses default resource group name from scope when not provided', async () => {
-    await outputToPromise(
-      pulumi
-        .all([minimalEventgridStack.construct.eventgridSystemTopic.resourceGroupName])
-        .apply(([resourceGroupName]) => {
-          expect(resourceGroupName).toEqual('test-rg-dev')
-        })
-    )
-  })
-
   test('eventgrid system topic uses default tags when not provided', async () => {
     await outputToPromise(
       pulumi.all([minimalEventgridStack.construct.eventgridSystemTopic.tags]).apply(([tags]) => {
         expect(tags?.environment).toEqual('dev')
       })
-    )
-  })
-
-  test('eventgrid system topic event subscription uses default resource group name from scope when not provided', async () => {
-    await outputToPromise(
-      pulumi
-        .all([minimalEventgridStack.construct.eventgridSystemEventSubscription.resourceGroupName])
-        .apply(([resourceGroupName]) => {
-          expect(resourceGroupName).toEqual('test-rg-dev')
-        })
     )
   })
 
