@@ -71,6 +71,24 @@
     ],
     "timeoutInSecs": 60
   },
+  "testLambdaWithVersionPinnedConcurrency": {
+    "functionName": "test-lambda-version-pc",
+    "logRetentionInDays": 7,
+    "memorySize": 1024,
+    "lambdaAliases": [
+      {
+        "aliasName": "test-version-pc-alias",
+        "retryAttempts": 0,
+        "provisionedConcurrency": {
+          "minCapacity": 1,
+          "maxCapacity": 3,
+          "utilizationTarget": 0.7,
+          "onVersion": true
+        }
+      }
+    ],
+    "timeoutInSecs": 60
+  },
   "testLambdaWithDlq": {
     "functionName": "test-lambda-with-error-handling",
     "logRetentionInDays": 7,

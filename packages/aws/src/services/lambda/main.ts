@@ -7,6 +7,7 @@ import {
   Alias,
   Architecture,
   AssetCode,
+  CfnVersion,
   DockerImageCode,
   DockerImageFunction,
   FileSystem,
@@ -15,6 +16,7 @@ import {
   IVersion,
   LayerVersion,
 } from 'aws-cdk-lib/aws-lambda'
+import { PredefinedMetric, ScalableTarget, ServiceNamespace } from 'aws-cdk-lib/aws-applicationautoscaling'
 import { SqsEventSource } from 'aws-cdk-lib/aws-lambda-event-sources'
 import _ from 'lodash'
 
@@ -190,10 +192,22 @@ export class LambdaManager {
         createCfnOutput(`${id}-${alias.aliasName}AliasName`, scope, functionAlias.aliasName)
 
         if (alias.provisionedConcurrency) {
-          const functionAutoScaling = functionAlias.addAutoScaling(alias.provisionedConcurrency)
-          functionAutoScaling.scaleOnUtilization({
-            utilizationTarget: alias.provisionedConcurrency.utilizationTarget,
-          })
+          if (alias.provisionedConcurrency.onVersion) {
+            /* Attach PC + autoscaling to the published function VERSION rather
+               than the alias. See ProvisionedConcurrencyProps.onVersion docs
+               for the deploy-failure trap this exists to avoid. */
+            this.attachProvisionedConcurrencyToVersion(
+              `${aliasId}-pc`,
+              scope,
+              lambdaFunction,
+              alias.provisionedConcurrency
+            )
+          } else {
+            const functionAutoScaling = functionAlias.addAutoScaling(alias.provisionedConcurrency)
+            functionAutoScaling.scaleOnUtilization({
+              utilizationTarget: alias.provisionedConcurrency.utilizationTarget,
+            })
+          }
         }
       })
       lambdaFunction.lambdaAliases = aliasMap
@@ -344,6 +358,51 @@ export class LambdaManager {
    * @param props the Lambda alias properties
    * @param lambdaVersion the Lambda function version to point the alias to
    */
+  /**
+   * @summary Attach provisioned concurrency + an autoscaling target to a Lambda
+   * version (resource id `function:<fn>:<version>`) rather than an alias. The
+   * version is warmed before the alias swap, and the alias itself carries no
+   * PC config — so CFN alias updates remain atomic and never trip the
+   * `Invalid alias configuration for Provisioned Concurrency` deploy failure
+   * mode documented on {@link ProvisionedConcurrencyProps.onVersion}.
+   * @param id scoped id prefix for the PC + scaling resources
+   * @param scope scope the resources are added to
+   * @param lambdaFunction the function whose currentVersion to attach PC to
+   * @param props the PC + autoscaling props
+   */
+  protected attachProvisionedConcurrencyToVersion(
+    id: string,
+    scope: CommonConstruct,
+    lambdaFunction: Function,
+    props: { maxCapacity: number; minCapacity: number; utilizationTarget: number }
+  ) {
+    const version = lambdaFunction.currentVersion
+
+    /* CDK doesn't expose AWS::Lambda::ProvisionedConcurrencyConfig as a
+       standalone L1 — set PC inline on the published CfnVersion instead.
+       Same CFN-level effect: PC attaches to the version, not the alias. */
+    const cfnVersion = version.node.defaultChild as CfnVersion
+    cfnVersion.provisionedConcurrencyConfig = {
+      provisionedConcurrentExecutions: props.minCapacity,
+    }
+
+    const scalableTarget = new ScalableTarget(scope, `${id}-target`, {
+      serviceNamespace: ServiceNamespace.LAMBDA,
+      resourceId: `function:${lambdaFunction.functionName}:${version.version}`,
+      scalableDimension: 'lambda:function:ProvisionedConcurrency',
+      minCapacity: props.minCapacity,
+      maxCapacity: props.maxCapacity,
+    })
+    scalableTarget.node.addDependency(version)
+
+    scalableTarget.scaleToTrackMetric(`${id}-utilization`, {
+      targetValue: props.utilizationTarget,
+      predefinedMetric: PredefinedMetric.LAMBDA_PROVISIONED_CONCURRENCY_UTILIZATION,
+    })
+
+    return scalableTarget
+  }
+
   public createLambdaFunctionAlias(
     id: string,
     scope: CommonConstruct,
