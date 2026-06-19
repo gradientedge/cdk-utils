@@ -13,6 +13,7 @@ interface TestStackProps extends CommonStackProps {
   testLambdaEdge: any
   testLambdaPython: any
   testLambdaWithConcurrency: any
+  testLambdaWithVersionPinnedConcurrency: any
   testLambdaWithDlq: any
   testLambdaWithDlqRetries: any
   testDockerLambdaWithDlqRetries: any
@@ -51,6 +52,7 @@ class TestCommonStack extends CommonStack {
         testLambdaEdge: this.node.tryGetContext('testLambdaEdge'),
         testLambdaPython: this.node.tryGetContext('testLambdaPython'),
         testLambdaWithConcurrency: this.node.tryGetContext('testLambdaWithConcurrency'),
+        testLambdaWithVersionPinnedConcurrency: this.node.tryGetContext('testLambdaWithVersionPinnedConcurrency'),
         testLambdaWithDlq: this.node.tryGetContext('testLambdaWithDlq'),
         testLambdaWithDlqRetries: this.node.tryGetContext('testLambdaWithDlqRetries'),
         testDockerLambdaWithDlqRetries: this.node.tryGetContext('testDockerLambdaWithDlqRetries'),
@@ -105,6 +107,15 @@ class TestCommonConstruct extends CommonConstruct {
       'test-lambda-with-concurrency',
       this,
       this.props.testLambdaWithConcurrency,
+      testRole,
+      [testLayer],
+      new lambda.AssetCode('packages/aws/test/common/nodejs/lib')
+    )
+
+    this.lambdaManager.createLambdaFunction(
+      'test-lambda-with-version-pc',
+      this,
+      this.props.testLambdaWithVersionPinnedConcurrency,
       testRole,
       [testLayer],
       new lambda.AssetCode('packages/aws/test/common/nodejs/lib')
@@ -170,9 +181,9 @@ describe('TestLambdaConstruct', () => {
   test('synthesises as expected', () => {
     /* test if number of resources are correctly synthesised */
     template.resourceCountIs('AWS::Lambda::LayerVersion', 1)
-    template.resourceCountIs('AWS::Lambda::Function', 7)
+    template.resourceCountIs('AWS::Lambda::Function', 8)
     template.resourceCountIs('AWS::SQS::Queue', 6)
-    template.resourceCountIs('AWS::Lambda::Alias', 2)
+    template.resourceCountIs('AWS::Lambda::Alias', 3)
     template.resourceCountIs('AWS::Lambda::EventSourceMapping', 2)
   })
 })
@@ -520,5 +531,54 @@ describe('TestLambdaConstructErrorHandling', () => {
 
     const error = () => new TestErrorAliasStack(app, 'test-error-stack-alias', testStackProps)
     expect(error).toThrow('Lambda Alias props undefined')
+  })
+})
+
+describe('TestLambdaConstruct version-pinned provisioned concurrency', () => {
+  test('attaches ProvisionedConcurrencyConfig inline on the published Version', () => {
+    /* Version-pc lambda's published CfnVersion carries the PC config. */
+    template.hasResourceProperties('AWS::Lambda::Version', {
+      ProvisionedConcurrencyConfig: { ProvisionedConcurrentExecutions: 1 },
+    })
+  })
+
+  test('leaves the alias PC-free so CFN can update FunctionVersion atomically', () => {
+    /* The alias for the version-pc lambda must NOT carry ProvisionedConcurrencyConfig.
+       That's the whole point: alias updates are atomic, no routing weights get
+       set during deploy, and the deploy can never wedge on
+       "Invalid alias configuration for Provisioned Concurrency". */
+    const aliases = template.findResources('AWS::Lambda::Alias', {
+      Properties: { Name: 'test-version-pc-alias' },
+    })
+    const aliasResources = Object.values(aliases)
+    expect(aliasResources).toHaveLength(1)
+    expect(
+      (aliasResources[0] as { Properties: { ProvisionedConcurrencyConfig?: unknown } }).Properties
+        .ProvisionedConcurrencyConfig
+    ).toBeUndefined()
+  })
+
+  test('creates an ApplicationAutoScaling target against function:<fn>:<version>', () => {
+    /* Resource ID is built via Fn::Join with a Fn::GetAtt to the version's
+       Version attribute — that's what makes the target version-scoped. */
+    const targets = template.findResources('AWS::ApplicationAutoScaling::ScalableTarget')
+    const versionTarget = Object.values(targets).find(t => {
+      const resourceId = (t as { Properties?: { ResourceId?: unknown } }).Properties?.ResourceId
+      return JSON.stringify(resourceId).includes('CurrentVersion') && JSON.stringify(resourceId).includes('"Version"')
+    })
+    expect(versionTarget).toBeDefined()
+    const props = (versionTarget as { Properties: { MinCapacity: number; MaxCapacity: number } }).Properties
+    expect(props.MinCapacity).toBe(1)
+    expect(props.MaxCapacity).toBe(3)
+  })
+
+  test('uses LambdaProvisionedConcurrencyUtilization as the predefined target-tracking metric', () => {
+    template.hasResourceProperties('AWS::ApplicationAutoScaling::ScalingPolicy', {
+      PolicyType: 'TargetTrackingScaling',
+      TargetTrackingScalingPolicyConfiguration: {
+        PredefinedMetricSpecification: { PredefinedMetricType: 'LambdaProvisionedConcurrencyUtilization' },
+        TargetValue: 0.7,
+      },
+    })
   })
 })

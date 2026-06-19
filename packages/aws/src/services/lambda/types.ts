@@ -29,7 +29,8 @@ export interface EdgeFunctionProps extends FunctionProps {
 }
 
 /**
- * Properties for configuring provisioned concurrency auto-scaling on a Lambda alias.
+ * Properties for configuring provisioned concurrency auto-scaling on a Lambda alias
+ * or on the function's published version.
  */
 /** @category Interface */
 export interface ProvisionedConcurrencyProps {
@@ -39,6 +40,35 @@ export interface ProvisionedConcurrencyProps {
   minCapacity: number
   /** Target utilization percentage to trigger scaling (0-1) */
   utilizationTarget: number
+  /**
+   * When true, attach provisioned concurrency (and its auto-scaling target)
+   * to the function's published version (`function:<fn>:<version>`) instead
+   * of the alias (`function:<fn>:<aliasName>`).
+   *
+   * Why this exists: when PC is on the alias, every CFN alias update that
+   * changes `FunctionVersion` triggers Lambda's built-in canary deploy
+   * behaviour — CFN sets `RoutingConfig.AdditionalVersionWeights` to keep
+   * traffic on the old version until PC is allocated on the new one. If
+   * the new version's init fails (`FUNCTION_ERROR_INIT_FAILURE`), the
+   * routing weights persist at 100% on old and **every subsequent deploy
+   * fails** with `Invalid alias configuration for Provisioned Concurrency`
+   * because Lambda forbids PC + routing config on the same alias update.
+   *
+   * Attaching PC to the version sidesteps this: the alias has no PC, so
+   * version swaps are atomic and never set routing weights. The new
+   * version is warmed by PC before the alias points at it because CDK
+   * publishes a new `currentVersion` on every change and the PC config /
+   * autoscaling target attach to that version explicitly.
+   *
+   * Trade-off: ApplicationAutoScaling targets accumulate one per deploy
+   * (since the resource ID embeds the version number). Combine with
+   * `RemovalPolicy.DESTROY` on the underlying scaling resources if your
+   * stack is updated frequently; the keep-targets-around limit is 2,500
+   * per region per account.
+   *
+   * @default false (PC stays on the alias — legacy behaviour)
+   */
+  onVersion?: boolean
 }
 
 /**
