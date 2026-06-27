@@ -1,6 +1,5 @@
 import {
   getApiManagementServiceOutput,
-  HostnameType,
   listSubscriptionSecretsOutput,
   LoggerType,
 } from '@pulumi/azure-native/apimanagement/index.js'
