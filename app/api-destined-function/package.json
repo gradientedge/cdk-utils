@@ -1,6 +1,6 @@
 {
   "name": "@gradientedge/cdk-utils-api-destined-function",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "private": true,
   "description": "Application for API Destined Function",
   "type": "module",
