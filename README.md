@@ -186,7 +186,6 @@ This project is licensed under the MIT License — see the [LICENSE](LICENSE) fi
 [issues-url]: https://github.com/gradientedge/cdk-utils/issues
 [pr]: https://img.shields.io/github/issues-pr/gradientedge/cdk-utils.svg
 [pr-url]: https://github.com/gradientedge/cdk-utils/pulls
-
 [pulumi-badge]: https://img.shields.io/badge/dynamic/yaml?url=https://raw.githubusercontent.com/gradientedge/cdk-utils/main/pnpm-workspace.yaml&query=$.catalog['@pulumi/pulumi']&label=@pulumi/pulumi&color=blueviolet
 [pulumi-azure-badge]: https://img.shields.io/badge/dynamic/yaml?url=https://raw.githubusercontent.com/gradientedge/cdk-utils/main/pnpm-workspace.yaml&query=$.catalog['@pulumi/azure-native']&label=@pulumi/azure-native&color=blueviolet
 [pulumi-cloudflare-badge]: https://img.shields.io/github/package-json/dependency-version/gradientedge/cdk-utils/@pulumi/cloudflare?filename=packages/cloudflare/package.json
