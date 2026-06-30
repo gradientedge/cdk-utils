@@ -1,5 +1,18 @@
 # @gradientedge/cdk-utils
 
+## 11.58.0
+
+### Minor Changes
+
+- [#1115](https://github.com/gradientedge/cdk-utils/pull/1115) [`1d9d8f5`](https://github.com/gradientedge/cdk-utils/commit/1d9d8f58c53c22d62c288393d0e61385500be78a) Thanks [@despock](https://github.com/despock)! - feat: bumping dependencies
+
+### Patch Changes
+
+- Updated dependencies [[`1d9d8f5`](https://github.com/gradientedge/cdk-utils/commit/1d9d8f58c53c22d62c288393d0e61385500be78a)]:
+  - @gradientedge/cdk-utils-cloudflare@2.25.0
+  - @gradientedge/cdk-utils-azure@2.55.0
+  - @gradientedge/cdk-utils-aws@2.23.0
+
 ## 11.57.0
 
 ### Minor Changes
