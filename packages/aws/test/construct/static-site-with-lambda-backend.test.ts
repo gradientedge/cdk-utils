@@ -232,7 +232,7 @@ describe('SiteWithLambdaBackend', () => {
                   'Fn::Split': [
                     '/',
                     {
-                      'Fn::GetAtt': ['testsitestacktestsitefnaliasFunctionUrlE67BA968', 'FunctionUrl'],
+                      'Fn::GetAtt': ['testsitestacktestsitelambdalatestFunctionUrl070DF7C4', 'FunctionUrl'],
                     },
                   ],
                 },
@@ -298,9 +298,8 @@ describe('SiteWithLambdaBackend', () => {
   test('provisions lambda function url with AWS_IAM auth by default', () => {
     template.hasResourceProperties('AWS::Lambda::Url', {
       AuthType: 'AWS_IAM',
-      TargetFunctionArn: {
-        'Fn::Join': ['', [{ 'Fn::GetAtt': ['testsitestacktestsitelambdaC503A7D7', 'Arn'] }, ':latest']],
-      },
+      TargetFunctionArn: { 'Fn::GetAtt': ['testsitestacktestsitelambdaC503A7D7', 'Arn'] },
+      Qualifier: 'latest',
     })
   })
 

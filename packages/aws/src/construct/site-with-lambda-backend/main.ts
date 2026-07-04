@@ -13,7 +13,7 @@ import {
 } from 'aws-cdk-lib/aws-cloudfront'
 import { FunctionUrlOrigin, HttpOrigin } from 'aws-cdk-lib/aws-cloudfront-origins'
 import { AnyPrincipal, Effect, IPrincipal, PolicyDocument, PolicyStatement, Role } from 'aws-cdk-lib/aws-iam'
-import { AssetCode, Function, FunctionUrl, FunctionUrlAuthType, IFunction, ILayerVersion } from 'aws-cdk-lib/aws-lambda'
+import { AssetCode, FunctionUrl, FunctionUrlAuthType, IFunction, ILayerVersion } from 'aws-cdk-lib/aws-lambda'
 import { IHostedZone } from 'aws-cdk-lib/aws-route53'
 import { IBucket } from 'aws-cdk-lib/aws-s3'
 import { BucketDeployment } from 'aws-cdk-lib/aws-s3-deployment'
@@ -434,15 +434,17 @@ export class SiteWithLambdaBackend extends CommonConstruct {
       alias => alias.aliasName === LAMBDA_ALIAS_NAME_CURRENT
     )
 
-    /* When using an alias, import the function with sameEnvironment: true to
-       prevent CDK from generating cross-account/cross-region permissions */
-    const lambdaFn = lambdaAlias
-      ? Function.fromFunctionAttributes(this, `${this.id}-fn-alias`, {
-          functionArn: `${this.siteLambdaFunction.functionArn}:${lambdaAlias.aliasName}`,
-          sameEnvironment: true,
-        })
+    /* When an alias is configured, attach the URL directly to the created Alias
+       resource stashed by lambdaManager.createLambdaFunction under
+       `lambdaFunction.lambdaAliases[aliasName]`. Attaching to the real Alias
+       (rather than importing via Function.fromFunctionAttributes) is what lets
+       CDK emit a proper `DependsOn: AWS::Lambda::Alias` on the
+       `AWS::Lambda::Url` resource in the synthesised template — without which
+       CFN creates the URL in parallel with the alias on first deploy and hits
+       `Function does not exist` from the Lambda API. */
+    const lambdaFn: IFunction = lambdaAlias
+      ? this.siteLambdaFunction.lambdaAliases?.[lambdaAlias.aliasName] ?? this.siteLambdaFunction
       : this.siteLambdaFunction
-    lambdaFn.node.addDependency(this.siteLambdaFunction)
 
     /* Explicit dependencies ensure the function and alias exist before the URL is created.
        Default to AWS_IAM so the URL is reachable only via the CloudFront distribution
