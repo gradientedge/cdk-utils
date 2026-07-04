@@ -21,6 +21,7 @@ import { Construct } from 'constructs'
 import _ from 'lodash'
 
 import { CommonConstruct } from '../../common/index.js'
+import { FunctionWithAliases } from '../../services/lambda/types.js'
 
 import { LAMBDA_ALIAS_NAME_CURRENT } from './constants.js'
 import {
@@ -94,7 +95,7 @@ export class SiteWithLambdaBackend extends CommonConstruct {
   /** The Lambda application code asset */
   siteLambdaApplication: AssetCode
   /** The site Lambda function */
-  siteLambdaFunction: IFunction
+  siteLambdaFunction: FunctionWithAliases
   /** The Lambda function URL used as the CloudFront origin */
   siteLambdaUrl: FunctionUrl
 
@@ -443,7 +444,7 @@ export class SiteWithLambdaBackend extends CommonConstruct {
        CFN creates the URL in parallel with the alias on first deploy and hits
        `Function does not exist` from the Lambda API. */
     const lambdaFn: IFunction = lambdaAlias
-      ? this.siteLambdaFunction.lambdaAliases?.[lambdaAlias.aliasName] ?? this.siteLambdaFunction
+      ? (this.siteLambdaFunction.lambdaAliases?.[lambdaAlias.aliasName] ?? this.siteLambdaFunction)
       : this.siteLambdaFunction
 
     /* Explicit dependencies ensure the function and alias exist before the URL is created.
