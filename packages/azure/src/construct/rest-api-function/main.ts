@@ -1,4 +1,4 @@
-import { HostnameType, NamedValue, PolicyContentFormat } from '@pulumi/azure-native/apimanagement/index.js'
+import { NamedValue, PolicyContentFormat } from '@pulumi/azure-native/apimanagement/index.js'
 import { getVaultOutput } from '@pulumi/azure-native/keyvault/index.js'
 import { listWebAppHostKeys } from '@pulumi/azure-native/web/index.js'
 import * as pulumi from '@pulumi/pulumi'
@@ -141,17 +141,6 @@ export class AzureRestApiFunction extends AzureFunctionApp {
         this.api.resourceGroupName = stackOutputs.apply(o => o.resourceGroupName)
       }
     } else {
-      let hostnameConfigurations
-      if (this.props.apiManagement.certificateKeyVaultId) {
-        hostnameConfigurations = [
-          {
-            hostName: `api-${this.props.locationConfig?.[this.props.location].name}.${this.props.domainName}`,
-            keyVaultId: this.props.apiManagement.certificateKeyVaultId,
-            type: HostnameType.Management,
-          },
-        ]
-      }
-
       this.api.apim = this.apiManagementManager.createApiManagementService(
         this.id,
         this,
@@ -160,7 +149,6 @@ export class AzureRestApiFunction extends AzureFunctionApp {
           serviceName: this.id,
           location: this.resourceGroup.location,
           resourceGroupName: this.resourceGroup.name,
-          hostnameConfigurations,
         },
         undefined,
         undefined,
