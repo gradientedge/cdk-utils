@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.55.1
+
+### Patch Changes
+
+- [#1122](https://github.com/gradientedge/cdk-utils/pull/1122) [`000f29d`](https://github.com/gradientedge/cdk-utils/commit/000f29dae5ef2dd4f92240f300d79e2e7182bc65) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - Allow client to define api management hostname configuration
+
 ## 2.55.0
 
 ### Minor Changes
