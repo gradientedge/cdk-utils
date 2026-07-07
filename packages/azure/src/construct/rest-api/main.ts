@@ -1,6 +1,5 @@
 import {
   getApiManagementServiceOutput,
-  HostnameType,
   listSubscriptionSecretsOutput,
   LoggerType,
 } from '@pulumi/azure-native/apimanagement/index.js'
@@ -103,17 +102,6 @@ export class AzureRestApi extends CommonAzureConstruct {
         this.api.resourceGroupName = apiStack.getOutput('apiResourceGroupName')
       }
     } else {
-      let hostnameConfigurations
-      if (this.props.apiManagement.certificateKeyVaultId) {
-        hostnameConfigurations = [
-          {
-            hostName: `api-${this.props.locationConfig?.[this.props.location].name}.${this.props.domainName}`,
-            keyVaultId: this.props.apiManagement.certificateKeyVaultId,
-            type: HostnameType.Proxy,
-          },
-        ]
-      }
-
       this.api.apim = this.apiManagementManager.createApiManagementService(
         this.id,
         this,
@@ -122,7 +110,6 @@ export class AzureRestApi extends CommonAzureConstruct {
           serviceName: this.id,
           location: this.resourceGroup.location,
           resourceGroupName: this.resourceGroup.name,
-          hostnameConfigurations,
         },
         undefined,
         undefined,
