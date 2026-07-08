@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-cloudflare
 
+## 2.26.0
+
+### Minor Changes
+
+- [#1123](https://github.com/gradientedge/cdk-utils/pull/1123) [`2f9f226`](https://github.com/gradientedge/cdk-utils/commit/2f9f2262518e1e3f0742c5a52ff1a1f984c162cf) Thanks [@despock](https://github.com/despock)! - feat: bumping dependencies
+
 ## 2.25.0
 
 ### Minor Changes
