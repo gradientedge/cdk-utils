@@ -1,5 +1,5 @@
 import { getVaultOutput, Secret, SkuFamily, SkuName, Vault } from '@pulumi/azure-native/keyvault/index.js'
-import { Input, ResourceOptions } from '@pulumi/pulumi'
+import { CustomResourceOptions, Input, ResourceOptions } from '@pulumi/pulumi'
 
 import { CommonAzureConstruct } from '../../common/index.js'
 
@@ -36,7 +36,7 @@ export class AzureKeyVaultManager {
     id: string,
     scope: CommonAzureConstruct,
     props: KeyVaultProps,
-    resourceOptions?: ResourceOptions
+    resourceOptions?: CustomResourceOptions
   ) {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
