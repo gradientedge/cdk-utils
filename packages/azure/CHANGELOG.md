@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.56.1
+
+### Patch Changes
+
+- [#1131](https://github.com/gradientedge/cdk-utils/pull/1131) [`6413c86`](https://github.com/gradientedge/cdk-utils/commit/6413c86ae91e1fc1391f4855043de9ead632431f) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - Use CustomResourceOptions for Azure Key Vault to allow import of existing resources
+
 ## 2.56.0
 
 ### Minor Changes
