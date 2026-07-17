@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.57.0
+
+### Minor Changes
+
+- [#1134](https://github.com/gradientedge/cdk-utils/pull/1134) [`7b5e8d6`](https://github.com/gradientedge/cdk-utils/commit/7b5e8d6b5803a7c9f9cf025d6ccc2bd7fd4e4bb2) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - Add in Azure load test constrcut
+
 ## 2.56.1
 
 ### Patch Changes
