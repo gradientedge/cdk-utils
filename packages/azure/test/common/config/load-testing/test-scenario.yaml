@@ -1,0 +1,8 @@
+version: v0.1
+testName: test-load-test
+displayName: Test Load Test
+description: Load test configuration for unit testing
+testPlan:
+  engineInstances: 1
+  loadTestConfiguration:
+    engineInstances: 1

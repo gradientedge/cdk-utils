@@ -1,0 +1,25 @@
+{
+  "loadTestConfigPath": "packages/azure/test/common/config/load-testing",
+  "loadTest": {},
+  "loadTestingVirtualNetwork": {
+    "addressSpace": {
+      "addressPrefixes": ["10.1.0.0/16"]
+    }
+  },
+  "loadTestingPublicIp": {
+    "publicIPAllocationMethod": "Static",
+    "sku": {
+      "name": "Standard",
+      "tier": "Regional"
+    }
+  },
+  "loadTestingNatGateway": {
+    "sku": {
+      "name": "Standard"
+    },
+    "idleTimeoutInMinutes": 4
+  },
+  "loadTestingSubnet": {
+    "addressPrefix": "10.1.1.0/24"
+  }
+}
