@@ -89,7 +89,7 @@ export class AzureKeyVaultManager {
     id: string,
     scope: CommonAzureConstruct,
     props: SecretProps,
-    resourceOptions?: ResourceOptions
+    resourceOptions?: CustomResourceOptions
   ) {
     if (!props) throw new Error(`Props undefined for ${id}`)
 

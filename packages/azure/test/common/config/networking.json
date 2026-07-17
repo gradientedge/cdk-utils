@@ -1,0 +1,50 @@
+{
+  "testVirtualNetwork": {
+    "addressSpace": {
+      "addressPrefixes": ["10.0.0.0/16"]
+    },
+    "virtualNetworkName": "testvnet"
+  },
+  "testPublicIPAddress": {
+    "publicIpAddressName": "testpip",
+    "publicIPAllocationMethod": "Static",
+    "sku": {
+      "name": "Standard",
+      "tier": "Regional"
+    }
+  },
+  "testNatGateway": {
+    "natGatewayName": "testngw",
+    "sku": {
+      "name": "Standard"
+    },
+    "idleTimeoutInMinutes": 4
+  },
+  "testSubnet": {
+    "subnetName": "testsubnet",
+    "addressPrefix": "10.0.1.0/24"
+  },
+  "testVirtualNetworkWithLocation": {
+    "addressSpace": {
+      "addressPrefixes": ["10.1.0.0/16"]
+    },
+    "virtualNetworkName": "testvnet2",
+    "location": "westus"
+  },
+  "testPublicIPAddressWithVersion": {
+    "publicIpAddressName": "testpip2",
+    "publicIPAllocationMethod": "Static",
+    "publicIPAddressVersion": "IPv4",
+    "sku": {
+      "name": "Standard"
+    }
+  },
+  "testNatGatewayWithLocation": {
+    "natGatewayName": "testngw2",
+    "sku": {
+      "name": "Standard"
+    },
+    "idleTimeoutInMinutes": 4,
+    "location": "westus"
+  }
+}

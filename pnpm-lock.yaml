@@ -169,6 +169,9 @@ importers:
       '@pulumi/azuread':
         specifier: 6.9.1
         version: 6.9.1(ts-node@10.9.2(@types/node@26.1.0)(typescript@6.0.3))(typescript@6.0.3)
+      '@pulumi/command':
+        specifier: 1.2.1
+        version: 1.2.1(ts-node@10.9.2(@types/node@26.1.0)(typescript@6.0.3))(typescript@6.0.3)
       '@pulumi/pulumi':
         specifier: 3.250.0
         version: 3.250.0(ts-node@10.9.2(@types/node@26.1.0)(typescript@6.0.3))(typescript@6.0.3)

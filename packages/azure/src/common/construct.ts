@@ -15,7 +15,9 @@ import {
   AzureEventgridManager,
   AzureFunctionManager,
   AzureKeyVaultManager,
+  AzureLoadTestManager,
   AzureMonitorManager,
+  AzureNetworkingManager,
   AzureOperationalInsightsManager,
   AzurePortalManager,
   AzureRedisManager,
@@ -77,12 +79,16 @@ export class CommonAzureConstruct extends ComponentResource {
   functionManager: AzureFunctionManager
   /** Manager for Azure Key Vault resources */
   keyVaultManager: AzureKeyVaultManager
+  /** Manager for Azure Load Testing resources */
+  loadTestManager: AzureLoadTestManager
   /** Manager for Azure Log Analytics Workspace resources */
   operationalInsightsManager: AzureOperationalInsightsManager
   /** Manager for Azure Portal Dashboard resources */
   portalManager: AzurePortalManager
   /** Manager for Azure Monitor diagnostic settings */
   monitorManager: AzureMonitorManager
+  /** Manager for Azure networking resources */
+  networkingManager: AzureNetworkingManager
   /** Manager for Azure Managed Redis (Enterprise) resources */
   redisManager: AzureRedisManager
   /** Manager for Azure Resource Group resources */
@@ -120,9 +126,11 @@ export class CommonAzureConstruct extends ComponentResource {
     this.eventgridManager = new AzureEventgridManager()
     this.functionManager = new AzureFunctionManager()
     this.keyVaultManager = new AzureKeyVaultManager()
+    this.loadTestManager = new AzureLoadTestManager()
     this.operationalInsightsManager = new AzureOperationalInsightsManager()
     this.portalManager = new AzurePortalManager()
     this.monitorManager = new AzureMonitorManager()
+    this.networkingManager = new AzureNetworkingManager()
     this.redisManager = new AzureRedisManager()
     this.resourceGroupManager = new AzureResourceGroupManager()
     this.resourceNameFormatter = new AzureResourceNameFormatter(props)
