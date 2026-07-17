@@ -1,5 +1,5 @@
-import { LoadTest } from '@pulumi/azure-native/loadtestservice/index.js'
-import { NatGateway, PublicIPAddress, Subnet, VirtualNetwork } from '@pulumi/azure-native/network/index.js'
+import { statSync } from 'node:fs'
+import { dirname, join } from 'node:path'
 import * as pulumi from '@pulumi/pulumi'
 import { outputToPromise } from '../helpers.js'
 import {
@@ -54,25 +54,59 @@ class TestLoadTestingConstruct extends AzureLoadTesting {
     this.props = props
     this.initResources()
   }
-}
 
-class TestMinimalLoadTestingStack extends CommonAzureStack {
-  declare props: any
-  declare construct: TestMinimalLoadTestingConstruct
-
-  constructor(name: string, props: TestAzureStackProps) {
-    super(name, testStackPropsMinimal)
-    this.construct = new TestMinimalLoadTestingConstruct(`${props.name}-minimal`, this.props)
+  protected deployLoadTests() {
+    let dir = process.cwd()
+    for (let i = 0; i < 6; i++) {
+      try {
+        const candidate = join(dir, this.props.loadTestConfigPath)
+        if (statSync(candidate).isDirectory()) {
+          this.props = { ...this.props, loadTestConfigPath: candidate }
+          break
+        }
+      } catch {
+        // keep walking
+      }
+      dir = dirname(dir)
+    }
+    super.deployLoadTests()
   }
 }
 
-class TestMinimalLoadTestingConstruct extends AzureLoadTesting {
+class TestCommonStackMinimal extends CommonAzureStack {
+  declare props: any
+  declare construct: TestLoadTestingMinimalConstruct
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackPropsMinimal)
+    this.construct = new TestLoadTestingMinimalConstruct(`${props.name}-minimal`, this.props)
+  }
+}
+
+class TestLoadTestingMinimalConstruct extends AzureLoadTesting {
   declare props: AzureLoadTestingProps & TestAzureStackProps
 
   constructor(name: string, props: AzureLoadTestingProps & TestAzureStackProps) {
     super(name, props)
     this.props = props
     this.initResources()
+  }
+
+  protected deployLoadTests() {
+    let dir = process.cwd()
+    for (let i = 0; i < 6; i++) {
+      try {
+        const candidate = join(dir, this.props.loadTestConfigPath)
+        if (statSync(candidate).isDirectory()) {
+          this.props = { ...this.props, loadTestConfigPath: candidate }
+          break
+        }
+      } catch {
+        // keep walking
+      }
+      dir = dirname(dir)
+    }
+    super.deployLoadTests()
   }
 }
 
@@ -113,7 +147,7 @@ pulumi.runtime.setMocks({
 const stack = new TestCommonStack('test-common-stack', testStackProps)
 
 pulumi.runtime.setConfig('project:extraContexts', JSON.stringify(testStackPropsMinimal.extraContexts))
-const stackMinimal = new TestMinimalLoadTestingStack('test-minimal-stack', testStackPropsMinimal)
+const stackMinimal = new TestCommonStackMinimal('test-minimal-stack', testStackPropsMinimal)
 
 describe('TestAzureLoadTestingConstruct', () => {
   test('is initialised as expected', () => {
