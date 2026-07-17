@@ -1,5 +1,3 @@
-import { statSync } from 'node:fs'
-import { dirname, join } from 'node:path'
 import * as pulumi from '@pulumi/pulumi'
 import { outputToPromise } from '../helpers.js'
 import {
@@ -54,23 +52,6 @@ class TestLoadTestingConstruct extends AzureLoadTesting {
     this.props = props
     this.initResources()
   }
-
-  protected deployLoadTests() {
-    let dir = process.cwd()
-    for (let i = 0; i < 6; i++) {
-      try {
-        const candidate = join(dir, this.props.loadTestConfigPath)
-        if (statSync(candidate).isDirectory()) {
-          this.props = { ...this.props, loadTestConfigPath: candidate }
-          break
-        }
-      } catch {
-        // keep walking
-      }
-      dir = dirname(dir)
-    }
-    super.deployLoadTests()
-  }
 }
 
 class TestCommonStackMinimal extends CommonAzureStack {
@@ -90,23 +71,6 @@ class TestLoadTestingMinimalConstruct extends AzureLoadTesting {
     super(name, props)
     this.props = props
     this.initResources()
-  }
-
-  protected deployLoadTests() {
-    let dir = process.cwd()
-    for (let i = 0; i < 6; i++) {
-      try {
-        const candidate = join(dir, this.props.loadTestConfigPath)
-        if (statSync(candidate).isDirectory()) {
-          this.props = { ...this.props, loadTestConfigPath: candidate }
-          break
-        }
-      } catch {
-        // keep walking
-      }
-      dir = dirname(dir)
-    }
-    super.deployLoadTests()
   }
 }
 
