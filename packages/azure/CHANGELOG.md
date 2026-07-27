@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.58.0
+
+### Minor Changes
+
+- [#1136](https://github.com/gradientedge/cdk-utils/pull/1136) [`3b16420`](https://github.com/gradientedge/cdk-utils/commit/3b16420e938c204b0aeb502da377a33d7c32f110) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - feat: bump dependencies and default Azure Redis Enterprise publicNetworkAccess to Enabled
+
 ## 2.57.0
 
 ### Minor Changes
