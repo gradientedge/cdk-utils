@@ -1,6 +1,6 @@
 import * as cdk from 'aws-cdk-lib'
 import { Template } from 'aws-cdk-lib/assertions'
-import { AssetCode } from 'aws-cdk-lib/aws-lambda'
+import { AssetCode, FunctionUrlAuthType } from 'aws-cdk-lib/aws-lambda'
 import { Construct } from 'constructs'
 import { CommonStack, SiteWithLambdaBackend, SiteWithLambdaBackendProps } from '../../src/index.js'
 
@@ -233,5 +233,110 @@ describe('TestSiteWithLambdaBackendConstruct NoFn', () => {
     templateNoFn.resourceCountIs('AWS::CloudFront::CachePolicy', 0)
     templateNoFn.resourceCountIs('AWS::CloudFront::OriginRequestPolicy', 0)
     templateNoFn.resourceCountIs('AWS::CloudFront::ResponseHeadersPolicy', 0)
+  })
+})
+
+/* Test with public Function URL auth to exercise NONE branch and wildcard grantee path */
+const testStackPropsPublicUrl = {
+  domainName: 'gradientedge.io',
+  env: {
+    account: '123456789',
+    region: 'eu-west-1',
+  },
+  extraContexts: [
+    'packages/aws/test/common/cdk-config/dummy.json',
+    'packages/aws/test/common/cdk-config/buckets.json',
+    'packages/aws/test/common/cdk-config/cachePolicies.json',
+    'packages/aws/test/common/cdk-config/certificates.json',
+    'packages/aws/test/common/cdk-config/distributions.json',
+    'packages/aws/test/common/cdk-config/lambdas.json',
+    'packages/aws/test/common/cdk-config/logs.json',
+    'packages/aws/test/common/cdk-config/requestPolicies.json',
+  ],
+  name: 'test-site-public-url-stack',
+  region: 'eu-west-1',
+  siteCreateAltARecord: true,
+  siteSubDomain: 'site',
+  stackName: 'test',
+  stage: 'test',
+  stageContextPath: 'packages/aws/test/common/cdk-env',
+}
+
+class TestCommonStackPublicUrl extends CommonStack {
+  declare props: TestStackProps
+
+  constructor(parent: cdk.App, name: string, props: cdk.StackProps) {
+    super(parent, name, props)
+
+    this.construct = new TestSiteWithLambdaBackendPublicUrl(this, testStackPropsPublicUrl.name, this.props)
+  }
+
+  protected determineConstructProps(props: cdk.StackProps) {
+    return {
+      ...super.determineConstructProps(props),
+      logLevel: this.node.tryGetContext('logLevel'),
+      nodeEnv: this.node.tryGetContext('nodeEnv'),
+      siteAliases: [`${this.node.tryGetContext('siteSubDomain')}.${this.fullyQualifiedDomain()}`],
+      siteCachePolicy: this.node.tryGetContext('siteCachePolicy'),
+      siteCertificate: this.node.tryGetContext('siteCertificate'),
+      siteDistribution: this.node.tryGetContext('siteDistribution'),
+      siteExecWrapperPath: '/opt/bootstrap',
+      siteHealthEndpoint: '/api/health',
+      siteLambda: this.node.tryGetContext('siteLambda'),
+      siteLambdaUrlAuthType: FunctionUrlAuthType.NONE,
+      siteLog: this.node.tryGetContext('testLogGroup'),
+      siteLogBucket: this.node.tryGetContext('siteLogBucket'),
+      siteOriginRequestPolicy: this.node.tryGetContext('siteOriginRequestPolicy'),
+      sitePort: '4000',
+      siteRecordName: this.node.tryGetContext('siteSubDomain'),
+      siteRegionalCertificate: {
+        domainName: this.fullyQualifiedDomain(),
+        subjectAlternativeNames: [`*.${this.fullyQualifiedDomain()}`],
+        useExistingCertificate: false,
+      },
+      siteSubDomain: this.node.tryGetContext('siteSubDomain'),
+      testAttribute: this.node.tryGetContext('testAttribute'),
+      timezone: this.node.tryGetContext('timezone'),
+      useExistingHostedZone: this.node.tryGetContext('useExistingHostedZone'),
+    }
+  }
+}
+
+class TestSiteWithLambdaBackendPublicUrl extends SiteWithLambdaBackend {
+  declare props: TestStackProps
+
+  constructor(parent: Construct, id: string, props: TestStackProps) {
+    super(parent, id, props)
+    this.props = props
+    this.id = 'test-site'
+    this.initResources()
+  }
+
+  protected createSiteLambdaApplication() {
+    this.siteLambdaApplication = AssetCode.fromAsset('packages/aws/test/common/nodejs/lib')
+  }
+}
+
+const appPublicUrl = new cdk.App({ context: testStackPropsPublicUrl })
+const stackPublicUrl = new TestCommonStackPublicUrl(appPublicUrl, 'test-site-public-url-stack', testStackPropsPublicUrl)
+const templatePublicUrl = Template.fromStack(stackPublicUrl)
+
+describe('TestSiteWithLambdaBackendConstruct PublicUrl', () => {
+  test('provisions lambda url with NONE auth type', () => {
+    templatePublicUrl.hasResourceProperties('AWS::Lambda::Url', {
+      AuthType: 'NONE',
+    })
+  })
+
+  test('adds wildcard invoke permission when using NONE auth type', () => {
+    templatePublicUrl.hasResourceProperties('AWS::Lambda::Permission', {
+      Action: 'lambda:InvokeFunctionUrl',
+      Principal: '*',
+      FunctionUrlAuthType: 'NONE',
+    })
+  })
+
+  test('does not provision origin access control when function url is public', () => {
+    templatePublicUrl.resourceCountIs('AWS::CloudFront::OriginAccessControl', 0)
   })
 })

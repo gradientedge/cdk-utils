@@ -57,6 +57,17 @@ const app = new cdk.App({ context: testStackProps })
 const commonStack = new TestCommonStack(app, 'test-common-stack', testStackProps)
 const template = Template.fromStack(commonStack)
 
+const createTestConstructWithStage = (stage: string, subDomain?: string) => {
+  const tempApp = new cdk.App()
+  const stackSuffix = subDomain === undefined ? 'root' : subDomain
+  const tempStack = new cdk.Stack(tempApp, `test-common-stack-${stage}-${stackSuffix}`)
+  return new TestCommonConstruct(tempStack, `test-common-construct-${stage}-${subDomain || 'root'}`, {
+    ...testStackProps,
+    stage,
+    subDomain: subDomain ?? 'test',
+  } as TestStackProps)
+}
+
 describe('TestCommonConstruct', () => {
   test('is initialised as expected', () => {
     /* test if the created stack have the right properties injected */
@@ -107,5 +118,35 @@ describe('ResourceNameFormatter', () => {
     expect(result).toContain('custom-prefix')
     expect(result).toContain('custom-suffix')
     expect(result).toContain('my-resource')
+  })
+})
+
+describe('CommonConstruct stage helpers', () => {
+  test('evaluates stage helper methods for test stage', () => {
+    const testConstruct = createTestConstructWithStage('tst')
+    expect(testConstruct.isDevelopmentStage()).toBe(false)
+    expect(testConstruct.isTestStage()).toBe(true)
+    expect(testConstruct.isUatStage()).toBe(false)
+    expect(testConstruct.isProductionStage()).toBe(false)
+  })
+
+  test('evaluates production stage as expected', () => {
+    const productionConstruct = createTestConstructWithStage('prd')
+    expect(productionConstruct.isProductionStage()).toBe(true)
+    expect(productionConstruct.isTestStage()).toBe(false)
+  })
+})
+
+describe('CommonConstruct domain resolution', () => {
+  test('uses root domain when subDomain is undefined', () => {
+    const tempApp = new cdk.App()
+    const tempStack = new cdk.Stack(tempApp, 'test-common-stack-tst-root')
+    const constructNoSubdomain = new TestCommonConstruct(tempStack, 'test-common-construct-tst-root', {
+      ...testStackProps,
+      stage: 'tst',
+      subDomain: undefined,
+    } as TestStackProps)
+
+    expect(constructNoSubdomain.fullyQualifiedDomainName).toEqual('gradientedge.io')
   })
 })
