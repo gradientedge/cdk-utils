@@ -49,7 +49,7 @@ export class AzureMonitorManager {
           scope.props.resourceNameOptions?.monitorAutoscaleSetting
         ),
       },
-      { parent: scope, ignoreChanges: ['resourceUri'], ...resourceOptions }
+      { parent: scope, ...resourceOptions }
     )
   }
 
