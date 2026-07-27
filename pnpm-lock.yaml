@@ -125,8 +125,8 @@ importers:
         specifier: 3.1080.0
         version: 3.1080.0
       '@aws-sdk/credential-providers':
-        specifier: 3.1080.0
-        version: 3.1080.0
+        specifier: 3.1095.0
+        version: 3.1095.0
       '@aws-sdk/types':
         specifier: 3.973.15
         version: 3.973.15
@@ -266,10 +266,6 @@ packages:
       - jsonschema
       - semver
 
-  '@aws-sdk/client-cognito-identity@3.1080.0':
-    resolution: {integrity: sha512-nah90QaXgfAPCAPHs9nOJ1uUIuEyuhhdifTNhUnmHKFk+JG5EkGByERL3zHRuTh/Wnzcnka5OrGTzk1WT9K2eQ==}
-    engines: {node: '>=20.0.0'}
-
   '@aws-sdk/client-secrets-manager@3.1080.0':
     resolution: {integrity: sha512-lgrJFeDMdFz7ly0Jn7sTs2wNODJrvq8s1oiiCJFfCiRmMgS2IKk7b73zCC9y0ofKHtp+P+AbqnqUsMabXijmMw==}
     engines: {node: '>=20.0.0'}
@@ -314,8 +310,8 @@ packages:
     resolution: {integrity: sha512-FTNZ05gkPBA6CKbU3N4zPgybV+stdazwMOya75CmGdcJL7p8Fw/BdHP8WVxJd0mvzyPK2cg/C3gli58Ir4HgCw==}
     engines: {node: '>=20.0.0'}
 
-  '@aws-sdk/credential-providers@3.1080.0':
-    resolution: {integrity: sha512-cecOoU13F9O1D/P9UAEfU2I9fY1RP+RkQ0ZPjgvt8jUCFlpuv5nM1dnuEf6mY9OexlVZHIaBwN9/Xiq7wfjhPg==}
+  '@aws-sdk/credential-providers@3.1095.0':
+    resolution: {integrity: sha512-hcL4iILqep+AieTjJ+eYpBoThcirhlr0rzOqyDKSlFeV15qy8FnvwZFlNmVUFFwHnZjvQz5M9MsRe4XbC6eDfw==}
     engines: {node: '>=20.0.0'}
 
   '@aws-sdk/nested-clients@3.997.35':
@@ -3284,17 +3280,6 @@ snapshots:
 
   '@aws-cdk/cloud-assembly-schema@54.14.0': {}
 
-  '@aws-sdk/client-cognito-identity@3.1080.0':
-    dependencies:
-      '@aws-sdk/core': 3.977.1
-      '@aws-sdk/credential-provider-node': 3.972.72
-      '@aws-sdk/types': 3.973.15
-      '@smithy/core': 3.30.0
-      '@smithy/fetch-http-handler': 5.6.11
-      '@smithy/node-http-handler': 4.9.11
-      '@smithy/types': 4.16.1
-      tslib: 2.8.1
-
   '@aws-sdk/client-secrets-manager@3.1080.0':
     dependencies:
       '@aws-sdk/core': 3.977.1
@@ -3409,9 +3394,8 @@ snapshots:
       '@smithy/types': 4.16.1
       tslib: 2.8.1
 
-  '@aws-sdk/credential-providers@3.1080.0':
+  '@aws-sdk/credential-providers@3.1095.0':
     dependencies:
-      '@aws-sdk/client-cognito-identity': 3.1080.0
       '@aws-sdk/core': 3.977.1
       '@aws-sdk/credential-provider-cognito-identity': 3.972.60
       '@aws-sdk/credential-provider-env': 3.972.61
@@ -3423,7 +3407,7 @@ snapshots:
       '@aws-sdk/credential-provider-sso': 3.973.5
       '@aws-sdk/credential-provider-web-identity': 3.972.67
       '@aws-sdk/nested-clients': 3.997.35
-      '@aws-sdk/types': 3.973.15
+      '@aws-sdk/types': 3.974.2
       '@smithy/core': 3.30.0
       '@smithy/credential-provider-imds': 4.4.14
       '@smithy/types': 4.16.1
