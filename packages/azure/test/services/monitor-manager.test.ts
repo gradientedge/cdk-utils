@@ -100,6 +100,20 @@ pulumi.runtime.setMocks({
 
     if (args.type === 'azure-native:monitor:AutoscaleSetting') {
       name = args.inputs.name
+
+      return {
+        id: `${args.name}-id`,
+        state: {
+          ...args.inputs,
+          name,
+          properties: {
+            enabled: args.inputs.enabled,
+            name,
+            profiles: args.inputs.profiles,
+            targetResourceUri: args.inputs.targetResourceUri,
+          },
+        },
+      }
     }
 
     if (args.type === 'azure-native:monitor:DiagnosticSetting') {
@@ -155,21 +169,19 @@ describe('TestAzureMonitorConstruct', () => {
         stack.construct.monitorAutoscaleSetting.id,
         stack.construct.monitorAutoscaleSetting.urn,
         stack.construct.monitorAutoscaleSetting.name,
-        stack.construct.monitorAutoscaleSetting.enabled,
-        stack.construct.monitorAutoscaleSetting.targetResourceUri,
-        stack.construct.monitorAutoscaleSetting.profiles,
+        stack.construct.monitorAutoscaleSetting.properties,
       ])
-      .apply(([id, urn, name, enabled, targetResourceUri, profiles]) => {
+      .apply(([id, urn, name, properties]) => {
         expect(id).toEqual('test-monitor-autoscale-setting-dev-as-id')
         expect(urn).toEqual(
           'urn:pulumi:stack::project::construct:test-common-stack$azure-native:monitor:AutoscaleSetting::test-monitor-autoscale-setting-dev-as'
         )
         expect(name).toEqual('test-monitor-autoscale-setting-dev')
-        expect(enabled).toBe(true)
-        expect(targetResourceUri).toEqual(
+        expect(properties.enabled).toBe(true)
+        expect(properties.targetResourceUri).toEqual(
           '/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.Compute/virtualMachineScaleSets/test-vmss'
         )
-        expect(profiles).toEqual([
+        expect(properties.profiles).toEqual([
           {
             capacity: {
               default: '1',
