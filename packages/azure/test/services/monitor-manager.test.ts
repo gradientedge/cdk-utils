@@ -7,6 +7,7 @@ import {
   MonitorAutoscaleSettingProps,
   MonitorDiagnosticSettingProps,
 } from '../../src/index.js'
+import { outputToPromise } from '../helpers.js'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
   testMonitorAutoscaleSetting: MonitorAutoscaleSettingProps
@@ -163,60 +164,64 @@ describe('TestAzureMonitorConstruct', () => {
 })
 
 describe('TestAzureMonitorConstruct', () => {
-  test('provisions monitor autoscale settings as expected', () => {
-    pulumi
-      .all([
-        stack.construct.monitorAutoscaleSetting.id,
-        stack.construct.monitorAutoscaleSetting.urn,
-        stack.construct.monitorAutoscaleSetting.name,
-        stack.construct.monitorAutoscaleSetting.properties,
-      ])
-      .apply(([id, urn, name, properties]) => {
-        expect(id).toEqual('test-monitor-autoscale-setting-dev-as-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:monitor:AutoscaleSetting::test-monitor-autoscale-setting-dev-as'
-        )
-        expect(name).toEqual('test-monitor-autoscale-setting-dev')
-        expect(properties.enabled).toBe(true)
-        expect(properties.targetResourceUri).toEqual(
-          '/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.Compute/virtualMachineScaleSets/test-vmss'
-        )
-        expect(properties.profiles).toEqual([
-          {
-            capacity: {
-              default: '1',
-              maximum: '3',
-              minimum: '1',
-            },
-            name: 'defaultProfile',
-          },
+  test('provisions monitor autoscale settings as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.monitorAutoscaleSetting.id,
+          stack.construct.monitorAutoscaleSetting.urn,
+          stack.construct.monitorAutoscaleSetting.name,
+          stack.construct.monitorAutoscaleSetting.properties,
         ])
-      })
+        .apply(([id, urn, name, properties]) => {
+          expect(id).toEqual('test-monitor-autoscale-setting-dev-as-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:monitor:AutoscaleSetting::test-monitor-autoscale-setting-dev-as'
+          )
+          expect(name).toEqual('test-monitor-autoscale-setting-dev')
+          expect(properties.enabled).toBe(true)
+          expect(properties.targetResourceUri).toEqual(
+            '/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.Compute/virtualMachineScaleSets/test-vmss'
+          )
+          expect(properties.profiles).toEqual([
+            {
+              capacity: {
+                default: '1',
+                maximum: '3',
+                minimum: '1',
+              },
+              name: 'defaultProfile',
+            },
+          ])
+        })
+    )
   })
 })
 
 describe('TestAzureMonitorConstruct', () => {
-  test('provisions monitor diagnostic settings as expected', () => {
-    pulumi
-      .all([
-        stack.construct.monitorDiagnosticSetting.id,
-        stack.construct.monitorDiagnosticSetting.urn,
-        stack.construct.monitorDiagnosticSetting.name,
-        stack.construct.monitorDiagnosticSetting.logs,
-        stack.construct.monitorDiagnosticSetting.metrics,
-        stack.construct.monitorDiagnosticSetting.storageAccountId,
-      ])
-      .apply(([id, urn, name, logs, metrics, storageAccountId]) => {
-        expect(id).toEqual('test-monitor-diagnostic-setting-dev-ds-id')
-        expect(urn).toEqual(
-          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:monitor:DiagnosticSetting::test-monitor-diagnostic-setting-dev-ds'
-        )
-        expect(name).toEqual('test-monitor-diagnostic-setting-dev')
-        expect(logs).toEqual([{ categoryGroup: 'allLogs', enabled: true }])
-        expect(metrics).toEqual([{ category: 'AllMetrics', enabled: true }])
-        expect(storageAccountId).toEqual(
-          '/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.Storage/storageAccounts/testsa'
-        )
-      })
+  test('provisions monitor diagnostic settings as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.monitorDiagnosticSetting.id,
+          stack.construct.monitorDiagnosticSetting.urn,
+          stack.construct.monitorDiagnosticSetting.name,
+          stack.construct.monitorDiagnosticSetting.logs,
+          stack.construct.monitorDiagnosticSetting.metrics,
+          stack.construct.monitorDiagnosticSetting.storageAccountId,
+        ])
+        .apply(([id, urn, name, logs, metrics, storageAccountId]) => {
+          expect(id).toEqual('test-monitor-diagnostic-setting-dev-ds-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:monitor:DiagnosticSetting::test-monitor-diagnostic-setting-dev-ds'
+          )
+          expect(name).toEqual('test-monitor-diagnostic-setting-dev')
+          expect(logs).toEqual([{ categoryGroup: 'allLogs', enabled: true }])
+          expect(metrics).toEqual([{ category: 'AllMetrics', enabled: true }])
+          expect(storageAccountId).toEqual(
+            '/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.Storage/storageAccounts/testsa'
+          )
+        })
+    )
   })
 })
