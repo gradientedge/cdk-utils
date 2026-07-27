@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.58.1
+
+### Patch Changes
+
+- [#1138](https://github.com/gradientedge/cdk-utils/pull/1138) [`d61ee6a`](https://github.com/gradientedge/cdk-utils/commit/d61ee6aae513946efe411798cf2c3e88a5a85344) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - feat: Update required breaking props
+
 ## 2.58.0
 
 ### Minor Changes
