@@ -152,7 +152,7 @@ export class AzureRestApiFunction extends AzureFunctionApp {
         },
         undefined,
         undefined,
-        { protect: true }
+        { protect: true, ignoreChanges: ['hostnameConfigurations'] }
       )
       this.api.id = this.api.apim.id
       this.api.name = this.api.apim.name
