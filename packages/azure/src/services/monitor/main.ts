@@ -1,9 +1,9 @@
-import { DiagnosticSetting } from '@pulumi/azure-native/monitor/index.js'
+import { AutoscaleSetting, DiagnosticSetting } from '@pulumi/azure-native/monitor/index.js'
 import { ResourceOptions } from '@pulumi/pulumi'
 
 import { CommonAzureConstruct } from '../../common/index.js'
 
-import { MonitorDiagnosticSettingProps } from './types.js'
+import { MonitorAutoscaleSettingProps, MonitorDiagnosticSettingProps } from './types.js'
 
 /**
  * Provides operations on Azure Monitor using Pulumi
@@ -24,6 +24,35 @@ import { MonitorDiagnosticSettingProps } from './types.js'
  * @category Service
  */
 export class AzureMonitorManager {
+  /**
+   * @summary Method to create a new monitor autoscale setting
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props monitor autoscale settings properties
+   * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native Monitor Autoscale Setting]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/monitor/autoscalesetting/}
+   */
+  public createMonitorAutoscaleSettings(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: MonitorAutoscaleSettingProps,
+    resourceOptions?: ResourceOptions
+  ) {
+    if (!props) throw new Error(`Props undefined for ${id}`)
+
+    return new AutoscaleSetting(
+      `${id}-as`,
+      {
+        ...props,
+        name: scope.resourceNameFormatter.format(
+          props.name?.toString(),
+          scope.props.resourceNameOptions?.monitorAutoscaleSetting
+        ),
+      },
+      { parent: scope, ignoreChanges: ['resourceUri'], ...resourceOptions }
+    )
+  }
+
   /**
    * @summary Method to create a new monitor diagnostic setting
    * @param id scoped id of the resource

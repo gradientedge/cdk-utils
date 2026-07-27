@@ -1,4 +1,20 @@
 {
+  "testMonitorAutoscaleSetting": {
+    "name": "test-monitor-autoscale-setting",
+    "enabled": true,
+    "resourceGroupName": "test-rg-dev",
+    "targetResourceUri": "/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.Compute/virtualMachineScaleSets/test-vmss",
+    "profiles": [
+      {
+        "name": "defaultProfile",
+        "capacity": {
+          "default": "1",
+          "minimum": "1",
+          "maximum": "3"
+        }
+      }
+    ]
+  },
   "testMonitorDiagnosticSetting": {
     "name": "test-monitor-diagnostic-setting",
     "resourceUri": "/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.Storage/storageAccounts/testsa",

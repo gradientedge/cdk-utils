@@ -1,13 +1,15 @@
-import { DiagnosticSetting } from '@pulumi/azure-native/monitor/index.js'
+import { AutoscaleSetting, DiagnosticSetting } from '@pulumi/azure-native/monitor/index.js'
 import * as pulumi from '@pulumi/pulumi'
 import {
   CommonAzureConstruct,
   CommonAzureStack,
   CommonAzureStackProps,
+  MonitorAutoscaleSettingProps,
   MonitorDiagnosticSettingProps,
 } from '../../src/index.js'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
+  testMonitorAutoscaleSetting: MonitorAutoscaleSettingProps
   testMonitorDiagnosticSetting: MonitorDiagnosticSettingProps
   testAttribute?: string
 }
@@ -50,12 +52,34 @@ class TestInvalidCommonStack extends CommonAzureStack {
   }
 }
 
+class TestInvalidAutoscaleCommonStack extends CommonAzureStack {
+  declare props: TestAzureStackProps
+  declare construct: TestCommonConstruct
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.construct = new TestCommonConstruct(testStackProps.name, this.props)
+  }
+
+  protected determineConstructProps(props: TestAzureStackProps): TestAzureStackProps {
+    const baseProps = super.determineConstructProps(props)
+    // Override the test property to undefined to trigger validation error
+    return { ...baseProps, testMonitorAutoscaleSetting: undefined }
+  }
+}
+
 class TestCommonConstruct extends CommonAzureConstruct {
   declare props: TestAzureStackProps
+  monitorAutoscaleSetting: AutoscaleSetting
   monitorDiagnosticSetting: DiagnosticSetting
 
   constructor(name: string, props: TestAzureStackProps) {
     super(name, props)
+    this.monitorAutoscaleSetting = this.monitorManager.createMonitorAutoscaleSettings(
+      `test-monitor-autoscale-setting-${this.props.stage}`,
+      this,
+      this.props.testMonitorAutoscaleSetting
+    )
     this.monitorDiagnosticSetting = this.monitorManager.createMonitorDiagnosticSettings(
       `test-monitor-diagnostic-setting-${this.props.stage}`,
       this,
@@ -73,6 +97,10 @@ pulumi.runtime.setAllConfig({
 pulumi.runtime.setMocks({
   newResource: (args: pulumi.runtime.MockResourceArgs) => {
     let name
+
+    if (args.type === 'azure-native:monitor:AutoscaleSetting') {
+      name = args.inputs.name
+    }
 
     if (args.type === 'azure-native:monitor:DiagnosticSetting') {
       name = args.inputs.name
@@ -98,6 +126,13 @@ describe('TestAzureMonitorConstruct', () => {
 })
 
 describe('TestAzureMonitorConstruct', () => {
+  test('handles autoscale mis-configurations as expected', () => {
+    const error = () => new TestInvalidAutoscaleCommonStack('test-invalid-autoscale-stack', testStackProps)
+    expect(error).toThrow('Props undefined for test-monitor-autoscale-setting-dev')
+  })
+})
+
+describe('TestAzureMonitorConstruct', () => {
   test('is initialised as expected', () => {
     expect(stack.construct.props).toHaveProperty('testAttribute')
     expect(stack.construct.props.testAttribute).toEqual('success')
@@ -108,7 +143,43 @@ describe('TestAzureMonitorConstruct', () => {
   test('synthesises as expected', () => {
     expect(stack).toBeDefined()
     expect(stack.construct).toBeDefined()
+    expect(stack.construct.monitorAutoscaleSetting).toBeDefined()
     expect(stack.construct.monitorDiagnosticSetting).toBeDefined()
+  })
+})
+
+describe('TestAzureMonitorConstruct', () => {
+  test('provisions monitor autoscale settings as expected', () => {
+    pulumi
+      .all([
+        stack.construct.monitorAutoscaleSetting.id,
+        stack.construct.monitorAutoscaleSetting.urn,
+        stack.construct.monitorAutoscaleSetting.name,
+        stack.construct.monitorAutoscaleSetting.enabled,
+        stack.construct.monitorAutoscaleSetting.targetResourceUri,
+        stack.construct.monitorAutoscaleSetting.profiles,
+      ])
+      .apply(([id, urn, name, enabled, targetResourceUri, profiles]) => {
+        expect(id).toEqual('test-monitor-autoscale-setting-dev-as-id')
+        expect(urn).toEqual(
+          'urn:pulumi:stack::project::construct:test-common-stack$azure-native:monitor:AutoscaleSetting::test-monitor-autoscale-setting-dev-as'
+        )
+        expect(name).toEqual('test-monitor-autoscale-setting-dev')
+        expect(enabled).toBe(true)
+        expect(targetResourceUri).toEqual(
+          '/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.Compute/virtualMachineScaleSets/test-vmss'
+        )
+        expect(profiles).toEqual([
+          {
+            capacity: {
+              default: '1',
+              maximum: '3',
+              minimum: '1',
+            },
+            name: 'defaultProfile',
+          },
+        ])
+      })
   })
 })
 
