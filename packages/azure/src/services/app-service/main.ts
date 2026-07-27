@@ -66,6 +66,9 @@ export class AzureAppServiceManager {
         },
         reserved: props.reserved ?? true,
         zoneRedundant: props.zoneRedundant ?? true,
+        hyperV: props.hyperV ?? false,
+        isXenon: props.isXenon ?? false,
+        perSiteScaling: props.perSiteScaling ?? false,
         tags: {
           environment: scope.props.stage,
           ...scope.props.defaultTags,
