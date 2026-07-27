@@ -3,4 +3,4 @@
 '@gradientedge/cdk-utils-azure': minor
 ---
 
-feat: bumping dependencies
+feat: bump dependencies and default Azure Redis Enterprise publicNetworkAccess to Enabled
