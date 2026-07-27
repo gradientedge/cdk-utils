@@ -65,6 +65,7 @@ export class AzureRedisManager {
         ),
         location: clusterProps.location ?? scope.props.location,
         resourceGroupName,
+        publicNetworkAccess: clusterProps.publicNetworkAccess ?? 'Enabled',
         sku: clusterProps.sku ?? {
           name: SkuName.Balanced_B0,
         },

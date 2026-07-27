@@ -272,6 +272,7 @@ class TestConstructWithRedis extends CommonAzureConstruct {
         clusterName: 'test-redis-cache',
         resourceGroupName: props.resourceGroupName!,
         location: props.location!,
+        publicNetworkAccess: 'Enabled',
         sku: {
           name: 'Balanced_B0',
         },
