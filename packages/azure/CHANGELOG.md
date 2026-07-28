@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.58.2
+
+### Patch Changes
+
+- [#1140](https://github.com/gradientedge/cdk-utils/pull/1140) [`7ed9fe5`](https://github.com/gradientedge/cdk-utils/commit/7ed9fe57fa2707addaaf0d215da6427dd9110af4) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - feat: add Azure monitor autoscaling settings
+
 ## 2.58.1
 
 ### Patch Changes
