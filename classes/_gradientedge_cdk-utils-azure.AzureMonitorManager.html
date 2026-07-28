@@ -37,7 +37,8 @@
 </div></section>
 <section class="tsd-index-section">
 <h3 class="tsd-index-heading tsd-anchor-link" id="methods">Methods<a href="#methods" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<div class="tsd-index-list"><a href="#createmonitordiagnosticsettings" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Monitor<wbr/>Diagnostic<wbr/>Settings</span></a>
+<div class="tsd-index-list"><a href="#createmonitorautoscalesettings" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Monitor<wbr/>Autoscale<wbr/>Settings</span></a>
+<a href="#createmonitordiagnosticsettings" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Monitor<wbr/>Diagnostic<wbr/>Settings</span></a>
 </div></section></div></details></section></section>
 <details class="tsd-panel-group tsd-member-group tsd-accordion" open><summary class="tsd-accordion-summary" data-key="section-Constructors"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
 <h2 class="tsd-anchor-link" id="constructors-1">Constructors<a href="#constructors-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2></summary>
@@ -52,6 +53,34 @@
 <details class="tsd-panel-group tsd-member-group tsd-accordion" open><summary class="tsd-accordion-summary" data-key="section-Methods"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
 <h2 class="tsd-anchor-link" id="methods-1">Methods<a href="#methods-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2></summary>
 <section>
+<section class="tsd-panel tsd-member">
+<h3 class="tsd-anchor-link" id="createmonitorautoscalesettings"><span>create<wbr/>Monitor<wbr/>Autoscale<wbr/>Settings</span><a href="#createmonitorautoscalesettings" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures">
+<li class="">
+<div class="tsd-signature tsd-anchor-link" id="createmonitorautoscalesettings-1"><span class="tsd-kind-call-signature">createMonitorAutoscaleSettings</span><span class="tsd-signature-symbol">(</span><br/>    <span class="tsd-kind-parameter">id</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">,</span><br/>    <span class="tsd-kind-parameter">scope</span><span class="tsd-signature-symbol">:</span> <a href="_gradientedge_cdk-utils-azure.CommonAzureConstruct.html" class="tsd-signature-type tsd-kind-class">CommonAzureConstruct</a><span class="tsd-signature-symbol">,</span><br/>    <span class="tsd-kind-parameter">props</span><span class="tsd-signature-symbol">:</span> <a href="../interfaces/_gradientedge_cdk-utils-azure.MonitorAutoscaleSettingProps.html" class="tsd-signature-type tsd-kind-interface">MonitorAutoscaleSettingProps</a><span class="tsd-signature-symbol">,</span><br/>    <span class="tsd-kind-parameter">resourceOptions</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ResourceOptions</span><span class="tsd-signature-symbol">,</span><br/><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">AutoscaleSetting</span><a href="#createmonitorautoscalesettings-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div>
+<div class="tsd-description">
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li><span><span class="tsd-kind-parameter">id</span>: <span class="tsd-signature-type">string</span></span>
+<div class="tsd-comment tsd-typography"><p>scoped id of the resource</p>
+</div></li>
+<li><span><span class="tsd-kind-parameter">scope</span>: <a href="_gradientedge_cdk-utils-azure.CommonAzureConstruct.html" class="tsd-signature-type tsd-kind-class">CommonAzureConstruct</a></span>
+<div class="tsd-comment tsd-typography"><p>scope in which this resource is defined</p>
+</div></li>
+<li><span><span class="tsd-kind-parameter">props</span>: <a href="../interfaces/_gradientedge_cdk-utils-azure.MonitorAutoscaleSettingProps.html" class="tsd-signature-type tsd-kind-interface">MonitorAutoscaleSettingProps</a></span>
+<div class="tsd-comment tsd-typography"><p>monitor autoscale settings properties</p>
+</div></li>
+<li><span><code class="tsd-tag">Optional</code><span class="tsd-kind-parameter">resourceOptions</span>: <span class="tsd-signature-type">ResourceOptions</span></span>
+<div class="tsd-comment tsd-typography"><p>Optional settings to control resource behaviour</p>
+</div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">AutoscaleSetting</span></h4>
+<div class="tsd-comment tsd-typography">
+<div class="tsd-tag-see">
+<h4 class="tsd-anchor-link" id="see">See<a href="#see" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>[Pulumi Azure Native Monitor Autoscale Setting]<a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/monitor/autoscalesetting/">https://www.pulumi.com/registry/packages/azure-native/api-docs/monitor/autoscalesetting/</a></p>
+</div></div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/gradientedge/cdk-utils/blob/main/packages/azure/src/services/monitor/main.ts#L35">packages/azure/src/services/monitor/main.ts:35</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="createmonitordiagnosticsettings"><span>create<wbr/>Monitor<wbr/>Diagnostic<wbr/>Settings</span><a href="#createmonitordiagnosticsettings" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -76,10 +105,10 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">DiagnosticSetting</span></h4>
 <div class="tsd-comment tsd-typography">
 <div class="tsd-tag-see">
-<h4 class="tsd-anchor-link" id="see">See<a href="#see" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>[Pulumi Azure Native Monitor Diagnostic Settings]<a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/insights/diagnosticsetting/">https://www.pulumi.com/registry/packages/azure-native/api-docs/insights/diagnosticsetting/</a></p>
+<h4 class="tsd-anchor-link" id="see-1">See<a href="#see-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>[Pulumi Azure Native Monitor Diagnostic Settings]<a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/insights/diagnosticsetting/">https://www.pulumi.com/registry/packages/azure-native/api-docs/insights/diagnosticsetting/</a></p>
 </div></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gradientedge/cdk-utils/blob/main/packages/azure/src/services/monitor/main.ts#L35">packages/azure/src/services/monitor/main.ts:35</a></li></ul></aside></div></li></ul></section></section></details></div>
+<li>Defined in <a href="https://github.com/gradientedge/cdk-utils/blob/main/packages/azure/src/services/monitor/main.ts#L64">packages/azure/src/services/monitor/main.ts:64</a></li></ul></aside></div></li></ul></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
@@ -97,7 +126,7 @@
 <details open class="tsd-accordion tsd-page-navigation-section"><summary class="tsd-accordion-summary" data-key="section-Constructors"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>Constructors</summary>
 <div><a href="#constructor"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Constructor"><use href="../assets/icons.svg#icon-512"></use></svg><span>constructor</span></a></div></details>
 <details open class="tsd-accordion tsd-page-navigation-section"><summary class="tsd-accordion-summary" data-key="section-Methods"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>Methods</summary>
-<div><a href="#createmonitordiagnosticsettings"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Monitor<wbr/>Diagnostic<wbr/>Settings</span></a></div></details></div></details></div>
+<div><a href="#createmonitorautoscalesettings"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Monitor<wbr/>Autoscale<wbr/>Settings</span></a><a href="#createmonitordiagnosticsettings"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Monitor<wbr/>Diagnostic<wbr/>Settings</span></a></div></details></div></details></div>
 <div class="site-menu">
 <nav class="tsd-navigation"><a href="../modules.html">GradientEdge CDK Utils</a>
 <ul class="tsd-small-nested-navigation" id="tsd-nav-container">
