@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.58.3
+
+### Patch Changes
+
+- [#1147](https://github.com/gradientedge/cdk-utils/pull/1147) [`9dbf49b`](https://github.com/gradientedge/cdk-utils/commit/9dbf49be8de54290e7904e3a362094d53c53ddd5) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - feat: Add Azure API Management Certificate
+
 ## 2.58.2
 
 ### Patch Changes
