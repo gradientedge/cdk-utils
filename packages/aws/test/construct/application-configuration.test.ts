@@ -183,7 +183,7 @@ class TestArnCommonStack extends CommonStack {
           ...appConfig,
           deploymentStrategy: {
             ...appConfig.deploymentStrategy,
-            deploymentStrategyArn: 'arn:aws:appconfig:eu-west-1:123456789:deploymentstrategy/test-strategy',
+            deploymentStrategyArn: 'arn:aws:appconfig:eu-west-1:123456789012:deploymentstrategy/test-strategy',
           },
         },
         appConfigContent: { test: 'value' },

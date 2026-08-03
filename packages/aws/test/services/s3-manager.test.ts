@@ -12,7 +12,7 @@ interface TestStackProps extends CommonStackProps {
 const testStackProps = {
   domainName: 'gradientedge.io',
   env: {
-    account: '123456789',
+    account: '123456789012',
     region: 'eu-west-1',
   },
   excludeDomainNameForBuckets: true,
@@ -88,7 +88,7 @@ describe('TestS3Manager', () => {
           },
         ],
       },
-      BucketName: 'site-logs-123456789-eu-west-1-test',
+      BucketName: 'site-logs-123456789012-eu-west-1-test',
       PublicAccessBlockConfiguration: {
         BlockPublicAcls: true,
         BlockPublicPolicy: true,
@@ -112,7 +112,7 @@ describe('TestS3Manager', () => {
           },
         ],
       },
-      BucketName: 'site-123456789-eu-west-1-test',
+      BucketName: 'site-123456789012-eu-west-1-test',
       PublicAccessBlockConfiguration: {
         BlockPublicAcls: true,
         BlockPublicPolicy: true,
@@ -241,10 +241,10 @@ describe('TestS3ManagerOwnedLogBucket', () => {
       templateS3Owned.toJSON().Resources as Record<string, { Type: string; Properties: any }>,
       resource => resource.Type === 'AWS::S3::Bucket'
     )
-    const sourceBucket = _.find(buckets, bucket => bucket.Properties.BucketName === 'site-123456789-eu-west-1-test')
+    const sourceBucket = _.find(buckets, bucket => bucket.Properties.BucketName === 'site-123456789012-eu-west-1-test')
     const logBucketLogicalId = _.findKey(
       buckets,
-      bucket => bucket.Properties.BucketName === 'site-logs-123456789-eu-west-1-test'
+      bucket => bucket.Properties.BucketName === 'site-logs-123456789012-eu-west-1-test'
     )
     expect(sourceBucket?.Properties.LoggingConfiguration).toEqual({
       DestinationBucketName: { Ref: logBucketLogicalId },

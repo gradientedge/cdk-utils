@@ -13,7 +13,7 @@ interface TestStackProps extends CommonStackProps {
 const testStackProps = {
   domainName: 'gradientedge.io',
   env: {
-    account: '123456789',
+    account: '123456789012',
     region: 'eu-west-1',
   },
   excludeDomainNameForBuckets: true,
@@ -92,12 +92,12 @@ describe('S3Manager - Region Context Hierarchy', () => {
     template.resourceCountIs('AWS::S3::Bucket', 2)
 
     template.hasResourceProperties('AWS::S3::Bucket', {
-      BucketName: 'site-logs-eu-123456789-eu-west-1-test',
+      BucketName: 'site-logs-eu-123456789012-eu-west-1-test',
       AccessControl: 'LogDeliveryWrite',
     })
 
     template.hasResourceProperties('AWS::S3::Bucket', {
-      BucketName: 'site-eu-123456789-eu-west-1-test',
+      BucketName: 'site-eu-123456789012-eu-west-1-test',
       AccessControl: 'LogDeliveryWrite',
       WebsiteConfiguration: {
         ErrorDocument: 'index.html',

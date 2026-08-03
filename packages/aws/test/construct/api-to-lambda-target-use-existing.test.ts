@@ -16,7 +16,7 @@ const testStackPropsUseExisting = {
   apiSubDomain: 'api',
   domainName: 'gradientedge.io',
   env: {
-    account: '123456789',
+    account: '123456789012',
     region: 'eu-west-1',
   },
   extraContexts: [
@@ -145,7 +145,7 @@ const testStackPropsUseExistingNoResource = {
   apiSubDomain: 'api',
   domainName: 'gradientedge.io',
   env: {
-    account: '123456789',
+    account: '123456789012',
     region: 'eu-west-1',
   },
   extraContexts: [
@@ -263,7 +263,7 @@ const testStackPropsImportedRoot = {
   apiSubDomain: 'api',
   domainName: 'gradientedge.io',
   env: {
-    account: '123456789',
+    account: '123456789012',
     region: 'eu-west-1',
   },
   extraContexts: [

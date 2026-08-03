@@ -34,7 +34,7 @@ interface TestStackProps extends CommonStackProps {
 const testStackProps = {
   domainName: 'gradientedge.io',
   env: {
-    account: '123456789',
+    account: '123456789012',
     region: 'eu-west-1',
   },
   extraContexts: [
@@ -852,7 +852,7 @@ describe('TestEventConstructErrorHandling', () => {
           'test-ddb-pipe-err',
           this,
           undefined as any,
-          'arn:aws:dynamodb:eu-west-1:123456789:table/test/stream/123',
+          'arn:aws:dynamodb:eu-west-1:123456789012:table/test/stream/123',
           testLambda
         )
       }

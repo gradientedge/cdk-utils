@@ -246,7 +246,7 @@ describe('TestRestApiWithCacheLambdaConstruct with existing VPC', () => {
     const existingVpcProps = {
       ...testRestApiLambdaWithCacheProps,
       env: {
-        account: '123456789',
+        account: '123456789012',
         region: 'eu-west-1',
       },
       name: 'test-restapi-existing-vpc',

@@ -12,7 +12,7 @@ interface TestStackProps extends SiteWithLambdaBackendProps {
 const testStackProps = {
   domainName: 'gradientedge.io',
   env: {
-    account: '123456789',
+    account: '123456789012',
     region: 'eu-west-1',
   },
   extraContexts: [
@@ -78,7 +78,7 @@ class TestCommonStack extends CommonStack {
       sitePort: '4000',
       siteRecordName: this.node.tryGetContext('siteSubDomain'),
       siteRegionalCertificate: {
-        certificateArn: 'arn:aws:acm:eu-west-1:123456789:certificate/12345a67-8f85-46da-8441-88c998b4bd64',
+        certificateArn: 'arn:aws:acm:eu-west-1:123456789012:certificate/12345a67-8f85-46da-8441-88c998b4bd64',
         certificateRegion: 'eu-west-1',
         certificateSsmName: '/certs/regional-certificate-arn',
         domainName: this.fullyQualifiedDomain(),
@@ -149,7 +149,7 @@ describe('TestSiteWithLambdaBackendConstruct Variants', () => {
 const testStackPropsNoFn = {
   domainName: 'gradientedge.io',
   env: {
-    account: '123456789',
+    account: '123456789012',
     region: 'eu-west-1',
   },
   extraContexts: [
@@ -240,7 +240,7 @@ describe('TestSiteWithLambdaBackendConstruct NoFn', () => {
 const testStackPropsPublicUrl = {
   domainName: 'gradientedge.io',
   env: {
-    account: '123456789',
+    account: '123456789012',
     region: 'eu-west-1',
   },
   extraContexts: [

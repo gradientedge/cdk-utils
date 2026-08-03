@@ -10,7 +10,7 @@ interface TestStackProps extends CommonStackProps {
 const testStackProps = {
   domainName: 'gradientedge.io',
   env: {
-    account: '123456789',
+    account: '123456789012',
     region: 'eu-west-1',
   },
   extraContexts: ['packages/aws/test/common/cdk-config/configs.json'],

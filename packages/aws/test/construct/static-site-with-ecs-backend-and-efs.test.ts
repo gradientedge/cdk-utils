@@ -13,7 +13,7 @@ interface TestStackProps extends SiteWithEcsBackendProps {
 const testStackProps = {
   domainName: 'gradientedge.io',
   env: {
-    account: '123456789',
+    account: '123456789012',
     region: 'eu-west-1',
   },
   extraContexts: [
@@ -254,7 +254,7 @@ describe('TestSiteWithEcsBackendAndEfsConstruct', () => {
         ],
         PriceClass: 'PriceClass_All',
         ViewerCertificate: {
-          AcmCertificateArn: 'arn:aws:acm:us-east-1:123456789:certificate/12345a67-8f85-46da-8441-88c998b4bd64',
+          AcmCertificateArn: 'arn:aws:acm:us-east-1:123456789012:certificate/12345a67-8f85-46da-8441-88c998b4bd64',
           MinimumProtocolVersion: 'TLSv1.2_2021',
           SslSupportMethod: 'sni-only',
         },
@@ -323,7 +323,7 @@ describe('TestSiteWithEcsBackendAndEfsConstruct', () => {
           Essential: true,
           Image: {
             'Fn::Sub':
-              '123456789.dkr.ecr.eu-west-1.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-123456789-eu-west-1:460140ea11213855346dc4cb5e36128373384a708c6fd0e1ebc430045456f073',
+              '123456789012.dkr.ecr.eu-west-1.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-123456789012-eu-west-1:460140ea11213855346dc4cb5e36128373384a708c6fd0e1ebc430045456f073',
           },
           LogConfiguration: {
             LogDriver: 'awslogs',
