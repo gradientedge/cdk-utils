@@ -7,6 +7,7 @@ import {
   Backend,
   BackendProtocol,
   Cache,
+  Certificate,
   Diagnostic,
   getApiManagementServiceOutput,
   Logger,
@@ -31,6 +32,7 @@ import {
   ApiPolicyProps,
   ApiSubscriptionProps,
   CacheProps,
+  CertificateProps,
   LoggerProps,
   NamedValueProps,
   ResolveApiManagementProps,
@@ -328,6 +330,25 @@ export class AzureApiManagementManager {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
     return new Cache(`${id}`, props, { parent: scope, ...resourceOptions })
+  }
+
+  /**
+   * @summary Method to create a new API certificate
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props API certificate properties
+   * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native API Management Certificate]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/apimanagement/certificate/}
+   */
+  public createCertificate(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: CertificateProps,
+    resourceOptions?: ResourceOptions
+  ) {
+    if (!props) throw new Error(`Props undefined for ${id}`)
+
+    return new Certificate(`${id}`, props, { parent: scope, ...resourceOptions })
   }
 
   /**

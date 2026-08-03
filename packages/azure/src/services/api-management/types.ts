@@ -7,6 +7,7 @@ import {
   ApiPolicyArgs,
   BackendArgs,
   CacheArgs,
+  CertificateArgs,
   GetApiManagementServiceOutputArgs,
   LoggerArgs,
   NamedValueArgs,
@@ -76,6 +77,13 @@ export interface ApiSubscriptionProps extends SubscriptionArgs {}
  * @category Interface
  */
 export interface CacheProps extends CacheArgs {}
+
+/**
+ * Properties for creating an API Management certificate
+ * @see [Pulumi Azure Native API Management Certificate]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/apimanagement/certificate/}
+ * @category Interface
+ */
+export interface CertificateProps extends CertificateArgs {}
 
 /**
  * Properties for configuring custom domains on an API Management service

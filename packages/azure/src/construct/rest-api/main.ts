@@ -60,6 +60,7 @@ export class AzureRestApi extends CommonAzureConstruct {
     this.createNamespaceSecretRole()
     this.createNamespaceSecret()
     this.createSubscriptionKeySecret()
+    this.createApiManagementCertificate()
     this.createApiManagementLogger()
     this.createApiDiagnostic()
     this.createDiagnosticLog()
@@ -310,5 +311,23 @@ export class AzureRestApi extends CommonAzureConstruct {
       resourceUri: this.api.apim.id,
       workspaceId: this.commonLogAnalyticsWorkspace.id,
     })
+  }
+
+  /**
+   * @summary Method to create the API Management certificate
+   */
+  protected createApiManagementCertificate() {
+    if (!this.props.apiManagementCertificate || this.props.apiManagement.useExistingApiManagement) return
+
+    this.apiManagementManager.createCertificate(
+      `${this.id}-apim-certificate`,
+      this,
+      {
+        ...this.props.apiManagementCertificate,
+        resourceGroupName: this.api.resourceGroupName,
+        serviceName: this.api.apim.name,
+      },
+      { parent: this, dependsOn: [this.api.apim] }
+    )
   }
 }

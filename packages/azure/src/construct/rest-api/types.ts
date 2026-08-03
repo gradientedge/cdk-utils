@@ -8,6 +8,7 @@ import {
   ApiManagementProps,
   CommonAzureStackProps,
   MonitorDiagnosticSettingProps,
+  CertificateProps,
 } from '../../index.js'
 
 /**
@@ -35,6 +36,8 @@ export interface AzureRestApiProps extends CommonAzureStackProps {
   apiManagementDiagnosticAzMonitor: ApiDiagnosticProps
   /** Monitor diagnostic settings for the API Management service */
   apiManagementDiagnosticSettings: MonitorDiagnosticSettingProps
+  /** API Management certificate properties */
+  apiManagementCertificate: CertificateProps
 }
 
 /**
