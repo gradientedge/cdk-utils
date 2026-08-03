@@ -15,7 +15,7 @@
 <div class="tsd-comment tsd-typography"><p>Provisioned API Management resources for the function-backed REST API</p>
 </div></section>
 <div class="tsd-signature"><span class="tsd-signature-keyword">interface</span> <span class="tsd-kind-interface">AzureApiFunction</span> <span class="tsd-signature-symbol">{</span><br/>    <a class="tsd-kind-property" href="#apim">apim</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ApiManagementService</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#apioperations">apiOperations</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-signature-symbol">[</span><span class="tsd-kind-index-signature">operation</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]:</span> <span class="tsd-signature-type">ApiOperation</span> <span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#authkeyvault">authKeyVault</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Output</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">GetVaultResult</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#backend">backend</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Backend</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#corspolicyxmlcontent">corsPolicyXmlContent</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#id">id</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#logger">logger</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Logger</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#managementapi">managementApi</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Api</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#name">name</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#namedvalue">namedValue</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">NamedValue</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#namedvalueroleassignment">namedValueRoleAssignment</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">RoleAssignment</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#namedvaluesecret">namedValueSecret</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Secret</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#resourcegroupname">resourceGroupName</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#validatejwtpolicyxmlcontent">validateJwtPolicyXmlContent</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div>
-<section class="tsd-panel tsd-hierarchy" data-refl="17677">
+<section class="tsd-panel tsd-hierarchy" data-refl="17707">
 <h4>Hierarchy (<a href="../hierarchy.html#@gradientedge/cdk-utils-azure.AzureApiFunction">View Summary</a>)</h4>
 <ul class="tsd-hierarchy">
 <li class="tsd-hierarchy-item"><a href="_gradientedge_cdk-utils-azure.AzureApi.html" class="tsd-signature-type tsd-kind-interface">AzureApi</a>
@@ -55,7 +55,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from <a href="_gradientedge_cdk-utils-azure.AzureApi.html">AzureApi</a>.<a href="_gradientedge_cdk-utils-azure.AzureApi.html#apim">apim</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/gradientedge/cdk-utils/blob/main/packages/azure/src/construct/rest-api/types.ts#L54">packages/azure/src/construct/rest-api/types.ts:54</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gradientedge/cdk-utils/blob/main/packages/azure/src/construct/rest-api/types.ts#L57">packages/azure/src/construct/rest-api/types.ts:57</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="apioperations"><span>api<wbr/>Operations</span><a href="#apioperations" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">apiOperations</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-signature-symbol">[</span><span class="tsd-kind-index-signature">operation</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]:</span> <span class="tsd-signature-type">ApiOperation</span> <span class="tsd-signature-symbol">}</span></div>
@@ -70,7 +70,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from <a href="_gradientedge_cdk-utils-azure.AzureApi.html">AzureApi</a>.<a href="_gradientedge_cdk-utils-azure.AzureApi.html#authkeyvault">authKeyVault</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/gradientedge/cdk-utils/blob/main/packages/azure/src/construct/rest-api/types.ts#L52">packages/azure/src/construct/rest-api/types.ts:52</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gradientedge/cdk-utils/blob/main/packages/azure/src/construct/rest-api/types.ts#L55">packages/azure/src/construct/rest-api/types.ts:55</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="backend"><span>backend</span><a href="#backend" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">backend</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Backend</span></div>
@@ -92,7 +92,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from <a href="_gradientedge_cdk-utils-azure.AzureApi.html">AzureApi</a>.<a href="_gradientedge_cdk-utils-azure.AzureApi.html#id">id</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/gradientedge/cdk-utils/blob/main/packages/azure/src/construct/rest-api/types.ts#L46">packages/azure/src/construct/rest-api/types.ts:46</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gradientedge/cdk-utils/blob/main/packages/azure/src/construct/rest-api/types.ts#L49">packages/azure/src/construct/rest-api/types.ts:49</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited">
 <h3 class="tsd-anchor-link" id="logger"><span>logger</span><a href="#logger" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">logger</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Logger</span></div>
@@ -100,7 +100,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from <a href="_gradientedge_cdk-utils-azure.AzureApi.html">AzureApi</a>.<a href="_gradientedge_cdk-utils-azure.AzureApi.html#logger">logger</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/gradientedge/cdk-utils/blob/main/packages/azure/src/construct/rest-api/types.ts#L60">packages/azure/src/construct/rest-api/types.ts:60</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gradientedge/cdk-utils/blob/main/packages/azure/src/construct/rest-api/types.ts#L63">packages/azure/src/construct/rest-api/types.ts:63</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="managementapi"><span>management<wbr/>Api</span><a href="#managementapi" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">managementApi</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Api</span></div>
@@ -115,7 +115,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from <a href="_gradientedge_cdk-utils-azure.AzureApi.html">AzureApi</a>.<a href="_gradientedge_cdk-utils-azure.AzureApi.html#name">name</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/gradientedge/cdk-utils/blob/main/packages/azure/src/construct/rest-api/types.ts#L48">packages/azure/src/construct/rest-api/types.ts:48</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gradientedge/cdk-utils/blob/main/packages/azure/src/construct/rest-api/types.ts#L51">packages/azure/src/construct/rest-api/types.ts:51</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="namedvalue"><span>named<wbr/>Value</span><a href="#namedvalue" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">namedValue</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">NamedValue</span></div>
@@ -130,7 +130,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from <a href="_gradientedge_cdk-utils-azure.AzureApi.html">AzureApi</a>.<a href="_gradientedge_cdk-utils-azure.AzureApi.html#namedvalueroleassignment">namedValueRoleAssignment</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/gradientedge/cdk-utils/blob/main/packages/azure/src/construct/rest-api/types.ts#L58">packages/azure/src/construct/rest-api/types.ts:58</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gradientedge/cdk-utils/blob/main/packages/azure/src/construct/rest-api/types.ts#L61">packages/azure/src/construct/rest-api/types.ts:61</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited">
 <h3 class="tsd-anchor-link" id="namedvaluesecret"><span>named<wbr/>Value<wbr/>Secret</span><a href="#namedvaluesecret" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">namedValueSecret</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Secret</span></div>
@@ -138,7 +138,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from <a href="_gradientedge_cdk-utils-azure.AzureApi.html">AzureApi</a>.<a href="_gradientedge_cdk-utils-azure.AzureApi.html#namedvaluesecret">namedValueSecret</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/gradientedge/cdk-utils/blob/main/packages/azure/src/construct/rest-api/types.ts#L56">packages/azure/src/construct/rest-api/types.ts:56</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gradientedge/cdk-utils/blob/main/packages/azure/src/construct/rest-api/types.ts#L59">packages/azure/src/construct/rest-api/types.ts:59</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited">
 <h3 class="tsd-anchor-link" id="resourcegroupname"><span>resource<wbr/>Group<wbr/>Name</span><a href="#resourcegroupname" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">resourceGroupName</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -146,7 +146,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from <a href="_gradientedge_cdk-utils-azure.AzureApi.html">AzureApi</a>.<a href="_gradientedge_cdk-utils-azure.AzureApi.html#resourcegroupname">resourceGroupName</a></p>
 <ul>
-<li>Defined in <a href="https://github.com/gradientedge/cdk-utils/blob/main/packages/azure/src/construct/rest-api/types.ts#L50">packages/azure/src/construct/rest-api/types.ts:50</a></li></ul></aside></section>
+<li>Defined in <a href="https://github.com/gradientedge/cdk-utils/blob/main/packages/azure/src/construct/rest-api/types.ts#L53">packages/azure/src/construct/rest-api/types.ts:53</a></li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="validatejwtpolicyxmlcontent"><code class="tsd-tag">Optional</code><span>validate<wbr/>Jwt<wbr/>Policy<wbr/>Xml<wbr/>Content</span><a href="#validatejwtpolicyxmlcontent" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">validateJwtPolicyXmlContent</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
