@@ -1,4 +1,4 @@
-import { AppServicePlanArgs, WebAppArgs } from '@pulumi/azure-native/web/index.js'
+import { AppServicePlanArgs, WebAppArgs, WebAppSlotArgs } from '@pulumi/azure-native/web/index.js'
 
 /**
  * Properties for creating an Azure App Service Plan
@@ -13,3 +13,10 @@ export interface ServicePlanProps extends AppServicePlanArgs {}
  * @category Interface
  */
 export interface LinuxWebAppProps extends WebAppArgs {}
+
+/**
+ * Properties for creating an Azure Web App Slot
+ * @see [Pulumi Azure Native Web App Slot]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/web/webappslot/}
+ * @category Interface
+ */
+export interface WebAppSlotProps extends WebAppSlotArgs {}
