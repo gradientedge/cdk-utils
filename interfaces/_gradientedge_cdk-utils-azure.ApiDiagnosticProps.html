@@ -19,7 +19,7 @@
 <h4 class="tsd-anchor-link" id="see">See<a href="#see" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>[Pulumi Azure Native API Management Diagnostic]<a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/apimanagement/apidiagnostic/">https://www.pulumi.com/registry/packages/azure-native/api-docs/apimanagement/apidiagnostic/</a></p>
 </div></div></section>
 <div class="tsd-signature"><span class="tsd-signature-keyword">interface</span> <span class="tsd-kind-interface">ApiDiagnosticProps</span> <span class="tsd-signature-symbol">{</span><br/>    <a class="tsd-kind-property" href="#alwayslog">alwaysLog</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#apiid">apiId</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#backend">backend</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PipelineDiagnosticSettingsArgs</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#diagnosticid">diagnosticId</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#frontend">frontend</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PipelineDiagnosticSettingsArgs</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#httpcorrelationprotocol">httpCorrelationProtocol</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#logclientip">logClientIp</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#loggerid">loggerId</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#metrics">metrics</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#operationnameformat">operationNameFormat</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#resourcegroupname">resourceGroupName</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#sampling">sampling</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">SamplingSettingsArgs</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#servicename">serviceName</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#verbosity">verbosity</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div>
-<section class="tsd-panel tsd-hierarchy" data-refl="17425">
+<section class="tsd-panel tsd-hierarchy" data-refl="17435">
 <h4>Hierarchy</h4>
 <ul class="tsd-hierarchy">
 <li class="tsd-hierarchy-item"><span class="tsd-signature-type">ApiDiagnosticArgs</span>
@@ -59,7 +59,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiDiagnosticArgs.alwaysLog</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiDiagnostic.d.ts:95</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiDiagnostic.d.ts:95</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="apiid"><span>api<wbr/>Id</span><a href="#apiid" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">apiId</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -67,7 +67,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiDiagnosticArgs.apiId</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiDiagnostic.d.ts:99</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiDiagnostic.d.ts:99</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="backend"><code class="tsd-tag">Optional</code><span>backend</span><a href="#backend" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">backend</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PipelineDiagnosticSettingsArgs</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -75,7 +75,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiDiagnosticArgs.backend</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiDiagnostic.d.ts:103</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiDiagnostic.d.ts:103</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="diagnosticid"><code class="tsd-tag">Optional</code><span>diagnostic<wbr/>Id</span><a href="#diagnosticid" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">diagnosticId</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -83,7 +83,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiDiagnosticArgs.diagnosticId</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiDiagnostic.d.ts:107</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiDiagnostic.d.ts:107</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="frontend"><code class="tsd-tag">Optional</code><span>frontend</span><a href="#frontend" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">frontend</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PipelineDiagnosticSettingsArgs</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -91,7 +91,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiDiagnosticArgs.frontend</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiDiagnostic.d.ts:111</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiDiagnostic.d.ts:111</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="httpcorrelationprotocol"><code class="tsd-tag">Optional</code><span>http<wbr/>Correlation<wbr/>Protocol</span><a href="#httpcorrelationprotocol" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">httpCorrelationProtocol</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -99,7 +99,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiDiagnosticArgs.httpCorrelationProtocol</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiDiagnostic.d.ts:115</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiDiagnostic.d.ts:115</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="logclientip"><code class="tsd-tag">Optional</code><span>log<wbr/>Client<wbr/>Ip</span><a href="#logclientip" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">logClientIp</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -107,7 +107,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiDiagnosticArgs.logClientIp</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiDiagnostic.d.ts:119</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiDiagnostic.d.ts:119</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="loggerid"><span>logger<wbr/>Id</span><a href="#loggerid" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">loggerId</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -115,7 +115,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiDiagnosticArgs.loggerId</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiDiagnostic.d.ts:123</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiDiagnostic.d.ts:123</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="metrics"><code class="tsd-tag">Optional</code><span>metrics</span><a href="#metrics" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">metrics</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -123,7 +123,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiDiagnosticArgs.metrics</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiDiagnostic.d.ts:127</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiDiagnostic.d.ts:127</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="operationnameformat"><code class="tsd-tag">Optional</code><span>operation<wbr/>Name<wbr/>Format</span><a href="#operationnameformat" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">operationNameFormat</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -131,7 +131,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiDiagnosticArgs.operationNameFormat</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiDiagnostic.d.ts:131</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiDiagnostic.d.ts:131</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="resourcegroupname"><span>resource<wbr/>Group<wbr/>Name</span><a href="#resourcegroupname" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">resourceGroupName</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -139,7 +139,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiDiagnosticArgs.resourceGroupName</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiDiagnostic.d.ts:135</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiDiagnostic.d.ts:135</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="sampling"><code class="tsd-tag">Optional</code><span>sampling</span><a href="#sampling" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">sampling</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">SamplingSettingsArgs</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -147,7 +147,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiDiagnosticArgs.sampling</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiDiagnostic.d.ts:139</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiDiagnostic.d.ts:139</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="servicename"><span>service<wbr/>Name</span><a href="#servicename" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">serviceName</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -155,7 +155,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiDiagnosticArgs.serviceName</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiDiagnostic.d.ts:143</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiDiagnostic.d.ts:143</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="verbosity"><code class="tsd-tag">Optional</code><span>verbosity</span><a href="#verbosity" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">verbosity</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -163,7 +163,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiDiagnosticArgs.verbosity</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiDiagnostic.d.ts:147</li></ul></aside></section></section></details></div>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiDiagnostic.d.ts:147</li></ul></aside></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">

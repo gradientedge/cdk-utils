@@ -19,7 +19,7 @@
 <h4 class="tsd-anchor-link" id="see">See<a href="#see" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>[Pulumi Azure Native Service Bus Namespace]<a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/servicebus/namespace/">https://www.pulumi.com/registry/packages/azure-native/api-docs/servicebus/namespace/</a></p>
 </div></div></section>
 <div class="tsd-signature"><span class="tsd-signature-keyword">interface</span> <span class="tsd-kind-interface">ServiceBusNamespaceProps</span> <span class="tsd-signature-symbol">{</span><br/>    <a class="tsd-kind-property" href="#alternatename">alternateName</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#disablelocalauth">disableLocalAuth</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#enablegeoreplication">enableGeoReplication</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#encryption">encryption</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">EncryptionArgs</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#georeplication">geoReplication</a><span class="tsd-signature-symbol">?:</span> <a href="_gradientedge_cdk-utils-azure.ServiceBusGeoReplicationProps.html" class="tsd-signature-type tsd-kind-interface">ServiceBusGeoReplicationProps</a><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#identity">identity</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">IdentityArgs</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#location">location</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#minimumtlsversion">minimumTlsVersion</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#namespacename">namespaceName</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#premiummessagingpartitions">premiumMessagingPartitions</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#privateendpointconnections">privateEndpointConnections</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PrivateEndpointConnectionArgs</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#publicnetworkaccess">publicNetworkAccess</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#resourcegroupname">resourceGroupName</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#sku">sku</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">SBSkuArgs</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#tags">tags</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">{</span> <span class="tsd-signature-symbol">[</span><span class="tsd-kind-index-signature">key</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span> <span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#zoneredundant">zoneRedundant</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div>
-<section class="tsd-panel tsd-hierarchy" data-refl="18860">
+<section class="tsd-panel tsd-hierarchy" data-refl="18870">
 <h4>Hierarchy (<a href="../hierarchy.html#@gradientedge/cdk-utils-azure.ServiceBusNamespaceProps">View Summary</a>)</h4>
 <ul class="tsd-hierarchy">
 <li class="tsd-hierarchy-item"><span class="tsd-signature-type">NamespaceArgs</span>
@@ -63,7 +63,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from NamespaceArgs.alternateName</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/namespace.d.ts:133</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/namespace.d.ts:133</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="disablelocalauth"><code class="tsd-tag">Optional</code><span>disable<wbr/>Local<wbr/>Auth</span><a href="#disablelocalauth" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">disableLocalAuth</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -71,7 +71,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from NamespaceArgs.disableLocalAuth</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/namespace.d.ts:137</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/namespace.d.ts:137</li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="enablegeoreplication"><code class="tsd-tag">Optional</code><span>enable<wbr/>Geo<wbr/>Replication</span><a href="#enablegeoreplication" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">enableGeoReplication</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -87,7 +87,7 @@ When <code>true</code>, <a href="_gradientedge_cdk-utils-azure.EventHandlerServi
 </div><aside class="tsd-sources">
 <p>Inherited from NamespaceArgs.encryption</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/namespace.d.ts:141</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/namespace.d.ts:141</li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="georeplication"><code class="tsd-tag">Optional</code><span>geo<wbr/>Replication</span><a href="#georeplication" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">geoReplication</span><span class="tsd-signature-symbol">?:</span> <a href="_gradientedge_cdk-utils-azure.ServiceBusGeoReplicationProps.html" class="tsd-signature-type tsd-kind-interface">ServiceBusGeoReplicationProps</a></div>
@@ -102,7 +102,7 @@ When <code>true</code>, <a href="_gradientedge_cdk-utils-azure.EventHandlerServi
 </div><aside class="tsd-sources">
 <p>Inherited from NamespaceArgs.identity</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/namespace.d.ts:145</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/namespace.d.ts:145</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="location"><code class="tsd-tag">Optional</code><span>location</span><a href="#location" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">location</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -110,7 +110,7 @@ When <code>true</code>, <a href="_gradientedge_cdk-utils-azure.EventHandlerServi
 </div><aside class="tsd-sources">
 <p>Inherited from NamespaceArgs.location</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/namespace.d.ts:149</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/namespace.d.ts:149</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="minimumtlsversion"><code class="tsd-tag">Optional</code><span>minimum<wbr/>Tls<wbr/>Version</span><a href="#minimumtlsversion" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">minimumTlsVersion</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -118,7 +118,7 @@ When <code>true</code>, <a href="_gradientedge_cdk-utils-azure.EventHandlerServi
 </div><aside class="tsd-sources">
 <p>Inherited from NamespaceArgs.minimumTlsVersion</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/namespace.d.ts:153</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/namespace.d.ts:153</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="namespacename"><code class="tsd-tag">Optional</code><span>namespace<wbr/>Name</span><a href="#namespacename" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">namespaceName</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -126,7 +126,7 @@ When <code>true</code>, <a href="_gradientedge_cdk-utils-azure.EventHandlerServi
 </div><aside class="tsd-sources">
 <p>Inherited from NamespaceArgs.namespaceName</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/namespace.d.ts:157</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/namespace.d.ts:157</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="premiummessagingpartitions"><code class="tsd-tag">Optional</code><span>premium<wbr/>Messaging<wbr/>Partitions</span><a href="#premiummessagingpartitions" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">premiumMessagingPartitions</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -134,7 +134,7 @@ When <code>true</code>, <a href="_gradientedge_cdk-utils-azure.EventHandlerServi
 </div><aside class="tsd-sources">
 <p>Inherited from NamespaceArgs.premiumMessagingPartitions</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/namespace.d.ts:161</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/namespace.d.ts:161</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="privateendpointconnections"><code class="tsd-tag">Optional</code><span>private<wbr/>Endpoint<wbr/>Connections</span><a href="#privateendpointconnections" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">privateEndpointConnections</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">PrivateEndpointConnectionArgs</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -143,7 +143,7 @@ These are also available as standalone resources. Do not mix inline and standalo
 </div><aside class="tsd-sources">
 <p>Inherited from NamespaceArgs.privateEndpointConnections</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/namespace.d.ts:166</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/namespace.d.ts:166</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="publicnetworkaccess"><code class="tsd-tag">Optional</code><span>public<wbr/>Network<wbr/>Access</span><a href="#publicnetworkaccess" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">publicNetworkAccess</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -151,7 +151,7 @@ These are also available as standalone resources. Do not mix inline and standalo
 </div><aside class="tsd-sources">
 <p>Inherited from NamespaceArgs.publicNetworkAccess</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/namespace.d.ts:170</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/namespace.d.ts:170</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="resourcegroupname"><span>resource<wbr/>Group<wbr/>Name</span><a href="#resourcegroupname" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">resourceGroupName</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -159,7 +159,7 @@ These are also available as standalone resources. Do not mix inline and standalo
 </div><aside class="tsd-sources">
 <p>Inherited from NamespaceArgs.resourceGroupName</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/namespace.d.ts:174</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/namespace.d.ts:174</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="sku"><code class="tsd-tag">Optional</code><span>sku</span><a href="#sku" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">sku</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">SBSkuArgs</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -167,7 +167,7 @@ These are also available as standalone resources. Do not mix inline and standalo
 </div><aside class="tsd-sources">
 <p>Inherited from NamespaceArgs.sku</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/namespace.d.ts:178</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/namespace.d.ts:178</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="tags"><code class="tsd-tag">Optional</code><span>tags</span><a href="#tags" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">tags</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">{</span> <span class="tsd-signature-symbol">[</span><span class="tsd-kind-index-signature">key</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span> <span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -175,7 +175,7 @@ These are also available as standalone resources. Do not mix inline and standalo
 </div><aside class="tsd-sources">
 <p>Inherited from NamespaceArgs.tags</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/namespace.d.ts:182</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/namespace.d.ts:182</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="zoneredundant"><code class="tsd-tag">Optional</code><span>zone<wbr/>Redundant</span><a href="#zoneredundant" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">zoneRedundant</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -183,7 +183,7 @@ These are also available as standalone resources. Do not mix inline and standalo
 </div><aside class="tsd-sources">
 <p>Inherited from NamespaceArgs.zoneRedundant</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/namespace.d.ts:188</li></ul></aside></section></section></details></div>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/namespace.d.ts:188</li></ul></aside></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">

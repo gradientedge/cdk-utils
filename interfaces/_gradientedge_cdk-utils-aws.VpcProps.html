@@ -12,7 +12,7 @@
 <li><a href="" aria-current="page">VpcProps</a></li></ul>
 <h1>Interface VpcProps</h1></div>
 <div class="tsd-signature"><span class="tsd-signature-keyword">interface</span> <span class="tsd-kind-interface">VpcProps</span> <span class="tsd-signature-symbol">{</span><br/>    <a class="tsd-kind-property" href="#availabilityzones">availabilityZones</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#cidr">cidr</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#createinternetgateway">createInternetGateway</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#defaultinstancetenancy">defaultInstanceTenancy</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">DefaultInstanceTenancy</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#enablednshostnames">enableDnsHostnames</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#enablednssupport">enableDnsSupport</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#flowlogs">flowLogs</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-signature-symbol">[</span><span class="tsd-kind-index-signature">id</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]:</span> <span class="tsd-signature-type">FlowLogOptions</span> <span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#gatewayendpoints">gatewayEndpoints</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-signature-symbol">[</span><span class="tsd-kind-index-signature">id</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]:</span> <span class="tsd-signature-type">GatewayVpcEndpointOptions</span> <span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#ipaddresses">ipAddresses</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IIpAddresses</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#ipprotocol">ipProtocol</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IpProtocol</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#ipv6addresses">ipv6Addresses</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IIpv6Addresses</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#isipv6">isIPV6</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#maxazs">maxAzs</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#natgatewayprovider">natGatewayProvider</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">NatProvider</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#natgateways">natGateways</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#natgatewaysubnets">natGatewaySubnets</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">SubnetSelection</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#reservedazs">reservedAzs</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#restrictdefaultsecuritygroup">restrictDefaultSecurityGroup</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#subnetconfiguration">subnetConfiguration</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">SubnetConfiguration</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#vpcname">vpcName</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#vpnconnections">vpnConnections</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-signature-symbol">[</span><span class="tsd-kind-index-signature">id</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]:</span> <span class="tsd-signature-type">VpnConnectionOptions</span> <span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#vpngateway">vpnGateway</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#vpngatewayasn">vpnGatewayAsn</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#vpnroutepropagation">vpnRoutePropagation</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">SubnetSelection</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div>
-<section class="tsd-panel tsd-hierarchy" data-refl="15744">
+<section class="tsd-panel tsd-hierarchy" data-refl="15754">
 <h4>Hierarchy</h4>
 <ul class="tsd-hierarchy">
 <li class="tsd-hierarchy-item"><span class="tsd-signature-type">VpcProps</span>
@@ -69,7 +69,7 @@
 </div></div><aside class="tsd-sources">
 <p>Inherited from ec2.VpcProps.availabilityZones</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:657</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:657</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="cidr"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span class="deprecated">cidr</span><a href="#cidr" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">cidr</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -88,7 +88,7 @@ split across all subnets per Availability Zone.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ec2.VpcProps.cidr</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:588</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:588</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="createinternetgateway"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>create<wbr/>Internet<wbr/>Gateway</span><a href="#createinternetgateway" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">createInternetGateway</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -102,7 +102,7 @@ split across all subnets per Availability Zone.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ec2.VpcProps.createInternetGateway</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:791</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:791</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="defaultinstancetenancy"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>default<wbr/>Instance<wbr/>Tenancy</span><a href="#defaultinstancetenancy" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">defaultInstanceTenancy</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">DefaultInstanceTenancy</span></div>
@@ -120,7 +120,7 @@ with Dedicated tenancy.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ec2.VpcProps.defaultInstanceTenancy</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:620</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:620</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="enablednshostnames"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>enable<wbr/>Dns<wbr/>Hostnames</span><a href="#enablednshostnames" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">enableDnsHostnames</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -136,7 +136,7 @@ but only if the enableDnsSupport attribute is also set to true.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ec2.VpcProps.enableDnsHostnames</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:597</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:597</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="enablednssupport"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>enable<wbr/>Dns<wbr/>Support</span><a href="#enablednssupport" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">enableDnsSupport</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -155,7 +155,7 @@ VPC IPv4 network range plus two will succeed.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ec2.VpcProps.enableDnsSupport</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:609</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:609</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="flowlogs"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>flow<wbr/>Logs</span><a href="#flowlogs" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">flowLogs</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-signature-symbol">[</span><span class="tsd-kind-index-signature">id</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]:</span> <span class="tsd-signature-type">FlowLogOptions</span> <span class="tsd-signature-symbol">}</span></div>
@@ -169,7 +169,7 @@ VPC IPv4 network range plus two will succeed.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ec2.VpcProps.flowLogs</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:768</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:768</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="gatewayendpoints"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>gateway<wbr/>Endpoints</span><a href="#gatewayendpoints" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">gatewayEndpoints</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-signature-symbol">[</span><span class="tsd-kind-index-signature">id</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]:</span> <span class="tsd-signature-type">GatewayVpcEndpointOptions</span> <span class="tsd-signature-symbol">}</span></div>
@@ -183,7 +183,7 @@ VPC IPv4 network range plus two will succeed.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ec2.VpcProps.gatewayEndpoints</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:760</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:760</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="ipaddresses"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>ip<wbr/>Addresses</span><a href="#ipaddresses" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">ipAddresses</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IIpAddresses</span></div>
@@ -199,7 +199,7 @@ VPC IPv4 network range plus two will succeed.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ec2.VpcProps.ipAddresses</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:577</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:577</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="ipprotocol"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>ip<wbr/>Protocol</span><a href="#ipprotocol" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">ipProtocol</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IpProtocol</span></div>
@@ -214,7 +214,7 @@ VPC IPv4 network range plus two will succeed.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ec2.VpcProps.ipProtocol</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:567</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:567</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="ipv6addresses"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>ipv6<wbr/>Addresses</span><a href="#ipv6addresses" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">ipv6Addresses</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IIpv6Addresses</span></div>
@@ -230,7 +230,7 @@ VPC IPv4 network range plus two will succeed.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ec2.VpcProps.ipv6Addresses</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:801</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:801</li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="isipv6"><code class="tsd-tag">Optional</code><span>is<wbr/>IPV6</span><a href="#isipv6" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">isIPV6</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -261,7 +261,7 @@ region on your stack.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ec2.VpcProps.maxAzs</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:640</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:640</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="natgatewayprovider"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>nat<wbr/>Gateway<wbr/>Provider</span><a href="#natgatewayprovider" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">natGatewayProvider</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">NatProvider</span></div>
@@ -277,7 +277,7 @@ may not be available in all AWS regions.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ec2.VpcProps.natGatewayProvider</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:691</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:691</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="natgateways"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>nat<wbr/>Gateways</span><a href="#natgateways" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">natGateways</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
@@ -296,7 +296,7 @@ cross-AZ data traffic instead.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ec2.VpcProps.natGateways</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:670</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:670</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="natgatewaysubnets"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>nat<wbr/>Gateway<wbr/>Subnets</span><a href="#natgatewaysubnets" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">natGatewaySubnets</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">SubnetSelection</span></div>
@@ -313,7 +313,7 @@ the picked subnets must be public subnets.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ec2.VpcProps.natGatewaySubnets</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:681</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:681</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="reservedazs"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>reserved<wbr/>Azs</span><a href="#reservedazs" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">reservedAzs</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
@@ -329,7 +329,7 @@ resources are provisioned.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ec2.VpcProps.reservedAzs</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:649</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:649</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="restrictdefaultsecuritygroup"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>restrict<wbr/>Default<wbr/>Security<wbr/>Group</span><a href="#restrictdefaultsecuritygroup" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">restrictDefaultSecurityGroup</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -344,7 +344,7 @@ from the default security group</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ec2.VpcProps.restrictDefaultSecurityGroup</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:785</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:785</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="subnetconfiguration"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>subnet<wbr/>Configuration</span><a href="#subnetconfiguration" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">subnetConfiguration</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">SubnetConfiguration</span><span class="tsd-signature-symbol">[]</span></div>
@@ -365,7 +365,7 @@ subnet in each AZ provide the following:</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ec2.VpcProps.subnetConfiguration</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:726</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:726</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="vpcname"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>vpc<wbr/>Name</span><a href="#vpcname" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">vpcName</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -380,7 +380,7 @@ subnet in each AZ provide the following:</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ec2.VpcProps.vpcName</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:778</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:778</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="vpnconnections"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>vpn<wbr/>Connections</span><a href="#vpnconnections" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">vpnConnections</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-signature-symbol">[</span><span class="tsd-kind-index-signature">id</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]:</span> <span class="tsd-signature-type">VpnConnectionOptions</span> <span class="tsd-signature-symbol">}</span></div>
@@ -394,7 +394,7 @@ subnet in each AZ provide the following:</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ec2.VpcProps.vpnConnections</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:744</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:744</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="vpngateway"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>vpn<wbr/>Gateway</span><a href="#vpngateway" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">vpnGateway</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -408,7 +408,7 @@ subnet in each AZ provide the following:</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ec2.VpcProps.vpnGateway</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:732</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:732</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="vpngatewayasn"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>vpn<wbr/>Gateway<wbr/>Asn</span><a href="#vpngatewayasn" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">vpnGatewayAsn</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
@@ -422,7 +422,7 @@ subnet in each AZ provide the following:</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ec2.VpcProps.vpnGatewayAsn</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:738</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:738</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="vpnroutepropagation"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>vpn<wbr/>Route<wbr/>Propagation</span><a href="#vpnroutepropagation" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">vpnRoutePropagation</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">SubnetSelection</span><span class="tsd-signature-symbol">[]</span></div>
@@ -436,7 +436,7 @@ subnet in each AZ provide the following:</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ec2.VpcProps.vpnRoutePropagation</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:754</li></ul></aside></section></section></details></div>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ec2/lib/vpc.d.ts:754</li></ul></aside></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">

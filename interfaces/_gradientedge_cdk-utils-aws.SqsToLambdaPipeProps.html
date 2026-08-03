@@ -12,7 +12,7 @@
 <li><a href="" aria-current="page">SqsToLambdaPipeProps</a></li></ul>
 <h1>Interface SqsToLambdaPipeProps</h1></div>
 <div class="tsd-signature"><span class="tsd-signature-keyword">interface</span> <span class="tsd-kind-interface">SqsToLambdaPipeProps</span> <span class="tsd-signature-symbol">{</span><br/>    <a class="tsd-kind-property" href="#description">description</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#desiredstate">desiredState</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#enrichment">enrichment</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">IFunctionRef</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#enrichmentparameters">enrichmentParameters</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IResolvable</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">PipeEnrichmentParametersProperty</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#kmskeyidentifier">kmsKeyIdentifier</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#lambdainputtemplate">lambdaInputTemplate</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#logconfiguration">logConfiguration</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IResolvable</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">PipeLogConfigurationProperty</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#name">name</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#pipefilterpattern">pipeFilterPattern</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#rolearn">roleArn</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">IRoleRef</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#source">source</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">IQueueRef</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">IStreamRef</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#sourceparameters">sourceParameters</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IResolvable</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">PipeSourceParametersProperty</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#sqsbatchsize">sqsBatchSize</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#sqsmaximumbatchingwindowinseconds">sqsMaximumBatchingWindowInSeconds</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#tags">tags</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Record</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">,</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#target">target</a><span class="tsd-signature-symbol">:</span><br/>        <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">string</span><br/>        <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">IFunctionRef</span><br/>        <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">ILogGroupRef</span><br/>        <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">IQueueRef</span><br/>        <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">ITopicRef</span><br/>        <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">IEventBusRef</span><br/>        <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">IStateMachineRef</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#targetparameters">targetParameters</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IResolvable</span><br/>    <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">PipeTargetParametersProperty</span><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div>
-<section class="tsd-panel tsd-hierarchy" data-refl="15502">
+<section class="tsd-panel tsd-hierarchy" data-refl="15512">
 <h4>Hierarchy</h4>
 <ul class="tsd-hierarchy">
 <li class="tsd-hierarchy-item"><span class="tsd-signature-type">CfnPipeProps</span>
@@ -59,7 +59,7 @@
 </div></div><aside class="tsd-sources">
 <p>Inherited from CfnPipeProps.description</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-pipes/lib/pipes.generated.d.ts:2319</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-pipes/lib/pipes.generated.d.ts:2319</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="desiredstate"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>desired<wbr/>State</span><a href="#desiredstate" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">desiredState</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -71,7 +71,7 @@
 </div></div><aside class="tsd-sources">
 <p>Inherited from CfnPipeProps.desiredState</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-pipes/lib/pipes.generated.d.ts:2325</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-pipes/lib/pipes.generated.d.ts:2325</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="enrichment"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>enrichment</span><a href="#enrichment" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">enrichment</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">IFunctionRef</span></div>
@@ -83,7 +83,7 @@
 </div></div><aside class="tsd-sources">
 <p>Inherited from CfnPipeProps.enrichment</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-pipes/lib/pipes.generated.d.ts:2331</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-pipes/lib/pipes.generated.d.ts:2331</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="enrichmentparameters"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>enrichment<wbr/>Parameters</span><a href="#enrichmentparameters" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">enrichmentParameters</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IResolvable</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">PipeEnrichmentParametersProperty</span></div>
@@ -95,7 +95,7 @@
 </div></div><aside class="tsd-sources">
 <p>Inherited from CfnPipeProps.enrichmentParameters</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-pipes/lib/pipes.generated.d.ts:2337</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-pipes/lib/pipes.generated.d.ts:2337</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="kmskeyidentifier"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>kms<wbr/>Key<wbr/>Identifier</span><a href="#kmskeyidentifier" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">kmsKeyIdentifier</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -111,7 +111,7 @@
 </div></div><aside class="tsd-sources">
 <p>Inherited from CfnPipeProps.kmsKeyIdentifier</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-pipes/lib/pipes.generated.d.ts:2351</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-pipes/lib/pipes.generated.d.ts:2351</li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="lambdainputtemplate"><code class="tsd-tag">Optional</code><span>lambda<wbr/>Input<wbr/>Template</span><a href="#lambdainputtemplate" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">lambdaInputTemplate</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -130,7 +130,7 @@
 </div></div><aside class="tsd-sources">
 <p>Inherited from CfnPipeProps.logConfiguration</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-pipes/lib/pipes.generated.d.ts:2357</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-pipes/lib/pipes.generated.d.ts:2357</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="name"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>name</span><a href="#name" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">name</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -142,7 +142,7 @@
 </div></div><aside class="tsd-sources">
 <p>Inherited from CfnPipeProps.name</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-pipes/lib/pipes.generated.d.ts:2363</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-pipes/lib/pipes.generated.d.ts:2363</li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="pipefilterpattern"><code class="tsd-tag">Optional</code><span>pipe<wbr/>Filter<wbr/>Pattern</span><a href="#pipefilterpattern" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">pipeFilterPattern</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">any</span></div>
@@ -161,7 +161,7 @@
 </div></div><aside class="tsd-sources">
 <p>Inherited from CfnPipeProps.roleArn</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-pipes/lib/pipes.generated.d.ts:2369</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-pipes/lib/pipes.generated.d.ts:2369</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="source"><code class="tsd-tag">Readonly</code><span>source</span><a href="#source" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">source</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">IQueueRef</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">IStreamRef</span></div>
@@ -173,7 +173,7 @@
 </div></div><aside class="tsd-sources">
 <p>Inherited from CfnPipeProps.source</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-pipes/lib/pipes.generated.d.ts:2375</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-pipes/lib/pipes.generated.d.ts:2375</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="sourceparameters"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>source<wbr/>Parameters</span><a href="#sourceparameters" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">sourceParameters</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IResolvable</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">PipeSourceParametersProperty</span></div>
@@ -185,7 +185,7 @@
 </div></div><aside class="tsd-sources">
 <p>Inherited from CfnPipeProps.sourceParameters</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-pipes/lib/pipes.generated.d.ts:2381</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-pipes/lib/pipes.generated.d.ts:2381</li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="sqsbatchsize"><code class="tsd-tag">Optional</code><span>sqs<wbr/>Batch<wbr/>Size</span><a href="#sqsbatchsize" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">sqsBatchSize</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
@@ -211,7 +211,7 @@
 </div></div><aside class="tsd-sources">
 <p>Inherited from CfnPipeProps.tags</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-pipes/lib/pipes.generated.d.ts:2387</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-pipes/lib/pipes.generated.d.ts:2387</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="target"><code class="tsd-tag">Readonly</code><span>target</span><a href="#target" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">target</span><span class="tsd-signature-symbol">:</span><br/>    <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">string</span><br/>    <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">IFunctionRef</span><br/>    <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">ILogGroupRef</span><br/>    <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">IQueueRef</span><br/>    <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">ITopicRef</span><br/>    <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">IEventBusRef</span><br/>    <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">IStateMachineRef</span></div>
@@ -223,7 +223,7 @@
 </div></div><aside class="tsd-sources">
 <p>Inherited from CfnPipeProps.target</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-pipes/lib/pipes.generated.d.ts:2393</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-pipes/lib/pipes.generated.d.ts:2393</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="targetparameters"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>target<wbr/>Parameters</span><a href="#targetparameters" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">targetParameters</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IResolvable</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">PipeTargetParametersProperty</span></div>
@@ -236,7 +236,7 @@
 </div></div><aside class="tsd-sources">
 <p>Inherited from CfnPipeProps.targetParameters</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-pipes/lib/pipes.generated.d.ts:2401</li></ul></aside></section></section></details></div>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-pipes/lib/pipes.generated.d.ts:2401</li></ul></aside></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">

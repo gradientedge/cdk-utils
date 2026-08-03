@@ -19,7 +19,7 @@
 <h4 class="tsd-anchor-link" id="see">See<a href="#see" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>[Pulumi Azure Native Service Bus Subscription]<a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/servicebus/subscription/">https://www.pulumi.com/registry/packages/azure-native/api-docs/servicebus/subscription/</a></p>
 </div></div></section>
 <div class="tsd-signature"><span class="tsd-signature-keyword">interface</span> <span class="tsd-kind-interface">ServiceBusSubscriptionProps</span> <span class="tsd-signature-symbol">{</span><br/>    <a class="tsd-kind-property" href="#autodeleteonidle">autoDeleteOnIdle</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#clientaffineproperties">clientAffineProperties</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">SBClientAffinePropertiesArgs</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#deadletteringonfilterevaluationexceptions">deadLetteringOnFilterEvaluationExceptions</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#deadletteringonmessageexpiration">deadLetteringOnMessageExpiration</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#defaultmessagetimetolive">defaultMessageTimeToLive</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#duplicatedetectionhistorytimewindow">duplicateDetectionHistoryTimeWindow</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#enablebatchedoperations">enableBatchedOperations</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#forwarddeadletteredmessagesto">forwardDeadLetteredMessagesTo</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#forwardto">forwardTo</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#isclientaffine">isClientAffine</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#lockduration">lockDuration</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#maxdeliverycount">maxDeliveryCount</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#namespacename">namespaceName</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#requiressession">requiresSession</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#resourcegroupname">resourceGroupName</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#status">status</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">EntityStatus</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#subscriptionname">subscriptionName</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#topicname">topicName</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div>
-<section class="tsd-panel tsd-hierarchy" data-refl="18906">
+<section class="tsd-panel tsd-hierarchy" data-refl="18916">
 <h4>Hierarchy</h4>
 <ul class="tsd-hierarchy">
 <li class="tsd-hierarchy-item"><span class="tsd-signature-type">SubscriptionArgs</span>
@@ -63,7 +63,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from SubscriptionArgs.autoDeleteOnIdle</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/subscription.d.ts:139</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/subscription.d.ts:139</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="clientaffineproperties"><code class="tsd-tag">Optional</code><span>client<wbr/>Affine<wbr/>Properties</span><a href="#clientaffineproperties" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">clientAffineProperties</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">SBClientAffinePropertiesArgs</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -71,7 +71,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from SubscriptionArgs.clientAffineProperties</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/subscription.d.ts:143</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/subscription.d.ts:143</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="deadletteringonfilterevaluationexceptions"><code class="tsd-tag">Optional</code><span>dead<wbr/>Lettering<wbr/>On<wbr/>Filter<wbr/>Evaluation<wbr/>Exceptions</span><a href="#deadletteringonfilterevaluationexceptions" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">deadLetteringOnFilterEvaluationExceptions</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -79,7 +79,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from SubscriptionArgs.deadLetteringOnFilterEvaluationExceptions</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/subscription.d.ts:147</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/subscription.d.ts:147</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="deadletteringonmessageexpiration"><code class="tsd-tag">Optional</code><span>dead<wbr/>Lettering<wbr/>On<wbr/>Message<wbr/>Expiration</span><a href="#deadletteringonmessageexpiration" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">deadLetteringOnMessageExpiration</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -87,7 +87,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from SubscriptionArgs.deadLetteringOnMessageExpiration</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/subscription.d.ts:151</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/subscription.d.ts:151</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="defaultmessagetimetolive"><code class="tsd-tag">Optional</code><span>default<wbr/>Message<wbr/>Time<wbr/>To<wbr/>Live</span><a href="#defaultmessagetimetolive" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">defaultMessageTimeToLive</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -95,7 +95,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from SubscriptionArgs.defaultMessageTimeToLive</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/subscription.d.ts:155</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/subscription.d.ts:155</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="duplicatedetectionhistorytimewindow"><code class="tsd-tag">Optional</code><span>duplicate<wbr/>Detection<wbr/>History<wbr/>Time<wbr/>Window</span><a href="#duplicatedetectionhistorytimewindow" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">duplicateDetectionHistoryTimeWindow</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -103,7 +103,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from SubscriptionArgs.duplicateDetectionHistoryTimeWindow</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/subscription.d.ts:159</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/subscription.d.ts:159</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="enablebatchedoperations"><code class="tsd-tag">Optional</code><span>enable<wbr/>Batched<wbr/>Operations</span><a href="#enablebatchedoperations" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">enableBatchedOperations</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -111,7 +111,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from SubscriptionArgs.enableBatchedOperations</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/subscription.d.ts:163</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/subscription.d.ts:163</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="forwarddeadletteredmessagesto"><code class="tsd-tag">Optional</code><span>forward<wbr/>Dead<wbr/>Lettered<wbr/>Messages<wbr/>To</span><a href="#forwarddeadletteredmessagesto" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">forwardDeadLetteredMessagesTo</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -119,7 +119,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from SubscriptionArgs.forwardDeadLetteredMessagesTo</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/subscription.d.ts:167</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/subscription.d.ts:167</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="forwardto"><code class="tsd-tag">Optional</code><span>forward<wbr/>To</span><a href="#forwardto" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">forwardTo</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -127,7 +127,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from SubscriptionArgs.forwardTo</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/subscription.d.ts:171</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/subscription.d.ts:171</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="isclientaffine"><code class="tsd-tag">Optional</code><span>is<wbr/>Client<wbr/>Affine</span><a href="#isclientaffine" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">isClientAffine</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -135,7 +135,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from SubscriptionArgs.isClientAffine</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/subscription.d.ts:175</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/subscription.d.ts:175</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="lockduration"><code class="tsd-tag">Optional</code><span>lock<wbr/>Duration</span><a href="#lockduration" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">lockDuration</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -143,7 +143,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from SubscriptionArgs.lockDuration</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/subscription.d.ts:179</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/subscription.d.ts:179</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="maxdeliverycount"><code class="tsd-tag">Optional</code><span>max<wbr/>Delivery<wbr/>Count</span><a href="#maxdeliverycount" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">maxDeliveryCount</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -151,7 +151,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from SubscriptionArgs.maxDeliveryCount</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/subscription.d.ts:183</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/subscription.d.ts:183</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="namespacename"><span>namespace<wbr/>Name</span><a href="#namespacename" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">namespaceName</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -159,7 +159,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from SubscriptionArgs.namespaceName</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/subscription.d.ts:187</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/subscription.d.ts:187</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="requiressession"><code class="tsd-tag">Optional</code><span>requires<wbr/>Session</span><a href="#requiressession" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">requiresSession</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -167,7 +167,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from SubscriptionArgs.requiresSession</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/subscription.d.ts:191</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/subscription.d.ts:191</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="resourcegroupname"><span>resource<wbr/>Group<wbr/>Name</span><a href="#resourcegroupname" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">resourceGroupName</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -175,7 +175,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from SubscriptionArgs.resourceGroupName</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/subscription.d.ts:195</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/subscription.d.ts:195</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="status"><code class="tsd-tag">Optional</code><span>status</span><a href="#status" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">status</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">EntityStatus</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -183,7 +183,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from SubscriptionArgs.status</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/subscription.d.ts:199</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/subscription.d.ts:199</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="subscriptionname"><code class="tsd-tag">Optional</code><span>subscription<wbr/>Name</span><a href="#subscriptionname" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">subscriptionName</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -191,7 +191,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from SubscriptionArgs.subscriptionName</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/subscription.d.ts:203</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/subscription.d.ts:203</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="topicname"><span>topic<wbr/>Name</span><a href="#topicname" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">topicName</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -199,7 +199,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from SubscriptionArgs.topicName</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/subscription.d.ts:207</li></ul></aside></section></section></details></div>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/servicebus/subscription.d.ts:207</li></ul></aside></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">

@@ -19,7 +19,7 @@
 <h4 class="tsd-anchor-link" id="see">See<a href="#see" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>[Pulumi Azure Native Subnet]<a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/network/subnet/">https://www.pulumi.com/registry/packages/azure-native/api-docs/network/subnet/</a></p>
 </div></div></section>
 <div class="tsd-signature"><span class="tsd-signature-keyword">interface</span> <span class="tsd-kind-interface">SubnetProps</span> <span class="tsd-signature-symbol">{</span><br/>    <a class="tsd-kind-property" href="#addressprefix">addressPrefix</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#addressprefixes">addressPrefixes</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#applicationgatewayipconfigurations">applicationGatewayIPConfigurations</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><br/>        <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ApplicationGatewayIPConfigurationArgs</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">,</span><br/>    <span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#defaultoutboundaccess">defaultOutboundAccess</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#delegations">delegations</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">DelegationArgs</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#id">id</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#ipallocations">ipAllocations</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">SubResourceArgs</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#ipampoolprefixallocations">ipamPoolPrefixAllocations</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">IpamPoolPrefixAllocationArgs</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#name">name</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#natgateway">natGateway</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">SubResourceArgs</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#networksecuritygroup">networkSecurityGroup</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">NetworkSecurityGroupArgs</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#privateendpointnetworkpolicies">privateEndpointNetworkPolicies</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#privatelinkservicenetworkpolicies">privateLinkServiceNetworkPolicies</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#resourcegroupname">resourceGroupName</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#routetable">routeTable</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RouteTableArgs</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#serviceendpointpolicies">serviceEndpointPolicies</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ServiceEndpointPolicyArgs</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#serviceendpoints">serviceEndpoints</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ServiceEndpointPropertiesFormatArgs</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#sharingscope">sharingScope</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#subnetname">subnetName</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#type">type</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#virtualnetworkname">virtualNetworkName</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div>
-<section class="tsd-panel tsd-hierarchy" data-refl="19116">
+<section class="tsd-panel tsd-hierarchy" data-refl="19126">
 <h4>Hierarchy</h4>
 <ul class="tsd-hierarchy">
 <li class="tsd-hierarchy-item"><span class="tsd-signature-type">SubnetArgs</span>
@@ -66,7 +66,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from SubnetArgs.addressPrefix</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:147</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:147</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="addressprefixes"><code class="tsd-tag">Optional</code><span>address<wbr/>Prefixes</span><a href="#addressprefixes" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">addressPrefixes</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -74,7 +74,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from SubnetArgs.addressPrefixes</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:151</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:151</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="applicationgatewayipconfigurations"><code class="tsd-tag">Optional</code><span>application<wbr/>Gateway<wbr/>IP<wbr/>Configurations</span><a href="#applicationgatewayipconfigurations" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">applicationGatewayIPConfigurations</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><br/>    <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ApplicationGatewayIPConfigurationArgs</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">,</span><br/><span class="tsd-signature-symbol">&gt;</span></div>
@@ -82,7 +82,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from SubnetArgs.applicationGatewayIPConfigurations</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:155</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:155</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="defaultoutboundaccess"><code class="tsd-tag">Optional</code><span>default<wbr/>Outbound<wbr/>Access</span><a href="#defaultoutboundaccess" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">defaultOutboundAccess</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -90,7 +90,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from SubnetArgs.defaultOutboundAccess</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:159</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:159</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="delegations"><code class="tsd-tag">Optional</code><span>delegations</span><a href="#delegations" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">delegations</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">DelegationArgs</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -98,7 +98,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from SubnetArgs.delegations</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:163</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:163</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="id"><code class="tsd-tag">Optional</code><span>id</span><a href="#id" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">id</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -106,7 +106,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from SubnetArgs.id</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:167</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:167</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="ipallocations"><code class="tsd-tag">Optional</code><span>ip<wbr/>Allocations</span><a href="#ipallocations" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">ipAllocations</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">SubResourceArgs</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -114,7 +114,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from SubnetArgs.ipAllocations</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:171</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:171</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="ipampoolprefixallocations"><code class="tsd-tag">Optional</code><span>ipam<wbr/>Pool<wbr/>Prefix<wbr/>Allocations</span><a href="#ipampoolprefixallocations" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">ipamPoolPrefixAllocations</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">IpamPoolPrefixAllocationArgs</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -122,7 +122,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from SubnetArgs.ipamPoolPrefixAllocations</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:175</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:175</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="name"><code class="tsd-tag">Optional</code><span>name</span><a href="#name" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">name</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -130,7 +130,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from SubnetArgs.name</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:179</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:179</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="natgateway"><code class="tsd-tag">Optional</code><span>nat<wbr/>Gateway</span><a href="#natgateway" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">natGateway</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">SubResourceArgs</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -138,7 +138,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from SubnetArgs.natGateway</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:183</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:183</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="networksecuritygroup"><code class="tsd-tag">Optional</code><span>network<wbr/>Security<wbr/>Group</span><a href="#networksecuritygroup" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">networkSecurityGroup</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">NetworkSecurityGroupArgs</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -146,7 +146,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from SubnetArgs.networkSecurityGroup</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:187</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:187</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="privateendpointnetworkpolicies"><code class="tsd-tag">Optional</code><span>private<wbr/>Endpoint<wbr/>Network<wbr/>Policies</span><a href="#privateendpointnetworkpolicies" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">privateEndpointNetworkPolicies</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -154,7 +154,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from SubnetArgs.privateEndpointNetworkPolicies</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:191</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:191</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="privatelinkservicenetworkpolicies"><code class="tsd-tag">Optional</code><span>private<wbr/>Link<wbr/>Service<wbr/>Network<wbr/>Policies</span><a href="#privatelinkservicenetworkpolicies" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">privateLinkServiceNetworkPolicies</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -162,7 +162,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from SubnetArgs.privateLinkServiceNetworkPolicies</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:195</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:195</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="resourcegroupname"><span>resource<wbr/>Group<wbr/>Name</span><a href="#resourcegroupname" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">resourceGroupName</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -170,7 +170,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from SubnetArgs.resourceGroupName</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:199</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:199</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="routetable"><code class="tsd-tag">Optional</code><span>route<wbr/>Table</span><a href="#routetable" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">routeTable</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RouteTableArgs</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -178,7 +178,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from SubnetArgs.routeTable</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:203</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:203</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="serviceendpointpolicies"><code class="tsd-tag">Optional</code><span>service<wbr/>Endpoint<wbr/>Policies</span><a href="#serviceendpointpolicies" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">serviceEndpointPolicies</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ServiceEndpointPolicyArgs</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -186,7 +186,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from SubnetArgs.serviceEndpointPolicies</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:207</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:207</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="serviceendpoints"><code class="tsd-tag">Optional</code><span>service<wbr/>Endpoints</span><a href="#serviceendpoints" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">serviceEndpoints</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ServiceEndpointPropertiesFormatArgs</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -194,7 +194,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from SubnetArgs.serviceEndpoints</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:211</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:211</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="sharingscope"><code class="tsd-tag">Optional</code><span>sharing<wbr/>Scope</span><a href="#sharingscope" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">sharingScope</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -202,7 +202,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from SubnetArgs.sharingScope</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:215</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:215</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="subnetname"><code class="tsd-tag">Optional</code><span>subnet<wbr/>Name</span><a href="#subnetname" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">subnetName</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -210,7 +210,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from SubnetArgs.subnetName</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:219</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:219</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="type"><code class="tsd-tag">Optional</code><span>type</span><a href="#type" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">type</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -218,7 +218,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from SubnetArgs.type</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:223</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:223</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="virtualnetworkname"><span>virtual<wbr/>Network<wbr/>Name</span><a href="#virtualnetworkname" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">virtualNetworkName</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -226,7 +226,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from SubnetArgs.virtualNetworkName</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:227</li></ul></aside></section></section></details></div>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/network/subnet.d.ts:227</li></ul></aside></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">

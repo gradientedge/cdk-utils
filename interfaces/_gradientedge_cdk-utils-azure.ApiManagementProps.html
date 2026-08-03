@@ -19,7 +19,7 @@
 <h4 class="tsd-anchor-link" id="see">See<a href="#see" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>[Pulumi Azure Native API Management]<a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/apimanagement/apimanagementservice/">https://www.pulumi.com/registry/packages/azure-native/api-docs/apimanagement/apimanagementservice/</a></p>
 </div></div></section>
 <div class="tsd-signature"><span class="tsd-signature-keyword">interface</span> <span class="tsd-kind-interface">ApiManagementProps</span> <span class="tsd-signature-symbol">{</span><br/>    <a class="tsd-kind-property" href="#additionallocations">additionalLocations</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">AdditionalLocationArgs</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#apistackname">apiStackName</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#apiversionconstraint">apiVersionConstraint</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ApiVersionConstraintArgs</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#certificatekeyvaultid">certificateKeyVaultId</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#certificates">certificates</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">CertificateConfigurationArgs</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#configurationapi">configurationApi</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ConfigurationApiArgs</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#customproperties">customProperties</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">{</span> <span class="tsd-signature-symbol">[</span><span class="tsd-kind-index-signature">key</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span> <span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#developerportalstatus">developerPortalStatus</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#disablegateway">disableGateway</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#enableclientcertificate">enableClientCertificate</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#hostnameconfigurations">hostnameConfigurations</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">HostnameConfigurationArgs</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#identity">identity</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ApiManagementServiceIdentityArgs</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#legacyportalstatus">legacyPortalStatus</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#location">location</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#natgatewaystate">natGatewayState</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#notificationsenderemail">notificationSenderEmail</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#privateendpointconnections">privateEndpointConnections</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><br/>        <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RemotePrivateEndpointConnectionWrapperArgs</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">,</span><br/>    <span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#publicipaddressid">publicIpAddressId</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#publicnetworkaccess">publicNetworkAccess</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#publisheremail">publisherEmail</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#publishername">publisherName</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#resourcegroupname">resourceGroupName</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#restore">restore</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#servicename">serviceName</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#sku">sku</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ApiManagementServiceSkuPropertiesArgs</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#tags">tags</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">{</span> <span class="tsd-signature-symbol">[</span><span class="tsd-kind-index-signature">key</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span> <span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#useexistingapimanagement">useExistingApiManagement</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#virtualnetworkconfiguration">virtualNetworkConfiguration</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">VirtualNetworkConfigurationArgs</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#virtualnetworktype">virtualNetworkType</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#zones">zones</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div>
-<section class="tsd-panel tsd-hierarchy" data-refl="17537">
+<section class="tsd-panel tsd-hierarchy" data-refl="17547">
 <h4>Hierarchy (<a href="../hierarchy.html#@gradientedge/cdk-utils-azure.ApiManagementProps">View Summary</a>)</h4>
 <ul class="tsd-hierarchy">
 <li class="tsd-hierarchy-item"><span class="tsd-signature-type">ApiManagementServiceArgs</span>
@@ -77,7 +77,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiManagementServiceArgs.additionalLocations</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:219</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:219</li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="apistackname"><code class="tsd-tag">Optional</code><span>api<wbr/>Stack<wbr/>Name</span><a href="#apistackname" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">apiStackName</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -92,7 +92,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiManagementServiceArgs.apiVersionConstraint</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:223</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:223</li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="certificatekeyvaultid"><code class="tsd-tag">Optional</code><span>certificate<wbr/>Key<wbr/>Vault<wbr/>Id</span><a href="#certificatekeyvaultid" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">certificateKeyVaultId</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -107,7 +107,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiManagementServiceArgs.certificates</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:227</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:227</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="configurationapi"><code class="tsd-tag">Optional</code><span>configuration<wbr/>Api</span><a href="#configurationapi" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">configurationApi</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ConfigurationApiArgs</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -115,7 +115,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiManagementServiceArgs.configurationApi</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:231</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:231</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="customproperties"><code class="tsd-tag">Optional</code><span>custom<wbr/>Properties</span><a href="#customproperties" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">customProperties</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">{</span> <span class="tsd-signature-symbol">[</span><span class="tsd-kind-index-signature">key</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span> <span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -123,7 +123,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiManagementServiceArgs.customProperties</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:235</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:235</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="developerportalstatus"><code class="tsd-tag">Optional</code><span>developer<wbr/>Portal<wbr/>Status</span><a href="#developerportalstatus" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">developerPortalStatus</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -131,7 +131,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiManagementServiceArgs.developerPortalStatus</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:241</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:241</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="disablegateway"><code class="tsd-tag">Optional</code><span>disable<wbr/>Gateway</span><a href="#disablegateway" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">disableGateway</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -139,7 +139,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiManagementServiceArgs.disableGateway</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:245</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:245</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="enableclientcertificate"><code class="tsd-tag">Optional</code><span>enable<wbr/>Client<wbr/>Certificate</span><a href="#enableclientcertificate" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">enableClientCertificate</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -147,7 +147,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiManagementServiceArgs.enableClientCertificate</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:249</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:249</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="hostnameconfigurations"><code class="tsd-tag">Optional</code><span>hostname<wbr/>Configurations</span><a href="#hostnameconfigurations" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">hostnameConfigurations</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">HostnameConfigurationArgs</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -155,7 +155,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiManagementServiceArgs.hostnameConfigurations</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:253</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:253</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="identity"><code class="tsd-tag">Optional</code><span>identity</span><a href="#identity" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">identity</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ApiManagementServiceIdentityArgs</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -163,7 +163,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiManagementServiceArgs.identity</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:257</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:257</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="legacyportalstatus"><code class="tsd-tag">Optional</code><span>legacy<wbr/>Portal<wbr/>Status</span><a href="#legacyportalstatus" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">legacyPortalStatus</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -171,7 +171,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiManagementServiceArgs.legacyPortalStatus</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:261</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:261</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="location"><code class="tsd-tag">Optional</code><span>location</span><a href="#location" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">location</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -179,7 +179,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiManagementServiceArgs.location</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:265</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:265</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="natgatewaystate"><code class="tsd-tag">Optional</code><span>nat<wbr/>Gateway<wbr/>State</span><a href="#natgatewaystate" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">natGatewayState</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -187,7 +187,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiManagementServiceArgs.natGatewayState</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:269</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:269</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="notificationsenderemail"><code class="tsd-tag">Optional</code><span>notification<wbr/>Sender<wbr/>Email</span><a href="#notificationsenderemail" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">notificationSenderEmail</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -195,7 +195,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiManagementServiceArgs.notificationSenderEmail</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:273</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:273</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="privateendpointconnections"><code class="tsd-tag">Optional</code><span>private<wbr/>Endpoint<wbr/>Connections</span><a href="#privateendpointconnections" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">privateEndpointConnections</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><br/>    <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">RemotePrivateEndpointConnectionWrapperArgs</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">,</span><br/><span class="tsd-signature-symbol">&gt;</span></div>
@@ -203,7 +203,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiManagementServiceArgs.privateEndpointConnections</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:277</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:277</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="publicipaddressid"><code class="tsd-tag">Optional</code><span>public<wbr/>Ip<wbr/>Address<wbr/>Id</span><a href="#publicipaddressid" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">publicIpAddressId</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -211,7 +211,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiManagementServiceArgs.publicIpAddressId</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:281</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:281</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="publicnetworkaccess"><code class="tsd-tag">Optional</code><span>public<wbr/>Network<wbr/>Access</span><a href="#publicnetworkaccess" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">publicNetworkAccess</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -219,7 +219,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiManagementServiceArgs.publicNetworkAccess</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:285</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:285</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="publisheremail"><span>publisher<wbr/>Email</span><a href="#publisheremail" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">publisherEmail</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -227,7 +227,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiManagementServiceArgs.publisherEmail</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:289</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:289</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="publishername"><span>publisher<wbr/>Name</span><a href="#publishername" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">publisherName</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -235,7 +235,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiManagementServiceArgs.publisherName</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:293</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:293</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="resourcegroupname"><span>resource<wbr/>Group<wbr/>Name</span><a href="#resourcegroupname" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">resourceGroupName</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -243,7 +243,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiManagementServiceArgs.resourceGroupName</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:297</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:297</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="restore"><code class="tsd-tag">Optional</code><span>restore</span><a href="#restore" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">restore</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -251,7 +251,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiManagementServiceArgs.restore</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:301</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:301</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="servicename"><code class="tsd-tag">Optional</code><span>service<wbr/>Name</span><a href="#servicename" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">serviceName</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -259,7 +259,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiManagementServiceArgs.serviceName</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:305</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:305</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="sku"><span>sku</span><a href="#sku" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">sku</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">ApiManagementServiceSkuPropertiesArgs</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -267,7 +267,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiManagementServiceArgs.sku</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:309</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:309</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="tags"><code class="tsd-tag">Optional</code><span>tags</span><a href="#tags" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">tags</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-symbol">{</span> <span class="tsd-signature-symbol">[</span><span class="tsd-kind-index-signature">key</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span> <span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -275,7 +275,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiManagementServiceArgs.tags</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:313</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:313</li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="useexistingapimanagement"><code class="tsd-tag">Optional</code><span>use<wbr/>Existing<wbr/>Api<wbr/>Management</span><a href="#useexistingapimanagement" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">useExistingApiManagement</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -290,7 +290,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiManagementServiceArgs.virtualNetworkConfiguration</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:319</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:319</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="virtualnetworktype"><code class="tsd-tag">Optional</code><span>virtual<wbr/>Network<wbr/>Type</span><a href="#virtualnetworktype" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">virtualNetworkType</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -298,7 +298,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiManagementServiceArgs.virtualNetworkType</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:323</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:323</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="zones"><code class="tsd-tag">Optional</code><span>zones</span><a href="#zones" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">zones</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">Input</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">&gt;</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">&gt;</span></div>
@@ -306,7 +306,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from ApiManagementServiceArgs.zones</p>
 <ul>
-<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.23.0_ts-node@10.9.2_@types+node@26.1.0_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:327</li></ul></aside></section></section></details></div>
+<li>Defined in node_modules/.pnpm/@pulumi+azure-native@3.24.0_ts-node@10.9.2_@types+node@26.1.2_typescript@6.0.3__typescript@6.0.3/node_modules/@pulumi/azure-native/apimanagement/apiManagementService.d.ts:327</li></ul></aside></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">

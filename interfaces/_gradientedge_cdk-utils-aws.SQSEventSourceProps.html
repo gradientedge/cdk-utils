@@ -12,7 +12,7 @@
 <li><a href="" aria-current="page">SQSEventSourceProps</a></li></ul>
 <h1>Interface SQSEventSourceProps</h1></div>
 <div class="tsd-signature"><span class="tsd-signature-keyword">interface</span> <span class="tsd-kind-interface">SQSEventSourceProps</span> <span class="tsd-signature-symbol">{</span><br/>    <a class="tsd-kind-property" href="#batchsize">batchSize</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#enabled">enabled</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#filterencryption">filterEncryption</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IKey</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#filters">filters</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-signature-symbol">[</span><span class="tsd-kind-index-signature">key</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]:</span> <span class="tsd-signature-type">any</span> <span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#maxbatchingwindow">maxBatchingWindow</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Duration</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#maxbatchingwindowinsecs">maxBatchingWindowInSecs</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#maxconcurrency">maxConcurrency</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#metricsconfig">metricsConfig</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">MetricsConfig</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#provisionedpollerconfig">provisionedPollerConfig</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ProvisionedPollerConfig</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#reportbatchitemfailures">reportBatchItemFailures</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div>
-<section class="tsd-panel tsd-hierarchy" data-refl="15488">
+<section class="tsd-panel tsd-hierarchy" data-refl="15498">
 <h4>Hierarchy</h4>
 <ul class="tsd-hierarchy">
 <li class="tsd-hierarchy-item"><span class="tsd-signature-type">SqsEventSourceProps</span>
@@ -58,7 +58,7 @@ If <code>maxBatchingWindow</code> is configured, this value can go up to 10,000.
 </div></div><aside class="tsd-sources">
 <p>Inherited from SqsEventSourceProps.batchSize</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-lambda-event-sources/lib/sqs.d.ts:16</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-lambda-event-sources/lib/sqs.d.ts:16</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="enabled"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>enabled</span><a href="#enabled" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">enabled</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -72,7 +72,7 @@ If <code>maxBatchingWindow</code> is configured, this value can go up to 10,000.
 </div></div><aside class="tsd-sources">
 <p>Inherited from SqsEventSourceProps.enabled</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-lambda-event-sources/lib/sqs.d.ts:38</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-lambda-event-sources/lib/sqs.d.ts:38</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="filterencryption"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>filter<wbr/>Encryption</span><a href="#filterencryption" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">filterEncryption</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IKey</span></div>
@@ -93,7 +93,7 @@ By default, Lambda will encrypt Filter Criteria using AWS managed keys</li>
 </div></div><aside class="tsd-sources">
 <p>Inherited from SqsEventSourceProps.filterEncryption</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-lambda-event-sources/lib/sqs.d.ts:55</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-lambda-event-sources/lib/sqs.d.ts:55</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="filters"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>filters</span><a href="#filters" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">filters</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-signature-symbol">[</span><span class="tsd-kind-index-signature">key</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]:</span> <span class="tsd-signature-type">any</span> <span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">[]</span></div>
@@ -107,7 +107,7 @@ By default, Lambda will encrypt Filter Criteria using AWS managed keys</li>
 </div></div><aside class="tsd-sources">
 <p>Inherited from SqsEventSourceProps.filters</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-lambda-event-sources/lib/sqs.d.ts:44</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-lambda-event-sources/lib/sqs.d.ts:44</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="maxbatchingwindow"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>max<wbr/>Batching<wbr/>Window</span><a href="#maxbatchingwindow" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">maxBatchingWindow</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Duration</span></div>
@@ -122,7 +122,7 @@ By default, Lambda will encrypt Filter Criteria using AWS managed keys</li>
 </div></div><aside class="tsd-sources">
 <p>Inherited from SqsEventSourceProps.maxBatchingWindow</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-lambda-event-sources/lib/sqs.d.ts:24</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-lambda-event-sources/lib/sqs.d.ts:24</li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="maxbatchingwindowinsecs"><span>max<wbr/>Batching<wbr/>Window<wbr/>In<wbr/>Secs</span><a href="#maxbatchingwindowinsecs" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">maxBatchingWindowInSecs</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">number</span></div>
@@ -147,7 +147,7 @@ By default, Lambda will encrypt Filter Criteria using AWS managed keys</li>
 </div></div><aside class="tsd-sources">
 <p>Inherited from SqsEventSourceProps.maxConcurrency</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-lambda-event-sources/lib/sqs.d.ts:65</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-lambda-event-sources/lib/sqs.d.ts:65</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="metricsconfig"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>metrics<wbr/>Config</span><a href="#metricsconfig" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">metricsConfig</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">MetricsConfig</span></div>
@@ -162,7 +162,7 @@ When specified, enables collection of additional metrics for the stream event so
 </div></div><aside class="tsd-sources">
 <p>Inherited from SqsEventSourceProps.metricsConfig</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-lambda-event-sources/lib/sqs.d.ts:72</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-lambda-event-sources/lib/sqs.d.ts:72</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="provisionedpollerconfig"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>provisioned<wbr/>Poller<wbr/>Config</span><a href="#provisionedpollerconfig" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">provisionedPollerConfig</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ProvisionedPollerConfig</span></div>
@@ -181,7 +181,7 @@ that can be provisioned to process events from the queue.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from SqsEventSourceProps.provisionedPollerConfig</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-lambda-event-sources/lib/sqs.d.ts:82</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-lambda-event-sources/lib/sqs.d.ts:82</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="reportbatchitemfailures"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>report<wbr/>Batch<wbr/>Item<wbr/>Failures</span><a href="#reportbatchitemfailures" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">reportBatchItemFailures</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -198,7 +198,7 @@ that can be provisioned to process events from the queue.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from SqsEventSourceProps.reportBatchItemFailures</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-lambda-event-sources/lib/sqs.d.ts:32</li></ul></aside></section></section></details></div>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-lambda-event-sources/lib/sqs.d.ts:32</li></ul></aside></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">

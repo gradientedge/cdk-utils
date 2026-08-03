@@ -12,7 +12,7 @@
 <li><a href="" aria-current="page">QueueProps</a></li></ul>
 <h1>Interface QueueProps</h1></div>
 <div class="tsd-signature"><span class="tsd-signature-keyword">interface</span> <span class="tsd-kind-interface">QueueProps</span> <span class="tsd-signature-symbol">{</span><br/>    <a class="tsd-kind-property" href="#contentbaseddeduplication">contentBasedDeduplication</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#datakeyreuse">dataKeyReuse</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Duration</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#datakeyreuseinsecs">dataKeyReuseInSecs</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#deadletterqueue">deadLetterQueue</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">DeadLetterQueue</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#deduplicationscope">deduplicationScope</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">DeduplicationScope</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#deliverydelay">deliveryDelay</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Duration</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#deliverydelayinsecs">deliveryDelayInSecs</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#encryption">encryption</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">QueueEncryption</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#encryptionmasterkey">encryptionMasterKey</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IKey</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#enforcessl">enforceSSL</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#fifo">fifo</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#fifothroughputlimit">fifoThroughputLimit</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">FifoThroughputLimit</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#maxmessagesizebytes">maxMessageSizeBytes</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#maxreceivecount">maxReceiveCount</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#queuename">queueName</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#receivemessagewaittime">receiveMessageWaitTime</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Duration</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#receivemessagewaittimeinsecs">receiveMessageWaitTimeInSecs</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#redriveallowpolicy">redriveAllowPolicy</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">RedriveAllowPolicy</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#removalpolicy">removalPolicy</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">RemovalPolicy</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#retentionindays">retentionInDays</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#retentionperiod">retentionPeriod</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Duration</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#retriesenabled">retriesEnabled</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#retrybatchsize">retryBatchSize</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#tags">tags</a><span class="tsd-signature-symbol">?:</span> <a href="_gradientedge_cdk-utils-aws.TagProps.html" class="tsd-signature-type tsd-kind-interface">TagProps</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#visibilitytimeout">visibilityTimeout</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Duration</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#visibilitytimeoutinsecs">visibilityTimeoutInSecs</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div>
-<section class="tsd-panel tsd-hierarchy" data-refl="14605">
+<section class="tsd-panel tsd-hierarchy" data-refl="14615">
 <h4>Hierarchy</h4>
 <ul class="tsd-hierarchy">
 <li class="tsd-hierarchy-item"><span class="tsd-signature-type">QueueProps</span>
@@ -76,7 +76,7 @@ messages, provide an explicit deduplication ID in your SendMessage() call.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from sqs.QueueProps.contentBasedDeduplication</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-sqs/lib/queue.d.ts:127</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-sqs/lib/queue.d.ts:127</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="datakeyreuse"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>data<wbr/>Key<wbr/>Reuse</span><a href="#datakeyreuse" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">dataKeyReuse</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Duration</span></div>
@@ -92,7 +92,7 @@ hours). The default is 300 (5 minutes).</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from sqs.QueueProps.dataKeyReuse</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-sqs/lib/queue.d.ts:106</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-sqs/lib/queue.d.ts:106</li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="datakeyreuseinsecs"><code class="tsd-tag">Optional</code><span>data<wbr/>Key<wbr/>Reuse<wbr/>In<wbr/>Secs</span><a href="#datakeyreuseinsecs" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">dataKeyReuseInSecs</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
@@ -113,7 +113,7 @@ hours). The default is 300 (5 minutes).</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from sqs.QueueProps.deadLetterQueue</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-sqs/lib/queue.d.ts:75</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-sqs/lib/queue.d.ts:75</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="deduplicationscope"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>deduplication<wbr/>Scope</span><a href="#deduplicationscope" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">deduplicationScope</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">DeduplicationScope</span></div>
@@ -129,7 +129,7 @@ occurs at the message group or queue level.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from sqs.QueueProps.deduplicationScope</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-sqs/lib/queue.d.ts:136</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-sqs/lib/queue.d.ts:136</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="deliverydelay"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>delivery<wbr/>Delay</span><a href="#deliverydelay" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">deliveryDelay</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Duration</span></div>
@@ -145,7 +145,7 @@ value is 0.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from sqs.QueueProps.deliveryDelay</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-sqs/lib/queue.d.ts:36</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-sqs/lib/queue.d.ts:36</li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="deliverydelayinsecs"><code class="tsd-tag">Optional</code><span>delivery<wbr/>Delay<wbr/>In<wbr/>Secs</span><a href="#deliverydelayinsecs" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">deliveryDelayInSecs</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
@@ -168,7 +168,7 @@ for current availability details.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from sqs.QueueProps.encryption</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-sqs/lib/queue.d.ts:84</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-sqs/lib/queue.d.ts:84</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="encryptionmasterkey"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>encryption<wbr/>Master<wbr/>Key</span><a href="#encryptionmasterkey" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">encryptionMasterKey</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IKey</span></div>
@@ -187,7 +187,7 @@ implicitly set to &quot;KMS&quot;.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from sqs.QueueProps.encryptionMasterKey</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-sqs/lib/queue.d.ts:97</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-sqs/lib/queue.d.ts:97</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="enforcessl"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>enforce<wbr/>SSL</span><a href="#enforcessl" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">enforceSSL</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -204,7 +204,7 @@ implicitly set to &quot;KMS&quot;.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from sqs.QueueProps.enforceSSL</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-sqs/lib/queue.d.ts:163</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-sqs/lib/queue.d.ts:163</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="fifo"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>fifo</span><a href="#fifo" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">fifo</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -218,7 +218,7 @@ implicitly set to &quot;KMS&quot;.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from sqs.QueueProps.fifo</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-sqs/lib/queue.d.ts:112</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-sqs/lib/queue.d.ts:112</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="fifothroughputlimit"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>fifo<wbr/>Throughput<wbr/>Limit</span><a href="#fifothroughputlimit" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">fifoThroughputLimit</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">FifoThroughputLimit</span></div>
@@ -234,7 +234,7 @@ throughput quota applies to the entire queue or per message group.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from sqs.QueueProps.fifoThroughputLimit</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-sqs/lib/queue.d.ts:145</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-sqs/lib/queue.d.ts:145</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="maxmessagesizebytes"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>max<wbr/>Message<wbr/>Size<wbr/>Bytes</span><a href="#maxmessagesizebytes" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">maxMessageSizeBytes</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
@@ -250,7 +250,7 @@ throughput quota applies to the entire queue or per message group.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from sqs.QueueProps.maxMessageSizeBytes</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-sqs/lib/queue.d.ts:45</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-sqs/lib/queue.d.ts:45</li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="maxreceivecount"><code class="tsd-tag">Optional</code><span>max<wbr/>Receive<wbr/>Count</span><a href="#maxreceivecount" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">maxReceiveCount</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
@@ -272,7 +272,7 @@ throughput quota applies to the entire queue or per message group.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from sqs.QueueProps.queueName</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-sqs/lib/queue.d.ts:18</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-sqs/lib/queue.d.ts:18</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="receivemessagewaittime"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>receive<wbr/>Message<wbr/>Wait<wbr/>Time</span><a href="#receivemessagewaittime" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">receiveMessageWaitTime</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Duration</span></div>
@@ -289,7 +289,7 @@ by default for messages to arrive.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from sqs.QueueProps.receiveMessageWaitTime</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-sqs/lib/queue.d.ts:56</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-sqs/lib/queue.d.ts:56</li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="receivemessagewaittimeinsecs"><code class="tsd-tag">Optional</code><span>receive<wbr/>Message<wbr/>Wait<wbr/>Time<wbr/>In<wbr/>Secs</span><a href="#receivemessagewaittimeinsecs" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">receiveMessageWaitTimeInSecs</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
@@ -311,7 +311,7 @@ redrive permission and which source queues can specify dead-letter queues.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from sqs.QueueProps.redriveAllowPolicy</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-sqs/lib/queue.d.ts:170</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-sqs/lib/queue.d.ts:170</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="removalpolicy"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>removal<wbr/>Policy</span><a href="#removalpolicy" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">removalPolicy</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">RemovalPolicy</span></div>
@@ -329,7 +329,7 @@ valuable that accidentally losing them would be unacceptable.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from sqs.QueueProps.removalPolicy</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-sqs/lib/queue.d.ts:156</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-sqs/lib/queue.d.ts:156</li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="retentionindays"><code class="tsd-tag">Optional</code><span>retention<wbr/>In<wbr/>Days</span><a href="#retentionindays" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">retentionInDays</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
@@ -352,7 +352,7 @@ seconds (14 days). The default value is 345600 seconds (4 days).</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from sqs.QueueProps.retentionPeriod</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-sqs/lib/queue.d.ts:27</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-sqs/lib/queue.d.ts:27</li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="retriesenabled"><code class="tsd-tag">Optional</code><span>retries<wbr/>Enabled</span><a href="#retriesenabled" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">retriesEnabled</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -392,7 +392,7 @@ a value, AWS CloudFormation uses the default value of 30 seconds.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from sqs.QueueProps.visibilityTimeout</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-sqs/lib/queue.d.ts:69</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-sqs/lib/queue.d.ts:69</li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="visibilitytimeoutinsecs"><code class="tsd-tag">Optional</code><span>visibility<wbr/>Timeout<wbr/>In<wbr/>Secs</span><a href="#visibilitytimeoutinsecs" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">visibilityTimeoutInSecs</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>

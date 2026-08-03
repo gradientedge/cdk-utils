@@ -12,7 +12,7 @@
 <li><a href="" aria-current="page">EcsApplicationLoadBalancedFargateServiceProps</a></li></ul>
 <h1>Interface EcsApplicationLoadBalancedFargateServiceProps</h1></div>
 <div class="tsd-signature"><span class="tsd-signature-keyword">interface</span> <span class="tsd-kind-interface">EcsApplicationLoadBalancedFargateServiceProps</span> <span class="tsd-signature-symbol">{</span><br/>    <a class="tsd-kind-property" href="#assignpublicip">assignPublicIp</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#capacityproviderstrategies">capacityProviderStrategies</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">CapacityProviderStrategy</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#certificate">certificate</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ICertificate</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#circuitbreaker">circuitBreaker</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">DeploymentCircuitBreaker</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#cloudmapoptions">cloudMapOptions</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">CloudMapOptions</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#cluster">cluster</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ICluster</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#containercpu">containerCpu</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#containermemorylimitmib">containerMemoryLimitMiB</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#cpu">cpu</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#deploymentcontroller">deploymentController</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">DeploymentController</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#desiredcount">desiredCount</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#domainname">domainName</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#domainzone">domainZone</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IHostedZone</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#enableecsmanagedtags">enableECSManagedTags</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#enableexecutecommand">enableExecuteCommand</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#ephemeralstoragegib">ephemeralStorageGiB</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#healthcheck">healthCheck</a><span class="tsd-signature-symbol">?:</span> <a href="_gradientedge_cdk-utils-aws.EcsApplicationLoadBalancedFargateServiceHealthCheck.html" class="tsd-signature-type tsd-kind-interface">EcsApplicationLoadBalancedFargateServiceHealthCheck</a><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#healthcheckgraceperiod">healthCheckGracePeriod</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Duration</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#idletimeout">idleTimeout</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Duration</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#ipaddresstype">ipAddressType</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IpAddressType</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#listenerport">listenerPort</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#loadbalancer">loadBalancer</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IApplicationLoadBalancer</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#loadbalancername">loadBalancerName</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#logging">logging</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">AwsLogDriverProps</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#maxhealthypercent">maxHealthyPercent</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#memorylimitmib">memoryLimitMiB</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#minhealthypercent">minHealthyPercent</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#mountpoints">mountPoints</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">MountPoint</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#openlistener">openListener</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#platformversion">platformVersion</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">FargatePlatformVersion</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#propagatetags">propagateTags</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">PropagatedTagSource</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#protocol">protocol</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ApplicationProtocol</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#protocolversion">protocolVersion</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ApplicationProtocolVersion</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#publicloadbalancer">publicLoadBalancer</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#recordtype">recordType</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ApplicationLoadBalancedServiceRecordType</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#redirecthttp">redirectHTTP</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#runtimeplatform">runtimePlatform</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">RuntimePlatform</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#securitygroups">securityGroups</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ISecurityGroup</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#servicename">serviceName</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#sitescaling">siteScaling</a><span class="tsd-signature-symbol">?:</span> <a href="_gradientedge_cdk-utils-aws.EcsScalingProps.html" class="tsd-signature-type tsd-kind-interface">EcsScalingProps</a><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#sslpolicy">sslPolicy</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">SslPolicy</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#targetprotocol">targetProtocol</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ApplicationProtocol</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#taskdefinition">taskDefinition</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">FargateTaskDefinition</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#taskimageoptions">taskImageOptions</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ApplicationLoadBalancedTaskImageOptions</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#tasksubnets">taskSubnets</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">SubnetSelection</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#vpc">vpc</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IVpc</span><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div>
-<section class="tsd-panel tsd-hierarchy" data-refl="13739">
+<section class="tsd-panel tsd-hierarchy" data-refl="13748">
 <h4>Hierarchy</h4>
 <ul class="tsd-hierarchy">
 <li class="tsd-hierarchy-item"><span class="tsd-signature-type">ApplicationLoadBalancedFargateServiceProps</span>
@@ -90,7 +90,7 @@
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.assignPublicIp</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/fargate/application-load-balanced-fargate-service.d.ts:17</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/fargate/application-load-balanced-fargate-service.d.ts:17</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="capacityproviderstrategies"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>capacity<wbr/>Provider<wbr/>Strategies</span><a href="#capacityproviderstrategies" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">capacityProviderStrategies</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">CapacityProviderStrategy</span><span class="tsd-signature-symbol">[]</span></div>
@@ -104,7 +104,7 @@
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.capacityProviderStrategies</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:223</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:223</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="certificate"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>certificate</span><a href="#certificate" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">certificate</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ICertificate</span></div>
@@ -119,7 +119,7 @@ Setting this option will set the load balancer protocol to HTTPS.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.certificate</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:81</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:81</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="circuitbreaker"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>circuit<wbr/>Breaker</span><a href="#circuitbreaker" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">circuitBreaker</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">DeploymentCircuitBreaker</span></div>
@@ -134,7 +134,7 @@ enabled.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.circuitBreaker</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:216</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:216</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="cloudmapoptions"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>cloud<wbr/>Map<wbr/>Options</span><a href="#cloudmapoptions" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">cloudMapOptions</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">CloudMapOptions</span></div>
@@ -148,7 +148,7 @@ enabled.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.cloudMapOptions</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:189</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:189</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="cluster"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>cluster</span><a href="#cluster" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">cluster</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ICluster</span></div>
@@ -163,7 +163,7 @@ enabled.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.cluster</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:38</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:38</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="containercpu"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>container<wbr/>Cpu</span><a href="#containercpu" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">containerCpu</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
@@ -177,7 +177,7 @@ enabled.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.containerCpu</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/fargate/application-load-balanced-fargate-service.d.ts:41</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/fargate/application-load-balanced-fargate-service.d.ts:41</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="containermemorylimitmib"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>container<wbr/>Memory<wbr/>Limit<wbr/>Mi<wbr/>B</span><a href="#containermemorylimitmib" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">containerMemoryLimitMiB</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
@@ -193,7 +193,7 @@ is terminated.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.containerMemoryLimitMiB</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/fargate/application-load-balanced-fargate-service.d.ts:50</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/fargate/application-load-balanced-fargate-service.d.ts:50</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="cpu"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>cpu</span><a href="#cpu" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">cpu</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
@@ -216,7 +216,7 @@ is terminated.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.cpu</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/fargate-service-base.d.ts:34</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/fargate-service-base.d.ts:34</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="deploymentcontroller"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>deployment<wbr/>Controller</span><a href="#deploymentcontroller" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">deploymentController</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">DeploymentController</span></div>
@@ -231,7 +231,7 @@ is terminated.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.deploymentController</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:210</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:210</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="desiredcount"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>desired<wbr/>Count</span><a href="#desiredcount" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">desiredCount</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
@@ -246,7 +246,7 @@ The minimum value is 1</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.desiredCount</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:71</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:71</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="domainname"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>domain<wbr/>Name</span><a href="#domainname" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">domainName</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -260,7 +260,7 @@ The minimum value is 1</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.domainName</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:111</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:111</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="domainzone"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>domain<wbr/>Zone</span><a href="#domainzone" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">domainZone</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IHostedZone</span></div>
@@ -274,7 +274,7 @@ The minimum value is 1</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.domainZone</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:117</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:117</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="enableecsmanagedtags"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>enable<wbr/>ECS<wbr/>Managed<wbr/>Tags</span><a href="#enableecsmanagedtags" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">enableECSManagedTags</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -289,7 +289,7 @@ The minimum value is 1</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.enableECSManagedTags</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:183</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:183</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="enableexecutecommand"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>enable<wbr/>Execute<wbr/>Command</span><a href="#enableexecutecommand" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">enableExecuteCommand</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -303,7 +303,7 @@ The minimum value is 1</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.enableExecuteCommand</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:235</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:235</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="ephemeralstoragegib"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>ephemeral<wbr/>Storage<wbr/>Gi<wbr/>B</span><a href="#ephemeralstoragegib" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">ephemeralStorageGiB</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
@@ -319,7 +319,7 @@ The minimum value is 1</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.ephemeralStorageGiB</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/fargate-service-base.d.ts:69</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/fargate-service-base.d.ts:69</li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="healthcheck"><code class="tsd-tag">Optional</code><span>health<wbr/>Check</span><a href="#healthcheck" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">healthCheck</span><span class="tsd-signature-symbol">?:</span> <a href="_gradientedge_cdk-utils-aws.EcsApplicationLoadBalancedFargateServiceHealthCheck.html" class="tsd-signature-type tsd-kind-interface">EcsApplicationLoadBalancedFargateServiceHealthCheck</a></div>
@@ -342,7 +342,7 @@ Elastic Load Balancing target health checks after a task has first started.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.healthCheckGracePeriod</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:130</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:130</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="idletimeout"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>idle<wbr/>Timeout</span><a href="#idletimeout" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">idleTimeout</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Duration</span></div>
@@ -356,7 +356,7 @@ Elastic Load Balancing target health checks after a task has first started.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.idleTimeout</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:241</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:241</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="ipaddresstype"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>ip<wbr/>Address<wbr/>Type</span><a href="#ipaddresstype" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">ipAddressType</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IpAddressType</span></div>
@@ -370,7 +370,7 @@ Elastic Load Balancing target health checks after a task has first started.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.ipAddressType</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:247</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:247</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="listenerport"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>listener<wbr/>Port</span><a href="#listenerport" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">listenerPort</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
@@ -384,7 +384,7 @@ Elastic Load Balancing target health checks after a task has first started.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.listenerPort</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:163</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:163</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="loadbalancer"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>load<wbr/>Balancer</span><a href="#loadbalancer" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">loadBalancer</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IApplicationLoadBalancer</span></div>
@@ -401,7 +401,7 @@ to create a new service with this pattern.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.loadBalancer</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:156</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:156</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="loadbalancername"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>load<wbr/>Balancer<wbr/>Name</span><a href="#loadbalancername" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">loadBalancerName</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -415,7 +415,7 @@ to create a new service with this pattern.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.loadBalancerName</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:229</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:229</li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="logging"><code class="tsd-tag">Optional</code><span>logging</span><a href="#logging" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">logging</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">AwsLogDriverProps</span></div>
@@ -438,7 +438,7 @@ deployment.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.maxHealthyPercent</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:138</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:138</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="memorylimitmib"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>memory<wbr/>Limit<wbr/>Mi<wbr/>B</span><a href="#memorylimitmib" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">memoryLimitMiB</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
@@ -462,7 +462,7 @@ for the cpu parameter:</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.memoryLimitMiB</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/fargate-service-base.d.ts:59</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/fargate-service-base.d.ts:59</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="minhealthypercent"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>min<wbr/>Healthy<wbr/>Percent</span><a href="#minhealthypercent" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">minHealthyPercent</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
@@ -478,7 +478,7 @@ continue to run and remain healthy during a deployment.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.minHealthyPercent</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:146</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:146</li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="mountpoints"><code class="tsd-tag">Optional</code><span>mount<wbr/>Points</span><a href="#mountpoints" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">mountPoints</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">MountPoint</span><span class="tsd-signature-symbol">[]</span></div>
@@ -499,7 +499,7 @@ continue to run and remain healthy during a deployment.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.openListener</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:63</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:63</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="platformversion"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>platform<wbr/>Version</span><a href="#platformversion" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">platformVersion</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">FargatePlatformVersion</span></div>
@@ -516,7 +516,7 @@ in the Amazon Elastic Container Service Developer Guide.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.platformVersion</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/fargate-service-base.d.ts:79</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/fargate-service-base.d.ts:79</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="propagatetags"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>propagate<wbr/>Tags</span><a href="#propagatetags" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">propagateTags</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">PropagatedTagSource</span></div>
@@ -531,7 +531,7 @@ Tags can only be propagated to the tasks within the service during service creat
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.propagateTags</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:176</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:176</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="protocol"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>protocol</span><a href="#protocol" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">protocol</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ApplicationProtocol</span></div>
@@ -548,7 +548,7 @@ name and domain zone must also be specified.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.protocol</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:99</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:99</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="protocolversion"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>protocol<wbr/>Version</span><a href="#protocolversion" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">protocolVersion</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ApplicationProtocolVersion</span></div>
@@ -562,7 +562,7 @@ name and domain zone must also be specified.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.protocolVersion</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:105</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:105</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="publicloadbalancer"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>public<wbr/>Load<wbr/>Balancer</span><a href="#publicloadbalancer" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">publicLoadBalancer</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -576,7 +576,7 @@ name and domain zone must also be specified.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.publicLoadBalancer</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:57</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:57</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="recordtype"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>record<wbr/>Type</span><a href="#recordtype" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">recordType</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ApplicationLoadBalancedServiceRecordType</span></div>
@@ -591,7 +591,7 @@ This is useful if you need to work with DNS systems that do not support alias re
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.recordType</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:203</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:203</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="redirecthttp"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>redirect<wbr/>HTTP</span><a href="#redirecthttp" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">redirectHTTP</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -606,7 +606,7 @@ This is only valid if the protocol of the ALB is HTTPS.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.redirectHTTP</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:196</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:196</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="runtimeplatform"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>runtime<wbr/>Platform</span><a href="#runtimeplatform" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">runtimePlatform</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">RuntimePlatform</span></div>
@@ -620,7 +620,7 @@ This is only valid if the protocol of the ALB is HTTPS.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.runtimePlatform</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/fargate-service-base.d.ts:85</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/fargate-service-base.d.ts:85</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="securitygroups"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>security<wbr/>Groups</span><a href="#securitygroups" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">securityGroups</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ISecurityGroup</span><span class="tsd-signature-symbol">[]</span></div>
@@ -634,7 +634,7 @@ This is only valid if the protocol of the ALB is HTTPS.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.securityGroups</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/fargate/application-load-balanced-fargate-service.d.ts:29</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/fargate/application-load-balanced-fargate-service.d.ts:29</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="servicename"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>service<wbr/>Name</span><a href="#servicename" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">serviceName</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -648,7 +648,7 @@ This is only valid if the protocol of the ALB is HTTPS.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.serviceName</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:123</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:123</li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="sitescaling"><code class="tsd-tag">Optional</code><span>site<wbr/>Scaling</span><a href="#sitescaling" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">siteScaling</span><span class="tsd-signature-symbol">?:</span> <a href="_gradientedge_cdk-utils-aws.EcsScalingProps.html" class="tsd-signature-type tsd-kind-interface">EcsScalingProps</a></div>
@@ -669,7 +669,7 @@ This is only valid if the protocol of the ALB is HTTPS.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.sslPolicy</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:169</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:169</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="targetprotocol"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>target<wbr/>Protocol</span><a href="#targetprotocol" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">targetProtocol</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ApplicationProtocol</span></div>
@@ -685,7 +685,7 @@ HTTP, port 443 for HTTPS).</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.targetProtocol</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:89</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:89</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="taskdefinition"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>task<wbr/>Definition</span><a href="#taskdefinition" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">taskDefinition</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">FargateTaskDefinition</span></div>
@@ -700,7 +700,7 @@ HTTP, port 443 for HTTPS).</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.taskDefinition</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/fargate-service-base.d.ts:10</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/fargate-service-base.d.ts:10</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="taskimageoptions"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>task<wbr/>Image<wbr/>Options</span><a href="#taskimageoptions" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">taskImageOptions</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ApplicationLoadBalancedTaskImageOptions</span></div>
@@ -714,7 +714,7 @@ HTTP, port 443 for HTTPS).</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.taskImageOptions</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:51</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:51</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="tasksubnets"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>task<wbr/>Subnets</span><a href="#tasksubnets" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">taskSubnets</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">SubnetSelection</span></div>
@@ -728,7 +728,7 @@ HTTP, port 443 for HTTPS).</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.taskSubnets</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/fargate/application-load-balanced-fargate-service.d.ts:23</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/fargate/application-load-balanced-fargate-service.d.ts:23</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="vpc"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>vpc</span><a href="#vpc" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">vpc</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IVpc</span></div>
@@ -743,7 +743,7 @@ HTTP, port 443 for HTTPS).</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from ApplicationLoadBalancedFargateServiceProps.vpc</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:45</li></ul></aside></section></section></details></div>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs-patterns/lib/base/application-load-balanced-service-base.d.ts:45</li></ul></aside></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">

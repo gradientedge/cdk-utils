@@ -12,7 +12,7 @@
 <li><a href="" aria-current="page">SfnDynamoPutItemProps</a></li></ul>
 <h1>Interface SfnDynamoPutItemProps</h1></div>
 <div class="tsd-signature"><span class="tsd-signature-keyword">interface</span> <span class="tsd-kind-interface">SfnDynamoPutItemProps</span> <span class="tsd-signature-symbol">{</span><br/>    <a class="tsd-kind-property" href="#assign">assign</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-signature-symbol">[</span><span class="tsd-kind-index-signature">name</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]:</span> <span class="tsd-signature-type">any</span> <span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#comment">comment</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#conditionexpression">conditionExpression</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#credentials">credentials</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Credentials</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#expressionattributenames">expressionAttributeNames</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-signature-symbol">[</span><span class="tsd-kind-index-signature">key</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]:</span> <span class="tsd-signature-type">string</span> <span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#expressionattributevalues">expressionAttributeValues</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-signature-symbol">[</span><span class="tsd-kind-index-signature">key</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]:</span> <span class="tsd-signature-type">DynamoAttributeValue</span> <span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#heartbeat">heartbeat</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Duration</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#heartbeattimeout">heartbeatTimeout</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Timeout</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#inputpath">inputPath</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#integrationpattern">integrationPattern</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IntegrationPattern</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#item">item</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-signature-symbol">[</span><span class="tsd-kind-index-signature">key</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]:</span> <span class="tsd-signature-type">DynamoAttributeValue</span> <span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#name">name</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#outputpath">outputPath</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#outputs">outputs</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#querylanguage">queryLanguage</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">QueryLanguage</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#resultpath">resultPath</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#resultselector">resultSelector</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-signature-symbol">[</span><span class="tsd-kind-index-signature">key</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]:</span> <span class="tsd-signature-type">any</span> <span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#retries">retries</a><span class="tsd-signature-symbol">?:</span> <a href="_gradientedge_cdk-utils-aws.SfnRetryProps.html" class="tsd-signature-type tsd-kind-interface">SfnRetryProps</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#returnconsumedcapacity">returnConsumedCapacity</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">DynamoConsumedCapacity</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#returnitemcollectionmetrics">returnItemCollectionMetrics</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">DynamoItemCollectionMetrics</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#returnvalues">returnValues</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">DynamoReturnValues</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#statename">stateName</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#table">table</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ITableRef</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#tasktimeout">taskTimeout</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Timeout</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#timeout">timeout</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Duration</span><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div>
-<section class="tsd-panel tsd-hierarchy" data-refl="15027">
+<section class="tsd-panel tsd-hierarchy" data-refl="15037">
 <h4>Hierarchy</h4>
 <ul class="tsd-hierarchy">
 <li class="tsd-hierarchy-item"><span class="tsd-signature-type">DynamoPutItemProps</span>
@@ -73,7 +73,7 @@ Using workflow variables, you can store data in a step and retrieve that data in
 </div></div><aside class="tsd-sources">
 <p>Inherited from DynamoPutItemProps.assign</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/state.d.ts:137</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/state.d.ts:137</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="comment"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>comment</span><a href="#comment" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">comment</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -87,7 +87,7 @@ Using workflow variables, you can store data in a step and retrieve that data in
 </div></div><aside class="tsd-sources">
 <p>Inherited from DynamoPutItemProps.comment</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/state.d.ts:30</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/state.d.ts:30</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="conditionexpression"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>condition<wbr/>Expression</span><a href="#conditionexpression" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">conditionExpression</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -104,7 +104,7 @@ Using workflow variables, you can store data in a step and retrieve that data in
 </div></div><aside class="tsd-sources">
 <p>Inherited from DynamoPutItemProps.conditionExpression</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-stepfunctions-tasks/lib/dynamodb/put-item.d.ts:28</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions-tasks/lib/dynamodb/put-item.d.ts:28</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="credentials"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>credentials</span><a href="#credentials" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">credentials</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Credentials</span></div>
@@ -122,7 +122,7 @@ This enables cross-account resource invocations.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from DynamoPutItemProps.credentials</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/task-base.d.ts:70</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/task-base.d.ts:70</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="expressionattributenames"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>expression<wbr/>Attribute<wbr/>Names</span><a href="#expressionattributenames" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">expressionAttributeNames</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-signature-symbol">[</span><span class="tsd-kind-index-signature">key</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]:</span> <span class="tsd-signature-type">string</span> <span class="tsd-signature-symbol">}</span></div>
@@ -139,7 +139,7 @@ This enables cross-account resource invocations.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from DynamoPutItemProps.expressionAttributeNames</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-stepfunctions-tasks/lib/dynamodb/put-item.d.ts:36</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions-tasks/lib/dynamodb/put-item.d.ts:36</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="expressionattributevalues"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>expression<wbr/>Attribute<wbr/>Values</span><a href="#expressionattributevalues" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">expressionAttributeValues</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-signature-symbol">[</span><span class="tsd-kind-index-signature">key</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]:</span> <span class="tsd-signature-type">DynamoAttributeValue</span> <span class="tsd-signature-symbol">}</span></div>
@@ -156,7 +156,7 @@ This enables cross-account resource invocations.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from DynamoPutItemProps.expressionAttributeValues</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-stepfunctions-tasks/lib/dynamodb/put-item.d.ts:46</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions-tasks/lib/dynamodb/put-item.d.ts:46</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="heartbeat"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span class="deprecated">heartbeat</span><a href="#heartbeat" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">heartbeat</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Duration</span></div>
@@ -173,7 +173,7 @@ This enables cross-account resource invocations.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from DynamoPutItemProps.heartbeat</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/task-base.d.ts:38</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/task-base.d.ts:38</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="heartbeattimeout"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>heartbeat<wbr/>Timeout</span><a href="#heartbeattimeout" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">heartbeatTimeout</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Timeout</span></div>
@@ -189,7 +189,7 @@ aws-stepfunctions-tasks extend this interface</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from DynamoPutItemProps.heartbeatTimeout</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/task-base.d.ts:47</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/task-base.d.ts:47</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="inputpath"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>input<wbr/>Path</span><a href="#inputpath" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">inputPath</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -205,7 +205,7 @@ input to be the empty object {}.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from DynamoPutItemProps.inputPath</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/state.d.ts:44</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/state.d.ts:44</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="integrationpattern"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>integration<wbr/>Pattern</span><a href="#integrationpattern" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">integrationPattern</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IntegrationPattern</span></div>
@@ -226,7 +226,7 @@ You can control these AWS services using service integration patterns.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from DynamoPutItemProps.integrationPattern</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/task-base.d.ts:61</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/task-base.d.ts:61</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="item"><code class="tsd-tag">Readonly</code><span>item</span><a href="#item" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">item</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-signature-symbol">[</span><span class="tsd-kind-index-signature">key</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]:</span> <span class="tsd-signature-type">DynamoAttributeValue</span> <span class="tsd-signature-symbol">}</span></div>
@@ -240,7 +240,7 @@ you can optionally provide other attribute name-value pairs for the item.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from DynamoPutItemProps.item</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-stepfunctions-tasks/lib/dynamodb/put-item.d.ts:14</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions-tasks/lib/dynamodb/put-item.d.ts:14</li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="name"><span>name</span><a href="#name" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">name</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
@@ -263,7 +263,7 @@ output to be the empty object {}.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from DynamoPutItemProps.outputPath</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/state.d.ts:53</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/state.d.ts:53</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="outputs"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>outputs</span><a href="#outputs" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">outputs</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">any</span></div>
@@ -285,7 +285,7 @@ Output also accepts a JSONata expression directly.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from DynamoPutItemProps.outputs</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/state.d.ts:108</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/state.d.ts:108</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="querylanguage"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>query<wbr/>Language</span><a href="#querylanguage" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">queryLanguage</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">QueryLanguage</span></div>
@@ -301,7 +301,7 @@ then it will use the query language specified in the top-level <code>queryLangua
 </div></div><aside class="tsd-sources">
 <p>Inherited from DynamoPutItemProps.queryLanguage</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/state.d.ts:18</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/state.d.ts:18</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="resultpath"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>result<wbr/>Path</span><a href="#resultpath" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">resultPath</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -317,7 +317,7 @@ input to become its output.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from DynamoPutItemProps.resultPath</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/task-base.d.ts:81</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/task-base.d.ts:81</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="resultselector"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>result<wbr/>Selector</span><a href="#resultselector" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">resultSelector</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-signature-symbol">[</span><span class="tsd-kind-index-signature">key</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]:</span> <span class="tsd-signature-type">any</span> <span class="tsd-signature-symbol">}</span></div>
@@ -337,7 +337,7 @@ or selected from the state's raw result.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from DynamoPutItemProps.resultSelector</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/task-base.d.ts:94</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/task-base.d.ts:94</li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="retries"><code class="tsd-tag">Optional</code><span>retries</span><a href="#retries" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">retries</span><span class="tsd-signature-symbol">?:</span> <a href="_gradientedge_cdk-utils-aws.SfnRetryProps.html" class="tsd-signature-type tsd-kind-interface">SfnRetryProps</a><span class="tsd-signature-symbol">[]</span></div>
@@ -361,7 +361,7 @@ or selected from the state's raw result.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from DynamoPutItemProps.returnConsumedCapacity</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-stepfunctions-tasks/lib/dynamodb/put-item.d.ts:56</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions-tasks/lib/dynamodb/put-item.d.ts:56</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="returnitemcollectionmetrics"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>return<wbr/>Item<wbr/>Collection<wbr/>Metrics</span><a href="#returnitemcollectionmetrics" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">returnItemCollectionMetrics</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">DynamoItemCollectionMetrics</span></div>
@@ -378,7 +378,7 @@ or selected from the state's raw result.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from DynamoPutItemProps.returnItemCollectionMetrics</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-stepfunctions-tasks/lib/dynamodb/put-item.d.ts:64</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions-tasks/lib/dynamodb/put-item.d.ts:64</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="returnvalues"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>return<wbr/>Values</span><a href="#returnvalues" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">returnValues</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">DynamoReturnValues</span></div>
@@ -396,7 +396,7 @@ before they were updated with the PutItem request.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from DynamoPutItemProps.returnValues</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-stepfunctions-tasks/lib/dynamodb/put-item.d.ts:73</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions-tasks/lib/dynamodb/put-item.d.ts:73</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="statename"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>state<wbr/>Name</span><a href="#statename" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">stateName</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -410,7 +410,7 @@ before they were updated with the PutItem request.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from DynamoPutItemProps.stateName</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/state.d.ts:24</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/state.d.ts:24</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="table"><code class="tsd-tag">Readonly</code><span>table</span><a href="#table" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">table</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ITableRef</span></div>
@@ -418,7 +418,7 @@ before they were updated with the PutItem request.</p>
 </div><aside class="tsd-sources">
 <p>Inherited from DynamoPutItemProps.table</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-stepfunctions-tasks/lib/dynamodb/put-item.d.ts:20</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions-tasks/lib/dynamodb/put-item.d.ts:20</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="tasktimeout"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>task<wbr/>Timeout</span><a href="#tasktimeout" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">taskTimeout</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Timeout</span></div>
@@ -434,7 +434,7 @@ aws-stepfunctions-tasks extend this interface</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from DynamoPutItemProps.taskTimeout</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/task-base.d.ts:31</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/task-base.d.ts:31</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="timeout"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span class="deprecated">timeout</span><a href="#timeout" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">timeout</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Duration</span></div>
@@ -451,7 +451,7 @@ aws-stepfunctions-tasks extend this interface</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from DynamoPutItemProps.timeout</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/task-base.d.ts:22</li></ul></aside></section></section></details></div>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/task-base.d.ts:22</li></ul></aside></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">

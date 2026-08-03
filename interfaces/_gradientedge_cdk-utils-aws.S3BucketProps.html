@@ -12,7 +12,7 @@
 <li><a href="" aria-current="page">S3BucketProps</a></li></ul>
 <h1>Interface S3BucketProps</h1></div>
 <div class="tsd-signature"><span class="tsd-signature-keyword">interface</span> <span class="tsd-kind-interface">S3BucketProps</span> <span class="tsd-signature-symbol">{</span><br/>    <a class="tsd-kind-property" href="#abacstatus">abacStatus</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#accesscontrol">accessControl</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">BucketAccessControl</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#autodeleteobjects">autoDeleteObjects</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#blockedencryptiontypes">blockedEncryptionTypes</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">BlockedEncryptionType</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#blockpublicaccess">blockPublicAccess</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">BlockPublicAccess</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#bucketkeyenabled">bucketKeyEnabled</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#bucketname">bucketName</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#bucketnameprefix">bucketNamePrefix</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#bucketnamespace">bucketNamespace</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">BucketNamespace</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#cors">cors</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">CorsRule</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#enableeventbridge">enableEventBridge</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#encryption">encryption</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">BucketEncryption</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#encryptionkey">encryptionKey</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IKey</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#enforcessl">enforceSSL</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#eventbridgeenabled">eventBridgeEnabled</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#existingbucket">existingBucket</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#intelligenttieringconfigurations">intelligentTieringConfigurations</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IntelligentTieringConfiguration</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#inventories">inventories</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Inventory</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#lifecyclerules">lifecycleRules</a><span class="tsd-signature-symbol">?:</span> <a href="_gradientedge_cdk-utils-aws.LifecycleRule.html" class="tsd-signature-type tsd-kind-interface">LifecycleRule</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#logbucket">logBucket</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IBucket</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#logbucketname">logBucketName</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#metrics">metrics</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">BucketMetrics</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#minimumtlsversion">minimumTLSVersion</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#notificationshandlerrole">notificationsHandlerRole</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IRole</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#notificationsskipdestinationvalidation">notificationsSkipDestinationValidation</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#objectlockdefaultretention">objectLockDefaultRetention</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ObjectLockRetention</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#objectlockenabled">objectLockEnabled</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#objectownership">objectOwnership</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ObjectOwnership</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#publicreadaccess">publicReadAccess</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#removalpolicy">removalPolicy</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">RemovalPolicy</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#replicationrole">replicationRole</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IRole</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#replicationrules">replicationRules</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ReplicationRule</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#serveraccesslogsbucket">serverAccessLogsBucket</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IBucket</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#serveraccesslogsprefix">serverAccessLogsPrefix</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#tags">tags</a><span class="tsd-signature-symbol">?:</span> <a href="_gradientedge_cdk-utils-aws.TagProps.html" class="tsd-signature-type tsd-kind-interface">TagProps</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#targetobjectkeyformat">targetObjectKeyFormat</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">TargetObjectKeyFormat</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#transferacceleration">transferAcceleration</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#transitiondefaultminimumobjectsize">transitionDefaultMinimumObjectSize</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">TransitionDefaultMinimumObjectSize</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#versioned">versioned</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#websiteerrordocument">websiteErrorDocument</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#websiteindexdocument">websiteIndexDocument</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#websiteredirect">websiteRedirect</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">RedirectTarget</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#websiteroutingrules">websiteRoutingRules</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">RoutingRule</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div>
-<section class="tsd-panel tsd-hierarchy" data-refl="14848">
+<section class="tsd-panel tsd-hierarchy" data-refl="14858">
 <h4>Hierarchy</h4>
 <ul class="tsd-hierarchy">
 <li class="tsd-hierarchy-item"><span class="tsd-signature-type">BucketProps</span>
@@ -91,7 +91,7 @@ Set to true to enable ABAC, false to explicitly disable it.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3.BucketProps.abacStatus</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1523</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1523</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="accesscontrol"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>access<wbr/>Control</span><a href="#accesscontrol" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">accessControl</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">BucketAccessControl</span></div>
@@ -105,7 +105,7 @@ Set to true to enable ABAC, false to explicitly disable it.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3.BucketProps.accessControl</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1591</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1591</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="autodeleteobjects"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>auto<wbr/>Delete<wbr/>Objects</span><a href="#autodeleteobjects" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">autoDeleteObjects</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -129,7 +129,7 @@ prevent race conditions with external bucket writers.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3.BucketProps.autoDeleteObjects</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1497</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1497</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="blockedencryptiontypes"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>blocked<wbr/>Encryption<wbr/>Types</span><a href="#blockedencryptiontypes" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">blockedEncryptionTypes</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">BlockedEncryptionType</span><span class="tsd-signature-symbol">[]</span></div>
@@ -146,7 +146,7 @@ the only <code>BlockedEncryptionType</code> in the list.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3.BucketProps.blockedEncryptionTypes</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1416</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1416</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="blockpublicaccess"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>block<wbr/>Public<wbr/>Access</span><a href="#blockpublicaccess" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">blockPublicAccess</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">BlockPublicAccess</span></div>
@@ -163,7 +163,7 @@ the only <code>BlockedEncryptionType</code> in the list.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3.BucketProps.blockPublicAccess</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1607</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1607</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="bucketkeyenabled"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>bucket<wbr/>Key<wbr/>Enabled</span><a href="#bucketkeyenabled" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">bucketKeyEnabled</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -184,7 +184,7 @@ attendant cost implications of that).</li>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3.BucketProps.bucketKeyEnabled</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1437</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1437</li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="bucketname"><span>bucket<wbr/>Name</span><a href="#bucketname" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">bucketName</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
@@ -212,7 +212,7 @@ Must start and end with a lowercase letter or number.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3.BucketProps.bucketNamePrefix</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1460</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1460</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="bucketnamespace"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>bucket<wbr/>Namespace</span><a href="#bucketnamespace" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">bucketNamespace</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">BucketNamespace</span></div>
@@ -233,7 +233,7 @@ When set to <code>GLOBAL</code>, it can be used standalone to explicitly specify
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3.BucketProps.bucketNamespace</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1472</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1472</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="cors"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>cors</span><a href="#cors" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">cors</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">CorsRule</span><span class="tsd-signature-symbol">[]</span></div>
@@ -250,7 +250,7 @@ When set to <code>GLOBAL</code>, it can be used standalone to explicitly specify
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3.BucketProps.cors</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1623</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1623</li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="enableeventbridge"><code class="tsd-tag">Optional</code><span>enable<wbr/>Event<wbr/>Bridge</span><a href="#enableeventbridge" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">enableEventBridge</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -273,7 +273,7 @@ encryption key is not specified, a key will automatically be created.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3.BucketProps.encryption</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1396</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1396</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="encryptionkey"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>encryption<wbr/>Key</span><a href="#encryptionkey" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">encryptionKey</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IKey</span></div>
@@ -290,7 +290,7 @@ a new KMS key will be created and associated with this bucket.</li>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3.BucketProps.encryptionKey</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1406</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1406</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="enforcessl"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>enforce<wbr/>SSL</span><a href="#enforcessl" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">enforceSSL</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -307,7 +307,7 @@ a new KMS key will be created and associated with this bucket.</li>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3.BucketProps.enforceSSL</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1423</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1423</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="eventbridgeenabled"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>event<wbr/>Bridge<wbr/>Enabled</span><a href="#eventbridgeenabled" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">eventBridgeEnabled</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -321,7 +321,7 @@ a new KMS key will be created and associated with this bucket.</li>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3.BucketProps.eventBridgeEnabled</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1540</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1540</li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="existingbucket"><code class="tsd-tag">Optional</code><span>existing<wbr/>Bucket</span><a href="#existingbucket" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">existingBucket</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -345,7 +345,7 @@ a new KMS key will be created and associated with this bucket.</li>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3.BucketProps.intelligentTieringConfigurations</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1684</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1684</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="inventories"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>inventories</span><a href="#inventories" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">inventories</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Inventory</span><span class="tsd-signature-symbol">[]</span></div>
@@ -362,7 +362,7 @@ a new KMS key will be created and associated with this bucket.</li>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3.BucketProps.inventories</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1648</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1648</li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="lifecyclerules"><code class="tsd-tag">Optional</code><span>lifecycle<wbr/>Rules</span><a href="#lifecyclerules" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">lifecycleRules</span><span class="tsd-signature-symbol">?:</span> <a href="_gradientedge_cdk-utils-aws.LifecycleRule.html" class="tsd-signature-type tsd-kind-interface">LifecycleRule</a><span class="tsd-signature-symbol">[]</span></div>
@@ -407,7 +407,7 @@ which surfaces an <code>accessLogsPolicyNotAdded</code> warning at synth. Prefer
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3.BucketProps.metrics</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1615</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1615</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="minimumtlsversion"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>minimum<wbr/>TLS<wbr/>Version</span><a href="#minimumtlsversion" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">minimumTLSVersion</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
@@ -425,7 +425,7 @@ which surfaces an <code>accessLogsPolicyNotAdded</code> warning at synth. Prefer
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3.BucketProps.minimumTLSVersion</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1694</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1694</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="notificationshandlerrole"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>notifications<wbr/>Handler<wbr/>Role</span><a href="#notificationshandlerrole" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">notificationsHandlerRole</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IRole</span></div>
@@ -439,7 +439,7 @@ which surfaces an <code>accessLogsPolicyNotAdded</code> warning at synth. Prefer
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3.BucketProps.notificationsHandlerRole</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1670</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1670</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="notificationsskipdestinationvalidation"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>notifications<wbr/>Skip<wbr/>Destination<wbr/>Validation</span><a href="#notificationsskipdestinationvalidation" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">notificationsSkipDestinationValidation</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -453,7 +453,7 @@ which surfaces an <code>accessLogsPolicyNotAdded</code> warning at synth. Prefer
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3.BucketProps.notificationsSkipDestinationValidation</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1676</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1676</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="objectlockdefaultretention"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>object<wbr/>Lock<wbr/>Default<wbr/>Retention</span><a href="#objectlockdefaultretention" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">objectLockDefaultRetention</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ObjectLockRetention</span></div>
@@ -472,7 +472,7 @@ has object lock enabled. Enabling object lock for existing buckets is not suppor
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3.BucketProps.objectLockDefaultRetention</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1534</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1534</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="objectlockenabled"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>object<wbr/>Lock<wbr/>Enabled</span><a href="#objectlockenabled" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">objectLockEnabled</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -491,7 +491,7 @@ enabled when the bucket is created.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3.BucketProps.objectLockEnabled</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1514</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1514</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="objectownership"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>object<wbr/>Ownership</span><a href="#objectownership" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">objectOwnership</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ObjectOwnership</span></div>
@@ -509,7 +509,7 @@ This means ACLs are disabled and the bucket owner will own every object.</li>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3.BucketProps.objectOwnership</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1658</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1658</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="publicreadaccess"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>public<wbr/>Read<wbr/>Access</span><a href="#publicreadaccess" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">publicReadAccess</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -524,7 +524,7 @@ Similar to calling <code>bucket.grantPublicAccess()</code></p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3.BucketProps.publicReadAccess</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1598</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1598</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="removalpolicy"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>removal<wbr/>Policy</span><a href="#removalpolicy" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">removalPolicy</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">RemovalPolicy</span></div>
@@ -538,7 +538,7 @@ Similar to calling <code>bucket.grantPublicAccess()</code></p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3.BucketProps.removalPolicy</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1478</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1478</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="replicationrole"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>replication<wbr/>Role</span><a href="#replicationrole" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">replicationRole</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IRole</span></div>
@@ -553,7 +553,7 @@ Similar to calling <code>bucket.grantPublicAccess()</code></p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3.BucketProps.replicationRole</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1702</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1702</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="replicationrules"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>replication<wbr/>Rules</span><a href="#replicationrules" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">replicationRules</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ReplicationRule</span><span class="tsd-signature-symbol">[]</span></div>
@@ -567,7 +567,7 @@ Similar to calling <code>bucket.grantPublicAccess()</code></p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3.BucketProps.replicationRules</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1708</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1708</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="serveraccesslogsbucket"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>server<wbr/>Access<wbr/>Logs<wbr/>Bucket</span><a href="#serveraccesslogsbucket" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">serverAccessLogsBucket</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IBucket</span></div>
@@ -581,7 +581,7 @@ Similar to calling <code>bucket.grantPublicAccess()</code></p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3.BucketProps.serverAccessLogsBucket</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1628</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1628</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="serveraccesslogsprefix"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>server<wbr/>Access<wbr/>Logs<wbr/>Prefix</span><a href="#serveraccesslogsprefix" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">serverAccessLogsPrefix</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -596,7 +596,7 @@ If defined without &quot;serverAccessLogsBucket&quot;, enables access logs to cu
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3.BucketProps.serverAccessLogsPrefix</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1634</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1634</li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="tags"><code class="tsd-tag">Optional</code><span>tags</span><a href="#tags" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">tags</span><span class="tsd-signature-symbol">?:</span> <a href="_gradientedge_cdk-utils-aws.TagProps.html" class="tsd-signature-type tsd-kind-interface">TagProps</a><span class="tsd-signature-symbol">[]</span></div>
@@ -617,7 +617,7 @@ If defined without &quot;serverAccessLogsBucket&quot;, enables access logs to cu
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3.BucketProps.targetObjectKeyFormat</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1640</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1640</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="transferacceleration"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>transfer<wbr/>Acceleration</span><a href="#transferacceleration" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">transferAcceleration</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -631,7 +631,7 @@ If defined without &quot;serverAccessLogsBucket&quot;, enables access logs to cu
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3.BucketProps.transferAcceleration</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1664</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1664</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="transitiondefaultminimumobjectsize"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>transition<wbr/>Default<wbr/>Minimum<wbr/>Object<wbr/>Size</span><a href="#transitiondefaultminimumobjectsize" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">transitionDefaultMinimumObjectSize</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">TransitionDefaultMinimumObjectSize</span></div>
@@ -648,7 +648,7 @@ take precedence over the default transition behavior.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3.BucketProps.transitionDefaultMinimumObjectSize</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1557</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1557</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="versioned"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>versioned</span><a href="#versioned" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">versioned</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -662,7 +662,7 @@ take precedence over the default transition behavior.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3.BucketProps.versioned</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1503</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1503</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="websiteerrordocument"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>website<wbr/>Error<wbr/>Document</span><a href="#websiteerrordocument" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">websiteErrorDocument</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -677,7 +677,7 @@ take precedence over the default transition behavior.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3.BucketProps.websiteErrorDocument</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1571</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1571</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="websiteindexdocument"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>website<wbr/>Index<wbr/>Document</span><a href="#websiteindexdocument" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">websiteIndexDocument</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -692,7 +692,7 @@ hosting for this bucket.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3.BucketProps.websiteIndexDocument</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1564</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1564</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="websiteredirect"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>website<wbr/>Redirect</span><a href="#websiteredirect" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">websiteRedirect</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">RedirectTarget</span></div>
@@ -707,7 +707,7 @@ hosting for this bucket.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3.BucketProps.websiteRedirect</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1579</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1579</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="websiteroutingrules"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>website<wbr/>Routing<wbr/>Rules</span><a href="#websiteroutingrules" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">websiteRoutingRules</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">RoutingRule</span><span class="tsd-signature-symbol">[]</span></div>
@@ -721,7 +721,7 @@ hosting for this bucket.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3.BucketProps.websiteRoutingRules</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1585</li></ul></aside></section></section></details></div>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3/lib/bucket.d.ts:1585</li></ul></aside></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">

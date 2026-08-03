@@ -12,7 +12,7 @@
 <li><a href="" aria-current="page">CloudTrailProps</a></li></ul>
 <h1>Interface CloudTrailProps</h1></div>
 <div class="tsd-signature"><span class="tsd-signature-keyword">interface</span> <span class="tsd-kind-interface">CloudTrailProps</span> <span class="tsd-signature-symbol">{</span><br/>    <a class="tsd-kind-property" href="#advancedeventselectors">advancedEventSelectors</a><span class="tsd-signature-symbol">?:</span><br/>        <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">IResolvable</span><br/>        <span class="tsd-signature-symbol">|</span> (<span class="tsd-signature-type">IResolvable</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">AdvancedEventSelectorProperty</span>)<span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#aggregationconfigurations">aggregationConfigurations</a><span class="tsd-signature-symbol">?:</span><br/>        <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">IResolvable</span><br/>        <span class="tsd-signature-symbol">|</span> (<span class="tsd-signature-type">IResolvable</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">AggregationConfigurationProperty</span>)<span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#cloudwatchlogsloggrouparn">cloudWatchLogsLogGroupArn</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">ILogGroupRef</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#cloudwatchlogsrolearn">cloudWatchLogsRoleArn</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">IRoleRef</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#enablelogfilevalidation">enableLogFileValidation</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">IResolvable</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#eventselectors">eventSelectors</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IResolvable</span> <span class="tsd-signature-symbol">|</span> (<span class="tsd-signature-type">IResolvable</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">EventSelectorProperty</span>)<span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#includeglobalserviceevents">includeGlobalServiceEvents</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">IResolvable</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#insightselectors">insightSelectors</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IResolvable</span> <span class="tsd-signature-symbol">|</span> (<span class="tsd-signature-type">IResolvable</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">InsightSelectorProperty</span>)<span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#islogging">isLogging</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">IResolvable</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#ismultiregiontrail">isMultiRegionTrail</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">IResolvable</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#isorganizationtrail">isOrganizationTrail</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">IResolvable</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#kmskeyid">kmsKeyId</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">IKeyRef</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">IAliasRef</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#s3bucketname">s3BucketName</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">IBucketRef</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#s3keyprefix">s3KeyPrefix</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#snstopicname">snsTopicName</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#tags">tags</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">CfnTag</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#trailname">trailName</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div>
-<section class="tsd-panel tsd-hierarchy" data-refl="13624">
+<section class="tsd-panel tsd-hierarchy" data-refl="13633">
 <h4>Hierarchy</h4>
 <ul class="tsd-hierarchy">
 <li class="tsd-hierarchy-item"><span class="tsd-signature-type">CfnTrailProps</span>
@@ -61,7 +61,7 @@
 </div></div><aside class="tsd-sources">
 <p>Inherited from CfnTrailProps.advancedEventSelectors</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-cloudtrail/lib/cloudtrail.generated.d.ts:1533</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-cloudtrail/lib/cloudtrail.generated.d.ts:1533</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="aggregationconfigurations"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>aggregation<wbr/>Configurations</span><a href="#aggregationconfigurations" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">aggregationConfigurations</span><span class="tsd-signature-symbol">?:</span><br/>    <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">IResolvable</span><br/>    <span class="tsd-signature-symbol">|</span> (<span class="tsd-signature-type">IResolvable</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">AggregationConfigurationProperty</span>)<span class="tsd-signature-symbol">[]</span></div>
@@ -74,7 +74,7 @@
 </div></div><aside class="tsd-sources">
 <p>Inherited from CfnTrailProps.aggregationConfigurations</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-cloudtrail/lib/cloudtrail.generated.d.ts:1541</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-cloudtrail/lib/cloudtrail.generated.d.ts:1541</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="cloudwatchlogsloggrouparn"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>cloud<wbr/>Watch<wbr/>Logs<wbr/>Log<wbr/>Group<wbr/>Arn</span><a href="#cloudwatchlogsloggrouparn" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">cloudWatchLogsLogGroupArn</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">ILogGroupRef</span></div>
@@ -91,7 +91,7 @@
 </div></div><aside class="tsd-sources">
 <p>Inherited from CfnTrailProps.cloudWatchLogsLogGroupArn</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-cloudtrail/lib/cloudtrail.generated.d.ts:1553</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-cloudtrail/lib/cloudtrail.generated.d.ts:1553</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="cloudwatchlogsrolearn"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>cloud<wbr/>Watch<wbr/>Logs<wbr/>Role<wbr/>Arn</span><a href="#cloudwatchlogsrolearn" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">cloudWatchLogsRoleArn</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">IRoleRef</span></div>
@@ -108,7 +108,7 @@
 </div></div><aside class="tsd-sources">
 <p>Inherited from CfnTrailProps.cloudWatchLogsRoleArn</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-cloudtrail/lib/cloudtrail.generated.d.ts:1565</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-cloudtrail/lib/cloudtrail.generated.d.ts:1565</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="enablelogfilevalidation"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>enable<wbr/>Log<wbr/>File<wbr/>Validation</span><a href="#enablelogfilevalidation" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">enableLogFileValidation</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">IResolvable</span></div>
@@ -123,7 +123,7 @@
 </div></div><aside class="tsd-sources">
 <p>Inherited from CfnTrailProps.enableLogFileValidation</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-cloudtrail/lib/cloudtrail.generated.d.ts:1573</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-cloudtrail/lib/cloudtrail.generated.d.ts:1573</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="eventselectors"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>event<wbr/>Selectors</span><a href="#eventselectors" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">eventSelectors</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IResolvable</span> <span class="tsd-signature-symbol">|</span> (<span class="tsd-signature-type">IResolvable</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">EventSelectorProperty</span>)<span class="tsd-signature-symbol">[]</span></div>
@@ -138,7 +138,7 @@
 </div></div><aside class="tsd-sources">
 <p>Inherited from CfnTrailProps.eventSelectors</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-cloudtrail/lib/cloudtrail.generated.d.ts:1585</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-cloudtrail/lib/cloudtrail.generated.d.ts:1585</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="includeglobalserviceevents"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>include<wbr/>Global<wbr/>Service<wbr/>Events</span><a href="#includeglobalserviceevents" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">includeGlobalServiceEvents</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">IResolvable</span></div>
@@ -150,7 +150,7 @@
 </div></div><aside class="tsd-sources">
 <p>Inherited from CfnTrailProps.includeGlobalServiceEvents</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-cloudtrail/lib/cloudtrail.generated.d.ts:1591</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-cloudtrail/lib/cloudtrail.generated.d.ts:1591</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="insightselectors"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>insight<wbr/>Selectors</span><a href="#insightselectors" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">insightSelectors</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IResolvable</span> <span class="tsd-signature-symbol">|</span> (<span class="tsd-signature-type">IResolvable</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">InsightSelectorProperty</span>)<span class="tsd-signature-symbol">[]</span></div>
@@ -165,7 +165,7 @@
 </div></div><aside class="tsd-sources">
 <p>Inherited from CfnTrailProps.insightSelectors</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-cloudtrail/lib/cloudtrail.generated.d.ts:1603</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-cloudtrail/lib/cloudtrail.generated.d.ts:1603</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="islogging"><code class="tsd-tag">Readonly</code><span>is<wbr/>Logging</span><a href="#islogging" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">isLogging</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">boolean</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">IResolvable</span></div>
@@ -177,7 +177,7 @@
 </div></div><aside class="tsd-sources">
 <p>Inherited from CfnTrailProps.isLogging</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-cloudtrail/lib/cloudtrail.generated.d.ts:1609</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-cloudtrail/lib/cloudtrail.generated.d.ts:1609</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="ismultiregiontrail"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>is<wbr/>Multi<wbr/>Region<wbr/>Trail</span><a href="#ismultiregiontrail" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">isMultiRegionTrail</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">IResolvable</span></div>
@@ -190,7 +190,7 @@
 </div></div><aside class="tsd-sources">
 <p>Inherited from CfnTrailProps.isMultiRegionTrail</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-cloudtrail/lib/cloudtrail.generated.d.ts:1617</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-cloudtrail/lib/cloudtrail.generated.d.ts:1617</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="isorganizationtrail"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>is<wbr/>Organization<wbr/>Trail</span><a href="#isorganizationtrail" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">isOrganizationTrail</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">IResolvable</span></div>
@@ -206,7 +206,7 @@
 </div></div><aside class="tsd-sources">
 <p>Inherited from CfnTrailProps.isOrganizationTrail</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-cloudtrail/lib/cloudtrail.generated.d.ts:1627</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-cloudtrail/lib/cloudtrail.generated.d.ts:1627</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="kmskeyid"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>kms<wbr/>Key<wbr/>Id</span><a href="#kmskeyid" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">kmsKeyId</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">IKeyRef</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">IAliasRef</span></div>
@@ -227,7 +227,7 @@
 </div></div><aside class="tsd-sources">
 <p>Inherited from CfnTrailProps.kmsKeyId</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-cloudtrail/lib/cloudtrail.generated.d.ts:1644</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-cloudtrail/lib/cloudtrail.generated.d.ts:1644</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="s3bucketname"><code class="tsd-tag">Readonly</code><span>s3<wbr/>Bucket<wbr/>Name</span><a href="#s3bucketname" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">s3BucketName</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span> <span class="tsd-signature-symbol">|</span> <span class="tsd-signature-type">IBucketRef</span></div>
@@ -240,7 +240,7 @@
 </div></div><aside class="tsd-sources">
 <p>Inherited from CfnTrailProps.s3BucketName</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-cloudtrail/lib/cloudtrail.generated.d.ts:1652</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-cloudtrail/lib/cloudtrail.generated.d.ts:1652</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="s3keyprefix"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>s3<wbr/>Key<wbr/>Prefix</span><a href="#s3keyprefix" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">s3KeyPrefix</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -253,7 +253,7 @@
 </div></div><aside class="tsd-sources">
 <p>Inherited from CfnTrailProps.s3KeyPrefix</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-cloudtrail/lib/cloudtrail.generated.d.ts:1660</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-cloudtrail/lib/cloudtrail.generated.d.ts:1660</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="snstopicname"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>sns<wbr/>Topic<wbr/>Name</span><a href="#snstopicname" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">snsTopicName</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -266,7 +266,7 @@
 </div></div><aside class="tsd-sources">
 <p>Inherited from CfnTrailProps.snsTopicName</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-cloudtrail/lib/cloudtrail.generated.d.ts:1668</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-cloudtrail/lib/cloudtrail.generated.d.ts:1668</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="tags"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>tags</span><a href="#tags" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">tags</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">CfnTag</span><span class="tsd-signature-symbol">[]</span></div>
@@ -278,7 +278,7 @@
 </div></div><aside class="tsd-sources">
 <p>Inherited from CfnTrailProps.tags</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-cloudtrail/lib/cloudtrail.generated.d.ts:1674</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-cloudtrail/lib/cloudtrail.generated.d.ts:1674</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="trailname"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>trail<wbr/>Name</span><a href="#trailname" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">trailName</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -297,7 +297,7 @@
 </div></div><aside class="tsd-sources">
 <p>Inherited from CfnTrailProps.trailName</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.261.0_constructs@10.6.0/node_modules/aws-cdk-lib/aws-cloudtrail/lib/cloudtrail.generated.d.ts:1686</li></ul></aside></section></section></details></div>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-cloudtrail/lib/cloudtrail.generated.d.ts:1686</li></ul></aside></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
