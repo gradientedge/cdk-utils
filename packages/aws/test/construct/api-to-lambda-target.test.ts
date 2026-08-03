@@ -15,7 +15,7 @@ const testStackProps = {
   apiSubDomain: 'api',
   domainName: 'gradientedge.io',
   env: {
-    account: '123456789',
+    account: '123456789012',
     region: 'eu-west-1',
   },
   extraContexts: [
@@ -229,7 +229,7 @@ describe('TestApiToLambdaTargetConstruct', () => {
     template.hasResourceProperties('AWS::Lambda::Function', {
       Architectures: ['arm64'],
       Code: {
-        S3Bucket: 'cdk-hnb659fds-assets-123456789-eu-west-1',
+        S3Bucket: 'cdk-hnb659fds-assets-123456789012-eu-west-1',
         S3Key: 'd5523e3b961cf2272cb4c94da89e310809981614bd36996014e2f23058109580.zip',
       },
       Environment: {

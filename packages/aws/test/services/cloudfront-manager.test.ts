@@ -20,7 +20,7 @@ interface TestStackProps extends CommonStackProps {
 const testStackProps = {
   domainName: 'gradientedge.io',
   env: {
-    account: '123456789',
+    account: '123456789012',
     region: 'us-east-1',
   },
   extraContexts: [
@@ -266,7 +266,7 @@ describe('TestCloudFrontConstruct', () => {
         ],
         PriceClass: 'PriceClass_All',
         ViewerCertificate: {
-          AcmCertificateArn: 'arn:aws:acm:us-east-1:123456789:certificate/12345a67-8f85-46da-8441-88c998b4bd64',
+          AcmCertificateArn: 'arn:aws:acm:us-east-1:123456789012:certificate/12345a67-8f85-46da-8441-88c998b4bd64',
           MinimumProtocolVersion: 'TLSv1.2_2021',
           SslSupportMethod: 'sni-only',
         },
