@@ -1,4 +1,4 @@
-import { AppServicePlan, WebApp } from '@pulumi/azure-native/web/index.js'
+import { AppServicePlan, WebApp, WebAppSlot } from '@pulumi/azure-native/web/index.js'
 import * as pulumi from '@pulumi/pulumi'
 import {
   CommonAzureConstruct,
@@ -6,6 +6,7 @@ import {
   CommonAzureStackProps,
   LinuxWebAppProps,
   ServicePlanProps,
+  WebAppSlotProps,
 } from '../../src/index.js'
 import { outputToPromise } from '../helpers.js'
 
@@ -13,6 +14,7 @@ interface TestAzureStackProps extends CommonAzureStackProps {
   testAppServicePlan: ServicePlanProps
   testAttribute?: string
   testLinuxWebApp: LinuxWebAppProps
+  testWebAppSlot?: WebAppSlotProps
 }
 
 const testStackProps: any = {
@@ -57,6 +59,7 @@ class TestCommonConstruct extends CommonAzureConstruct {
   declare props: TestAzureStackProps
   appServicePlan: AppServicePlan
   linuxWebApp: WebApp
+  webAppSlot: WebAppSlot
 
   constructor(name: string, props: TestAzureStackProps) {
     super(name, props)
@@ -68,6 +71,16 @@ class TestCommonConstruct extends CommonAzureConstruct {
 
     this.linuxWebApp = this.appServiceManager.createLinuxWebApp(`test-linux-web-app-${this.props.stage}`, this, {
       ...this.props.testLinuxWebApp,
+    })
+
+    this.webAppSlot = this.appServiceManager.createWebAppSlot(`test-web-app-slot-${this.props.stage}`, this, {
+      ...(this.props.testWebAppSlot ?? {
+        name: 'test-linux-web-app',
+        slot: 'staging',
+        resourceGroupName: 'test-rg-dev',
+        serverFarmId:
+          '/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.Web/serverfarms/test-app-service-plan-dev',
+      }),
     })
   }
 }
@@ -86,6 +99,8 @@ pulumi.runtime.setMocks({
     if (args.type === 'azure-native:web:AppServicePlan') {
       name = args.inputs.name
     } else if (args.type === 'azure-native:web:WebApp') {
+      name = args.inputs.name
+    } else if (args.type === 'azure-native:web:WebAppSlot') {
       name = args.inputs.name
     }
 
@@ -121,6 +136,7 @@ describe('TestAzureAppServiceConstruct', () => {
     expect(stack.construct).toBeDefined()
     expect(stack.construct.appServicePlan).toBeDefined()
     expect(stack.construct.linuxWebApp).toBeDefined()
+    expect(stack.construct.webAppSlot).toBeDefined()
   })
 })
 
@@ -180,12 +196,39 @@ describe('TestAzureLinuxWebAppConstruct', () => {
   })
 })
 
+describe('TestAzureWebAppSlotConstruct', () => {
+  test('provisions web app slot as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.webAppSlot.id,
+          stack.construct.webAppSlot.urn,
+          stack.construct.webAppSlot.name,
+          stack.construct.webAppSlot.location,
+          stack.construct.webAppSlot.httpsOnly,
+          stack.construct.webAppSlot.tags,
+        ])
+        .apply(([id, urn, name, location, httpsOnly, tags]) => {
+          expect(id).toEqual('test-web-app-slot-dev-was-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:web:WebAppSlot::test-web-app-slot-dev-was'
+          )
+          expect(name).toEqual('test-linux-web-app-dev')
+          expect(location).toEqual('eastus')
+          expect(httpsOnly).toEqual(true)
+          expect(tags?.environment).toEqual('dev')
+        })
+    )
+  })
+})
+
 /* --- Tests for default value fallback branches in createLinuxWebApp --- */
 
 class TestMinimalWebAppConstruct extends CommonAzureConstruct {
   declare props: TestAzureStackProps
   appServicePlan: AppServicePlan
   linuxWebApp: WebApp
+  webAppSlot: WebAppSlot
 
   constructor(name: string, props: TestAzureStackProps) {
     super(name, props)
@@ -198,6 +241,13 @@ class TestMinimalWebAppConstruct extends CommonAzureConstruct {
     // Create a web app with minimal props to exercise default branches
     this.linuxWebApp = this.appServiceManager.createLinuxWebApp(`test-minimal-lwa-${this.props.stage}`, this, {
       name: 'test-minimal-web-app',
+      resourceGroupName: 'test-rg-dev',
+      serverFarmId: '/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.Web/serverfarms/test',
+    } as any)
+
+    this.webAppSlot = this.appServiceManager.createWebAppSlot(`test-minimal-was-${this.props.stage}`, this, {
+      name: 'test-minimal-web-app',
+      slot: 'green',
       resourceGroupName: 'test-rg-dev',
       serverFarmId: '/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.Web/serverfarms/test',
     } as any)
@@ -248,6 +298,38 @@ describe('TestAzureLinuxWebAppConstruct - Default Values', () => {
       })
     )
   })
+
+  test('web app slot uses default httpsOnly when not provided', async () => {
+    await outputToPromise(
+      pulumi.all([minimalWebAppStack.construct.webAppSlot.httpsOnly]).apply(([httpsOnly]) => {
+        expect(httpsOnly).toEqual(true)
+      })
+    )
+  })
+
+  test('web app slot uses default kind when not provided', async () => {
+    await outputToPromise(
+      pulumi.all([minimalWebAppStack.construct.webAppSlot.kind]).apply(([kind]) => {
+        expect(kind).toEqual('app,linux')
+      })
+    )
+  })
+
+  test('web app slot uses default identity when not provided', async () => {
+    await outputToPromise(
+      pulumi.all([minimalWebAppStack.construct.webAppSlot.identity]).apply(([identity]) => {
+        expect(identity?.type).toEqual('SystemAssigned')
+      })
+    )
+  })
+
+  test('web app slot uses default tags when not provided', async () => {
+    await outputToPromise(
+      pulumi.all([minimalWebAppStack.construct.webAppSlot.tags]).apply(([tags]) => {
+        expect(tags?.environment).toEqual('dev')
+      })
+    )
+  })
 })
 
 describe('TestAzureLinuxWebAppConstruct - Error Handling', () => {
@@ -255,5 +337,11 @@ describe('TestAzureLinuxWebAppConstruct - Error Handling', () => {
     expect(() => {
       stack.construct.appServiceManager.createLinuxWebApp('test-lwa-err', stack.construct, undefined as any)
     }).toThrow('Props undefined for test-lwa-err')
+  })
+
+  test('createWebAppSlot throws when props are undefined', () => {
+    expect(() => {
+      stack.construct.appServiceManager.createWebAppSlot('test-was-err', stack.construct, undefined as any)
+    }).toThrow('Props undefined for test-was-err')
   })
 })

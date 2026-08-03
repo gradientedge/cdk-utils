@@ -3,12 +3,13 @@ import {
   ManagedServiceIdentityType,
   SupportedTlsVersions,
   WebApp,
+  WebAppSlot,
 } from '@pulumi/azure-native/web/index.js'
 import { ResourceOptions } from '@pulumi/pulumi'
 
 import { CommonAzureConstruct } from '../../common/index.js'
 
-import { LinuxWebAppProps, ServicePlanProps } from './types.js'
+import { LinuxWebAppProps, ServicePlanProps, WebAppSlotProps } from './types.js'
 
 /**
  * Provides operations on Azure App Service using Pulumi
@@ -101,6 +102,53 @@ export class AzureAppServiceManager {
 
     return new WebApp(
       `${id}-lwa`,
+      {
+        ...props,
+        name: scope.resourceNameFormatter.format(props.name?.toString(), scope.props.resourceNameOptions?.linuxWebApp),
+        resourceGroupName,
+        location: props.location ?? scope.props.location,
+        httpsOnly: props.httpsOnly ?? true,
+        kind: props.kind ?? 'app,linux',
+        identity: props.identity ?? {
+          type: ManagedServiceIdentityType.SystemAssigned,
+        },
+        siteConfig: props.siteConfig ?? {
+          alwaysOn: true,
+          linuxFxVersion: 'NODE|22-lts',
+          minTlsVersion: SupportedTlsVersions.SupportedTlsVersions_1_3,
+        },
+        tags: {
+          environment: scope.props.stage,
+          ...scope.props.defaultTags,
+          ...props.tags,
+        },
+      },
+      { parent: scope, ...resourceOptions }
+    )
+  }
+
+  /**
+   * @summary Method to create a new web app slot
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props web app slot properties
+   * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native Web App Slot]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/web/webappslot/}
+   */
+  public createWebAppSlot(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: WebAppSlotProps,
+    resourceOptions?: ResourceOptions
+  ) {
+    if (!props) throw new Error(`Props undefined for ${id}`)
+
+    // Get resource group name
+    const resourceGroupName =
+      props.resourceGroupName ?? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
+
+    return new WebAppSlot(
+      `${id}-was`,
       {
         ...props,
         name: scope.resourceNameFormatter.format(props.name?.toString(), scope.props.resourceNameOptions?.linuxWebApp),
