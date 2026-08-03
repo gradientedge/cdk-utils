@@ -2,6 +2,7 @@ import {
   Api,
   ApiManagementService,
   Backend,
+  Certificate,
   GetApiManagementServiceResult,
 } from '@pulumi/azure-native/apimanagement/index.js'
 import * as redisenterprise from '@pulumi/azure-native/redisenterprise/index.js'
@@ -421,6 +422,7 @@ import {
   ApiPolicyProps,
   ApiSubscriptionProps,
   CacheProps,
+  CertificateProps,
   LoggerProps,
   NamedValueProps,
 } from '../../src/index.js'
@@ -432,6 +434,7 @@ class TestConstructWithExtraApimMethods extends CommonAzureConstruct {
   apiNamedValue: NamedValue
   apiSubscription: ApiSubscription
   apiCache: Cache
+  apiCertificate: Certificate
   apiOperation: ApiOperation
   apiOperationPolicy: ApiOperationPolicy
 
@@ -479,6 +482,12 @@ class TestConstructWithExtraApimMethods extends CommonAzureConstruct {
       cacheId: 'test-cache-id',
       useFromLocation: 'eastus',
     } as CacheProps)
+
+    this.apiCertificate = this.apiManagementManager.createCertificate(`test-api-cert-${this.props.stage}`, this, {
+      serviceName: 'test-service',
+      resourceGroupName: 'test-rg-dev',
+      certificateId: 'test-certificate-id',
+    } as CertificateProps)
 
     this.apiOperation = this.apiManagementManager.createOperation(`test-api-op-${this.props.stage}`, this, {
       apiId: 'test-api',
@@ -535,6 +544,10 @@ describe('TestAzureApiManagementExtraMethods', () => {
 
   test('provisions api cache as expected', () => {
     expect(stackWithExtraMethods.construct.apiCache).toBeDefined()
+  })
+
+  test('provisions api certificate as expected', () => {
+    expect(stackWithExtraMethods.construct.apiCertificate).toBeDefined()
   })
 
   test('provisions api operation as expected', () => {
@@ -595,6 +608,16 @@ describe('TestAzureApiManagementExtraMethods - Error Handling', () => {
         undefined as any
       )
     }).toThrow('Props undefined for test-cache-err')
+  })
+
+  test('createCertificate throws when props are undefined', () => {
+    expect(() => {
+      stackWithExtraMethods.construct.apiManagementManager.createCertificate(
+        'test-cert-err',
+        stackWithExtraMethods.construct,
+        undefined as any
+      )
+    }).toThrow('Props undefined for test-cert-err')
   })
 })
 

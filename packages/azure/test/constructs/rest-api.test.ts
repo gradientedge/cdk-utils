@@ -119,6 +119,7 @@ class TestRestApiNewApiConstruct extends AzureRestApi {
     this.createNamespaceSecretRole()
     this.createNamespaceSecret()
     this.createSubscriptionKeySecret()
+    this.createApiManagementCertificate()
     this.createApiManagementLogger()
     this.createApiDiagnostic()
     this.createDiagnosticLog()
@@ -159,6 +160,7 @@ class TestRestApiNewApiWithCertConstruct extends AzureRestApi {
     this.createNamespaceSecretRole()
     this.createNamespaceSecret()
     this.createSubscriptionKeySecret()
+    this.createApiManagementCertificate()
     this.createApiManagementLogger()
     this.createApiDiagnostic()
     this.createDiagnosticLog()
@@ -432,6 +434,14 @@ describe('TestRestApiNewApiWithCertConstruct', () => {
   })
 })
 
+describe('TestRestApiNewApiWithCertConstruct', () => {
+  test('creates api management certificate flow as expected', () => {
+    expect(stackNewApiWithCert.construct).toBeDefined()
+    expect(stackNewApiWithCert.construct.api).toBeDefined()
+    expect(stackNewApiWithCert.construct.api.apim).toBeDefined()
+  })
+})
+
 /* --- Tests for no insights variant --- */
 
 describe('TestAzureRestApiNoInsightsConstruct', () => {
@@ -477,6 +487,7 @@ class TestRestApiExistingFullConstruct extends AzureRestApi {
     this.createNamespaceSecretRole()
     this.createNamespaceSecret()
     this.createSubscriptionKeySecret()
+    this.createApiManagementCertificate()
     this.createApiManagementLogger()
     this.createApiDiagnostic()
     this.createDiagnosticLog()

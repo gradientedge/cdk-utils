@@ -14,6 +14,9 @@
     },
     "certificateKeyVaultId": "/subscriptions/test-sub/resourceGroups/test-rg/providers/Microsoft.KeyVault/vaults/test-kv/certificates/test-cert"
   },
+  "apiManagementCertificate": {
+    "certificateId": "test-api-management-certificate"
+  },
   "apiManagementDiagnostic": {
     "diagnosticId": "applicationinsights",
     "apiId": "/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.ApiManagement/service/test-api-management-dev/apis/test-api"
