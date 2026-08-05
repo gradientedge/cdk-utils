@@ -1,5 +1,20 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.59.0
+
+### Minor Changes
+
+- [#1149](https://github.com/gradientedge/cdk-utils/pull/1149) [`b8536e4`](https://github.com/gradientedge/cdk-utils/commit/b8536e4b1fa7dfe5f2fa0d7fb3f8b3d8b10a67a0) Thanks [@despock](https://github.com/despock)! - feat: bumping dependencies
+
+### Patch Changes
+
+- [#1152](https://github.com/gradientedge/cdk-utils/pull/1152) [`e2848cb`](https://github.com/gradientedge/cdk-utils/commit/e2848cbfdd40685905a7f975a7e6aacc235a4507) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - fix: Fix Azure monitor autoscale name
+
+- [#1151](https://github.com/gradientedge/cdk-utils/pull/1151) [`6fca404`](https://github.com/gradientedge/cdk-utils/commit/6fca4046378966517cc54101027026f25632ba2f) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - Feat: Add Azure web app slots
+
+- Updated dependencies [[`b8536e4`](https://github.com/gradientedge/cdk-utils/commit/b8536e4b1fa7dfe5f2fa0d7fb3f8b3d8b10a67a0)]:
+  - @gradientedge/cdk-utils-common@2.12.0
+
 ## 2.58.3
 
 ### Patch Changes
