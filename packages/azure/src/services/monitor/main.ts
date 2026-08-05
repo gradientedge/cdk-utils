@@ -40,14 +40,18 @@ export class AzureMonitorManager {
   ) {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
+    const autoscaleSettingName = scope.resourceNameFormatter.format(
+      props.name?.toString(),
+      scope.props.resourceNameOptions?.monitorAutoscaleSetting
+    )
+
     return new AutoscaleSetting(
       `${id}-as`,
       {
         ...props,
-        name: scope.resourceNameFormatter.format(
-          props.name?.toString(),
-          scope.props.resourceNameOptions?.monitorAutoscaleSetting
-        ),
+        // Keep ARM path and payload name in sync to avoid Azure validation failures.
+        autoscaleSettingName,
+        name: autoscaleSettingName,
       },
       { parent: scope, ...resourceOptions }
     )

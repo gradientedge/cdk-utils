@@ -100,7 +100,7 @@ pulumi.runtime.setMocks({
     let name
 
     if (args.type === 'azure-native:monitor:AutoscaleSetting') {
-      name = args.inputs.name
+      name = args.inputs.autoscaleSettingName
 
       return {
         id: `${args.name}-id`,
@@ -179,6 +179,7 @@ describe('TestAzureMonitorConstruct', () => {
             'urn:pulumi:stack::project::construct:test-common-stack$azure-native:monitor:AutoscaleSetting::test-monitor-autoscale-setting-dev-as'
           )
           expect(name).toEqual('test-monitor-autoscale-setting-dev')
+
           expect(properties.enabled).toBe(true)
           expect(properties.targetResourceUri).toEqual(
             '/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.Compute/virtualMachineScaleSets/test-vmss'
