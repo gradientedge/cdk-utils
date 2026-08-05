@@ -41,7 +41,7 @@ export class AzureMonitorManager {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
     const autoscaleSettingName = scope.resourceNameFormatter.format(
-      props.name?.toString() ?? id,
+      props.name?.toString(),
       scope.props.resourceNameOptions?.monitorAutoscaleSetting
     )
 
