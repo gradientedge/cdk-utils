@@ -6,6 +6,7 @@ import {
   WorkersRoute,
   WorkersScript,
 } from '@pulumi/cloudflare'
+import { ResourceOptions } from '@pulumi/pulumi'
 import _ from 'lodash'
 
 import { CommonCloudflareConstruct } from '../../common/index.js'
@@ -45,7 +46,12 @@ export class CloudflareWorkerManager {
    * @param props worker domain properties
    * @see [Pulumi Worker Domain]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/workercustomdomain/}
    */
-  public createWorkerDomain(id: string, scope: CommonCloudflareConstruct, props: WorkerDomainProps) {
+  public createWorkerDomain(
+    id: string,
+    scope: CommonCloudflareConstruct,
+    props: WorkerDomainProps,
+    resourceOptions?: ResourceOptions
+  ) {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
     const zoneId = props.zoneId
@@ -58,7 +64,7 @@ export class CloudflareWorkerManager {
         accountId: props.accountId ?? scope.props.accountId,
         zoneId,
       },
-      { parent: scope }
+      { parent: scope, ...resourceOptions }
     )
   }
 

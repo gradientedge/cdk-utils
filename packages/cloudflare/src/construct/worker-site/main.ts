@@ -113,12 +113,17 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
    * @summary Create the worker domain
    */
   protected createWorkerDomain() {
-    this.siteWorkerDomain = this.workerManager.createWorkerDomain(`${this.id}-worker-domain`, this, {
-      ...this.props.siteWorkerDomain,
-      environment: this.props.siteWorkerDomain.environment ?? 'production',
-      hostname: `${this.props.siteSubDomain}.${this.props.domainName}`,
-      service: this.siteWorkerScript.scriptName,
-    })
+    this.siteWorkerDomain = this.workerManager.createWorkerDomain(
+      `${this.id}-worker-domain`,
+      this,
+      {
+        ...this.props.siteWorkerDomain,
+        environment: this.props.siteWorkerDomain.environment ?? 'production',
+        hostname: `${this.props.siteSubDomain}.${this.props.domainName}`,
+        service: this.siteWorkerScript.scriptName,
+      },
+      { dependsOn: [this.siteWorkerScript] }
+    )
   }
 
   /**
