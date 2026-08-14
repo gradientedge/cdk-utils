@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-cloudflare
 
+## 2.28.1
+
+### Patch Changes
+
+- [#1159](https://github.com/gradientedge/cdk-utils/pull/1159) [`c5a66e3`](https://github.com/gradientedge/cdk-utils/commit/c5a66e3355fda8f613442b296d4a730d011ecf44) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - feat: Cloudflare static add dependency between route and worker
+
 ## 2.28.0
 
 ### Minor Changes

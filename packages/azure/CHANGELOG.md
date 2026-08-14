@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.59.1
+
+### Patch Changes
+
+- [#1161](https://github.com/gradientedge/cdk-utils/pull/1161) [`d0f4b65`](https://github.com/gradientedge/cdk-utils/commit/d0f4b659f2c8165f90549c147f4eea171e328e43) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - feat: existingCosmosAccount to be optional in function-app construct
+
 ## 2.59.0
 
 ### Minor Changes
