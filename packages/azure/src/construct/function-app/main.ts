@@ -470,14 +470,16 @@ export class AzureFunctionApp extends CommonAzureConstruct {
       this.appConfigurationsParsedConfig &&
       AzureAppConfigurationManager.hasCosmosDependencies(this.appConfigurationsParsedConfig)
     ) {
-      this.cosmosDbManager.grantSqlRoleDefinitionToAccount(
-        this.id,
-        this,
-        this.props.existingCosmosAccountName,
-        this.props.existingCosmosAccountResourceGroupName,
-        this.getFunctionAppPrincipalId(),
-        [CosmosRoleDefinition.CONTRIBUTOR, CosmosRoleDefinition.READER]
-      )
+      if (this.props.existingCosmosAccountName && this.props.existingCosmosAccountResourceGroupName) {
+        this.cosmosDbManager.grantSqlRoleDefinitionToAccount(
+          this.id,
+          this,
+          this.props.existingCosmosAccountName,
+          this.props.existingCosmosAccountResourceGroupName,
+          this.getFunctionAppPrincipalId(),
+          [CosmosRoleDefinition.CONTRIBUTOR, CosmosRoleDefinition.READER]
+        )
+      }
     }
 
     if (this.appKeyVaultsByResourceGroup && this.appKeyVaultsByResourceGroup.size > 0) {
