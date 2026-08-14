@@ -57,9 +57,9 @@ export interface AzureFunctionAppProps extends CommonAzureStackProps {
   /** Resource group name of the existing EventGrid topic */
   existingTopicResourceGroupName: string
   /** Resource group name of the existing CosmosDB account */
-  existingCosmosAccountResourceGroupName: string
+  existingCosmosAccountResourceGroupName?: string
   /** Name of the existing CosmosDB account */
-  existingCosmosAccountName: string
+  existingCosmosAccountName?: string
   /** Custom host.json configuration to merge at the stack level */
   hostsConfiguration: any
   /** Resource group name of the existing App Configuration store */
