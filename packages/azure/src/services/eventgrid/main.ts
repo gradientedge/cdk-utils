@@ -2,9 +2,13 @@ import {
   DataResidencyBoundary,
   EventDeliverySchema,
   EventSubscription,
+  getNamespaceOutput,
+  getNamespaceTopicOutput,
   GetSystemTopicResult,
   getTopicOutput,
   getSystemTopicOutput,
+  Namespace,
+  NamespaceTopic,
   SystemTopic,
   SystemTopicEventSubscription,
   TlsVersion,
@@ -16,9 +20,13 @@ import { CommonAzureConstruct } from '../../common/index.js'
 
 import {
   EventgridEventSubscriptionProps,
+  EventgridNamespaceProps,
+  EventgridNamespaceTopicProps,
   EventgridSystemTopicEventSubscriptionProps,
   EventgridSystemTopicProps,
   EventgridTopicProps,
+  ResolveEventgridNamespaceProps,
+  ResolveEventgridNamespaceTopicProps,
   ResolveEventgridTopicProps,
   ResolveEventgridSystemTopicProps,
 } from './types.js'
@@ -105,6 +113,143 @@ export class AzureEventgridManager {
         topicName: scope.resourceNameFormatter.format(
           props.topicName?.toString(),
           scope.props.resourceNameOptions?.eventGridTopic
+        ),
+        resourceGroupName: props.resourceGroupName ?? scope.resourceNameFormatter.format(scope.props.resourceGroupName),
+      },
+      { parent: scope, ...resourceOptions }
+    )
+  }
+
+  /**
+   * @summary Method to create a new eventgrid namespace
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props eventgrid namespace properties
+   * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native Event Grid Namespace]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/namespace/}
+   */
+  public createEventgridNamespace(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: EventgridNamespaceProps,
+    resourceOptions?: ResourceOptions
+  ) {
+    if (!props) throw new Error(`Props undefined for ${id}`)
+
+    const resourceGroupName =
+      props.resourceGroupName ?? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
+
+    return new Namespace(
+      `${id}-ens`,
+      {
+        ...props,
+        namespaceName: scope.resourceNameFormatter.format(
+          props.namespaceName?.toString(),
+          scope.props.resourceNameOptions?.eventGridNamespace
+        ),
+        location: props.location ?? scope.props.location,
+        resourceGroupName,
+        minimumTlsVersionAllowed: props.minimumTlsVersionAllowed ?? TlsVersion.TlsVersion_1_2,
+        tags: {
+          environment: scope.props.stage,
+          ...scope.props.defaultTags,
+          ...props.tags,
+        },
+      },
+      { parent: scope, ...resourceOptions }
+    )
+  }
+
+  /**
+   * @summary Method to resolve an existing eventgrid namespace
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props eventgrid namespace properties
+   * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native Event Grid Namespace Lookup]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/namespace/}
+   */
+  public resolveEventgridNamespace(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: ResolveEventgridNamespaceProps,
+    resourceOptions?: ResourceOptions
+  ) {
+    if (!props) throw new Error(`Props undefined for ${id}`)
+
+    return getNamespaceOutput(
+      {
+        namespaceName: scope.resourceNameFormatter.format(
+          props.namespaceName?.toString(),
+          scope.props.resourceNameOptions?.eventGridNamespace
+        ),
+        resourceGroupName: props.resourceGroupName ?? scope.resourceNameFormatter.format(scope.props.resourceGroupName),
+      },
+      { parent: scope, ...resourceOptions }
+    )
+  }
+
+  /**
+   * @summary Method to create a new eventgrid namespace topic
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props eventgrid namespace topic properties
+   * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native Event Grid Namespace Topic]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/namespacetopic/}
+   */
+  public createEventgridNamespaceTopic(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: EventgridNamespaceTopicProps,
+    resourceOptions?: ResourceOptions
+  ) {
+    if (!props) throw new Error(`Props undefined for ${id}`)
+
+    const resourceGroupName =
+      props.resourceGroupName ?? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
+
+    return new NamespaceTopic(
+      `${id}-ent`,
+      {
+        ...props,
+        namespaceName: scope.resourceNameFormatter.format(
+          props.namespaceName?.toString(),
+          scope.props.resourceNameOptions?.eventGridNamespace
+        ),
+        topicName: scope.resourceNameFormatter.format(
+          props.topicName?.toString(),
+          scope.props.resourceNameOptions?.eventGridNamespaceTopic
+        ),
+        resourceGroupName,
+      },
+      { parent: scope, ...resourceOptions }
+    )
+  }
+
+  /**
+   * @summary Method to resolve an existing eventgrid namespace topic
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props eventgrid namespace topic properties
+   * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native Event Grid Namespace Topic Lookup]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/namespacetopic/}
+   */
+  public resolveEventgridNamespaceTopic(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: ResolveEventgridNamespaceTopicProps,
+    resourceOptions?: ResourceOptions
+  ) {
+    if (!props) throw new Error(`Props undefined for ${id}`)
+
+    return getNamespaceTopicOutput(
+      {
+        namespaceName: scope.resourceNameFormatter.format(
+          props.namespaceName?.toString(),
+          scope.props.resourceNameOptions?.eventGridNamespace
+        ),
+        topicName: scope.resourceNameFormatter.format(
+          props.topicName?.toString(),
+          scope.props.resourceNameOptions?.eventGridNamespaceTopic
         ),
         resourceGroupName: props.resourceGroupName ?? scope.resourceNameFormatter.format(scope.props.resourceGroupName),
       },

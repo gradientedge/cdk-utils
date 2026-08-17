@@ -1,5 +1,7 @@
 import {
   EventSubscription,
+  Namespace,
+  NamespaceTopic,
   SystemTopic,
   SystemTopicEventSubscription,
   Topic,
@@ -10,6 +12,8 @@ import {
   CommonAzureStack,
   CommonAzureStackProps,
   EventgridEventSubscriptionProps,
+  EventgridNamespaceProps,
+  EventgridNamespaceTopicProps,
   EventgridSystemTopicEventSubscriptionProps,
   EventgridSystemTopicProps,
   EventgridTopicProps,
@@ -18,6 +22,8 @@ import { outputToPromise } from '../helpers.js'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
   testEventgridTopic: EventgridTopicProps
+  testEventgridNamespace: EventgridNamespaceProps
+  testEventgridNamespaceTopic: EventgridNamespaceTopicProps
   testEventgridEventSubscription: EventgridEventSubscriptionProps
   testEventgridSystemTopic: EventgridSystemTopicProps
   testEventgridSystemEventSubscription: EventgridSystemTopicEventSubscriptionProps
@@ -65,6 +71,8 @@ class TestInvalidCommonStack extends CommonAzureStack {
 class TestCommonConstruct extends CommonAzureConstruct {
   declare props: TestAzureStackProps
   eventgridTopic: Topic
+  eventgridNamespace: Namespace
+  eventgridNamespaceTopic: NamespaceTopic
   eventgridSubscription: EventSubscription
   eventgridSystemTopic: SystemTopic
   eventgridSystemEventSubscription: SystemTopicEventSubscription
@@ -75,6 +83,18 @@ class TestCommonConstruct extends CommonAzureConstruct {
       `test-eventgrid-topic-${this.props.stage}`,
       this,
       this.props.testEventgridTopic
+    )
+
+    this.eventgridNamespace = this.eventgridManager.createEventgridNamespace(
+      `test-eventgrid-namespace-${this.props.stage}`,
+      this,
+      this.props.testEventgridNamespace
+    )
+
+    this.eventgridNamespaceTopic = this.eventgridManager.createEventgridNamespaceTopic(
+      `test-eventgrid-namespace-topic-${this.props.stage}`,
+      this,
+      this.props.testEventgridNamespaceTopic
     )
 
     this.eventgridSubscription = this.eventgridManager.createEventgridSubscription(
@@ -113,6 +133,10 @@ pulumi.runtime.setMocks({
       name = args.inputs.topicName
     } else if (args.type === 'azure-native:eventgrid:EventSubscription') {
       name = args.inputs.eventSubscriptionName
+    } else if (args.type === 'azure-native:eventgrid:Namespace') {
+      name = args.inputs.namespaceName
+    } else if (args.type === 'azure-native:eventgrid:NamespaceTopic') {
+      name = args.inputs.topicName
     } else if (args.type === 'azure-native:eventgrid:SystemTopic') {
       name = args.inputs.systemTopicName
     } else if (args.type === 'azure-native:eventgrid:SystemTopicEventSubscription') {
@@ -150,6 +174,8 @@ describe('TestAzureEventgridConstruct', () => {
     expect(stack).toBeDefined()
     expect(stack.construct).toBeDefined()
     expect(stack.construct.eventgridTopic).toBeDefined()
+    expect(stack.construct.eventgridNamespace).toBeDefined()
+    expect(stack.construct.eventgridNamespaceTopic).toBeDefined()
     expect(stack.construct.eventgridSubscription).toBeDefined()
     expect(stack.construct.eventgridSystemTopic).toBeDefined()
     expect(stack.construct.eventgridSystemEventSubscription).toBeDefined()
@@ -175,6 +201,50 @@ describe('TestAzureEventgridConstruct', () => {
           expect(name).toEqual('test-eventgrid-topic-dev')
           expect(location).toEqual('eastus')
           expect(tags?.environment).toEqual('dev')
+        })
+    )
+  })
+})
+
+describe('TestAzureEventgridConstruct', () => {
+  test('provisions eventgrid namespace as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.eventgridNamespace.id,
+          stack.construct.eventgridNamespace.urn,
+          stack.construct.eventgridNamespace.name,
+          stack.construct.eventgridNamespace.location,
+          stack.construct.eventgridNamespace.tags,
+        ])
+        .apply(([id, urn, name, location, tags]) => {
+          expect(id).toEqual('test-eventgrid-namespace-dev-ens-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:eventgrid:Namespace::test-eventgrid-namespace-dev-ens'
+          )
+          expect(name).toEqual('test-eventgrid-namespace-dev')
+          expect(location).toEqual('eastus')
+          expect(tags?.environment).toEqual('dev')
+        })
+    )
+  })
+})
+
+describe('TestAzureEventgridConstruct', () => {
+  test('provisions eventgrid namespace topic as expected', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.eventgridNamespaceTopic.id,
+          stack.construct.eventgridNamespaceTopic.urn,
+          stack.construct.eventgridNamespaceTopic.name,
+        ])
+        .apply(([id, urn, name]) => {
+          expect(id).toEqual('test-eventgrid-namespace-topic-dev-ent-id')
+          expect(urn).toEqual(
+            'urn:pulumi:stack::project::construct:test-common-stack$azure-native:eventgrid:NamespaceTopic::test-eventgrid-namespace-topic-dev-ent'
+          )
+          expect(name).toEqual('test-eventgrid-namespace-topic-dev')
         })
     )
   })
@@ -253,6 +323,22 @@ describe('TestAzureEventgridConstruct - Props Undefined', () => {
     }).toThrow('Props undefined for test-sub-err')
   })
 
+  test('createEventgridNamespace throws when props are undefined', () => {
+    expect(() => {
+      stack.construct.eventgridManager.createEventgridNamespace('test-namespace-err', stack.construct, undefined as any)
+    }).toThrow('Props undefined for test-namespace-err')
+  })
+
+  test('createEventgridNamespaceTopic throws when props are undefined', () => {
+    expect(() => {
+      stack.construct.eventgridManager.createEventgridNamespaceTopic(
+        'test-namespace-topic-err',
+        stack.construct,
+        undefined as any
+      )
+    }).toThrow('Props undefined for test-namespace-topic-err')
+  })
+
   test('createEventgridSystemTopic throws when props are undefined', () => {
     expect(() => {
       stack.construct.eventgridManager.createEventgridSystemTopic(
@@ -280,6 +366,26 @@ describe('TestAzureEventgridConstruct - Props Undefined', () => {
     }).toThrow('Props undefined for test-resolve-err')
   })
 
+  test('resolveEventgridNamespace throws when props are undefined', () => {
+    expect(() => {
+      stack.construct.eventgridManager.resolveEventgridNamespace(
+        'test-namespace-resolve-err',
+        stack.construct,
+        undefined as any
+      )
+    }).toThrow('Props undefined for test-namespace-resolve-err')
+  })
+
+  test('resolveEventgridNamespaceTopic throws when props are undefined', () => {
+    expect(() => {
+      stack.construct.eventgridManager.resolveEventgridNamespaceTopic(
+        'test-namespace-topic-resolve-err',
+        stack.construct,
+        undefined as any
+      )
+    }).toThrow('Props undefined for test-namespace-topic-resolve-err')
+  })
+
   test('resolveEventgridSystemTopic throws when props are undefined', () => {
     expect(() => {
       stack.construct.eventgridManager.resolveEventgridSystemTopic(
@@ -295,10 +401,14 @@ describe('TestAzureEventgridConstruct - Props Undefined', () => {
 class TestMinimalEventgridConstruct extends CommonAzureConstruct {
   declare props: TestAzureStackProps
   eventgridTopic: Topic
+  eventgridNamespace: Namespace
+  eventgridNamespaceTopic: NamespaceTopic
   eventgridSubscription: EventSubscription
   eventgridSystemTopic: SystemTopic
   eventgridSystemEventSubscription: SystemTopicEventSubscription
   resolvedEventgridTopic: pulumi.Output<any>
+  resolvedEventgridNamespace: pulumi.Output<any>
+  resolvedEventgridNamespaceTopic: pulumi.Output<any>
   resolvedEventgridSystemTopic: pulumi.Output<any>
 
   constructor(name: string, props: TestAzureStackProps) {
@@ -310,6 +420,23 @@ class TestMinimalEventgridConstruct extends CommonAzureConstruct {
       this,
       {
         topicName: 'test-minimal-eg-topic',
+      } as any
+    )
+
+    this.eventgridNamespace = this.eventgridManager.createEventgridNamespace(
+      `test-minimal-eg-namespace-${this.props.stage}`,
+      this,
+      {
+        namespaceName: 'test-minimal-eg-namespace',
+      } as any
+    )
+
+    this.eventgridNamespaceTopic = this.eventgridManager.createEventgridNamespaceTopic(
+      `test-minimal-eg-namespace-topic-${this.props.stage}`,
+      this,
+      {
+        namespaceName: 'test-minimal-eg-namespace',
+        topicName: 'test-minimal-eg-namespace-topic',
       } as any
     )
 
@@ -360,6 +487,23 @@ class TestMinimalEventgridConstruct extends CommonAzureConstruct {
       this,
       {
         topicName: 'test-minimal-eg-topic',
+      } as any
+    )
+
+    this.resolvedEventgridNamespace = this.eventgridManager.resolveEventgridNamespace(
+      `test-resolved-eg-namespace-${this.props.stage}`,
+      this,
+      {
+        namespaceName: 'test-minimal-eg-namespace',
+      } as any
+    )
+
+    this.resolvedEventgridNamespaceTopic = this.eventgridManager.resolveEventgridNamespaceTopic(
+      `test-resolved-eg-namespace-topic-${this.props.stage}`,
+      this,
+      {
+        namespaceName: 'test-minimal-eg-namespace',
+        topicName: 'test-minimal-eg-namespace-topic',
       } as any
     )
 
@@ -422,6 +566,32 @@ describe('TestAzureEventgridConstruct - Default Values', () => {
     )
   })
 
+  test('eventgrid namespace uses default location from scope when not provided', async () => {
+    await outputToPromise(
+      pulumi.all([minimalEventgridStack.construct.eventgridNamespace.location]).apply(([location]) => {
+        expect(location).toEqual('eastus')
+      })
+    )
+  })
+
+  test('eventgrid namespace uses default tags when not provided', async () => {
+    await outputToPromise(
+      pulumi.all([minimalEventgridStack.construct.eventgridNamespace.tags]).apply(([tags]) => {
+        expect(tags?.environment).toEqual('dev')
+      })
+    )
+  })
+
+  test('eventgrid namespace uses default minimum tls version when not provided', async () => {
+    await outputToPromise(
+      pulumi
+        .all([minimalEventgridStack.construct.eventgridNamespace.minimumTlsVersionAllowed])
+        .apply(([minimumTlsVersionAllowed]) => {
+          expect(minimumTlsVersionAllowed).toEqual('1.2')
+        })
+    )
+  })
+
   test('eventgrid subscription uses default eventDeliverySchema when not provided', async () => {
     await outputToPromise(
       pulumi.all([minimalEventgridStack.construct.eventgridSubscription.eventDeliverySchema]).apply(([schema]) => {
@@ -461,6 +631,27 @@ describe('TestAzureEventgridConstruct - Default Values', () => {
         expect((resolvedEventgridTopic as any).topicName).toEqual('test-minimal-eg-topic-dev')
         expect((resolvedEventgridTopic as any).resourceGroupName).toEqual('test-rg-dev')
       })
+    )
+  })
+
+  test('resolve eventgrid namespace uses formatted namespace name and default resource group name from scope', async () => {
+    await outputToPromise(
+      pulumi.output(minimalEventgridStack.construct.resolvedEventgridNamespace).apply(resolvedEventgridNamespace => {
+        expect((resolvedEventgridNamespace as any).namespaceName).toEqual('test-minimal-eg-namespace-dev')
+        expect((resolvedEventgridNamespace as any).resourceGroupName).toEqual('test-rg-dev')
+      })
+    )
+  })
+
+  test('resolve eventgrid namespace topic uses formatted names and default resource group name from scope', async () => {
+    await outputToPromise(
+      pulumi
+        .output(minimalEventgridStack.construct.resolvedEventgridNamespaceTopic)
+        .apply(resolvedEventgridNamespaceTopic => {
+          expect((resolvedEventgridNamespaceTopic as any).namespaceName).toEqual('test-minimal-eg-namespace-dev')
+          expect((resolvedEventgridNamespaceTopic as any).topicName).toEqual('test-minimal-eg-namespace-topic-dev')
+          expect((resolvedEventgridNamespaceTopic as any).resourceGroupName).toEqual('test-rg-dev')
+        })
     )
   })
 
