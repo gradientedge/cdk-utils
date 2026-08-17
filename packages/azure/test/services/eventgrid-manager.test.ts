@@ -160,6 +160,22 @@ pulumi.runtime.setMocks({
 
 const stack = new TestCommonStack('test-common-stack', testStackProps)
 
+const autoscaleEventgridNamespace = stack.construct.eventgridManager.createEventgridNamespace(
+  'test-autoscale-eventgrid-namespace',
+  stack.construct,
+  {
+    autoScaleConfiguration: {
+      enableAutoScale: true,
+      maximumThroughputUnits: 8,
+      minimumThroughputUnits: 2,
+    },
+    location: 'eastus',
+    namespaceName: 'test-autoscale-eventgrid-namespace',
+    resourceGroupName: 'test-rg-dev',
+    sku: { name: 'Standard' },
+  }
+)
+
 describe('TestAzureEventgridConstruct', () => {
   test('handles mis-configurations as expected', () => {
     const error = () => new TestInvalidCommonStack('test-invalid-stack', testStackProps)
@@ -236,61 +252,54 @@ describe('TestAzureEventgridConstruct', () => {
 })
 
 describe('TestAzureEventgridConstruct', () => {
-  test('provisions ARM deployment for eventgrid namespace autoscale', async () => {
-    const autoscaleNamespace = stack.construct.eventgridManager.createEventgridNamespace(
-      'test-autoscale-eventgrid-namespace-dev',
-      stack.construct,
-      {
-        autoScaleConfiguration: {
-          enableAutoScale: true,
-          maximumThroughputUnits: 8,
-          minimumThroughputUnits: 2,
-        },
-        location: 'eastus',
-        namespaceName: 'test-autoscale-eventgrid-namespace',
-        resourceGroupName: 'test-rg-dev',
-        sku: { name: 'Standard' },
-      }
-    )
-
+  test('provisions ARM deployment for eventgrid namespace autoscale with exact template', async () => {
     await outputToPromise(
-      autoscaleNamespace.name.apply(name => expect(name).toEqual('test-autoscale-eventgrid-namespace'))
+      autoscaleEventgridNamespace.name.apply(name => {
+        expect(name).toEqual('test-autoscale-eventgrid-namespace-dev')
+      })
     )
 
     const deployments = capturedDeployments.filter(
-      deployment => deployment.name === 'test-autoscale-eventgrid-namespace-dev-ens-autoscale'
+      deployment => deployment.name === 'test-autoscale-eventgrid-namespace-ens-autoscale'
     )
     expect(deployments.length).toEqual(1)
 
     const deployment = deployments[0]
     expect(deployment.type).toEqual('azure-native:resources:Deployment')
     expect(deployment.inputs.resourceGroupName).toEqual('test-rg-dev')
-    expect(deployment.inputs.deploymentName).toEqual('test-autoscale-eventgrid-namespace-dev-ens-autoscale-dev')
+    expect(deployment.inputs.deploymentName).toEqual('test-autoscale-eventgrid-namespace-ens-autoscale-dev')
 
     await outputToPromise(
-      deployment.inputs.properties.template.apply((template: any) => {
-        expect(template.resources).toEqual([
-          {
-            apiVersion: '2025-11-15-preview',
-            location: 'eastus',
-            name: 'test-autoscale-eventgrid-namespace',
-            tags: {
-              environment: 'dev',
-            },
-            properties: {
-              autoScaleConfiguration: {
-                enableAutoScale: true,
-                maximumThroughputUnits: 8,
-                minimumThroughputUnits: 2,
+      pulumi.output(deployment.inputs.properties).apply(properties => {
+        expect(properties).toEqual({
+          mode: 'Incremental',
+          template: {
+            $schema: 'https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#',
+            contentVersion: '1.0.0.0',
+            resources: [
+              {
+                apiVersion: '2025-11-15-preview',
+                location: 'eastus',
+                name: 'test-autoscale-eventgrid-namespace-dev',
+                tags: {
+                  environment: 'dev',
+                },
+                properties: {
+                  autoScaleConfiguration: {
+                    enableAutoScale: true,
+                    maximumThroughputUnits: 8,
+                    minimumThroughputUnits: 2,
+                  },
+                },
+                sku: {
+                  capacity: 2,
+                  name: 'Standard',
+                },
+                type: 'Microsoft.EventGrid/namespaces',
               },
-            },
-            sku: {
-              capacity: 2,
-              name: 'Standard',
-            },
-            type: 'Microsoft.EventGrid/namespaces',
+            ],
           },
-        ])
+        })
       })
     )
   })
