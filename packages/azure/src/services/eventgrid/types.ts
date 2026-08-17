@@ -10,6 +10,18 @@ import {
   SystemTopicEventSubscriptionArgs,
   TopicArgs,
 } from '@pulumi/azure-native/eventgrid/index.js'
+import { Input } from '@pulumi/pulumi'
+
+/**
+ * Autoscale configuration for an EventGrid namespace.
+ * @see [Azure Event Grid namespace autoscale]{@link https://learn.microsoft.com/en-us/azure/event-grid/namespace-enable-autoscale}
+ * @category Interface
+ */
+export interface EventgridNamespaceAutoScaleConfigurationProps {
+  enableAutoScale: Input<boolean>
+  minimumThroughputUnits?: Input<number>
+  maximumThroughputUnits?: Input<number>
+}
 
 /**
  * Properties for creating an EventGrid topic
@@ -23,7 +35,9 @@ export interface EventgridTopicProps extends TopicArgs {}
  * @see [Pulumi Azure Native Event Grid Namespace]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/namespace/}
  * @category Interface
  */
-export interface EventgridNamespaceProps extends NamespaceArgs {}
+export interface EventgridNamespaceProps extends NamespaceArgs {
+  autoScaleConfiguration?: EventgridNamespaceAutoScaleConfigurationProps
+}
 
 /**
  * Properties for creating an EventGrid namespace topic

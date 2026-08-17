@@ -30,6 +30,8 @@ interface TestAzureStackProps extends CommonAzureStackProps {
   testAttribute?: string
 }
 
+const capturedDeployments: pulumi.runtime.MockResourceArgs[] = []
+
 const testStackProps: any = {
   domainName: 'gradientedge.io',
   extraContexts: ['packages/azure/test/common/config/dummy.json', 'packages/azure/test/common/config/eventgrid.json'],
@@ -141,6 +143,9 @@ pulumi.runtime.setMocks({
       name = args.inputs.systemTopicName
     } else if (args.type === 'azure-native:eventgrid:SystemTopicEventSubscription') {
       name = args.inputs.eventSubscriptionName
+    } else if (args.type === 'azure-native:resources:Deployment') {
+      name = args.inputs.deploymentName
+      capturedDeployments.push(args)
     }
 
     return {
@@ -226,6 +231,67 @@ describe('TestAzureEventgridConstruct', () => {
           expect(location).toEqual('eastus')
           expect(tags?.environment).toEqual('dev')
         })
+    )
+  })
+})
+
+describe('TestAzureEventgridConstruct', () => {
+  test('provisions ARM deployment for eventgrid namespace autoscale', async () => {
+    const autoscaleNamespace = stack.construct.eventgridManager.createEventgridNamespace(
+      'test-autoscale-eventgrid-namespace-dev',
+      stack.construct,
+      {
+        autoScaleConfiguration: {
+          enableAutoScale: true,
+          maximumThroughputUnits: 8,
+          minimumThroughputUnits: 2,
+        },
+        location: 'eastus',
+        namespaceName: 'test-autoscale-eventgrid-namespace',
+        resourceGroupName: 'test-rg-dev',
+        sku: { name: 'Standard' },
+      }
+    )
+
+    await outputToPromise(
+      autoscaleNamespace.name.apply(name => expect(name).toEqual('test-autoscale-eventgrid-namespace'))
+    )
+
+    const deployments = capturedDeployments.filter(
+      deployment => deployment.name === 'test-autoscale-eventgrid-namespace-dev-ens-autoscale'
+    )
+    expect(deployments.length).toEqual(1)
+
+    const deployment = deployments[0]
+    expect(deployment.type).toEqual('azure-native:resources:Deployment')
+    expect(deployment.inputs.resourceGroupName).toEqual('test-rg-dev')
+    expect(deployment.inputs.deploymentName).toEqual('test-autoscale-eventgrid-namespace-dev-ens-autoscale-dev')
+
+    await outputToPromise(
+      deployment.inputs.properties.template.apply((template: any) => {
+        expect(template.resources).toEqual([
+          {
+            apiVersion: '2025-11-15-preview',
+            location: 'eastus',
+            name: 'test-autoscale-eventgrid-namespace',
+            tags: {
+              environment: 'dev',
+            },
+            properties: {
+              autoScaleConfiguration: {
+                enableAutoScale: true,
+                maximumThroughputUnits: 8,
+                minimumThroughputUnits: 2,
+              },
+            },
+            sku: {
+              capacity: 2,
+              name: 'Standard',
+            },
+            type: 'Microsoft.EventGrid/namespaces',
+          },
+        ])
+      })
     )
   })
 })
