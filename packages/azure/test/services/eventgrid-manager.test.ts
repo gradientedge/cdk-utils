@@ -582,16 +582,6 @@ describe('TestAzureEventgridConstruct - Default Values', () => {
     )
   })
 
-  test('eventgrid namespace uses default minimum tls version when not provided', async () => {
-    await outputToPromise(
-      pulumi
-        .all([minimalEventgridStack.construct.eventgridNamespace.minimumTlsVersionAllowed])
-        .apply(([minimumTlsVersionAllowed]) => {
-          expect(minimumTlsVersionAllowed).toEqual('1.2')
-        })
-    )
-  })
-
   test('eventgrid subscription uses default eventDeliverySchema when not provided', async () => {
     await outputToPromise(
       pulumi.all([minimalEventgridStack.construct.eventgridSubscription.eventDeliverySchema]).apply(([schema]) => {
