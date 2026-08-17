@@ -149,7 +149,6 @@ export class AzureEventgridManager {
         ),
         location: props.location ?? scope.props.location,
         resourceGroupName,
-        minimumTlsVersionAllowed: props.minimumTlsVersionAllowed ?? TlsVersion.TlsVersion_1_2,
         tags: {
           environment: scope.props.stage,
           ...scope.props.defaultTags,
