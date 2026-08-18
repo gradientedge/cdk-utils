@@ -27,6 +27,16 @@
     "systemTopicName": "test-eventgrid-system-topic",
     "topicType": "Microsoft.Storage.StorageAccounts"
   },
+  "testEventgridNamespace": {
+    "location": "eastus",
+    "namespaceName": "test-eventgrid-namespace",
+    "resourceGroupName": "test-rg-dev"
+  },
+  "testEventgridNamespaceTopic": {
+    "namespaceName": "test-eventgrid-namespace",
+    "resourceGroupName": "test-rg-dev",
+    "topicName": "test-eventgrid-namespace-topic"
+  },
   "testEventgridTopic": {
     "location": "eastus",
     "resourceGroupName": "test-rg-dev",
