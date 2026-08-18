@@ -25,7 +25,7 @@
 
 </div></div></section><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gradientedge/cdk-utils/blob/main/packages/azure/src/services/eventgrid/main.ts#L44">packages/azure/src/services/eventgrid/main.ts:44</a></li></ul></aside>
+<li>Defined in <a href="https://github.com/gradientedge/cdk-utils/blob/main/packages/azure/src/services/eventgrid/main.ts#L55">packages/azure/src/services/eventgrid/main.ts:55</a></li></ul></aside>
 <section class="tsd-panel-group tsd-index-group">
 <section class="tsd-panel tsd-index-panel">
 <details class="tsd-index-content tsd-accordion" open><summary class="tsd-accordion-summary tsd-index-summary"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
@@ -37,10 +37,14 @@
 </div></section>
 <section class="tsd-index-section">
 <h3 class="tsd-index-heading tsd-anchor-link" id="methods">Methods<a href="#methods" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
-<div class="tsd-index-list"><a href="#createeventgridsubscription" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Eventgrid<wbr/>Subscription</span></a>
+<div class="tsd-index-list"><a href="#createeventgridnamespace" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Eventgrid<wbr/>Namespace</span></a>
+<a href="#createeventgridnamespacetopic" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Eventgrid<wbr/>Namespace<wbr/>Topic</span></a>
+<a href="#createeventgridsubscription" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Eventgrid<wbr/>Subscription</span></a>
 <a href="#createeventgridsystemtopic" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Eventgrid<wbr/>System<wbr/>Topic</span></a>
 <a href="#createeventgridsystemtopiceventsubscription" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Eventgrid<wbr/>System<wbr/>Topic<wbr/>Event<wbr/>Subscription</span></a>
 <a href="#createeventgridtopic" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Eventgrid<wbr/>Topic</span></a>
+<a href="#resolveeventgridnamespace" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>resolve<wbr/>Eventgrid<wbr/>Namespace</span></a>
+<a href="#resolveeventgridnamespacetopic" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>resolve<wbr/>Eventgrid<wbr/>Namespace<wbr/>Topic</span></a>
 <a href="#resolveeventgridsystemtopic" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>resolve<wbr/>Eventgrid<wbr/>System<wbr/>Topic</span></a>
 <a href="#resolveeventgridtopic" class="tsd-index-link"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>resolve<wbr/>Eventgrid<wbr/>Topic</span></a>
 </div></section></div></details></section></section>
@@ -57,6 +61,62 @@
 <details class="tsd-panel-group tsd-member-group tsd-accordion" open><summary class="tsd-accordion-summary" data-key="section-Methods"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>
 <h2 class="tsd-anchor-link" id="methods-1">Methods<a href="#methods-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h2></summary>
 <section>
+<section class="tsd-panel tsd-member">
+<h3 class="tsd-anchor-link" id="createeventgridnamespace"><span>create<wbr/>Eventgrid<wbr/>Namespace</span><a href="#createeventgridnamespace" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures">
+<li class="">
+<div class="tsd-signature tsd-anchor-link" id="createeventgridnamespace-1"><span class="tsd-kind-call-signature">createEventgridNamespace</span><span class="tsd-signature-symbol">(</span><br/>    <span class="tsd-kind-parameter">id</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">,</span><br/>    <span class="tsd-kind-parameter">scope</span><span class="tsd-signature-symbol">:</span> <a href="_gradientedge_cdk-utils-azure.CommonAzureConstruct.html" class="tsd-signature-type tsd-kind-class">CommonAzureConstruct</a><span class="tsd-signature-symbol">,</span><br/>    <span class="tsd-kind-parameter">props</span><span class="tsd-signature-symbol">:</span> <a href="../interfaces/_gradientedge_cdk-utils-azure.EventgridNamespaceProps.html" class="tsd-signature-type tsd-kind-interface">EventgridNamespaceProps</a><span class="tsd-signature-symbol">,</span><br/>    <span class="tsd-kind-parameter">resourceOptions</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ResourceOptions</span><span class="tsd-signature-symbol">,</span><br/><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Namespace</span><a href="#createeventgridnamespace-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div>
+<div class="tsd-description">
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li><span><span class="tsd-kind-parameter">id</span>: <span class="tsd-signature-type">string</span></span>
+<div class="tsd-comment tsd-typography"><p>scoped id of the resource</p>
+</div></li>
+<li><span><span class="tsd-kind-parameter">scope</span>: <a href="_gradientedge_cdk-utils-azure.CommonAzureConstruct.html" class="tsd-signature-type tsd-kind-class">CommonAzureConstruct</a></span>
+<div class="tsd-comment tsd-typography"><p>scope in which this resource is defined</p>
+</div></li>
+<li><span><span class="tsd-kind-parameter">props</span>: <a href="../interfaces/_gradientedge_cdk-utils-azure.EventgridNamespaceProps.html" class="tsd-signature-type tsd-kind-interface">EventgridNamespaceProps</a></span>
+<div class="tsd-comment tsd-typography"><p>eventgrid namespace properties</p>
+</div></li>
+<li><span><code class="tsd-tag">Optional</code><span class="tsd-kind-parameter">resourceOptions</span>: <span class="tsd-signature-type">ResourceOptions</span></span>
+<div class="tsd-comment tsd-typography"><p>Optional settings to control resource behaviour</p>
+</div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Namespace</span></h4>
+<div class="tsd-comment tsd-typography">
+<div class="tsd-tag-see">
+<h4 class="tsd-anchor-link" id="see">See<a href="#see" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>[Pulumi Azure Native Event Grid Namespace]<a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/namespace/">https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/namespace/</a></p>
+</div></div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/gradientedge/cdk-utils/blob/main/packages/azure/src/services/eventgrid/main.ts#L134">packages/azure/src/services/eventgrid/main.ts:134</a></li></ul></aside></div></li></ul></section>
+<section class="tsd-panel tsd-member">
+<h3 class="tsd-anchor-link" id="createeventgridnamespacetopic"><span>create<wbr/>Eventgrid<wbr/>Namespace<wbr/>Topic</span><a href="#createeventgridnamespacetopic" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures">
+<li class="">
+<div class="tsd-signature tsd-anchor-link" id="createeventgridnamespacetopic-1"><span class="tsd-kind-call-signature">createEventgridNamespaceTopic</span><span class="tsd-signature-symbol">(</span><br/>    <span class="tsd-kind-parameter">id</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">,</span><br/>    <span class="tsd-kind-parameter">scope</span><span class="tsd-signature-symbol">:</span> <a href="_gradientedge_cdk-utils-azure.CommonAzureConstruct.html" class="tsd-signature-type tsd-kind-class">CommonAzureConstruct</a><span class="tsd-signature-symbol">,</span><br/>    <span class="tsd-kind-parameter">props</span><span class="tsd-signature-symbol">:</span> <a href="../interfaces/_gradientedge_cdk-utils-azure.EventgridNamespaceTopicProps.html" class="tsd-signature-type tsd-kind-interface">EventgridNamespaceTopicProps</a><span class="tsd-signature-symbol">,</span><br/>    <span class="tsd-kind-parameter">resourceOptions</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ResourceOptions</span><span class="tsd-signature-symbol">,</span><br/><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">NamespaceTopic</span><a href="#createeventgridnamespacetopic-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div>
+<div class="tsd-description">
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li><span><span class="tsd-kind-parameter">id</span>: <span class="tsd-signature-type">string</span></span>
+<div class="tsd-comment tsd-typography"><p>scoped id of the resource</p>
+</div></li>
+<li><span><span class="tsd-kind-parameter">scope</span>: <a href="_gradientedge_cdk-utils-azure.CommonAzureConstruct.html" class="tsd-signature-type tsd-kind-class">CommonAzureConstruct</a></span>
+<div class="tsd-comment tsd-typography"><p>scope in which this resource is defined</p>
+</div></li>
+<li><span><span class="tsd-kind-parameter">props</span>: <a href="../interfaces/_gradientedge_cdk-utils-azure.EventgridNamespaceTopicProps.html" class="tsd-signature-type tsd-kind-interface">EventgridNamespaceTopicProps</a></span>
+<div class="tsd-comment tsd-typography"><p>eventgrid namespace topic properties</p>
+</div></li>
+<li><span><code class="tsd-tag">Optional</code><span class="tsd-kind-parameter">resourceOptions</span>: <span class="tsd-signature-type">ResourceOptions</span></span>
+<div class="tsd-comment tsd-typography"><p>Optional settings to control resource behaviour</p>
+</div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">NamespaceTopic</span></h4>
+<div class="tsd-comment tsd-typography">
+<div class="tsd-tag-see">
+<h4 class="tsd-anchor-link" id="see-1">See<a href="#see-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>[Pulumi Azure Native Event Grid Namespace Topic]<a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/namespacetopic/">https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/namespacetopic/</a></p>
+</div></div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/gradientedge/cdk-utils/blob/main/packages/azure/src/services/eventgrid/main.ts#L295">packages/azure/src/services/eventgrid/main.ts:295</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="createeventgridsubscription"><span>create<wbr/>Eventgrid<wbr/>Subscription</span><a href="#createeventgridsubscription" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -81,10 +141,10 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">EventSubscription</span></h4>
 <div class="tsd-comment tsd-typography">
 <div class="tsd-tag-see">
-<h4 class="tsd-anchor-link" id="see">See<a href="#see" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>[Pulumi Azure Native Event Grid Event Subscription]<a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/eventsubscription/">https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/eventsubscription/</a></p>
+<h4 class="tsd-anchor-link" id="see-2">See<a href="#see-2" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>[Pulumi Azure Native Event Grid Event Subscription]<a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/eventsubscription/">https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/eventsubscription/</a></p>
 </div></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gradientedge/cdk-utils/blob/main/packages/azure/src/services/eventgrid/main.ts#L123">packages/azure/src/services/eventgrid/main.ts:123</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/gradientedge/cdk-utils/blob/main/packages/azure/src/services/eventgrid/main.ts#L364">packages/azure/src/services/eventgrid/main.ts:364</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="createeventgridsystemtopic"><span>create<wbr/>Eventgrid<wbr/>System<wbr/>Topic</span><a href="#createeventgridsystemtopic" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -109,10 +169,10 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">SystemTopic</span></h4>
 <div class="tsd-comment tsd-typography">
 <div class="tsd-tag-see">
-<h4 class="tsd-anchor-link" id="see-1">See<a href="#see-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>[Pulumi Azure Native Event Grid System Topic]<a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/systemtopic/">https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/systemtopic/</a></p>
+<h4 class="tsd-anchor-link" id="see-3">See<a href="#see-3" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>[Pulumi Azure Native Event Grid System Topic]<a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/systemtopic/">https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/systemtopic/</a></p>
 </div></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gradientedge/cdk-utils/blob/main/packages/azure/src/services/eventgrid/main.ts#L157">packages/azure/src/services/eventgrid/main.ts:157</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/gradientedge/cdk-utils/blob/main/packages/azure/src/services/eventgrid/main.ts#L398">packages/azure/src/services/eventgrid/main.ts:398</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="createeventgridsystemtopiceventsubscription"><span>create<wbr/>Eventgrid<wbr/>System<wbr/>Topic<wbr/>Event<wbr/>Subscription</span><a href="#createeventgridsystemtopiceventsubscription" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -140,10 +200,10 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">SystemTopicEventSubscription</span></h4>
 <div class="tsd-comment tsd-typography">
 <div class="tsd-tag-see">
-<h4 class="tsd-anchor-link" id="see-2">See<a href="#see-2" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>[Pulumi Azure Native Event Grid System Topic Event Subscription]<a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/systemtopiceventsubscription/">https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/systemtopiceventsubscription/</a></p>
+<h4 class="tsd-anchor-link" id="see-4">See<a href="#see-4" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>[Pulumi Azure Native Event Grid System Topic Event Subscription]<a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/systemtopiceventsubscription/">https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/systemtopiceventsubscription/</a></p>
 </div></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gradientedge/cdk-utils/blob/main/packages/azure/src/services/eventgrid/main.ts#L197">packages/azure/src/services/eventgrid/main.ts:197</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/gradientedge/cdk-utils/blob/main/packages/azure/src/services/eventgrid/main.ts#L438">packages/azure/src/services/eventgrid/main.ts:438</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="createeventgridtopic"><span>create<wbr/>Eventgrid<wbr/>Topic</span><a href="#createeventgridtopic" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -168,10 +228,66 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Topic</span></h4>
 <div class="tsd-comment tsd-typography">
 <div class="tsd-tag-see">
-<h4 class="tsd-anchor-link" id="see-3">See<a href="#see-3" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>[Pulumi Azure Native Event Grid Topic]<a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/topic/">https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/topic/</a></p>
+<h4 class="tsd-anchor-link" id="see-5">See<a href="#see-5" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>[Pulumi Azure Native Event Grid Topic]<a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/topic/">https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/topic/</a></p>
 </div></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gradientedge/cdk-utils/blob/main/packages/azure/src/services/eventgrid/main.ts#L53">packages/azure/src/services/eventgrid/main.ts:53</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/gradientedge/cdk-utils/blob/main/packages/azure/src/services/eventgrid/main.ts#L64">packages/azure/src/services/eventgrid/main.ts:64</a></li></ul></aside></div></li></ul></section>
+<section class="tsd-panel tsd-member">
+<h3 class="tsd-anchor-link" id="resolveeventgridnamespace"><span>resolve<wbr/>Eventgrid<wbr/>Namespace</span><a href="#resolveeventgridnamespace" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures">
+<li class="">
+<div class="tsd-signature tsd-anchor-link" id="resolveeventgridnamespace-1"><span class="tsd-kind-call-signature">resolveEventgridNamespace</span><span class="tsd-signature-symbol">(</span><br/>    <span class="tsd-kind-parameter">id</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">,</span><br/>    <span class="tsd-kind-parameter">scope</span><span class="tsd-signature-symbol">:</span> <a href="_gradientedge_cdk-utils-azure.CommonAzureConstruct.html" class="tsd-signature-type tsd-kind-class">CommonAzureConstruct</a><span class="tsd-signature-symbol">,</span><br/>    <span class="tsd-kind-parameter">props</span><span class="tsd-signature-symbol">:</span> <a href="../interfaces/_gradientedge_cdk-utils-azure.ResolveEventgridNamespaceProps.html" class="tsd-signature-type tsd-kind-interface">ResolveEventgridNamespaceProps</a><span class="tsd-signature-symbol">,</span><br/>    <span class="tsd-kind-parameter">resourceOptions</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ResourceOptions</span><span class="tsd-signature-symbol">,</span><br/><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Output</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">GetNamespaceResult</span><span class="tsd-signature-symbol">&gt;</span><a href="#resolveeventgridnamespace-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div>
+<div class="tsd-description">
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li><span><span class="tsd-kind-parameter">id</span>: <span class="tsd-signature-type">string</span></span>
+<div class="tsd-comment tsd-typography"><p>scoped id of the resource</p>
+</div></li>
+<li><span><span class="tsd-kind-parameter">scope</span>: <a href="_gradientedge_cdk-utils-azure.CommonAzureConstruct.html" class="tsd-signature-type tsd-kind-class">CommonAzureConstruct</a></span>
+<div class="tsd-comment tsd-typography"><p>scope in which this resource is defined</p>
+</div></li>
+<li><span><span class="tsd-kind-parameter">props</span>: <a href="../interfaces/_gradientedge_cdk-utils-azure.ResolveEventgridNamespaceProps.html" class="tsd-signature-type tsd-kind-interface">ResolveEventgridNamespaceProps</a></span>
+<div class="tsd-comment tsd-typography"><p>eventgrid namespace properties</p>
+</div></li>
+<li><span><code class="tsd-tag">Optional</code><span class="tsd-kind-parameter">resourceOptions</span>: <span class="tsd-signature-type">ResourceOptions</span></span>
+<div class="tsd-comment tsd-typography"><p>Optional settings to control resource behaviour</p>
+</div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Output</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">GetNamespaceResult</span><span class="tsd-signature-symbol">&gt;</span></h4>
+<div class="tsd-comment tsd-typography">
+<div class="tsd-tag-see">
+<h4 class="tsd-anchor-link" id="see-6">See<a href="#see-6" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>[Pulumi Azure Native Event Grid Namespace Lookup]<a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/namespace/">https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/namespace/</a></p>
+</div></div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/gradientedge/cdk-utils/blob/main/packages/azure/src/services/eventgrid/main.ts#L267">packages/azure/src/services/eventgrid/main.ts:267</a></li></ul></aside></div></li></ul></section>
+<section class="tsd-panel tsd-member">
+<h3 class="tsd-anchor-link" id="resolveeventgridnamespacetopic"><span>resolve<wbr/>Eventgrid<wbr/>Namespace<wbr/>Topic</span><a href="#resolveeventgridnamespacetopic" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
+<ul class="tsd-signatures">
+<li class="">
+<div class="tsd-signature tsd-anchor-link" id="resolveeventgridnamespacetopic-1"><span class="tsd-kind-call-signature">resolveEventgridNamespaceTopic</span><span class="tsd-signature-symbol">(</span><br/>    <span class="tsd-kind-parameter">id</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">,</span><br/>    <span class="tsd-kind-parameter">scope</span><span class="tsd-signature-symbol">:</span> <a href="_gradientedge_cdk-utils-azure.CommonAzureConstruct.html" class="tsd-signature-type tsd-kind-class">CommonAzureConstruct</a><span class="tsd-signature-symbol">,</span><br/>    <span class="tsd-kind-parameter">props</span><span class="tsd-signature-symbol">:</span> <a href="../interfaces/_gradientedge_cdk-utils-azure.ResolveEventgridNamespaceTopicProps.html" class="tsd-signature-type tsd-kind-interface">ResolveEventgridNamespaceTopicProps</a><span class="tsd-signature-symbol">,</span><br/>    <span class="tsd-kind-parameter">resourceOptions</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ResourceOptions</span><span class="tsd-signature-symbol">,</span><br/><span class="tsd-signature-symbol">)</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Output</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">GetNamespaceTopicResult</span><span class="tsd-signature-symbol">&gt;</span><a href="#resolveeventgridnamespacetopic-1" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></div>
+<div class="tsd-description">
+<div class="tsd-parameters">
+<h4 class="tsd-parameters-title">Parameters</h4>
+<ul class="tsd-parameter-list">
+<li><span><span class="tsd-kind-parameter">id</span>: <span class="tsd-signature-type">string</span></span>
+<div class="tsd-comment tsd-typography"><p>scoped id of the resource</p>
+</div></li>
+<li><span><span class="tsd-kind-parameter">scope</span>: <a href="_gradientedge_cdk-utils-azure.CommonAzureConstruct.html" class="tsd-signature-type tsd-kind-class">CommonAzureConstruct</a></span>
+<div class="tsd-comment tsd-typography"><p>scope in which this resource is defined</p>
+</div></li>
+<li><span><span class="tsd-kind-parameter">props</span>: <a href="../interfaces/_gradientedge_cdk-utils-azure.ResolveEventgridNamespaceTopicProps.html" class="tsd-signature-type tsd-kind-interface">ResolveEventgridNamespaceTopicProps</a></span>
+<div class="tsd-comment tsd-typography"><p>eventgrid namespace topic properties</p>
+</div></li>
+<li><span><code class="tsd-tag">Optional</code><span class="tsd-kind-parameter">resourceOptions</span>: <span class="tsd-signature-type">ResourceOptions</span></span>
+<div class="tsd-comment tsd-typography"><p>Optional settings to control resource behaviour</p>
+</div></li></ul></div>
+<h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Output</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">GetNamespaceTopicResult</span><span class="tsd-signature-symbol">&gt;</span></h4>
+<div class="tsd-comment tsd-typography">
+<div class="tsd-tag-see">
+<h4 class="tsd-anchor-link" id="see-7">See<a href="#see-7" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>[Pulumi Azure Native Event Grid Namespace Topic Lookup]<a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/namespacetopic/">https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/namespacetopic/</a></p>
+</div></div><aside class="tsd-sources">
+<ul>
+<li>Defined in <a href="https://github.com/gradientedge/cdk-utils/blob/main/packages/azure/src/services/eventgrid/main.ts#L332">packages/azure/src/services/eventgrid/main.ts:332</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="resolveeventgridsystemtopic"><span>resolve<wbr/>Eventgrid<wbr/>System<wbr/>Topic</span><a href="#resolveeventgridsystemtopic" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -196,10 +312,10 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Output</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">GetSystemTopicResult</span><span class="tsd-signature-symbol">&gt;</span></h4>
 <div class="tsd-comment tsd-typography">
 <div class="tsd-tag-see">
-<h4 class="tsd-anchor-link" id="see-4">See<a href="#see-4" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>[Pulumi Azure Native Event Grid System Topic Lookup]<a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/getsystemtopic/">https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/getsystemtopic/</a></p>
+<h4 class="tsd-anchor-link" id="see-8">See<a href="#see-8" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>[Pulumi Azure Native Event Grid System Topic Lookup]<a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/getsystemtopic/">https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/getsystemtopic/</a></p>
 </div></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gradientedge/cdk-utils/blob/main/packages/azure/src/services/eventgrid/main.ts#L232">packages/azure/src/services/eventgrid/main.ts:232</a></li></ul></aside></div></li></ul></section>
+<li>Defined in <a href="https://github.com/gradientedge/cdk-utils/blob/main/packages/azure/src/services/eventgrid/main.ts#L473">packages/azure/src/services/eventgrid/main.ts:473</a></li></ul></aside></div></li></ul></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="resolveeventgridtopic"><span>resolve<wbr/>Eventgrid<wbr/>Topic</span><a href="#resolveeventgridtopic" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <ul class="tsd-signatures">
@@ -224,10 +340,10 @@
 <h4 class="tsd-returns-title">Returns <span class="tsd-signature-type">Output</span><span class="tsd-signature-symbol">&lt;</span><span class="tsd-signature-type">GetTopicResult</span><span class="tsd-signature-symbol">&gt;</span></h4>
 <div class="tsd-comment tsd-typography">
 <div class="tsd-tag-see">
-<h4 class="tsd-anchor-link" id="see-5">See<a href="#see-5" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>[Pulumi Azure Native Event Grid Topic Lookup]<a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/topic/">https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/topic/</a></p>
+<h4 class="tsd-anchor-link" id="see-9">See<a href="#see-9" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><p>[Pulumi Azure Native Event Grid Topic Lookup]<a href="https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/topic/">https://www.pulumi.com/registry/packages/azure-native/api-docs/eventgrid/topic/</a></p>
 </div></div><aside class="tsd-sources">
 <ul>
-<li>Defined in <a href="https://github.com/gradientedge/cdk-utils/blob/main/packages/azure/src/services/eventgrid/main.ts#L95">packages/azure/src/services/eventgrid/main.ts:95</a></li></ul></aside></div></li></ul></section></section></details></div>
+<li>Defined in <a href="https://github.com/gradientedge/cdk-utils/blob/main/packages/azure/src/services/eventgrid/main.ts#L106">packages/azure/src/services/eventgrid/main.ts:106</a></li></ul></aside></div></li></ul></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
@@ -245,7 +361,7 @@
 <details open class="tsd-accordion tsd-page-navigation-section"><summary class="tsd-accordion-summary" data-key="section-Constructors"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>Constructors</summary>
 <div><a href="#constructor"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Constructor"><use href="../assets/icons.svg#icon-512"></use></svg><span>constructor</span></a></div></details>
 <details open class="tsd-accordion tsd-page-navigation-section"><summary class="tsd-accordion-summary" data-key="section-Methods"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><use href="../assets/icons.svg#icon-chevronDown"></use></svg>Methods</summary>
-<div><a href="#createeventgridsubscription"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Eventgrid<wbr/>Subscription</span></a><a href="#createeventgridsystemtopic"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Eventgrid<wbr/>System<wbr/>Topic</span></a><a href="#createeventgridsystemtopiceventsubscription"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Eventgrid<wbr/>System<wbr/>Topic<wbr/>Event<wbr/>Subscription</span></a><a href="#createeventgridtopic"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Eventgrid<wbr/>Topic</span></a><a href="#resolveeventgridsystemtopic"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>resolve<wbr/>Eventgrid<wbr/>System<wbr/>Topic</span></a><a href="#resolveeventgridtopic"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>resolve<wbr/>Eventgrid<wbr/>Topic</span></a></div></details></div></details></div>
+<div><a href="#createeventgridnamespace"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Eventgrid<wbr/>Namespace</span></a><a href="#createeventgridnamespacetopic"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Eventgrid<wbr/>Namespace<wbr/>Topic</span></a><a href="#createeventgridsubscription"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Eventgrid<wbr/>Subscription</span></a><a href="#createeventgridsystemtopic"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Eventgrid<wbr/>System<wbr/>Topic</span></a><a href="#createeventgridsystemtopiceventsubscription"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Eventgrid<wbr/>System<wbr/>Topic<wbr/>Event<wbr/>Subscription</span></a><a href="#createeventgridtopic"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>create<wbr/>Eventgrid<wbr/>Topic</span></a><a href="#resolveeventgridnamespace"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>resolve<wbr/>Eventgrid<wbr/>Namespace</span></a><a href="#resolveeventgridnamespacetopic"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>resolve<wbr/>Eventgrid<wbr/>Namespace<wbr/>Topic</span></a><a href="#resolveeventgridsystemtopic"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>resolve<wbr/>Eventgrid<wbr/>System<wbr/>Topic</span></a><a href="#resolveeventgridtopic"><svg class="tsd-kind-icon" viewBox="0 0 24 24" aria-label="Method"><use href="../assets/icons.svg#icon-2048"></use></svg><span>resolve<wbr/>Eventgrid<wbr/>Topic</span></a></div></details></div></details></div>
 <div class="site-menu">
 <nav class="tsd-navigation"><a href="../modules.html">GradientEdge CDK Utils</a>
 <ul class="tsd-small-nested-navigation" id="tsd-nav-container">
