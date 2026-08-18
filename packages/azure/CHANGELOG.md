@@ -1,5 +1,13 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.59.2
+
+### Patch Changes
+
+- [#1162](https://github.com/gradientedge/cdk-utils/pull/1162) [`b509195`](https://github.com/gradientedge/cdk-utils/commit/b509195dde2e5c75e7d77988a777ebcace173c44) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - feat: set contentVersion to static in flex consumption function
+
+- [#1163](https://github.com/gradientedge/cdk-utils/pull/1163) [`3ac0235`](https://github.com/gradientedge/cdk-utils/commit/3ac023517951f876543d6016fb6505ca4392c407) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - feat: add Azure event grid namespace resources
+
 ## 2.59.1
 
 ### Patch Changes
