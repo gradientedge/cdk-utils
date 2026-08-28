@@ -106,7 +106,7 @@ jobs:
       - name: Build Production
         run: pnpm build:production
       - name: Create Release Pull Request or Publish
-        uses: changesets/action@v1
+        uses: changesets/action@v2
         with:
           title: 'chore: version packages'
           commit: 'chore: version packages'
