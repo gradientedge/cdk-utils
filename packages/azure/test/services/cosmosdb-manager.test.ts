@@ -416,3 +416,52 @@ describe('TestAzureCosmosDbConstruct - grantSqlRoleDefinitionToAccount Reader On
     expect(stackReaderOnly.construct).toBeDefined()
   })
 })
+
+/* --- Minimum TLS version default --- */
+
+class TestCosmosTlsConstruct extends CommonAzureConstruct {
+  declare props: TestAzureStackProps
+  cosmosDbAccount: DatabaseAccount
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.cosmosDbAccount = this.cosmosDbManager.createCosmosDbAccount(`test-cosmos-tls-${this.props.stage}`, this, {
+      accountName: 'test-cosmos-tls',
+      resourceGroupName: 'test-rg-dev',
+      databaseAccountOfferType: 'Standard',
+      consistencyPolicy: { defaultConsistencyLevel: 'Session' },
+      locations: [{ locationName: 'eastus', failoverPriority: 0 }],
+      minimalTlsVersion: 'Tls11',
+    } as any)
+  }
+}
+
+class TestCosmosTlsStack extends CommonAzureStack {
+  declare props: TestAzureStackProps
+  declare construct: TestCosmosTlsConstruct
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestCosmosTlsConstruct(props.name, this.props)
+  }
+}
+
+const cosmosTlsStack = new TestCosmosTlsStack('test-cosmos-tls-stack', testStackProps)
+
+describe('TestAzureCosmosDbConstruct - Minimum TLS Version', () => {
+  test('cosmos db account pins TLS 1.2', async () => {
+    await outputToPromise(
+      pulumi.all([minimalCosmosStack.construct.cosmosDbAccount.minimalTlsVersion]).apply(([minimalTlsVersion]) => {
+        expect(minimalTlsVersion).toEqual('Tls12')
+      })
+    )
+  })
+
+  test('cosmos db account ignores a caller attempt to weaken the minimum TLS version', async () => {
+    await outputToPromise(
+      pulumi.all([cosmosTlsStack.construct.cosmosDbAccount.minimalTlsVersion]).apply(([minimalTlsVersion]) => {
+        expect(minimalTlsVersion).toEqual('Tls12')
+      })
+    )
+  })
+})

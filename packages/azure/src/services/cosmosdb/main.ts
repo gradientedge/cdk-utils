@@ -2,6 +2,7 @@ import {
   DatabaseAccount,
   getDatabaseAccountOutput,
   getSqlResourceSqlRoleDefinitionOutput,
+  MinimalTlsVersion,
   ResourceIdentityType,
   SqlResourceSqlContainer,
   SqlResourceSqlDatabase,
@@ -69,6 +70,7 @@ export class AzureCosmosDbManager {
         ),
         disableLocalAuth: true,
         location: props.location ?? scope.props.location,
+        minimalTlsVersion: MinimalTlsVersion.Tls12,
         resourceGroupName,
         tags: {
           environment: scope.props.stage,
