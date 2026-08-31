@@ -150,7 +150,7 @@ describe('TestAzureStorageConstruct', () => {
           expect(name).toEqual('teststorageaccountdev')
           expect(location).toEqual('eastus')
           expect(sku).toEqual({ name: 'Standard_LRS' })
-          expect(minimumTlsVersion).toEqual('TLS1_3')
+          expect(minimumTlsVersion).toEqual('TLS1_2')
           expect(tags?.environment).toEqual('dev')
         })
     )
@@ -454,18 +454,18 @@ describe('TestAzureStorageConstruct - HTTPS Only', () => {
 })
 
 describe('TestAzureStorageConstruct - Minimum TLS Version', () => {
-  test('storage account pins TLS 1.3', async () => {
+  test('storage account pins TLS 1.2', async () => {
     await outputToPromise(
       pulumi.all([minimalStorageStack.construct.storageAccount.minimumTlsVersion]).apply(([minimumTlsVersion]) => {
-        expect(minimumTlsVersion).toEqual('TLS1_3')
+        expect(minimumTlsVersion).toEqual('TLS1_2')
       })
     )
   })
 
-  test('storage account ignores a caller value equal to the pin', async () => {
+  test('storage account ignores a caller asking for the unsupported TLS 1.3', async () => {
     await outputToPromise(
       pulumi.all([storageTlsStack.construct.hardenedAccount.minimumTlsVersion]).apply(([minimumTlsVersion]) => {
-        expect(minimumTlsVersion).toEqual('TLS1_3')
+        expect(minimumTlsVersion).toEqual('TLS1_2')
       })
     )
   })
@@ -473,7 +473,7 @@ describe('TestAzureStorageConstruct - Minimum TLS Version', () => {
   test('storage account ignores a caller attempt to weaken the minimum TLS version', async () => {
     await outputToPromise(
       pulumi.all([storageTlsStack.construct.weakenedAccount.minimumTlsVersion]).apply(([minimumTlsVersion]) => {
-        expect(minimumTlsVersion).toEqual('TLS1_3')
+        expect(minimumTlsVersion).toEqual('TLS1_2')
       })
     )
   })

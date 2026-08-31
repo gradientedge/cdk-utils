@@ -84,7 +84,9 @@ export class AzureStorageManager {
         // so there is no stronger value for a caller to ask for.
         enableHttpsTrafficOnly: true,
         isHnsEnabled: props.isHnsEnabled ?? false,
-        minimumTlsVersion: MinimumTlsVersion.TLS1_3,
+        // TLS1_3 exists in the enum but the storage API rejects it: "Minimum TLS
+        // version 1.3 version is not supported". TLS1_2 is the highest it accepts.
+        minimumTlsVersion: MinimumTlsVersion.TLS1_2,
         resourceGroupName,
         sku: props.sku ?? {
           name: SkuName.Standard_LRS,
