@@ -12,10 +12,11 @@ updates:
     allow:
       - dependency-type: 'direct'
     versioning-strategy: increase
-    # Match the pnpm `minimumReleaseAge: 2880` (48h) gate in pnpm-workspace.yaml
-    # so Dependabot does not raise PRs for releases pnpm would still hold back.
+    # Hold new releases for 7 days before proposing them. This is stricter than the
+    # pnpm `minimumReleaseAge: 2880` (48h) gate in pnpm-workspace.yaml, so a PR
+    # raised here is never one pnpm would refuse to install.
     cooldown:
-      default-days: 2
+      default-days: 7
 
   - package-ecosystem: 'github-actions'
     directory: '/'
@@ -23,3 +24,8 @@ updates:
       interval: 'weekly'
       time: '09:00'
       timezone: 'Europe/London'
+    # Same 7 day window as the npm entry above. pnpm's `minimumReleaseAge` gate does
+    # not reach GitHub Actions, so this cooldown is the only thing holding back a
+    # freshly published action version here.
+    cooldown:
+      default-days: 7
