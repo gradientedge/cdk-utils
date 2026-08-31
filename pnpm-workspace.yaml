@@ -38,7 +38,7 @@ saveWorkspaceProtocol: 'rolling'
 strictPeerDependencies: false
 # Refuse a package update that weakens the provenance or attestation guarantees
 # the currently locked version already satisfies.
-trustPolicy: 'no-downgrade'
+trustPolicy: no-downgrade
 allowBuilds:
   '@pulumi/command': true
   '@pulumi/std': true
