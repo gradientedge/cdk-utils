@@ -3,6 +3,10 @@ packages:
   - 'app/**'
 overrides:
   '@opentelemetry/core': 2.8.0
+  # minimatch@10.2.5 in the lint and docs toolchain resolves brace-expansion 5.0.8,
+  # which GHSA-rgw5-rvv9-x895 affects. 5.0.9 is the fix for that branch, and the
+  # runtime path through @pulumi/pulumi already resolves to it.
+  brace-expansion: 5.0.9
   js-yaml: 4.3.2
   protobufjs: 8.6.6
   # read-yaml-file@1 calls js-yaml.safeLoad which was removed in js-yaml 4.
