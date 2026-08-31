@@ -394,3 +394,64 @@ describe('TestAzureStorageConstruct - ManagementPolicy and Table', () => {
     )
   })
 })
+
+/* --- Minimum TLS version floor --- */
+
+class TestStorageTlsConstruct extends CommonAzureConstruct {
+  declare props: TestAzureStackProps
+  hardenedAccount: StorageAccount
+  weakenedAccount: StorageAccount
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.hardenedAccount = this.storageManager.createStorageAccount(`test-storage-tls13-${this.props.stage}`, this, {
+      accountName: 'teststoragetlsthree',
+      resourceGroupName: 'test-rg-dev',
+      minimumTlsVersion: 'TLS1_3',
+    } as any)
+
+    this.weakenedAccount = this.storageManager.createStorageAccount(`test-storage-tls10-${this.props.stage}`, this, {
+      accountName: 'teststoragetlszero',
+      resourceGroupName: 'test-rg-dev',
+      minimumTlsVersion: 'TLS1_0',
+    } as any)
+  }
+}
+
+class TestStorageTlsStack extends CommonAzureStack {
+  declare props: TestAzureStackProps
+  declare construct: TestStorageTlsConstruct
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestStorageTlsConstruct(props.name, this.props)
+  }
+}
+
+const storageTlsStack = new TestStorageTlsStack('test-storage-tls-stack', testStackProps)
+
+describe('TestAzureStorageConstruct - Minimum TLS Version', () => {
+  test('storage account applies the TLS 1.2 floor when not provided', async () => {
+    await outputToPromise(
+      pulumi.all([minimalStorageStack.construct.storageAccount.minimumTlsVersion]).apply(([minimumTlsVersion]) => {
+        expect(minimumTlsVersion).toEqual('TLS1_2')
+      })
+    )
+  })
+
+  test('storage account lets a caller harden the minimum TLS version to 1.3', async () => {
+    await outputToPromise(
+      pulumi.all([storageTlsStack.construct.hardenedAccount.minimumTlsVersion]).apply(([minimumTlsVersion]) => {
+        expect(minimumTlsVersion).toEqual('TLS1_3')
+      })
+    )
+  })
+
+  test('storage account ignores a caller attempt to weaken the minimum TLS version', async () => {
+    await outputToPromise(
+      pulumi.all([storageTlsStack.construct.weakenedAccount.minimumTlsVersion]).apply(([minimumTlsVersion]) => {
+        expect(minimumTlsVersion).toEqual('TLS1_2')
+      })
+    )
+  })
+})

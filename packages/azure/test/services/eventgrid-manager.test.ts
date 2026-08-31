@@ -631,7 +631,7 @@ describe('TestAzureEventgridConstruct - Default Values', () => {
     )
   })
 
-  test('eventgrid topic uses default minimum tls version when not provided', async () => {
+  test('eventgrid topic applies the minimum tls version pin when not provided', async () => {
     await outputToPromise(
       pulumi
         .all([minimalEventgridStack.construct.eventgridTopic.minimumTlsVersionAllowed])
@@ -727,6 +727,46 @@ describe('TestAzureEventgridConstruct - Default Values', () => {
         .apply(resolvedEventgridSystemTopic => {
           expect((resolvedEventgridSystemTopic as any).systemTopicName).toEqual('test-minimal-eg-sys-topic')
           expect((resolvedEventgridSystemTopic as any).resourceGroupName).toEqual('test-rg-dev')
+        })
+    )
+  })
+})
+
+/* --- Minimum TLS version pin --- */
+
+class TestEventgridTlsConstruct extends CommonAzureConstruct {
+  declare props: TestAzureStackProps
+  eventgridTopic: Topic
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.eventgridTopic = this.eventgridManager.createEventgridTopic(`test-eg-tls-${this.props.stage}`, this, {
+      topicName: 'test-eg-tls',
+      resourceGroupName: 'test-rg-dev',
+      minimumTlsVersionAllowed: '1.0',
+    } as EventgridTopicProps)
+  }
+}
+
+class TestEventgridTlsStack extends CommonAzureStack {
+  declare props: TestAzureStackProps
+  declare construct: TestEventgridTlsConstruct
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestEventgridTlsConstruct(props.name, this.props)
+  }
+}
+
+const eventgridTlsStack = new TestEventgridTlsStack('test-eg-tls-stack', testStackProps)
+
+describe('TestAzureEventgridConstruct - Minimum TLS Version', () => {
+  test('eventgrid topic ignores a caller attempt to weaken the minimum tls version', async () => {
+    await outputToPromise(
+      pulumi
+        .all([eventgridTlsStack.construct.eventgridTopic.minimumTlsVersionAllowed])
+        .apply(([minimumTlsVersionAllowed]) => {
+          expect(minimumTlsVersionAllowed).toEqual('1.2')
         })
     )
   })

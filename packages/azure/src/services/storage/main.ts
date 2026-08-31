@@ -81,7 +81,10 @@ export class AzureStorageManager {
           .toLowerCase(),
         allowBlobPublicAccess: props.allowBlobPublicAccess ?? false,
         isHnsEnabled: props.isHnsEnabled ?? false,
-        minimumTlsVersion: props.minimumTlsVersion ?? MinimumTlsVersion.TLS1_2,
+        // A floor, not a fixed value: a caller may harden the account to TLS 1.3 but
+        // cannot drop it below TLS 1.2.
+        minimumTlsVersion:
+          props.minimumTlsVersion === MinimumTlsVersion.TLS1_3 ? MinimumTlsVersion.TLS1_3 : MinimumTlsVersion.TLS1_2,
         resourceGroupName,
         sku: props.sku ?? {
           name: SkuName.Standard_LRS,
