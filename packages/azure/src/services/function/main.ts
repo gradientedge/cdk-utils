@@ -68,6 +68,7 @@ export class AzureFunctionManager {
         siteConfig: output(props.siteConfig).apply(siteConfig => ({
           ...siteConfig,
           ftpsState: siteConfig?.ftpsState ?? FtpsState.FtpsOnly,
+          http20Enabled: siteConfig?.http20Enabled ?? true,
           minTlsVersion: SupportedTlsVersions.SupportedTlsVersions_1_3,
         })),
         tags: {
@@ -269,6 +270,7 @@ export class AzureFunctionManager {
           siteConfig: output(props.siteConfig).apply(siteConfig => ({
             ...siteConfig,
             ftpsState: siteConfig?.ftpsState ?? FtpsState.FtpsOnly,
+            http20Enabled: siteConfig?.http20Enabled ?? true,
             minTlsVersion: SupportedTlsVersions.SupportedTlsVersions_1_3,
           })),
           functionAppConfig: {

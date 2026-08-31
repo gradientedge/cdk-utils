@@ -410,6 +410,22 @@ describe('TestAzureAppServiceConstruct - Minimum TLS Version', () => {
     )
   })
 
+  test('linux web app enables HTTP/2 by default', async () => {
+    await outputToPromise(
+      pulumi.all([minimalWebAppStack.construct.linuxWebApp.siteConfig]).apply(([siteConfig]) => {
+        expect(siteConfig?.http20Enabled).toEqual(true)
+      })
+    )
+  })
+
+  test('web app slot enables HTTP/2 by default', async () => {
+    await outputToPromise(
+      pulumi.all([minimalWebAppStack.construct.webAppSlot.siteConfig]).apply(([siteConfig]) => {
+        expect(siteConfig?.http20Enabled).toEqual(true)
+      })
+    )
+  })
+
   test('linux web app pins TLS 1.3', async () => {
     await outputToPromise(
       pulumi.all([minimalWebAppStack.construct.linuxWebApp.siteConfig]).apply(([siteConfig]) => {

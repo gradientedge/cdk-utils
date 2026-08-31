@@ -496,6 +496,24 @@ describe('TestAzureFunctionConstruct - Minimum TLS Version', () => {
     )
   })
 
+  test('function app enables HTTP/2 by default', async () => {
+    await outputToPromise(
+      pulumi.all([minimalStack.construct.functionApp.siteConfig]).apply(([siteConfig]) => {
+        expect(siteConfig?.http20Enabled).toEqual(true)
+      })
+    )
+  })
+
+  test('flex consumption resource enables HTTP/2 by default', async () => {
+    await outputToPromise(
+      pulumi
+        .all([minimalStack.construct.functionAppFlexConsumptionResource.properties])
+        .apply(([properties]: any[]) => {
+          expect(properties?.siteConfig?.http20Enabled).toEqual(true)
+        })
+    )
+  })
+
   test('function app pins TLS 1.3', async () => {
     await outputToPromise(
       pulumi.all([minimalStack.construct.functionApp.siteConfig]).apply(([siteConfig]) => {
