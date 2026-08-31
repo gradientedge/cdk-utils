@@ -1,6 +1,7 @@
 import { Deployment, DeploymentMode, Resource } from '@pulumi/azure-native/resources/index.js'
 import {
   ClientCertMode,
+  FtpsState,
   ManagedServiceIdentityType,
   SupportedTlsVersions,
   WebApp,
@@ -66,6 +67,7 @@ export class AzureFunctionManager {
         },
         siteConfig: output(props.siteConfig).apply(siteConfig => ({
           ...siteConfig,
+          ftpsState: siteConfig?.ftpsState ?? FtpsState.FtpsOnly,
           minTlsVersion: SupportedTlsVersions.SupportedTlsVersions_1_3,
         })),
         tags: {
@@ -179,6 +181,7 @@ export class AzureFunctionManager {
         },
         siteConfig: output(props.siteConfig).apply(siteConfig => ({
           ...siteConfig,
+          ftpsState: siteConfig?.ftpsState ?? FtpsState.FtpsOnly,
           http20Enabled: siteConfig?.http20Enabled ?? true,
           linuxFxVersion:
             siteConfig?.linuxFxVersion ??
@@ -265,6 +268,7 @@ export class AzureFunctionManager {
           serverFarmId: props.serverFarmId,
           siteConfig: output(props.siteConfig).apply(siteConfig => ({
             ...siteConfig,
+            ftpsState: siteConfig?.ftpsState ?? FtpsState.FtpsOnly,
             minTlsVersion: SupportedTlsVersions.SupportedTlsVersions_1_3,
           })),
           functionAppConfig: {

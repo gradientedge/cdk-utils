@@ -470,6 +470,32 @@ class TestTlsCommonStack extends CommonAzureStack {
 const tlsStack = new TestTlsCommonStack('test-tls-stack', testStackProps)
 
 describe('TestAzureFunctionConstruct - Minimum TLS Version', () => {
+  test('function app defaults ftpsState to FtpsOnly', async () => {
+    await outputToPromise(
+      pulumi.all([minimalStack.construct.functionApp.siteConfig]).apply(([siteConfig]) => {
+        expect(siteConfig?.ftpsState).toEqual('FtpsOnly')
+      })
+    )
+  })
+
+  test('flex consumption function app defaults ftpsState to FtpsOnly', async () => {
+    await outputToPromise(
+      pulumi.all([minimalStack.construct.functionAppFlexConsumption.siteConfig]).apply(([siteConfig]) => {
+        expect(siteConfig?.ftpsState).toEqual('FtpsOnly')
+      })
+    )
+  })
+
+  test('flex consumption resource defaults ftpsState to FtpsOnly', async () => {
+    await outputToPromise(
+      pulumi
+        .all([minimalStack.construct.functionAppFlexConsumptionResource.properties])
+        .apply(([properties]: any[]) => {
+          expect(properties?.siteConfig?.ftpsState).toEqual('FtpsOnly')
+        })
+    )
+  })
+
   test('function app pins TLS 1.3', async () => {
     await outputToPromise(
       pulumi.all([minimalStack.construct.functionApp.siteConfig]).apply(([siteConfig]) => {

@@ -1,5 +1,6 @@
 import {
   AppServicePlan,
+  FtpsState,
   ManagedServiceIdentityType,
   SupportedTlsVersions,
   WebApp,
@@ -115,6 +116,7 @@ export class AzureAppServiceManager {
         siteConfig: output(props.siteConfig).apply(siteConfig => ({
           ...siteConfig,
           alwaysOn: siteConfig?.alwaysOn ?? true,
+          ftpsState: siteConfig?.ftpsState ?? FtpsState.FtpsOnly,
           linuxFxVersion: siteConfig?.linuxFxVersion ?? 'NODE|22-lts',
           minTlsVersion: SupportedTlsVersions.SupportedTlsVersions_1_3,
         })),
@@ -163,6 +165,7 @@ export class AzureAppServiceManager {
         siteConfig: output(props.siteConfig).apply(siteConfig => ({
           ...siteConfig,
           alwaysOn: siteConfig?.alwaysOn ?? true,
+          ftpsState: siteConfig?.ftpsState ?? FtpsState.FtpsOnly,
           linuxFxVersion: siteConfig?.linuxFxVersion ?? 'NODE|22-lts',
           minTlsVersion: SupportedTlsVersions.SupportedTlsVersions_1_3,
         })),

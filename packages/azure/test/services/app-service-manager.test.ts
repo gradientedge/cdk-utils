@@ -360,7 +360,7 @@ class TestTlsOverrideConstruct extends CommonAzureConstruct {
       name: 'test-tls-web-app',
       resourceGroupName: 'test-rg-dev',
       serverFarmId: '/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.Web/serverfarms/test',
-      siteConfig: { minTlsVersion: '1.2' },
+      siteConfig: { minTlsVersion: '1.2', ftpsState: 'AllAllowed' },
     } as any)
 
     this.webAppSlot = this.appServiceManager.createWebAppSlot(`test-tls-was-${this.props.stage}`, this, {
@@ -386,6 +386,30 @@ class TestTlsOverrideStack extends CommonAzureStack {
 const tlsOverrideStack = new TestTlsOverrideStack('test-tls-override-stack', testStackProps)
 
 describe('TestAzureAppServiceConstruct - Minimum TLS Version', () => {
+  test('linux web app defaults ftpsState to FtpsOnly', async () => {
+    await outputToPromise(
+      pulumi.all([minimalWebAppStack.construct.linuxWebApp.siteConfig]).apply(([siteConfig]) => {
+        expect(siteConfig?.ftpsState).toEqual('FtpsOnly')
+      })
+    )
+  })
+
+  test('web app slot defaults ftpsState to FtpsOnly', async () => {
+    await outputToPromise(
+      pulumi.all([minimalWebAppStack.construct.webAppSlot.siteConfig]).apply(([siteConfig]) => {
+        expect(siteConfig?.ftpsState).toEqual('FtpsOnly')
+      })
+    )
+  })
+
+  test('linux web app lets the caller override ftpsState', async () => {
+    await outputToPromise(
+      pulumi.all([tlsOverrideStack.construct.linuxWebApp.siteConfig]).apply(([siteConfig]) => {
+        expect(siteConfig?.ftpsState).toEqual('AllAllowed')
+      })
+    )
+  })
+
   test('linux web app pins TLS 1.3', async () => {
     await outputToPromise(
       pulumi.all([minimalWebAppStack.construct.linuxWebApp.siteConfig]).apply(([siteConfig]) => {
