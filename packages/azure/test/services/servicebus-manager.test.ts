@@ -638,17 +638,9 @@ class TestServiceBusWeakTlsStack extends CommonAzureStack {
 const sbWeakTlsStack = new TestServiceBusWeakTlsStack('test-sb-weak-tls-stack', testStackProps)
 
 describe('TestAzureServiceBusConstruct - Minimum TLS Version', () => {
-  test('service bus namespace pins TLS 1.2', async () => {
+  test('service bus namespace pins TLS 1.3', async () => {
     await outputToPromise(
       pulumi.all([minimalSbStack.construct.serviceBusNamespace.minimumTlsVersion]).apply(([minimumTlsVersion]) => {
-        expect(minimumTlsVersion).toEqual('1.2')
-      })
-    )
-  })
-
-  test('service bus namespace lets a caller harden the minimum TLS version to 1.3', async () => {
-    await outputToPromise(
-      pulumi.all([sbTlsStack.construct.serviceBusNamespace.minimumTlsVersion]).apply(([minimumTlsVersion]) => {
         expect(minimumTlsVersion).toEqual('1.3')
       })
     )
@@ -657,7 +649,15 @@ describe('TestAzureServiceBusConstruct - Minimum TLS Version', () => {
   test('service bus namespace ignores a caller attempt to weaken the minimum TLS version', async () => {
     await outputToPromise(
       pulumi.all([sbWeakTlsStack.construct.serviceBusNamespace.minimumTlsVersion]).apply(([minimumTlsVersion]) => {
-        expect(minimumTlsVersion).toEqual('1.2')
+        expect(minimumTlsVersion).toEqual('1.3')
+      })
+    )
+  })
+
+  test('service bus namespace ignores a caller value equal to the pin', async () => {
+    await outputToPromise(
+      pulumi.all([sbTlsStack.construct.serviceBusNamespace.minimumTlsVersion]).apply(([minimumTlsVersion]) => {
+        expect(minimumTlsVersion).toEqual('1.3')
       })
     )
   })

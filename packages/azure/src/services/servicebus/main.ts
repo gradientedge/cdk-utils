@@ -97,12 +97,7 @@ export class AzureServiceBusManager {
         identity: namespaceProps.identity ?? {
           type: ManagedServiceIdentityType.SystemAssigned,
         },
-        // A floor, not a fixed value: a caller may harden the namespace to 1.3 but
-        // cannot drop it below 1.2.
-        minimumTlsVersion:
-          namespaceProps.minimumTlsVersion === TlsVersion.TlsVersion_1_3
-            ? TlsVersion.TlsVersion_1_3
-            : TlsVersion.TlsVersion_1_2,
+        minimumTlsVersion: TlsVersion.TlsVersion_1_3,
         sku,
         tags: {
           environment: scope.props.stage,
