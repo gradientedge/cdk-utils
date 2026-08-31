@@ -212,3 +212,50 @@ describe('TestAzureRedisConstruct', () => {
     )
   })
 })
+
+/* --- Minimum TLS version default --- */
+
+class TestRedisTlsConstruct extends CommonAzureConstruct {
+  declare props: TestAzureStackProps
+  redisResult: ManagedRedisResult
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.redisResult = this.redisManager.createManagedRedis(`test-redis-tls-${this.props.stage}`, this, {
+      clusterName: 'test-redis-tls',
+      resourceGroupName: 'test-rg-dev',
+      sku: { name: 'Balanced_B0' },
+      minimumTlsVersion: '1.1',
+    } as any)
+  }
+}
+
+class TestRedisTlsStack extends CommonAzureStack {
+  declare props: TestAzureStackProps
+  declare construct: TestRedisTlsConstruct
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestRedisTlsConstruct(props.name, this.props)
+  }
+}
+
+const redisTlsStack = new TestRedisTlsStack('test-redis-tls-stack', testStackProps)
+
+describe('TestAzureRedisConstruct - Minimum TLS Version', () => {
+  test('redis cluster pins TLS 1.2', async () => {
+    await outputToPromise(
+      pulumi.all([minimalRedisStack.construct.redisResult.cluster.minimumTlsVersion]).apply(([minimumTlsVersion]) => {
+        expect(minimumTlsVersion).toEqual('1.2')
+      })
+    )
+  })
+
+  test('redis cluster ignores a caller attempt to weaken the minimum TLS version', async () => {
+    await outputToPromise(
+      pulumi.all([redisTlsStack.construct.redisResult.cluster.minimumTlsVersion]).apply(([minimumTlsVersion]) => {
+        expect(minimumTlsVersion).toEqual('1.2')
+      })
+    )
+  })
+})

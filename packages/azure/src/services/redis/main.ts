@@ -7,6 +7,7 @@ import {
   Protocol,
   RedisEnterprise,
   SkuName,
+  TlsVersion,
 } from '@pulumi/azure-native/redisenterprise/index.js'
 import { ResourceOptions } from '@pulumi/pulumi'
 
@@ -65,6 +66,7 @@ export class AzureRedisManager {
         ),
         location: clusterProps.location ?? scope.props.location,
         resourceGroupName,
+        minimumTlsVersion: TlsVersion.TlsVersion_1_2,
         publicNetworkAccess: clusterProps.publicNetworkAccess ?? 'Enabled',
         sku: clusterProps.sku ?? {
           name: SkuName.Balanced_B0,
