@@ -5,7 +5,7 @@ import {
   WebApp,
   WebAppSlot,
 } from '@pulumi/azure-native/web/index.js'
-import { ResourceOptions } from '@pulumi/pulumi'
+import { output, ResourceOptions } from '@pulumi/pulumi'
 
 import { CommonAzureConstruct } from '../../common/index.js'
 
@@ -112,11 +112,12 @@ export class AzureAppServiceManager {
         identity: props.identity ?? {
           type: ManagedServiceIdentityType.SystemAssigned,
         },
-        siteConfig: props.siteConfig ?? {
-          alwaysOn: true,
-          linuxFxVersion: 'NODE|22-lts',
+        siteConfig: output(props.siteConfig).apply(siteConfig => ({
+          ...siteConfig,
+          alwaysOn: siteConfig?.alwaysOn ?? true,
+          linuxFxVersion: siteConfig?.linuxFxVersion ?? 'NODE|22-lts',
           minTlsVersion: SupportedTlsVersions.SupportedTlsVersions_1_3,
-        },
+        })),
         tags: {
           environment: scope.props.stage,
           ...scope.props.defaultTags,
@@ -159,11 +160,12 @@ export class AzureAppServiceManager {
         identity: props.identity ?? {
           type: ManagedServiceIdentityType.SystemAssigned,
         },
-        siteConfig: props.siteConfig ?? {
-          alwaysOn: true,
-          linuxFxVersion: 'NODE|22-lts',
+        siteConfig: output(props.siteConfig).apply(siteConfig => ({
+          ...siteConfig,
+          alwaysOn: siteConfig?.alwaysOn ?? true,
+          linuxFxVersion: siteConfig?.linuxFxVersion ?? 'NODE|22-lts',
           minTlsVersion: SupportedTlsVersions.SupportedTlsVersions_1_3,
-        },
+        })),
         tags: {
           environment: scope.props.stage,
           ...scope.props.defaultTags,

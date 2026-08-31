@@ -426,3 +426,92 @@ describe('TestAzureFunctionConstruct - Props Undefined', () => {
     }).toThrow('Props undefined for test-flex-res-err')
   })
 })
+
+/* --- Minimum TLS version defaults, and their survival across a partial siteConfig override --- */
+
+class TestTlsConstruct extends CommonAzureConstruct {
+  declare props: TestMinimalAzureStackProps
+  functionApp: WebApp
+  functionAppFlexConsumption: WebApp
+
+  constructor(name: string, props: TestMinimalAzureStackProps) {
+    super(name, props)
+
+    this.functionApp = this.functionManager.createFunctionApp(`test-tls-fa-${this.props.stage}`, this, {
+      name: 'test-tls-function-app',
+      resourceGroupName: 'test-rg-dev',
+      serverFarmId: '/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.Web/serverfarms/test-asp',
+      siteConfig: { minTlsVersion: '1.2' },
+    } as any)
+
+    this.functionAppFlexConsumption = this.functionManager.createFunctionAppFlexConsumption(
+      `test-tls-flex-${this.props.stage}`,
+      this,
+      {
+        name: 'test-tls-flex-consumption',
+        resourceGroupName: 'test-rg-dev',
+        serverFarmId: '/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.Web/serverfarms/test-asp',
+        siteConfig: { alwaysOn: true },
+      } as any
+    )
+  }
+}
+
+class TestTlsCommonStack extends CommonAzureStack {
+  declare props: TestMinimalAzureStackProps
+  declare construct: TestTlsConstruct
+
+  constructor(name: string, props: TestMinimalAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestTlsConstruct(props.name, this.props)
+  }
+}
+
+const tlsStack = new TestTlsCommonStack('test-tls-stack', testStackProps)
+
+describe('TestAzureFunctionConstruct - Minimum TLS Version', () => {
+  test('function app pins TLS 1.3', async () => {
+    await outputToPromise(
+      pulumi.all([minimalStack.construct.functionApp.siteConfig]).apply(([siteConfig]) => {
+        expect(siteConfig?.minTlsVersion).toEqual('1.3')
+      })
+    )
+  })
+
+  test('flex consumption function app pins TLS 1.3', async () => {
+    await outputToPromise(
+      pulumi.all([minimalStack.construct.functionAppFlexConsumption.siteConfig]).apply(([siteConfig]) => {
+        expect(siteConfig?.minTlsVersion).toEqual('1.3')
+        expect(siteConfig?.http20Enabled).toEqual(true)
+      })
+    )
+  })
+
+  test('flex consumption resource pins TLS 1.3', async () => {
+    await outputToPromise(
+      pulumi
+        .all([minimalStack.construct.functionAppFlexConsumptionResource.properties])
+        .apply(([properties]: any[]) => {
+          expect(properties?.siteConfig?.minTlsVersion).toEqual('1.3')
+        })
+    )
+  })
+
+  test('flex consumption keeps the TLS pin alongside caller-supplied siteConfig fields', async () => {
+    await outputToPromise(
+      pulumi.all([tlsStack.construct.functionAppFlexConsumption.siteConfig]).apply(([siteConfig]) => {
+        expect(siteConfig?.alwaysOn).toEqual(true)
+        expect(siteConfig?.minTlsVersion).toEqual('1.3')
+        expect(siteConfig?.http20Enabled).toEqual(true)
+      })
+    )
+  })
+
+  test('function app ignores a caller attempt to weaken the TLS version', async () => {
+    await outputToPromise(
+      pulumi.all([tlsStack.construct.functionApp.siteConfig]).apply(([siteConfig]) => {
+        expect(siteConfig?.minTlsVersion).toEqual('1.3')
+      })
+    )
+  })
+})

@@ -345,3 +345,86 @@ describe('TestAzureLinuxWebAppConstruct - Error Handling', () => {
     }).toThrow('Props undefined for test-was-err')
   })
 })
+
+/* --- Minimum TLS version defaults, and their survival across a partial siteConfig override --- */
+
+class TestTlsOverrideConstruct extends CommonAzureConstruct {
+  declare props: TestAzureStackProps
+  linuxWebApp: WebApp
+  webAppSlot: WebAppSlot
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+
+    this.linuxWebApp = this.appServiceManager.createLinuxWebApp(`test-tls-lwa-${this.props.stage}`, this, {
+      name: 'test-tls-web-app',
+      resourceGroupName: 'test-rg-dev',
+      serverFarmId: '/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.Web/serverfarms/test',
+      siteConfig: { minTlsVersion: '1.2' },
+    } as any)
+
+    this.webAppSlot = this.appServiceManager.createWebAppSlot(`test-tls-was-${this.props.stage}`, this, {
+      name: 'test-tls-web-app',
+      slot: 'blue',
+      resourceGroupName: 'test-rg-dev',
+      serverFarmId: '/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.Web/serverfarms/test',
+      siteConfig: { minTlsVersion: '1.2' },
+    } as any)
+  }
+}
+
+class TestTlsOverrideStack extends CommonAzureStack {
+  declare props: TestAzureStackProps
+  declare construct: TestTlsOverrideConstruct
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestTlsOverrideConstruct(props.name, this.props)
+  }
+}
+
+const tlsOverrideStack = new TestTlsOverrideStack('test-tls-override-stack', testStackProps)
+
+describe('TestAzureAppServiceConstruct - Minimum TLS Version', () => {
+  test('linux web app pins TLS 1.3', async () => {
+    await outputToPromise(
+      pulumi.all([minimalWebAppStack.construct.linuxWebApp.siteConfig]).apply(([siteConfig]) => {
+        expect(siteConfig?.minTlsVersion).toEqual('1.3')
+      })
+    )
+  })
+
+  test('web app slot pins TLS 1.3', async () => {
+    await outputToPromise(
+      pulumi.all([minimalWebAppStack.construct.webAppSlot.siteConfig]).apply(([siteConfig]) => {
+        expect(siteConfig?.minTlsVersion).toEqual('1.3')
+      })
+    )
+  })
+
+  test('linux web app keeps the TLS pin alongside caller-supplied siteConfig fields', async () => {
+    await outputToPromise(
+      pulumi.all([stack.construct.linuxWebApp.siteConfig]).apply(([siteConfig]) => {
+        expect(siteConfig?.alwaysOn).toEqual(true)
+        expect(siteConfig?.minTlsVersion).toEqual('1.3')
+        expect(siteConfig?.linuxFxVersion).toEqual('NODE|22-lts')
+      })
+    )
+  })
+
+  test('linux web app ignores a caller attempt to weaken the TLS version', async () => {
+    await outputToPromise(
+      pulumi.all([tlsOverrideStack.construct.linuxWebApp.siteConfig]).apply(([siteConfig]) => {
+        expect(siteConfig?.minTlsVersion).toEqual('1.3')
+      })
+    )
+  })
+
+  test('web app slot ignores a caller attempt to weaken the TLS version', async () => {
+    await outputToPromise(
+      pulumi.all([tlsOverrideStack.construct.webAppSlot.siteConfig]).apply(([siteConfig]) => {
+        expect(siteConfig?.minTlsVersion).toEqual('1.3')
+      })
+    )
+  })
+})

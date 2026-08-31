@@ -1,6 +1,12 @@
 import { Deployment, DeploymentMode, Resource } from '@pulumi/azure-native/resources/index.js'
-import { ClientCertMode, ManagedServiceIdentityType, WebApp, WebAppFunction } from '@pulumi/azure-native/web/index.js'
-import { ResourceOptions } from '@pulumi/pulumi'
+import {
+  ClientCertMode,
+  ManagedServiceIdentityType,
+  SupportedTlsVersions,
+  WebApp,
+  WebAppFunction,
+} from '@pulumi/azure-native/web/index.js'
+import { output, ResourceOptions } from '@pulumi/pulumi'
 import { v5 as uuidv5 } from 'uuid'
 
 import { CommonAzureConstruct, CommonAzureStack } from '../../common/index.js'
@@ -58,6 +64,10 @@ export class AzureFunctionManager {
         identity: props.identity ?? {
           type: ManagedServiceIdentityType.SystemAssigned,
         },
+        siteConfig: output(props.siteConfig).apply(siteConfig => ({
+          ...siteConfig,
+          minTlsVersion: SupportedTlsVersions.SupportedTlsVersions_1_3,
+        })),
         tags: {
           environment: scope.props.stage,
           ...scope.props.defaultTags,
@@ -167,10 +177,14 @@ export class AzureFunctionManager {
           runtime,
           scaleAndConcurrency,
         },
-        siteConfig: props.siteConfig ?? {
-          http20Enabled: true,
-          linuxFxVersion: `${props.runtime?.name ?? 'node'}|${props.runtime?.version ?? scope.props.runtimeVersion ?? CommonAzureStack.NODEJS_RUNTIME}`,
-        },
+        siteConfig: output(props.siteConfig).apply(siteConfig => ({
+          ...siteConfig,
+          http20Enabled: siteConfig?.http20Enabled ?? true,
+          linuxFxVersion:
+            siteConfig?.linuxFxVersion ??
+            `${props.runtime?.name ?? 'node'}|${props.runtime?.version ?? scope.props.runtimeVersion ?? CommonAzureStack.NODEJS_RUNTIME}`,
+          minTlsVersion: SupportedTlsVersions.SupportedTlsVersions_1_3,
+        })),
         tags: tags,
       },
       { parent: scope, ...resourceOptions }
@@ -249,7 +263,10 @@ export class AzureFunctionManager {
         properties: {
           httpsOnly: props.httpsOnly ?? true,
           serverFarmId: props.serverFarmId,
-          siteConfig: props.siteConfig,
+          siteConfig: output(props.siteConfig).apply(siteConfig => ({
+            ...siteConfig,
+            minTlsVersion: SupportedTlsVersions.SupportedTlsVersions_1_3,
+          })),
           functionAppConfig: {
             ...props.functionAppConfig,
             runtime: {
