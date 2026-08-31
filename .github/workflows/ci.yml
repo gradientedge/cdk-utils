@@ -20,6 +20,8 @@ jobs:
   validate:
     name: Build & Test Package(s)
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     strategy:
       matrix:
         node-version: [22.x, 24.x]
@@ -63,18 +65,23 @@ jobs:
         with:
           name: docs-artifact
           path: ./api-docs/
+          # The artifact is only a hand-off to the docs deployment, so let it expire
+          # on its own rather than deleting it with a third-party action.
+          retention-days: 1
 
   release:
     name: Release Package(s)
     if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && success() }}
     runs-on: ubuntu-latest
     needs: [validate]
+    permissions:
+      contents: write
+      pull-requests: write
     strategy:
       matrix:
         node-version: [24.x]
     env:
       GITHUB_TOKEN: ${{ secrets.GIT_TOKEN }}
-      NODE_AUTH_TOKEN: ${{ secrets.GIT_TOKEN }}
       HUSKY: 0
     steps:
       - name: Checkout Code
@@ -99,10 +106,6 @@ jobs:
             ${{ runner.os }}-pnpm-
       - name: Install Packages
         run: pnpm install --frozen-lockfile
-      - uses: actions/download-artifact@v8
-        with:
-          name: docs-artifact
-          path: ./api-docs/
       - name: Build Production
         run: pnpm build:production
       - name: Create Release Pull Request or Publish
@@ -115,13 +118,28 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
-      - name: Deploy Documentation
-        uses: peaceiris/actions-gh-pages@v4
+
+  deploy-docs:
+    name: Deploy Documentation
+    if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && success() }}
+    runs-on: ubuntu-latest
+    needs: [release]
+    # Pages deploys through its own OIDC flow, so this job needs no repository
+    # token and the release job needs no Pages permission.
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/download-artifact@v8
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./api-docs
-      - uses: geekyeggo/delete-artifact@v6
+          name: docs-artifact
+          path: ./api-docs/
+      - uses: actions/upload-pages-artifact@v4
         with:
-          name: |
-            docs-artifact
-          failOnError: false
+          path: ./api-docs
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
