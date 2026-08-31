@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.60.1
+
+### Patch Changes
+
+- [`e8a4049`](https://github.com/gradientedge/cdk-utils/commit/e8a4049141649d1abc4116fa302b677706fe9e7d) Thanks [@despock](https://github.com/despock)! - feat: default API Management named values to secret
+
 ## 2.60.0
 
 ### Minor Changes
