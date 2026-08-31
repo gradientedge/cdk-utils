@@ -80,6 +80,9 @@ export class AzureStorageManager {
           .replace(/\W/g, '')
           .toLowerCase(),
         allowBlobPublicAccess: props.allowBlobPublicAccess ?? false,
+        // Pinned rather than defaulted: plaintext HTTP is never a hardening choice,
+        // so there is no stronger value for a caller to ask for.
+        enableHttpsTrafficOnly: true,
         isHnsEnabled: props.isHnsEnabled ?? false,
         // A floor, not a fixed value: a caller may harden the account to TLS 1.3 but
         // cannot drop it below TLS 1.2.

@@ -414,6 +414,7 @@ class TestStorageTlsConstruct extends CommonAzureConstruct {
       accountName: 'teststoragetlszero',
       resourceGroupName: 'test-rg-dev',
       minimumTlsVersion: 'TLS1_0',
+      enableHttpsTrafficOnly: false,
     } as any)
   }
 }
@@ -429,6 +430,28 @@ class TestStorageTlsStack extends CommonAzureStack {
 }
 
 const storageTlsStack = new TestStorageTlsStack('test-storage-tls-stack', testStackProps)
+
+describe('TestAzureStorageConstruct - HTTPS Only', () => {
+  test('storage account requires HTTPS when not provided', async () => {
+    await outputToPromise(
+      pulumi
+        .all([minimalStorageStack.construct.storageAccount.enableHttpsTrafficOnly])
+        .apply(([enableHttpsTrafficOnly]) => {
+          expect(enableHttpsTrafficOnly).toEqual(true)
+        })
+    )
+  })
+
+  test('storage account ignores a caller attempt to allow plaintext HTTP', async () => {
+    await outputToPromise(
+      pulumi
+        .all([storageTlsStack.construct.weakenedAccount.enableHttpsTrafficOnly])
+        .apply(([enableHttpsTrafficOnly]) => {
+          expect(enableHttpsTrafficOnly).toEqual(true)
+        })
+    )
+  })
+})
 
 describe('TestAzureStorageConstruct - Minimum TLS Version', () => {
   test('storage account applies the TLS 1.2 floor when not provided', async () => {
