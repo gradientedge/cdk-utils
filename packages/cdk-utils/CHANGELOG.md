@@ -1,5 +1,43 @@
 # @gradientedge/cdk-utils
 
+## 11.61.0
+
+### Minor Changes
+
+- [`7505a0e`](https://github.com/gradientedge/cdk-utils/commit/7505a0e85fd1e0788755b191aa7adf5d58697e99) Thanks [@despock](https://github.com/despock)! - feat: bumping dependencies
+
+### Patch Changes
+
+- [`bc3da47`](https://github.com/gradientedge/cdk-utils/commit/bc3da47652a4ef4508543c7b37f31f781f62d486) Thanks [@despock](https://github.com/despock)! - feat: pin the managed Redis cluster minimum TLS version to 1.2
+
+- [`bc3da47`](https://github.com/gradientedge/cdk-utils/commit/bc3da47652a4ef4508543c7b37f31f781f62d486) Thanks [@despock](https://github.com/despock)! - feat: default the app service and function app FTPS state to FtpsOnly
+
+- [`bc3da47`](https://github.com/gradientedge/cdk-utils/commit/bc3da47652a4ef4508543c7b37f31f781f62d486) Thanks [@despock](https://github.com/despock)! - feat: disable remote debugging by default on app services and function apps
+
+- [`bc3da47`](https://github.com/gradientedge/cdk-utils/commit/bc3da47652a4ef4508543c7b37f31f781f62d486) Thanks [@despock](https://github.com/despock)! - feat: enforce the storage account and Event Grid topic minimum TLS versions
+
+- [`bc3da47`](https://github.com/gradientedge/cdk-utils/commit/bc3da47652a4ef4508543c7b37f31f781f62d486) Thanks [@despock](https://github.com/despock)! - feat: disable key based metadata write access on Cosmos DB accounts
+
+- [`bc3da47`](https://github.com/gradientedge/cdk-utils/commit/bc3da47652a4ef4508543c7b37f31f781f62d486) Thanks [@despock](https://github.com/despock)! - feat: enforce a Service Bus namespace minimum TLS version floor of 1.2
+
+- [`bc3da47`](https://github.com/gradientedge/cdk-utils/commit/bc3da47652a4ef4508543c7b37f31f781f62d486) Thanks [@despock](https://github.com/despock)! - feat: pin the Cosmos DB account minimum TLS version to 1.2
+
+- [`82b7506`](https://github.com/gradientedge/cdk-utils/commit/82b750686e5f75d063656e0eb9b6db89dbb2b836) Thanks [@despock](https://github.com/despock)! - fix: pin the storage account minimum TLS version to 1.2, which is the highest the API accepts
+
+- [`bc3da47`](https://github.com/gradientedge/cdk-utils/commit/bc3da47652a4ef4508543c7b37f31f781f62d486) Thanks [@despock](https://github.com/despock)! - feat: pin the app service and function app minimum TLS version to 1.3
+
+- [`bc3da47`](https://github.com/gradientedge/cdk-utils/commit/bc3da47652a4ef4508543c7b37f31f781f62d486) Thanks [@despock](https://github.com/despock)! - feat: state a periodic backup policy on Cosmos DB accounts
+
+- [`bc3da47`](https://github.com/gradientedge/cdk-utils/commit/bc3da47652a4ef4508543c7b37f31f781f62d486) Thanks [@despock](https://github.com/despock)! - feat: raise the Service Bus and storage account TLS pins to 1.3
+
+- [`bc3da47`](https://github.com/gradientedge/cdk-utils/commit/bc3da47652a4ef4508543c7b37f31f781f62d486) Thanks [@despock](https://github.com/despock)! - feat: require HTTPS on storage accounts
+
+- [`bc3da47`](https://github.com/gradientedge/cdk-utils/commit/bc3da47652a4ef4508543c7b37f31f781f62d486) Thanks [@despock](https://github.com/despock)! - feat: enable HTTP/2 by default on app services and function apps
+- Updated dependencies [[`7505a0e`](https://github.com/gradientedge/cdk-utils/commit/7505a0e85fd1e0788755b191aa7adf5d58697e99), [`bc3da47`](https://github.com/gradientedge/cdk-utils/commit/bc3da47652a4ef4508543c7b37f31f781f62d486), [`bc3da47`](https://github.com/gradientedge/cdk-utils/commit/bc3da47652a4ef4508543c7b37f31f781f62d486), [`bc3da47`](https://github.com/gradientedge/cdk-utils/commit/bc3da47652a4ef4508543c7b37f31f781f62d486), [`bc3da47`](https://github.com/gradientedge/cdk-utils/commit/bc3da47652a4ef4508543c7b37f31f781f62d486), [`bc3da47`](https://github.com/gradientedge/cdk-utils/commit/bc3da47652a4ef4508543c7b37f31f781f62d486), [`bc3da47`](https://github.com/gradientedge/cdk-utils/commit/bc3da47652a4ef4508543c7b37f31f781f62d486), [`bc3da47`](https://github.com/gradientedge/cdk-utils/commit/bc3da47652a4ef4508543c7b37f31f781f62d486), [`82b7506`](https://github.com/gradientedge/cdk-utils/commit/82b750686e5f75d063656e0eb9b6db89dbb2b836), [`bc3da47`](https://github.com/gradientedge/cdk-utils/commit/bc3da47652a4ef4508543c7b37f31f781f62d486), [`bc3da47`](https://github.com/gradientedge/cdk-utils/commit/bc3da47652a4ef4508543c7b37f31f781f62d486), [`bc3da47`](https://github.com/gradientedge/cdk-utils/commit/bc3da47652a4ef4508543c7b37f31f781f62d486), [`bc3da47`](https://github.com/gradientedge/cdk-utils/commit/bc3da47652a4ef4508543c7b37f31f781f62d486), [`bc3da47`](https://github.com/gradientedge/cdk-utils/commit/bc3da47652a4ef4508543c7b37f31f781f62d486)]:
+  - @gradientedge/cdk-utils-aws@2.26.0
+  - @gradientedge/cdk-utils-azure@2.60.0
+  - @gradientedge/cdk-utils-cloudflare@2.29.0
+
 ## 11.60.2
 
 ### Patch Changes
