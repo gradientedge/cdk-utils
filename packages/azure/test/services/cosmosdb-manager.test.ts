@@ -433,6 +433,7 @@ class TestCosmosTlsConstruct extends CommonAzureConstruct {
       locations: [{ locationName: 'eastus', failoverPriority: 0 }],
       minimalTlsVersion: 'Tls11',
       disableKeyBasedMetadataWriteAccess: false,
+      backupPolicy: { type: 'Continuous' },
     } as any)
   }
 }
@@ -448,6 +449,24 @@ class TestCosmosTlsStack extends CommonAzureStack {
 }
 
 const cosmosTlsStack = new TestCosmosTlsStack('test-cosmos-tls-stack', testStackProps)
+
+describe('TestAzureCosmosDbConstruct - Backup Policy', () => {
+  test('cosmos db account states a periodic backup policy when none is provided', async () => {
+    await outputToPromise(
+      pulumi.all([minimalCosmosStack.construct.cosmosDbAccount.backupPolicy]).apply(([backupPolicy]: any[]) => {
+        expect(backupPolicy?.type).toEqual('Periodic')
+      })
+    )
+  })
+
+  test('cosmos db account lets the caller choose a continuous backup policy', async () => {
+    await outputToPromise(
+      pulumi.all([cosmosTlsStack.construct.cosmosDbAccount.backupPolicy]).apply(([backupPolicy]: any[]) => {
+        expect(backupPolicy?.type).toEqual('Continuous')
+      })
+    )
+  })
+})
 
 describe('TestAzureCosmosDbConstruct - Key Based Metadata Write', () => {
   test('cosmos db account disables key based metadata write access', async () => {

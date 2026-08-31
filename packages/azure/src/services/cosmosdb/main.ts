@@ -68,6 +68,9 @@ export class AzureCosmosDbManager {
           props.accountName?.toString(),
           scope.props.resourceNameOptions?.cosmosDbAccount
         ),
+        // Periodic is what Azure applies when nothing is stated; setting it explicitly
+        // puts the backup mode under review rather than leaving it inherited.
+        backupPolicy: props.backupPolicy ?? { type: 'Periodic' },
         disableKeyBasedMetadataWriteAccess: true,
         disableLocalAuth: true,
         location: props.location ?? scope.props.location,
