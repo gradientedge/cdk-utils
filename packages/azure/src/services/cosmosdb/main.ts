@@ -68,6 +68,7 @@ export class AzureCosmosDbManager {
           props.accountName?.toString(),
           scope.props.resourceNameOptions?.cosmosDbAccount
         ),
+        disableKeyBasedMetadataWriteAccess: true,
         disableLocalAuth: true,
         location: props.location ?? scope.props.location,
         minimalTlsVersion: MinimalTlsVersion.Tls12,

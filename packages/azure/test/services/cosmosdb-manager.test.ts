@@ -432,6 +432,7 @@ class TestCosmosTlsConstruct extends CommonAzureConstruct {
       consistencyPolicy: { defaultConsistencyLevel: 'Session' },
       locations: [{ locationName: 'eastus', failoverPriority: 0 }],
       minimalTlsVersion: 'Tls11',
+      disableKeyBasedMetadataWriteAccess: false,
     } as any)
   }
 }
@@ -447,6 +448,28 @@ class TestCosmosTlsStack extends CommonAzureStack {
 }
 
 const cosmosTlsStack = new TestCosmosTlsStack('test-cosmos-tls-stack', testStackProps)
+
+describe('TestAzureCosmosDbConstruct - Key Based Metadata Write', () => {
+  test('cosmos db account disables key based metadata write access', async () => {
+    await outputToPromise(
+      pulumi
+        .all([minimalCosmosStack.construct.cosmosDbAccount.disableKeyBasedMetadataWriteAccess])
+        .apply(([disableKeyBasedMetadataWriteAccess]) => {
+          expect(disableKeyBasedMetadataWriteAccess).toEqual(true)
+        })
+    )
+  })
+
+  test('cosmos db account ignores a caller attempt to re-enable key based metadata write', async () => {
+    await outputToPromise(
+      pulumi
+        .all([cosmosTlsStack.construct.cosmosDbAccount.disableKeyBasedMetadataWriteAccess])
+        .apply(([disableKeyBasedMetadataWriteAccess]) => {
+          expect(disableKeyBasedMetadataWriteAccess).toEqual(true)
+        })
+    )
+  })
+})
 
 describe('TestAzureCosmosDbConstruct - Minimum TLS Version', () => {
   test('cosmos db account pins TLS 1.2', async () => {
