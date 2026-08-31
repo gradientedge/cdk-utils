@@ -69,13 +69,13 @@ export class AzureServiceBusManager {
     const resourceGroupName =
       namespaceProps.resourceGroupName ?? scope.resourceNameFormatter.format(scope.props.resourceGroupName)
 
-    const sku = namespaceProps.sku ?? { name: SkuName.Standard }
+    const sku = output(namespaceProps.sku).apply(value => value ?? { name: SkuName.Standard })
 
     if (enableGeoReplication) {
       // Geo-replication requires Premium. Callers pass `sku` as a literal SBSkuArgs in
       // practice; validate synchronously so misconfiguration fails at construct time
       // rather than during preview/up.
-      const skuName = (sku as servicebusInputs.SBSkuArgs).name
+      const skuName = (namespaceProps.sku as servicebusInputs.SBSkuArgs | undefined)?.name ?? SkuName.Standard
       if (skuName !== SkuName.Premium) {
         throw new Error(
           `Service Bus geo-replication requires the Premium SKU, but ${id} was configured with "${String(skuName)}"`

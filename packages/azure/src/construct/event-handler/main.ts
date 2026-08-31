@@ -7,11 +7,25 @@ import {
   listQueueKeysOutput,
 } from '@pulumi/azure-native/servicebus/index.js'
 import { AccessRights } from '@pulumi/azure-native/types/enums/servicebus/index.js'
-import { Output } from '@pulumi/pulumi'
+import { Input, output, Output } from '@pulumi/pulumi'
 
 import { AzureFunctionApp } from '../function-app/index.js'
 
 import { AzureEventHandlerProps, EventHandlerEventGridSubscription, EventHandlerServiceBus } from './types.js'
+
+/**
+ * Narrows an optional pulumi input to a required one. `@pulumi/azure-native` declares optional
+ * arguments as `Input<T | undefined>`, so a truthiness guard on the raw prop cannot remove
+ * `undefined` from inside an `Output`. Resolving through `apply` restores that guarantee and
+ * fails loudly for values that are only known once the output resolves.
+ */
+const requiredInput = (value: Input<string | undefined>, description: string): Output<string> =>
+  output(value).apply(resolved => {
+    if (!resolved) {
+      throw new Error(`${description} is required but resolved to undefined`)
+    }
+    return resolved
+  })
 
 /**
  * Provides a construct to create and deploy an Azure EventGrid Event Handler with Service Bus integration.
@@ -179,7 +193,10 @@ export class AzureEventHandler extends AzureFunctionApp {
     const useExistingFlags = this.resolveServiceBusUseExisting()
     if (useExistingFlags.namespace && this.props.serviceBus?.namespace?.namespaceName) {
       this.serviceBus.namespace = getNamespaceOutput({
-        namespaceName: this.props.serviceBus.namespace.namespaceName,
+        namespaceName: requiredInput(
+          this.props.serviceBus.namespace.namespaceName,
+          'serviceBus.namespace.namespaceName'
+        ),
         resourceGroupName: this.props.serviceBus.namespace.resourceGroupName,
       })
     } else {
@@ -211,8 +228,11 @@ export class AzureEventHandler extends AzureFunctionApp {
       this.props.serviceBus?.queue?.queueName
     ) {
       this.serviceBus.queue = getQueueOutput({
-        namespaceName: this.props.serviceBus.namespace.namespaceName,
-        queueName: this.props.serviceBus.queue.queueName,
+        namespaceName: requiredInput(
+          this.props.serviceBus.namespace.namespaceName,
+          'serviceBus.namespace.namespaceName'
+        ),
+        queueName: requiredInput(this.props.serviceBus.queue.queueName, 'serviceBus.queue.queueName'),
         resourceGroupName: this.props.serviceBus.namespace.resourceGroupName,
       })
     } else {

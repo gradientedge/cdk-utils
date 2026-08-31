@@ -149,12 +149,12 @@ export class AzureEventgridManager {
       scope.props.resourceNameOptions?.eventGridNamespace
     )
     const location = namespaceProps.location ?? scope.props.location
-    const sku = namespaceProps.sku ?? { name: 'Standard' }
-    const tags = {
+    const sku = output(namespaceProps.sku).apply(value => value ?? { name: 'Standard' })
+    const tags = output(namespaceProps.tags).apply(resolvedTags => ({
       environment: scope.props.stage,
       ...scope.props.defaultTags,
-      ...namespaceProps.tags,
-    }
+      ...resolvedTags,
+    }))
 
     const namespace = new Namespace(
       `${id}-ens`,
