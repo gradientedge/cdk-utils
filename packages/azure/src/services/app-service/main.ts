@@ -120,6 +120,7 @@ export class AzureAppServiceManager {
           http20Enabled: siteConfig?.http20Enabled ?? true,
           linuxFxVersion: siteConfig?.linuxFxVersion ?? 'NODE|22-lts',
           minTlsVersion: SupportedTlsVersions.SupportedTlsVersions_1_3,
+          remoteDebuggingEnabled: siteConfig?.remoteDebuggingEnabled ?? false,
         })),
         tags: {
           environment: scope.props.stage,
@@ -170,6 +171,7 @@ export class AzureAppServiceManager {
           http20Enabled: siteConfig?.http20Enabled ?? true,
           linuxFxVersion: siteConfig?.linuxFxVersion ?? 'NODE|22-lts',
           minTlsVersion: SupportedTlsVersions.SupportedTlsVersions_1_3,
+          remoteDebuggingEnabled: siteConfig?.remoteDebuggingEnabled ?? false,
         })),
         tags: {
           environment: scope.props.stage,

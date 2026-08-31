@@ -70,6 +70,7 @@ export class AzureFunctionManager {
           ftpsState: siteConfig?.ftpsState ?? FtpsState.FtpsOnly,
           http20Enabled: siteConfig?.http20Enabled ?? true,
           minTlsVersion: SupportedTlsVersions.SupportedTlsVersions_1_3,
+          remoteDebuggingEnabled: siteConfig?.remoteDebuggingEnabled ?? false,
         })),
         tags: {
           environment: scope.props.stage,
@@ -184,6 +185,7 @@ export class AzureFunctionManager {
           ...siteConfig,
           ftpsState: siteConfig?.ftpsState ?? FtpsState.FtpsOnly,
           http20Enabled: siteConfig?.http20Enabled ?? true,
+          remoteDebuggingEnabled: siteConfig?.remoteDebuggingEnabled ?? false,
           linuxFxVersion:
             siteConfig?.linuxFxVersion ??
             `${props.runtime?.name ?? 'node'}|${props.runtime?.version ?? scope.props.runtimeVersion ?? CommonAzureStack.NODEJS_RUNTIME}`,
@@ -272,6 +274,7 @@ export class AzureFunctionManager {
             ftpsState: siteConfig?.ftpsState ?? FtpsState.FtpsOnly,
             http20Enabled: siteConfig?.http20Enabled ?? true,
             minTlsVersion: SupportedTlsVersions.SupportedTlsVersions_1_3,
+            remoteDebuggingEnabled: siteConfig?.remoteDebuggingEnabled ?? false,
           })),
           functionAppConfig: {
             ...props.functionAppConfig,

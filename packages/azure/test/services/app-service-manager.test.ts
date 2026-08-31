@@ -410,6 +410,22 @@ describe('TestAzureAppServiceConstruct - Minimum TLS Version', () => {
     )
   })
 
+  test('linux web app disables remote debugging by default', async () => {
+    await outputToPromise(
+      pulumi.all([minimalWebAppStack.construct.linuxWebApp.siteConfig]).apply(([siteConfig]) => {
+        expect(siteConfig?.remoteDebuggingEnabled).toEqual(false)
+      })
+    )
+  })
+
+  test('web app slot disables remote debugging by default', async () => {
+    await outputToPromise(
+      pulumi.all([minimalWebAppStack.construct.webAppSlot.siteConfig]).apply(([siteConfig]) => {
+        expect(siteConfig?.remoteDebuggingEnabled).toEqual(false)
+      })
+    )
+  })
+
   test('linux web app enables HTTP/2 by default', async () => {
     await outputToPromise(
       pulumi.all([minimalWebAppStack.construct.linuxWebApp.siteConfig]).apply(([siteConfig]) => {

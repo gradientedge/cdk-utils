@@ -496,6 +496,22 @@ describe('TestAzureFunctionConstruct - Minimum TLS Version', () => {
     )
   })
 
+  test('function app disables remote debugging by default', async () => {
+    await outputToPromise(
+      pulumi.all([minimalStack.construct.functionApp.siteConfig]).apply(([siteConfig]) => {
+        expect(siteConfig?.remoteDebuggingEnabled).toEqual(false)
+      })
+    )
+  })
+
+  test('flex consumption function app disables remote debugging by default', async () => {
+    await outputToPromise(
+      pulumi.all([minimalStack.construct.functionAppFlexConsumption.siteConfig]).apply(([siteConfig]) => {
+        expect(siteConfig?.remoteDebuggingEnabled).toEqual(false)
+      })
+    )
+  })
+
   test('function app enables HTTP/2 by default', async () => {
     await outputToPromise(
       pulumi.all([minimalStack.construct.functionApp.siteConfig]).apply(([siteConfig]) => {
