@@ -12,7 +12,7 @@
 <li><a href="" aria-current="page">SfnSqsSendMessageProps</a></li></ul>
 <h1>Interface SfnSqsSendMessageProps</h1></div>
 <div class="tsd-signature"><span class="tsd-signature-keyword">interface</span> <span class="tsd-kind-interface">SfnSqsSendMessageProps</span> <span class="tsd-signature-symbol">{</span><br/>    <a class="tsd-kind-property" href="#assign">assign</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-signature-symbol">[</span><span class="tsd-kind-index-signature">name</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]:</span> <span class="tsd-signature-type">any</span> <span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#comment">comment</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#credentials">credentials</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Credentials</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#delay">delay</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Duration</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#heartbeat">heartbeat</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Duration</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#heartbeattimeout">heartbeatTimeout</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Timeout</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#inputpath">inputPath</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#integrationpattern">integrationPattern</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IntegrationPattern</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#messagebody">messageBody</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">TaskInput</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#messagededuplicationid">messageDeduplicationId</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#messagegroupid">messageGroupId</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#name">name</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#outputpath">outputPath</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#outputs">outputs</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">any</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#querylanguage">queryLanguage</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">QueryLanguage</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#queue">queue</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">IQueue</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#resultpath">resultPath</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#resultselector">resultSelector</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-signature-symbol">[</span><span class="tsd-kind-index-signature">key</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]:</span> <span class="tsd-signature-type">any</span> <span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#retries">retries</a><span class="tsd-signature-symbol">?:</span> <a href="_gradientedge_cdk-utils-aws.SfnRetryProps.html" class="tsd-signature-type tsd-kind-interface">SfnRetryProps</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#statename">stateName</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#tasktimeout">taskTimeout</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Timeout</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#timeout">timeout</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Duration</span><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div>
-<section class="tsd-panel tsd-hierarchy" data-refl="15326">
+<section class="tsd-panel tsd-hierarchy" data-refl="15339">
 <h4>Hierarchy</h4>
 <ul class="tsd-hierarchy">
 <li class="tsd-hierarchy-item"><span class="tsd-signature-type">SqsSendMessageProps</span>
@@ -70,7 +70,7 @@ Using workflow variables, you can store data in a step and retrieve that data in
 </div></div><aside class="tsd-sources">
 <p>Inherited from SqsSendMessageProps.assign</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/state.d.ts:137</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/state.d.ts:137</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="comment"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>comment</span><a href="#comment" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">comment</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -84,7 +84,7 @@ Using workflow variables, you can store data in a step and retrieve that data in
 </div></div><aside class="tsd-sources">
 <p>Inherited from SqsSendMessageProps.comment</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/state.d.ts:30</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/state.d.ts:30</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="credentials"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>credentials</span><a href="#credentials" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">credentials</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Credentials</span></div>
@@ -102,7 +102,7 @@ This enables cross-account resource invocations.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from SqsSendMessageProps.credentials</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/task-base.d.ts:70</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/task-base.d.ts:70</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="delay"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>delay</span><a href="#delay" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">delay</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Duration</span></div>
@@ -118,7 +118,7 @@ of the delay period. The maximum allowed delay is 15 minutes.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from SqsSendMessageProps.delay</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions-tasks/lib/sqs/send-message.d.ts:23</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-stepfunctions-tasks/lib/sqs/send-message.d.ts:23</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="heartbeat"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span class="deprecated">heartbeat</span><a href="#heartbeat" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">heartbeat</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Duration</span></div>
@@ -135,7 +135,7 @@ of the delay period. The maximum allowed delay is 15 minutes.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from SqsSendMessageProps.heartbeat</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/task-base.d.ts:38</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/task-base.d.ts:38</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="heartbeattimeout"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>heartbeat<wbr/>Timeout</span><a href="#heartbeattimeout" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">heartbeatTimeout</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Timeout</span></div>
@@ -151,7 +151,7 @@ aws-stepfunctions-tasks extend this interface</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from SqsSendMessageProps.heartbeatTimeout</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/task-base.d.ts:47</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/task-base.d.ts:47</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="inputpath"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>input<wbr/>Path</span><a href="#inputpath" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">inputPath</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -167,7 +167,7 @@ input to be the empty object {}.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from SqsSendMessageProps.inputPath</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/state.d.ts:44</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/state.d.ts:44</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="integrationpattern"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>integration<wbr/>Pattern</span><a href="#integrationpattern" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">integrationPattern</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IntegrationPattern</span></div>
@@ -188,7 +188,7 @@ You can control these AWS services using service integration patterns.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from SqsSendMessageProps.integrationPattern</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/task-base.d.ts:61</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/task-base.d.ts:61</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="messagebody"><code class="tsd-tag">Readonly</code><span>message<wbr/>Body</span><a href="#messagebody" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">messageBody</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">TaskInput</span></div>
@@ -196,7 +196,7 @@ You can control these AWS services using service integration patterns.</p>
 </div><aside class="tsd-sources">
 <p>Inherited from SqsSendMessageProps.messageBody</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions-tasks/lib/sqs/send-message.d.ts:14</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-stepfunctions-tasks/lib/sqs/send-message.d.ts:14</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="messagededuplicationid"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>message<wbr/>Deduplication<wbr/>Id</span><a href="#messagededuplicationid" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">messageDeduplicationId</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -212,7 +212,7 @@ but aren't delivered during the 5-minute deduplication interval.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from SqsSendMessageProps.messageDeduplicationId</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions-tasks/lib/sqs/send-message.d.ts:31</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-stepfunctions-tasks/lib/sqs/send-message.d.ts:31</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="messagegroupid"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>message<wbr/>Group<wbr/>Id</span><a href="#messagegroupid" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">messageGroupId</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -228,7 +228,7 @@ Messages in different message groups might be processed out of order.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from SqsSendMessageProps.messageGroupId</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions-tasks/lib/sqs/send-message.d.ts:40</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-stepfunctions-tasks/lib/sqs/send-message.d.ts:40</li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="name"><span>name</span><a href="#name" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">name</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span></div>
@@ -251,7 +251,7 @@ output to be the empty object {}.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from SqsSendMessageProps.outputPath</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/state.d.ts:53</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/state.d.ts:53</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="outputs"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>outputs</span><a href="#outputs" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">outputs</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">any</span></div>
@@ -273,7 +273,7 @@ Output also accepts a JSONata expression directly.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from SqsSendMessageProps.outputs</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/state.d.ts:108</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/state.d.ts:108</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="querylanguage"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>query<wbr/>Language</span><a href="#querylanguage" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">queryLanguage</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">QueryLanguage</span></div>
@@ -289,7 +289,7 @@ then it will use the query language specified in the top-level <code>queryLangua
 </div></div><aside class="tsd-sources">
 <p>Inherited from SqsSendMessageProps.queryLanguage</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/state.d.ts:18</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/state.d.ts:18</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="queue"><code class="tsd-tag">Readonly</code><span>queue</span><a href="#queue" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">queue</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">IQueue</span></div>
@@ -297,7 +297,7 @@ then it will use the query language specified in the top-level <code>queryLangua
 </div><aside class="tsd-sources">
 <p>Inherited from SqsSendMessageProps.queue</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions-tasks/lib/sqs/send-message.d.ts:10</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-stepfunctions-tasks/lib/sqs/send-message.d.ts:10</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="resultpath"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>result<wbr/>Path</span><a href="#resultpath" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">resultPath</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -313,7 +313,7 @@ input to become its output.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from SqsSendMessageProps.resultPath</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/task-base.d.ts:81</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/task-base.d.ts:81</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="resultselector"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>result<wbr/>Selector</span><a href="#resultselector" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">resultSelector</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-signature-symbol">[</span><span class="tsd-kind-index-signature">key</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]:</span> <span class="tsd-signature-type">any</span> <span class="tsd-signature-symbol">}</span></div>
@@ -333,7 +333,7 @@ or selected from the state's raw result.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from SqsSendMessageProps.resultSelector</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/task-base.d.ts:94</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/task-base.d.ts:94</li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="retries"><code class="tsd-tag">Optional</code><span>retries</span><a href="#retries" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">retries</span><span class="tsd-signature-symbol">?:</span> <a href="_gradientedge_cdk-utils-aws.SfnRetryProps.html" class="tsd-signature-type tsd-kind-interface">SfnRetryProps</a><span class="tsd-signature-symbol">[]</span></div>
@@ -354,7 +354,7 @@ or selected from the state's raw result.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from SqsSendMessageProps.stateName</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/state.d.ts:24</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/state.d.ts:24</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="tasktimeout"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>task<wbr/>Timeout</span><a href="#tasktimeout" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">taskTimeout</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Timeout</span></div>
@@ -370,7 +370,7 @@ aws-stepfunctions-tasks extend this interface</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from SqsSendMessageProps.taskTimeout</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/task-base.d.ts:31</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/task-base.d.ts:31</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="timeout"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span class="deprecated">timeout</span><a href="#timeout" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">timeout</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Duration</span></div>
@@ -387,7 +387,7 @@ aws-stepfunctions-tasks extend this interface</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from SqsSendMessageProps.timeout</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/task-base.d.ts:22</li></ul></aside></section></section></details></div>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-stepfunctions/lib/states/task-base.d.ts:22</li></ul></aside></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">

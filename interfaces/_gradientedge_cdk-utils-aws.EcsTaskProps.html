@@ -12,7 +12,7 @@
 <li><a href="" aria-current="page">EcsTaskProps</a></li></ul>
 <h1>Interface EcsTaskProps</h1></div>
 <div class="tsd-signature"><span class="tsd-signature-keyword">interface</span> <span class="tsd-kind-interface">EcsTaskProps</span> <span class="tsd-signature-symbol">{</span><br/>    <a class="tsd-kind-property" href="#compatibility">compatibility</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">Compatibility</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#cpu">cpu</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#enablefaultinjection">enableFaultInjection</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#ephemeralstoragegib">ephemeralStorageGiB</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#executionrole">executionRole</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IRole</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#family">family</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#inferenceaccelerators">inferenceAccelerators</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">InferenceAccelerator</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#ipcmode">ipcMode</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IpcMode</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#logging">logging</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">AwsLogDriverProps</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#memorymib">memoryMiB</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#networkmode">networkMode</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">NetworkMode</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#pidmode">pidMode</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">PidMode</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#placementconstraints">placementConstraints</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">PlacementConstraint</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#proxyconfiguration">proxyConfiguration</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ProxyConfiguration</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#runtimeplatform">runtimePlatform</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">RuntimePlatform</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#tags">tags</a><span class="tsd-signature-symbol">?:</span> <a href="_gradientedge_cdk-utils-aws.TagProps.html" class="tsd-signature-type tsd-kind-interface">TagProps</a><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#taskrole">taskRole</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IRole</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#volumes">volumes</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Volume</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div>
-<section class="tsd-panel tsd-hierarchy" data-refl="13939">
+<section class="tsd-panel tsd-hierarchy" data-refl="13952">
 <h4>Hierarchy</h4>
 <ul class="tsd-hierarchy">
 <li class="tsd-hierarchy-item"><span class="tsd-signature-type">TaskDefinitionProps</span>
@@ -56,7 +56,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from TaskDefinitionProps.compatibility</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs/lib/base/task-definition.d.ts:130</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-ecs/lib/base/task-definition.d.ts:130</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="cpu"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>cpu</span><a href="#cpu" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">cpu</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -80,7 +80,7 @@ which determines your range of valid values for the memory parameter:</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from TaskDefinitionProps.cpu</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs/lib/base/task-definition.d.ts:154</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-ecs/lib/base/task-definition.d.ts:154</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="enablefaultinjection"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>enable<wbr/>Fault<wbr/>Injection</span><a href="#enablefaultinjection" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">enableFaultInjection</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -95,7 +95,7 @@ which determines your range of valid values for the memory parameter:</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from TaskDefinitionProps.enableFaultInjection</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs/lib/base/task-definition.d.ts:102</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-ecs/lib/base/task-definition.d.ts:102</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="ephemeralstoragegib"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>ephemeral<wbr/>Storage<wbr/>Gi<wbr/>B</span><a href="#ephemeralstoragegib" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">ephemeralStorageGiB</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
@@ -110,7 +110,7 @@ which determines your range of valid values for the memory parameter:</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from TaskDefinitionProps.ephemeralStorageGiB</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs/lib/base/task-definition.d.ts:216</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-ecs/lib/base/task-definition.d.ts:216</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="executionrole"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>execution<wbr/>Role</span><a href="#executionrole" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">executionRole</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IRole</span></div>
@@ -125,7 +125,7 @@ which determines your range of valid values for the memory parameter:</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from TaskDefinitionProps.executionRole</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs/lib/base/task-definition.d.ts:75</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-ecs/lib/base/task-definition.d.ts:75</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="family"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>family</span><a href="#family" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">family</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -139,7 +139,7 @@ which determines your range of valid values for the memory parameter:</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from TaskDefinitionProps.family</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs/lib/base/task-definition.d.ts:67</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-ecs/lib/base/task-definition.d.ts:67</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="inferenceaccelerators"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span class="deprecated">inference<wbr/>Accelerators</span><a href="#inferenceaccelerators" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">inferenceAccelerators</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">InferenceAccelerator</span><span class="tsd-signature-symbol">[]</span></div>
@@ -157,7 +157,7 @@ which determines your range of valid values for the memory parameter:</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from TaskDefinitionProps.inferenceAccelerators</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs/lib/base/task-definition.d.ts:208</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-ecs/lib/base/task-definition.d.ts:208</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="ipcmode"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>ipc<wbr/>Mode</span><a href="#ipcmode" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">ipcMode</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IpcMode</span></div>
@@ -172,7 +172,7 @@ which determines your range of valid values for the memory parameter:</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from TaskDefinitionProps.ipcMode</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs/lib/base/task-definition.d.ts:186</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-ecs/lib/base/task-definition.d.ts:186</li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="logging"><code class="tsd-tag">Optional</code><span>logging</span><a href="#logging" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">logging</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">AwsLogDriverProps</span></div>
@@ -203,7 +203,7 @@ which determines your range of valid values for the cpu parameter:</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from TaskDefinitionProps.memoryMiB</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs/lib/base/task-definition.d.ts:178</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-ecs/lib/base/task-definition.d.ts:178</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="networkmode"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>network<wbr/>Mode</span><a href="#networkmode" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">networkMode</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">NetworkMode</span></div>
@@ -218,7 +218,7 @@ which determines your range of valid values for the cpu parameter:</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from TaskDefinitionProps.networkMode</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs/lib/base/task-definition.d.ts:115</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-ecs/lib/base/task-definition.d.ts:115</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="pidmode"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>pid<wbr/>Mode</span><a href="#pidmode" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">pidMode</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">PidMode</span></div>
@@ -238,7 +238,7 @@ information, see <a href="https://docs.aws.amazon.com/AmazonECS/latest/developer
 </div></div><aside class="tsd-sources">
 <p>Inherited from TaskDefinitionProps.pidMode</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs/lib/base/task-definition.d.ts:199</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-ecs/lib/base/task-definition.d.ts:199</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="placementconstraints"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>placement<wbr/>Constraints</span><a href="#placementconstraints" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">placementConstraints</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">PlacementConstraint</span><span class="tsd-signature-symbol">[]</span></div>
@@ -255,7 +255,7 @@ constraints in the task definition and those specified at run time).</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from TaskDefinitionProps.placementConstraints</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs/lib/base/task-definition.d.ts:126</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-ecs/lib/base/task-definition.d.ts:126</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="proxyconfiguration"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>proxy<wbr/>Configuration</span><a href="#proxyconfiguration" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">proxyConfiguration</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ProxyConfiguration</span></div>
@@ -269,7 +269,7 @@ constraints in the task definition and those specified at run time).</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from TaskDefinitionProps.proxyConfiguration</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs/lib/base/task-definition.d.ts:87</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-ecs/lib/base/task-definition.d.ts:87</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="runtimeplatform"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>runtime<wbr/>Platform</span><a href="#runtimeplatform" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">runtimePlatform</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">RuntimePlatform</span></div>
@@ -284,7 +284,7 @@ constraints in the task definition and those specified at run time).</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from TaskDefinitionProps.runtimePlatform</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs/lib/base/task-definition.d.ts:224</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-ecs/lib/base/task-definition.d.ts:224</li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="tags"><code class="tsd-tag">Optional</code><span>tags</span><a href="#tags" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">tags</span><span class="tsd-signature-symbol">?:</span> <a href="_gradientedge_cdk-utils-aws.TagProps.html" class="tsd-signature-type tsd-kind-interface">TagProps</a><span class="tsd-signature-symbol">[]</span></div>
@@ -305,7 +305,7 @@ constraints in the task definition and those specified at run time).</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from TaskDefinitionProps.taskRole</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs/lib/base/task-definition.d.ts:81</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-ecs/lib/base/task-definition.d.ts:81</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="volumes"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>volumes</span><a href="#volumes" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">volumes</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Volume</span><span class="tsd-signature-symbol">[]</span></div>
@@ -320,7 +320,7 @@ constraints in the task definition and those specified at run time).</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from TaskDefinitionProps.volumes</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-ecs/lib/base/task-definition.d.ts:94</li></ul></aside></section></section></details></div>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-ecs/lib/base/task-definition.d.ts:94</li></ul></aside></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">

@@ -12,7 +12,7 @@
 <li><a href="" aria-current="page">EfsFileSystemProps</a></li></ul>
 <h1>Interface EfsFileSystemProps</h1></div>
 <div class="tsd-signature"><span class="tsd-signature-keyword">interface</span> <span class="tsd-kind-interface">EfsFileSystemProps</span> <span class="tsd-signature-symbol">{</span><br/>    <a class="tsd-kind-property" href="#allowanonymousaccess">allowAnonymousAccess</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#authorizationconfig">authorizationConfig</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">AuthorizationConfig</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#enableautomaticbackups">enableAutomaticBackups</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#encrypted">encrypted</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#filesystemname">fileSystemName</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#filesystempolicy">fileSystemPolicy</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">PolicyDocument</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#kmskey">kmsKey</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IKeyRef</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#lifecyclepolicy">lifecyclePolicy</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">LifecyclePolicy</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#onezone">oneZone</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#outofinfrequentaccesspolicy">outOfInfrequentAccessPolicy</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">OutOfInfrequentAccessPolicy</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#performancemode">performanceMode</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">PerformanceMode</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#provisionedthroughputpersecond">provisionedThroughputPerSecond</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Size</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#provisionnewondeployment">provisionNewOnDeployment</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#removalpolicy">removalPolicy</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">RemovalPolicy</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#replicationconfiguration">replicationConfiguration</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ReplicationConfiguration</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#replicationoverwriteprotection">replicationOverwriteProtection</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ReplicationOverwriteProtection</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#rootdirectory">rootDirectory</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#securitygroup">securityGroup</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ISecurityGroup</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#throughputmode">throughputMode</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ThroughputMode</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#transitencryption">transitEncryption</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#transitencryptionport">transitEncryptionPort</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#transitiontoarchivepolicy">transitionToArchivePolicy</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">LifecyclePolicy</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#vpc">vpc</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">IVpc</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#vpcsubnets">vpcSubnets</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">SubnetSelection</span><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div>
-<section class="tsd-panel tsd-hierarchy" data-refl="14023">
+<section class="tsd-panel tsd-hierarchy" data-refl="14036">
 <h4>Hierarchy</h4>
 <ul class="tsd-hierarchy">
 <li class="tsd-hierarchy-item"><span class="tsd-signature-type">FileSystemProps</span>
@@ -67,7 +67,7 @@ or set <code>@aws-cdk/aws-efs:denyAnonymousAccess</code> feature flag, otherwise
 </div></div><aside class="tsd-sources">
 <p>Inherited from FileSystemProps.allowAnonymousAccess</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-efs/lib/efs-file-system.d.ts:269</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-efs/lib/efs-file-system.d.ts:269</li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="authorizationconfig"><code class="tsd-tag">Optional</code><span>authorization<wbr/>Config</span><a href="#authorizationconfig" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">authorizationConfig</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">AuthorizationConfig</span></div>
@@ -88,7 +88,7 @@ or set <code>@aws-cdk/aws-efs:denyAnonymousAccess</code> feature flag, otherwise
 </div></div><aside class="tsd-sources">
 <p>Inherited from FileSystemProps.enableAutomaticBackups</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-efs/lib/efs-file-system.d.ts:256</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-efs/lib/efs-file-system.d.ts:256</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="encrypted"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>encrypted</span><a href="#encrypted" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">encrypted</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -105,7 +105,7 @@ or set <code>@aws-cdk/aws-efs:denyAnonymousAccess</code> feature flag, otherwise
 </div></div><aside class="tsd-sources">
 <p>Inherited from FileSystemProps.encrypted</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-efs/lib/efs-file-system.d.ts:190</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-efs/lib/efs-file-system.d.ts:190</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="filesystemname"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>file<wbr/>System<wbr/>Name</span><a href="#filesystemname" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">fileSystemName</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -119,7 +119,7 @@ or set <code>@aws-cdk/aws-efs:denyAnonymousAccess</code> feature flag, otherwise
 </div></div><aside class="tsd-sources">
 <p>Inherited from FileSystemProps.fileSystemName</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-efs/lib/efs-file-system.d.ts:196</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-efs/lib/efs-file-system.d.ts:196</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="filesystempolicy"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>file<wbr/>System<wbr/>Policy</span><a href="#filesystempolicy" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">fileSystemPolicy</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">PolicyDocument</span></div>
@@ -133,7 +133,7 @@ or set <code>@aws-cdk/aws-efs:denyAnonymousAccess</code> feature flag, otherwise
 </div></div><aside class="tsd-sources">
 <p>Inherited from FileSystemProps.fileSystemPolicy</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-efs/lib/efs-file-system.d.ts:262</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-efs/lib/efs-file-system.d.ts:262</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="kmskey"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>kms<wbr/>Key</span><a href="#kmskey" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">kmsKey</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IKeyRef</span></div>
@@ -150,7 +150,7 @@ or set <code>@aws-cdk/aws-efs:denyAnonymousAccess</code> feature flag, otherwise
 </div></div><aside class="tsd-sources">
 <p>Inherited from FileSystemProps.kmsKey</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-efs/lib/efs-file-system.d.ts:202</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-efs/lib/efs-file-system.d.ts:202</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="lifecyclepolicy"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>lifecycle<wbr/>Policy</span><a href="#lifecyclepolicy" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">lifecyclePolicy</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">LifecyclePolicy</span></div>
@@ -164,7 +164,7 @@ or set <code>@aws-cdk/aws-efs:denyAnonymousAccess</code> feature flag, otherwise
 </div></div><aside class="tsd-sources">
 <p>Inherited from FileSystemProps.lifecyclePolicy</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-efs/lib/efs-file-system.d.ts:208</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-efs/lib/efs-file-system.d.ts:208</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="onezone"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>one<wbr/>Zone</span><a href="#onezone" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">oneZone</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -182,7 +182,7 @@ If enabled, <code>performanceMode</code> must be set to <code>GENERAL_PURPOSE</c
 </div></div><aside class="tsd-sources">
 <p>Inherited from FileSystemProps.oneZone</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-efs/lib/efs-file-system.d.ts:277</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-efs/lib/efs-file-system.d.ts:277</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="outofinfrequentaccesspolicy"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>out<wbr/>Of<wbr/>Infrequent<wbr/>Access<wbr/>Policy</span><a href="#outofinfrequentaccesspolicy" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">outOfInfrequentAccessPolicy</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">OutOfInfrequentAccessPolicy</span></div>
@@ -197,7 +197,7 @@ primary storage class.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from FileSystemProps.outOfInfrequentAccessPolicy</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-efs/lib/efs-file-system.d.ts:215</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-efs/lib/efs-file-system.d.ts:215</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="performancemode"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>performance<wbr/>Mode</span><a href="#performancemode" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">performanceMode</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">PerformanceMode</span></div>
@@ -213,7 +213,7 @@ Updating this property will replace the file system.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from FileSystemProps.performanceMode</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-efs/lib/efs-file-system.d.ts:230</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-efs/lib/efs-file-system.d.ts:230</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="provisionedthroughputpersecond"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>provisioned<wbr/>Throughput<wbr/>Per<wbr/>Second</span><a href="#provisionedthroughputpersecond" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">provisionedThroughputPerSecond</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Size</span></div>
@@ -229,7 +229,7 @@ Must be at least 1MiB/s.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from FileSystemProps.provisionedThroughputPerSecond</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-efs/lib/efs-file-system.d.ts:244</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-efs/lib/efs-file-system.d.ts:244</li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="provisionnewondeployment"><code class="tsd-tag">Optional</code><span>provision<wbr/>New<wbr/>On<wbr/>Deployment</span><a href="#provisionnewondeployment" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">provisionNewOnDeployment</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -250,7 +250,7 @@ Must be at least 1MiB/s.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from FileSystemProps.removalPolicy</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-efs/lib/efs-file-system.d.ts:250</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-efs/lib/efs-file-system.d.ts:250</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="replicationconfiguration"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>replication<wbr/>Configuration</span><a href="#replicationconfiguration" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">replicationConfiguration</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ReplicationConfiguration</span></div>
@@ -264,7 +264,7 @@ Must be at least 1MiB/s.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from FileSystemProps.replicationConfiguration</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-efs/lib/efs-file-system.d.ts:292</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-efs/lib/efs-file-system.d.ts:292</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="replicationoverwriteprotection"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>replication<wbr/>Overwrite<wbr/>Protection</span><a href="#replicationoverwriteprotection" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">replicationOverwriteProtection</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ReplicationOverwriteProtection</span></div>
@@ -282,7 +282,7 @@ Set false if you want to create a read-only filesystem for use as a replication 
 </div></div><aside class="tsd-sources">
 <p>Inherited from FileSystemProps.replicationOverwriteProtection</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-efs/lib/efs-file-system.d.ts:286</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-efs/lib/efs-file-system.d.ts:286</li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="rootdirectory"><code class="tsd-tag">Optional</code><span>root<wbr/>Directory</span><a href="#rootdirectory" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">rootDirectory</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -303,7 +303,7 @@ Set false if you want to create a read-only filesystem for use as a replication 
 </div></div><aside class="tsd-sources">
 <p>Inherited from FileSystemProps.securityGroup</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-efs/lib/efs-file-system.d.ts:177</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-efs/lib/efs-file-system.d.ts:177</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="throughputmode"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>throughput<wbr/>Mode</span><a href="#throughputmode" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">throughputMode</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ThroughputMode</span></div>
@@ -317,7 +317,7 @@ Set false if you want to create a read-only filesystem for use as a replication 
 </div></div><aside class="tsd-sources">
 <p>Inherited from FileSystemProps.throughputMode</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-efs/lib/efs-file-system.d.ts:236</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-efs/lib/efs-file-system.d.ts:236</li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="transitencryption"><code class="tsd-tag">Optional</code><span>transit<wbr/>Encryption</span><a href="#transitencryption" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">transitEncryption</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -346,7 +346,7 @@ Metadata operations such as listing the contents of a directory don't count as f
 </div></div><aside class="tsd-sources">
 <p>Inherited from FileSystemProps.transitionToArchivePolicy</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-efs/lib/efs-file-system.d.ts:222</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-efs/lib/efs-file-system.d.ts:222</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="vpc"><code class="tsd-tag">Readonly</code><span>vpc</span><a href="#vpc" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">vpc</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">IVpc</span></div>
@@ -354,7 +354,7 @@ Metadata operations such as listing the contents of a directory don't count as f
 </div><aside class="tsd-sources">
 <p>Inherited from FileSystemProps.vpc</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-efs/lib/efs-file-system.d.ts:171</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-efs/lib/efs-file-system.d.ts:171</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="vpcsubnets"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>vpc<wbr/>Subnets</span><a href="#vpcsubnets" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">vpcSubnets</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">SubnetSelection</span></div>
@@ -368,7 +368,7 @@ Metadata operations such as listing the contents of a directory don't count as f
 </div></div><aside class="tsd-sources">
 <p>Inherited from FileSystemProps.vpcSubnets</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-efs/lib/efs-file-system.d.ts:183</li></ul></aside></section></section></details></div>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-efs/lib/efs-file-system.d.ts:183</li></ul></aside></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">

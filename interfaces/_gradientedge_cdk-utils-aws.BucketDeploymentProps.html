@@ -12,7 +12,7 @@
 <li><a href="" aria-current="page">BucketDeploymentProps</a></li></ul>
 <h1>Interface BucketDeploymentProps</h1></div>
 <div class="tsd-signature"><span class="tsd-signature-keyword">interface</span> <span class="tsd-kind-interface">BucketDeploymentProps</span> <span class="tsd-signature-symbol">{</span><br/>    <a class="tsd-kind-property" href="#accesscontrol">accessControl</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">BucketAccessControl</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#cachecontrol">cacheControl</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">CacheControl</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#contentdisposition">contentDisposition</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#contentencoding">contentEncoding</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#contentlanguage">contentLanguage</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#contenttype">contentType</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#destinationbucket">destinationBucket</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">IBucket</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#destinationkeyprefix">destinationKeyPrefix</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#distribution">distribution</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IDistributionRef</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#distributionpaths">distributionPaths</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#ephemeralstoragesize">ephemeralStorageSize</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Size</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#exclude">exclude</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#expirationindays">expirationInDays</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#expires">expires</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Expiration</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#extract">extract</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#include">include</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#loggroup">logGroup</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ILogGroupRef</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#logretention">logRetention</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">RetentionDays</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#memorylimit">memoryLimit</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#metadata">metadata</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-signature-symbol">[</span><span class="tsd-kind-index-signature">key</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]:</span> <span class="tsd-signature-type">string</span> <span class="tsd-signature-symbol">}</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#noncurrentversionexpirationindays">noncurrentVersionExpirationInDays</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#outputobjectkeys">outputObjectKeys</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#prune">prune</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#retainondelete">retainOnDelete</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#role">role</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IRole</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#securitygroups">securityGroups</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ISecurityGroup</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#serversideencryption">serverSideEncryption</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ServerSideEncryption</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#serversideencryptionawskmskeyid">serverSideEncryptionAwsKmsKeyId</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#serversideencryptioncustomeralgorithm">serverSideEncryptionCustomerAlgorithm</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#signcontent">signContent</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#sources">sources</a><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ISource</span><span class="tsd-signature-symbol">[]</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#storageclass">storageClass</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">StorageClass</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#useefs">useEfs</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#vpc">vpc</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IVpc</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#vpcsubnets">vpcSubnets</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">SubnetSelection</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#waitfordistributioninvalidation">waitForDistributionInvalidation</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span><span class="tsd-signature-symbol">;</span><br/>    <a class="tsd-kind-property" href="#websiteredirectlocation">websiteRedirectLocation</a><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">;</span><br/><span class="tsd-signature-symbol">}</span></div>
-<section class="tsd-panel tsd-hierarchy" data-refl="13709">
+<section class="tsd-panel tsd-hierarchy" data-refl="13722">
 <h4>Hierarchy</h4>
 <ul class="tsd-hierarchy">
 <li class="tsd-hierarchy-item"><span class="tsd-signature-type">BucketDeploymentProps</span>
@@ -84,7 +84,7 @@
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3deploy.BucketDeploymentProps.accessControl</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:233</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:233</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="cachecontrol"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>cache<wbr/>Control</span><a href="#cachecontrol" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">cacheControl</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">CacheControl</span><span class="tsd-signature-symbol">[]</span></div>
@@ -101,7 +101,7 @@
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3deploy.BucketDeploymentProps.cacheControl</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:166</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:166</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="contentdisposition"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>content<wbr/>Disposition</span><a href="#contentdisposition" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">contentDisposition</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -118,7 +118,7 @@
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3deploy.BucketDeploymentProps.contentDisposition</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:172</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:172</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="contentencoding"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>content<wbr/>Encoding</span><a href="#contentencoding" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">contentEncoding</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -135,7 +135,7 @@
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3deploy.BucketDeploymentProps.contentEncoding</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:178</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:178</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="contentlanguage"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>content<wbr/>Language</span><a href="#contentlanguage" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">contentLanguage</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -152,7 +152,7 @@
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3deploy.BucketDeploymentProps.contentLanguage</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:184</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:184</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="contenttype"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>content<wbr/>Type</span><a href="#contenttype" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">contentType</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -169,7 +169,7 @@
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3deploy.BucketDeploymentProps.contentType</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:190</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:190</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="destinationbucket"><code class="tsd-tag">Readonly</code><span>destination<wbr/>Bucket</span><a href="#destinationbucket" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">destinationBucket</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">IBucket</span></div>
@@ -177,7 +177,7 @@
 </div><aside class="tsd-sources">
 <p>Inherited from s3deploy.BucketDeploymentProps.destinationBucket</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:20</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:20</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="destinationkeyprefix"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>destination<wbr/>Key<wbr/>Prefix</span><a href="#destinationkeyprefix" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">destinationKeyPrefix</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -194,7 +194,7 @@ from accidentally deleting data that wasn't uploaded by it.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3deploy.BucketDeploymentProps.destinationKeyPrefix</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:31</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:31</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="distribution"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>distribution</span><a href="#distribution" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">distribution</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IDistributionRef</span></div>
@@ -210,7 +210,7 @@ files are uploaded to the destination bucket.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3deploy.BucketDeploymentProps.distribution</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:89</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:89</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="distributionpaths"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>distribution<wbr/>Paths</span><a href="#distributionpaths" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">distributionPaths</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
@@ -224,7 +224,7 @@ files are uploaded to the destination bucket.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3deploy.BucketDeploymentProps.distributionPaths</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:95</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:95</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="ephemeralstoragesize"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>ephemeral<wbr/>Storage<wbr/>Size</span><a href="#ephemeralstoragesize" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">ephemeralStorageSize</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">Size</span></div>
@@ -238,7 +238,7 @@ files are uploaded to the destination bucket.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3deploy.BucketDeploymentProps.ephemeralStorageSize</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:139</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:139</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="exclude"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>exclude</span><a href="#exclude" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">exclude</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
@@ -259,7 +259,7 @@ evaluated when invalidating the asset), you should leverage the <code>exclude</c
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3deploy.BucketDeploymentProps.exclude</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:49</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:49</li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="expirationindays"><code class="tsd-tag">Optional</code><span>expiration<wbr/>In<wbr/>Days</span><a href="#expirationindays" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">expirationInDays</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
@@ -283,7 +283,7 @@ evaluated when invalidating the asset), you should leverage the <code>exclude</c
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3deploy.BucketDeploymentProps.expires</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:196</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:196</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="extract"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>extract</span><a href="#extract" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">extract</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -298,7 +298,7 @@ If false, the file will remain zipped in the destination bucket.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3deploy.BucketDeploymentProps.extract</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:37</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:37</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="include"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>include</span><a href="#include" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">include</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">[]</span></div>
@@ -317,7 +317,7 @@ is usually leveraged alongside an <code>exclude</code> filter.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3deploy.BucketDeploymentProps.include</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:58</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:58</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="loggroup"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>log<wbr/>Group</span><a href="#loggroup" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">logGroup</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ILogGroupRef</span></div>
@@ -333,7 +333,7 @@ If you are deploying to another type of region, please check regional availabili
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3deploy.BucketDeploymentProps.logGroup</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:123</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:123</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="logretention"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>log<wbr/>Retention</span><a href="#logretention" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">logRetention</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">RetentionDays</span></div>
@@ -349,7 +349,7 @@ If you are deploying to another type of region, please check regional availabili
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3deploy.BucketDeploymentProps.logRetention</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:114</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:114</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="memorylimit"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>memory<wbr/>Limit</span><a href="#memorylimit" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">memoryLimit</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
@@ -360,13 +360,13 @@ accordingly.</p>
 </div>
 <div class="tsd-comment tsd-typography">
 <div class="tsd-tag-default">
-<h4 class="tsd-anchor-link" id="default-16">Default<a href="#default-16" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><pre><code class="ts"><span class="hl-5">128</span>
+<h4 class="tsd-anchor-link" id="default-16">Default<a href="#default-16" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h4><pre><code class="ts"><span class="hl-5">1024</span>
 </code><button type="button">Copy</button></pre>
 
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3deploy.BucketDeploymentProps.memoryLimit</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:133</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:133</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="metadata"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>metadata</span><a href="#metadata" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">metadata</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-symbol">{</span> <span class="tsd-signature-symbol">[</span><span class="tsd-kind-index-signature">key</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">string</span><span class="tsd-signature-symbol">]:</span> <span class="tsd-signature-type">string</span> <span class="tsd-signature-symbol">}</span></div>
@@ -383,7 +383,7 @@ accordingly.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3deploy.BucketDeploymentProps.metadata</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:158</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:158</li></ul></aside></section>
 <section class="tsd-panel tsd-member">
 <h3 class="tsd-anchor-link" id="noncurrentversionexpirationindays"><code class="tsd-tag">Optional</code><span>noncurrent<wbr/>Version<wbr/>Expiration<wbr/>In<wbr/>Days</span><a href="#noncurrentversionexpirationindays" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">noncurrentVersionExpirationInDays</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">number</span></div>
@@ -406,7 +406,7 @@ This is useful when you are facing the error <code>Response object is too long</
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3deploy.BucketDeploymentProps.outputObjectKeys</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:263</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:263</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="prune"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>prune</span><a href="#prune" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">prune</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -426,7 +426,7 @@ do not exist in the asset, will NOT be deleted during deployment (create/update)
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3deploy.BucketDeploymentProps.prune</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:70</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:70</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="retainondelete"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>retain<wbr/>On<wbr/>Delete</span><a href="#retainondelete" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">retainOnDelete</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -446,7 +446,7 @@ visit to the package documentation referred below to make sure you fully underst
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3deploy.BucketDeploymentProps.retainOnDelete</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:81</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:81</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="role"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>role</span><a href="#role" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">role</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IRole</span></div>
@@ -460,7 +460,7 @@ visit to the package documentation referred below to make sure you fully underst
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3deploy.BucketDeploymentProps.role</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:152</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:152</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="securitygroups"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>security<wbr/>Groups</span><a href="#securitygroups" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">securityGroups</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ISecurityGroup</span><span class="tsd-signature-symbol">[]</span></div>
@@ -475,7 +475,7 @@ visit to the package documentation referred below to make sure you fully underst
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3deploy.BucketDeploymentProps.securityGroups</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:272</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:272</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="serversideencryption"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>server<wbr/>Side<wbr/>Encryption</span><a href="#serversideencryption" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">serverSideEncryption</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">ServerSideEncryption</span></div>
@@ -492,7 +492,7 @@ visit to the package documentation referred below to make sure you fully underst
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3deploy.BucketDeploymentProps.serverSideEncryption</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:202</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:202</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="serversideencryptionawskmskeyid"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>server<wbr/>Side<wbr/>Encryption<wbr/>Aws<wbr/>Kms<wbr/>Key<wbr/>Id</span><a href="#serversideencryptionawskmskeyid" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">serverSideEncryptionAwsKmsKeyId</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -509,7 +509,7 @@ visit to the package documentation referred below to make sure you fully underst
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3deploy.BucketDeploymentProps.serverSideEncryptionAwsKmsKeyId</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:220</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:220</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="serversideencryptioncustomeralgorithm"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>server<wbr/>Side<wbr/>Encryption<wbr/>Customer<wbr/>Algorithm</span><a href="#serversideencryptioncustomeralgorithm" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">serverSideEncryptionCustomerAlgorithm</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -527,7 +527,7 @@ Warning: This is not a useful parameter until this bug is fixed: <a href="https:
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3deploy.BucketDeploymentProps.serverSideEncryptionCustomerAlgorithm</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:227</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:227</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="signcontent"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>sign<wbr/>Content</span><a href="#signcontent" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">signContent</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -542,7 +542,7 @@ and include it in the signed S3 request headers.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3deploy.BucketDeploymentProps.signContent</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:254</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:254</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="sources"><code class="tsd-tag">Readonly</code><span>sources</span><a href="#sources" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">sources</span><span class="tsd-signature-symbol">:</span> <span class="tsd-signature-type">ISource</span><span class="tsd-signature-symbol">[]</span></div>
@@ -550,7 +550,7 @@ and include it in the signed S3 request headers.</p>
 </div><aside class="tsd-sources">
 <p>Inherited from s3deploy.BucketDeploymentProps.sources</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:16</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:16</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="storageclass"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>storage<wbr/>Class</span><a href="#storageclass" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">storageClass</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">StorageClass</span></div>
@@ -567,7 +567,7 @@ and include it in the signed S3 request headers.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3deploy.BucketDeploymentProps.storageClass</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:208</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:208</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="useefs"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>use<wbr/>Efs</span><a href="#useefs" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">useEfs</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -582,7 +582,7 @@ Enabling this option will require a VPC to be specified.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3deploy.BucketDeploymentProps.useEfs</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:146</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:146</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="vpc"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>vpc</span><a href="#vpc" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">vpc</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">IVpc</span></div>
@@ -597,7 +597,7 @@ This is required if <code>useEfs</code> is set.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3deploy.BucketDeploymentProps.vpc</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:240</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:240</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="vpcsubnets"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>vpc<wbr/>Subnets</span><a href="#vpcsubnets" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">vpcSubnets</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">SubnetSelection</span></div>
@@ -612,7 +612,7 @@ Only used if 'vpc' is supplied.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3deploy.BucketDeploymentProps.vpcSubnets</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:247</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:247</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="waitfordistributioninvalidation"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>wait<wbr/>For<wbr/>Distribution<wbr/>Invalidation</span><a href="#waitfordistributioninvalidation" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">waitForDistributionInvalidation</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">boolean</span></div>
@@ -632,7 +632,7 @@ can silently fail.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3deploy.BucketDeploymentProps.waitForDistributionInvalidation</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:105</li></ul></aside></section>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:105</li></ul></aside></section>
 <section class="tsd-panel tsd-member tsd-is-inherited tsd-is-external">
 <h3 class="tsd-anchor-link" id="websiteredirectlocation"><code class="tsd-tag">Optional</code> <code class="tsd-tag">Readonly</code><span>website<wbr/>Redirect<wbr/>Location</span><a href="#websiteredirectlocation" aria-label="Permalink" class="tsd-anchor-icon"><svg viewBox="0 0 24 24" aria-hidden="true"><use href="../assets/icons.svg#icon-anchor"></use></svg></a></h3>
 <div class="tsd-signature"><span class="tsd-kind-property">websiteRedirectLocation</span><span class="tsd-signature-symbol">?:</span> <span class="tsd-signature-type">string</span></div>
@@ -649,7 +649,7 @@ can silently fail.</p>
 </div></div><aside class="tsd-sources">
 <p>Inherited from s3deploy.BucketDeploymentProps.websiteRedirectLocation</p>
 <ul>
-<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.263.0_constructs@10.8.0/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:214</li></ul></aside></section></section></details></div>
+<li>Defined in node_modules/.pnpm/aws-cdk-lib@2.267.0_constructs@10.8.1/node_modules/aws-cdk-lib/aws-s3-deployment/lib/bucket-deployment.d.ts:214</li></ul></aside></section></section></details></div>
 <div class="col-sidebar">
 <div class="page-menu">
 <div class="tsd-navigation settings">
