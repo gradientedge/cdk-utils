@@ -574,3 +574,91 @@ describe('TestAzureServicebusConstruct - GeoReplication', () => {
     expect(capturedDeployments.length).toEqual(before)
   })
 })
+
+/* --- Minimum TLS version default --- */
+
+class TestServiceBusTlsConstruct extends CommonAzureConstruct {
+  declare props: TestAzureStackProps
+  serviceBusNamespace: Namespace
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.serviceBusNamespace = this.serviceBusManager.createServiceBusNamespace(
+      `test-sb-tls-${this.props.stage}`,
+      this,
+      {
+        namespaceName: 'test-sb-tls',
+        resourceGroupName: 'test-rg-dev',
+        minimumTlsVersion: '1.3',
+      } as ServiceBusNamespaceProps
+    )
+  }
+}
+
+class TestServiceBusTlsStack extends CommonAzureStack {
+  declare props: TestAzureStackProps
+  declare construct: TestServiceBusTlsConstruct
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestServiceBusTlsConstruct(props.name, this.props)
+  }
+}
+
+const sbTlsStack = new TestServiceBusTlsStack('test-sb-tls-stack', testStackProps)
+
+class TestServiceBusWeakTlsConstruct extends CommonAzureConstruct {
+  declare props: TestAzureStackProps
+  serviceBusNamespace: Namespace
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+    this.serviceBusNamespace = this.serviceBusManager.createServiceBusNamespace(
+      `test-sb-weak-tls-${this.props.stage}`,
+      this,
+      {
+        namespaceName: 'test-sb-weak-tls',
+        resourceGroupName: 'test-rg-dev',
+        minimumTlsVersion: '1.0',
+      } as ServiceBusNamespaceProps
+    )
+  }
+}
+
+class TestServiceBusWeakTlsStack extends CommonAzureStack {
+  declare props: TestAzureStackProps
+  declare construct: TestServiceBusWeakTlsConstruct
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestServiceBusWeakTlsConstruct(props.name, this.props)
+  }
+}
+
+const sbWeakTlsStack = new TestServiceBusWeakTlsStack('test-sb-weak-tls-stack', testStackProps)
+
+describe('TestAzureServiceBusConstruct - Minimum TLS Version', () => {
+  test('service bus namespace pins TLS 1.2', async () => {
+    await outputToPromise(
+      pulumi.all([minimalSbStack.construct.serviceBusNamespace.minimumTlsVersion]).apply(([minimumTlsVersion]) => {
+        expect(minimumTlsVersion).toEqual('1.2')
+      })
+    )
+  })
+
+  test('service bus namespace lets a caller harden the minimum TLS version to 1.3', async () => {
+    await outputToPromise(
+      pulumi.all([sbTlsStack.construct.serviceBusNamespace.minimumTlsVersion]).apply(([minimumTlsVersion]) => {
+        expect(minimumTlsVersion).toEqual('1.3')
+      })
+    )
+  })
+
+  test('service bus namespace ignores a caller attempt to weaken the minimum TLS version', async () => {
+    await outputToPromise(
+      pulumi.all([sbWeakTlsStack.construct.serviceBusNamespace.minimumTlsVersion]).apply(([minimumTlsVersion]) => {
+        expect(minimumTlsVersion).toEqual('1.2')
+      })
+    )
+  })
+})

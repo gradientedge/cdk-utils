@@ -7,6 +7,7 @@ import {
   QueueAuthorizationRule,
   SkuName,
   Subscription,
+  TlsVersion,
   Topic,
 } from '@pulumi/azure-native/servicebus/index.js'
 import { servicebus as servicebusInputs } from '@pulumi/azure-native/types/input.js'
@@ -96,6 +97,12 @@ export class AzureServiceBusManager {
         identity: namespaceProps.identity ?? {
           type: ManagedServiceIdentityType.SystemAssigned,
         },
+        // A floor, not a fixed value: a caller may harden the namespace to 1.3 but
+        // cannot drop it below 1.2.
+        minimumTlsVersion:
+          namespaceProps.minimumTlsVersion === TlsVersion.TlsVersion_1_3
+            ? TlsVersion.TlsVersion_1_3
+            : TlsVersion.TlsVersion_1_2,
         sku,
         tags: {
           environment: scope.props.stage,
