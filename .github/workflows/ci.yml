@@ -29,9 +29,9 @@ jobs:
       CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: ${{ matrix.node-version }}
       - name: Enable Corepack
@@ -40,7 +40,7 @@ jobs:
         id: pnpm-store
         run: echo "path=$(pnpm store path)" >> $GITHUB_OUTPUT
       - name: Cache pnpm store
-        uses: actions/cache@v6
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ${{ steps.pnpm-store.outputs.path }}
           key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
@@ -55,12 +55,12 @@ jobs:
       - name: Validate Documentation
         run: pnpm run docs
       - name: Publish Code Coverage Report
-        uses: codecov/codecov-action@v7
+        uses: codecov/codecov-action@fb8b3582c8e4def4969c97caa2f19720cb33a72f # v7.0.0
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && success() && matrix.node-version == '24.x' }}
         with:
           slug: gradientedge/cdk-utils
           token: ${{ env.CODECOV_TOKEN }}
-      - uses: actions/upload-artifact@v7
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
         if: ${{ github.event_name == 'push' && github.ref == 'refs/heads/main' && success() && matrix.node-version == '24.x' }}
         with:
           name: docs-artifact
@@ -85,11 +85,11 @@ jobs:
       HUSKY: 0
     steps:
       - name: Checkout Code
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
       - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v7
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: ${{ matrix.node-version }}
       - name: Enable Corepack
@@ -98,7 +98,7 @@ jobs:
         id: pnpm-store
         run: echo "path=$(pnpm store path)" >> $GITHUB_OUTPUT
       - name: Cache pnpm store
-        uses: actions/cache@v6
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
         with:
           path: ${{ steps.pnpm-store.outputs.path }}
           key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
@@ -109,7 +109,7 @@ jobs:
       - name: Build Production
         run: pnpm build:production
       - name: Create Release Pull Request or Publish
-        uses: changesets/action@v1
+        uses: changesets/action@a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d # v1.9.0
         with:
           title: 'chore: version packages'
           commit: 'chore: version packages'
@@ -133,13 +133,13 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - uses: actions/download-artifact@v8
+      - uses: actions/download-artifact@3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c # v8.0.1
         with:
           name: docs-artifact
           path: ./api-docs/
-      - uses: actions/upload-pages-artifact@v4
+      - uses: actions/upload-pages-artifact@7b1f4a764d45c48632c6b24a0339c27f5614fb0b # v4.0.0
         with:
           path: ./api-docs
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@d6db90164ac5ed86f2b6aed7e0febac5b3c0c03e # v4.0.5
