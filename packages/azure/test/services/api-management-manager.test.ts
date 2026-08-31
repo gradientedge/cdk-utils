@@ -666,3 +666,58 @@ describe('TestAzureApiManagementWithPolicy', () => {
     )
   })
 })
+
+/* --- Named values default to secret --- */
+
+class TestConstructWithNamedValues extends CommonAzureConstruct {
+  declare props: TestAzureStackProps
+  defaultedNamedValue: NamedValue
+  explicitNamedValue: NamedValue
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, props)
+
+    this.defaultedNamedValue = this.apiManagementManager.createNamedValue(`test-nv-default-${this.props.stage}`, this, {
+      displayName: 'test-named-value-default',
+      resourceGroupName: 'test-rg-dev',
+      serviceName: 'test-service',
+    } as NamedValueProps)
+
+    this.explicitNamedValue = this.apiManagementManager.createNamedValue(`test-nv-explicit-${this.props.stage}`, this, {
+      displayName: 'test-named-value-explicit',
+      resourceGroupName: 'test-rg-dev',
+      serviceName: 'test-service',
+      secret: false,
+    } as NamedValueProps)
+  }
+}
+
+class TestStackWithNamedValues extends CommonAzureStack {
+  declare props: TestAzureStackProps
+  declare construct: TestConstructWithNamedValues
+
+  constructor(name: string, props: TestAzureStackProps) {
+    super(name, testStackProps)
+    this.construct = new TestConstructWithNamedValues(props.name, this.props)
+  }
+}
+
+const namedValueStack = new TestStackWithNamedValues('test-named-value-stack', testStackProps)
+
+describe('TestAzureApiManagementNamedValue', () => {
+  test('named value is secret when not stated', async () => {
+    await outputToPromise(
+      pulumi.all([namedValueStack.construct.defaultedNamedValue.secret]).apply(([secret]) => {
+        expect(secret).toEqual(true)
+      })
+    )
+  })
+
+  test('named value lets the caller opt out of secret', async () => {
+    await outputToPromise(
+      pulumi.all([namedValueStack.construct.explicitNamedValue.secret]).apply(([secret]) => {
+        expect(secret).toEqual(false)
+      })
+    )
+  })
+})

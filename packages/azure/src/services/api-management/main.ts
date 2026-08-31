@@ -296,7 +296,16 @@ export class AzureApiManagementManager {
   ) {
     if (!props) throw new Error(`Props undefined for ${id}`)
 
-    return new NamedValue(`${id}`, props, { parent: scope, ...resourceOptions })
+    return new NamedValue(
+      `${id}`,
+      {
+        ...props,
+        // Named values carry backend keys and connection strings. A value that is not
+        // secret is readable through the management API and shown in the portal.
+        secret: props.secret ?? true,
+      },
+      { parent: scope, ...resourceOptions }
+    )
   }
 
   /**
