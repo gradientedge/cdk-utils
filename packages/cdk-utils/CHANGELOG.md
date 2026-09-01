@@ -1,5 +1,13 @@
 # @gradientedge/cdk-utils
 
+## 11.61.2
+
+### Patch Changes
+
+- [`563a7f5`](https://github.com/gradientedge/cdk-utils/commit/563a7f5db22b864910f16169a7d6a73f52b8deb8) Thanks [@despock](https://github.com/despock)! - fix: remove the Cosmos DB backup policy default, which the API rejects
+- Updated dependencies [[`563a7f5`](https://github.com/gradientedge/cdk-utils/commit/563a7f5db22b864910f16169a7d6a73f52b8deb8)]:
+  - @gradientedge/cdk-utils-azure@2.60.2
+
 ## 11.61.1
 
 ### Patch Changes
