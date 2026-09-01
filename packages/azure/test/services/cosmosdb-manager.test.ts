@@ -451,15 +451,17 @@ class TestCosmosTlsStack extends CommonAzureStack {
 const cosmosTlsStack = new TestCosmosTlsStack('test-cosmos-tls-stack', testStackProps)
 
 describe('TestAzureCosmosDbConstruct - Backup Policy', () => {
-  test('cosmos db account states a periodic backup policy when none is provided', async () => {
+  // The API rejects a policy of type Periodic that carries no periodicModeProperties,
+  // so the manager states nothing and lets Azure apply its own default.
+  test('cosmos db account states no backup policy when none is provided', async () => {
     await outputToPromise(
       pulumi.all([minimalCosmosStack.construct.cosmosDbAccount.backupPolicy]).apply(([backupPolicy]: any[]) => {
-        expect(backupPolicy?.type).toEqual('Periodic')
+        expect(backupPolicy).toBeUndefined()
       })
     )
   })
 
-  test('cosmos db account lets the caller choose a continuous backup policy', async () => {
+  test('cosmos db account passes a caller supplied backup policy through', async () => {
     await outputToPromise(
       pulumi.all([cosmosTlsStack.construct.cosmosDbAccount.backupPolicy]).apply(([backupPolicy]: any[]) => {
         expect(backupPolicy?.type).toEqual('Continuous')
