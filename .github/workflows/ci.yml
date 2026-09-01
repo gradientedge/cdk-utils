@@ -119,7 +119,10 @@ jobs:
           commit-message: 'chore: version packages'
           publish-script: pnpm release
           version-script: pnpm changeset version
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          # Must match the GITHUB_TOKEN env var below: v2 refuses to run when both are
+          # set to different values. The env var stays because
+          # @changesets/changelog-github reads it while generating the changelog.
+          github-token: ${{ secrets.GIT_TOKEN }}
         env:
           NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
