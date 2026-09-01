@@ -92,6 +92,10 @@ jobs:
         uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
         with:
           node-version: ${{ matrix.node-version }}
+          # changesets/action v2 no longer writes an .npmrc from NPM_TOKEN, so the
+          # registry auth has to be set up here instead. The generated .npmrc reads
+          # NODE_AUTH_TOKEN, which is supplied on the publish step below.
+          registry-url: 'https://registry.npmjs.org'
       - name: Enable Corepack
         run: corepack enable && corepack install
       - name: Get pnpm store directory
@@ -115,9 +119,9 @@ jobs:
           commit-message: 'chore: version packages'
           publish-script: pnpm release
           version-script: pnpm changeset version
+          github-token: ${{ secrets.GITHUB_TOKEN }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
   deploy-docs:
     name: Deploy Documentation
