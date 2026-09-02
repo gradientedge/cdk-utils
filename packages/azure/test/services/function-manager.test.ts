@@ -529,10 +529,10 @@ describe('TestAzureFunctionConstruct - Minimum TLS Version', () => {
     )
   })
 
-  test('function app pins TLS 1.3', async () => {
+  test('function app pins TLS 1.2', async () => {
     await outputToPromise(
       pulumi.all([minimalStack.construct.functionApp.siteConfig]).apply(([siteConfig]) => {
-        expect(siteConfig?.minTlsVersion).toEqual('1.3')
+        expect(siteConfig?.minTlsVersion).toEqual('1.2')
       })
     )
   })
@@ -569,7 +569,7 @@ describe('TestAzureFunctionConstruct - Minimum TLS Version', () => {
   test('function app ignores a caller attempt to weaken the TLS version', async () => {
     await outputToPromise(
       pulumi.all([tlsStack.construct.functionApp.siteConfig]).apply(([siteConfig]) => {
-        expect(siteConfig?.minTlsVersion).toEqual('1.3')
+        expect(siteConfig?.minTlsVersion).toEqual('1.2')
       })
     )
   })

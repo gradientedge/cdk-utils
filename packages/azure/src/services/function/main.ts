@@ -69,7 +69,7 @@ export class AzureFunctionManager {
           ...siteConfig,
           ftpsState: siteConfig?.ftpsState ?? FtpsState.FtpsOnly,
           http20Enabled: siteConfig?.http20Enabled ?? true,
-          minTlsVersion: SupportedTlsVersions.SupportedTlsVersions_1_3,
+          minTlsVersion: SupportedTlsVersions.SupportedTlsVersions_1_2,
           remoteDebuggingEnabled: siteConfig?.remoteDebuggingEnabled ?? false,
         })),
         tags: {
