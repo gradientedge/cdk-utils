@@ -355,7 +355,6 @@ describe('TestAzureFunctionConstruct - Default Value Branches', () => {
     expect(flexArgs.inputs.functionAppConfig.scaleAndConcurrency.instanceMemoryMB).toEqual(2048)
     expect(flexArgs.inputs.functionAppConfig.scaleAndConcurrency.maximumInstanceCount).toEqual(40)
     expect(flexArgs.inputs.siteConfig.http20Enabled).toEqual(true)
-    expect(flexArgs.inputs.siteConfig.linuxFxVersion).toEqual('node|24')
   })
 
   test('flex consumption deployment uses default values', () => {

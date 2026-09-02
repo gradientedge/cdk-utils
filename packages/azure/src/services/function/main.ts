@@ -186,9 +186,6 @@ export class AzureFunctionManager {
           ftpsState: siteConfig?.ftpsState ?? FtpsState.FtpsOnly,
           http20Enabled: siteConfig?.http20Enabled ?? true,
           remoteDebuggingEnabled: siteConfig?.remoteDebuggingEnabled ?? false,
-          linuxFxVersion:
-            siteConfig?.linuxFxVersion ??
-            `${props.runtime?.name ?? 'node'}|${props.runtime?.version ?? scope.props.runtimeVersion ?? CommonAzureStack.NODEJS_RUNTIME}`,
           minTlsVersion: SupportedTlsVersions.SupportedTlsVersions_1_3,
         })),
         tags: tags,
