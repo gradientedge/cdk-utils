@@ -440,7 +440,7 @@ class TestTlsConstruct extends CommonAzureConstruct {
       name: 'test-tls-function-app',
       resourceGroupName: 'test-rg-dev',
       serverFarmId: '/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.Web/serverfarms/test-asp',
-      siteConfig: { minTlsVersion: '1.2' },
+      siteConfig: { minTlsVersion: '1.0' },
     } as any)
 
     this.functionAppFlexConsumption = this.functionManager.createFunctionAppFlexConsumption(
@@ -537,21 +537,21 @@ describe('TestAzureFunctionConstruct - Minimum TLS Version', () => {
     )
   })
 
-  test('flex consumption function app pins TLS 1.3', async () => {
+  test('flex consumption function app pins TLS 1.2', async () => {
     await outputToPromise(
       pulumi.all([minimalStack.construct.functionAppFlexConsumption.siteConfig]).apply(([siteConfig]) => {
-        expect(siteConfig?.minTlsVersion).toEqual('1.3')
+        expect(siteConfig?.minTlsVersion).toEqual('1.2')
         expect(siteConfig?.http20Enabled).toEqual(true)
       })
     )
   })
 
-  test('flex consumption resource pins TLS 1.3', async () => {
+  test('flex consumption resource pins TLS 1.2', async () => {
     await outputToPromise(
       pulumi
         .all([minimalStack.construct.functionAppFlexConsumptionResource.properties])
         .apply(([properties]: any[]) => {
-          expect(properties?.siteConfig?.minTlsVersion).toEqual('1.3')
+          expect(properties?.siteConfig?.minTlsVersion).toEqual('1.2')
         })
     )
   })
@@ -560,7 +560,7 @@ describe('TestAzureFunctionConstruct - Minimum TLS Version', () => {
     await outputToPromise(
       pulumi.all([tlsStack.construct.functionAppFlexConsumption.siteConfig]).apply(([siteConfig]) => {
         expect(siteConfig?.alwaysOn).toEqual(true)
-        expect(siteConfig?.minTlsVersion).toEqual('1.3')
+        expect(siteConfig?.minTlsVersion).toEqual('1.2')
         expect(siteConfig?.http20Enabled).toEqual(true)
       })
     )
