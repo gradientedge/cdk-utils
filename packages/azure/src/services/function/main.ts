@@ -1,14 +1,14 @@
-import { Deployment, DeploymentMode, Resource } from '@pulumi/azure-native/resources/index.js'
+import { Resource } from '@pulumi/azure-native/resources/index.js'
 import {
   ClientCertMode,
   FtpsState,
   ManagedServiceIdentityType,
+  SiteUpdateStrategyType,
   SupportedTlsVersions,
   WebApp,
   WebAppFunction,
 } from '@pulumi/azure-native/web/index.js'
 import { output, ResourceOptions } from '@pulumi/pulumi'
-import { v5 as uuidv5 } from 'uuid'
 
 import { CommonAzureConstruct, CommonAzureStack } from '../../common/index.js'
 
@@ -176,11 +176,19 @@ export class AzureFunctionManager {
         clientAffinityProxyEnabled: props.clientAffinityProxyEnabled ?? false,
         clientCertMode: props.clientCertMode ?? ClientCertMode.Optional,
         clientCertEnabled: props.clientCertEnabled ?? false,
-        functionAppConfig: {
-          ...props.functionAppConfig,
+        // Resolved before it is read: `functionAppConfig` is an Input, so a caller can
+        // pass an Output and spreading it directly would splat its methods.
+        functionAppConfig: output(props.functionAppConfig).apply(functionAppConfig => ({
+          ...functionAppConfig,
           runtime,
           scaleAndConcurrency,
-        },
+          // Owned by this resource rather than patched in afterwards: a later update
+          // that omitted it would reset the strategy, and an ARM deployment with
+          // unchanged inputs never re-runs to restore it.
+          siteUpdateStrategy: functionAppConfig?.siteUpdateStrategy ?? {
+            type: SiteUpdateStrategyType.RollingUpdate,
+          },
+        })),
         siteConfig: output(props.siteConfig).apply(siteConfig => ({
           ...siteConfig,
           ftpsState: siteConfig?.ftpsState ?? FtpsState.FtpsOnly,
@@ -191,43 +199,6 @@ export class AzureFunctionManager {
         tags: tags,
       },
       { parent: scope, ...resourceOptions }
-    )
-
-    // perform a deployment for the rolling update strategy
-    const deploymentId = uuidv5(`${id}-depl`, uuidv5.DNS)
-    new Deployment(
-      deploymentId,
-      {
-        deploymentName: deploymentId,
-        resourceGroupName,
-        properties: {
-          mode: DeploymentMode.Incremental,
-          template: {
-            $schema: 'https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#',
-            contentVersion: '1.0.0.0',
-            resources: [
-              {
-                type: 'Microsoft.Web/sites',
-                apiVersion: '2024-04-01',
-                name,
-                location,
-                tags,
-                properties: {
-                  functionAppConfig: {
-                    ...props.functionAppConfig,
-                    runtime,
-                    scaleAndConcurrency,
-                    siteUpdateStrategy: {
-                      type: 'RollingUpdate',
-                    },
-                  },
-                },
-              },
-            ],
-          },
-        },
-      },
-      { parent: functionApp, dependsOn: [functionApp], ...resourceOptions }
     )
 
     return functionApp

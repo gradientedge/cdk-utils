@@ -1,7 +1,6 @@
 import { Resource } from '@pulumi/azure-native/resources/index.js'
 import { WebApp, WebAppFunction } from '@pulumi/azure-native/web/index.js'
 import * as pulumi from '@pulumi/pulumi'
-import { v5 as uuidv5 } from 'uuid'
 import {
   CommonAzureConstruct,
   CommonAzureStack,
@@ -218,22 +217,12 @@ describe('TestAzureFunctionConstruct', () => {
     )
   })
 
-  test('flex consumption deployment has correct settings', () => {
-    const deploymentArgs = capturedResources[uuidv5('test-function-app-flex-consumption-dev-depl', uuidv5.DNS)]
-    expect(deploymentArgs).toBeDefined()
-    expect(deploymentArgs.type).toEqual('azure-native:resources:Deployment')
-
-    const template = deploymentArgs.inputs.properties.template
-    expect(template.$schema).toEqual('https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#')
-    expect(template.contentVersion).toEqual('1.0.0.0')
-
-    const resource = template.resources[0]
-    expect(resource.type).toEqual('Microsoft.Web/sites')
-    expect(resource.apiVersion).toEqual('2024-04-01')
-    expect(resource.location).toEqual('eastus')
-
-    const config = resource.properties.functionAppConfig
-    expect(config.siteUpdateStrategy.type).toEqual('RollingUpdate')
+  test('flex consumption sets the rolling update strategy on the app itself', async () => {
+    await outputToPromise(
+      pulumi.all([stack.construct.functionAppFlexConsumption.functionAppConfig]).apply(([functionAppConfig]) => {
+        expect(functionAppConfig?.siteUpdateStrategy?.type).toEqual('RollingUpdate')
+      })
+    )
   })
 })
 
@@ -357,11 +346,12 @@ describe('TestAzureFunctionConstruct - Default Value Branches', () => {
     expect(flexArgs.inputs.siteConfig.http20Enabled).toEqual(true)
   })
 
-  test('flex consumption deployment uses default values', () => {
-    const deploymentArgs = capturedResources[uuidv5('test-minimal-flex-dev-depl', uuidv5.DNS)]
-    expect(deploymentArgs).toBeDefined()
-    const config = deploymentArgs.inputs.properties.template.resources[0].properties.functionAppConfig
-    expect(config.siteUpdateStrategy.type).toEqual('RollingUpdate')
+  test('flex consumption defaults the update strategy to rolling update', async () => {
+    await outputToPromise(
+      pulumi.all([minimalStack.construct.functionAppFlexConsumption.functionAppConfig]).apply(([functionAppConfig]) => {
+        expect(functionAppConfig?.siteUpdateStrategy?.type).toEqual('RollingUpdate')
+      })
+    )
   })
 
   test('flex consumption resource uses default values', () => {
