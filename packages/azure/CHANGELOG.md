@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.60.5
+
+### Patch Changes
+
+- [`0e83663`](https://github.com/gradientedge/cdk-utils/commit/0e8366320a7be9ea43ece9a3fbe285b38cd673d9) Thanks [@despock](https://github.com/despock)! - fix: keep the flex consumption function app rolling update strategy applied
+
 ## 2.60.4
 
 ### Patch Changes
