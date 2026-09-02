@@ -1,5 +1,15 @@
 # @gradientedge/cdk-utils
 
+## 11.61.4
+
+### Patch Changes
+
+- [`7990d8e`](https://github.com/gradientedge/cdk-utils/commit/7990d8ec7c6e79c7bcc0e144dc639ddc526fb50b) Thanks [@despock](https://github.com/despock)! - Pin the flex consumption function app minimum TLS version back to 1.2
+
+- [`7990d8e`](https://github.com/gradientedge/cdk-utils/commit/7990d8ec7c6e79c7bcc0e144dc639ddc526fb50b) Thanks [@despock](https://github.com/despock)! - Pin the function app minimum TLS version back to 1.2
+- Updated dependencies [[`7990d8e`](https://github.com/gradientedge/cdk-utils/commit/7990d8ec7c6e79c7bcc0e144dc639ddc526fb50b), [`7990d8e`](https://github.com/gradientedge/cdk-utils/commit/7990d8ec7c6e79c7bcc0e144dc639ddc526fb50b)]:
+  - @gradientedge/cdk-utils-azure@2.60.4
+
 ## 11.61.3
 
 ### Patch Changes
