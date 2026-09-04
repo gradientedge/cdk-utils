@@ -1,6 +1,5 @@
 ---
 '@gradientedge/cdk-utils-azure': patch
-'@gradientedge/cdk-utils': patch
 ---
 
 fix(azure): scope APIM certificate kv-role RoleAssignment to an ARM resource ID instead of the Key Vault secret URI
