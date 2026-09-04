@@ -21,8 +21,20 @@ import { Input } from '@pulumi/pulumi'
  * @category Interface
  */
 export interface ApiManagementProps extends ApiManagementServiceArgs {
-  /** Key Vault resource ID containing the SSL certificate for custom domains */
+  /** Key Vault secret URI containing the SSL certificate for custom domains */
   certificateKeyVaultId?: Input<string>
+  /** Name of the Key Vault referenced by certificateKeyVaultId. When provided together with
+   *  certificateKeyVaultResourceGroupName, the kv-role RBAC assignment is scoped to this vault's
+   *  ARM resource ID (optionally narrowed to certificateKeyVaultSecretName) instead of the secret
+   *  URI, which Azure rejects as a role assignment scope. Omitting these falls back to the
+   *  existing (URI-scoped) behaviour so other consumers are unaffected. */
+  certificateKeyVaultName?: Input<string>
+  /** Resource group of the Key Vault referenced by certificateKeyVaultId */
+  certificateKeyVaultResourceGroupName?: Input<string>
+  /** Name of the secret referenced by certificateKeyVaultId. Narrows the kv-role RBAC assignment
+   *  to that specific secret rather than the whole vault, avoiding collisions with any existing
+   *  vault-level role assignment for the same principal. */
+  certificateKeyVaultSecretName?: Input<string>
   /** Pulumi stack name for importing an existing API Management service */
   apiStackName?: string
   /** When true, resolves an existing API Management service instead of creating one */
