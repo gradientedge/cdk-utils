@@ -129,6 +129,13 @@ export class AzureRestApi extends CommonAzureConstruct {
       }).identity
 
       if (this.props.apiManagement.certificateKeyVaultId && apimIdentity) {
+        /* RBAC scope must be an ARM resource ID, not the Key Vault secret URI used by the
+           Certificate resource's keyVault.secretIdentifier. Resolve the vault explicitly when
+           its name/resource group are known; otherwise keep the existing (URI-scoped) behaviour
+           so other consumers of this construct are unaffected. */
+        const { certificateKeyVaultName, certificateKeyVaultResourceGroupName, certificateKeyVaultSecretName } =
+          this.props.apiManagement
+
         this.authorisationManager.createRoleAssignment(`${this.id}-kv-role`, this, {
           principalId: apimIdentity.apply(id => id?.principalId ?? ''),
           roleDefinitionId: this.authorisationManager.resolveRoleDefinitionId(
@@ -136,7 +143,18 @@ export class AzureRestApi extends CommonAzureConstruct {
             RoleDefinitionId.KEY_VAULT_CERTIFICATE_USER
           ),
           principalType: PrincipalType.ServicePrincipal,
-          scope: this.props.apiManagement.certificateKeyVaultId,
+          scope:
+            certificateKeyVaultName && certificateKeyVaultResourceGroupName
+              ? (() => {
+                  const certificateKeyVault = getVaultOutput(
+                    { vaultName: certificateKeyVaultName, resourceGroupName: certificateKeyVaultResourceGroupName },
+                    { parent: this }
+                  )
+                  return certificateKeyVaultSecretName
+                    ? pulumi.interpolate`${certificateKeyVault.id}/secrets/${certificateKeyVaultSecretName}`
+                    : certificateKeyVault.id
+                })()
+              : this.props.apiManagement.certificateKeyVaultId,
         })
       }
     }
