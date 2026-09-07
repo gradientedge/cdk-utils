@@ -12,7 +12,10 @@
       "name": "Consumption",
       "capacity": 0
     },
-    "certificateKeyVaultId": "/subscriptions/test-sub/resourceGroups/test-rg/providers/Microsoft.KeyVault/vaults/test-kv/certificates/test-cert"
+    "certificateKeyVaultId": "/subscriptions/test-sub/resourceGroups/test-rg/providers/Microsoft.KeyVault/vaults/test-kv/certificates/test-cert",
+    "certificateKeyVaultName": "test-kv",
+    "certificateKeyVaultResourceGroupName": "test-rg",
+    "certificateKeyVaultSecretName": "test-cert"
   },
   "apiManagementCertificate": {
     "certificateId": "test-api-management-certificate"

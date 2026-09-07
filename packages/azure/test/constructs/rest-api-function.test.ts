@@ -55,6 +55,8 @@ const testStackPropsCorsSubdomain: TestAzureStackProps = {
   ],
 }
 
+const roleAssignmentScopes: Record<string, pulumi.Input<string> | undefined> = {}
+
 class TestCommonStack extends CommonAzureStack {
   declare props: CommonAzureStackProps
   declare construct: TestRestApiFunctionConstruct
@@ -267,6 +269,7 @@ pulumi.runtime.setMocks({
       name = args.name
     } else if (args.type === 'azure-native:authorization:RoleAssignment') {
       name = args.name
+      roleAssignmentScopes[args.name] = args.inputs.scope as pulumi.Input<string>
     } else if (args.type === 'pulumi:pulumi:StackReference') {
       return {
         id: `${args.name}-id`,
@@ -295,6 +298,12 @@ pulumi.runtime.setMocks({
     }
   },
   call: (args: pulumi.runtime.MockCallArgs) => {
+    if (args.token === 'azure-native:keyvault:getVault') {
+      return {
+        ...args.inputs,
+        id: '/subscriptions/test-sub/resourceGroups/test-rg/providers/Microsoft.KeyVault/vaults/test-kv',
+      }
+    }
     if (args.token === 'azure-native:storage:listStorageAccountKeys') {
       return {
         keys: [{ value: 'mock-storage-key' }],
@@ -508,6 +517,16 @@ describe('TestAzureRestApiFunctionNewApiConstruct', () => {
           expect(urn).toBeDefined()
           expect(name).toBeDefined()
         })
+    )
+  })
+
+  test('scopes certificate role assignment to the certificate secret', async () => {
+    await outputToPromise(
+      pulumi.output(roleAssignmentScopes['test-common-stack-new-api-kv-role']).apply(scope => {
+        expect(scope).toEqual(
+          '/subscriptions/test-sub/resourceGroups/test-rg/providers/Microsoft.KeyVault/vaults/test-kv/secrets/test-cert'
+        )
+      })
     )
   })
 })
