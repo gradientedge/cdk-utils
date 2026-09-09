@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.60.7
+
+### Patch Changes
+
+- [#1185](https://github.com/gradientedge/cdk-utils/pull/1185) [`9cff7f5`](https://github.com/gradientedge/cdk-utils/commit/9cff7f542d615bd0c64d5ceb46009fbea0974543) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - feat: Update deploy load test script to use static ip
+
 ## 2.60.6
 
 ### Patch Changes
