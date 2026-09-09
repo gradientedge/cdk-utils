@@ -122,12 +122,11 @@ export class AzureLoadTesting extends CommonAzureConstruct {
     for (const configFile of yamlFiles) {
       const testId = configFile.replace('.yaml', '')
       const configPath = path.resolve(configDir, configFile)
-      const loadTestCommand = pulumi
-        .all([this.loadTest.name, this.resourceGroup.name, this.subnet.id])
-        .apply(
-          ([loadTestName, resourceGroupName, subnetId]) =>
-            `az load test create --load-test-resource "${loadTestName}" --resource-group "${resourceGroupName}" --test-id "${testId}" --load-test-config-file "${configPath}" --subnet-id "${subnetId}" 2>&1 || az load test update --load-test-resource "${loadTestName}" --resource-group "${resourceGroupName}" --test-id "${testId}" --load-test-config-file "${configPath}" --subnet-id "${subnetId}"`
-        )
+      const loadTestCommand = pulumi.all([this.loadTest.name, this.resourceGroup.name, this.subnet.id]).apply(
+        // --disable-public-ip prevents Azure Load Testing from provisioning its own LB/public IP, so egress uses our NAT gateway instead
+        ([loadTestName, resourceGroupName, subnetId]) =>
+          `az load test create --load-test-resource "${loadTestName}" --resource-group "${resourceGroupName}" --test-id "${testId}" --load-test-config-file "${configPath}" --subnet-id "${subnetId}" --disable-public-ip true 2>&1 || az load test update --load-test-resource "${loadTestName}" --resource-group "${resourceGroupName}" --test-id "${testId}" --load-test-config-file "${configPath}" --subnet-id "${subnetId}" --disable-public-ip true`
+      )
 
       new command.Command(`${this.id}-deploy-${testId}`, {
         create: loadTestCommand,
