@@ -1,4 +1,5 @@
-import { readdirSync } from 'fs'
+import { createHash } from 'crypto'
+import { readdirSync, readFileSync, statSync } from 'fs'
 import path from 'path'
 
 import * as command from '@pulumi/command/local/index.js'
@@ -117,6 +118,7 @@ export class AzureLoadTesting extends CommonAzureConstruct {
   /** @summary Create or update test definitions from YAML files in the configured directory */
   protected deployLoadTests() {
     const configDir = path.resolve(this.props.loadTestConfigPath)
+    const configHash = this.hashLoadTestConfig(configDir)
     const yamlFiles = readdirSync(configDir).filter(file => file.endsWith('.yaml'))
 
     for (const configFile of yamlFiles) {
@@ -131,8 +133,24 @@ export class AzureLoadTesting extends CommonAzureConstruct {
       new command.Command(`${this.id}-deploy-${testId}`, {
         create: loadTestCommand,
         update: loadTestCommand,
-        triggers: [this.loadTest.id, configFile],
+        triggers: [this.loadTest.id, configFile, configHash],
       })
     }
+  }
+
+  /**
+   * @summary Content hash of the test configuration directory
+   * @remarks Test definitions and their scripts are uploaded by the CLI, so Pulumi cannot diff them.
+   * Without this the deployment only reruns when the resource or a file name changes.
+   */
+  protected hashLoadTestConfig(configDir: string): string {
+    const files = readdirSync(configDir, { encoding: 'utf8', recursive: true })
+      .map(file => path.resolve(configDir, file))
+      .filter(file => statSync(file).isFile())
+      .sort()
+
+    return files
+      .reduce((hash, file) => hash.update(path.relative(configDir, file)).update(readFileSync(file)), createHash('md5'))
+      .digest('hex')
   }
 }
