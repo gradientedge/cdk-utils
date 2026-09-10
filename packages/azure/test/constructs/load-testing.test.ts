@@ -1,3 +1,6 @@
+import { mkdtempSync, rmSync, writeFileSync } from 'fs'
+import os from 'os'
+import path from 'path'
 import * as pulumi from '@pulumi/pulumi'
 import { outputToPromise } from '../helpers.js'
 import {
@@ -51,6 +54,10 @@ class TestLoadTestingConstruct extends AzureLoadTesting {
     super(name, props)
     this.props = props
     this.initResources()
+  }
+
+  public configHash(configDir: string): string {
+    return this.hashLoadTestConfig(configDir)
   }
 }
 
@@ -271,5 +278,23 @@ describe('TestAzureLoadTestingMinimalConstruct', () => {
         expect(name).toEqual('test-common-stack-minimal-dev')
       })
     )
+  })
+
+  test('hashes the test configuration directory', () => {
+    const configDir = mkdtempSync(path.join(os.tmpdir(), 'load-testing-'))
+
+    try {
+      writeFileSync(path.join(configDir, 'scenario.yaml'), 'testId: scenario\n')
+      writeFileSync(path.join(configDir, 'scenario.py'), 'PASS = True\n')
+      const hash = stack.construct.configHash(configDir)
+
+      expect(hash).toMatch(/^[a-f0-9]{32}$/)
+      expect(stack.construct.configHash(configDir)).toEqual(hash)
+
+      writeFileSync(path.join(configDir, 'scenario.py'), 'PASS = False\n')
+      expect(stack.construct.configHash(configDir)).not.toEqual(hash)
+    } finally {
+      rmSync(configDir, { force: true, recursive: true })
+    }
   })
 })
