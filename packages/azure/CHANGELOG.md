@@ -1,5 +1,13 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.60.8
+
+### Patch Changes
+
+- [#1187](https://github.com/gradientedge/cdk-utils/pull/1187) [`72ec304`](https://github.com/gradientedge/cdk-utils/commit/72ec30482a549afdd086a9e348e362012970cc48) Thanks [@sathish-palanivelu](https://github.com/sathish-palanivelu)! - Redeploy load test definitions when their configuration content changes
+
+  `AzureLoadTesting` triggered the deployment command on the config file name only, so test definitions and their uploaded scripts were never redeployed after the first apply. The deployment is now also triggered by a content hash of the test configuration directory.
+
 ## 2.60.7
 
 ### Patch Changes
