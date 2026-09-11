@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.61.0
+
+### Minor Changes
+
+- [#1195](https://github.com/gradientedge/cdk-utils/pull/1195) [`2865687`](https://github.com/gradientedge/cdk-utils/commit/2865687db96137999ff58206b84b6f87da74b1a8) Thanks [@sathish-palanivelu](https://github.com/sathish-palanivelu)! - Add `AzureEventHandler.eventGridDiagnosticSettings` prop. When set, the `AzureEventHandler` construct configures diagnostic logging for its EventGrid topic to Log Analytics, following the same opt-in pattern as the construct's existing Service Bus diagnostic settings.
+
 ## 2.60.8
 
 ### Patch Changes
