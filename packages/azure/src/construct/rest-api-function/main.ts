@@ -360,7 +360,7 @@ export class AzureRestApiFunction extends AzureFunctionApp {
           </set-header>
         </inbound>
         <backend>
-            <base />
+          ${this.api.backendPolicyXmlContent ?? '<base />'}
         </backend>
         <outbound>
           <base />

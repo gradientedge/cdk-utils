@@ -63,6 +63,8 @@ export interface AzureRestApiFunctionProps extends AzureRestApiProps, AzureFunct
 export interface AzureApiFunction extends AzureApi {
   /** Map of operation display names to provisioned API operation resources */
   apiOperations: { [operation: string]: ApiOperation }
+  /** Custom backend policy XML content; defaults to `<base />` */
+  backendPolicyXmlContent?: Input<string>
   /** The provisioned API Management backend pointing to the function app */
   backend: Backend
   /** Generated CORS policy XML content */
