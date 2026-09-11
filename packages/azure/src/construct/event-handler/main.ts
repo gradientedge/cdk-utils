@@ -128,6 +128,7 @@ export class AzureEventHandler extends AzureFunctionApp {
     this.createServiceBusQueueAuthorizationRule()
     this.createEventGrid()
     this.createEventGridEventSubscription()
+    this.createDiagnosticLog()
     this.createServiceBusDiagnosticLog()
     this.enableMalwareScanningOnDataStorageAccount()
     super.initResources()
@@ -365,6 +366,35 @@ export class AzureEventHandler extends AzureFunctionApp {
         },
       }
     )
+  }
+
+  /**
+   * @summary Method to create diagnostic log settings for the EventGrid topic.
+   *
+   * Skipped unless the consumer stack opts in via `eventGridDiagnosticSettings` — not every
+   * event handler stack needs topic-level diagnostics.
+   */
+  protected createDiagnosticLog() {
+    if (!this.props.eventGridDiagnosticSettings) return
+
+    this.monitorManager.createMonitorDiagnosticSettings(this.id, this, {
+      logs: [
+        {
+          categoryGroup: 'allLogs',
+          enabled: true,
+        },
+      ],
+      metrics: [
+        {
+          category: 'AllMetrics',
+          enabled: true,
+        },
+      ],
+      ...this.props.eventGridDiagnosticSettings,
+      name: `${this.id}-eventgrid`,
+      resourceUri: this.eventGridTopic.id,
+      workspaceId: this.commonLogAnalyticsWorkspace.id,
+    })
   }
 
   /**
