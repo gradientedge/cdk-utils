@@ -56,6 +56,10 @@ const testStackPropsCorsSubdomain: TestAzureStackProps = {
 }
 
 const roleAssignmentScopes: Record<string, pulumi.Input<string> | undefined> = {}
+let resolveCustomApiPolicyValue: (value: string) => void
+const customApiPolicyValue = new Promise<string>(resolve => {
+  resolveCustomApiPolicyValue = resolve
+})
 
 class TestCommonStack extends CommonAzureStack {
   declare props: CommonAzureStackProps
@@ -263,8 +267,13 @@ pulumi.runtime.setMocks({
       name = args.inputs.displayName
     } else if (args.type === 'azure-native:apimanagement:ApiOperation') {
       name = args.inputs.displayName
-    } else if (args.type === 'azure-native:apimanagement:Policy') {
+    } else if (
+      args.type === 'azure-native:apimanagement:Policy' ||
+      args.type === 'azure-native:apimanagement:ApiPolicy'
+    ) {
       name = args.name
+      const value = args.inputs.value as string
+      if (value.includes('<forward-request timeout="30" />')) resolveCustomApiPolicyValue(value)
     } else if (args.type === 'azure-native:apimanagement:ApiOperationPolicy') {
       name = args.name
     } else if (args.type === 'azure-native:authorization:RoleAssignment') {
@@ -592,6 +601,7 @@ class TestRestApiFunctionWithPolicyConstruct extends AzureRestApiFunction {
     this.createApiManagementNamespace()
     this.createApiManagementRoutes()
     this.createCorsPolicy()
+    this.api.backendPolicyXmlContent = '<forward-request timeout="30" />'
     this.createApiPolicy()
   }
 
@@ -617,10 +627,11 @@ pulumi.runtime.setConfig('project:extraContexts', JSON.stringify(testStackProps.
 const stackWithPolicy = new TestCommonStackWithPolicy('test-policy-stack', testStackProps)
 
 describe('TestAzureRestApiFunctionWithPolicyConstruct', () => {
-  test('creates api policy as expected', () => {
+  test('creates api policy with custom backend policy content', async () => {
     expect(stackWithPolicy).toBeDefined()
     expect(stackWithPolicy.construct).toBeDefined()
     expect(stackWithPolicy.construct.api).toBeDefined()
+    await expect(customApiPolicyValue).resolves.toContain('<forward-request timeout="30" />')
   })
 
   test('dashboardVariables returns expected variables', () => {
