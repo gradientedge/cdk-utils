@@ -1,5 +1,16 @@
 # @gradientedge/cdk-utils
 
+## 11.63.0
+
+### Minor Changes
+
+- [#1197](https://github.com/gradientedge/cdk-utils/pull/1197) [`9f24ab5`](https://github.com/gradientedge/cdk-utils/commit/9f24ab5864d5459b011af26664d191f773b31ee4) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - Add `AzureApiFunction.backendPolicyXmlContent` for custom API Management backend policy XML.
+
+### Patch Changes
+
+- Updated dependencies [[`9f24ab5`](https://github.com/gradientedge/cdk-utils/commit/9f24ab5864d5459b011af26664d191f773b31ee4)]:
+  - @gradientedge/cdk-utils-azure@2.62.0
+
 ## 11.62.0
 
 ### Minor Changes
