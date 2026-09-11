@@ -13,6 +13,7 @@ import {
   DefenderForStorageProps,
   EventgridEventSubscriptionProps,
   EventgridTopicProps,
+  MonitorDiagnosticSettingProps,
   ServiceBusNamespaceProps,
   ServiceBusQueueProps,
   StorageAccountProps,
@@ -125,6 +126,11 @@ export interface AzureEventHandlerProps extends AzureFunctionAppProps {
   defender?: DefenderForStorageProps
   /** EventGrid event subscription properties */
   eventGridEventSubscription?: EventgridEventSubscriptionProps
+  /**
+   * EventGrid topic diagnostic logging properties. Diagnostic settings are only created when
+   * this is set — most event handler stacks do not need topic-level diagnostics.
+   */
+  eventGridDiagnosticSettings?: MonitorDiagnosticSettingProps
   /** EventGrid subscription dead-letter queue storage properties */
   eventGridSubscription: EventHandlerEventGridSubscriptionProps
   /** EventGrid topic properties */

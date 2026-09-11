@@ -9,6 +9,9 @@
     "eventSubscriptionName": "test-event-handler-subscription",
     "scope": "/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.EventGrid/topics/test-event-handler-topic-dev"
   },
+  "eventGridDiagnosticSettings": {
+    "logAnalyticsDestinationType": "Dedicated"
+  },
   "eventGridSubscription": {
     "dlqStorageAccount": {
       "accountName": "test-event-handler-dlq-sa",
