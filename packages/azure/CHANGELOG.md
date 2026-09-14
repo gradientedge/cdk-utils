@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.62.1
+
+### Patch Changes
+
+- [#1199](https://github.com/gradientedge/cdk-utils/pull/1199) [`35454c6`](https://github.com/gradientedge/cdk-utils/commit/35454c6239141fb438cfbfe6067e4b5fbb160e53) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - Add optional Azure Web App deployment slot provisioning with auto-swap configuration support.
+
 ## 2.62.0
 
 ### Minor Changes
