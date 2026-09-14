@@ -156,7 +156,7 @@ export class AzureAppServiceManager {
       `${id}-was`,
       {
         ...props,
-        name: scope.resourceNameFormatter.format(props.name?.toString(), scope.props.resourceNameOptions?.linuxWebApp),
+        name: props.name,
         resourceGroupName,
         location: props.location ?? scope.props.location,
         httpsOnly: props.httpsOnly ?? true,

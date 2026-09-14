@@ -243,9 +243,14 @@ describe('TestSiteWithWebAppConstruct', () => {
 
   test('provisions web app slot with auto-swap configuration', () => {
     pulumi
-      .all([stack.construct.site.webAppSlot?.id, stack.construct.site.webAppSlot?.siteConfig])
-      .apply(([id, siteConfig]) => {
+      .all([
+        stack.construct.site.webAppSlot?.id,
+        stack.construct.site.webAppSlot?.name,
+        stack.construct.site.webAppSlot?.siteConfig,
+      ])
+      .apply(([id, name, siteConfig]) => {
         expect(id).toEqual('test-common-stack-web-app-slot-was-id')
+        expect(name).toEqual('test-site-web-app-dev')
         expect(siteConfig?.autoSwapSlotName).toEqual('production')
       })
   })

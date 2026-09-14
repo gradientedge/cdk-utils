@@ -57,7 +57,6 @@ export class SiteWithWebApp extends CommonAzureConstruct {
     this.createCodePackage()
     this.createWebAppSiteConfig()
     this.createWebApp()
-    this.createWebAppSlot()
     this.createDiagnosticLog()
   }
 
@@ -177,6 +176,7 @@ export class SiteWithWebApp extends CommonAzureConstruct {
       },
       { ...resourceOptions }
     )
+    this.createWebAppSlot()
   }
 
   /** @summary Create the optional Azure Web App deployment slot */
