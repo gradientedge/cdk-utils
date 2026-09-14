@@ -27,6 +27,14 @@
         "alwaysOn": true
       }
     },
+    "webAppSlot": {
+      "name": "test-site-web-app",
+      "slot": "staging",
+      "resourceGroupName": "test-rg-dev",
+      "siteConfig": {
+        "autoSwapSlotName": "production"
+      }
+    },
     "codeArchiveFile": {
       "type": "zip",
       "sourceDir": "dist",
