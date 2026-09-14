@@ -1,11 +1,17 @@
 import * as archive from '@pulumi/archive'
 import { GetFileOutputArgs } from '@pulumi/archive'
 import { BlobContainer, StorageAccount } from '@pulumi/azure-native/storage/index.js'
-import { AppServicePlan, WebApp } from '@pulumi/azure-native/web/index.js'
+import { AppServicePlan, WebApp, WebAppSlot } from '@pulumi/azure-native/web/index.js'
 import { Output } from '@pulumi/pulumi'
 
 import { CommonAzureStackProps } from '../../common/index.js'
-import { LinuxWebAppProps, ServicePlanProps, StorageAccountProps, StorageContainerProps } from '../../services/index.js'
+import {
+  LinuxWebAppProps,
+  ServicePlanProps,
+  StorageAccountProps,
+  StorageContainerProps,
+  WebAppSlotProps,
+} from '../../services/index.js'
 
 /**
  * Properties for configuring the site infrastructure resources
@@ -22,6 +28,8 @@ export interface SiteProps {
   storageContainer: StorageContainerProps
   /** Linux Web App properties */
   webApp: LinuxWebAppProps
+  /** Optional deployment slot properties */
+  webAppSlot?: WebAppSlotProps
 }
 
 /**
@@ -60,4 +68,6 @@ export interface Site {
   storageContainer: BlobContainer
   /** The provisioned Azure Linux Web App */
   webApp: WebApp
+  /** The provisioned Azure Web App deployment slot */
+  webAppSlot?: WebAppSlot
 }

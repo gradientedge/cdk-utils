@@ -121,6 +121,8 @@ pulumi.runtime.setMocks({
       capturedContainerAccountName = args.inputs.accountName
     } else if (args.type === 'azure-native:web:WebApp') {
       name = args.inputs.name
+    } else if (args.type === 'azure-native:web:WebAppSlot') {
+      name = args.inputs.name
     } else if (args.type === 'azure-native:monitor:DiagnosticSetting') {
       name = args.inputs.name
     }
@@ -162,6 +164,7 @@ describe('TestSiteWithWebAppConstruct', () => {
     expect(stack.construct.site.codeArchiveFile).toBeDefined()
     expect(stack.construct.site.environmentVariables).toBeDefined()
     expect(stack.construct.site.webApp).toBeDefined()
+    expect(stack.construct.site.webAppSlot).toBeDefined()
   })
 
   test('provisions site app service plan as expected', () => {
@@ -235,6 +238,15 @@ describe('TestSiteWithWebAppConstruct', () => {
         )
         expect(name).toEqual('test-site-web-app-dev')
         expect(tags?.environment).toEqual('dev')
+      })
+  })
+
+  test('provisions web app slot with auto-swap configuration', () => {
+    pulumi
+      .all([stack.construct.site.webAppSlot?.id, stack.construct.site.webAppSlot?.siteConfig])
+      .apply(([id, siteConfig]) => {
+        expect(id).toEqual('test-common-stack-web-app-slot-was-id')
+        expect(siteConfig?.autoSwapSlotName).toEqual('production')
       })
   })
 

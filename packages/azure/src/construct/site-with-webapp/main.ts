@@ -57,6 +57,7 @@ export class SiteWithWebApp extends CommonAzureConstruct {
     this.createCodePackage()
     this.createWebAppSiteConfig()
     this.createWebApp()
+    this.createWebAppSlot()
     this.createDiagnosticLog()
   }
 
@@ -175,6 +176,22 @@ export class SiteWithWebApp extends CommonAzureConstruct {
         }),
       },
       { ...resourceOptions }
+    )
+  }
+
+  /** @summary Create the optional Azure Web App deployment slot */
+  protected createWebAppSlot(resourceOptions?: ResourceOptions) {
+    if (!this.props.site.webAppSlot) return
+
+    this.site.webAppSlot = this.appServiceManager.createWebAppSlot(
+      `${this.id}-web-app-slot`,
+      this,
+      {
+        ...this.props.site.webAppSlot,
+        name: this.site.webApp.name,
+        resourceGroupName: this.resourceGroup.name,
+      },
+      { dependsOn: [this.site.webApp], ...resourceOptions }
     )
   }
 
