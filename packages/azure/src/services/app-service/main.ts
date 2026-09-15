@@ -156,7 +156,7 @@ export class AzureAppServiceManager {
       `${id}-was`,
       {
         ...props,
-        name: scope.resourceNameFormatter.format(props.name?.toString(), scope.props.resourceNameOptions?.linuxWebApp),
+        name: props.name,
         resourceGroupName,
         location: props.location ?? scope.props.location,
         httpsOnly: props.httpsOnly ?? true,
@@ -179,7 +179,11 @@ export class AzureAppServiceManager {
           ...props.tags,
         },
       },
-      { parent: scope, ...resourceOptions }
+      {
+        parent: scope,
+        ...resourceOptions,
+        ignoreChanges: [...new Set([...(resourceOptions?.ignoreChanges ?? []), 'siteConfig.autoSwapSlotName'])],
+      }
     )
   }
 }

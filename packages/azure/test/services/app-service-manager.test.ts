@@ -213,7 +213,7 @@ describe('TestAzureWebAppSlotConstruct', () => {
           expect(urn).toEqual(
             'urn:pulumi:stack::project::construct:test-common-stack$azure-native:web:WebAppSlot::test-web-app-slot-dev-was'
           )
-          expect(name).toEqual('test-linux-web-app-dev')
+          expect(name).toEqual('test-linux-web-app')
           expect(location).toEqual('eastus')
           expect(httpsOnly).toEqual(true)
           expect(tags?.environment).toEqual('dev')
