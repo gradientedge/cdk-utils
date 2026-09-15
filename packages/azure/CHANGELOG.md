@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.62.2
+
+### Patch Changes
+
+- [#1201](https://github.com/gradientedge/cdk-utils/pull/1201) [`5400da1`](https://github.com/gradientedge/cdk-utils/commit/5400da1d69fb16186f4ecb85afce2df81edac42b) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - Create deployment slots before dependent Web App deployment commands.
+
 ## 2.62.1
 
 ### Patch Changes
