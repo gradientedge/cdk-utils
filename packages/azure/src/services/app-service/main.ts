@@ -179,7 +179,11 @@ export class AzureAppServiceManager {
           ...props.tags,
         },
       },
-      { parent: scope, ...resourceOptions }
+      {
+        parent: scope,
+        ...resourceOptions,
+        ignoreChanges: [...new Set([...(resourceOptions?.ignoreChanges ?? []), 'siteConfig.autoSwapSlotName'])],
+      }
     )
   }
 }
