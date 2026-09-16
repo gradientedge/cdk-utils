@@ -632,6 +632,7 @@ describe('TestAzureRestApiFunctionWithPolicyConstruct', () => {
     expect(stackWithPolicy.construct).toBeDefined()
     expect(stackWithPolicy.construct.api).toBeDefined()
     await expect(customApiPolicyValue).resolves.toContain('<forward-request timeout="30" />')
+    await expect(customApiPolicyValue).resolves.toContain('<base />')
   })
 
   test('dashboardVariables returns expected variables', () => {
