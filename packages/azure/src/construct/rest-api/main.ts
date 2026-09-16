@@ -6,8 +6,10 @@ import {
 import { getComponentOutput, GetComponentResult } from '@pulumi/azure-native/applicationinsights/index.js'
 import { PrincipalType } from '@pulumi/azure-native/authorization/index.js'
 import { getVaultOutput } from '@pulumi/azure-native/keyvault/index.js'
+import { AutoscaleSetting } from '@pulumi/azure-native/monitor/index.js'
 import * as pulumi from '@pulumi/pulumi'
 import { Output } from '@pulumi/pulumi'
+import _ from 'lodash'
 
 import { CommonAzureConstruct } from '../../common/index.js'
 import { RoleDefinitionId } from '../../services/index.js'
@@ -36,6 +38,8 @@ export class AzureRestApi extends CommonAzureConstruct {
   api: AzureApi = {} as AzureApi
   /** The resolved Application Insights component for telemetry */
   applicationInsights: Output<GetComponentResult>
+  /** Azure Monitor autoscale setting for the API Management service */
+  apiManagementAutoscaleSetting?: AutoscaleSetting
 
   /**
    * @summary Create a new AzureRestApi
@@ -57,6 +61,7 @@ export class AzureRestApi extends CommonAzureConstruct {
     this.resolveCommonLogAnalyticsWorkspace()
     this.resolveApplicationInsights()
     this.createApiManagement()
+    this.createApiManagementAutoscale()
     this.createNamespaceSecretRole()
     this.createNamespaceSecret()
     this.createSubscriptionKeySecret()
@@ -166,6 +171,44 @@ export class AzureRestApi extends CommonAzureConstruct {
       apiName: this.api.name,
       apiResourceGroupName: this.api.resourceGroupName,
     })
+  }
+
+  /** Configure Azure Monitor custom autoscale for v2 API Management tiers. */
+  protected createApiManagementAutoscale() {
+    const apiManagementService = this.api.apim
+    const autoscaleProps = this.props.apiManagementAutoscaling
+
+    if (this.props.apiManagement.useExistingApiManagement || !apiManagementService || !autoscaleProps) return
+
+    const configuredProfiles = autoscaleProps.profiles as unknown as
+      Array<{ rules?: Array<Record<string, unknown>> }> | undefined
+    const profiles = configuredProfiles?.map(profile => ({
+      ...profile,
+      rules: profile.rules?.map(rule =>
+        _.merge({}, rule, {
+          metricTrigger: {
+            metricResourceUri: apiManagementService.id,
+            metricResourceLocation: this.resourceGroup.location,
+          },
+        })
+      ),
+    }))
+
+    this.apiManagementAutoscaleSetting = this.monitorManager.createMonitorAutoscaleSettings(
+      `${this.id}-apim-autoscale`,
+      this,
+      {
+        ..._.merge({}, autoscaleProps, { profiles }),
+        name: `${this.id}-apim-autoscale`,
+        enabled: autoscaleProps.enabled ?? true,
+        location: this.resourceGroup.location,
+        resourceGroupName: this.resourceGroup.name,
+        targetResourceUri: apiManagementService.id,
+      },
+      { dependsOn: [apiManagementService] }
+    )
+
+    return this.apiManagementAutoscaleSetting
   }
 
   /**

@@ -118,6 +118,7 @@ class TestRestApiNewApiConstruct extends AzureRestApi {
     this.resolveCommonLogAnalyticsWorkspace()
     this.resolveApplicationInsights()
     this.createApiManagement()
+    this.createApiManagementAutoscale()
     this.createNamespaceSecretRole()
     this.createNamespaceSecret()
     this.createSubscriptionKeySecret()
@@ -159,6 +160,7 @@ class TestRestApiNewApiWithCertConstruct extends AzureRestApi {
     this.resolveCommonLogAnalyticsWorkspace()
     this.resolveApplicationInsights()
     this.createApiManagement()
+    this.createApiManagementAutoscale()
     this.createNamespaceSecretRole()
     this.createNamespaceSecret()
     this.createSubscriptionKeySecret()
@@ -362,6 +364,35 @@ describe('TestAzureRestApiNewApiConstruct', () => {
           expect(id).toBeDefined()
           expect(urn).toBeDefined()
           expect(name).toBeDefined()
+        })
+    )
+  })
+})
+
+describe('TestAzureRestApiNewApiConstruct', () => {
+  test('provisions enabled APIM autoscale with dynamic target fields', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stackNewApi.construct.apiManagementAutoscaleSetting?.enabled,
+          stackNewApi.construct.apiManagementAutoscaleSetting?.profiles,
+          stackNewApi.construct.api.apim.id,
+          stackNewApi.construct.resourceGroup.location,
+        ])
+        .apply(([enabled, profiles, apiManagementId, location]) => {
+          expect(enabled).toBe(true)
+          expect(profiles).toEqual([
+            expect.objectContaining({
+              rules: [
+                expect.objectContaining({
+                  metricTrigger: expect.objectContaining({
+                    metricResourceUri: apiManagementId,
+                    metricResourceLocation: location,
+                  }),
+                }),
+              ],
+            }),
+          ])
         })
     )
   })
