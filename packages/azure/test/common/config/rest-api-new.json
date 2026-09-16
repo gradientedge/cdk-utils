@@ -13,6 +13,38 @@
       "capacity": 0
     }
   },
+  "apiManagementAutoscaling": {
+    "profiles": [
+      {
+        "name": "default",
+        "capacity": {
+          "minimum": "1",
+          "default": "2",
+          "maximum": "10"
+        },
+        "rules": [
+          {
+            "metricTrigger": {
+              "metricName": "CpuPercent_Gateway",
+              "metricNamespace": "Microsoft.ApiManagement/service",
+              "operator": "GreaterThan",
+              "statistic": "Average",
+              "threshold": 60,
+              "timeAggregation": "Average",
+              "timeGrain": "PT1M",
+              "timeWindow": "PT30M"
+            },
+            "scaleAction": {
+              "cooldown": "PT60M",
+              "direction": "Increase",
+              "type": "ChangeCount",
+              "value": "1"
+            }
+          }
+        ]
+      }
+    ]
+  },
   "apiManagementDiagnostic": {
     "diagnosticId": "applicationinsights",
     "apiId": "/subscriptions/test-sub/resourceGroups/test-rg-dev/providers/Microsoft.ApiManagement/service/test-api-management-dev/apis/test-api"

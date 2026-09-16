@@ -9,6 +9,7 @@ import {
   CommonAzureStackProps,
   MonitorDiagnosticSettingProps,
   CertificateProps,
+  MonitorAutoscaleSettingProps,
 } from '../../index.js'
 
 /**
@@ -38,6 +39,8 @@ export interface AzureRestApiProps extends CommonAzureStackProps {
   apiManagementDiagnosticSettings: MonitorDiagnosticSettingProps
   /** API Management certificate properties */
   apiManagementCertificate: CertificateProps
+  /** API Management autoscaling settings for v2 tiers */
+  apiManagementAutoscaling?: MonitorAutoscaleSettingProps
 }
 
 /**
