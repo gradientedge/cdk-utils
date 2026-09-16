@@ -1,5 +1,15 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.62.3
+
+### Patch Changes
+
+- [#1203](https://github.com/gradientedge/cdk-utils/pull/1203) [`33c209b`](https://github.com/gradientedge/cdk-utils/commit/33c209be2c8ec9256988b6eaa7231f40021a32cb) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - Add configurable Azure API Management autoscaling for v2 tiers with dynamic resource targeting.
+
+- [#1206](https://github.com/gradientedge/cdk-utils/pull/1206) [`ce865a8`](https://github.com/gradientedge/cdk-utils/commit/ce865a85e902bbb9f6e647c8cb36c46cfc1f6a53) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - Preserve inherited API Management backend policies when custom backend policy content is configured.
+
+- [#1204](https://github.com/gradientedge/cdk-utils/pull/1204) [`f473c01`](https://github.com/gradientedge/cdk-utils/commit/f473c0182f90571eeab8e6a0c7b26485b33bf29f) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - feat(azure): add APIM autoscaling support
+
 ## 2.62.2
 
 ### Patch Changes
