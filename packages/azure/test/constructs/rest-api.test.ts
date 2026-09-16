@@ -231,6 +231,8 @@ pulumi.runtime.setMocks({
       name = args.name
     } else if (args.type === 'azure-native:monitor:DiagnosticSetting') {
       name = args.inputs.name
+    } else if (args.type === 'azure-native:monitor:AutoscaleSetting') {
+      name = args.inputs.name
     } else if (args.type === 'azure-native:apimanagement:Subscription') {
       name = args.name
     } else if (args.type === 'pulumi:pulumi:StackReference') {
@@ -248,14 +250,24 @@ pulumi.runtime.setMocks({
       }
     }
 
+    const state = {
+      ...args.inputs,
+      name,
+      identity: { principalId: 'mock-principal-id' },
+      primaryKey: 'mock-primary-key',
+    }
+
+    if (args.type === 'azure-native:monitor:AutoscaleSetting') {
+      state.properties = {
+        enabled: args.inputs.enabled,
+        profiles: args.inputs.profiles,
+        targetResourceUri: args.inputs.targetResourceUri,
+      }
+    }
+
     return {
       id: `${args.name}-id`,
-      state: {
-        ...args.inputs,
-        name,
-        identity: { principalId: 'mock-principal-id' },
-        primaryKey: 'mock-primary-key',
-      },
+      state,
     }
   },
   call: (args: pulumi.runtime.MockCallArgs) => {
@@ -374,14 +386,13 @@ describe('TestAzureRestApiNewApiConstruct', () => {
     await outputToPromise(
       pulumi
         .all([
-          stackNewApi.construct.apiManagementAutoscaleSetting?.enabled,
-          stackNewApi.construct.apiManagementAutoscaleSetting?.profiles,
+          stackNewApi.construct.apiManagementAutoscaleSetting?.properties,
           stackNewApi.construct.api.apim.id,
           stackNewApi.construct.resourceGroup.location,
         ])
-        .apply(([enabled, profiles, apiManagementId, location]) => {
-          expect(enabled).toBe(true)
-          expect(profiles).toEqual([
+        .apply(([properties, apiManagementId, location]) => {
+          expect(properties?.enabled).toBe(true)
+          expect(properties?.profiles).toEqual([
             expect.objectContaining({
               rules: [
                 expect.objectContaining({
