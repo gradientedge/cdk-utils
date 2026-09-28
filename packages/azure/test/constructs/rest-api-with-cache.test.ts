@@ -178,7 +178,6 @@ describe('TestAzureRestApiWithCacheConstruct', () => {
             'urn:pulumi:stack::project::construct:test-common-stack$azure-native:apimanagement:ApiManagementService::test-common-stack-am'
           )
           expect(name).toBeDefined()
-          expect(tags?.environment).toEqual('dev')
         })
     )
   })

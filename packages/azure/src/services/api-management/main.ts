@@ -94,7 +94,6 @@ export class AzureApiManagementManager {
         publisherEmail: props.publisherEmail ?? 'noreply@example.com',
         publisherName: props.publisherName ?? 'Default Publisher',
         tags: {
-          environment: scope.props.stage,
           ...scope.props.defaultTags,
           ...props.tags,
         },
