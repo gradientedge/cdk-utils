@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.62.5
+
+### Patch Changes
+
+- [#1213](https://github.com/gradientedge/cdk-utils/pull/1213) [`fe1d2e8`](https://github.com/gradientedge/cdk-utils/commit/fe1d2e8db0a907e167c7df551e55eae968952ee1) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - feat: remove environment tag from Azure api management resource
+
 ## 2.62.4
 
 ### Patch Changes
