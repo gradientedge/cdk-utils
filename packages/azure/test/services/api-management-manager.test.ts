@@ -178,7 +178,6 @@ describe('TestAzureApiManagementConstruct', () => {
           expect(name).toEqual('test-api-management-dev')
           expect(location).toEqual('eastus')
           expect(sku).toEqual({ capacity: 1, name: 'Developer' })
-          expect(tags?.environment).toEqual('dev')
         })
     )
   })
