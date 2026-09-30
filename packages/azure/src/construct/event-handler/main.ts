@@ -46,7 +46,7 @@ const requiredInput = (value: Input<string | undefined>, description: string): O
  * ## Authorization and the `EVENT_INGEST_SERVICE_BUS` connection string
  *
  * When the construct owns the queue (`queue.useExisting=false`), it provisions a per-queue
- * authorization rule named `listen-send` (scoped to the queue) with `Listen + Send` rights, and the function app's
+ * authorization rule named `listen-send` (scoped to the queue) with `Listen + Send + Manage` rights, and the function app's
  * `EVENT_INGEST_SERVICE_BUS` connection string is sourced from that rule. This avoids granting the
  * function app access to sibling queues when the namespace is shared.
  *
@@ -258,16 +258,18 @@ export class AzureEventHandler extends AzureFunctionApp {
   }
 
   /**
-   * @summary Provision a per-queue Listen+Send authorization rule.
+   * @summary Provision a per-queue Listen+Send+Manage authorization rule.
    *
    * Skipped when the construct does not own the queue (`queue.useExisting=true`) — in that case
    * the producer/owner of the queue is responsible for its auth rules and the function app's
    * connection string falls back to the namespace-level root rule in {@link createFunctionAppSiteConfig}.
    *
    * Replaces the previous reliance on `RootManageSharedAccessKey`, which grants Listen+Send+Manage
-   * on every queue in the namespace. The new rule narrows the scope to this one queue while keeping
-   * Listen+Send so existing function code can both consume and publish through it (Manage is
-   * intentionally dropped — a runtime app should not create or delete queues).
+   * on every queue in the namespace. This rule narrows that scope to this one queue.
+   *
+   * Manage is included because the Functions scale controller calls the Service Bus management API
+   * to read queue-length metrics; that requires Manage/EntityRead. Without it the host logs a 401
+   * per invocation and silently degrades to first-message-enqueued-time based scaling.
    */
   protected createServiceBusQueueAuthorizationRule() {
     const useExistingFlags = this.resolveServiceBusUseExisting()
@@ -279,7 +281,9 @@ export class AzureEventHandler extends AzureFunctionApp {
 
     // Azure caps `authorizationRuleName` at 50 chars. The rule's scope is the queue itself
     // (`…/namespaces/<ns>/queues/<queue>/authorizationRules/<rule>`), so a literal name is
-    // unambiguous and avoids hitting the cap on long stack ids.
+    // unambiguous and avoids hitting the cap on long stack ids. The name is kept as `listen-send`
+    // even though Manage is granted: it is immutable, so renaming would replace the rule and
+    // rotate the SAS keys behind every consumer's connection string.
     this.serviceBus.queueAuthorizationRule = this.serviceBusManager.createServiceBusQueueAuthorizationRule(
       this.id,
       this,
@@ -288,7 +292,7 @@ export class AzureEventHandler extends AzureFunctionApp {
         namespaceName: this.serviceBus.namespace.name,
         queueName: this.serviceBus.queue.name,
         resourceGroupName: namespaceResourceGroupName,
-        rights: [AccessRights.Listen, AccessRights.Send],
+        rights: [AccessRights.Listen, AccessRights.Send, AccessRights.Manage],
       }
     )
 

@@ -94,7 +94,7 @@ export interface EventHandlerServiceBus {
   /** The provisioned or resolved Service Bus queue */
   queue: Queue | Output<GetQueueResult>
   /**
-   * Per-queue authorization rule (Listen+Send) used to build the function app's
+   * Per-queue authorization rule (Listen+Send+Manage) used to build the function app's
    * `EVENT_INGEST_SERVICE_BUS` connection string. Provisioned only when the
    * construct owns the queue (`queue.useExisting=false`); undefined when the
    * queue is external and the connection string falls back to the namespace-level rule.
