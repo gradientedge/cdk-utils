@@ -822,7 +822,7 @@ describe('TestAzureEventHandlerSharedNamespace', () => {
     )
   })
 
-  test('provisions a per-queue Listen+Send authorization rule', async () => {
+  test('provisions a per-queue Listen+Send+Manage authorization rule', async () => {
     expect(stackSharedNamespace.construct.serviceBus.queueAuthorizationRule).toBeDefined()
     await outputToPromise(
       pulumi
@@ -832,7 +832,7 @@ describe('TestAzureEventHandlerSharedNamespace', () => {
         ])
         .apply(([name, rights]) => {
           expect(name).toContain('listen-send')
-          expect(rights).toEqual(['Listen', 'Send'])
+          expect(rights).toEqual(['Listen', 'Send', 'Manage'])
         })
     )
   })
