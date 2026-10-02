@@ -389,12 +389,19 @@ describe('TestAzureServicebusConstruct - Default Values', () => {
           minimalSbStack.construct.serviceBusQueue.requiresDuplicateDetection,
           minimalSbStack.construct.serviceBusQueue.deadLetteringOnMessageExpiration,
           minimalSbStack.construct.serviceBusQueue.duplicateDetectionHistoryTimeWindow,
+          minimalSbStack.construct.serviceBusQueue.defaultMessageTimeToLive,
         ])
         .apply(
-          ([requiresDuplicateDetection, deadLetteringOnMessageExpiration, duplicateDetectionHistoryTimeWindow]) => {
+          ([
+            requiresDuplicateDetection,
+            deadLetteringOnMessageExpiration,
+            duplicateDetectionHistoryTimeWindow,
+            defaultMessageTimeToLive,
+          ]) => {
             expect(requiresDuplicateDetection).toEqual(true)
             expect(deadLetteringOnMessageExpiration).toEqual(true)
             expect(duplicateDetectionHistoryTimeWindow).toEqual('PT1M')
+            expect(defaultMessageTimeToLive).toEqual('P30D')
           }
         )
     )
