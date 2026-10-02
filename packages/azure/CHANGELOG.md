@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.62.7
+
+### Patch Changes
+
+- [#1219](https://github.com/gradientedge/cdk-utils/pull/1219) [`3cea538`](https://github.com/gradientedge/cdk-utils/commit/3cea538500fb756989a954e23f3e621241e2ff9f) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - feat: Update Azure service bus queue default timeout to 30 days
+
 ## 2.62.6
 
 ### Patch Changes
