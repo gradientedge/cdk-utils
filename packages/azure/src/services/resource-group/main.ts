@@ -51,7 +51,7 @@ export class AzureResourceGroupManager {
         location: props.location,
         tags: {
           environment: scope.props.stage,
-          ...scope.props.defaultTags,
+          ...(scope.props.resourceGroupTags ?? scope.props.defaultTags),
           ...props.tags,
         },
       },
