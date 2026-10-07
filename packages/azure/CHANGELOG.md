@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.62.8
+
+### Patch Changes
+
+- [#1221](https://github.com/gradientedge/cdk-utils/pull/1221) [`dcc6077`](https://github.com/gradientedge/cdk-utils/commit/dcc6077d86a7fc4af10f525de083e7be427943ba) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - feat: Add resourceGroupTags to apply a separate tag set to Azure resource groups
+
 ## 2.62.7
 
 ### Patch Changes
