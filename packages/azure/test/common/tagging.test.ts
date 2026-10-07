@@ -351,4 +351,42 @@ describe('registerTagTransformation', () => {
     expect(result).toBeDefined()
     expect(result!.opts).toBe(originalOpts)
   })
+
+  test('transformation applies resourceGroupTags instead of defaultTags to resource groups', () => {
+    let capturedTransformation: (args: pulumi.ResourceTransformationArgs) => any
+    vi.spyOn(pulumi.runtime, 'registerStackTransformation').mockImplementation((fn: any) => {
+      capturedTransformation = fn
+    })
+
+    registerTagTransformation({ environment: 'production' }, [], { owner: 'platform' })
+
+    const result = capturedTransformation!({
+      type: 'azure-native:resources:ResourceGroup',
+      name: 'test-rg',
+      props: { tags: { app: 'myapp' } },
+      opts: {},
+      resource: {} as any,
+    })
+
+    expect(result!.props.tags).toEqual({ owner: 'platform', app: 'myapp' })
+  })
+
+  test('transformation applies defaultTags to non resource group resources when resourceGroupTags set', () => {
+    let capturedTransformation: (args: pulumi.ResourceTransformationArgs) => any
+    vi.spyOn(pulumi.runtime, 'registerStackTransformation').mockImplementation((fn: any) => {
+      capturedTransformation = fn
+    })
+
+    registerTagTransformation({ environment: 'production' }, [], { owner: 'platform' })
+
+    const result = capturedTransformation!({
+      type: 'azure-native:storage:StorageAccount',
+      name: 'test-sa',
+      props: {},
+      opts: {},
+      resource: {} as any,
+    })
+
+    expect(result!.props.tags).toEqual({ environment: 'production' })
+  })
 })

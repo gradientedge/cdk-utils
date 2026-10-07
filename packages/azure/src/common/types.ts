@@ -51,6 +51,8 @@ export interface CommonAzureStackProps extends BaseProps {
   locales?: string[]
   /** Default tags applied to all taggable Azure resources */
   defaultTags?: { [key: string]: string }
+  /** Tags applied to resource groups instead of defaultTags (falls back to defaultTags when unset) */
+  resourceGroupTags?: { [key: string]: string }
   /** Tag keys to ignore in Pulumi lifecycle management (e.g. tags set externally like 'CreatedOn') */
   tagsToIgnore?: string[]
   /** Shared Log Analytics Workspace lookup arguments for diagnostic logging */

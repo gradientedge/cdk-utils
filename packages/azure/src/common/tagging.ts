@@ -37,13 +37,18 @@ export function isTaggableResource(resourceType: string): boolean {
  * @summary Register a stack transformation to automatically apply tags to Azure resources
  * @param defaultTags The default tags to apply to all resources
  * @param tagsToIgnore Optional list of tag keys to ignore in lifecycle management
+ * @param resourceGroupTags Optional tags applied to resource groups instead of defaultTags
  * @example
  * ```typescript
  * registerTagTransformation({ environment: 'production', team: 'platform' })
  * ```
  */
 /** @category Constant */
-export function registerTagTransformation(defaultTags: Record<string, string>, tagsToIgnore: string[] = []): void {
+export function registerTagTransformation(
+  defaultTags: Record<string, string>,
+  tagsToIgnore: string[] = [],
+  resourceGroupTags?: Record<string, string>
+): void {
   pulumi.runtime.registerStackTransformation((args: pulumi.ResourceTransformationArgs) => {
     // Only process taggable resources
     if (!isTaggableResource(args.type)) {
@@ -57,7 +62,9 @@ export function registerTagTransformation(defaultTags: Record<string, string>, t
 
     // Merge default tags with resource-specific tags (resource tags take precedence)
     const currentTags = (args.props as any).tags || {}
-    const mergedTags = { ...defaultTags, ...currentTags }
+    const baseTags =
+      args.type === 'azure-native:resources:ResourceGroup' && resourceGroupTags ? resourceGroupTags : defaultTags
+    const mergedTags = { ...baseTags, ...currentTags }
 
     // Apply the merged tags
     const newProps = {

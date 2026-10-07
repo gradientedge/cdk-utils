@@ -52,8 +52,12 @@ export class CommonAzureStack extends ComponentResource {
     this.props = this.determineConstructProps(props)
 
     /* register tag transformation for automatic tag application */
-    if (this.props.defaultTags) {
-      registerTagTransformation(this.props.defaultTags, this.props.tagsToIgnore ?? [])
+    if (this.props.defaultTags || this.props.resourceGroupTags) {
+      registerTagTransformation(
+        this.props.defaultTags ?? {},
+        this.props.tagsToIgnore ?? [],
+        this.props.resourceGroupTags
+      )
     }
 
     this.createConstruct()
