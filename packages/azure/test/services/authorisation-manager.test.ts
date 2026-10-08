@@ -1,4 +1,9 @@
-import { PrincipalType, RoleAssignment } from '@pulumi/azure-native/authorization/index.js'
+import {
+  LockLevel,
+  ManagementLockByScope,
+  PrincipalType,
+  RoleAssignment,
+} from '@pulumi/azure-native/authorization/index.js'
 import * as pulumi from '@pulumi/pulumi'
 import { CommonAzureConstruct, CommonAzureStack, CommonAzureStackProps, RoleDefinitionId } from '../../src/index.js'
 import { outputToPromise } from '../helpers.js'
@@ -20,9 +25,13 @@ const testStackProps: any = {
   subscriptionId: 'test-subscription-id',
 }
 
+const registeredResourceInputs: Record<string, Record<string, unknown>> = {}
+
 class TestCommonConstruct extends CommonAzureConstruct {
   declare props: TestAzureStackProps
   roleAssignment: RoleAssignment
+  managementLock: ManagementLockByScope
+  managementDeleteLock: ManagementLockByScope
   storageTableRole: RoleAssignment
   storageAccountRole: RoleAssignment
   appConfigRole: RoleAssignment
@@ -64,6 +73,17 @@ class TestCommonConstruct extends CommonAzureConstruct {
       PrincipalType.ServicePrincipal,
       this.authorisationManager.resolveRoleDefinitionId(this, RoleDefinitionId.APP_CONFIGURATION_DATA_READER)
     )
+
+    this.managementLock = this.authorisationManager.createManagementLockByScope('test-delete-lock', this, {
+      lockName: 'test-delete-lock',
+      level: LockLevel.CanNotDelete,
+      scope: '/subscriptions/test-sub/resourceGroups/test-rg/providers/Microsoft.Storage/storageAccounts/testsa',
+    })
+    this.managementDeleteLock = this.authorisationManager.createManagementLockByScopeDeleteLock(
+      'test-delete-lock-helper',
+      this,
+      this.storageAccountRole
+    )
   }
 }
 
@@ -85,6 +105,7 @@ pulumi.runtime.setAllConfig({
 
 pulumi.runtime.setMocks({
   newResource: (args: pulumi.runtime.MockResourceArgs) => {
+    registeredResourceInputs[args.name] = args.inputs
     return {
       id: `${args.name}-id`,
       state: { ...args.inputs, name: args.name },
@@ -105,6 +126,8 @@ describe('TestAzureAuthorisationConstruct', () => {
     expect(stack.construct.storageTableRole).toBeDefined()
     expect(stack.construct.storageAccountRole).toBeDefined()
     expect(stack.construct.appConfigRole).toBeDefined()
+    expect(stack.construct.managementLock).toBeDefined()
+    expect(stack.construct.managementDeleteLock).toBeDefined()
   })
 })
 
@@ -140,6 +163,31 @@ describe('TestAzureAuthorisationConstruct', () => {
       })
     )
   })
+
+  test('provisions management lock by scope as expected', async () => {
+    await outputToPromise(
+      pulumi.all([stack.construct.managementLock.id, stack.construct.managementLock.level]).apply(([id, level]) => {
+        expect(id).toBeDefined()
+        expect(level).toBe(LockLevel.CanNotDelete)
+      })
+    )
+  })
+
+  test('provisions a CanNotDelete management lock by scope', async () => {
+    await outputToPromise(
+      pulumi
+        .all([
+          stack.construct.managementDeleteLock.id,
+          stack.construct.managementDeleteLock.level,
+          stack.construct.storageAccountRole.id,
+        ])
+        .apply(([id, level, resourceId]) => {
+          expect(id).toBeDefined()
+          expect(level).toBe(LockLevel.CanNotDelete)
+          expect(registeredResourceInputs['test-delete-lock-helper-delete-lock']?.scope).toBe(resourceId)
+        })
+    )
+  })
 })
 
 describe('TestAzureAuthorisationConstruct - Error Handling', () => {
@@ -147,5 +195,25 @@ describe('TestAzureAuthorisationConstruct - Error Handling', () => {
     expect(() => {
       stack.construct.authorisationManager.createRoleAssignment('test-role-err', stack.construct, undefined as any)
     }).toThrow('Props undefined for test-role-err')
+  })
+
+  test('createManagementLockByScope throws when props are undefined', () => {
+    expect(() => {
+      stack.construct.authorisationManager.createManagementLockByScope(
+        'test-lock-err',
+        stack.construct,
+        undefined as any
+      )
+    }).toThrow('Props undefined for test-lock-err')
+  })
+
+  test('createManagementLockByScopeDeleteLock throws when resource is undefined', () => {
+    expect(() => {
+      stack.construct.authorisationManager.createManagementLockByScopeDeleteLock(
+        'test-delete-lock-err',
+        stack.construct,
+        undefined as any
+      )
+    }).toThrow('Resource undefined for test-delete-lock-err')
   })
 })

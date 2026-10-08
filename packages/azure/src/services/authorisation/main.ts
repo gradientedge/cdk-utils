@@ -1,10 +1,15 @@
-import { PrincipalType, RoleAssignment } from '@pulumi/azure-native/authorization/index.js'
-import { Input, ResourceOptions } from '@pulumi/pulumi'
+import {
+  LockLevel,
+  ManagementLockByScope,
+  PrincipalType,
+  RoleAssignment,
+} from '@pulumi/azure-native/authorization/index.js'
+import { CustomResource, Input, mergeOptions, ResourceOptions } from '@pulumi/pulumi'
 
 import { CommonAzureConstruct } from '../../common/index.js'
 
 import { RoleDefinitionId } from './constants.js'
-import { RoleAssignmentProps } from './types.js'
+import { ManagementLockByScopeProps, RoleAssignmentProps } from './types.js'
 
 /**
  * Provides operations on Azure Authorisation using Pulumi
@@ -25,6 +30,52 @@ import { RoleAssignmentProps } from './types.js'
  * @category Service
  */
 export class AzureAuthorisationManager {
+  /**
+   * @summary Method to create a management lock at a resource scope
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param props Management lock properties
+   * @param resourceOptions Optional settings to control resource behaviour
+   * @see [Pulumi Azure Native Management Lock By Scope]{@link https://www.pulumi.com/registry/packages/azure-native/api-docs/authorization/managementlockbyscope/}
+   */
+  public createManagementLockByScope(
+    id: string,
+    scope: CommonAzureConstruct,
+    props: ManagementLockByScopeProps,
+    resourceOptions?: ResourceOptions
+  ) {
+    if (!props) throw new Error(`Props undefined for ${id}`)
+
+    return new ManagementLockByScope(`${id}`, props, { parent: scope, ...resourceOptions })
+  }
+
+  /**
+   * @summary Method to create a CanNotDelete management lock at a resource scope
+   * @param id scoped id of the resource
+   * @param scope scope in which this resource is defined
+   * @param resource Pulumi resource to protect from deletion
+   * @param resourceOptions Optional settings to control resource behaviour
+   */
+  public createManagementLockByScopeDeleteLock(
+    id: string,
+    scope: CommonAzureConstruct,
+    resource: CustomResource,
+    resourceOptions?: ResourceOptions
+  ) {
+    if (!resource) throw new Error(`Resource undefined for ${id}`)
+
+    return this.createManagementLockByScope(
+      `${id}-delete-lock`,
+      scope,
+      {
+        lockName: `${id}-delete-lock`,
+        level: LockLevel.CanNotDelete,
+        scope: resource.id,
+      },
+      mergeOptions(resourceOptions, { dependsOn: [resource] })
+    )
+  }
+
   /**
    * @summary Method to create a new role assignment
    * @param id scoped id of the resource
