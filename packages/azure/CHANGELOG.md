@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.62.9
+
+### Patch Changes
+
+- [#1223](https://github.com/gradientedge/cdk-utils/pull/1223) [`881b7b3`](https://github.com/gradientedge/cdk-utils/commit/881b7b3f012596d08e9919403c1b6a42acd92a3d) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - Add `createManagementLockByScopeDeleteLock` to create a `CanNotDelete` management lock for a Pulumi resource.
+
 ## 2.62.8
 
 ### Patch Changes
