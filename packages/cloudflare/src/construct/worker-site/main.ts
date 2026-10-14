@@ -75,7 +75,7 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
    * @summary Initialise and provision resources
    */
   protected initResources() {
-    if (this.props.siteWranglerConfig || this.props.siteSource) this.translateWorkersBaseConfig()
+    this.translateWorkersBaseConfig()
     this.resolveWorkerAssetPath()
     this.resolveZone()
     this.createWorkerPlainTextBindingEnvironmentVariables()
@@ -121,6 +121,8 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
   }
 
   protected translateWorkersBaseConfig() {
+    if (!this.props.siteWranglerConfig && !this.props.siteSource) return
+
     const configSource = this.props.siteWranglerConfig ?? this.props.siteSource
     if (!configSource) throw new Error('Worker Wrangler config path is required')
     const configRelPath = configSource.replace(/^\.\.\//, '')
