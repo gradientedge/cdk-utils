@@ -1,9 +1,12 @@
+import fs from 'fs'
+import os from 'os'
 import * as path from 'path'
 import { fileURLToPath } from 'url'
 
 import { GetZoneResult, Zone } from '@pulumi/cloudflare'
 import * as pulumi from '@pulumi/pulumi'
 import { Output } from '@pulumi/pulumi'
+import { vi } from 'vitest'
 import { CloudflareWorkerSite, CloudflareWorkerSiteProps, CommonCloudflareStack } from '../../src/index.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
@@ -112,6 +115,14 @@ class TestCommonConstruct extends CloudflareWorkerSite {
     super(name, props)
     this.initResources()
   }
+
+  public testResolveWorkerAssetPath() {
+    this.resolveWorkerAssetPath()
+  }
+
+  public testTranslateWorkersBaseConfig() {
+    this.translateWorkersBaseConfig()
+  }
 }
 
 class TestExistingZoneConstruct extends CloudflareWorkerSite {
@@ -163,6 +174,76 @@ let stack = new TestCommonCloudflareStack('test-stack', testStackProps)
 describe('TestCloudflareWorkerSite', () => {
   test('handles mis-configurations as expected', () => {
     expect(() => new TestInvalidCommonCloudflareStack('test-stack', testStackProps)).toThrow()
+  })
+
+  test('only creates a workers.dev subdomain when configured', async () => {
+    expect(stack.construct.siteWorkerSubdomain).toBeUndefined()
+    const worker = new TestCommonConstruct('test-subdomain-worker', {
+      ...stack.construct.props,
+      siteWorkerSubdomain: {
+        accountId: 'test-account',
+        scriptName: 'test-script-dev',
+        enabled: false,
+        previewsEnabled: false,
+      },
+    })
+    const accountId = worker.siteWorkerSubdomain.accountId as Output<string> & {
+      promise: (withUnknowns?: boolean) => Promise<string>
+    }
+    const scriptName = worker.siteWorkerSubdomain.scriptName as Output<string> & {
+      promise: (withUnknowns?: boolean) => Promise<string>
+    }
+    const enabled = worker.siteWorkerSubdomain.enabled as Output<boolean> & {
+      promise: (withUnknowns?: boolean) => Promise<boolean>
+    }
+    const previewsEnabled = worker.siteWorkerSubdomain.previewsEnabled as Output<boolean> & {
+      promise: (withUnknowns?: boolean) => Promise<boolean>
+    }
+    expect(await accountId.promise(true)).toBe('123456789012')
+    expect(await scriptName.promise(true)).toBe('test-script-dev')
+    expect(await enabled.promise(true)).toBe(false)
+    expect(await previewsEnabled.promise(true)).toBe(false)
+  })
+
+  test('resolves the Worker asset from a dist working directory', () => {
+    const originalAsset = stack.construct.props.siteWorkerAsset
+    const workingDirectory = process.cwd()
+    const expectedAsset = path.relative(workingDirectory, path.resolve(workingDirectory, '..', originalAsset))
+    const cwd = vi.spyOn(process, 'cwd').mockReturnValue(path.join(workingDirectory, 'dist'))
+    try {
+      stack.construct.testResolveWorkerAssetPath()
+      expect(stack.construct.props.siteWorkerAsset).toEqual(expectedAsset)
+    } finally {
+      cwd.mockRestore()
+      stack.construct.props.siteWorkerAsset = originalAsset
+    }
+  })
+
+  test('translates a base Wrangler JSONC config', () => {
+    const configDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'worker-site-config-'))
+    const originalScript = stack.construct.props.siteWorkerScript
+    const originalBindings = stack.construct.workerPlainTextBindingEnvironmentVariables
+    fs.writeFileSync(
+      path.join(configDirectory, 'wrangler.jsonc'),
+      '{ // Worker base config\n "main": "worker.js", "compatibility_date": "2026-04-19", "vars": {"HELLO": "world"}, "assets": {"directory": "./public", "binding": "ASSETS", "not_found_handling": "404-page"} }'
+    )
+    try {
+      stack.construct.props.siteWranglerConfig = configDirectory
+      stack.construct.testTranslateWorkersBaseConfig()
+      expect(stack.construct.props.siteWorkerScript.mainModule).toEqual('worker.js')
+      expect(stack.construct.props.siteWorkerScript.compatibilityDate).toEqual('2026-04-19')
+      const assets = stack.construct.props.siteWorkerScript.assets as { directory?: string } | undefined
+      expect(assets?.directory).toEqual(path.join(configDirectory, 'public'))
+      expect(stack.construct.workerPlainTextBindingEnvironmentVariables).toEqual([
+        { name: 'HELLO', text: 'world', type: 'plain_text' },
+        { name: 'ASSETS', type: 'assets' },
+      ])
+    } finally {
+      stack.construct.props.siteWranglerConfig = undefined
+      stack.construct.props.siteWorkerScript = originalScript
+      stack.construct.workerPlainTextBindingEnvironmentVariables = originalBindings
+      fs.rmSync(configDirectory, { recursive: true, force: true })
+    }
   })
 })
 
