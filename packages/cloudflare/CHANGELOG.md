@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-cloudflare
 
+## 2.29.1
+
+### Patch Changes
+
+- [#1225](https://github.com/gradientedge/cdk-utils/pull/1225) [`63e1ba1`](https://github.com/gradientedge/cdk-utils/commit/63e1ba11d1aa8bab32c9d3e103a3938a9ccea187) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - Add reusable Worker asset path resolution, Wrangler base configuration translation, and opt-in workers.dev subdomain control to CloudflareWorkerSite.
+
 ## 2.29.0
 
 ### Minor Changes
