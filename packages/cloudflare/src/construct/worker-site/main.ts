@@ -15,7 +15,7 @@ import {
 import { WorkersScriptBinding } from '@pulumi/cloudflare/types/input.js'
 import { ComponentResourceOptions, Output } from '@pulumi/pulumi'
 import * as std from '@pulumi/std'
-import { parse, ParseError } from 'jsonc-parser'
+import { parse } from 'jsonc-parser'
 
 import { CommonCloudflareConstruct } from '../../common/index.js'
 
@@ -121,17 +121,14 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
   }
 
   protected translateWorkersBaseConfig() {
-    if (!this.props.siteWranglerConfig && !this.props.siteSource) return
-
-    const configSource = this.props.siteWranglerConfig ?? this.props.siteSource
-    if (!configSource) throw new Error('Worker Wrangler config path is required')
+    const configSource = this.props.siteWranglerConfig || this.props.siteSource
+    if (!configSource) return
     const configRelPath = configSource.replace(/^\.\.\//, '')
     const fromCwd = path.resolve(process.cwd(), '..', configRelPath, 'wrangler.jsonc')
     const fromDist = path.resolve(process.cwd(), '..', '..', configRelPath, 'wrangler.jsonc')
     const configPath = fs.existsSync(fromCwd) ? fromCwd : fromDist
     const configText = fs.readFileSync(configPath, 'utf8')
-    const parseErrors: ParseError[] = []
-    const wranglerConfig = parse(configText, parseErrors) as {
+    const wranglerConfig = parse(configText) as {
       name?: string
       main?: string
       compatibility_date?: string
@@ -144,10 +141,6 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
       }
       assets?: { directory?: string; binding?: string; not_found_handling?: string }
       vars?: Record<string, string>
-    }
-
-    if (parseErrors.length > 0) {
-      throw new Error(`Failed to parse Wrangler base config at ${configPath}`)
     }
 
     this.workerPlainTextBindingEnvironmentVariables = [
