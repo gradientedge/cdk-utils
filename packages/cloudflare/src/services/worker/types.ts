@@ -5,6 +5,7 @@ import {
   WorkersKvNamespaceArgs,
   WorkersRouteArgs,
   WorkersScriptArgs,
+  WorkersScriptSubdomainArgs,
 } from '@pulumi/cloudflare'
 
 /**
@@ -13,6 +14,13 @@ import {
  * @category Interface
  */
 export interface WorkerDomainProps extends WorkersCustomDomainArgs {}
+
+/**
+ * Properties for configuring a Cloudflare Worker's workers.dev subdomain
+ * @see [Pulumi Cloudflare WorkersScriptSubdomain]{@link https://www.pulumi.com/registry/packages/cloudflare/api-docs/workersscriptsubdomain/}
+ * @category Interface
+ */
+export interface WorkerSubdomainProps extends WorkersScriptSubdomainArgs {}
 
 /**
  * Properties for creating a Cloudflare Workers Route

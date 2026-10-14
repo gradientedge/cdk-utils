@@ -3,10 +3,19 @@ import * as path from 'path'
 
 import * as aws from '@pulumi/aws'
 import * as azure from '@pulumi/azure-native'
-import { GetZoneResult, Ruleset, WorkersCustomDomain, WorkersScript, Zone, ZoneSetting } from '@pulumi/cloudflare'
+import {
+  GetZoneResult,
+  Ruleset,
+  WorkersCustomDomain,
+  WorkersScript,
+  WorkersScriptSubdomain,
+  Zone,
+  ZoneSetting,
+} from '@pulumi/cloudflare'
 import { WorkersScriptBinding } from '@pulumi/cloudflare/types/input.js'
 import { ComponentResourceOptions, Output } from '@pulumi/pulumi'
 import * as std from '@pulumi/std'
+import { parse, ParseError } from 'jsonc-parser'
 
 import { CommonCloudflareConstruct } from '../../common/index.js'
 
@@ -38,6 +47,8 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
   siteWorkerScript: WorkersScript
   /** The Cloudflare Workers custom domain resource */
   siteWorkerDomain: WorkersCustomDomain
+  /** Optional workers.dev subdomain configuration for the script */
+  siteWorkerSubdomain: WorkersScriptSubdomain
   /** The Cloudflare ruleset resource for the worker site */
   siteRuleSet: Ruleset
   /** The Cloudflare zone setting resource for the worker site */
@@ -64,10 +75,15 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
    * @summary Initialise and provision resources
    */
   protected initResources() {
+    if (this.props.siteWranglerConfig || this.props.siteSource) this.translateWorkersBaseConfig()
+    this.resolveWorkerAssetPath()
     this.resolveZone()
+    this.createWorkerPlainTextBindingEnvironmentVariables()
+    this.createWorkerSecretTextBindingEnvironmentVariables()
     this.resolveEnvironmentVariables()
     this.createWorker()
     this.createWorkerDomain()
+    this.createWorkerSubdomain()
     this.createRuleset()
     this.createZoneSetting()
   }
@@ -96,6 +112,96 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
     }
   }
 
+  protected resolveWorkerAssetPath() {
+    const cdkParentDir = path.resolve(process.cwd(), '..')
+    const fromCwd = path.resolve(cdkParentDir, this.props.siteWorkerAsset)
+    const fromDist = path.resolve(cdkParentDir, '..', this.props.siteWorkerAsset)
+    const workerAsset = [fromCwd, fromDist].find(candidate => fs.existsSync(candidate)) ?? fromCwd
+    this.props.siteWorkerAsset = path.relative(cdkParentDir, workerAsset)
+  }
+
+  protected translateWorkersBaseConfig() {
+    const configSource = this.props.siteWranglerConfig ?? this.props.siteSource
+    if (!configSource) throw new Error('Worker Wrangler config path is required')
+    const configRelPath = configSource.replace(/^\.\.\//, '')
+    const fromCwd = path.resolve(process.cwd(), '..', configRelPath, 'wrangler.jsonc')
+    const fromDist = path.resolve(process.cwd(), '..', '..', configRelPath, 'wrangler.jsonc')
+    const configPath = fs.existsSync(fromCwd) ? fromCwd : fromDist
+    const configText = fs.readFileSync(configPath, 'utf8')
+    const parseErrors: ParseError[] = []
+    const wranglerConfig = parse(configText, parseErrors) as {
+      name?: string
+      main?: string
+      compatibility_date?: string
+      compatibility_flags?: string[]
+      cache?: { enabled?: boolean }
+      observability?: {
+        enabled?: boolean
+        logs?: { enabled?: boolean; invocation_logs?: boolean; head_sampling_rate?: number }
+        traces?: { enabled?: boolean; head_sampling_rate?: number }
+      }
+      assets?: { directory?: string; binding?: string; not_found_handling?: string }
+      vars?: Record<string, string>
+    }
+
+    if (parseErrors.length > 0) {
+      throw new Error(`Failed to parse Wrangler base config at ${configPath}`)
+    }
+
+    this.workerPlainTextBindingEnvironmentVariables = [
+      ...Object.entries(wranglerConfig.vars ?? {}).map(([name, text]) => ({ name, text, type: 'plain_text' })),
+      ...(wranglerConfig.assets?.binding ? [{ name: wranglerConfig.assets.binding, type: 'assets' }] : []),
+    ]
+    this.props.siteWorkerScript = {
+      ...this.props.siteWorkerScript,
+      scriptName: this.props.siteWorkerScript.scriptName ?? wranglerConfig.name,
+      mainModule: wranglerConfig.main ?? this.props.siteWorkerScript?.mainModule,
+      compatibilityDate: wranglerConfig.compatibility_date ?? this.props.siteWorkerScript?.compatibilityDate,
+      compatibilityFlags: wranglerConfig.compatibility_flags ?? this.props.siteWorkerScript?.compatibilityFlags,
+      cacheOptions: wranglerConfig.cache
+        ? { enabled: wranglerConfig.cache.enabled }
+        : this.props.siteWorkerScript?.cacheOptions,
+      observability: wranglerConfig.observability
+        ? {
+            enabled: wranglerConfig.observability.enabled ?? false,
+            logs: wranglerConfig.observability.logs
+              ? {
+                  enabled: wranglerConfig.observability.logs.enabled ?? wranglerConfig.observability.enabled ?? false,
+                  invocationLogs: wranglerConfig.observability.logs.invocation_logs ?? true,
+                  headSamplingRate: wranglerConfig.observability.logs.head_sampling_rate,
+                }
+              : undefined,
+            traces: wranglerConfig.observability.traces
+              ? {
+                  enabled: wranglerConfig.observability.traces.enabled,
+                  headSamplingRate: wranglerConfig.observability.traces.head_sampling_rate,
+                }
+              : undefined,
+          }
+        : this.props.siteWorkerScript?.observability,
+      assets: wranglerConfig.assets
+        ? {
+            directory: wranglerConfig.assets.directory
+              ? path.resolve(path.dirname(configPath), wranglerConfig.assets.directory)
+              : undefined,
+            config: {
+              notFoundHandling: wranglerConfig.assets.not_found_handling,
+            },
+          }
+        : this.props.siteWorkerScript?.assets,
+    }
+  }
+
+  /**
+   * @summary Create the plain text binding environment variables for the static site
+   */
+  protected createWorkerPlainTextBindingEnvironmentVariables() {}
+
+  /**
+   * @summary Create the secret text binding environment variables for the static site
+   */
+  protected createWorkerSecretTextBindingEnvironmentVariables() {}
+
   /**
    * @summary Create the worker
    */
@@ -123,6 +229,19 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
         service: this.siteWorkerScript.scriptName,
       },
       { dependsOn: [this.siteWorkerScript] }
+    )
+  }
+
+  protected createWorkerSubdomain() {
+    if (!this.props.siteWorkerSubdomain) return
+    this.siteWorkerSubdomain = new WorkersScriptSubdomain(
+      `${this.id}-worker-subdomain`,
+      {
+        ...this.props.siteWorkerSubdomain,
+        accountId: this.props.accountId,
+        scriptName: this.siteWorkerScript.scriptName,
+      },
+      { parent: this, dependsOn: [this.siteWorkerScript] }
     )
   }
 

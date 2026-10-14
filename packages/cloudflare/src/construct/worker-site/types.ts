@@ -2,6 +2,7 @@ import { CommonCloudflareStackProps } from '../../common/index.js'
 import {
   WorkerDomainProps,
   WorkerScriptProps,
+  WorkerSubdomainProps,
   RulesetProps,
   ZoneProps,
   ZoneSettingProps,
@@ -20,8 +21,14 @@ export interface CloudflareWorkerSiteProps extends CommonCloudflareStackProps {
   siteWorkerScript: WorkerScriptProps
   /** The Cloudflare Workers custom domain properties */
   siteWorkerDomain: WorkerDomainProps
+  /** Optional workers.dev and preview URL settings */
+  siteWorkerSubdomain?: WorkerSubdomainProps
   /** The relative path to the worker script asset file */
   siteWorkerAsset: string
+  /** Optional path to the Worker project's base Wrangler configuration directory */
+  siteWranglerConfig?: string
+  /** Legacy path to the Worker project's base Wrangler configuration directory */
+  siteSource?: string
   /** The Cloudflare ruleset properties for the worker site */
   siteRuleSet: RulesetProps
   /** The Cloudflare zone setting properties for the worker site */
