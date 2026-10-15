@@ -7,6 +7,7 @@ import {
   ServicePlanProps,
   StorageAccountProps,
   StorageContainerProps,
+  DefenderForStorageProps,
 } from '../../index.js'
 
 /**
@@ -74,6 +75,8 @@ export interface AzureFunctionAppProps extends CommonAzureStackProps {
   dataStorageContainer: StorageContainerProps
   /** Data storage account properties for the function app */
   dataStorageAccount: StorageAccountProps
+  /** Defender for Storage settings for the data storage account */
+  dataStorageAccountDefender?: DefenderForStorageProps
   /** SAS token properties for the data storage container */
   dataStorageContainerSas: ContainerSasTokenProps
   /** Name of the Key Vault for storing the data SAS token */
