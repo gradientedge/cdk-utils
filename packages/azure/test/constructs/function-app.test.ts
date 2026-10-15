@@ -1,4 +1,5 @@
 import { ConfigurationStore } from '@pulumi/azure-native/appconfiguration/index.js'
+import { DefenderForStorage } from '@pulumi/azure-native/security/index.js'
 import * as pulumi from '@pulumi/pulumi'
 import { outputToPromise } from '../helpers.js'
 import {
@@ -63,8 +64,13 @@ class TestCommonStack extends CommonAzureStack {
   declare props: any
   declare construct: TestFunctionAppConstruct
 
-  constructor(name: string, props: TestAzureStackProps) {
-    super(name, testStackProps)
+  constructor(
+    name: string,
+    props: TestAzureStackProps,
+    defender?: AzureFunctionAppProps['dataStorageAccountDefender']
+  ) {
+    const stackProps = { ...testStackProps, dataStorageAccountDefender: defender }
+    super(name, stackProps)
     this.construct = new TestFunctionAppConstruct(props.name, this.props)
   }
 }
@@ -102,11 +108,18 @@ class TestFunctionAppConstruct extends AzureFunctionApp {
     this.createStorageDeploymentContainer()
     this.createStorageContainer()
     this.createDataStorageAccount()
+    this.createDataStorageAccountDefender()
     this.createDataStorageContainer()
     this.createCodePackage()
     this.createFunctionApp()
     this.createRoleAssignments()
     this.createFunctionDashboard()
+  }
+}
+
+class TestFunctionAppWithoutDataStorageAccount extends AzureFunctionApp {
+  public initResources() {
+    this.createDataStorageAccountDefender()
   }
 }
 
@@ -231,10 +244,15 @@ pulumi.runtime.setAllConfig({
   'project:extraContexts': JSON.stringify(testStackProps.extraContexts),
 })
 
+const capturedDefenders: pulumi.runtime.MockResourceArgs[] = []
+
 pulumi.runtime.setMocks({
   newResource: (args: pulumi.runtime.MockResourceArgs) => {
     let name
 
+    if (args.type === 'azure-native:security:DefenderForStorage') {
+      capturedDefenders.push(args)
+    }
     if (args.type === 'azure-native:resources:ResourceGroup') {
       name = args.inputs.resourceGroupName
     } else if (args.type === 'azure-native:web:AppServicePlan') {
@@ -284,6 +302,21 @@ pulumi.runtime.setMocks({
 })
 
 const stack = new TestCommonStack('test-common-stack', testStackProps)
+const stackWithDefender = new TestCommonStack(
+  'test-common-stack-with-defender',
+  {
+    ...testStackProps,
+    name: 'test-common-stack-with-defender',
+  },
+  {
+    resourceId: 'provided-account-id',
+    properties: {
+      isEnabled: true,
+      overrideSubscriptionLevelSettings: true,
+      malwareScanning: { onUpload: { isEnabled: true, capGBPerMonth: -1 } },
+    },
+  }
+)
 
 pulumi.runtime.setConfig('project:extraContexts', JSON.stringify(testStackPropsOverrides.extraContexts))
 const stackWithOverrides = new TestCommonStackWithOverrides('test-overrides-stack', testStackPropsOverrides)
@@ -298,6 +331,40 @@ pulumi.runtime.setConfig('project:extraContexts', JSON.stringify(testStackPropsM
 const stackMinimal = new TestCommonStackMinimal('test-minimal-stack', testStackPropsMinimal)
 
 describe('TestAzureFunctionAppConstruct', () => {
+  test('creates Defender for the data storage account only when configured', async () => {
+    const children = (construct: AzureFunctionApp) =>
+      [...(construct as unknown as { __childResources: Set<pulumi.Resource> }).__childResources].filter(
+        resource => resource instanceof DefenderForStorage
+      ) as DefenderForStorage[]
+    expect(children(stack.construct)).toHaveLength(0)
+    const defenders = children(stackWithDefender.construct)
+    expect(defenders).toHaveLength(1)
+    await outputToPromise(
+      pulumi
+        .all([defenders[0].urn, defenders[0].properties, stackWithDefender.construct.dataStorageAccount.id])
+        .apply(([urn, properties, accountId]) => {
+          expect(urn).toContain('test-common-stack-with-defender-data-storage-defender')
+          expect(accountId).toEqual('test-common-stack-with-defender-data-storage-account-sa-id')
+          expect(capturedDefenders).toHaveLength(1)
+          expect(capturedDefenders[0].inputs.resourceId).toEqual(accountId)
+          expect(properties).toEqual({
+            isEnabled: true,
+            overrideSubscriptionLevelSettings: true,
+            malwareScanning: { onUpload: { isEnabled: true, capGBPerMonth: -1 } },
+          })
+        })
+    )
+  })
+
+  test('does not create Defender when the data storage account is absent', () => {
+    const construct = new TestFunctionAppWithoutDataStorageAccount(
+      'test-missing-data-account',
+      stackWithDefender.construct.props
+    )
+    const children = (construct as unknown as { __childResources: Set<pulumi.Resource> }).__childResources
+    expect([...(children ?? [])].filter(resource => resource instanceof DefenderForStorage)).toHaveLength(0)
+  })
+
   test('is initialised as expected', () => {
     expect(stack.construct.props).toHaveProperty('testAttribute')
     expect(stack.construct.props.testAttribute).toEqual('success')

@@ -1,11 +1,6 @@
 import * as pulumi from '@pulumi/pulumi'
 import { DefenderForStorage } from '@pulumi/azure-native/security/index.js'
-import {
-  CommonAzureConstruct,
-  CommonAzureStack,
-  CommonAzureStackProps,
-  DefenderForStorageProps,
-} from '../../src/index.js'
+import { CommonAzureConstruct, CommonAzureStack, CommonAzureStackProps } from '../../src/index.js'
 import { outputToPromise } from '../helpers.js'
 
 interface TestAzureStackProps extends CommonAzureStackProps {
@@ -35,7 +30,7 @@ class TestCommonConstruct extends CommonAzureConstruct {
       this,
       {
         resourceId: '/subscriptions/test-sub/resourceGroups/test-rg/providers/Microsoft.Storage/storageAccounts/testsa',
-      } as DefenderForStorageProps
+      }
     )
   }
 }

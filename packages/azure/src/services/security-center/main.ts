@@ -1,9 +1,7 @@
-import { DefenderForStorage } from '@pulumi/azure-native/security/index.js'
+import { DefenderForStorage, DefenderForStorageArgs } from '@pulumi/azure-native/security/index.js'
 import { ResourceOptions } from '@pulumi/pulumi'
 
 import { CommonAzureConstruct } from '../../common/index.js'
-
-import { DefenderForStorageProps } from './types.js'
 
 /**
  * Provides operations on Azure Security Center using Pulumi
@@ -35,7 +33,7 @@ export class AzureSecurityCentermanager {
   public createDefenderForStorage(
     id: string,
     scope: CommonAzureConstruct,
-    props: DefenderForStorageProps,
+    props: DefenderForStorageArgs,
     resourceOptions?: ResourceOptions
   ) {
     if (!props) throw new Error(`Props undefined for ${id}`)

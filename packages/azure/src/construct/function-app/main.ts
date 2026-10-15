@@ -119,6 +119,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
     this.createStorageDeploymentContainer()
     this.createStorageContainer()
     this.createDataStorageAccount()
+    this.createDataStorageAccountDefender()
     this.createDataStorageContainer()
     this.generateStorageContainerSas()
     this.createFunctionHosts()
@@ -245,6 +246,18 @@ export class AzureFunctionApp extends CommonAzureConstruct {
       ...this.appEnvironmentVariables,
       AZURE_STORAGE_ACCOUNT_NAME: this.dataStorageAccount.name,
     }
+  }
+
+  /**
+   * @summary Enable Defender for Storage on the data storage account when configured
+   */
+  protected createDataStorageAccountDefender() {
+    if (!this.props.dataStorageAccountDefender || !this.dataStorageAccount) return
+
+    this.securityCentermanager.createDefenderForStorage(`${this.id}-data-storage-defender`, this, {
+      ...this.props.dataStorageAccountDefender,
+      resourceId: this.dataStorageAccount.id,
+    })
   }
 
   /**
