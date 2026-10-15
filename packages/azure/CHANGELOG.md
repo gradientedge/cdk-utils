@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.62.10
+
+### Patch Changes
+
+- [#1227](https://github.com/gradientedge/cdk-utils/pull/1227) [`8175ddb`](https://github.com/gradientedge/cdk-utils/commit/8175ddb19a590bb29f0d946c75bcbe9bad7f9961) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - feat: Add optional data storage account defender to function app construct
+
 ## 2.62.9
 
 ### Patch Changes
