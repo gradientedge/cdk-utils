@@ -10,7 +10,6 @@ import { BlobContainer, StorageAccount } from '@pulumi/azure-native/storage/inde
 import { Input, Output } from '@pulumi/pulumi'
 
 import {
-  DefenderForStorageProps,
   EventgridEventSubscriptionProps,
   EventgridTopicProps,
   MonitorDiagnosticSettingProps,
@@ -122,8 +121,6 @@ export interface EventHandlerEventGridTopicProps extends EventgridTopicProps {
  * @category Interface
  */
 export interface AzureEventHandlerProps extends AzureFunctionAppProps {
-  /** Microsoft Defender for Storage configuration */
-  defender?: DefenderForStorageProps
   /** EventGrid event subscription properties */
   eventGridEventSubscription?: EventgridEventSubscriptionProps
   /**
