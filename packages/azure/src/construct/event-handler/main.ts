@@ -8,6 +8,7 @@ import {
 } from '@pulumi/azure-native/servicebus/index.js'
 import { AccessRights } from '@pulumi/azure-native/types/enums/servicebus/index.js'
 import { Input, output, Output } from '@pulumi/pulumi'
+import _ from 'lodash'
 
 import { AzureFunctionApp } from '../function-app/index.js'
 
@@ -130,8 +131,20 @@ export class AzureEventHandler extends AzureFunctionApp {
     this.createEventGridEventSubscription()
     this.createDiagnosticLog()
     this.createServiceBusDiagnosticLog()
-    this.enableMalwareScanningOnDataStorageAccount()
     super.initResources()
+  }
+
+  /**
+   * @summary Enable Defender for Storage on the data storage account, sending malware scan results to the event grid topic
+   */
+  protected createDataStorageAccountDefender() {
+    if (!this.props.dataStorageAccountDefender) return
+
+    this.props.dataStorageAccountDefender = _.merge({}, this.props.dataStorageAccountDefender, {
+      properties: { malwareScanning: { scanResultsEventGridTopicResourceId: this.eventGridTopic.id } },
+    })
+
+    super.createDataStorageAccountDefender()
   }
 
   /**
@@ -429,23 +442,6 @@ export class AzureEventHandler extends AzureFunctionApp {
           enabled: true,
         },
       ],
-    })
-  }
-
-  /**
-   * @summary Method to enable Microsoft Defender malware scanning on the data storage account
-   */
-  protected enableMalwareScanningOnDataStorageAccount() {
-    if (!this.props.defender) return
-
-    this.securityCentermanager.createDefenderForStorage(`${this.id}-data-storage-defender`, this, {
-      ...this.props.defender,
-      resourceId: this.dataStorageAccount.id,
-      properties: {
-        malwareScanning: {
-          scanResultsEventGridTopicResourceId: this.eventGridTopic.id,
-        },
-      },
     })
   }
 

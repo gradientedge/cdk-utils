@@ -1,4 +1,5 @@
 import { Topic } from '@pulumi/azure-native/eventgrid/index.js'
+import { DefenderForStorage } from '@pulumi/azure-native/security/index.js'
 import { Namespace, Queue } from '@pulumi/azure-native/servicebus/index.js'
 import * as pulumi from '@pulumi/pulumi'
 import { outputToPromise } from '../helpers.js'
@@ -111,7 +112,7 @@ class TestEventHandlerConstruct extends AzureEventHandler {
     this.createEventGrid()
     this.createEventGridEventSubscription()
     this.createServiceBusDiagnosticLog()
-    this.enableMalwareScanningOnDataStorageAccount()
+    this.createDataStorageAccountDefender()
   }
 }
 
@@ -185,7 +186,7 @@ class TestEventHandlerExistingTopicNoSubConstruct extends AzureEventHandler {
   }
 }
 
-/** Test class to cover enableMalwareScanningOnDataStorageAccount with defender props */
+/** Test class to cover createDataStorageAccountDefender with data storage account defender props */
 class TestCommonStackWithDefender extends CommonAzureStack {
   declare props: AzureEventHandlerProps & TestAzureStackProps
   declare construct: TestEventHandlerWithDefenderConstruct
@@ -218,7 +219,7 @@ class TestEventHandlerWithDefenderConstruct extends AzureEventHandler {
     this.createEventGridEventSubscription()
     this.createServiceBusDiagnosticLog()
     this.createDataStorageAccount()
-    this.enableMalwareScanningOnDataStorageAccount()
+    this.createDataStorageAccountDefender()
   }
 }
 
@@ -226,6 +227,7 @@ class TestEventHandlerWithDefenderConstruct extends AzureEventHandler {
 process.on('unhandledRejection', () => {})
 
 const capturedDiagnosticSettings: pulumi.runtime.MockResourceArgs[] = []
+const capturedDefenders: pulumi.runtime.MockResourceArgs[] = []
 
 pulumi.runtime.setAllConfig({
   'project:stage': testStackProps.stage,
@@ -257,6 +259,7 @@ pulumi.runtime.setMocks({
       capturedDiagnosticSettings.push(args)
     } else if (args.type === 'azure-native:security:DefenderForStorage') {
       name = args.name
+      capturedDefenders.push(args)
     } else if (args.type === 'pulumi:providers:azure-native') {
       name = args.name
     } else if (args.type === 'azure-native:web:AppServicePlan') {
@@ -502,7 +505,7 @@ describe('TestAzureEventHandlerWithDefenderConstruct', () => {
     expect(stackWithDefender.construct).toBeDefined()
     expect(stackWithDefender.construct.eventGridTopic).toBeDefined()
     expect(stackWithDefender.construct.dataStorageAccount).toBeDefined()
-    expect(stackWithDefender.construct.props.defender).toBeDefined()
+    expect(stackWithDefender.construct.props.dataStorageAccountDefender).toBeDefined()
   })
 })
 

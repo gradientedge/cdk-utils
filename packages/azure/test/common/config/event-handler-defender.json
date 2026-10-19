@@ -34,8 +34,18 @@
       "resourceGroupName": "test-rg-dev"
     }
   },
-  "defender": {
-    "resourceId": "test-resource-id"
+  "dataStorageAccountDefender": {
+    "resourceId": "test-resource-id",
+    "settingName": "current",
+    "properties": {
+      "isEnabled": true,
+      "malwareScanning": {
+        "onUpload": {
+          "capGBPerMonth": -1,
+          "isEnabled": true
+        }
+      }
+    }
   },
   "dataStorageAccount": {
     "accountName": "test-defender-storage",
