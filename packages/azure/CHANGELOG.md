@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.62.11
+
+### Patch Changes
+
+- [#1229](https://github.com/gradientedge/cdk-utils/pull/1229) [`79fd7b0`](https://github.com/gradientedge/cdk-utils/commit/79fd7b058e60d1da701cbb6ea4f5099df3626b31) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - fix: Send data storage account defender malware scan results to the event handler event grid topic
+
 ## 2.62.10
 
 ### Patch Changes
