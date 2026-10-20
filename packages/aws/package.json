@@ -29,7 +29,7 @@
     "aws-cdk-lib": "2.267.0",
     "constructs": "10.8.1",
     "lodash": "4.18.1",
-    "moment": "2.30.1",
+    "moment": "2.31.0",
     "uuid": "14.0.2"
   },
   "keywords": [
