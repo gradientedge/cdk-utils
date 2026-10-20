@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.62.12
+
+### Patch Changes
+
+- [#1232](https://github.com/gradientedge/cdk-utils/pull/1232) [`fb52cdd`](https://github.com/gradientedge/cdk-utils/commit/fb52cdd3572b2527b26057e80b9c3cbfdb6a3f08) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - Use `commonStorageAccountSku` as the default SKU for Azure storage accounts when an account-specific SKU is not provided. Preserve the existing `Standard_LRS` fallback when neither is configured.
+
 ## 2.62.11
 
 ### Patch Changes
