@@ -1,6 +1,7 @@
 import { BaseProps } from '@gradientedge/cdk-utils-common'
 import { GetComponentOutputArgs } from '@pulumi/azure-native/applicationinsights/index.js'
 import { GetWorkspaceOutputArgs } from '@pulumi/azure-native/operationalinsights/index.js'
+import { StorageAccountArgs } from '@pulumi/azure-native/storage/index.js'
 import { Input } from '@pulumi/pulumi'
 
 import { AzureLocation, AzureRemoteBackend } from './constants.js'
@@ -31,6 +32,8 @@ export interface CommonAzureStackProps extends BaseProps {
   stackName?: string
   /** Optional Azure resource group name override */
   resourceGroupName?: string
+  /** Default SKU for storage accounts without an account-specific SKU */
+  commonStorageAccountSku?: StorageAccountArgs['sku']
   /** Remote backend configuration for Pulumi state storage */
   remoteBackend?: AzureRemoteBackendProps
   /** Global prefix applied to all resource names */
