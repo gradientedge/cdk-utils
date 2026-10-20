@@ -243,8 +243,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
         ...this.props.dataStorageAccount,
         resourceGroupName: this.resourceGroup.name,
         location: this.resourceGroup.location,
-      },
-      { ignoreChanges: ['sku'] }
+      }
     )
 
     this.appEnvironmentVariables = {
