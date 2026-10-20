@@ -236,15 +236,11 @@ export class AzureFunctionApp extends CommonAzureConstruct {
   protected createDataStorageAccount() {
     if (!this.props.dataStorageAccount) return
 
-    this.dataStorageAccount = this.storageManager.createStorageAccount(
-      `${this.id}-data-storage-account`,
-      this,
-      {
-        ...this.props.dataStorageAccount,
-        resourceGroupName: this.resourceGroup.name,
-        location: this.resourceGroup.location,
-      }
-    )
+    this.dataStorageAccount = this.storageManager.createStorageAccount(`${this.id}-data-storage-account`, this, {
+      ...this.props.dataStorageAccount,
+      resourceGroupName: this.resourceGroup.name,
+      location: this.resourceGroup.location,
+    })
 
     this.appEnvironmentVariables = {
       ...this.appEnvironmentVariables,
