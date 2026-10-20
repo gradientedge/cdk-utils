@@ -240,6 +240,40 @@ describe('TestAzureStorageConstruct - Default Values', () => {
     )
   })
 
+  test('storage account uses the construct default SKU when the account has none', async () => {
+    const scope = new CommonAzureConstruct('test-stage-sku', {
+      ...minimalStorageStack.construct.props,
+      commonStorageAccountSku: { name: 'Standard_ZRS' },
+    })
+    const account = scope.storageManager.createStorageAccount(
+      'test-stage-sku',
+      scope,
+      // The Azure Native input type requires SKU, but the manager supports an omitted SKU.
+      {
+        accountName: 'test-stage-sku',
+        resourceGroupName: 'test-rg-dev',
+        kind: 'StorageV2',
+      } as StorageAccountProps
+    )
+
+    expect(await outputToPromise(account.sku)).toEqual({ name: 'Standard_ZRS' })
+  })
+
+  test('storage account SKU overrides the construct default SKU', async () => {
+    const scope = new CommonAzureConstruct('test-explicit-sku', {
+      ...minimalStorageStack.construct.props,
+      commonStorageAccountSku: { name: 'Standard_ZRS' },
+    })
+    const account = scope.storageManager.createStorageAccount('test-explicit-sku', scope, {
+      accountName: 'test-explicit-sku',
+      resourceGroupName: 'test-rg-dev',
+      kind: 'StorageV2',
+      sku: { name: 'Standard_GRS' },
+    })
+
+    expect(await outputToPromise(account.sku)).toEqual({ name: 'Standard_GRS' })
+  })
+
   test('storage account uses default kind when not provided', async () => {
     await outputToPromise(
       pulumi.all([minimalStorageStack.construct.storageAccount.kind]).apply(([kind]) => {

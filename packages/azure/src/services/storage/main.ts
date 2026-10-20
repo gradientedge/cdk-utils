@@ -88,9 +88,10 @@ export class AzureStorageManager {
         // version 1.3 version is not supported". TLS1_2 is the highest it accepts.
         minimumTlsVersion: MinimumTlsVersion.TLS1_2,
         resourceGroupName,
-        sku: props.sku ?? {
-          name: SkuName.Standard_LRS,
-        },
+        sku: props.sku ??
+          scope.props.commonStorageAccountSku ?? {
+            name: SkuName.Standard_LRS,
+          },
         kind: props.kind ?? Kind.StorageV2,
         location: props.location ?? scope.props.location,
         tags: {

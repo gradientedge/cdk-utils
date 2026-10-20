@@ -1,5 +1,4 @@
 import { Topic } from '@pulumi/azure-native/eventgrid/index.js'
-import { DefenderForStorage } from '@pulumi/azure-native/security/index.js'
 import { Namespace, Queue } from '@pulumi/azure-native/servicebus/index.js'
 import * as pulumi from '@pulumi/pulumi'
 import { outputToPromise } from '../helpers.js'
