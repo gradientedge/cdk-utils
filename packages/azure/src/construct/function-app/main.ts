@@ -119,6 +119,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
     this.createStorageDeploymentContainer()
     this.createStorageContainer()
     this.createDataStorageAccount()
+    this.createDataStorageAccountLifecycleRules()
     this.createDataStorageAccountDefender()
     this.createDataStorageContainer()
     this.generateStorageContainerSas()
@@ -246,6 +247,19 @@ export class AzureFunctionApp extends CommonAzureConstruct {
       ...this.appEnvironmentVariables,
       AZURE_STORAGE_ACCOUNT_NAME: this.dataStorageAccount.name,
     }
+  }
+
+  /**
+   * @summary Method to create lifecycle rules for the data storage account
+   */
+  protected createDataStorageAccountLifecycleRules() {
+    if (!this.props.dataStorageAccountLifecycleRules || !this.dataStorageAccount) return
+
+    this.storageManager.createManagementPolicy(`${this.id}-data-storage-lifecycle-policy`, this, {
+      ...this.props.dataStorageAccountLifecycleRules,
+      accountName: this.dataStorageAccount.name,
+      resourceGroupName: this.resourceGroup.name,
+    })
   }
 
   /**
