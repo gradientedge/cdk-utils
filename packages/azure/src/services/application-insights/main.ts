@@ -91,6 +91,7 @@ export class AzureApplicationInsightsManager {
         {
           parent: scope,
           ...resourceOptions,
+          dependsOn: [component],
         }
       )
     }
