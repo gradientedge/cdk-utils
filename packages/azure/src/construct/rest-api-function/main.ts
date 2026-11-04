@@ -1,4 +1,4 @@
-import { NamedValue, PolicyContentFormat } from '@pulumi/azure-native/apimanagement/index.js'
+import { ApiOperation, NamedValue, PolicyContentFormat } from '@pulumi/azure-native/apimanagement/index.js'
 import { getVaultOutput } from '@pulumi/azure-native/keyvault/index.js'
 import { listWebAppHostKeys } from '@pulumi/azure-native/web/index.js'
 import * as pulumi from '@pulumi/pulumi'
@@ -238,16 +238,16 @@ export class AzureRestApiFunction extends AzureFunctionApp {
     })
 
     _.forEach(this.props.apiManagementApi.operations, operation => {
-      this.createApiOperation(operation)
-      this.createApiOperationCachePolicy(operation)
+      const apiOperation = this.createApiOperation(operation)
+      this.createApiOperationCachePolicy(operation, apiOperation)
     })
   }
 
   /**
    * @summary Method to create an API Management API operation
    */
-  protected createApiOperation(operation: ApiManagementApiOperationProps) {
-    this.api.apiOperations[operation.displayName.toString()] = this.apiManagementManager.createOperation(
+  protected createApiOperation(operation: ApiManagementApiOperationProps): ApiOperation {
+    const apiOperation = this.apiManagementManager.createOperation(
       `${this.id}-apim-api-apim-api-operation-${operation.displayName}-${operation.method}`,
       this,
       {
@@ -262,12 +262,15 @@ export class AzureRestApiFunction extends AzureFunctionApp {
       },
       { dependsOn: [this.api.managementApi] }
     )
+
+    this.api.apiOperations[operation.displayName.toString()] = apiOperation
+    return apiOperation
   }
 
   /**
    * @summary Method to create a cache policy for an API Management API operation
    */
-  protected createApiOperationCachePolicy(operation: ApiManagementApiOperationProps) {
+  protected createApiOperationCachePolicy(operation: ApiManagementApiOperationProps, apiOperation: ApiOperation) {
     if (!operation.caching || !operation.caching.enableCacheSet) return
 
     this.apiManagementManager.createOperationPolicy(
@@ -297,7 +300,7 @@ export class AzureRestApiFunction extends AzureFunctionApp {
           </on-error>
         </policies>`.replace(/\n[ \t]*\n/g, '\n'),
       },
-      { dependsOn: [this.api.managementApi] }
+      { dependsOn: [this.api.managementApi, apiOperation] }
     )
   }
 
