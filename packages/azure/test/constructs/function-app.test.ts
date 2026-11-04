@@ -1,5 +1,6 @@
 import { ConfigurationStore } from '@pulumi/azure-native/appconfiguration/index.js'
 import { DefenderForStorage } from '@pulumi/azure-native/security/index.js'
+import { ManagementPolicy } from '@pulumi/azure-native/storage/index.js'
 import * as pulumi from '@pulumi/pulumi'
 import { outputToPromise } from '../helpers.js'
 import {
@@ -9,6 +10,7 @@ import {
   CommonAzureStack,
   CommonAzureStackProps,
   FunctionAppProperties,
+  ManagementPolicyProps,
   RoleDefinitionId,
   StorageAccountProps,
   StorageContainerProps,
@@ -108,6 +110,7 @@ class TestFunctionAppConstruct extends AzureFunctionApp {
     this.createStorageDeploymentContainer()
     this.createStorageContainer()
     this.createDataStorageAccount()
+    this.createDataStorageAccountLifecycleRules()
     this.createDataStorageAccountDefender()
     this.createDataStorageContainer()
     this.createCodePackage()
@@ -156,6 +159,7 @@ class TestFunctionAppWithOverridesConstruct extends AzureFunctionApp {
     this.createStorageDeploymentContainer()
     this.createStorageContainer()
     this.createDataStorageAccount()
+    this.createDataStorageAccountLifecycleRules()
     this.createDataStorageContainer()
     this.generateStorageContainerSas()
     this.createCodePackage()
@@ -196,6 +200,7 @@ class TestFunctionAppWithExistingConfigConstruct extends AzureFunctionApp {
     this.createStorageAccount()
     this.createStorageDeploymentContainer()
     this.createDataStorageAccount()
+    this.createDataStorageAccountLifecycleRules()
     this.createDataStorageContainer()
     this.createCodePackage()
     this.createFunctionApp()
@@ -233,6 +238,7 @@ class TestFunctionAppMinimalConstruct extends AzureFunctionApp {
     this.createStorageDeploymentContainer()
     this.createStorageContainer()
     this.createDataStorageAccount()
+    this.createDataStorageAccountLifecycleRules()
     this.createDataStorageContainer()
     this.generateStorageContainerSas()
   }
@@ -331,6 +337,53 @@ pulumi.runtime.setConfig('project:extraContexts', JSON.stringify(testStackPropsM
 const stackMinimal = new TestCommonStackMinimal('test-minimal-stack', testStackPropsMinimal)
 
 describe('TestAzureFunctionAppConstruct', () => {
+  test('creates data storage lifecycle policy only when rules are configured', async () => {
+    const lifecycleRules = [
+      {
+        enabled: true,
+        name: 'delete-old-blobs',
+        type: 'Lifecycle' as const,
+        definition: {
+          actions: {
+            baseBlob: {
+              delete: {
+                daysAfterModificationGreaterThan: 30,
+              },
+            },
+          },
+          filters: {
+            blobTypes: ['blockBlob'],
+            prefixMatch: ['test-data-container/'],
+          },
+        },
+      },
+    ]
+    const lifecyclePolicy: ManagementPolicyProps = {
+      accountName: 'provided-account',
+      policy: { rules: lifecycleRules },
+      resourceGroupName: 'provided-resource-group',
+    }
+    const construct = new TestFunctionAppConstruct('test-lifecycle-rules', {
+      ...stack.construct.props,
+      dataStorageAccountLifecycleRules: lifecyclePolicy,
+    })
+    const policies = [
+      ...((construct as unknown as { __childResources: Set<pulumi.Resource> }).__childResources ?? []),
+    ].filter(resource => resource instanceof ManagementPolicy) as ManagementPolicy[]
+
+    expect(policies).toHaveLength(1)
+    await outputToPromise(
+      policies[0].policy.apply(policy => {
+        expect(policy.rules).toEqual(lifecycleRules)
+      })
+    )
+
+    const noRules = [
+      ...(stack.construct as unknown as { __childResources: Set<pulumi.Resource> }).__childResources,
+    ].filter(resource => resource instanceof ManagementPolicy)
+    expect(noRules).toHaveLength(0)
+  })
+
   test('creates Defender for the data storage account only when configured', async () => {
     const children = (construct: AzureFunctionApp) =>
       [...(construct as unknown as { __childResources: Set<pulumi.Resource> }).__childResources].filter(
