@@ -1,5 +1,15 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.62.13
+
+### Patch Changes
+
+- [#1236](https://github.com/gradientedge/cdk-utils/pull/1236) [`15c03f7`](https://github.com/gradientedge/cdk-utils/commit/15c03f7e6444785a455aed9248ab15529290a02e) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - Ensure API Management operation policies wait for their operation before deployment.
+
+- [#1235](https://github.com/gradientedge/cdk-utils/pull/1235) [`04bb5bf`](https://github.com/gradientedge/cdk-utils/commit/04bb5bfab5f4b239fc15b499a65839b70342a25c) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - Make Application Insights billing features depend on their parent component so fresh deployments no longer fail with `ParentResourceNotFound` when the billing features are written before the component exists.
+
+- [#1234](https://github.com/gradientedge/cdk-utils/pull/1234) [`09e7d22`](https://github.com/gradientedge/cdk-utils/commit/09e7d22e94d7706e3a867b2504ad08e481c65147) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - feat: Add optional lifecycle management policy support for Azure Function App data storage accounts.
+
 ## 2.62.12
 
 ### Patch Changes
