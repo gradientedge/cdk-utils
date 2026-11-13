@@ -225,9 +225,6 @@ class TestEventHandlerWithDefenderConstruct extends AzureEventHandler {
 // Suppress expected unhandled rejections from dependsOn with non-Resource values in existing topic variants
 process.on('unhandledRejection', () => {})
 
-const capturedDiagnosticSettings: pulumi.runtime.MockResourceArgs[] = []
-const capturedDefenders: pulumi.runtime.MockResourceArgs[] = []
-
 pulumi.runtime.setAllConfig({
   'project:stage': testStackProps.stage,
   'project:stageContextPath': testStackProps.stageContextPath ?? '',
@@ -255,10 +252,8 @@ pulumi.runtime.setMocks({
       name = args.inputs.eventSubscriptionName
     } else if (args.type === 'azure-native:monitor:DiagnosticSetting') {
       name = args.inputs.name
-      capturedDiagnosticSettings.push(args)
     } else if (args.type === 'azure-native:security:DefenderForStorage') {
       name = args.name
-      capturedDefenders.push(args)
     } else if (args.type === 'pulumi:providers:azure-native') {
       name = args.name
     } else if (args.type === 'azure-native:web:AppServicePlan') {
@@ -564,32 +559,34 @@ describe('TestAzureEventHandlerFullConstruct', () => {
 
 describe('AzureEventHandler.createDiagnosticLog', () => {
   test('creates EventGrid topic diagnostics when eventGridDiagnosticSettings is configured', async () => {
-    const diagnostic = capturedDiagnosticSettings.find(resource =>
-      (resource.inputs.name as string).includes('-full-eventgrid')
-    )
-
-    expect(diagnostic).toBeDefined()
+    const diagnostic = stackFull.construct.eventGridTopicDiagnosticSettings
 
     await outputToPromise(
       pulumi
-        .all([stackFull.construct.eventGridTopic.id, stackFull.construct.commonLogAnalyticsWorkspace.id])
-        .apply(([topicId, workspaceId]) => {
-          expect(diagnostic?.inputs.resourceUri).toEqual(topicId)
-          expect(diagnostic?.inputs.workspaceId).toEqual(workspaceId)
-          expect(diagnostic?.inputs.logAnalyticsDestinationType).toEqual('Dedicated')
-          expect(diagnostic?.inputs.logs).toEqual([{ categoryGroup: 'allLogs', enabled: true }])
-          expect(diagnostic?.inputs.metrics).toEqual([{ category: 'AllMetrics', enabled: true }])
+        .all([
+          diagnostic.name,
+          diagnostic.logs,
+          diagnostic.metrics,
+          diagnostic.workspaceId,
+          diagnostic.logAnalyticsDestinationType,
+          (diagnostic as any).resourceUri,
+          stackFull.construct.eventGridTopic.id,
+          stackFull.construct.commonLogAnalyticsWorkspace.id,
+        ])
+        .apply(([name, logs, metrics, workspaceIdOut, destinationType, resourceUri, topicId, workspaceId]) => {
+          expect(name).toContain('test-common-stack-full-eventgrid')
+          expect(resourceUri).toEqual(topicId)
+          expect(workspaceIdOut).toEqual(workspaceId)
+          expect(destinationType).toEqual('Dedicated')
+          expect(logs).toEqual([{ categoryGroup: 'allLogs', enabled: true }])
+          expect(metrics).toEqual([{ category: 'AllMetrics', enabled: true }])
         })
     )
   })
 
   test('skips EventGrid topic diagnostics when eventGridDiagnosticSettings is not configured', () => {
     expect(stack.construct.props.eventGridDiagnosticSettings).toBeUndefined()
-    expect(
-      capturedDiagnosticSettings.some(resource =>
-        (resource.inputs.name as string).startsWith(`${stack.construct.id}-eventgrid`)
-      )
-    ).toEqual(false)
+    expect(stack.construct.eventGridTopicDiagnosticSettings).toBeUndefined()
   })
 })
 
