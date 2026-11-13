@@ -1,5 +1,4 @@
 import { ConfigurationStore } from '@pulumi/azure-native/appconfiguration/index.js'
-import { DefenderForStorage } from '@pulumi/azure-native/security/index.js'
 import { ManagementPolicy } from '@pulumi/azure-native/storage/index.js'
 import * as pulumi from '@pulumi/pulumi'
 import { outputToPromise } from '../helpers.js'
@@ -112,6 +111,7 @@ class TestFunctionAppConstruct extends AzureFunctionApp {
     this.createDataStorageAccount()
     this.createDataStorageAccountLifecycleRules()
     this.createDataStorageAccountDefender()
+    this.createDefenderScanResultsDiagnosticLog()
     this.createDataStorageContainer()
     this.createCodePackage()
     this.createFunctionApp()
@@ -250,15 +250,10 @@ pulumi.runtime.setAllConfig({
   'project:extraContexts': JSON.stringify(testStackProps.extraContexts),
 })
 
-const capturedDefenders: pulumi.runtime.MockResourceArgs[] = []
-
 pulumi.runtime.setMocks({
   newResource: (args: pulumi.runtime.MockResourceArgs) => {
     let name
 
-    if (args.type === 'azure-native:security:DefenderForStorage') {
-      capturedDefenders.push(args)
-    }
     if (args.type === 'azure-native:resources:ResourceGroup') {
       name = args.inputs.resourceGroupName
     } else if (args.type === 'azure-native:web:AppServicePlan') {
@@ -281,6 +276,8 @@ pulumi.runtime.setMocks({
       name = args.inputs.name
     } else if (args.type === 'azure-native:portal:Dashboard') {
       name = args.inputs.dashboardName
+    } else if (args.type === 'azure-native:security:DefenderForStorage') {
+      name = args.name
     }
 
     return {
@@ -367,44 +364,32 @@ describe('TestAzureFunctionAppConstruct', () => {
       ...stack.construct.props,
       dataStorageAccountLifecycleRules: lifecyclePolicy,
     })
-    const policies = [
-      ...((construct as unknown as { __childResources: Set<pulumi.Resource> }).__childResources ?? []),
-    ].filter(resource => resource instanceof ManagementPolicy) as ManagementPolicy[]
-
-    expect(policies).toHaveLength(1)
+    const policy = construct.dataStorageAccountLifecyclePolicy
+    expect(policy).toBeDefined()
     await outputToPromise(
-      policies[0].policy.apply(policy => {
-        expect(policy.rules).toEqual(lifecycleRules)
+      policy.policy.apply(lifecyclePolicy => {
+        expect(lifecyclePolicy.rules).toEqual(lifecycleRules)
       })
     )
 
-    const noRules = [
-      ...(stack.construct as unknown as { __childResources: Set<pulumi.Resource> }).__childResources,
-    ].filter(resource => resource instanceof ManagementPolicy)
-    expect(noRules).toHaveLength(0)
+    expect(stack.construct.dataStorageAccountLifecyclePolicy).toBeUndefined()
+    await outputToPromise(construct.appServicePlan.name)
   })
 
   test('creates Defender for the data storage account only when configured', async () => {
-    const children = (construct: AzureFunctionApp) =>
-      [...(construct as unknown as { __childResources: Set<pulumi.Resource> }).__childResources].filter(
-        resource => resource instanceof DefenderForStorage
-      ) as DefenderForStorage[]
-    expect(children(stack.construct)).toHaveLength(0)
-    const defenders = children(stackWithDefender.construct)
-    expect(defenders).toHaveLength(1)
+    const defender = stackWithDefender.construct.dataStorageAccountDefender
+    expect(stack.construct.dataStorageAccountDefender).toBeUndefined()
     await outputToPromise(
       pulumi
-        .all([defenders[0].urn, defenders[0].properties, stackWithDefender.construct.dataStorageAccount.id])
-        .apply(([urn, properties, accountId]) => {
-          expect(urn).toContain('test-common-stack-with-defender-data-storage-defender')
-          expect(accountId).toEqual('test-common-stack-with-defender-data-storage-account-sa-id')
-          expect(capturedDefenders).toHaveLength(1)
-          expect(capturedDefenders[0].inputs.resourceId).toEqual(accountId)
+        .all([defender.name, defender.properties, stackWithDefender.construct.dataStorageAccount.id])
+        .apply(([name, properties, accountId]) => {
+          expect(name).toContain('test-common-stack-with-defender-data-storage-defender')
           expect(properties).toEqual({
             isEnabled: true,
             overrideSubscriptionLevelSettings: true,
             malwareScanning: { onUpload: { isEnabled: true, capGBPerMonth: -1 } },
           })
+          expect(accountId).toEqual('test-common-stack-with-defender-data-storage-account-sa-id')
         })
     )
   })
@@ -414,8 +399,35 @@ describe('TestAzureFunctionAppConstruct', () => {
       'test-missing-data-account',
       stackWithDefender.construct.props
     )
-    const children = (construct as unknown as { __childResources: Set<pulumi.Resource> }).__childResources
-    expect([...(children ?? [])].filter(resource => resource instanceof DefenderForStorage)).toHaveLength(0)
+    expect(construct.dataStorageAccountDefender).toBeUndefined()
+  })
+
+  test('creates defender scan results diagnostic setting only when defender and workspace are configured', async () => {
+    const diagnostic = stackWithDefender.construct.dataStorageAccountDefenderDiagnosticSettings
+    expect(stack.construct.dataStorageAccountDefenderDiagnosticSettings).toBeUndefined()
+    await outputToPromise(
+      pulumi
+        .all([
+          diagnostic.urn,
+          diagnostic.logs,
+          (diagnostic as any).resourceUri,
+          stackWithDefender.construct.dataStorageAccount.id,
+        ])
+        .apply(([urn, logs, resourceUri, accountId]) => {
+          expect(urn).toContain('test-common-stack-with-defender-defender-scan-results')
+          expect(logs).toEqual([{ category: 'ScanResults', enabled: true }])
+          expect(resourceUri).toEqual(`${accountId}/providers/Microsoft.Security/DefenderForStorageSettings/current`)
+        })
+    )
+  })
+
+  test('does not create defender scan results diagnostic setting when workspace is absent', async () => {
+    const construct = new TestFunctionAppConstruct('test-no-workspace-diagnostics', {
+      ...stackWithDefender.construct.props,
+      commonLogAnalyticsWorkspace: undefined,
+    })
+    expect(construct.dataStorageAccountDefenderDiagnosticSettings).toBeUndefined()
+    await outputToPromise(construct.appServicePlan.name)
   })
 
   test('is initialised as expected', () => {

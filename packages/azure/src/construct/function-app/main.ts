@@ -10,8 +10,15 @@ import {
 import { getComponentOutput, GetComponentResult } from '@pulumi/azure-native/applicationinsights/index.js'
 import { PrincipalType, RoleAssignment } from '@pulumi/azure-native/authorization/index.js'
 import { SkuFamily, SkuName, Vault } from '@pulumi/azure-native/keyvault/index.js'
+import { DiagnosticSetting } from '@pulumi/azure-native/monitor/index.js'
 import { Dashboard } from '@pulumi/azure-native/portal/index.js'
-import { BlobContainer, listStorageAccountKeysOutput, StorageAccount } from '@pulumi/azure-native/storage/index.js'
+import { DefenderForStorage } from '@pulumi/azure-native/security/index.js'
+import {
+  BlobContainer,
+  listStorageAccountKeysOutput,
+  ManagementPolicy,
+  StorageAccount,
+} from '@pulumi/azure-native/storage/index.js'
 import {
   AppServicePlan,
   AuthenticationType,
@@ -81,6 +88,12 @@ export class AzureFunctionApp extends CommonAzureConstruct {
   dataStorageAccount: StorageAccount
   /** The provisioned data storage container */
   dataStorageContainer: BlobContainer
+  /** The provisioned lifecycle management policy for the data storage account */
+  dataStorageAccountLifecyclePolicy: ManagementPolicy
+  /** The Defender for the data storage account */
+  dataStorageAccountDefender: DefenderForStorage
+  /** The diagnostic settings for the Defender for the data storage account */
+  dataStorageAccountDefenderDiagnosticSettings: DiagnosticSetting
 
   /** The resolved Application Insights component for telemetry */
   applicationInsights: Output<GetComponentResult>
@@ -121,6 +134,7 @@ export class AzureFunctionApp extends CommonAzureConstruct {
     this.createDataStorageAccount()
     this.createDataStorageAccountLifecycleRules()
     this.createDataStorageAccountDefender()
+    this.createDefenderScanResultsDiagnosticLog()
     this.createDataStorageContainer()
     this.generateStorageContainerSas()
     this.createFunctionHosts()
@@ -255,11 +269,15 @@ export class AzureFunctionApp extends CommonAzureConstruct {
   protected createDataStorageAccountLifecycleRules() {
     if (!this.props.dataStorageAccountLifecycleRules || !this.dataStorageAccount) return
 
-    this.storageManager.createManagementPolicy(`${this.id}-data-storage-lifecycle-policy`, this, {
-      ...this.props.dataStorageAccountLifecycleRules,
-      accountName: this.dataStorageAccount.name,
-      resourceGroupName: this.resourceGroup.name,
-    })
+    this.dataStorageAccountLifecyclePolicy = this.storageManager.createManagementPolicy(
+      `${this.id}-data-storage-lifecycle-policy`,
+      this,
+      {
+        ...this.props.dataStorageAccountLifecycleRules,
+        accountName: this.dataStorageAccount.name,
+        resourceGroupName: this.resourceGroup.name,
+      }
+    )
   }
 
   /**
@@ -268,10 +286,33 @@ export class AzureFunctionApp extends CommonAzureConstruct {
   protected createDataStorageAccountDefender() {
     if (!this.props.dataStorageAccountDefender || !this.dataStorageAccount) return
 
-    this.securityCentermanager.createDefenderForStorage(`${this.id}-data-storage-defender`, this, {
-      ...this.props.dataStorageAccountDefender,
-      resourceId: this.dataStorageAccount.id,
-    })
+    this.dataStorageAccountDefender = this.securityCentermanager.createDefenderForStorage(
+      `${this.id}-data-storage-defender`,
+      this,
+      {
+        ...this.props.dataStorageAccountDefender,
+        resourceId: this.dataStorageAccount.id,
+      }
+    )
+  }
+
+  /**
+   * @summary Export every Defender malware scan result to the shared Log Analytics workspace
+   */
+  protected createDefenderScanResultsDiagnosticLog() {
+    if (!this.dataStorageAccountDefender || !this.commonLogAnalyticsWorkspace) return
+
+    this.dataStorageAccountDefenderDiagnosticSettings = this.monitorManager.createMonitorDiagnosticSettings(
+      `${this.id}-defender-scan-results`,
+      this,
+      {
+        name: `${this.id}-defender-scan-results`,
+        resourceUri: pulumi.interpolate`${this.dataStorageAccount.id}/providers/Microsoft.Security/DefenderForStorageSettings/current`,
+        workspaceId: this.commonLogAnalyticsWorkspace.id,
+        logs: [{ category: 'ScanResults', enabled: true }],
+      },
+      { dependsOn: [this.dataStorageAccountDefender] }
+    )
   }
 
   /**
