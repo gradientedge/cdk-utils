@@ -1,5 +1,6 @@
 import { Provider } from '@pulumi/azure-native'
 import { getTopicOutput, GetTopicResult, Topic } from '@pulumi/azure-native/eventgrid/index.js'
+import { DiagnosticSetting } from '@pulumi/azure-native/monitor/index.js'
 import {
   getNamespaceOutput,
   getQueueOutput,
@@ -99,6 +100,8 @@ export class AzureEventHandler extends AzureFunctionApp {
   eventGridEventSubscription: EventHandlerEventGridSubscription
   /** The provisioned or resolved EventGrid topic */
   eventGridTopic: Topic | Output<GetTopicResult>
+  /** The diagnostic settings for the EventGrid topic */
+  eventGridTopicDiagnosticSettings: DiagnosticSetting
   /** Provisioned Service Bus resources (namespace and queue) */
   serviceBus: EventHandlerServiceBus
 
@@ -394,7 +397,7 @@ export class AzureEventHandler extends AzureFunctionApp {
   protected createDiagnosticLog() {
     if (!this.props.eventGridDiagnosticSettings) return
 
-    this.monitorManager.createMonitorDiagnosticSettings(this.id, this, {
+    this.eventGridTopicDiagnosticSettings = this.monitorManager.createMonitorDiagnosticSettings(this.id, this, {
       logs: [
         {
           categoryGroup: 'allLogs',
