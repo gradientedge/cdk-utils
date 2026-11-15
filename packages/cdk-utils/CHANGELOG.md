@@ -1,5 +1,13 @@
 # @gradientedge/cdk-utils
 
+## 11.63.15
+
+### Patch Changes
+
+- [#1238](https://github.com/gradientedge/cdk-utils/pull/1238) [`c4a4f51`](https://github.com/gradientedge/cdk-utils/commit/c4a4f513a4728c3b2ea72f599a16accfe2efb43a) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - Expose Defender and diagnostic setting resources as typed fields on function app and event handler constructs.
+- Updated dependencies [[`c4a4f51`](https://github.com/gradientedge/cdk-utils/commit/c4a4f513a4728c3b2ea72f599a16accfe2efb43a)]:
+  - @gradientedge/cdk-utils-azure@2.62.14
+
 ## 11.63.14
 
 ### Patch Changes
