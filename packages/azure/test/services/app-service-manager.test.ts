@@ -484,3 +484,37 @@ describe('TestAzureAppServiceConstruct - Minimum TLS Version', () => {
     )
   })
 })
+
+describe('AzureAppServiceManager zone redundancy defaults', () => {
+  const planProps: ServicePlanProps = { name: 'test-zr-plan', resourceGroupName: 'test-rg-dev' } as ServicePlanProps
+
+  test('app service plan uses true when no plan or common default is set', async () => {
+    const scope = new CommonAzureConstruct('test-zr-default', stack.construct.props)
+    const plan = scope.appServiceManager.createAppServicePlan('test-zr-default', scope, planProps)
+
+    expect(await outputToPromise(plan.zoneRedundant)).toEqual(true)
+  })
+
+  test('app service plan uses the construct default when the plan has none', async () => {
+    const scope = new CommonAzureConstruct('test-zr-common', {
+      ...stack.construct.props,
+      commonAppServiceZoneRedundant: false,
+    })
+    const plan = scope.appServiceManager.createAppServicePlan('test-zr-common', scope, planProps)
+
+    expect(await outputToPromise(plan.zoneRedundant)).toEqual(false)
+  })
+
+  test('app service plan zoneRedundant overrides the construct default', async () => {
+    const scope = new CommonAzureConstruct('test-zr-explicit', {
+      ...stack.construct.props,
+      commonAppServiceZoneRedundant: false,
+    })
+    const plan = scope.appServiceManager.createAppServicePlan('test-zr-explicit', scope, {
+      ...planProps,
+      zoneRedundant: true,
+    })
+
+    expect(await outputToPromise(plan.zoneRedundant)).toEqual(true)
+  })
+})

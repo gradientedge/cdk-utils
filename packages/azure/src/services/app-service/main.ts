@@ -67,7 +67,7 @@ export class AzureAppServiceManager {
           tier: 'FlexConsumption',
         },
         reserved: props.reserved ?? true,
-        zoneRedundant: props.zoneRedundant ?? true,
+        zoneRedundant: props.zoneRedundant ?? scope.props.commonAppServiceZoneRedundant ?? true,
         hyperV: props.hyperV ?? false,
         isXenon: props.isXenon ?? false,
         perSiteScaling: props.perSiteScaling ?? false,

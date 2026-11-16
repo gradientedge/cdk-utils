@@ -4,6 +4,8 @@ import { GetWorkspaceOutputArgs } from '@pulumi/azure-native/operationalinsights
 import { StorageAccountArgs } from '@pulumi/azure-native/storage/index.js'
 import { Input } from '@pulumi/pulumi'
 
+import { ServicePlanProps } from '../services/app-service/types.js'
+
 import { AzureLocation, AzureRemoteBackend } from './constants.js'
 
 /**
@@ -34,6 +36,8 @@ export interface CommonAzureStackProps extends BaseProps {
   resourceGroupName?: string
   /** Default SKU for storage accounts without an account-specific SKU */
   commonStorageAccountSku?: StorageAccountArgs['sku']
+  /** Default zone redundancy for app service plans without a plan-specific zoneRedundant value */
+  commonAppServiceZoneRedundant?: ServicePlanProps['zoneRedundant']
   /** Remote backend configuration for Pulumi state storage */
   remoteBackend?: AzureRemoteBackendProps
   /** Global prefix applied to all resource names */
