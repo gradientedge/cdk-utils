@@ -253,7 +253,7 @@ export class AzureRestApi extends CommonAzureConstruct {
         secretName: pulumi.interpolate`${this.applicationInsights.name}-${this.id}-key`,
         resourceGroupName: this.props.apiAuthKeyVault.resourceGroupName,
         properties: {
-          value: this.applicationInsights.instrumentationKey,
+          value: pulumi.secret(this.applicationInsights.instrumentationKey),
         },
       }
     )
@@ -292,7 +292,7 @@ export class AzureRestApi extends CommonAzureConstruct {
       secretName: `${this.id}-subscription-key`,
       resourceGroupName: this.props.apiAuthKeyVault.resourceGroupName,
       properties: {
-        value: subscriptionKey,
+        value: pulumi.secret(subscriptionKey),
       },
     })
   }

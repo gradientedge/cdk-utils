@@ -118,7 +118,7 @@ export class AzureRestApiFunction extends AzureFunctionApp {
         secretName: pulumi.interpolate`${this.app.name}key`,
         resourceGroupName: this.props.apiAuthKeyVault.resourceGroupName,
         properties: {
-          value: functionKey,
+          value: pulumi.secret(functionKey),
           attributes: {
             enabled: true,
           },
