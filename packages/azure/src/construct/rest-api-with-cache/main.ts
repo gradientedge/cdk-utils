@@ -100,7 +100,7 @@ export class AzureRestApiWithCache extends AzureRestApi {
         secretName: pulumi.interpolate`${this.api.redisCluster.name}key`,
         resourceGroupName: this.props.apiAuthKeyVault.resourceGroupName,
         properties: {
-          value: connectionString,
+          value: pulumi.secret(connectionString),
         },
       },
       /* The role assignment must complete before writing the secret,
