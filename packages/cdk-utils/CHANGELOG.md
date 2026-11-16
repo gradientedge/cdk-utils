@@ -1,5 +1,15 @@
 # @gradientedge/cdk-utils
 
+## 11.63.16
+
+### Patch Changes
+
+- [#1241](https://github.com/gradientedge/cdk-utils/pull/1241) [`2522136`](https://github.com/gradientedge/cdk-utils/commit/252213620ca599abdbe2fbb7d9ef0541d451e71b) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - Add optional common property `commonAppServiceZoneRedundant` as the default `zoneRedundant` for Azure app service plans.
+
+- [#1240](https://github.com/gradientedge/cdk-utils/pull/1240) [`bea66ce`](https://github.com/gradientedge/cdk-utils/commit/bea66ced4b9bb3f31b37b402510b789bbf9d76f9) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - Mark Key Vault secret values as Pulumi secrets
+- Updated dependencies [[`2522136`](https://github.com/gradientedge/cdk-utils/commit/252213620ca599abdbe2fbb7d9ef0541d451e71b), [`bea66ce`](https://github.com/gradientedge/cdk-utils/commit/bea66ced4b9bb3f31b37b402510b789bbf9d76f9)]:
+  - @gradientedge/cdk-utils-azure@2.62.15
+
 ## 11.63.15
 
 ### Patch Changes
