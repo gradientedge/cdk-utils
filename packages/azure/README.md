@@ -32,3 +32,7 @@ class MyAzureStack extends CommonAzureConstruct {
 ### Storage account SKU defaults
 
 Set `commonStorageAccountSku` on common Azure stack/construct props (for example in a stage context JSON file) to supply a default for storage accounts created through `AzureStorageManager`. An account's own `sku` takes precedence. If neither is set, the manager uses `Standard_LRS`. Pulumi `ignoreChanges` for `sku` is configured separately through the resource options passed to `createStorageAccount`; a configured default does not update existing accounts when SKU changes are ignored.
+
+### App Service plan zone redundancy defaults
+
+Set `commonAppServiceZoneRedundant` on common Azure stack/construct props to supply a default `zoneRedundant` value for app service plans created through `AzureAppServiceManager`. A plan's own `zoneRedundant` takes precedence. If neither is set, the manager uses `true`.
