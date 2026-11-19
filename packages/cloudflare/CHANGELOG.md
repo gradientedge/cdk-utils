@@ -1,5 +1,11 @@
 # @gradientedge/cdk-utils-cloudflare
 
+## 2.29.2
+
+### Patch Changes
+
+- [#1243](https://github.com/gradientedge/cdk-utils/pull/1243) [`237aed6`](https://github.com/gradientedge/cdk-utils/commit/237aed6a778227e5dd4bad66a873f23699b040b7) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - Translate the top-level Wrangler observability sampling rate to the Pulumi Worker configuration.
+
 ## 2.29.1
 
 ### Patch Changes
