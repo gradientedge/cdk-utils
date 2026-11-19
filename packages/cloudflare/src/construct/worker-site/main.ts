@@ -136,6 +136,7 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
       cache?: { enabled?: boolean }
       observability?: {
         enabled?: boolean
+        head_sampling_rate?: number
         logs?: { enabled?: boolean; invocation_logs?: boolean; head_sampling_rate?: number }
         traces?: { enabled?: boolean; head_sampling_rate?: number }
       }
@@ -159,6 +160,7 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
       observability: wranglerConfig.observability
         ? {
             enabled: wranglerConfig.observability.enabled ?? false,
+            headSamplingRate: wranglerConfig.observability.head_sampling_rate,
             logs: wranglerConfig.observability.logs
               ? {
                   enabled: wranglerConfig.observability.logs.enabled ?? wranglerConfig.observability.enabled ?? false,
