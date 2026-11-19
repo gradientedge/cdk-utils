@@ -245,6 +245,39 @@ describe('TestCloudflareWorkerSite', () => {
       fs.rmSync(configDirectory, { recursive: true, force: true })
     }
   })
+
+  test.each([1, 0, 0.25, undefined])('translates observability sampling rate %s', samplingRate => {
+    const configDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'worker-site-observability-'))
+    const originalScript = stack.construct.props.siteWorkerScript
+    const originalBindings = stack.construct.workerPlainTextBindingEnvironmentVariables
+    const originalConfig = stack.construct.props.siteWranglerConfig
+    fs.writeFileSync(
+      path.join(configDirectory, 'wrangler.jsonc'),
+      JSON.stringify({
+        observability: {
+          enabled: true,
+          head_sampling_rate: samplingRate,
+          logs: { enabled: true, head_sampling_rate: 0.5 },
+          traces: { enabled: true, head_sampling_rate: 0.1 },
+        },
+      })
+    )
+    try {
+      stack.construct.props.siteWranglerConfig = configDirectory
+      stack.construct.testTranslateWorkersBaseConfig()
+      expect(stack.construct.props.siteWorkerScript.observability).toEqual({
+        enabled: true,
+        headSamplingRate: samplingRate,
+        logs: { enabled: true, invocationLogs: true, headSamplingRate: 0.5 },
+        traces: { enabled: true, headSamplingRate: 0.1 },
+      })
+    } finally {
+      stack.construct.props.siteWranglerConfig = originalConfig
+      stack.construct.props.siteWorkerScript = originalScript
+      stack.construct.workerPlainTextBindingEnvironmentVariables = originalBindings
+      fs.rmSync(configDirectory, { recursive: true, force: true })
+    }
+  })
 })
 
 describe('TestCloudflareWorkerSite', () => {
