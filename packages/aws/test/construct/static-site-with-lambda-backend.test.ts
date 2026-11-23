@@ -124,7 +124,7 @@ describe('SiteWithLambdaBackend', () => {
     template.resourceCountIs('AWS::ApplicationAutoScaling::ScalableTarget', 1)
     template.resourceCountIs('AWS::ApplicationAutoScaling::ScalingPolicy', 1)
     template.resourceCountIs('AWS::Lambda::Url', 1)
-    template.resourceCountIs('AWS::Lambda::Permission', 1)
+    template.resourceCountIs('AWS::Lambda::Permission', 2)
   })
 })
 
