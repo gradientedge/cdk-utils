@@ -115,7 +115,6 @@ class MyCloudflareStack extends CommonCloudflareConstruct {
 }
 ```
 
-x
 `CloudflareWorkerSite` reads the base `wrangler.jsonc` from `siteWranglerConfig` (or `siteSource`).
 Its `assets.directory` is resolved relative to that configuration file. When present, `_headers`
 and `_redirects` in that directory are read as UTF-8 and passed to Pulumi as
