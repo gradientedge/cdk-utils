@@ -1,5 +1,17 @@
 # @gradientedge/cdk-utils-cloudflare
 
+## 2.30.0
+
+### Minor Changes
+
+- [#1245](https://github.com/gradientedge/cdk-utils/pull/1245) [`0c70366`](https://github.com/gradientedge/cdk-utils/commit/0c703668839c64f2586deb35eb7ca190fa53421e) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - feat: bumping dependencies
+
+### Patch Changes
+
+- [#1247](https://github.com/gradientedge/cdk-utils/pull/1247) [`09891c6`](https://github.com/gradientedge/cdk-utils/commit/09891c68853590a901daaa0e886713452807c2ee) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - fix: forward static asset _headers and _redirects file contents to Pulumi Workers asset configuration
+- Updated dependencies [[`0c70366`](https://github.com/gradientedge/cdk-utils/commit/0c703668839c64f2586deb35eb7ca190fa53421e)]:
+  - @gradientedge/cdk-utils-common@2.13.0
+
 ## 2.29.2
 
 ### Patch Changes

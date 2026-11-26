@@ -1,5 +1,16 @@
 # @gradientedge/cdk-utils-azure
 
+## 2.63.0
+
+### Minor Changes
+
+- [#1245](https://github.com/gradientedge/cdk-utils/pull/1245) [`0c70366`](https://github.com/gradientedge/cdk-utils/commit/0c703668839c64f2586deb35eb7ca190fa53421e) Thanks [@hemalshah-gradientedge](https://github.com/hemalshah-gradientedge)! - feat: bumping dependencies
+
+### Patch Changes
+
+- Updated dependencies [[`0c70366`](https://github.com/gradientedge/cdk-utils/commit/0c703668839c64f2586deb35eb7ca190fa53421e)]:
+  - @gradientedge/cdk-utils-common@2.13.0
+
 ## 2.62.15
 
 ### Patch Changes
