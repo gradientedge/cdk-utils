@@ -1,6 +1,6 @@
 {
   "name": "@gradientedge/cdk-utils-cloudflare",
-  "version": "2.29.2",
+  "version": "2.30.0",
   "description": "Cloudflare Pulumi utilities for @gradientedge/cdk-utils",
   "type": "module",
   "main": "dist/src/index.js",
