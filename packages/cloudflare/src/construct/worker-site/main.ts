@@ -22,7 +22,9 @@ import { CommonCloudflareConstruct } from '../../common/index.js'
 import { CloudflareWorkerSiteProps } from './types.js'
 
 /**
- * Provides a construct to create and deploy a cloudflare worker site
+ * Provides a construct to create and deploy a cloudflare worker site.
+ * Wrangler asset directories are resolved relative to their configuration file;
+ * optional _headers and _redirects files are forwarded to the Workers asset configuration.
  * @example
  * import { CloudflareWorkerSite, CloudflareWorkerSiteProps } '@gradientedge/cdk-utils'
  * import { Construct } from 'constructs'
@@ -143,6 +145,11 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
       assets?: { directory?: string; binding?: string; not_found_handling?: string }
       vars?: Record<string, string>
     }
+    const assetsDirectory = wranglerConfig.assets?.directory
+      ? path.resolve(path.dirname(configPath), wranglerConfig.assets.directory)
+      : undefined
+    const headersPath = assetsDirectory ? path.join(assetsDirectory, '_headers') : undefined
+    const redirectsPath = assetsDirectory ? path.join(assetsDirectory, '_redirects') : undefined
 
     this.workerPlainTextBindingEnvironmentVariables = [
       ...Object.entries(wranglerConfig.vars ?? {}).map(([name, text]) => ({ name, text, type: 'plain_text' })),
@@ -182,6 +189,9 @@ export class CloudflareWorkerSite extends CommonCloudflareConstruct {
               ? path.resolve(path.dirname(configPath), wranglerConfig.assets.directory)
               : undefined,
             config: {
+              headers: headersPath && fs.existsSync(headersPath) ? fs.readFileSync(headersPath, 'utf8') : undefined,
+              redirects:
+                redirectsPath && fs.existsSync(redirectsPath) ? fs.readFileSync(redirectsPath, 'utf8') : undefined,
               notFoundHandling: wranglerConfig.assets.not_found_handling,
             },
           }

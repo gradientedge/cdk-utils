@@ -246,6 +246,126 @@ describe('TestCloudflareWorkerSite', () => {
     }
   })
 
+  test.each([
+    { headers: undefined, redirects: undefined },
+    { headers: '/static/*\n  Cache-Control: public, max-age=14400, s-maxage=86400\n', redirects: undefined },
+    { headers: undefined, redirects: '/old /new 301\n' },
+    { headers: '/icon.svg\n  Cache-Control: public, max-age=14400\n', redirects: '/old /new 302\n' },
+    { headers: '', redirects: '' },
+  ])('passes asset rule file contents to the Worker resource: %j', async ({ headers, redirects }) => {
+    const configDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'worker-site-asset-rules-'))
+    const assetsDirectory = path.join(configDirectory, 'public')
+    fs.mkdirSync(assetsDirectory)
+    fs.writeFileSync(
+      path.join(configDirectory, 'wrangler.jsonc'),
+      JSON.stringify({
+        assets: { directory: './public', binding: 'ASSETS', not_found_handling: '404-page' },
+      })
+    )
+    if (headers !== undefined) fs.writeFileSync(path.join(assetsDirectory, '_headers'), headers)
+    if (redirects !== undefined) fs.writeFileSync(path.join(assetsDirectory, '_redirects'), redirects)
+    try {
+      const worker = new TestCommonConstruct(`test-asset-rules-${headers?.length}-${redirects?.length}`, {
+        ...stack.construct.props,
+        siteWranglerConfig: configDirectory,
+      })
+      const assets = await new Promise(resolve => worker.siteWorkerScript.assets.apply(resolve))
+      expect(assets).toEqual({
+        directory: assetsDirectory,
+        config: {
+          headers,
+          redirects,
+          notFoundHandling: '404-page',
+        },
+      })
+    } finally {
+      fs.rmSync(configDirectory, { recursive: true, force: true })
+    }
+  })
+
+  test('loads asset rules relative to the Wrangler config from a dist working directory', () => {
+    const configDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'worker-site-dist-rules-'))
+    const assetsDirectory = path.join(configDirectory, 'public')
+    const originalScript = stack.construct.props.siteWorkerScript
+    const originalBindings = stack.construct.workerPlainTextBindingEnvironmentVariables
+    const originalConfig = stack.construct.props.siteWranglerConfig
+    const workingDirectory = path.join(configDirectory, 'infrastructure')
+    const cwd = vi.spyOn(process, 'cwd').mockReturnValue(path.join(workingDirectory, 'dist'))
+    fs.mkdirSync(assetsDirectory)
+    fs.writeFileSync(
+      path.join(configDirectory, 'wrangler.jsonc'),
+      JSON.stringify({ assets: { directory: './public' } })
+    )
+    fs.writeFileSync(path.join(assetsDirectory, '_headers'), '/static/*\n  Cache-Control: public, max-age=14400\n')
+    fs.writeFileSync(path.join(assetsDirectory, '_redirects'), '/old /new 301\n')
+    try {
+      stack.construct.props.siteWranglerConfig = '../'
+      stack.construct.testTranslateWorkersBaseConfig()
+      expect(stack.construct.props.siteWorkerScript.assets).toEqual({
+        directory: assetsDirectory,
+        config: {
+          headers: '/static/*\n  Cache-Control: public, max-age=14400\n',
+          redirects: '/old /new 301\n',
+          notFoundHandling: undefined,
+        },
+      })
+    } finally {
+      cwd.mockRestore()
+      stack.construct.props.siteWranglerConfig = originalConfig
+      stack.construct.props.siteWorkerScript = originalScript
+      stack.construct.workerPlainTextBindingEnvironmentVariables = originalBindings
+      fs.rmSync(configDirectory, { recursive: true, force: true })
+    }
+  })
+
+  test.each([undefined, {}])('does not load rule files without an asset directory: %j', assets => {
+    const configDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'worker-site-no-assets-'))
+    const originalScript = stack.construct.props.siteWorkerScript
+    const originalBindings = stack.construct.workerPlainTextBindingEnvironmentVariables
+    const originalConfig = stack.construct.props.siteWranglerConfig
+    const configuredAssets = {
+      directory: '/configured/assets',
+      config: { headers: '/configured/*\n  X-Test: configured\n', redirects: '/from /to 301\n' },
+    }
+    fs.writeFileSync(path.join(configDirectory, 'wrangler.jsonc'), JSON.stringify({ assets }))
+    try {
+      stack.construct.props.siteWranglerConfig = configDirectory
+      stack.construct.props.siteWorkerScript = { ...originalScript, assets: configuredAssets }
+      stack.construct.testTranslateWorkersBaseConfig()
+      expect(stack.construct.props.siteWorkerScript.assets).toEqual(
+        assets
+          ? {
+              directory: undefined,
+              config: { headers: undefined, redirects: undefined, notFoundHandling: undefined },
+            }
+          : configuredAssets
+      )
+    } finally {
+      stack.construct.props.siteWranglerConfig = originalConfig
+      stack.construct.props.siteWorkerScript = originalScript
+      stack.construct.workerPlainTextBindingEnvironmentVariables = originalBindings
+      fs.rmSync(configDirectory, { recursive: true, force: true })
+    }
+  })
+
+  test.each(['_headers', '_redirects'])('surfaces errors reading an existing %s file', filename => {
+    const configDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'worker-site-invalid-rules-'))
+    const originalScript = stack.construct.props.siteWorkerScript
+    const originalBindings = stack.construct.workerPlainTextBindingEnvironmentVariables
+    const originalConfig = stack.construct.props.siteWranglerConfig
+    fs.writeFileSync(path.join(configDirectory, 'wrangler.jsonc'), JSON.stringify({ assets: { directory: '.' } }))
+    fs.mkdirSync(path.join(configDirectory, filename))
+    try {
+      stack.construct.props.siteWranglerConfig = configDirectory
+      expect(() => stack.construct.testTranslateWorkersBaseConfig()).toThrow(/EISDIR/)
+    } finally {
+      stack.construct.props.siteWranglerConfig = originalConfig
+      stack.construct.props.siteWorkerScript = originalScript
+      stack.construct.workerPlainTextBindingEnvironmentVariables = originalBindings
+      fs.rmSync(configDirectory, { recursive: true, force: true })
+    }
+  })
+
   test.each([1, 0, 0.25, undefined])('translates observability sampling rate %s', samplingRate => {
     const configDirectory = fs.mkdtempSync(path.join(os.tmpdir(), 'worker-site-observability-'))
     const originalScript = stack.construct.props.siteWorkerScript
